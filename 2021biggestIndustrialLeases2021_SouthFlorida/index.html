@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_6510711924e84d688f70e3400f0cd682 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>2021 South Florida Top Industrial Leases</b></h3>
+             
+    
+                <p align="center" style="vertical-align: bottom; font-size:13px"><i>Amazon made the list twice.</i></p>
+                
+    
+            <div class="folium-map" id="map_6510711924e84d688f70e3400f0cd682" ></div>
+        
+</body>
+<script>    
+    
+            var map_6510711924e84d688f70e3400f0cd682 = L.map(
+                "map_6510711924e84d688f70e3400f0cd682",
+                {
+                    center: [25.94592574, -80.29893933],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 8,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_d5507409229443528e50d4710367f804 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_6510711924e84d688f70e3400f0cd682);
+        
+    
+            var marker_cluster_88bb5125e712465cb85545595128989d = L.markerClusterGroup(
+                {}
+            );
+            map_6510711924e84d688f70e3400f0cd682.addLayer(marker_cluster_88bb5125e712465cb85545595128989d);
+        
+    
+            var marker_fa6fee1391e14533a2694b95e25cfc94 = L.marker(
+                [25.840994, -80.33831789999999],
+                {}
+            ).addTo(marker_cluster_88bb5125e712465cb85545595128989d);
+        
+    
+            marker_fa6fee1391e14533a2694b95e25cfc94.bindTooltip(
+                `<div>
+                     Business Park: <strong>First Park Miami</strong><br>    Address: <strong>8801 NW 87th Ave</strong><br>    City: <strong>Miami</strong><br>    Property Type: <strong>Warehouse</strong><br>    Tenant Name: <strong>Carbel</strong><br>    Size SF: <strong>368287</strong><br>    Lease Type: <strong>New</strong><br>    Sign Date: <strong>Jul-21</strong><br>    Submarket: <strong>Medley/Hialeah Gardens</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_0e69f781abb64127975ac13a4221bed2 = L.marker(
+                [25.9696633, -80.27115979999999],
+                {}
+            ).addTo(marker_cluster_88bb5125e712465cb85545595128989d);
+        
+    
+            marker_0e69f781abb64127975ac13a4221bed2.bindTooltip(
+                `<div>
+                     Business Park: <strong>Bridge Point Commerce Center</strong><br>    Address: <strong>4310 NW 215th St</strong><br>    City: <strong>Miami Gardens</strong><br>    Property Type: <strong>Warehouse</strong><br>    Tenant Name: <strong>City Furniture</strong><br>    Size SF: <strong>286875</strong><br>    Lease Type: <strong>New</strong><br>    Sign Date: <strong>Mar-21</strong><br>    Submarket: <strong>Northeast Dade</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_513abd8e04904acdb2e283b3fbaaacfb = L.marker(
+                [25.4467308, -80.42246159999999],
+                {}
+            ).addTo(marker_cluster_88bb5125e712465cb85545595128989d);
+        
+    
+            marker_513abd8e04904acdb2e283b3fbaaacfb.bindTooltip(
+                `<div>
+                     Business Park: <strong>3750 Palm Dr</strong><br>    Address: <strong>3750 Palm Dr</strong><br>    City: <strong>Homestead</strong><br>    Property Type: <strong>Warehouse</strong><br>    Tenant Name: <strong>Amazon</strong><br>    Size SF: <strong>216000</strong><br>    Lease Type: <strong>New</strong><br>    Sign Date: <strong>Mar-21</strong><br>    Submarket: <strong>Outlying Miami-Dade</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_3253146253b6406cb9661c5690a6b536 = L.marker(
+                [26.283099, -80.2938057],
+                {}
+            ).addTo(marker_cluster_88bb5125e712465cb85545595128989d);
+        
+    
+            marker_3253146253b6406cb9661c5690a6b536.bindTooltip(
+                `<div>
+                     Business Park: <strong>Coral Springs Distribution Center I Bldg C</strong><br>    Address: <strong>4030 NW 126th Ave</strong><br>    City: <strong>Coral Springs</strong><br>    Property Type: <strong>Warehouse</strong><br>    Tenant Name: <strong>Amazon</strong><br>    Size SF: <strong>215486</strong><br>    Lease Type: <strong>New</strong><br>    Sign Date: <strong>May-21</strong><br>    Submarket: <strong>Northwest Broward</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_46df7a72ee6647728698cb542c73023a = L.marker(
+                [25.7912463, -80.3613988],
+                {}
+            ).addTo(marker_cluster_88bb5125e712465cb85545595128989d);
+        
+    
+            marker_46df7a72ee6647728698cb542c73023a.bindTooltip(
+                `<div>
+                     Business Park: <strong>International Corporate Park</strong><br>    Address: <strong>10205 NW 19th St</strong><br>    City: <strong>Miami</strong><br>    Property Type: <strong>Warehouse</strong><br>    Tenant Name: <strong>Expeditors International</strong><br>    Size SF: <strong>206000</strong><br>    Lease Type: <strong>Renewal</strong><br>    Sign Date: <strong>Feb-21</strong><br>    Submarket: <strong>Miami Airport West</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_ada78cb8926144c68407a51395d903c3 = L.marker(
+                [26.2848911, -80.2842221],
+                {}
+            ).addTo(marker_cluster_88bb5125e712465cb85545595128989d);
+        
+    
+            marker_ada78cb8926144c68407a51395d903c3.bindTooltip(
+                `<div>
+                     Business Park: <strong>Coral Springs Commerce Center II Bldg 4</strong><br>    Address: <strong>4250 Coral Ridge Dr</strong><br>    City: <strong>Coral Springs</strong><br>    Property Type: <strong>Warehouse</strong><br>    Tenant Name: <strong>Ferguson Enterprises</strong><br>    Size SF: <strong>194441</strong><br>    Lease Type: <strong>New</strong><br>    Sign Date: <strong>Aug-21</strong><br>    Submarket: <strong>Northwest Broward</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_9507f6bd68ae482495535306e262e8c2 = L.marker(
+                [25.875701, -80.25398299999999],
+                {}
+            ).addTo(marker_cluster_88bb5125e712465cb85545595128989d);
+        
+    
+            marker_9507f6bd68ae482495535306e262e8c2.bindTooltip(
+                `<div>
+                     Business Park: <strong>3350-3450 NW 112th St</strong><br>    Address: <strong>3350-3450 NW 112th St</strong><br>    City: <strong>Miami</strong><br>    Property Type: <strong>Warehouse</strong><br>    Tenant Name: <strong>Retrievex / Access Information Management</strong><br>    Size SF: <strong>187749</strong><br>    Lease Type: <strong>Renewal</strong><br>    Sign Date: <strong>Q1 2021</strong><br>    Submarket: <strong>Northeast Dade</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_7d519e36c5c040448744cc2dd3eb63af = L.marker(
+                [25.9640048, -80.2715303],
+                {}
+            ).addTo(marker_cluster_88bb5125e712465cb85545595128989d);
+        
+    
+            marker_7d519e36c5c040448744cc2dd3eb63af.bindTooltip(
+                `<div>
+                     Business Park: <strong>Bridge Point Commerce Center Bldg B</strong><br>    Address: <strong>21201 NW 43rd Ave</strong><br>    City: <strong>Miami Gardens</strong><br>    Property Type: <strong>Warehouse</strong><br>    Tenant Name: <strong>USPS</strong><br>    Size SF: <strong>179634</strong><br>    Lease Type: <strong>New</strong><br>    Sign Date: <strong>Jul-21</strong><br>    Submarket: <strong>Northeast Dade</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_f82045105e6e49f5adee588575559de3 = L.marker(
+                [26.2082152, -80.2911445],
+                {}
+            ).addTo(marker_cluster_88bb5125e712465cb85545595128989d);
+        
+    
+            marker_f82045105e6e49f5adee588575559de3.bindTooltip(
+                `<div>
+                     Business Park: <strong>Tamarac Business Center Bldg I</strong><br>    Address: <strong>6901 N Hiatus Rd</strong><br>    City: <strong>Tamarac</strong><br>    Property Type: <strong>Warehouse</strong><br>    Tenant Name: <strong>Amazon</strong><br>    Size SF: <strong>178322</strong><br>    Lease Type: <strong>New</strong><br>    Sign Date: <strong>Apr-21</strong><br>    Submarket: <strong>Southwest Broward</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_6e9df2e4814c416d8f49d31bf03a8013 = L.marker(
+                [25.7947119, -80.20136959999999],
+                {}
+            ).addTo(marker_cluster_88bb5125e712465cb85545595128989d);
+        
+    
+            marker_6e9df2e4814c416d8f49d31bf03a8013.bindTooltip(
+                `<div>
+                     Business Park: <strong>Prologis Beacon Lakes 24</strong><br>    Address: <strong>13155 NW 19th Ln</strong><br>    City: <strong>Miami</strong><br>    Property Type: <strong>Warehouse</strong><br>    Tenant Name: <strong>King Ocean</strong><br>    Size SF: <strong>157258</strong><br>    Lease Type: <strong>New</strong><br>    Sign Date: <strong>Dec-21</strong><br>    Submarket: <strong>Miami Airport West</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>

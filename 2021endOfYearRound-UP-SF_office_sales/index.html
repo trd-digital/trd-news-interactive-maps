@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_892a5b2149934e71a8860f92ec6c0638 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>2021 South Florida Priciest Office Sales</b></h3>
+             
+    
+                <p align="center" style="vertical-align: bottom; font-size:13px"><i>The most expensive office sales in South Florida</i></p>
+                
+    
+            <div class="folium-map" id="map_892a5b2149934e71a8860f92ec6c0638" ></div>
+        
+</body>
+<script>    
+    
+            var map_892a5b2149934e71a8860f92ec6c0638 = L.map(
+                "map_892a5b2149934e71a8860f92ec6c0638",
+                {
+                    center: [26.06123581, -80.17264059],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 9,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_f275e8ab6f3f45448be5490c48253cf6 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_892a5b2149934e71a8860f92ec6c0638);
+        
+    
+            var marker_cluster_0745e56453a64ea7863ff377ea07a71d = L.markerClusterGroup(
+                {}
+            );
+            map_892a5b2149934e71a8860f92ec6c0638.addLayer(marker_cluster_0745e56453a64ea7863ff377ea07a71d);
+        
+    
+            var marker_3824f8218b9c4011a604c66dc3a05c37 = L.marker(
+                [26.7066782, -80.05103799999999],
+                {}
+            ).addTo(marker_cluster_0745e56453a64ea7863ff377ea07a71d);
+        
+    
+            marker_3824f8218b9c4011a604c66dc3a05c37.bindTooltip(
+                `<div>
+                     Property Name: <strong>Phillips Point</strong><br>    Property Address: <strong>777 S Flagler Dr & 201 Lakeview Ave</strong><br>    Buyer: <strong>The Related Companies</strong><br>    Seller: <strong>AEW Capital Management</strong><br>    City: <strong>West Palm Beach</strong><br>    County: <strong>Palm Beach</strong><br>    Square Footage: <strong>  451,858 </strong><br>    Sale Price: <strong>$281,850,000 </strong><br>    Price/SF: <strong>$623.76</strong><br>    Sale Date: <strong>Q1 2021</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_fac0f49120a74283a90356e4187fb033 = L.marker(
+                [25.772249, -80.18677389999999],
+                {}
+            ).addTo(marker_cluster_0745e56453a64ea7863ff377ea07a71d);
+        
+    
+            marker_fac0f49120a74283a90356e4187fb033.bindTooltip(
+                `<div>
+                     Property Name: <strong>Citigroup Center</strong><br>    Property Address: <strong>201 S Biscayne Blvd</strong><br>    Buyer: <strong>JV: Monarch Alternative Capital / Tourmaline Capital Parnters</strong><br>    Seller: <strong>CP Group</strong><br>    City: <strong>Miami</strong><br>    County: <strong>Miami-Dade</strong><br>    Square Footage: <strong>  812,525 </strong><br>    Sale Price: <strong>$270,000,000 </strong><br>    Price/SF: <strong>$332.30</strong><br>    Sale Date: <strong>Q2 2021</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_2bb05619ed784b9fbbc7d4e3e2991aac = L.marker(
+                [25.7803273, -80.19735659999999],
+                {}
+            ).addTo(marker_cluster_0745e56453a64ea7863ff377ea07a71d);
+        
+    
+            marker_2bb05619ed784b9fbbc7d4e3e2991aac.bindTooltip(
+                `<div>
+                     Property Name: <strong>2 & 3 MiamiCentral</strong><br>    Property Address: <strong>161 NW 6th St & 700 NW 1st St</strong><br>    Buyer: <strong>Blackstone Real Estate</strong><br>    Seller: <strong>Shorenstein Properties LLC</strong><br>    City: <strong>Miami</strong><br>    County: <strong>Miami-Dade</strong><br>    Square Footage: <strong>  320,000 </strong><br>    Sale Price: <strong>$230,000,000 </strong><br>    Price/SF: <strong>$718.75</strong><br>    Sale Date: <strong>Q1 2021</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_07c2456430e4484f8e6b44f07cae6d67 = L.marker(
+                [25.7737878, -80.1879712],
+                {}
+            ).addTo(marker_cluster_0745e56453a64ea7863ff377ea07a71d);
+        
+    
+            marker_07c2456430e4484f8e6b44f07cae6d67.bindTooltip(
+                `<div>
+                     Property Name: <strong>One Biscayne Tower</strong><br>    Property Address: <strong>2 S Biscayne Blvd</strong><br>    Buyer: <strong>JV: CP Group / Rialto Capital Management / Sabal Financial Group</strong><br>    Seller: <strong>Dow Chemical Company</strong><br>    City: <strong>Miami</strong><br>    County: <strong>Miami-Dade</strong><br>    Square Footage: <strong>  691,783 </strong><br>    Sale Price: <strong>$225,000,000 </strong><br>    Price/SF: <strong>$325.25</strong><br>    Sale Date: <strong>Q2 2021</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_16e3de5373014ba8a0cd3b17dbe78afb = L.marker(
+                [26.7066126, -80.0559808],
+                {}
+            ).addTo(marker_cluster_0745e56453a64ea7863ff377ea07a71d);
+        
+    
+            marker_16e3de5373014ba8a0cd3b17dbe78afb.bindTooltip(
+                `<div>
+                     Property Name: <strong>CityPlace Tower </strong><br>    Property Address: <strong>525 Okeechobee Blvd</strong><br>    Buyer: <strong>Related Companies</strong><br>    Seller: <strong>W.R. Berkley Corporation</strong><br>    City: <strong>West Palm Beach</strong><br>    County: <strong>Palm Beach</strong><br>    Square Footage: <strong>  306,007 </strong><br>    Sale Price: <strong>$175,000,000 </strong><br>    Price/SF: <strong>$571.88</strong><br>    Sale Date: <strong>Q2 2021</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_77232aa9eb3b4bc9ab8356b8edb66b8e = L.marker(
+                [25.9679722, -80.1437527],
+                {}
+            ).addTo(marker_cluster_0745e56453a64ea7863ff377ea07a71d);
+        
+    
+            marker_77232aa9eb3b4bc9ab8356b8edb66b8e.bindTooltip(
+                `<div>
+                     Property Name: <strong>Aventura Corporate Center</strong><br>    Property Address: <strong>20801, 20803, 20807 Biscayne Blvd</strong><br>    Buyer: <strong>Stonecutter Capital Management</strong><br>    Seller: <strong>Renaissance Properties</strong><br>    City: <strong>Aventura</strong><br>    County: <strong>Miami-Dade</strong><br>    Square Footage: <strong>  251,773 </strong><br>    Sale Price: <strong>$140,000,000 </strong><br>    Price/SF: <strong>$556.06</strong><br>    Sale Date: <strong>Q3 2021</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_150b458be9154368a96ca540904bb7d0 = L.marker(
+                [25.7835999, -80.3005047],
+                {}
+            ).addTo(marker_cluster_0745e56453a64ea7863ff377ea07a71d);
+        
+    
+            marker_150b458be9154368a96ca540904bb7d0.bindTooltip(
+                `<div>
+                     Property Name: <strong>Waterford Atrium</strong><br>    Property Address: <strong>6100, 6303, 6505 Blue Lagoon Dr</strong><br>    Buyer: <strong>RealOp Investments</strong><br>    Seller: <strong>MetLife Real Estate Investments</strong><br>    City: <strong>Miami</strong><br>    County: <strong>Miami-Dade</strong><br>    Square Footage: <strong>  495,485 </strong><br>    Sale Price: <strong>$110,140,100 </strong><br>    Price/SF: <strong>$222.29</strong><br>    Sale Date: <strong>Q2 2021</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_8f26bbd3e27745ec967a36f3caa82686 = L.marker(
+                [26.3619507, -80.1284648],
+                {}
+            ).addTo(marker_cluster_0745e56453a64ea7863ff377ea07a71d);
+        
+    
+            marker_8f26bbd3e27745ec967a36f3caa82686.bindTooltip(
+                `<div>
+                     Property Name: <strong>One Town Center</strong><br>    Property Address: <strong>1 Town Center Rd</strong><br>    Buyer: <strong>Prime US REIT</strong><br>    Seller: <strong>JV: Crocker Partners / Siguler Guff</strong><br>    City: <strong>Boca Raton</strong><br>    County: <strong>Palm Beach</strong><br>    Square Footage: <strong>  191,294 </strong><br>    Sale Price: <strong>$99,500,000 </strong><br>    Price/SF: <strong>$520.14</strong><br>    Sale Date: <strong>Q3 2021</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_7248c5fe3ab24283a776ef32296d7d99 = L.marker(
+                [25.8090526, -80.33283879999999],
+                {}
+            ).addTo(marker_cluster_0745e56453a64ea7863ff377ea07a71d);
+        
+    
+            marker_7248c5fe3ab24283a776ef32296d7d99.bindTooltip(
+                `<div>
+                     Property Name: <strong>Doral Concourse</strong><br>    Property Address: <strong>8400 NW 36th St</strong><br>    Buyer: <strong>MG3 Developer Group</strong><br>    Seller: <strong>DRA Advisors</strong><br>    City: <strong>Miami</strong><br>    County: <strong>Miami-Dade</strong><br>    Square Footage: <strong>  240,669 </strong><br>    Sale Price: <strong>$96,000,000</strong><br>    Price/SF: <strong>$398.89</strong><br>    Sale Date: <strong>Q3 2021</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_0c9312bf78084cabbbff348de2a5905f = L.marker(
+                [25.9501278, -80.1417244],
+                {}
+            ).addTo(marker_cluster_0745e56453a64ea7863ff377ea07a71d);
+        
+    
+            marker_0c9312bf78084cabbbff348de2a5905f.bindTooltip(
+                `<div>
+                     Property Name: <strong>Aventura Harbour Centre (10X Centre)</strong><br>    Property Address: <strong>18851 NE 29th Ave</strong><br>    Buyer: <strong>Cardone Capital</strong><br>    Seller: <strong>C-III Capital Partners LLC</strong><br>    City: <strong>Aventura</strong><br>    County: <strong>Miami-Dade</strong><br>    Square Footage: <strong>  219,000 </strong><br>    Sale Price: <strong>$93,000,000 </strong><br>    Price/SF: <strong>$415.53</strong><br>    Sale Date: <strong>Q2 2021</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>

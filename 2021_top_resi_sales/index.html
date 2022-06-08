@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_636722a246874cd89db4497d67cf0ac7 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>2021 South Florida Top Residential Sales</b></h3>
+             
+    
+                <p align="center" style="vertical-align: bottom; font-size:13px"><i>Palm Beach took 6 of the 10 top spots</i></p>
+                
+    
+            <div class="folium-map" id="map_636722a246874cd89db4497d67cf0ac7" ></div>
+        
+</body>
+<script>    
+    
+            var map_636722a246874cd89db4497d67cf0ac7 = L.map(
+                "map_636722a246874cd89db4497d67cf0ac7",
+                {
+                    center: [26.51700199, -80.0711282],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 8,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_baf675b6423f439b9c9e6fb14cda8ab8 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_636722a246874cd89db4497d67cf0ac7);
+        
+    
+            var marker_cluster_71c10f690fcc4eee8c44ec7f7bff96a8 = L.markerClusterGroup(
+                {}
+            );
+            map_636722a246874cd89db4497d67cf0ac7.addLayer(marker_cluster_71c10f690fcc4eee8c44ec7f7bff96a8);
+        
+    
+            var marker_78efd55f77d0478cb8f14398c6b8e736 = L.marker(
+                [26.7327407, -80.0365917],
+                {}
+            ).addTo(marker_cluster_71c10f690fcc4eee8c44ec7f7bff96a8);
+        
+    
+            marker_78efd55f77d0478cb8f14398c6b8e736.bindTooltip(
+                `<div>
+                     Address: <strong>535 N County Road</strong><br>    City: <strong>Palm Beach</strong><br>    Price: <strong>$122.7M</strong><br>    Square Feet: <strong>N/A</strong><br>    Buyer: <strong>King County Road Inc</strong><br>    Sale Date: <strong>N/A</strong><br>    MLS: <strong>N/A</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_30d935af28ba4698b548451b484a5fb6 = L.marker(
+                [26.6524428, -80.0373809],
+                {}
+            ).addTo(marker_cluster_71c10f690fcc4eee8c44ec7f7bff96a8);
+        
+    
+            marker_30d935af28ba4698b548451b484a5fb6.bindTooltip(
+                `<div>
+                     Address: <strong>1840 South Ocean Boulevard</strong><br>    City: <strong>Palm Beach</strong><br>    Price: <strong>$109.63M</strong><br>    Square Feet: <strong>15954.0</strong><br>    Buyer: <strong>1840 South Ocean Trust, Kochman Ronald Trustee</strong><br>    Sale Date: <strong>6/14/21</strong><br>    MLS: <strong>PBBOR #21-378</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_4e63554f8f0740839c28a63d33c23a6e = L.marker(
+                [26.6673352, -80.0365949],
+                {}
+            ).addTo(marker_cluster_71c10f690fcc4eee8c44ec7f7bff96a8);
+        
+    
+            marker_4e63554f8f0740839c28a63d33c23a6e.bindTooltip(
+                `<div>
+                     Address: <strong>1341 South Ocean Boulevard</strong><br>    City: <strong>Palm Beach</strong><br>    Price: <strong>$95.00M</strong><br>    Square Feet: <strong>13936.0</strong><br>    Buyer: <strong>Kochman Ronald S Trustee, 1341 South Ocean Boulevard Trust</strong><br>    Sale Date: <strong>5/14/21</strong><br>    MLS: <strong>N/A</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_aa40c371ec494c65933cdb58ab0d9c7b = L.marker(
+                [26.6437781, -80.03794859999999],
+                {}
+            ).addTo(marker_cluster_71c10f690fcc4eee8c44ec7f7bff96a8);
+        
+    
+            marker_aa40c371ec494c65933cdb58ab0d9c7b.bindTooltip(
+                `<div>
+                     Address: <strong>2000 South Ocean Boulevard</strong><br>    City: <strong>Lake Worth</strong><br>    Price: <strong>$94.17M</strong><br>    Square Feet: <strong>20597.0</strong><br>    Buyer: <strong>2000 S Ocean Trust, Kochman Ronald Trustee</strong><br>    Sale Date: <strong>3/8/21</strong><br>    MLS: <strong>PBBOR #17-1227</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_a01121e330754379ad9b98a9a2d2f3f5 = L.marker(
+                [26.856091, -80.0464028],
+                {}
+            ).addTo(marker_cluster_71c10f690fcc4eee8c44ec7f7bff96a8);
+        
+    
+            marker_a01121e330754379ad9b98a9a2d2f3f5.bindTooltip(
+                `<div>
+                     Address: <strong>12525 Seminole Beach Road/12210 Banyan Rd</strong><br>    City: <strong>North Palm Beach</strong><br>    Price: <strong>$80.00M</strong><br>    Square Feet: <strong>15514.0</strong><br>    Buyer: <strong>Florida Estates LLC</strong><br>    Sale Date: <strong>4/8/21</strong><br>    MLS: <strong>RAPB #RX-10632970</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_b00947d5010946f3915229d622be61f1 = L.marker(
+                [25.7768898, -80.1515369],
+                {}
+            ).addTo(marker_cluster_71c10f690fcc4eee8c44ec7f7bff96a8);
+        
+    
+            marker_b00947d5010946f3915229d622be61f1.bindTooltip(
+                `<div>
+                     Address: <strong>8 Star Island Drive</strong><br>    City: <strong>Miami Beach</strong><br>    Price: <strong>$75.00M</strong><br>    Square Feet: <strong>16619.0</strong><br>    Buyer: <strong>N/A</strong><br>    Sale Date: <strong>12/20/21</strong><br>    MLS: <strong>N/A</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_bcc49e555560459fa1bdf0ab78711d83 = L.marker(
+                [25.7153865, -80.24750929999999],
+                {}
+            ).addTo(marker_cluster_71c10f690fcc4eee8c44ec7f7bff96a8);
+        
+    
+            marker_bcc49e555560459fa1bdf0ab78711d83.bindTooltip(
+                `<div>
+                     Address: <strong>3488 Saint Gaudens Road</strong><br>    City: <strong>Coconut Grove</strong><br>    Price: <strong>$65M</strong><br>    Square Feet: <strong>N/A</strong><br>    Buyer: <strong>CH2CG LLC</strong><br>    Sale Date: <strong>N/A</strong><br>    MLS: <strong>N/A</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_6aaa53b890374a17b696f752d041f8e0 = L.marker(
+                [26.746267, -80.0355469],
+                {}
+            ).addTo(marker_cluster_71c10f690fcc4eee8c44ec7f7bff96a8);
+        
+    
+            marker_6aaa53b890374a17b696f752d041f8e0.bindTooltip(
+                `<div>
+                     Address: <strong>901 North Ocean Boulevard</strong><br>    City: <strong>Palm Beach</strong><br>    Price: <strong>$64.00M</strong><br>    Square Feet: <strong>15306.0</strong><br>    Buyer: <strong>Beechgreen LLC</strong><br>    Sale Date: <strong>9/2/21</strong><br>    MLS: <strong>PBBOR #21-281</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_bb8a70bf73af40b498fcb946cae488b4 = L.marker(
+                [26.6808159, -80.0381014],
+                {}
+            ).addTo(marker_cluster_71c10f690fcc4eee8c44ec7f7bff96a8);
+        
+    
+            marker_bb8a70bf73af40b498fcb946cae488b4.bindTooltip(
+                `<div>
+                     Address: <strong>174 Via Del Lago</strong><br>    City: <strong>Palm Beach</strong><br>    Price: <strong>$57.00M</strong><br>    Square Feet: <strong>15241.0</strong><br>    Buyer: <strong>174 Vdl Investment LLC</strong><br>    Sale Date: <strong>3/28/21</strong><br>    MLS: <strong>PBBOR #20-2192</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_acec9ea5c3724228ad4e4faf199c78bb = L.marker(
+                [26.6982729, -80.04366859999999],
+                {}
+            ).addTo(marker_cluster_71c10f690fcc4eee8c44ec7f7bff96a8);
+        
+    
+            marker_acec9ea5c3724228ad4e4faf199c78bb.bindTooltip(
+                `<div>
+                     Address: <strong>520 Island Drive</strong><br>    City: <strong>Palm Beach</strong><br>    Price: <strong>$49.14M</strong><br>    Square Feet: <strong>N/A</strong><br>    Buyer: <strong>Miller Elizabeth R, Dinan James G (Founder, York Capital Management)</strong><br>    Sale Date: <strong>5/18/21</strong><br>    MLS: <strong>PBBOR #21-627</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>

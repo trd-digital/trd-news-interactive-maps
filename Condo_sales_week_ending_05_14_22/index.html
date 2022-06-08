@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_5d31ecd30e384a2a86bc676b24f4103f {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>Recent Miami-Dade Condo Sales </b></h3>
+             
+    
+                <p align="center" style="vertical-align: bottom; font-size:13px"><i>May 8th - May 14th</i></p>
+                
+    
+            <div class="folium-map" id="map_5d31ecd30e384a2a86bc676b24f4103f" ></div>
+        
+</body>
+<script>    
+    
+            var map_5d31ecd30e384a2a86bc676b24f4103f = L.map(
+                "map_5d31ecd30e384a2a86bc676b24f4103f",
+                {
+                    center: [25.805101999999998, -80.16008537999998],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 11,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_afd8508a1fde4d4a97a50adf2cc39a25 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_5d31ecd30e384a2a86bc676b24f4103f);
+        
+    
+            var marker_cluster_5d49cedc209c410bb7877712799d0847 = L.markerClusterGroup(
+                {}
+            );
+            map_5d31ecd30e384a2a86bc676b24f4103f.addLayer(marker_cluster_5d49cedc209c410bb7877712799d0847);
+        
+    
+            var marker_5bfaf184044848dd915fd1e410de7adc = L.marker(
+                [25.7671967, -80.1945134],
+                {}
+            ).addTo(marker_cluster_5d49cedc209c410bb7877712799d0847);
+        
+    
+            marker_5bfaf184044848dd915fd1e410de7adc.bindTooltip(
+                `<div>
+                     Building Name: <strong>Rise Condo </strong><br>     Sale Price: <strong>$6,300,000.00</strong><br>Days on Market:     <strong>21</strong><br>Listing Agent: <strong>Ana Maria Gomez     </strong><br>Buying Agent: <strong>TEMP USER</strong><br>Price sq ft:     <strong>$1,424.05</strong><br>Address: <strong>88 SW 7th St 4201 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_2608e7d53a214326a3d75254975ea553 = L.marker(
+                [25.946531, -80.130636],
+                {}
+            ).addTo(marker_cluster_5d49cedc209c410bb7877712799d0847);
+        
+    
+            marker_2608e7d53a214326a3d75254975ea553.bindTooltip(
+                `<div>
+                     Building Name: <strong>Prive Condo </strong><br>     Sale Price: <strong>$5,800,000.00</strong><br>Days on Market:     <strong>561</strong><br>Listing Agent: <strong>Bento Queiroz     </strong><br>Buying Agent: <strong>Diana Shay</strong><br>Price sq ft:     <strong>$1,313.11</strong><br>Address: <strong>5500 Island Estates Dr PH7 Aventura</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_7029326073824ed692643c618d2095d5 = L.marker(
+                [25.7591323, -80.1918295],
+                {}
+            ).addTo(marker_cluster_5d49cedc209c410bb7877712799d0847);
+        
+    
+            marker_7029326073824ed692643c618d2095d5.bindTooltip(
+                `<div>
+                     Building Name: <strong>Four Seasons Residences </strong><br>     Sale Price: <strong>$4,061,000.00</strong><br>Days on Market:     <strong>34</strong><br>Listing Agent: <strong>Carlos Herman Morean     </strong><br>Buying Agent: <strong>Michael Light</strong><br>Price sq ft:     <strong>$1,209.71</strong><br>Address: <strong>1425 Brickell Ave 58E Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_0ed38bdfadd94547a4737d31e55eaa84 = L.marker(
+                [25.7589251, -80.143131],
+                {}
+            ).addTo(marker_cluster_5d49cedc209c410bb7877712799d0847);
+        
+    
+            marker_0ed38bdfadd94547a4737d31e55eaa84.bindTooltip(
+                `<div>
+                     Building Name: <strong>Bayside Village Condo </strong><br>     Sale Price: <strong>$3,550,000.00</strong><br>Days on Market:     <strong>6</strong><br>Listing Agent: <strong>Karla Abaunza     </strong><br>Buying Agent: <strong>Karla Abaunza</strong><br>Price sq ft:     <strong>$1,589.08</strong><br>Address: <strong>2423 Fisher Island Dr 5203 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_0dd63fac41bd4e799b08a6fba54d8620 = L.marker(
+                [25.7727159, -80.14041569999999],
+                {}
+            ).addTo(marker_cluster_5d49cedc209c410bb7877712799d0847);
+        
+    
+            marker_0dd63fac41bd4e799b08a6fba54d8620.bindTooltip(
+                `<div>
+                     Building Name: <strong>Murano Grande </strong><br>     Sale Price: <strong>$3,500,000.00</strong><br>Days on Market:     <strong>96</strong><br>Listing Agent: <strong>Jeffrey Miller     </strong><br>Buying Agent: <strong>Jonathan Corso</strong><br>Price sq ft:     <strong>$1,729.25</strong><br>Address: <strong>400 Alton Rd 2506 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_37bc7808bf3e4e2086a4c1f76a878e03 = L.marker(
+                [25.7852071, -80.1901214],
+                {}
+            ).addTo(marker_cluster_5d49cedc209c410bb7877712799d0847);
+        
+    
+            marker_37bc7808bf3e4e2086a4c1f76a878e03.bindTooltip(
+                `<div>
+                     Building Name: <strong>Marquis </strong><br>     Sale Price: <strong>$3,200,000.00</strong><br>Days on Market:     <strong>158</strong><br>Listing Agent: <strong>Domenico Albano     </strong><br>Buying Agent: <strong>Ozgur Ureten</strong><br>Price sq ft:     <strong>$847.46</strong><br>Address: <strong>1100 E Biscayne Blvd 3507 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_14cc71a6bcfa4b9587b055fc1c8199c5 = L.marker(
+                [25.946531, -80.130636],
+                {}
+            ).addTo(marker_cluster_5d49cedc209c410bb7877712799d0847);
+        
+    
+            marker_14cc71a6bcfa4b9587b055fc1c8199c5.bindTooltip(
+                `<div>
+                     Building Name: <strong>Prive Condo </strong><br>     Sale Price: <strong>$3,200,000.00</strong><br>Days on Market:     <strong>775</strong><br>Listing Agent: <strong>Jonathan Lief     </strong><br>Buying Agent: <strong>Nicole Holtzheuser</strong><br>Price sq ft:     <strong>$1,112.27</strong><br>Address: <strong>5500 Island Estates Dr 1106 Aventura</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_8e92c098e9e745229d5357060c48f754 = L.marker(
+                [25.7690044, -80.1381107],
+                {}
+            ).addTo(marker_cluster_5d49cedc209c410bb7877712799d0847);
+        
+    
+            marker_8e92c098e9e745229d5357060c48f754.bindTooltip(
+                `<div>
+                     Building Name: <strong>Murano at Portofino Condo </strong><br>     Sale Price: <strong>$3,200,000.00</strong><br>Days on Market:     <strong>110</strong><br>Listing Agent: <strong>Carolina Rainer     </strong><br>Buying Agent: <strong>James Kay</strong><br>Price sq ft:     <strong>$2,214.53</strong><br>Address: <strong>1000 S Pointe Dr 101 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_231896e5d3304a83a224b20ac4f50015 = L.marker(
+                [25.810647, -80.122714],
+                {}
+            ).addTo(marker_cluster_5d49cedc209c410bb7877712799d0847);
+        
+    
+            marker_231896e5d3304a83a224b20ac4f50015.bindTooltip(
+                `<div>
+                     Building Name: <strong>The Caribbean Condo </strong><br>     Sale Price: <strong>$2,625,000.00</strong><br>Days on Market:     <strong>33</strong><br>Listing Agent: <strong>Ida Schwartz     </strong><br>Buying Agent: <strong>Stacy Robins</strong><br>Price sq ft:     <strong>$1,619.37</strong><br>Address: <strong>3737 Collins Ave S-1103 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_8b49c72d4a6f4442b2bfbc91eb0f97d1 = L.marker(
+                [25.7351295, -80.21874609999999],
+                {}
+            ).addTo(marker_cluster_5d49cedc209c410bb7877712799d0847);
+        
+    
+            marker_8b49c72d4a6f4442b2bfbc91eb0f97d1.bindTooltip(
+                `<div>
+                     Building Name: <strong>Grove Isle Condo</strong><br>     Sale Price: <strong>$2,070,000.00</strong><br>Days on Market:     <strong>11</strong><br>Listing Agent: <strong>Alec Macias     </strong><br>Buying Agent: <strong>Alec Macias</strong><br>Price sq ft:     <strong>$863.22</strong><br>Address: <strong>2 Grove Isle Dr B1702</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>

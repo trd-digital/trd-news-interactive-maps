@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_f9fec3c0882547f1838ac1f33ef71e86 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>May 2022 Top Miami-Dade Condo Sales </b></h3>
+             
+    
+            <div class="folium-map" id="map_f9fec3c0882547f1838ac1f33ef71e86" ></div>
+        
+</body>
+<script>    
+    
+            var map_f9fec3c0882547f1838ac1f33ef71e86 = L.map(
+                "map_f9fec3c0882547f1838ac1f33ef71e86",
+                {
+                    center: [25.81274674, -80.14729000666668],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 11,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_622578ab721c40a2a40489b3c2f2a1cb = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            var marker_b5e06e5469f241b285ef785938ec5070 = L.marker(
+                [25.8078488, -80.1232302],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_b5e06e5469f241b285ef785938ec5070.bindTooltip(
+                `<div>
+                     Building Address: <strong>Faena House </strong><br>    Sale Price: <strong>$15,500,000.00</strong><br>Days on Market:     <strong>63</strong><br>Listing Agent: <strong>Toni Schrager     </strong><br>Buying Agent: <strong>Bryan Sereny PA</strong><br>Square Feet:     <strong>6246</strong><br>Address: <strong>3315 Collins Ave 6a Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_96568c29a0374ce18e8d2d2f0cfa8384 = L.marker(
+                [25.755254, -80.194744],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_96568c29a0374ce18e8d2d2f0cfa8384.bindTooltip(
+                `<div>
+                     Building Address: <strong>Santa Maria </strong><br>    Sale Price: <strong>$12,000,000.00</strong><br>Days on Market:     <strong>309</strong><br>Listing Agent: <strong>Audrey Ross     </strong><br>Buying Agent: <strong>Liz Hogan</strong><br>Square Feet:     <strong>10000</strong><br>Address: <strong>1643 Brickell Ave PH 4902 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_f6425b2af7484b4faddea44826261d9f = L.marker(
+                [25.8951782, -80.1231506],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_f6425b2af7484b4faddea44826261d9f.bindTooltip(
+                `<div>
+                     Building Address: <strong>Oceana Bal Harbour Condo </strong><br>    Sale Price: <strong>$8,900,000.00</strong><br>Days on Market:     <strong>201</strong><br>Listing Agent: <strong>Jonathan Mann     </strong><br>Buying Agent: <strong>Omer Horev</strong><br>Square Feet:     <strong>3264</strong><br>Address: <strong>10201 Collins Ave 2103 Bal Harbour</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_72bdd68d8f914912bd34954a3ead4d45 = L.marker(
+                [25.8951782, -80.1231506],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_72bdd68d8f914912bd34954a3ead4d45.bindTooltip(
+                `<div>
+                     Building Address: <strong>Oceana Bal Harbour Condo </strong><br>    Sale Price: <strong>$8,900,000.00</strong><br>Days on Market:     <strong>1</strong><br>Listing Agent: <strong>Comp Sale     </strong><br>Buying Agent: <strong>Lourdes Alatriste</strong><br>Square Feet:     <strong>3450</strong><br>Address: <strong>10203 Collins Ave 1602 Bal Harbour</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_3250ed27f3b442eabaaae3b8cbdb040a = L.marker(
+                [25.7682956, -80.1316247],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_3250ed27f3b442eabaaae3b8cbdb040a.bindTooltip(
+                `<div>
+                     Building Address: <strong>Continuum on South Beach </strong><br>    Sale Price: <strong>$8,800,000.00</strong><br>Days on Market:     <strong>2</strong><br>Listing Agent: <strong>Jorge Martinez     </strong><br>Buying Agent: <strong>Devin Kay</strong><br>Square Feet:     <strong>2173</strong><br>Address: <strong>50 S Pointe Dr 3104 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_2e1456aed58448eb93b95ba513611d1e = L.marker(
+                [25.6942877, -80.1578218],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_2e1456aed58448eb93b95ba513611d1e.bindTooltip(
+                `<div>
+                     Building Address: <strong>Oceana Key Biscayne </strong><br>    Sale Price: <strong>$8,800,000.00</strong><br>Days on Market:     <strong>253</strong><br>Listing Agent: <strong>Brigitte Nachtigall     </strong><br>Buying Agent: <strong>David Deleon</strong><br>Square Feet:     <strong>3791</strong><br>Address: <strong>360 Ocean Dr 501S Key Biscayne</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_d24048445b804750b955764325806366 = L.marker(
+                [25.784171, -80.1900783],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_d24048445b804750b955764325806366.bindTooltip(
+                `<div>
+                     Building Address: <strong>One Thousand Museum </strong><br>    Sale Price: <strong>$7,300,000.00</strong><br>Days on Market:     <strong>1</strong><br>Listing Agent: <strong>Patrice Hallot     </strong><br>Buying Agent: <strong>Anna Sherrill</strong><br>Square Feet:     <strong>4600</strong><br>Address: <strong>1000 E Biscayne Blvd 3201 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_56a5bffe39c441fb9349b9667965faea = L.marker(
+                [25.7260243, -80.2424968],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_56a5bffe39c441fb9349b9667965faea.bindTooltip(
+                `<div>
+                     Building Address: <strong>Cloisters on the Bay Condo </strong><br>    Sale Price: <strong>$7,000,000.00</strong><br>Days on Market:     <strong>7</strong><br>Listing Agent: <strong>Ilana Levitt     </strong><br>Buying Agent: <strong>Ilana Levitt</strong><br>Square Feet:     <strong>5739</strong><br>Address: <strong>3471 Main Hwy 727 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_2209caa6f07a478f9e9502f5279e9f13 = L.marker(
+                [25.7620721, -80.1477688],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_2209caa6f07a478f9e9502f5279e9f13.bindTooltip(
+                `<div>
+                     Building Address: <strong>Bayview at Fisher Island </strong><br>    Sale Price: <strong>$6,500,000.00</strong><br>Days on Market:     <strong>121</strong><br>Listing Agent: <strong>Riley Smith     </strong><br>Buying Agent: <strong>Riley Smith</strong><br>Square Feet:     <strong>3580</strong><br>Address: <strong>5132 Fisher Island Dr 5132 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_62ec82f1389f498d92cc06a94a0c90a3 = L.marker(
+                [25.9482145, -80.1197839],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_62ec82f1389f498d92cc06a94a0c90a3.bindTooltip(
+                `<div>
+                     Building Address: <strong>Porsche Design Tower</strong><br>    Sale Price: <strong>$6,050,000.00</strong><br>Days on Market:     <strong>51</strong><br>Listing Agent: <strong>Enrique Tettamanti     </strong><br>Buying Agent: <strong>Melissa Barragan</strong><br>Square Feet:     <strong>5913</strong><br>Address: <strong>0orsche Design Tower 18555 Collins Ave 2501 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_05e7db61dabe40b29ba52ecfe9f23620 = L.marker(
+                [25.7671967, -80.1945134],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_05e7db61dabe40b29ba52ecfe9f23620.bindTooltip(
+                `<div>
+                     Building Address: <strong>Rise Condo </strong><br>    Sale Price: <strong>$6,300,000.00</strong><br>Days on Market:     <strong>21</strong><br>Listing Agent: <strong>Ana Maria Gomez     </strong><br>Buying Agent: <strong>TEMP USER</strong><br>Square Feet:     <strong>4424</strong><br>Address: <strong>88 SW 7th St 4201 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_b226a959c75f471aae910f77ebb31bcb = L.marker(
+                [25.946531, -80.130636],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_b226a959c75f471aae910f77ebb31bcb.bindTooltip(
+                `<div>
+                     Building Address: <strong>Prive Condo </strong><br>    Sale Price: <strong>$5,800,000.00</strong><br>Days on Market:     <strong>561</strong><br>Listing Agent: <strong>Bento Queiroz     </strong><br>Buying Agent: <strong>Diana Shay</strong><br>Square Feet:     <strong>4417</strong><br>Address: <strong>5500 Island Estates Dr PH7 Aventura</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_25d6792ab76a418aa68381a5b9102424 = L.marker(
+                [25.7591323, -80.1918295],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_25d6792ab76a418aa68381a5b9102424.bindTooltip(
+                `<div>
+                     Building Address: <strong>Four Seasons Residences </strong><br>    Sale Price: <strong>$4,061,000.00</strong><br>Days on Market:     <strong>34</strong><br>Listing Agent: <strong>Carlos Herman Morean     </strong><br>Buying Agent: <strong>Michael Light</strong><br>Square Feet:     <strong>3357</strong><br>Address: <strong>1425 Brickell Ave 58E Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_1c7325c7ed624072bc7f6e7135237ab3 = L.marker(
+                [25.7589251, -80.143131],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_1c7325c7ed624072bc7f6e7135237ab3.bindTooltip(
+                `<div>
+                     Building Address: <strong>Bayside Village Condo </strong><br>    Sale Price: <strong>$3,550,000.00</strong><br>Days on Market:     <strong>6</strong><br>Listing Agent: <strong>Karla Abaunza     </strong><br>Buying Agent: <strong>Karla Abaunza</strong><br>Square Feet:     <strong>2234</strong><br>Address: <strong>2423 Fisher Island Dr 5203 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_3b1f55bdf3d2497da5fdd0335c8152cc = L.marker(
+                [25.7727159, -80.14041569999999],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_3b1f55bdf3d2497da5fdd0335c8152cc.bindTooltip(
+                `<div>
+                     Building Address: <strong>Murano Grande </strong><br>    Sale Price: <strong>$3,500,000.00</strong><br>Days on Market:     <strong>96</strong><br>Listing Agent: <strong>Jeffrey Miller     </strong><br>Buying Agent: <strong>Jonathan Corso</strong><br>Square Feet:     <strong>2024</strong><br>Address: <strong>400 Alton Rd 2506 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_87d4db9d70734ffe87986624ef876e75 = L.marker(
+                [25.7852071, -80.1901214],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_87d4db9d70734ffe87986624ef876e75.bindTooltip(
+                `<div>
+                     Building Address: <strong>Marquis </strong><br>    Sale Price: <strong>$3,200,000.00</strong><br>Days on Market:     <strong>158</strong><br>Listing Agent: <strong>Domenico Albano     </strong><br>Buying Agent: <strong>Ozgur Ureten</strong><br>Square Feet:     <strong>3776</strong><br>Address: <strong>1100 E Biscayne Blvd 3507 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_aacbf2556ec04efeabb4ed2c16ffa642 = L.marker(
+                [25.946531, -80.130636],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_aacbf2556ec04efeabb4ed2c16ffa642.bindTooltip(
+                `<div>
+                     Building Address: <strong>Prive Condo </strong><br>    Sale Price: <strong>$3,200,000.00</strong><br>Days on Market:     <strong>775</strong><br>Listing Agent: <strong>Jonathan Lief     </strong><br>Buying Agent: <strong>Nicole Holtzheuser</strong><br>Square Feet:     <strong>2877</strong><br>Address: <strong>5500 Island Estates Dr 1106 Aventura</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_935174ff30c64e2b82caa562395e0b0e = L.marker(
+                [25.7690044, -80.1381107],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_935174ff30c64e2b82caa562395e0b0e.bindTooltip(
+                `<div>
+                     Building Address: <strong>Murano at Portofino Condo </strong><br>    Sale Price: <strong>$3,200,000.00</strong><br>Days on Market:     <strong>110</strong><br>Listing Agent: <strong>Carolina Rainer     </strong><br>Buying Agent: <strong>James Kay</strong><br>Square Feet:     <strong>1445</strong><br>Address: <strong>1000 S Pointe Dr 101 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_4145c35b14764695b97206e1df50375e = L.marker(
+                [25.810647, -80.122714],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_4145c35b14764695b97206e1df50375e.bindTooltip(
+                `<div>
+                     Building Address: <strong>The Caribbean Condo </strong><br>    Sale Price: <strong>$2,625,000.00</strong><br>Days on Market:     <strong>33</strong><br>Listing Agent: <strong>Ida Schwartz     </strong><br>Buying Agent: <strong>Stacy Robins</strong><br>Square Feet:     <strong>1621</strong><br>Address: <strong>3737 Collins Ave S-1103 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_180bd52ce1fc466a972e75313504d4d8 = L.marker(
+                [25.7351295, -80.21874609999999],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_180bd52ce1fc466a972e75313504d4d8.bindTooltip(
+                `<div>
+                     Building Address: <strong>Grove Isle</strong><br>    Sale Price: <strong>$2,070,000.00</strong><br>Days on Market:     <strong>11</strong><br>Listing Agent: <strong>Alec Macias     </strong><br>Buying Agent: <strong>Alec Macias</strong><br>Square Feet:     <strong>2398</strong><br>Address: <strong>0rove Isle Condo 2 Grove Isle Dr B1702 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_51ec1a5a2d974aab8928150c9359cc8e = L.marker(
+                [25.7677245, -80.13634490000001],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_51ec1a5a2d974aab8928150c9359cc8e.bindTooltip(
+                `<div>
+                     Building Address: <strong>Apogee Condo </strong><br>    Sale Price: <strong>$12,250,000.00</strong><br>Days on Market:     <strong>360</strong><br>Listing Agent: <strong>Bill Hernandez     </strong><br>Buying Agent: <strong>Clemente Sanchez PA</strong><br>Square Feet:     <strong>6595</strong><br>Address: <strong>800 S Pointe Dr 1401 Miami  Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_136d98650e4048ce89c6694d783433af = L.marker(
+                [25.9400648, -80.12026379999999],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_136d98650e4048ce89c6694d783433af.bindTooltip(
+                `<div>
+                     Building Address: <strong>Mansions at Acqualina </strong><br>    Sale Price: <strong>$12,210,000.00</strong><br>Days on Market:     <strong>99</strong><br>Listing Agent: <strong>Boris Vertsberger     </strong><br>Buying Agent: <strong>Chad Carroll</strong><br>Square Feet:     <strong>9218</strong><br>Address: <strong>17749 Collins Ave 2401/2402 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_c45abd347097499fb159616cd97e8e8d = L.marker(
+                [25.7623526, -80.1473326],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_c45abd347097499fb159616cd97e8e8d.bindTooltip(
+                `<div>
+                     Building Address: <strong>Fisher Island </strong><br>    Sale Price: <strong>$10,400,000.00</strong><br>Days on Market:     <strong>266</strong><br>Listing Agent: <strong>Karla Abaunza     </strong><br>Buying Agent: <strong>Jill Eber</strong><br>Square Feet:     <strong>3835</strong><br>Address: <strong>7046 Fisher Island Dr 7046 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_491222f0339a4e0e8272b0cdf0708858 = L.marker(
+                [25.956929, -80.1193868],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_491222f0339a4e0e8272b0cdf0708858.bindTooltip(
+                `<div>
+                     Building Address: <strong>Regalia </strong><br>    Sale Price: <strong>$10,150,000.00</strong><br>Days on Market:     <strong>35</strong><br>Listing Agent: <strong>Chad Carroll     </strong><br>Buying Agent: <strong>Roberto Morales</strong><br>Square Feet:     <strong>7600</strong><br>Address: <strong>19575 Collins Ave 38 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_47e313e0ad9b4f32a7a07a4eeff5b2c9 = L.marker(
+                [25.694538, -80.15759829999999],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_47e313e0ad9b4f32a7a07a4eeff5b2c9.bindTooltip(
+                `<div>
+                     Building Address: <strong>Oceana Key Biscayne </strong><br>    Sale Price: <strong>$7,400,000.00</strong><br>Days on Market:     <strong>12</strong><br>Listing Agent: <strong>Monica Slodarz     </strong><br>Buying Agent: <strong>Lisa Sayfie</strong><br>Square Feet:     <strong>3005</strong><br>Address: <strong>350 Ocean Dr 403N Key Biscayne</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_19bfa687f90c4e97b15f7de60898573f = L.marker(
+                [25.7589149, -80.13751099999999],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_19bfa687f90c4e97b15f7de60898573f.bindTooltip(
+                `<div>
+                     Building Address: <strong>Fisher Island </strong><br>    Sale Price: <strong>$5,999,000.00</strong><br>Days on Market:     <strong>15</strong><br>Listing Agent: <strong>Lazaro Rivero     </strong><br>Buying Agent: <strong>Karla Abaunza</strong><br>Square Feet:     <strong>3140</strong><br>Address: <strong>7951 Fisher Island Dr 7951 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_10488a70c83a49eca4a9051a41105a6c = L.marker(
+                [25.9529783, -80.1191546],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_10488a70c83a49eca4a9051a41105a6c.bindTooltip(
+                `<div>
+                     Building Address: <strong>Residences by Armani Casa </strong><br>    Sale Price: <strong>$5,200,000.00</strong><br>Days on Market:     <strong>540</strong><br>Listing Agent: <strong>Melissa Barragan     </strong><br>Buying Agent: <strong>Neal Klotsman</strong><br>Square Feet:     <strong>3748</strong><br>Address: <strong>18975 Collins Ave 1500 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_7b591df611024defb3763cc44f8e294e = L.marker(
+                [25.8720993, -80.1218779],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_7b591df611024defb3763cc44f8e294e.bindTooltip(
+                `<div>
+                     Building Address: <strong>Eighty Seven Park </strong><br>    Sale Price: <strong>$4,875,000.00</strong><br>Days on Market:     <strong>327</strong><br>Listing Agent: <strong>Diana Garchitorena     </strong><br>Buying Agent: <strong>Diana Garchitorena</strong><br>Square Feet:     <strong>3206</strong><br>Address: <strong>8701 Collins Ave 706 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_50e6098430f74294906ef4d6e41692c0 = L.marker(
+                [25.7727159, -80.14041569999999],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_50e6098430f74294906ef4d6e41692c0.bindTooltip(
+                `<div>
+                     Building Address: <strong>Murano Grande Portofino </strong><br>    Sale Price: <strong>$4,400,000.00</strong><br>Days on Market:     <strong>26</strong><br>Listing Agent: <strong>Daniel Hertzberg     </strong><br>Buying Agent: <strong>Oliver Lloyd</strong><br>Square Feet:     <strong>3058</strong><br>Address: <strong>400 Alton Rd 3103 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_34f4109980c84c669848adf51bdfb1c9 = L.marker(
+                [25.7975046, -80.1281362],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_34f4109980c84c669848adf51bdfb1c9.bindTooltip(
+                `<div>
+                     Building Address: <strong>W South Beach</strong><br>    Sale Price: <strong>$3,650,000.00</strong><br>Days on Market:     <strong>83</strong><br>Listing Agent: <strong>Matthew Crane     </strong><br>Buying Agent: <strong>Christopher Adeleke</strong><br>Square Feet:     <strong>1543</strong><br>Address: <strong>2201 Collins Ave 804</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_0e9a5314aa154401a831cd4906492259 = L.marker(
+                [25.8830205, -80.1216893],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_0e9a5314aa154401a831cd4906492259.bindTooltip(
+                `<div>
+                     Building Address: <strong>Fendi Chateau </strong><br>    Sale Price: <strong>$9,500,000.00</strong><br>Days on Market:     <strong>14</strong><br>Listing Agent: <strong>Romina Grinberg     </strong><br>Buying Agent: <strong>Ximena Penuela</strong><br>Square Feet:     <strong>3453</strong><br>Address: <strong>9349 Collins Ave 402 Surfside</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e57c2ae27ec148e5ae59a63b78a2a3a1 = L.marker(
+                [25.8951782, -80.1231506],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_e57c2ae27ec148e5ae59a63b78a2a3a1.bindTooltip(
+                `<div>
+                     Building Address: <strong>Oceana Bal Harbour Condo </strong><br>    Sale Price: <strong>$8,500,000.00</strong><br>Days on Market:     <strong>146</strong><br>Listing Agent: <strong>Matias Derito     </strong><br>Buying Agent: <strong>Bruno Junqueira</strong><br>Square Feet:     <strong>3450</strong><br>Address: <strong>10201 Collins Ave 2402 Bal Harbour</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_1bb62ebe69ff49c39be5db208f3284ea = L.marker(
+                [25.768079, -80.1339531],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_1bb62ebe69ff49c39be5db208f3284ea.bindTooltip(
+                `<div>
+                     Building Address: <strong>One Ocean </strong><br>    Sale Price: <strong>$6,995,000.00</strong><br>Days on Market:     <strong>10</strong><br>Listing Agent: <strong>Dina Goldentayer     </strong><br>Buying Agent: <strong>Marco Tine</strong><br>Square Feet:     <strong>3337</strong><br>Address: <strong>1 Collins Ave 406 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_bff44f12d2b04b2d9cbc361b18b92de4 = L.marker(
+                [25.8892229, -80.1228812],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_bff44f12d2b04b2d9cbc361b18b92de4.bindTooltip(
+                `<div>
+                     Building Address: <strong>St Regis Bal Harbour </strong><br>    Sale Price: <strong>$5,100,000.00</strong><br>Days on Market:     <strong>204</strong><br>Listing Agent: <strong>Ricardo Montalvan     </strong><br>Buying Agent: <strong>NON-MLS MEMBER</strong><br>Square Feet:     <strong>2840</strong><br>Address: <strong>9705 Collins Ave 403N Bal Harbour</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_3a18e1f55bab4dd0bc8dca2e159f08fb = L.marker(
+                [25.8105453, -80.1225323],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_3a18e1f55bab4dd0bc8dca2e159f08fb.bindTooltip(
+                `<div>
+                     Building Address: <strong>The Caribbean Condo </strong><br>    Sale Price: <strong>$4,250,000.00</strong><br>Days on Market:     <strong>120</strong><br>Listing Agent: <strong>Michael Duchon     </strong><br>Buying Agent: <strong>Eloy Carmenate</strong><br>Square Feet:     <strong>3357</strong><br>Address: <strong>3739 Collins Ave N-601/3 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_c52920a9a65b48389da15ba1a205fc18 = L.marker(
+                [25.8227293, -80.1226745],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_c52920a9a65b48389da15ba1a205fc18.bindTooltip(
+                `<div>
+                     Building Address: <strong>Green Diamond </strong><br>    Sale Price: <strong>$3,265,500.00</strong><br>Days on Market:     <strong>8</strong><br>Listing Agent: <strong>Michele Redlich     </strong><br>Buying Agent: <strong>Mendel Fellig</strong><br>Square Feet:     <strong>1980</strong><br>Address: <strong>4775 Collins Ave 3503 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_77db59d8405f49b2901e31b8ed5c8957 = L.marker(
+                [25.9220146, -80.1217034],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_77db59d8405f49b2901e31b8ed5c8957.bindTooltip(
+                `<div>
+                     Building Address: <strong>Ritz Carlton </strong><br>    Sale Price: <strong>$2,900,000.00</strong><br>Days on Market:     <strong>194</strong><br>Listing Agent: <strong>Giulietta Ulloa     </strong><br>Buying Agent: <strong>Richard Klassman</strong><br>Square Feet:     <strong>1447</strong><br>Address: <strong>15701 Collins Ave 3703 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_12ac361362cd41a28fdfbaaccd542b13 = L.marker(
+                [25.7603363, -80.1893438],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_12ac361362cd41a28fdfbaaccd542b13.bindTooltip(
+                `<div>
+                     Building Address: <strong>Jade Residences Brickell </strong><br>    Sale Price: <strong>$2,575,000.00</strong><br>Days on Market:     <strong>39</strong><br>Listing Agent: <strong>Silvana Giuffrida     </strong><br>Buying Agent: <strong>Christopher Richard</strong><br>Square Feet:     <strong>2130</strong><br>Address: <strong>1331 Brickell Bay Dr 3405 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_19b630366a6b43c4be0177f4d6f51bf4 = L.marker(
+                [25.685686, -80.15729309999999],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_19b630366a6b43c4be0177f4d6f51bf4.bindTooltip(
+                `<div>
+                     Building Address: <strong>Casa del Mar </strong><br>    Sale Price: <strong>$2,500,000.00</strong><br>Days on Market:     <strong>15</strong><br>Listing Agent: <strong>Karina Asturias Reguera     </strong><br>Buying Agent: <strong>Dolores Urdapilleta</strong><br>Square Feet:     <strong>3120</strong><br>Address: <strong>881 Ocean Dr 10A Key Biscayne</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_515b0cf5d0e042f5bdb6b840d6d15290 = L.marker(
+                [25.9343529, -80.1210992],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_515b0cf5d0e042f5bdb6b840d6d15290.bindTooltip(
+                `<div>
+                     Building Address: <strong>Jade Ocean</strong><br>    Sale Price: <strong>$2,275,000.00</strong><br>Days on Market:     <strong>19</strong><br>Listing Agent: <strong>Richard Goihman     </strong><br>Buying Agent: <strong>Vanesa Seijas</strong><br>Square Feet:     <strong>1956</strong><br>Address: <strong>0ade Ocean Condo 17121 Collins Ave 1608 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_c6e5e6768503449e9174887efca8474c = L.marker(
+                [25.6942877, -80.1578218],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_c6e5e6768503449e9174887efca8474c.bindTooltip(
+                `<div>
+                     Building Address: <strong>Oceana Key Biscayne </strong><br>    Sale Price: <strong>$8,500,000.00</strong><br>Days on Market:     <strong>44</strong><br>Listing Agent: <strong>Riley Smith     </strong><br>Buying Agent: <strong>Riley Smith</strong><br>Square Feet:     <strong>3791</strong><br>Address: <strong>360 Ocean Dr 1101S Key Biscayne</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_d256142d434346bc8a5f0d8cd1535118 = L.marker(
+                [25.729886, -80.2368583],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_d256142d434346bc8a5f0d8cd1535118.bindTooltip(
+                `<div>
+                     Building Address: <strong>The Grove at Grand Bay </strong><br>    Sale Price: <strong>$8,400,000.00</strong><br>Days on Market:     <strong>16</strong><br>Listing Agent: <strong>John De Olazarra     </strong><br>Buying Agent: <strong>Michael Martirena</strong><br>Square Feet:     <strong>4824</strong><br>Address: <strong>2675 S Bayshore Dr 1201S Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_804fd4c2882146c382612c9da296d468 = L.marker(
+                [25.7676323, -80.137348],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_804fd4c2882146c382612c9da296d468.bindTooltip(
+                `<div>
+                     Building Address: <strong>Continuum on South Beach </strong><br>    Sale Price: <strong>$7,050,000.00</strong><br>Days on Market:     <strong>9</strong><br>Listing Agent: <strong>Juan Alvarez     </strong><br>Buying Agent: <strong>Sheila Rojas</strong><br>Square Feet:     <strong>2048</strong><br>Address: <strong>100 S Pointe Dr 3106 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_0aca0a97cb0a4577a22e75a18cf7d20e = L.marker(
+                [25.9529783, -80.1191546],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_0aca0a97cb0a4577a22e75a18cf7d20e.bindTooltip(
+                `<div>
+                     Building Address: <strong>Residences by Armani Casa </strong><br>    Sale Price: <strong>$4,550,000.00</strong><br>Days on Market:     <strong>449</strong><br>Listing Agent: <strong>Mariana Niro     </strong><br>Buying Agent: <strong>Christian Espinosa</strong><br>Square Feet:     <strong>2682</strong><br>Address: <strong>18975 Collins Ave 4602 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_fe8157225f324e42aa515d36c115cd7e = L.marker(
+                [25.6942877, -80.1578218],
+                {}
+            ).addTo(map_f9fec3c0882547f1838ac1f33ef71e86);
+        
+    
+            marker_fe8157225f324e42aa515d36c115cd7e.bindTooltip(
+                `<div>
+                     Building Address: <strong>Oceana</strong><br>    Sale Price: <strong>$3,960,000.00</strong><br>Days on Market:     <strong>82</strong><br>Listing Agent: <strong>Andrey Jimenez-Trushina     </strong><br>Buying Agent: <strong>Nurit Edelman</strong><br>Square Feet:     <strong>1703</strong><br>Address: <strong>0 ceana Key Biscayne 360 Ocean Dr 604S Key Biscayne</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>

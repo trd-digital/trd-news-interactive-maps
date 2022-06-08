@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_e2b4a2f8290342f4949174c470c44cf9 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>2021 South Florida Priciest Hotel Sales</b></h3>
+             
+    
+                <p align="center" style="vertical-align: bottom; font-size:13px"><i>The most expensive hotel sales in South Florida</i></p>
+                
+    
+            <div class="folium-map" id="map_e2b4a2f8290342f4949174c470c44cf9" ></div>
+        
+</body>
+<script>    
+    
+            var map_e2b4a2f8290342f4949174c470c44cf9 = L.map(
+                "map_e2b4a2f8290342f4949174c470c44cf9",
+                {
+                    center: [25.976239000000003, -80.13830084000001],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 8,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_48298a3737d840f9baf5bb7058dcc862 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_e2b4a2f8290342f4949174c470c44cf9);
+        
+    
+            var marker_cluster_6bb6684f706c4e7e8d3fada27a9024ae = L.markerClusterGroup(
+                {}
+            );
+            map_e2b4a2f8290342f4949174c470c44cf9.addLayer(marker_cluster_6bb6684f706c4e7e8d3fada27a9024ae);
+        
+    
+            var marker_6254c664db564f49a2be8303f3b60c70 = L.marker(
+                [26.0193254, -80.1156831],
+                {}
+            ).addTo(marker_cluster_6bb6684f706c4e7e8d3fada27a9024ae);
+        
+    
+            marker_6254c664db564f49a2be8303f3b60c70.bindTooltip(
+                `<div>
+                     Property Name: <strong>Margaritaville Hollywood Beach Resort</strong><br>    Property Address: <strong>1111 North Ocean Drive, Hollywood, FL</strong><br>    Buyer: <strong>Pebblebrook Hotel Trust</strong><br>    Seller: <strong>KSL Capital Partners</strong><br>    Units: <strong>369</strong><br>    Price/Unit: <strong>$731,707</strong><br>    City: <strong>Hollywood</strong><br>    Square Footage: <strong>666,300</strong><br>    Sale Price: <strong>$270,000,000</strong><br>    Price/SF: <strong>$405.22</strong><br>    Sale Date: <strong>Sep-21</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_060cc527e77f4b9ea770eaea1fca07cb = L.marker(
+                [25.7666736, -80.1927482],
+                {}
+            ).addTo(marker_cluster_6bb6684f706c4e7e8d3fada27a9024ae);
+        
+    
+            marker_060cc527e77f4b9ea770eaea1fca07cb.bindTooltip(
+                `<div>
+                     Property Name: <strong>EAST Miami</strong><br>    Property Address: <strong>788 Brickell Plz</strong><br>    Buyer: <strong>Trinity Investments</strong><br>    Seller: <strong>Swire Properties</strong><br>    Units: <strong>352</strong><br>    Price/Unit: <strong>$494,318</strong><br>    City: <strong>Miami</strong><br>    Square Footage: <strong>536,070</strong><br>    Sale Price: <strong>$174,000,000</strong><br>    Price/SF: <strong>$324.58</strong><br>    Sale Date: <strong>Oct-21</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_683f4cc51a09415397aecc8554a0a3ba = L.marker(
+                [25.7581672, -80.1925132],
+                {}
+            ).addTo(marker_cluster_6bb6684f706c4e7e8d3fada27a9024ae);
+        
+    
+            marker_683f4cc51a09415397aecc8554a0a3ba.bindTooltip(
+                `<div>
+                     Property Name: <strong>Four Seasons</strong><br>    Property Address: <strong>1441 Brickell Ave</strong><br>    Buyer: <strong>Fort Partners</strong><br>    Seller: <strong>Westbrook Partners</strong><br>    Units: <strong>221</strong><br>    Price/Unit: <strong>$588,235</strong><br>    City: <strong>Miami</strong><br>    Square Footage: <strong>263,867</strong><br>    Sale Price: <strong>$130,000,000</strong><br>    Price/SF: <strong>$492.67</strong><br>    Sale Date: <strong>Jul-21</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_65471f071dd6424092e271d5f5387164 = L.marker(
+                [26.1081401, -80.10625920000001],
+                {}
+            ).addTo(marker_cluster_6bb6684f706c4e7e8d3fada27a9024ae);
+        
+    
+            marker_65471f071dd6424092e271d5f5387164.bindTooltip(
+                `<div>
+                     Property Name: <strong>B Ocean Resort</strong><br>    Property Address: <strong>1140 Seabreeze Blvd</strong><br>    Buyer: <strong>JV: Rockpoint Group & InSite Group</strong><br>    Seller: <strong>Carlyle Group</strong><br>    Units: <strong>481</strong><br>    Price/Unit: <strong>$263,773</strong><br>    City: <strong>Fort Lauderdale</strong><br>    Square Footage: <strong>368,646</strong><br>    Sale Price: <strong>$126,875,000</strong><br>    Price/SF: <strong>$344.16</strong><br>    Sale Date: <strong>Oct-21</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_f5a18282ab294b06a6c70ab25c1f65d5 = L.marker(
+                [26.7148159, -80.0508291],
+                {}
+            ).addTo(marker_cluster_6bb6684f706c4e7e8d3fada27a9024ae);
+        
+    
+            marker_f5a18282ab294b06a6c70ab25c1f65d5.bindTooltip(
+                `<div>
+                     Property Name: <strong>The Ben</strong><br>    Property Address: <strong>251 N Narcissuc Ave</strong><br>    Buyer: <strong>Wheelock Street Capital</strong><br>    Seller: <strong>Concord Hospitality</strong><br>    Units: <strong>208</strong><br>    Price/Unit: <strong>$511,538</strong><br>    City: <strong>West Palm Beach</strong><br>    Square Footage: <strong>146,746</strong><br>    Sale Price: <strong>$106,400,000</strong><br>    Price/SF: <strong>$725.06</strong><br>    Sale Date: <strong>Oct-21</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_77a74f5719b741b49d0bf15e533f3491 = L.marker(
+                [25.7763776, -80.1319108],
+                {}
+            ).addTo(marker_cluster_6bb6684f706c4e7e8d3fada27a9024ae);
+        
+    
+            marker_77a74f5719b741b49d0bf15e533f3491.bindTooltip(
+                `<div>
+                     Property Name: <strong>Celino South Beach</strong><br>    Property Address: <strong>640 Ocean Dr</strong><br>    Buyer: <strong>CGI Merchant Group</strong><br>    Seller: <strong>Optimum Asset Management</strong><br>    Units: <strong>132</strong><br>    Price/Unit: <strong>$617,074</strong><br>    City: <strong>Miami Beach</strong><br>    Square Footage: <strong>59,359</strong><br>    Sale Price: <strong>$81,453,800</strong><br>    Price/SF: <strong>$1,372.22</strong><br>    Sale Date: <strong>Jul-21</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_01dd998082164e43b683e631e1ab6d46 = L.marker(
+                [25.7604836, -80.1909065],
+                {}
+            ).addTo(marker_cluster_6bb6684f706c4e7e8d3fada27a9024ae);
+        
+    
+            marker_01dd998082164e43b683e631e1ab6d46.bindTooltip(
+                `<div>
+                     Property Name: <strong>Hotel AKA Brickell</strong><br>    Property Address: <strong>1395 Brickell Ave</strong><br>    Buyer: <strong>JV: Electra America & AKA</strong><br>    Seller: <strong>JV: Mast Capital & Angelo Gordon</strong><br>    Units: <strong>201</strong><br>    Price/Unit: <strong>$374,776</strong><br>    City: <strong>Miami</strong><br>    Square Footage: <strong>212,503</strong><br>    Sale Price: <strong>$75,330,000</strong><br>    Price/SF: <strong>$354.49</strong><br>    Sale Date: <strong>Oct-21</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_ad8221011d5c4e78a61e0d960b50d884 = L.marker(
+                [25.8004209, -80.126164],
+                {}
+            ).addTo(marker_cluster_6bb6684f706c4e7e8d3fada27a9024ae);
+        
+    
+            marker_ad8221011d5c4e78a61e0d960b50d884.bindTooltip(
+                `<div>
+                     Property Name: <strong>Como Metropolitan Miami Beach</strong><br>    Property Address: <strong>2445 Collins Ave</strong><br>    Buyer: <strong>JHSF</strong><br>    Seller: <strong>COMO Hotels and Resorts</strong><br>    Units: <strong>74</strong><br>    Price/Unit: <strong>$945,946</strong><br>    City: <strong>Miami Beach</strong><br>    Square Footage: <strong>53,328</strong><br>    Sale Price: <strong>$70,000,000</strong><br>    Price/SF: <strong>$1,312.63</strong><br>    Sale Date: <strong>Aug-21</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_0ebe2d4b9fe947f382b5e7a6d0319928 = L.marker(
+                [25.808867, -80.1899911],
+                {}
+            ).addTo(marker_cluster_6bb6684f706c4e7e8d3fada27a9024ae);
+        
+    
+            marker_0ebe2d4b9fe947f382b5e7a6d0319928.bindTooltip(
+                `<div>
+                     Property Name: <strong>Hampton Inn & Suites and AC Hotel by Marriott Midtown Miami</strong><br>    Property Address: <strong>3450 & 3400 Biscayne Blvd</strong><br>    Buyer: <strong>TPG Real Estate Partners</strong><br>    Seller: <strong>3H Group Hotels</strong><br>    Units: <strong>304</strong><br>    Price/Unit: <strong>$200,658</strong><br>    City: <strong>Miami</strong><br>    Square Footage: <strong>280,000</strong><br>    Sale Price: <strong>$61,000,000</strong><br>    Price/SF: <strong>$217.86</strong><br>    Sale Date: <strong>Jun-21</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_6c5f3c96c9ce4e70ac1b365c55e9bcd9 = L.marker(
+                [26.2491187, -80.0860032],
+                {}
+            ).addTo(marker_cluster_6bb6684f706c4e7e8d3fada27a9024ae);
+        
+    
+            marker_6c5f3c96c9ce4e70ac1b365c55e9bcd9.bindTooltip(
+                `<div>
+                     Property Name: <strong>Fort Lauderdale Marriott Pompano Beach</strong><br>    Property Address: <strong>1200 N Ocean Blvd</strong><br>    Buyer: <strong>JV: Key International & Wexford Real Estate Investors</strong><br>    Seller: <strong>Pan Am Equities</strong><br>    Units: <strong>219</strong><br>    Price/Unit: <strong>$246,575</strong><br>    City: <strong>Pompano Beach</strong><br>    Square Footage: <strong>184,184</strong><br>    Sale Price: <strong>$54,000,000</strong><br>    Price/SF: <strong>$293.19</strong><br>    Sale Date: <strong>Dec-21</strong><br>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>

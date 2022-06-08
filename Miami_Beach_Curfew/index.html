@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_0c990047c8cf47ee98aab13395954b5e {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+            <div class="folium-map" id="map_0c990047c8cf47ee98aab13395954b5e" ></div>
+        
+</body>
+<script>    
+    
+            var map_0c990047c8cf47ee98aab13395954b5e = L.map(
+                "map_0c990047c8cf47ee98aab13395954b5e",
+                {
+                    center: [25.7907, -80.13],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 14,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_b9a6ca43c06a4b8fb473bbdee49f11f2 = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_0c990047c8cf47ee98aab13395954b5e);
+        
+    
+
+        function geo_json_9dc1fac07bd543e6a64030aca7ef8444_onEachFeature(feature, layer) {
+            layer.on({
+            });
+        };
+        var geo_json_9dc1fac07bd543e6a64030aca7ef8444 = L.geoJson(null, {
+                onEachFeature: geo_json_9dc1fac07bd543e6a64030aca7ef8444_onEachFeature,
+            
+        });
+
+        function geo_json_9dc1fac07bd543e6a64030aca7ef8444_add (data) {
+            geo_json_9dc1fac07bd543e6a64030aca7ef8444
+                .addData(data)
+                .addTo(map_0c990047c8cf47ee98aab13395954b5e);
+        }
+            geo_json_9dc1fac07bd543e6a64030aca7ef8444_add({"bbox": [-80.14373597183292, 25.76422899488679, -80.12594511337245, 25.79924862415078], "features": [{"bbox": [-80.14373597183292, 25.76422899488679, -80.12594511337245, 25.79924862415078], "geometry": {"coordinates": [[[-80.1306273905898, 25.77339523234139, 0.0], [-80.12923955578435, 25.78005956929612, 0.0], [-80.1280283770534, 25.78801389977173, 0.0], [-80.12594511337245, 25.79764753341434, 0.0], [-80.13009591160096, 25.79924862415078, 0.0], [-80.14373597183292, 25.79200113340356, 0.0], [-80.14356338062673, 25.78557205663554, 0.0], [-80.1422684908428, 25.78562281285983, 0.0], [-80.14187780879949, 25.77507523288332, 0.0], [-80.14120701308478, 25.7751094428879, 0.0], [-80.1373216379029, 25.76790449881657, 0.0], [-80.13586821948148, 25.76802207036581, 0.0], [-80.13627794775938, 25.76632178245302, 0.0], [-80.13077304030698, 25.76422899488679, 0.0], [-80.1306273905898, 25.77339523234139, 0.0]]], "type": "Polygon"}, "id": "0", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+        var popup_61a50f5054914277b52f14ad46fddf66 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ae4bbecd54bf4131b8f46436c7064f8b = $(`<div id="html_ae4bbecd54bf4131b8f46436c7064f8b" style="width: 100.0%; height: 100.0%;">Curfew area</div>`)[0];
+            popup_61a50f5054914277b52f14ad46fddf66.setContent(html_ae4bbecd54bf4131b8f46436c7064f8b);
+        
+
+        geo_json_9dc1fac07bd543e6a64030aca7ef8444.bindPopup(popup_61a50f5054914277b52f14ad46fddf66)
+        ;
+
+        
+    
+    
+            var marker_8509b653f6e44f1583f213387d30c32c = L.marker(
+                [25.778293270251954, -80.13143134480265],
+                {}
+            ).addTo(map_0c990047c8cf47ee98aab13395954b5e);
+        
+    
+            marker_8509b653f6e44f1583f213387d30c32c.bindTooltip(
+                `<div>
+                     Shooting spree on the 800 block of Ocean Drive<br>that hospitalized three people.
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_c97f08537cc846a6b68b8cd29adeafe2 = L.marker(
+                [25.779488788858867, -80.13121290171135],
+                {}
+            ).addTo(map_0c990047c8cf47ee98aab13395954b5e);
+        
+    
+            marker_c97f08537cc846a6b68b8cd29adeafe2.bindTooltip(
+                `<div>
+                     Mango's Tropical Cafe
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_eb8a6b1dd4b84caf955a10c1c44a8fd8 = L.marker(
+                [25.78100360218833, -80.1308607863681],
+                {}
+            ).addTo(map_0c990047c8cf47ee98aab13395954b5e);
+        
+    
+            marker_eb8a6b1dd4b84caf955a10c1c44a8fd8.bindTooltip(
+                `<div>
+                     The Clevelander Bar
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_0fea5606f73d4c67ae23fece6a525c03 = L.marker(
+                [25.770678948362917, -80.13400121520405],
+                {}
+            ).addTo(map_0c990047c8cf47ee98aab13395954b5e);
+        
+    
+            marker_0fea5606f73d4c67ae23fece6a525c03.bindTooltip(
+                `<div>
+                     Story Nightclub
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>

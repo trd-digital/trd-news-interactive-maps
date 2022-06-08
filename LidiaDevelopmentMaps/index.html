@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_ef6ffa9a35fa4da8b622f5be4f2a41ff {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+            <div class="folium-map" id="map_ef6ffa9a35fa4da8b622f5be4f2a41ff" ></div>
+        
+</body>
+<script>    
+    
+            var map_ef6ffa9a35fa4da8b622f5be4f2a41ff = L.map(
+                "map_ef6ffa9a35fa4da8b622f5be4f2a41ff",
+                {
+                    center: [25.49, -80.4],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_7b1b24b1a13241ea81ce7fc146dc82e3 = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_ef6ffa9a35fa4da8b622f5be4f2a41ff);
+        
+    
+
+        function geo_json_30b5a2e34b094e708293ed559f92952c_onEachFeature(feature, layer) {
+            layer.on({
+            });
+        };
+        var geo_json_30b5a2e34b094e708293ed559f92952c = L.geoJson(null, {
+                onEachFeature: geo_json_30b5a2e34b094e708293ed559f92952c_onEachFeature,
+            
+        });
+
+        function geo_json_30b5a2e34b094e708293ed559f92952c_add (data) {
+            geo_json_30b5a2e34b094e708293ed559f92952c
+                .addData(data)
+                .addTo(map_ef6ffa9a35fa4da8b622f5be4f2a41ff);
+        }
+            geo_json_30b5a2e34b094e708293ed559f92952c_add({"bbox": [-80.38837635372498, 25.5182819068883, -80.36391948296115, 25.52980362727206], "features": [{"bbox": [-80.38837635372498, 25.5182819068883, -80.36391948296115, 25.52980362727206], "geometry": {"coordinates": [[[-80.38810901114608, 25.5182819068883, 0.0], [-80.36392994373892, 25.5187238174537, 0.0], [-80.36391948296115, 25.52980362727206, 0.0], [-80.38837635372498, 25.52919858972292, 0.0], [-80.38810901114608, 25.5182819068883, 0.0]]], "type": "Polygon"}, "id": "0", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+        var popup_9e351a8e03ea4f4a8b9e9086317b02a8 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_100766d6600249fca2839fd31a28458c = $(`<div id="html_100766d6600249fca2839fd31a28458c" style="width: 100.0%; height: 100.0%;">South Dade Logistics and Technology Hub</div>`)[0];
+            popup_9e351a8e03ea4f4a8b9e9086317b02a8.setContent(html_100766d6600249fca2839fd31a28458c);
+        
+
+        geo_json_30b5a2e34b094e708293ed559f92952c.bindPopup(popup_9e351a8e03ea4f4a8b9e9086317b02a8)
+        ;
+
+        
+    
+    
+
+        function geo_json_60e7d05185204cdb88f8c242f867cf5b_onEachFeature(feature, layer) {
+            layer.on({
+            });
+        };
+        var geo_json_60e7d05185204cdb88f8c242f867cf5b = L.geoJson(null, {
+                onEachFeature: geo_json_60e7d05185204cdb88f8c242f867cf5b_onEachFeature,
+            
+        });
+
+        function geo_json_60e7d05185204cdb88f8c242f867cf5b_add (data) {
+            geo_json_60e7d05185204cdb88f8c242f867cf5b
+                .addData(data)
+                .addTo(map_ef6ffa9a35fa4da8b622f5be4f2a41ff);
+        }
+            geo_json_60e7d05185204cdb88f8c242f867cf5b_add({"bbox": [-80.43359838287127, 25.45986365771649, -80.43081134456598, 25.46105388204601], "features": [{"bbox": [-80.43359838287127, 25.45986365771649, -80.43081134456598, 25.46105388204601], "geometry": {"coordinates": [[[-80.43359103855319, 25.46105388204601, 0.0], [-80.43359282850086, 25.4610391113494, 0.0], [-80.43359838287127, 25.46101938542091, 0.0], [-80.43359445919629, 25.46100018118189, 0.0], [-80.43359055317757, 25.46098106444135, 0.0], [-80.43358569603383, 25.46095729040919, 0.0], [-80.43358652412516, 25.46093815826209, 0.0], [-80.4335825683563, 25.46091921048054, 0.0], [-80.43358808750533, 25.46090006286272, 0.0], [-80.43358886374745, 25.46088114691711, 0.0], [-80.4335886724706, 25.46085768192173, 0.0], [-80.43358851680021, 25.46083438878554, 0.0], [-80.43359303245646, 25.46081107498155, 0.0], [-80.43359748403614, 25.46078785231231, 0.0], [-80.43359363228298, 25.46076965132001, 0.0], [-80.43359440884606, 25.4607513554433, 0.0], [-80.43359518270687, 25.46073314271289, 0.0], [-80.43359594967305, 25.46071500696583, 0.0], [-80.43359670337547, 25.46069694427714, 0.0], [-80.43359745751091, 25.46067896793067, 0.0], [-80.43359817951432, 25.46066103781807, 0.0], [-80.4335933946513, 25.46063895949364, 0.0], [-80.43358863049744, 25.46061699999962, 0.0], [-80.4335848310978, 25.46059951180264, 0.0], [-80.43358104863475, 25.46058210336096, 0.0], [-80.43358085656439, 25.46056028908989, 0.0], [-80.43357429190306, 25.46053016953579, 0.0], [-80.43357148079772, 25.46051732138589, 0.0], [-80.43356774764754, 25.46050025768663, 0.0], [-80.43356310455896, 25.4604790342574, 0.0], [-80.43355851271637, 25.46045795182563, 0.0], [-80.43355393807495, 25.4604369789664, 0.0], [-80.43354492599713, 25.46041624654734, 0.0], [-80.4335359626779, 25.46039562714286, 0.0], [-80.43353144181737, 25.46037495492899, 0.0], [-80.43352692988941, 25.46035438545825, 0.0], [-80.43352248712979, 25.4603339628447, 0.0], [-80.43351457830686, 25.46031785790017, 0.0], [-80.43351106592381, 25.46030166913357, 0.0], [-80.43350669698903, 25.46028153105079, 0.0], [-80.43350409370998, 25.46026950553037, 0.0], [-80.43349977884074, 25.46024955243894, 0.0], [-80.43349548691353, 25.46022970569713, 0.0], [-80.4334903667811, 25.46020602858982, 0.0], [-80.43348612463652, 25.46018641236033, 0.0], [-80.43347932279758, 25.46017485734021, 0.0], [-80.43347514807262, 25.46015541933819, 0.0], [-80.43347008194571, 25.46013217448498, 0.0], [-80.43346751817032, 25.46012057210069, 0.0], [-80.43345913457726, 25.4601015554232, 0.0], [-80.43345082413613, 25.46008265323527, 0.0], [-80.43344839460603, 25.46007126962632, 0.0], [-80.43344195271825, 25.46004108517702, 0.0], [-80.43343534093532, 25.46002997360278, 0.0], [-80.4334213558954, 25.46000411205224, 0.0], [-80.43341977321957, 25.45999667554546, 0.0], [-80.43341242047127, 25.45998198563918, 0.0], [-80.4334077128315, 25.45995985227614, 0.0], [-80.43338745938922, 25.45992367640345, 0.0], [-80.43081621498398, 25.45986365771649, 0.0], [-80.43081134456598, 25.46098656314892, 0.0], [-80.43359103855319, 25.46105388204601, 0.0]]], "type": "Polygon"}, "id": "0", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+        var popup_3006d055dd564379a10713ef60460de3 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_c067fe8c87d449b49d1a5c06546023f9 = $(`<div id="html_c067fe8c87d449b49d1a5c06546023f9" style="width: 100.0%; height: 100.0%;">Homestead Park of Commerce</div>`)[0];
+            popup_3006d055dd564379a10713ef60460de3.setContent(html_c067fe8c87d449b49d1a5c06546023f9);
+        
+
+        geo_json_60e7d05185204cdb88f8c242f867cf5b.bindPopup(popup_3006d055dd564379a10713ef60460de3)
+        ;
+
+        
+    
+    
+
+        function geo_json_bf771f32d3df48a08088eed3ee2dd03e_onEachFeature(feature, layer) {
+            layer.on({
+            });
+        };
+        var geo_json_bf771f32d3df48a08088eed3ee2dd03e = L.geoJson(null, {
+                onEachFeature: geo_json_bf771f32d3df48a08088eed3ee2dd03e_onEachFeature,
+            
+        });
+
+        function geo_json_bf771f32d3df48a08088eed3ee2dd03e_add (data) {
+            geo_json_bf771f32d3df48a08088eed3ee2dd03e
+                .addData(data)
+                .addTo(map_ef6ffa9a35fa4da8b622f5be4f2a41ff);
+        }
+            geo_json_bf771f32d3df48a08088eed3ee2dd03e_add({"bbox": [-80.4689403989278, 25.47521182895359, -80.46535909052488, 25.47706480604307], "features": [{"bbox": [-80.4689403989278, 25.47521182895359, -80.46535909052488, 25.47706480604307], "geometry": {"coordinates": [[[-80.46535909052488, 25.47706480604307, 0.0], [-80.46804926051105, 25.47704156869703, 0.0], [-80.4689403989278, 25.47578091751497, 0.0], [-80.46893273193808, 25.47524020605886, 0.0], [-80.46651590371518, 25.47521182895359, 0.0], [-80.46591228124416, 25.47602383119348, 0.0], [-80.46535909052488, 25.47706480604307, 0.0]]], "type": "Polygon"}, "id": "0", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+        var popup_d8631bb4797844df89e77e379a8115c0 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_b9ccbe4005234e6a934b24dae7cd576e = $(`<div id="html_b9ccbe4005234e6a934b24dae7cd576e" style="width: 100.0%; height: 100.0%;">CityPlace Homestead</div>`)[0];
+            popup_d8631bb4797844df89e77e379a8115c0.setContent(html_b9ccbe4005234e6a934b24dae7cd576e);
+        
+
+        geo_json_bf771f32d3df48a08088eed3ee2dd03e.bindPopup(popup_d8631bb4797844df89e77e379a8115c0)
+        ;
+
+        
+    
+    
+
+        function geo_json_a097e7fdc19b45b5a1f91731ef5f2d97_onEachFeature(feature, layer) {
+            layer.on({
+            });
+        };
+        var geo_json_a097e7fdc19b45b5a1f91731ef5f2d97 = L.geoJson(null, {
+                onEachFeature: geo_json_a097e7fdc19b45b5a1f91731ef5f2d97_onEachFeature,
+            
+        });
+
+        function geo_json_a097e7fdc19b45b5a1f91731ef5f2d97_add (data) {
+            geo_json_a097e7fdc19b45b5a1f91731ef5f2d97
+                .addData(data)
+                .addTo(map_ef6ffa9a35fa4da8b622f5be4f2a41ff);
+        }
+            geo_json_a097e7fdc19b45b5a1f91731ef5f2d97_add({"bbox": [-80.47938244107536, 25.46918424150392, -80.47742216354884, 25.46976779954609], "features": [{"bbox": [-80.47938244107536, 25.46918424150392, -80.47742216354884, 25.46976779954609], "geometry": {"coordinates": [[[-80.47742216354884, 25.46976779954609, 0.0], [-80.47938244107536, 25.46976088220154, 0.0], [-80.47936179137676, 25.46920638087226, 0.0], [-80.47743222352624, 25.46918424150392, 0.0], [-80.47742216354884, 25.46976779954609, 0.0]]], "type": "Polygon"}, "id": "0", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+        var popup_9bd24f4ba0af49b5ab194cd40110348b = L.popup({"maxWidth": "100%"});
+
+        
+            var html_c36445c4c67c4763b26f29de3b2e1dfd = $(`<div id="html_c36445c4c67c4763b26f29de3b2e1dfd" style="width: 100.0%; height: 100.0%;">Homestead Station</div>`)[0];
+            popup_9bd24f4ba0af49b5ab194cd40110348b.setContent(html_c36445c4c67c4763b26f29de3b2e1dfd);
+        
+
+        geo_json_a097e7fdc19b45b5a1f91731ef5f2d97.bindPopup(popup_9bd24f4ba0af49b5ab194cd40110348b)
+        ;
+
+        
+    
+</script>
