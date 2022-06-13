@@ -13,5 +13,7 @@ The scripts use the Google Maps Geocoding API to take an address, exchange it fo
 Otherwise, you can register for your own at `developers.google.com`. To use your own API Key, delete the first line of code in the snippet below, and replace `google_maps_API_Key` with your own. Again for security reasons, it's recommended you store the API Key in a config file listed in your `.gitignore`, along with `.ipynd_checkpoints` to prevent unauthorized access.
 
 
-```%store -r google_maps_API_Key
-geolocator = GoogleV3(api_key=google_maps_API_Key)```
+```
+%store -r google_maps_API_Key
+geolocator = GoogleV3(api_key=google_maps_API_Key)
+```
