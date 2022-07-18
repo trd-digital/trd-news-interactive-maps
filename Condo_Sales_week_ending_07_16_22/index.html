@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_bbc663277b19387fcbb78efc3c4de01a {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>Recent Miami-Dade Condo Sales </b></h3>
+             
+    
+                <p align="center" style="vertical-align: bottom; font-size:13px"><i>July 10th - July 16th</i></p>
+                
+    
+            <div class="folium-map" id="map_bbc663277b19387fcbb78efc3c4de01a" ></div>
+        
+</body>
+<script>    
+    
+            var map_bbc663277b19387fcbb78efc3c4de01a = L.map(
+                "map_bbc663277b19387fcbb78efc3c4de01a",
+                {
+                    center: [25.805402200000003, -80.17243914],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 11,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_04058db53727a770e0cccc3403833780 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_bbc663277b19387fcbb78efc3c4de01a);
+        
+    
+            var marker_8805c2e9eed137c98943da4db9329876 = L.marker(
+                [25.8951677, -80.12315],
+                {}
+            ).addTo(map_bbc663277b19387fcbb78efc3c4de01a);
+        
+    
+            marker_8805c2e9eed137c98943da4db9329876.bindTooltip(
+                `<div>
+                     Building Name: <strong>Oceana Bal Harbour </strong><br>     Sale Price: <strong>$12,350,000.00</strong><br>Days on Market:     <strong>14</strong><br>Listing Agent: <strong>Mark Zilbert     </strong><br>Buying Agent: <strong>Tracy Galya</strong><br>Price sq ft:     <strong>$2,951.02</strong><br>Address: <strong>10201 Collins Ave 1801S Bal Harbour</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_7b87fe6e3495910169328cb8639e8fe1 = L.marker(
+                [25.6942877, -80.1578218],
+                {}
+            ).addTo(map_bbc663277b19387fcbb78efc3c4de01a);
+        
+    
+            marker_7b87fe6e3495910169328cb8639e8fe1.bindTooltip(
+                `<div>
+                     Building Name: <strong>Oceana Key Biscayne </strong><br>     Sale Price: <strong>$6,950,000.00</strong><br>Days on Market:     <strong>65</strong><br>Listing Agent: <strong>Claudio Iglesias     </strong><br>Buying Agent: <strong>Cassio Galiza PA</strong><br>Price sq ft:     <strong>$2,069.68</strong><br>Address: <strong>360 Ocean Dr 302S Key Biscayne</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_432538b15b5ad11ed3bdf4986466b8c3 = L.marker(
+                [25.8931472, -80.1231444],
+                {}
+            ).addTo(map_bbc663277b19387fcbb78efc3c4de01a);
+        
+    
+            marker_432538b15b5ad11ed3bdf4986466b8c3.bindTooltip(
+                `<div>
+                     Building Name: <strong>Bal Harbour </strong><br>     Sale Price: <strong>$2,450,000.00</strong><br>Days on Market:     <strong>26</strong><br>Listing Agent: <strong>Jeffrey London     </strong><br>Buying Agent: <strong>Jannette Zafrani</strong><br>Price sq ft:     <strong>$970.30</strong><br>Address: <strong>101 Condo 10155 Collins Ave 507 Bal Harbour</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_6cc99a8ecf20d8a4ba497709f99198b5 = L.marker(
+                [25.7277525, -80.2394939],
+                {}
+            ).addTo(map_bbc663277b19387fcbb78efc3c4de01a);
+        
+    
+            marker_6cc99a8ecf20d8a4ba497709f99198b5.bindTooltip(
+                `<div>
+                     Building Name: <strong>Yacht Harbour Condo </strong><br>     Sale Price: <strong>$2,250,000.00</strong><br>Days on Market:     <strong>1</strong><br>Listing Agent: <strong>Carole Smith     </strong><br>Buying Agent: <strong>Maite Alvarez</strong><br>Price sq ft:     <strong>$1,417.77</strong><br>Address: <strong>2901 S Bayshore Dr 13B Coconut Grove</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_19ebebdcb859951378f1cf45832dd6b1 = L.marker(
+                [25.7468655, -80.2698381],
+                {}
+            ).addTo(map_bbc663277b19387fcbb78efc3c4de01a);
+        
+    
+            marker_19ebebdcb859951378f1cf45832dd6b1.bindTooltip(
+                `<div>
+                     Building Name: <strong>Biltmore Parc Condo </strong><br>     Sale Price: <strong>$2,199,000.00</strong><br>Days on Market:     <strong>83</strong><br>Listing Agent: <strong>Anniella Tabraue     </strong><br>Buying Agent: <strong>Marilu Perez-Perez</strong><br>Price sq ft:     <strong>$937.74</strong><br>Address: <strong>718 Valencia Ave 305 Coral Gables</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_67f3f00568dedf1e8ededa3a0299c8b0 = L.marker(
+                [25.7603404, -80.1920171],
+                {}
+            ).addTo(map_bbc663277b19387fcbb78efc3c4de01a);
+        
+    
+            marker_67f3f00568dedf1e8ededa3a0299c8b0.bindTooltip(
+                `<div>
+                     Building Name: <strong>Brickell Arch </strong><br>     Sale Price: <strong>$2,075,000.00</strong><br>Days on Market:     <strong>64</strong><br>Listing Agent: <strong>Susana Rosado     </strong><br>Buying Agent: <strong>Ruben Pena</strong><br>Price sq ft:     <strong>$835.01</strong><br>Address: <strong>1395 Brickell Ave 3406 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_17c93149f122ad74adb62ccefd3d1e6a = L.marker(
+                [25.7705273, -80.1895438],
+                {}
+            ).addTo(map_bbc663277b19387fcbb78efc3c4de01a);
+        
+    
+            marker_17c93149f122ad74adb62ccefd3d1e6a.bindTooltip(
+                `<div>
+                     Building Name: <strong>Epic Residence </strong><br>     Sale Price: <strong>$1,700,000.00</strong><br>Days on Market:     <strong>50</strong><br>Listing Agent: <strong>Carlos Uribe     </strong><br>Buying Agent: <strong>Carlos Uribe</strong><br>Price sq ft:     <strong>$1,141.71</strong><br>Address: <strong>200 Biscayne Blvd Way 1109 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_3228581196b2da6df0c7cb466ded991d = L.marker(
+                [25.9232597, -80.1218135],
+                {}
+            ).addTo(map_bbc663277b19387fcbb78efc3c4de01a);
+        
+    
+            marker_3228581196b2da6df0c7cb466ded991d.bindTooltip(
+                `<div>
+                     Building Name: <strong>Trump Towers </strong><br>     Sale Price: <strong>$1,550,000.00</strong><br>Days on Market:     <strong>82</strong><br>Listing Agent: <strong>Cassio Filho     </strong><br>Buying Agent: <strong>Cassio Filho</strong><br>Price sq ft:     <strong>$801.03</strong><br>Address: <strong>15811 Collins Ave 2103 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_1b91bb3b2a967f3243b19d772952190b = L.marker(
+                [25.8460388, -80.1196447],
+                {}
+            ).addTo(map_bbc663277b19387fcbb78efc3c4de01a);
+        
+    
+            marker_1b91bb3b2a967f3243b19d772952190b.bindTooltip(
+                `<div>
+                     Building Name: <strong>Akoya </strong><br>     Sale Price: <strong>$1,400,000.00</strong><br>Days on Market:     <strong>1</strong><br>Listing Agent: <strong>Nils Jucaud     </strong><br>Buying Agent: <strong>Gustavo Duquesne</strong><br>Price sq ft:     <strong>$1,059.00</strong><br>Address: <strong>6365 Collins Ave 3507 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_4ec7fab679eed959e4901567dd23cb00 = L.marker(
+                [25.7966352, -80.18792409999999],
+                {}
+            ).addTo(map_bbc663277b19387fcbb78efc3c4de01a);
+        
+    
+            marker_4ec7fab679eed959e4901567dd23cb00.bindTooltip(
+                `<div>
+                     Building Name: <strong>Paramount Bay</strong><br>     Sale Price: <strong>$1,350,000.00</strong><br>Days on Market:     <strong>56</strong><br>Listing Agent: <strong>Yadira Henriquez Saba     </strong><br>Buying Agent: <strong>Marion Ott</strong><br>Price sq ft:     <strong>$850.13</strong><br>Address: <strong>0aramount Bay Condo 2020 N Bayshore Dr 801 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
