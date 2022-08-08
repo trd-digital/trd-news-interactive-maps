@@ -39,7 +39,7 @@ map.on('click', 'arch_data', function (e) {
     let year_start = e.features[0].properties.app_year_start;
     new mapboxgl.Popup()
         .setLngLat(e.lngLat)
-        .setHTML('<h4>' + full_address + '</h4>' 
+        .setHTML('<h2>' + full_address + '</h2>' 
         + '<strong>Application year:</strong> ' + year_start + '<br>'
         + '<strong>Architect:</strong> ' + name + '<br><br>'
         + '<strong>Description:</strong> ' + work_desc)
