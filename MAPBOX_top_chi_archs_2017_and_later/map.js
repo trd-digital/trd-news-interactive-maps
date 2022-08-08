@@ -27,7 +27,7 @@ map.on('load', function () {
             'circle-color': '#ff7f50',
             'circle-stroke-color': '#4d4d4d',
             'circle-stroke-width': 0.5,
-            'circle-radius': 5
+            'circle-radius': 8
         }
     }, firstSymbolId);
 });
