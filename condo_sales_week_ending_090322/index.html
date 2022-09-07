@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_1e7f9c8c2c36bd6f3d338475844c32a4 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>Recent Miami-Dade Condo Sales </b></h3>
+             
+    
+                <p align="center" style="vertical-align: bottom; font-size:13px"><i>August 28th - September 3rd</i></p>
+                
+    
+            <div class="folium-map" id="map_1e7f9c8c2c36bd6f3d338475844c32a4" ></div>
+        
+</body>
+<script>    
+    
+            var map_1e7f9c8c2c36bd6f3d338475844c32a4 = L.map(
+                "map_1e7f9c8c2c36bd6f3d338475844c32a4",
+                {
+                    center: [25.813284389999996, -80.14989472999999],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 11,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_7adebb769576d21bdbd6ea3413664a5e = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_1e7f9c8c2c36bd6f3d338475844c32a4);
+        
+    
+            var marker_390212d33769b67e0fec26f175148546 = L.marker(
+                [25.956929, -80.1193868],
+                {}
+            ).addTo(map_1e7f9c8c2c36bd6f3d338475844c32a4);
+        
+    
+            marker_390212d33769b67e0fec26f175148546.bindTooltip(
+                `<div>
+                     Building Name: <strong>Regalia Condo </strong><br>     Sale Price: <strong>$10,700,000.00</strong><br>Days on Market:     <strong>8</strong><br>Listing Agent: <strong>Jill Hertzberg     </strong><br>Buying Agent: <strong>Eric Grabois</strong><br>Price sq ft:     <strong>$2,143.43</strong><br>Address: <strong>19575 Collins Ave 17 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_c998d275924241814fa8e625c73f79b0 = L.marker(
+                [25.7979013, -80.1275924],
+                {}
+            ).addTo(map_1e7f9c8c2c36bd6f3d338475844c32a4);
+        
+    
+            marker_c998d275924241814fa8e625c73f79b0.bindTooltip(
+                `<div>
+                     Building Name: <strong>W Resort & Residence </strong><br>     Sale Price: <strong>$8,750,000.00</strong><br>Days on Market:     <strong>254</strong><br>Listing Agent: <strong>Anna Sherrill     </strong><br>Buying Agent: <strong>Eloy Carmenate</strong><br>Price sq ft:     <strong>$3,311.88</strong><br>Address: <strong>2201 Collins Ave PH28 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_5f40f3ea1b5ddf858ba003ec372c13a5 = L.marker(
+                [25.9400518, -80.12056079999999],
+                {}
+            ).addTo(map_1e7f9c8c2c36bd6f3d338475844c32a4);
+        
+    
+            marker_5f40f3ea1b5ddf858ba003ec372c13a5.bindTooltip(
+                `<div>
+                     Building Name: <strong>Mansions at Acqualina </strong><br>     Sale Price: <strong>$6,250,000.00</strong><br>Days on Market:     <strong>505</strong><br>Listing Agent: <strong>Denise Rubin     </strong><br>Buying Agent: <strong>Denise Rubin</strong><br>Price sq ft:     <strong>$1,356.04</strong><br>Address: <strong>17749 Collins Ave 801 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_69977c0d0b76b0e84351947715976de0 = L.marker(
+                [25.7677332, -80.1349941],
+                {}
+            ).addTo(map_1e7f9c8c2c36bd6f3d338475844c32a4);
+        
+    
+            marker_69977c0d0b76b0e84351947715976de0.bindTooltip(
+                `<div>
+                     Building Name: <strong>Portofino  Tower </strong><br>     Sale Price: <strong>$4,300,000.00</strong><br>Days on Market:     <strong>45</strong><br>Listing Agent: <strong>Dora Puig     </strong><br>Buying Agent: <strong>Samantha Scalzo</strong><br>Price sq ft:     <strong>$1,825.90</strong><br>Address: <strong>300 S Pointe Dr 1105 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_d5eaa28f22374697e5d4a7a5a7e3e5a9 = L.marker(
+                [25.8008285, -80.1857847],
+                {}
+            ).addTo(map_1e7f9c8c2c36bd6f3d338475844c32a4);
+        
+    
+            marker_d5eaa28f22374697e5d4a7a5a7e3e5a9.bindTooltip(
+                `<div>
+                     Building Name: <strong>Star Lofts on the Bay </strong><br>     Sale Price: <strong>$2,930,000.00</strong><br>Days on Market:     <strong>35</strong><br>Listing Agent: <strong>Daniel Tzinker     </strong><br>Buying Agent: <strong>Astrid Miniet</strong><br>Price sq ft:     <strong>$590.13</strong><br>Address: <strong>700 NE 25th St PH1 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e7239d4c6dacf603d2552f4a8a21625e = L.marker(
+                [25.790654, -80.1300455],
+                {}
+            ).addTo(map_1e7f9c8c2c36bd6f3d338475844c32a4);
+        
+    
+            marker_e7239d4c6dacf603d2552f4a8a21625e.bindTooltip(
+                `<div>
+                     Building Name: <strong>Monad Terrace </strong><br>     Sale Price: <strong>$2,850,000.00</strong><br>Days on Market:     <strong>159</strong><br>Listing Agent: <strong>Raymond Jacomo     </strong><br>Buying Agent: <strong>Ryan M Thorburn</strong><br>Price sq ft:     <strong>$1,961.46</strong><br>Address: <strong>1300 Monad Ter 10C Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_29f103bf49122b2feab54ba7d8a5d90c = L.marker(
+                [25.685686, -80.15729309999999],
+                {}
+            ).addTo(map_1e7f9c8c2c36bd6f3d338475844c32a4);
+        
+    
+            marker_29f103bf49122b2feab54ba7d8a5d90c.bindTooltip(
+                `<div>
+                     Building Name: <strong>Casa Del Mar Condo </strong><br>     Sale Price: <strong>$2,650,000.00</strong><br>Days on Market:     <strong>210</strong><br>Listing Agent: <strong>Juan Velasquez     </strong><br>Buying Agent: <strong>Angela Santamaria PA</strong><br>Price sq ft:     <strong>$849.36</strong><br>Address: <strong>881 Ocean Dr 11H Key Biscayne</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_5619bf971b0df522e48c979b0eb81ad8 = L.marker(
+                [25.8068747, -80.1862424],
+                {}
+            ).addTo(map_1e7f9c8c2c36bd6f3d338475844c32a4);
+        
+    
+            marker_5619bf971b0df522e48c979b0eb81ad8.bindTooltip(
+                `<div>
+                     Building Name: <strong>Paraiso Bay </strong><br>     Sale Price: <strong>$2,500,000.00</strong><br>Days on Market:     <strong>78</strong><br>Listing Agent: <strong>Ellen Manas     </strong><br>Buying Agent: <strong>Andrew Becerra Jr. PA</strong><br>Price sq ft:     <strong>$785.67</strong><br>Address: <strong>650 NE 32nd St PH5004 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_5fed4edbcf6e7a5a19ac0ff790e2bca0 = L.marker(
+                [25.8460388, -80.1196447],
+                {}
+            ).addTo(map_1e7f9c8c2c36bd6f3d338475844c32a4);
+        
+    
+            marker_5fed4edbcf6e7a5a19ac0ff790e2bca0.bindTooltip(
+                `<div>
+                     Building Name: <strong>Akoya Condo </strong><br>     Sale Price: <strong>$2,150,000.00</strong><br>Days on Market:     <strong>26</strong><br>Listing Agent: <strong>Nabil Jimenez     </strong><br>Buying Agent: <strong>Stefania Cambarau</strong><br>Price sq ft:     <strong>$1,220.90</strong><br>Address: <strong>6365 Collins Ave 3303 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_55d12be37e07dac753142047e796fde6 = L.marker(
+                [25.7401466, -80.2174028],
+                {}
+            ).addTo(map_1e7f9c8c2c36bd6f3d338475844c32a4);
+        
+    
+            marker_55d12be37e07dac753142047e796fde6.bindTooltip(
+                `<div>
+                     Building Name: <strong>The Fairchild</strong><br>     Sale Price: <strong>$2,100,000.00</strong><br>Days on Market:     <strong>86</strong><br>Listing Agent: <strong>Arline Silver     </strong><br>Buying Agent: <strong>Frank Giordano</strong><br>Price sq ft:     <strong>$1,048.43</strong><br>Address: <strong>3581 E Glencoe Street unit 408</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
