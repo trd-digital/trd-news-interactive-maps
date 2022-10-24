@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_8954036bfacbc5ca95cb1fd932b304a9 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>Recent Miami-Dade Condo Sales </b></h3>
+             
+    
+                <p align="center" style="vertical-align: bottom; font-size:13px"><i>October 16th - October 22nd</i></p>
+                
+    
+            <div class="folium-map" id="map_8954036bfacbc5ca95cb1fd932b304a9" ></div>
+        
+</body>
+<script>    
+    
+            var map_8954036bfacbc5ca95cb1fd932b304a9 = L.map(
+                "map_8954036bfacbc5ca95cb1fd932b304a9",
+                {
+                    center: [25.761024349999996, -80.17166143],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 11,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_219b2b983fcdac92627b2e5d66b261d7 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_8954036bfacbc5ca95cb1fd932b304a9);
+        
+    
+            var marker_f176ff031c0b726d1d4640884a07f6ef = L.marker(
+                [25.7623668, -80.14735929999999],
+                {}
+            ).addTo(map_8954036bfacbc5ca95cb1fd932b304a9);
+        
+    
+            marker_f176ff031c0b726d1d4640884a07f6ef.bindTooltip(
+                `<div>
+                     Building Name: <strong>Palazzo Della Luna </strong><br>     Sale Price: <strong>$11,200,000.00</strong><br>Days on Market:     <strong>26</strong><br>Listing Agent: <strong>Jill Eber     </strong><br>Buying Agent: <strong>Anthony Lauria</strong><br>Price sq ft:     <strong>$2,941.95</strong><br>Address: <strong>6800 Fisher Island Dr 6831</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_ca58bd9e3c2f8c6732af21701647dd7b = L.marker(
+                [25.9220146, -80.1217034],
+                {}
+            ).addTo(map_8954036bfacbc5ca95cb1fd932b304a9);
+        
+    
+            marker_ca58bd9e3c2f8c6732af21701647dd7b.bindTooltip(
+                `<div>
+                     Building Name: <strong>Ritz Carlton Sunny Isles </strong><br>     Sale Price: <strong>$7,900,000.00</strong><br>Days on Market:     <strong>120</strong><br>Listing Agent: <strong>Luis Gautier     </strong><br>Buying Agent: <strong>Alyssa Jansheski</strong><br>Price sq ft:     <strong>$2,465.67</strong><br>Address: <strong>15701 Collins Ave 1105 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_9cee2e6b9ec53ff88a70383c1469bdc1 = L.marker(
+                [25.755259, -80.1947467],
+                {}
+            ).addTo(map_8954036bfacbc5ca95cb1fd932b304a9);
+        
+    
+            marker_9cee2e6b9ec53ff88a70383c1469bdc1.bindTooltip(
+                `<div>
+                     Building Name: <strong>Santa Maria </strong><br>     Sale Price: <strong>$4,000,000.00</strong><br>Days on Market:     <strong>329</strong><br>Listing Agent: <strong>Fabian Dominguez     </strong><br>Buying Agent: <strong>Alejandro Cure</strong><br>Price sq ft:     <strong>$992.56</strong><br>Address: <strong>1643 Brickell Ave 3505 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_c9766bf57382b2024db17af05194053f = L.marker(
+                [25.7642644, -80.192725],
+                {}
+            ).addTo(map_8954036bfacbc5ca95cb1fd932b304a9);
+        
+    
+            marker_c9766bf57382b2024db17af05194053f.bindTooltip(
+                `<div>
+                     Building Name: <strong>Brickell Flatiron </strong><br>     Sale Price: <strong>$3,000,000.00</strong><br>Days on Market:     <strong>56</strong><br>Listing Agent: <strong>Paolo Coniglio     </strong><br>Buying Agent: <strong>Wesley Pearce</strong><br>Price sq ft:     <strong>$1,240.69</strong><br>Address: <strong>1000 Brickell Plz PH5504 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_8c83fcc07ff797fe59cf7ce583ada9a7 = L.marker(
+                [25.7400661, -80.217131],
+                {}
+            ).addTo(map_8954036bfacbc5ca95cb1fd932b304a9);
+        
+    
+            marker_8c83fcc07ff797fe59cf7ce583ada9a7.bindTooltip(
+                `<div>
+                     Building Name: <strong>The Fairchild </strong><br>     Sale Price: <strong>$2,600,000.00</strong><br>Days on Market:     <strong>158</strong><br>Listing Agent: <strong>John Seidel     </strong><br>Buying Agent: <strong>John Seidel</strong><br>Price sq ft:     <strong>$970.15</strong><br>Address: <strong>3581 E Glencoe St 203 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_89feb1871ae1246a3931ce8e98f01cf7 = L.marker(
+                [25.6903035, -80.1633105],
+                {}
+            ).addTo(map_8954036bfacbc5ca95cb1fd932b304a9);
+        
+    
+            marker_89feb1871ae1246a3931ce8e98f01cf7.bindTooltip(
+                `<div>
+                     Building Name: <strong>101 Sunrise</strong><br>     Sale Price: <strong>$2,250,000.00</strong><br>Days on Market:     <strong>115</strong><br>Listing Agent: <strong>Lucas Boccheciampe     </strong><br>Buying Agent: <strong>Jose Isaza</strong><br>Price sq ft:     <strong>$1,011.24</strong><br>Address: <strong>101 Sunrise Dr A-401 Key Biscayne</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_161e26d7b5fbb4f1722d6362e995c70f = L.marker(
+                [25.770563, -80.13698],
+                {}
+            ).addTo(map_8954036bfacbc5ca95cb1fd932b304a9);
+        
+    
+            marker_161e26d7b5fbb4f1722d6362e995c70f.bindTooltip(
+                `<div>
+                     Building Name: <strong>The Courts at South Beach </strong><br>     Sale Price: <strong>$1,825,000.00</strong><br>Days on Market:     <strong>13</strong><br>Listing Agent: <strong>Larry Hughes     </strong><br>Buying Agent: <strong>Arshan Borhan</strong><br>Price sq ft:     <strong>$1,208.61</strong><br>Address: <strong>100 Jefferson Ave 10009 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_f5f0e491a8202efc956fc6ec10827b69 = L.marker(
+                [25.685686, -80.15729309999999],
+                {}
+            ).addTo(map_8954036bfacbc5ca95cb1fd932b304a9);
+        
+    
+            marker_f5f0e491a8202efc956fc6ec10827b69.bindTooltip(
+                `<div>
+                     Building Name: <strong>Casa Del Mar </strong><br>     Sale Price: <strong>$1,800,000.00</strong><br>Days on Market:     <strong>131</strong><br>Listing Agent: <strong>Carolina Echarte     </strong><br>Buying Agent: <strong>Gonzalo Alvarado</strong><br>Price sq ft:     <strong>$960.00</strong><br>Address: <strong>881 Ocean Dr 15F Key Biscayne</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_25c589b7be6d01568f03f608985da55c = L.marker(
+                [25.7690295, -80.1856979],
+                {}
+            ).addTo(map_8954036bfacbc5ca95cb1fd932b304a9);
+        
+    
+            marker_25c589b7be6d01568f03f608985da55c.bindTooltip(
+                `<div>
+                     Building Name: <strong>Asia </strong><br>     Sale Price: <strong>$1,600,000.00</strong><br>Days on Market:     <strong>30</strong><br>Listing Agent: <strong>Maribel Faura     </strong><br>Buying Agent: <strong>Ariel Murgado</strong><br>Price sq ft:     <strong>$785.85</strong><br>Address: <strong>900 Brickell Key Blvd  1403 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_cc22d31718a2dcc25689798f0b2d0190 = L.marker(
+                [25.7506906, -80.1996674],
+                {}
+            ).addTo(map_8954036bfacbc5ca95cb1fd932b304a9);
+        
+    
+            marker_cc22d31718a2dcc25689798f0b2d0190.bindTooltip(
+                `<div>
+                     Building Name: <strong>Brickell Bay Club</strong><br>     Sale Price: <strong>$1,400,000.00</strong><br>Days on Market:     <strong>46</strong><br>Listing Agent: <strong>Claudia Damato PA     </strong><br>Buying Agent: <strong>Jorge Baez Lacayo</strong><br>Price sq ft:     <strong>$501.61</strong><br>Address: <strong>2333 Brickell Avenue</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
