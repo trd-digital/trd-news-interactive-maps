@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_4696b83ac11b27d957d354c5d845a10c {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>Top 10 Cook County Condo Sales </b></h3>
+             
+    
+                <p align="center" style="vertical-align: bottom; font-size:13px"><i>November 6th - November 12th, as per the MLS</i></p>
+                
+    
+            <div class="folium-map" id="map_4696b83ac11b27d957d354c5d845a10c" ></div>
+        
+</body>
+<script>    
+    
+            var map_4696b83ac11b27d957d354c5d845a10c = L.map(
+                "map_4696b83ac11b27d957d354c5d845a10c",
+                {
+                    center: [41.90202434999999, -87.63537471],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_5bef2782e329acfed276630fd998afdd = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_4696b83ac11b27d957d354c5d845a10c);
+        
+    
+            var marker_be800251d66ab3f031565047cc5c1c51 = L.marker(
+                [41.9291507, -87.6401127],
+                {}
+            ).addTo(map_4696b83ac11b27d957d354c5d845a10c);
+        
+    
+            marker_be800251d66ab3f031565047cc5c1c51.bindTooltip(
+                `<div>
+                     Address: <strong>2550 N Lakeview Ave Unit T3501</strong><br>     Sale Price: <strong>$5,825,000</strong><br>    Price sq ft: <strong>$1,239.0</strong><br>     Year Built: <strong>2010</strong><br></strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_79a749d36afd45ccad96502d99cc21ac = L.marker(
+                [41.899701, -87.6276042],
+                {}
+            ).addTo(map_4696b83ac11b27d957d354c5d845a10c);
+        
+    
+            marker_79a749d36afd45ccad96502d99cc21ac.bindTooltip(
+                `<div>
+                     Address: <strong>11 E Walton Pl #4002</strong><br>     Sale Price: <strong>$5,330,000</strong><br>    Price sq ft: <strong>$1,333.0</strong><br>     Year Built: <strong>2009</strong><br></strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_446622226e392f4cab232957fe4b4aed = L.marker(
+                [41.8856379, -87.6154707],
+                {}
+            ).addTo(map_4696b83ac11b27d957d354c5d845a10c);
+        
+    
+            marker_446622226e392f4cab232957fe4b4aed.bindTooltip(
+                `<div>
+                     Address: <strong>211 N Harbor Dr #4501</strong><br>     Sale Price: <strong>$3,442,850</strong><br>    Price sq ft: <strong>$1,147.0</strong><br>     Year Built: <strong>2021</strong><br></strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_f0609565dc68aa3dd5aab02c3eb52d41 = L.marker(
+                [41.9116413, -87.6469189],
+                {}
+            ).addTo(map_4696b83ac11b27d957d354c5d845a10c);
+        
+    
+            marker_f0609565dc68aa3dd5aab02c3eb52d41.bindTooltip(
+                `<div>
+                     Address: <strong>1625 N Burling St #402</strong><br>     Sale Price: <strong>$2,360,000</strong><br>    Price sq ft: <strong>$nan</strong><br>     Year Built: <strong>2017</strong><br></strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_ce7ac25586598cd57cb6ccbb8f16a9fa = L.marker(
+                [41.8874575, -87.6183727],
+                {}
+            ).addTo(map_4696b83ac11b27d957d354c5d845a10c);
+        
+    
+            marker_ce7ac25586598cd57cb6ccbb8f16a9fa.bindTooltip(
+                `<div>
+                     Address: <strong>363 E Wacker Dr #3509</strong><br>     Sale Price: <strong>$2,300,000</strong><br>    Price sq ft: <strong>$808.0</strong><br>     Year Built: <strong>2021</strong><br></strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_6b1f9a2d2e3f9a1ca681c04c13db1070 = L.marker(
+                [41.8774321, -87.6568362],
+                {}
+            ).addTo(map_4696b83ac11b27d957d354c5d845a10c);
+        
+    
+            marker_6b1f9a2d2e3f9a1ca681c04c13db1070.bindTooltip(
+                `<div>
+                     Address: <strong>323 S Racine Ave Unit PHC</strong><br>     Sale Price: <strong>$1,755,900</strong><br>    Price sq ft: <strong>$566.0</strong><br>     Year Built: <strong>2021</strong><br></strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_6eef92567d8305e750e6a2f7da905c87 = L.marker(
+                [41.89449, -87.6415997],
+                {}
+            ).addTo(map_4696b83ac11b27d957d354c5d845a10c);
+        
+    
+            marker_6eef92567d8305e750e6a2f7da905c87.bindTooltip(
+                `<div>
+                     Address: <strong>676 N Kingsbury St #204</strong><br>     Sale Price: <strong>$1,610,000</strong><br>    Price sq ft: <strong>$523.0</strong><br>     Year Built: <strong>2016</strong><br></strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_4d47ae23c985fb6abbfee0455b38d766 = L.marker(
+                [41.8875829, -87.6173096],
+                {}
+            ).addTo(map_4696b83ac11b27d957d354c5d845a10c);
+        
+    
+            marker_4d47ae23c985fb6abbfee0455b38d766.bindTooltip(
+                `<div>
+                     Address: <strong>363 E Wacker Dr #1502</strong><br>     Sale Price: <strong>$1,575,000</strong><br>    Price sq ft: <strong>$687.0</strong><br>     Year Built: <strong>2021</strong><br></strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_3f1d29fde56d2cb705282ff8db7d6e2f = L.marker(
+                [41.9220478, -87.6430231],
+                {}
+            ).addTo(map_4696b83ac11b27d957d354c5d845a10c);
+        
+    
+            marker_3f1d29fde56d2cb705282ff8db7d6e2f.bindTooltip(
+                `<div>
+                     Address: <strong>540 W Webster Ave Unit 1012-13</strong><br>     Sale Price: <strong>$1,560,000</strong><br>    Price sq ft: <strong>$601.0</strong><br>     Year Built: <strong>2017</strong><br></strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_2b83ced54db527b33eed7fdda09336e8 = L.marker(
+                [41.9251023, -87.6464993],
+                {}
+            ).addTo(map_4696b83ac11b27d957d354c5d845a10c);
+        
+    
+            marker_2b83ced54db527b33eed7fdda09336e8.bindTooltip(
+                `<div>
+                     Address: <strong>2350 N Orchard St Unit MZ102</strong><br>     Sale Price: <strong>$1,500,000</strong><br>    Price sq ft: <strong>$744.0</strong><br>     Year Built: <strong>2020</strong><br></strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
