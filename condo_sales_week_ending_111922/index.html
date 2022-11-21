@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_4183b93d7d67cbc1e5b66622038e68a6 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>Recent Miami-Dade Condo Sales </b></h3>
+             
+    
+                <p align="center" style="vertical-align: bottom; font-size:13px"><i>November 13th - November 19th</i></p>
+                
+    
+            <div class="folium-map" id="map_4183b93d7d67cbc1e5b66622038e68a6" ></div>
+        
+</body>
+<script>    
+    
+            var map_4183b93d7d67cbc1e5b66622038e68a6 = L.map(
+                "map_4183b93d7d67cbc1e5b66622038e68a6",
+                {
+                    center: [25.81536056, -80.15093945999999],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 10,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_f4af8b42b0a329f2545b71624324e24d = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_4183b93d7d67cbc1e5b66622038e68a6);
+        
+    
+            var marker_ea7f3e877b9d521e7039b20e2a3f916e = L.marker(
+                [25.7617, -80.13568599999999],
+                {}
+            ).addTo(map_4183b93d7d67cbc1e5b66622038e68a6);
+        
+    
+            marker_ea7f3e877b9d521e7039b20e2a3f916e.bindTooltip(
+                `<div>
+                     Building Name: <strong>7400 Oceanside</strong><br>     Sale Price: <strong>$9,250,000.00</strong><br>Days on Market:     <strong>120</strong><br>Listing Agent: <strong>Dora Puig     </strong><br>Buying Agent: <strong>Maria Oneide Gioia</strong><br>Price sq ft:     <strong>$2,263.83</strong><br>Address: <strong>7400 Oceanside at Fisher Island 7431 Fisher Island Dr 7431 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_6e5a9b1d45f4288df2f3ea6d3e2c00a9 = L.marker(
+                [25.8838004, -80.12177080000001],
+                {}
+            ).addTo(map_4183b93d7d67cbc1e5b66622038e68a6);
+        
+    
+            marker_6e5a9b1d45f4288df2f3ea6d3e2c00a9.bindTooltip(
+                `<div>
+                     Building Name: <strong>Azure Condominium </strong><br>     Sale Price: <strong>$6,500,000.00</strong><br>Days on Market:     <strong>211</strong><br>Listing Agent: <strong>Silvia Coltrane     </strong><br>Buying Agent: <strong>Silvia Coltrane</strong><br>Price sq ft:     <strong>$1,309.16</strong><br>Address: <strong>9401 Collins Ave 607 Surfside</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_dac53572be8752015bfcababfbc316d5 = L.marker(
+                [25.9400518, -80.12056079999999],
+                {}
+            ).addTo(map_4183b93d7d67cbc1e5b66622038e68a6);
+        
+    
+            marker_dac53572be8752015bfcababfbc316d5.bindTooltip(
+                `<div>
+                     Building Name: <strong>Mansions at Acqualina </strong><br>     Sale Price: <strong>$6,400,000.00</strong><br>Days on Market:     <strong>75</strong><br>Listing Agent: <strong>Richard Goihman     </strong><br>Buying Agent: <strong>Ryan Mendell</strong><br>Price sq ft:     <strong>$1,388.59</strong><br>Address: <strong>17749 Collins Ave 701 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e24afe00a740e9c7a7ebc3f195851482 = L.marker(
+                [25.773326, -80.136329],
+                {}
+            ).addTo(map_4183b93d7d67cbc1e5b66622038e68a6);
+        
+    
+            marker_e24afe00a740e9c7a7ebc3f195851482.bindTooltip(
+                `<div>
+                     Building Name: <strong>350 Meridian</strong><br>     Sale Price: <strong>$5,550,000.00</strong><br>Days on Market:     <strong>127</strong><br>Listing Agent: <strong>Dina Goldentayer     </strong><br>Buying Agent: <strong>Vicki Miller</strong><br>Price sq ft:     <strong>$1,850.00</strong><br>Address: <strong>350 Meridian Condo 350 Meridian Ave PH Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_befc11c2995a26e88d6ba90938478e64 = L.marker(
+                [25.810647, -80.122714],
+                {}
+            ).addTo(map_4183b93d7d67cbc1e5b66622038e68a6);
+        
+    
+            marker_befc11c2995a26e88d6ba90938478e64.bindTooltip(
+                `<div>
+                     Building Name: <strong>Caribbean Condo </strong><br>     Sale Price: <strong>$2,900,000.00</strong><br>Days on Market:     <strong>44</strong><br>Listing Agent: <strong>Christopher Zoller     </strong><br>Buying Agent: <strong>Stacy Robins</strong><br>Price sq ft:     <strong>$1,789.02</strong><br>Address: <strong>3737 Collins Ave S-1503 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_5ebcd33033de88f8d9a22b8f293d6421 = L.marker(
+                [25.6362123, -80.29110050000001],
+                {}
+            ).addTo(map_4183b93d7d67cbc1e5b66622038e68a6);
+        
+    
+            marker_5ebcd33033de88f8d9a22b8f293d6421.bindTooltip(
+                `<div>
+                     Building Name: <strong>Deering Bay Condo II </strong><br>     Sale Price: <strong>$2,450,000.00</strong><br>Days on Market:     <strong>127</strong><br>Listing Agent: <strong>Edith Neuwahl     </strong><br>Buying Agent: <strong>Teresita Bernace</strong><br>Price sq ft:     <strong>$674.93</strong><br>Address: <strong>13635 Deering Bay Dr 294 Coral Gables</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_73cbae9def07fb8a28b1e094a6f14ab7 = L.marker(
+                [25.7686007, -80.1361615],
+                {}
+            ).addTo(map_4183b93d7d67cbc1e5b66622038e68a6);
+        
+    
+            marker_73cbae9def07fb8a28b1e094a6f14ab7.bindTooltip(
+                `<div>
+                     Building Name: <strong>Marea Condo </strong><br>     Sale Price: <strong>$2,150,000.00</strong><br>Days on Market:     <strong>135</strong><br>Listing Agent: <strong>Joonok Yang     </strong><br>Buying Agent: <strong>Daniel Hechtkopf</strong><br>Price sq ft:     <strong>$1,244.21</strong><br>Address: <strong>801 S Pointe Dr 205 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_986de6bcc211ab8a42542c946b0cd418 = L.marker(
+                [25.8069485, -80.1862675],
+                {}
+            ).addTo(map_4183b93d7d67cbc1e5b66622038e68a6);
+        
+    
+            marker_986de6bcc211ab8a42542c946b0cd418.bindTooltip(
+                `<div>
+                     Building Name: <strong>Paraiso Bay </strong><br>     Sale Price: <strong>$1,825,000.00</strong><br>Days on Market:     <strong>105</strong><br>Listing Agent: <strong>Caroline Perez     </strong><br>Buying Agent: <strong>Christina Fernandez</strong><br>Price sq ft:     <strong>$811.83</strong><br>Address: <strong>650 NE 32 St 4806-4807 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_c62f07c678fefe7e0f15d3031cdb4bd4 = L.marker(
+                [25.9490014, -80.1372188],
+                {}
+            ).addTo(map_4183b93d7d67cbc1e5b66622038e68a6);
+        
+    
+            marker_c62f07c678fefe7e0f15d3031cdb4bd4.bindTooltip(
+                `<div>
+                     Building Name: <strong>Echo Aventura </strong><br>     Sale Price: <strong>$1,700,000.00</strong><br>Days on Market:     <strong>73</strong><br>Listing Agent: <strong>Ruben Alfonso     </strong><br>Buying Agent: <strong>Tatiana Dzenis</strong><br>Price sq ft:     <strong>$646.39</strong><br>Address: <strong>3250 NE 188 St 608 Aventura</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_18bedbeaa72d432c5d389dfc8f3c63a5 = L.marker(
+                [25.8233175, -80.1215857],
+                {}
+            ).addTo(map_4183b93d7d67cbc1e5b66622038e68a6);
+        
+    
+            marker_18bedbeaa72d432c5d389dfc8f3c63a5.bindTooltip(
+                `<div>
+                     Building Name: <strong>Blue Diamond</strong><br>     Sale Price: <strong>$1,500,000.00</strong><br>Days on Market:     <strong>47</strong><br>Listing Agent: <strong>Julio Oliveira     </strong><br>Buying Agent: <strong>Michelle Dehez</strong><br>Price sq ft:     <strong>$1,006.71</strong><br>Address: <strong>0Blue Diamond Condo 4779 Collins Ave 2408 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
