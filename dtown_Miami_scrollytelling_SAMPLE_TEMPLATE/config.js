@@ -1,21 +1,21 @@
-let topTitleDiv = "<h4>South Florida</h4>";
+// let topTitleDiv = "<h4>South Florida</h4>";
 
-let titleDiv =
-  "<h1>Here are the resi projects planned for downtown Miami</h1>";
+// let titleDiv =
+//   "<h1>Here are the resi projects planned for downtown Miami</h1>";
 
-let descriptionDiv =
-"<p>The rules don't seen to apply to Miami.</p>" +
-"<p>Despite economists predicting a global recession, developers are betting big on downtown Miami. Projects under construction and those planned since the start of the year expect to bring a whopping 7,000-plus apartments and condos to the Magic City.</p>" + 
-"<p>According to an analysis by <em>The Real Deal</em>, 1,358 condos are in the works and 3,793 apartments are planned. More than 2,000 additional units are not yet specified as condos or rentals.</p>" +
-"<p>The disclosed land acquisitions in downtown Miami total more than $230 million. This doesn't include other projects in Brickell, Edgewater and Wynwood.</p>";
+// let descriptionDiv =
+// "<p>The rules don't seen to apply to Miami.</p>" +
+// "<p>Despite economists predicting a global recession, developers are betting big on downtown Miami. Projects under construction and those planned since the start of the year expect to bring a whopping 7,000-plus apartments and condos to the Magic City.</p>" + 
+// "<p>According to an analysis by <em>The Real Deal</em>, 1,358 condos are in the works and 3,793 apartments are planned. More than 2,000 additional units are not yet specified as condos or rentals.</p>" +
+// "<p>The disclosed land acquisitions in downtown Miami total more than $230 million. This doesn't include other projects in Brickell, Edgewater and Wynwood.</p>";
 
 let introDiv =
 "<p>Here are some of the residential projects planned for downtown Miami:</p>"
 
-let bylineDiv = "<p><em>By Adam Farence. Research by Lidia Dinkova and Katherine Kallergis</em></p>";
+// let bylineDiv = "<p><em>By Adam Farence. Research by Lidia Dinkova and Katherine Kallergis</em></p>";
 
-let footerDiv =
-  '<p><a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox</a> | <a href="http://www.openstreetmap.org/about/" target="_blank">© OpenStreetMap</a>';
+// let footerDiv =
+//   '<p><a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox</a> | <a href="http://www.openstreetmap.org/about/" target="_blank">© OpenStreetMap</a>';
 
 let divChapter1 =
   "<h3>222 Northeast First Avenue | Namdar</h3>" +
@@ -48,12 +48,12 @@ var config = {
   markerColor: "#3FB1CE",
   theme: "light",
   use3dTerrain: false,
-  topTitle: topTitleDiv,
-  title: titleDiv,
+  topTitle: [],
+  title: [],
   subtitle: "",
-  byline: bylineDiv,
-  description: descriptionDiv,
-  footer: footerDiv,
+  byline: [],
+  description: [],
+  footer: [],
   chapters: [
     {
       id: "overallMap",
