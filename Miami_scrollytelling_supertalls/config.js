@@ -88,7 +88,7 @@ var config = {
       location: {
         center: [-80.1895731176583,25.7774202098037],
         zoom: 17.79,
-        zoomSmall: 11,
+        zoomSmall: 16,
         pitch: 32.50,
         bearing: -25.60,
       },
@@ -121,7 +121,7 @@ var config = {
       location: {
         center: [-80.188597555905,25.7728928912491],
         zoom: 17.48,
-        zoomSmall: 14,
+        zoomSmall: 16,
         pitch: 45,
         bearing: 1.09,
       },
@@ -154,7 +154,7 @@ var config = {
       location: {
         center: [-80.1910412701565,25.7668053996104],
         zoom: 18.27,
-        zoomSmall: 14,
+        zoomSmall: 16,
         pitch: 54.5,
         bearing: .74,
       },
@@ -187,7 +187,7 @@ var config = {
       location: {
         center: [-80.1905477438852,25.7708809096629],
         zoom: 17.52,
-        zoomSmall: 14,
+        zoomSmall: 16,
         pitch: 54.5,
         bearing: -.07,
       },
@@ -220,7 +220,7 @@ var config = {
       location: {
         center: [-80.1910695518629,25.7645244788327],
         zoom: 17.52,
-        zoomSmall: 14,
+        zoomSmall: 16,
         pitch: 54.5,
         bearing: -.07,
       },
