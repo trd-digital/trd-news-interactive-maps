@@ -19,9 +19,9 @@ let introDiv =
 
 let divChapter1 =
   "<h3>300 Biscayne Boulevard | PMG and its partners, Greybrook, Mohari Hospitality, S2 Development and Hilton </h3>" +
-  '<img src="images/WaldorfAstoria.jpg">' +
-  '<p class="imageCredit">Insert credit here...</p>' +
-  "<p>Waldorf Astoria Hotel & Residences: This will be the first building in Miami that will have a tuned mass damper. Expected completion is in 2027. The general contractor is John Moriarty & Associates. The tower will have 205 hotel keys and 360 luxury condo units, which were 87 percent pre-sold as of November.  This will be the tallest residental structure south of New York once completed. </p>";
+  // '<img src="images/WaldorfAstoria.jpg">' +
+  // '<p class="imageCredit">Insert credit here...</p>' +
+  "<p>Waldorf Astoria Hotel & Residences: Expected completion is in 2027. The tower will have 205 hotel keys and 360 luxury condo units, which were 87 percent pre-sold as of November.  This will be the tallest residental structure south of New York once completed. </p>";
 
 let divChapter2 =
   "<h3>100 South Biscayne Boulevard | Tibor Hollo's Florida East Coast Realty</h3>" +
@@ -29,20 +29,20 @@ let divChapter2 =
 
 let divChapter3 =
   "<h3>700 Brickell Avenue and 799 Brickell Plaza | Swire Properties and Steve Ross' Related Companies</h3>" +
-  '<img src="images/OneBrickell.jpg">' +
-  '<p class="imageCredit">Insert credit here...</p>' +
+  // '<img src="images/OneBrickell.jpg">' +
+  // '<p class="imageCredit">Insert credit here...</p>' +
   "<p>Construction is expected to start next year. This will be an office tower at the Brickell City Centre.</p>";
 
 let divChapter4 =
   "<h3>400 Southeast Second Avenue | Hyatt Hotels and Gencom</h3>" +
-  '<img src="images/Riverbridge.jpg">' +
-  '<p class="imageCredit">Insert credit here...</p>' +
-  "<p>The Miami Riverbridge project will redevelop the James L. Knight Center and next-door Hyatt hotel with three towers. One of the towers will rise 1,049 feet and will have 860 units. This project, or the developers' lease of the develppment site from the city rather, was approved by Miami voters in a November referendum.</p>";
+  // '<img src="images/Riverbridge.jpg">' +
+  // '<p class="imageCredit">Insert credit here...</p>' +
+  "<p>The Miami Riverbridge project will redevelop the James L. Knight Center and next-door Hyatt hotel with three towers. One of the towers will rise 1,049 feet and will have 860 units. Miami voters approved the lease for the project site in a November referendum.</p>";
 
 let divChapter5 =
   "<h3>888 Brickell Avenue | Michael Stern's JDS Development Group</h3>" +
-  '<img src="images/888 Brickell Avenue.jpg">' +
-  '<p class="imageCredit">Insert credit here...</p>' +
+  // '<img src="images/888 Brickell Avenue.jpg">' +
+  // '<p class="imageCredit">Insert credit here...</p>' +
   "<p>The tower is branded as 888. It will have 259 residential units for sale (condos). Developer JDS just scored FAA approval for the tower's height. </p>";
 
 var config = {
