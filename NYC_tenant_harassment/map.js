@@ -22,17 +22,15 @@ function mapDetailsFunction(mapID, visibility, source) {
         paint: {
             'circle-color': [
                 'match',
-                ['get','CaseOpenYear'],
-                '2018', 
+                ['get','FindingOfHarassment'],
+                'N/A', 
                 '#FFA500', // orange
-                '2019', 
+                'No Harassment', 
                 '#0000FF', // blue
-                '2020', 
+                'After Inquest', 
                 '#FFFF00', // yellow
-                '2021', 
-                '#00FF00', // green
-                '2022', 
-                '#FF0000', // red
+                'After Trial', 
+                '#A020F0', // purple
                 '#ccc'],
             'circle-stroke-color': '#000000',
             'circle-stroke-width': 0.5,
@@ -45,18 +43,16 @@ function mapDetailsFunction(mapID, visibility, source) {
     // define legend
     // define layer names
     const layers = [
-    '2018',
-    '2019',
-    '2020',
-    '2021',
-    '2022'
+    'N/A',
+    'No Harassment',
+    'After Inquest',
+    'After Trial'
     ];
     const colors = [
     '#FFA500',
     '#0000FF',
     '#FFFF00',
-    '#00FF00',
-    '#FF0000'
+    '#A020F0'
     ];
 
     // // create legend
@@ -78,15 +74,13 @@ function mapDetailsFunction(mapID, visibility, source) {
 
     // load map layers
     map.on("load", function () {
-    mapDetailsFunction("2018", "visible", "data/NYC_tenant_harassment2018.geojson");
+    mapDetailsFunction("N/A", "visible", "data/NYC_tenant_harassment_NA.geojson");
         map.addLayer(mapDetails);
-    mapDetailsFunction("2019", "visible", "data/NYC_tenant_harassment2019.geojson");
+    mapDetailsFunction("No Harassment", "visible", "data/NYC_tenant_harassment_NH.geojson");
         map.addLayer(mapDetails);
-    mapDetailsFunction("2020", "visible", "data/NYC_tenant_harassment2020.geojson");
+    mapDetailsFunction("After Inquest", "visible", "data/NYC_tenant_harassment_AI.geojson");
         map.addLayer(mapDetails);
-    mapDetailsFunction("2021", "visible", "data/NYC_tenant_harassment2021.geojson");
-        map.addLayer(mapDetails);
-    mapDetailsFunction("2022", "visible", "data/NYC_tenant_harassment2022.geojson");
+    mapDetailsFunction("After Trial", "visible", "data/NYC_tenant_harassment_AT.geojson");
         map.addLayer(mapDetails);
     });
 
@@ -95,46 +89,34 @@ function mapDetailsFunction(mapID, visibility, source) {
                     const type = event.target.value;
                     // update the map filter
                     if (type === 'all') {
-                        map.setLayoutProperty('2018','visibility','visible');
-                        map.setLayoutProperty('2019','visibility','visible');
-                        map.setLayoutProperty('2020','visibility','visible');
-                        map.setLayoutProperty('2021','visibility','visible');
-                        map.setLayoutProperty('2022','visibility','visible');
-                    } else if (type === '2018') {
-                        map.setLayoutProperty('2018','visibility','visible');
-                        map.setLayoutProperty('2019','visibility','none');
-                        map.setLayoutProperty('2020','visibility','none');
-                        map.setLayoutProperty('2021','visibility','none');
-                        map.setLayoutProperty('2022','visibility','none');
-                    } else if (type === '2019') {
-                        map.setLayoutProperty('2018','visibility','none');
-                        map.setLayoutProperty('2019','visibility','visible');
-                        map.setLayoutProperty('2020','visibility','none');
-                        map.setLayoutProperty('2021','visibility','none');
-                        map.setLayoutProperty('2022','visibility','none');
-                    } else if (type === '2020') {
-                        map.setLayoutProperty('2018','visibility','none');
-                        map.setLayoutProperty('2019','visibility','none');
-                        map.setLayoutProperty('2020','visibility','visible');
-                        map.setLayoutProperty('2021','visibility','none');
-                        map.setLayoutProperty('2022','visibility','none');
-                    } else if (type === '2021') {
-                        map.setLayoutProperty('2018','visibility','none');
-                        map.setLayoutProperty('2019','visibility','none');
-                        map.setLayoutProperty('2020','visibility','none');
-                        map.setLayoutProperty('2021','visibility','visible');
-                        map.setLayoutProperty('2022','visibility','none');
-                    } else if (type === '2022') {
-                        map.setLayoutProperty('2018','visibility','none');
-                        map.setLayoutProperty('2019','visibility','none');
-                        map.setLayoutProperty('2020','visibility','none');
-                        map.setLayoutProperty('2021','visibility','none');
-                        map.setLayoutProperty('2022','visibility','visible');
-                    }
-                });
+                        map.setLayoutProperty('N/A','visibility','visible');
+                        map.setLayoutProperty('No Harassment','visibility','visible');
+                        map.setLayoutProperty('After Inquest','visibility','visible');
+                        map.setLayoutProperty('After Trial','visibility','visible');
+                    } else if (type === 'N/A') {
+                        map.setLayoutProperty('N/A','visibility','visible');
+                        map.setLayoutProperty('No Harassment','visibility','none');
+                        map.setLayoutProperty('After Inquest','visibility','none');
+                        map.setLayoutProperty('After Trial','visibility','none');
+                    } else if (type === 'No Harassment') {
+                        map.setLayoutProperty('N/A','visibility','none');
+                        map.setLayoutProperty('No Harassment','visibility','visible');
+                        map.setLayoutProperty('After Inquest','visibility','none');
+                        map.setLayoutProperty('After Trial','visibility','none');
+                    } else if (type === 'After Inquest') {
+                        map.setLayoutProperty('N/A','visibility','none');
+                        map.setLayoutProperty('No Harassment','visibility','none');
+                        map.setLayoutProperty('After Inquest','visibility','visible');
+                        map.setLayoutProperty('After Trial','visibility','none');
+                    } else if (type === 'After Trial') {
+                        map.setLayoutProperty('N/A','visibility','none');
+                        map.setLayoutProperty('No Harassment','visibility','none');
+                        map.setLayoutProperty('After Inquest','visibility','none');
+                        map.setLayoutProperty('After Trial','visibility','visible');
+                }});
 
-        // Create the popup - 2018
-        map.on('click', '2018', function (e) {
+        // Create the popup - N/A
+        map.on('click', 'N/A', function (e) {
             let StreetName = e.features[0].properties.StreetName;
             let FindingOfHarassment = e.features[0].properties.FindingOfHarassment;
             let Respondent = e.features[0].properties.Respondent;
@@ -150,16 +132,16 @@ function mapDetailsFunction(mapID, visibility, source) {
                 .addTo(map);
         });
         // Change the cursor to a pointer when the mouse is over the turnstileData layer.
-        map.on('mouseenter', '2018', function () {
+        map.on('mouseenter', 'N/A', function () {
             map.getCanvas().style.cursor = 'pointer';
         });
         // Change it back to a pointer when it leaves.
-        map.on('mouseleave', '2018', function () {
+        map.on('mouseleave', 'N/A', function () {
             map.getCanvas().style.cursor = '';
         });
 
-        // Create the popup - 2019
-        map.on('click', '2019', function (e) {
+        // Create the popup - No Harassment
+        map.on('click', 'No Harassment', function (e) {
             let StreetName = e.features[0].properties.StreetName;
             let FindingOfHarassment = e.features[0].properties.FindingOfHarassment;
             let Respondent = e.features[0].properties.Respondent;
@@ -175,16 +157,16 @@ function mapDetailsFunction(mapID, visibility, source) {
                 .addTo(map);
         });
         // Change the cursor to a pointer when the mouse is over the turnstileData layer.
-        map.on('mouseenter', '2019', function () {
+        map.on('mouseenter', 'No Harassment', function () {
             map.getCanvas().style.cursor = 'pointer';
         });
         // Change it back to a pointer when it leaves.
-        map.on('mouseleave', '2019', function () {
+        map.on('mouseleave', 'No Harassment', function () {
             map.getCanvas().style.cursor = '';
         });
 
-        // Create the popup - 2020
-        map.on('click', '2020', function (e) {
+        // Create the popup - After Inquest
+        map.on('click', 'After Inquest', function (e) {
             let StreetName = e.features[0].properties.StreetName;
             let FindingOfHarassment = e.features[0].properties.FindingOfHarassment;
             let Respondent = e.features[0].properties.Respondent;
@@ -200,16 +182,16 @@ function mapDetailsFunction(mapID, visibility, source) {
                 .addTo(map);
         });
         // Change the cursor to a pointer when the mouse is over the turnstileData layer.
-        map.on('mouseenter', '2020', function () {
+        map.on('mouseenter', 'After Inquest', function () {
             map.getCanvas().style.cursor = 'pointer';
         });
         // Change it back to a pointer when it leaves.
-        map.on('mouseleave', '2020', function () {
+        map.on('mouseleave', 'After Inquest', function () {
             map.getCanvas().style.cursor = '';
         });
 
         // Create the popup - 2021
-        map.on('click', '2021', function (e) {
+        map.on('click', 'After Trial', function (e) {
             let StreetName = e.features[0].properties.StreetName;
             let FindingOfHarassment = e.features[0].properties.FindingOfHarassment;
             let Respondent = e.features[0].properties.Respondent;
@@ -225,36 +207,11 @@ function mapDetailsFunction(mapID, visibility, source) {
             .addTo(map);
     });
         // Change the cursor to a pointer when the mouse is over the turnstileData layer.
-        map.on('mouseenter', '2021', function () {
+        map.on('mouseenter', 'After Trial', function () {
             map.getCanvas().style.cursor = 'pointer';
         });
         // Change it back to a pointer when it leaves.
-        map.on('mouseleave', '2021', function () {
-            map.getCanvas().style.cursor = '';
-        });
-
-        // Create the popup - 2022
-        map.on('click', '2022', function (e) {
-            let StreetName = e.features[0].properties.StreetName;
-            let FindingOfHarassment = e.features[0].properties.FindingOfHarassment;
-            let Respondent = e.features[0].properties.Respondent;
-            let Penalty = e.features[0].properties.Penalty;
-            let DateFiled = e.features[0].properties.CaseOpenDate;
-            new mapboxgl.Popup()
-                .setLngLat(e.lngLat)
-                .setHTML('<h2>' + StreetName + '</h2>' 
-                + '<strong>Result: ' + FindingOfHarassment + '</strong> '
-                + '<p>Respondent: ' + Respondent + '</p>'
-                + '<u><p> Penalty: ' + Penalty + '</u></p>'
-                + '<p> Case Opened Date: ' + DateFiled + '</p>')
-                .addTo(map);
-        });
-        // Change the cursor to a pointer when the mouse is over the turnstileData layer.
-        map.on('mouseenter', '2022', function () {
-            map.getCanvas().style.cursor = 'pointer';
-        });
-        // Change it back to a pointer when it leaves.
-        map.on('mouseleave', '2022', function () {
+        map.on('mouseleave', 'After Trial', function () {
             map.getCanvas().style.cursor = '';
         });
 
