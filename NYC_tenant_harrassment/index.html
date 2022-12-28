@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8' />
+        <title>NYC Tenant Harassment Cases</title>
+        <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+        <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.js'></script>
+        <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css' rel='stylesheet' />
+        <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #6C7D7F;
+        }
+
+        #map {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .mapboxgl-popup-content h4 {
+            font-weight: 300;
+            font-size: 1.5em;
+            border-width: 0px 0px 0.5px 0px;
+            border-style: solid;
+            border-color: rgb(80, 80, 80);
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+        .mapboxgl-popup-content h2 {
+            font-weight: 500;
+            margin-top: 0.5em;
+            margin-bottom: 0.3em;
+        }
+        .mapboxgl-popup-content p {
+            font-weight: 300;
+            margin-top: 0.3em;
+            margin-bottom: 0em;
+        }
+
+        /* overlay styling */
+
+        .map-overlay {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #fff;
+            margin-right: 20px;
+            font-family: Calibri;
+            overflow: auto;
+            border-radius: 3px;
+        }
+
+        /* legend stuff */
+
+        #legend {
+            padding: 10px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            line-height: 18px;
+            height: 180px;
+            margin-bottom: 110px;
+            width: 110px;
+        }
+
+        /* #legend-2 {
+            padding: 10px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            line-height: 18px;
+            height: 55px;
+            margin-bottom: 30px;
+            width: 135px;
+        }
+
+        .legend-key {
+            display: inline-block;
+            border-radius: 20%;
+            width: 10px;
+            height: 10px;
+            margin-right: 5px;
+            } */
+
+        </style>
+
+        </head>
+</head>
+
+<body>
+    <div id='map'></div>
+    <div class='map-overlay' id='legend'>
+        <div>
+            <p>Case File Year</p>
+        <div>
+            <input type="radio" id="all" name="year" value="all" checked="checked">
+            <label for="all">All years</label><br />
+        </div>
+
+        <div>
+            <input type="radio" id="2018" name="year" value="2018">
+            <label for="2018">2018</label><br />
+        </div>
+
+        <div>
+            <input type="radio" id="2019" name="year" value="2019">
+            <label for="2019">2019</label><br />
+        </div>
+
+        <div>
+            <input type="radio" id="2020" name="year" value="2020">
+            <label for="2020">2020</label><br />
+        </div>
+
+        <div>
+            <input type="radio" id="2021" name="year" value="2021">
+            <label for="2021">2021</label><br />
+        </div>
+
+        <div>
+            <input type="radio" id="2022" name="year" value="2022">
+            <label for="2022">2022</label><br />
+        </div>
+
+    </div>
+
+    <div class='map-overlay' id='legend-2'></div>
+    <script type='text/javascript' src="map.js"></script>
+</body>
+
+</html>
