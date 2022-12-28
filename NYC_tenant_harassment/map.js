@@ -24,13 +24,13 @@ function mapDetailsFunction(mapID, visibility, source) {
                 'match',
                 ['get','FindingOfHarassment'],
                 'N/A', 
-                '#FFA500', // orange
+                '#D2B48C', // orange
                 'No Harassment', 
-                '#0000FF', // blue
+                '#00FF00', // green
                 'After Inquest', 
-                '#FFFF00', // yellow
+                '#FF0000', // red
                 'After Trial', 
-                '#A020F0', // purple
+                '#000000', // black
                 '#ccc'],
             'circle-stroke-color': '#000000',
             'circle-stroke-width': 0.5,
@@ -125,7 +125,7 @@ function mapDetailsFunction(mapID, visibility, source) {
             new mapboxgl.Popup()
                 .setLngLat(e.lngLat)
                 .setHTML('<h2>' + StreetName + '</h2>' 
-                + '<strong>Result: ' + FindingOfHarassment + '</strong> '
+                + '<strong>Result: Inconclusive </strong> '
                 + '<p>Respondent: ' + Respondent + '</p>'
                 + '<u><p> Penalty: ' + Penalty + '</u></p>'
                 + '<p> Case Opened Date: ' + DateFiled + '</p>')
@@ -165,7 +165,7 @@ function mapDetailsFunction(mapID, visibility, source) {
             map.getCanvas().style.cursor = '';
         });
 
-        // Create the popup - After Inquest
+        // Create the popup - After Inquest (After Formal Investigation)
         map.on('click', 'After Inquest', function (e) {
             let StreetName = e.features[0].properties.StreetName;
             let FindingOfHarassment = e.features[0].properties.FindingOfHarassment;
@@ -175,7 +175,7 @@ function mapDetailsFunction(mapID, visibility, source) {
             new mapboxgl.Popup()
                 .setLngLat(e.lngLat)
                 .setHTML('<h2>' + StreetName + '</h2>' 
-                + '<strong>Result: ' + FindingOfHarassment + '</strong> '
+                + '<strong>Result: Harassment Found After Harassment Found after Landlord No-Show</strong> '
                 + '<p>Respondent: ' + Respondent + '</p>'
                 + '<u><p> Penalty: ' + Penalty + '</u></p>'
                 + '<p> Case Opened Date: ' + DateFiled + '</p>')
@@ -190,7 +190,7 @@ function mapDetailsFunction(mapID, visibility, source) {
             map.getCanvas().style.cursor = '';
         });
 
-        // Create the popup - 2021
+        // Create the popup - After Trial
         map.on('click', 'After Trial', function (e) {
             let StreetName = e.features[0].properties.StreetName;
             let FindingOfHarassment = e.features[0].properties.FindingOfHarassment;
@@ -200,7 +200,7 @@ function mapDetailsFunction(mapID, visibility, source) {
             new mapboxgl.Popup()
             .setLngLat(e.lngLat)
             .setHTML('<h2>' + StreetName + '</h2>' 
-            + '<strong>Result: ' + FindingOfHarassment + '</strong> '
+            + '<strong>Result: Harassment Found After Trial </strong> '
             + '<p>Respondent: ' + Respondent + '</p>'
             + '<u><p> Penalty: ' + Penalty + '</u></p>'
             + '<p> Case Opened Date: ' + DateFiled + '</p>')
