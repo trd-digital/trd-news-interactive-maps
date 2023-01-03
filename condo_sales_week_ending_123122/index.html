@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_266fd199a06e8641ec01786fdac9316c {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>Recent Miami-Dade Condo Sales </b></h3>
+             
+    
+                <p align="center" style="vertical-align: bottom; font-size:13px"><i>December 25th - December 31th</i></p>
+                
+    
+            <div class="folium-map" id="map_266fd199a06e8641ec01786fdac9316c" ></div>
+        
+</body>
+<script>    
+    
+            var map_266fd199a06e8641ec01786fdac9316c = L.map(
+                "map_266fd199a06e8641ec01786fdac9316c",
+                {
+                    center: [25.837599779999994, -80.14313192],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 10,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_a76c8d1150dc9aabc8d4c56f4fe00454 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_266fd199a06e8641ec01786fdac9316c);
+        
+    
+            var marker_193080543dba466317c6c9b10a1ac862 = L.marker(
+                [25.9219798, -80.1217032],
+                {}
+            ).addTo(map_266fd199a06e8641ec01786fdac9316c);
+        
+    
+            marker_193080543dba466317c6c9b10a1ac862.bindTooltip(
+                `<div>
+                     Building Name: <strong>Ritz-Carlton Sunny Isles </strong><br>     Sale Price: <strong>$7,300,000.00</strong><br>Days on Market:     <strong>28</strong><br>Listing Agent: <strong>Chad Carroll     </strong><br>Buying Agent: <strong>Brian Judge</strong><br>Price sq ft:     <strong>$2,278.40</strong><br>Address: <strong>15701 Collins Ave 3805 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_40b516ed547c295a10cb2e80c42c7706 = L.marker(
+                [25.8544637, -80.1200027],
+                {}
+            ).addTo(map_266fd199a06e8641ec01786fdac9316c);
+        
+    
+            marker_40b516ed547c295a10cb2e80c42c7706.bindTooltip(
+                `<div>
+                     Building Name: <strong>L'Atelier Condo </strong><br>     Sale Price: <strong>$4,500,000.00</strong><br>Days on Market:     <strong>28</strong><br>Listing Agent: <strong>Ron Laviv     </strong><br>Buying Agent: <strong>Ron Laviv</strong><br>Price sq ft:     <strong>$2,109.70</strong><br>Address: <strong>6901 Collins Ave 601 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e07daae8715c7d2def99dc2e4151b86d = L.marker(
+                [25.8227293, -80.1226745],
+                {}
+            ).addTo(map_266fd199a06e8641ec01786fdac9316c);
+        
+    
+            marker_e07daae8715c7d2def99dc2e4151b86d.bindTooltip(
+                `<div>
+                     Building Name: <strong>Green Diamond </strong><br>     Sale Price: <strong>$3,000,000.00</strong><br>Days on Market:     <strong>141</strong><br>Listing Agent: <strong>Mendel Fellig     </strong><br>Buying Agent: <strong>Joanna Jimenez</strong><br>Price sq ft:     <strong>$1,515.15</strong><br>Address: <strong>4775 Collins Ave 3503 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e7bad1f61e6f304597e2646e90db94e7 = L.marker(
+                [25.883813, -80.1217561],
+                {}
+            ).addTo(map_266fd199a06e8641ec01786fdac9316c);
+        
+    
+            marker_e7bad1f61e6f304597e2646e90db94e7.bindTooltip(
+                `<div>
+                     Building Name: <strong>Azure Condo </strong><br>     Sale Price: <strong>$2,276,000.00</strong><br>Days on Market:     <strong>4</strong><br>Listing Agent: <strong>Ivan Chorney     </strong><br>Buying Agent: <strong>Klaudia Juniewicz</strong><br>Price sq ft:     <strong>$1,170.18</strong><br>Address: <strong>9401 Collins Ave 1002 Surfside</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_64bf721eeabc2a2dbf3748a882ede475 = L.marker(
+                [25.8392568, -80.12039469999999],
+                {}
+            ).addTo(map_266fd199a06e8641ec01786fdac9316c);
+        
+    
+            marker_64bf721eeabc2a2dbf3748a882ede475.bindTooltip(
+                `<div>
+                     Building Name: <strong>57 Ocean</strong><br>     Sale Price: <strong>$2,225,000.00</strong><br>Days on Market:     <strong>89</strong><br>Listing Agent: <strong>Dina Goldentayer     </strong><br>Buying Agent: <strong>Christopher Jude</strong><br>Price sq ft:     <strong>$1,787.15</strong><br>Address: <strong>5775 Collins Ave 605 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_97c4116b8eb0d0a47fd34c7397e93e40 = L.marker(
+                [25.789686, -80.1739309],
+                {}
+            ).addTo(map_266fd199a06e8641ec01786fdac9316c);
+        
+    
+            marker_97c4116b8eb0d0a47fd34c7397e93e40.bindTooltip(
+                `<div>
+                     Building Name: <strong>One Thousand Venetian </strong><br>     Sale Price: <strong>$2,150,000.00</strong><br>Days on Market:     <strong>44</strong><br>Listing Agent: <strong>Anna Sherrill     </strong><br>Buying Agent: <strong>Selim Ozutez</strong><br>Price sq ft:     <strong>$1,069.65</strong><br>Address: <strong>1000 Venetian Way 602 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_93e3065e17fecd3fe0acd90e0ec2fbca = L.marker(
+                [25.789686, -80.1739309],
+                {}
+            ).addTo(map_266fd199a06e8641ec01786fdac9316c);
+        
+    
+            marker_93e3065e17fecd3fe0acd90e0ec2fbca.bindTooltip(
+                `<div>
+                     Building Name: <strong>One Thousand Venetian </strong><br>     Sale Price: <strong>$2,000,000.00</strong><br>Days on Market:     <strong>11</strong><br>Listing Agent: <strong>Aouri Makhlouf     </strong><br>Buying Agent: <strong>Anna Sherrill</strong><br>Price sq ft:     <strong>$1,162.79</strong><br>Address: <strong>1000 Venetian Way 1004 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_26033ffe7989a72c426d9a3cfa5da586 = L.marker(
+                [25.7693285, -80.1837717],
+                {}
+            ).addTo(map_266fd199a06e8641ec01786fdac9316c);
+        
+    
+            marker_26033ffe7989a72c426d9a3cfa5da586.bindTooltip(
+                `<div>
+                     Building Name: <strong>Three Tequesta Point </strong><br>     Sale Price: <strong>$1,030,000.00</strong><br>Days on Market:     <strong>58</strong><br>Listing Agent: <strong>Stephan Hermida     </strong><br>Buying Agent: <strong>Claudia Avellan-Juez</strong><br>Price sq ft:     <strong>$594.00</strong><br>Address: <strong>848 Brickell Key Dr 905 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e7fde3bfaa5c87cbc14b2a42a977ab2b = L.marker(
+                [25.9285885, -80.1509559],
+                {}
+            ).addTo(map_266fd199a06e8641ec01786fdac9316c);
+        
+    
+            marker_e7fde3bfaa5c87cbc14b2a42a977ab2b.bindTooltip(
+                `<div>
+                     Building Name: <strong>The Harbour North Condo </strong><br>     Sale Price: <strong>$900,000.00</strong><br>Days on Market:     <strong>385</strong><br>Listing Agent: <strong>Simy Chocron Morely     </strong><br>Buying Agent: <strong>Gustavo Gambino</strong><br>Price sq ft:     <strong>$578.03</strong><br>Address: <strong>16385 Biscayne Blvd 1207 North Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_3f3686349b6ef72fea7f1097dfda672b = L.marker(
+                [25.7764662, -80.1421986],
+                {}
+            ).addTo(map_266fd199a06e8641ec01786fdac9316c);
+        
+    
+            marker_3f3686349b6ef72fea7f1097dfda672b.bindTooltip(
+                `<div>
+                     Building Name: <strong>The Floridian</strong><br>     Sale Price: <strong>$900,000.00</strong><br>Days on Market:     <strong>1</strong><br>Listing Agent: <strong>Dimitri Voncini     </strong><br>Buying Agent: <strong>Dimitri Voncini</strong><br>Price sq ft:     <strong>$784.66</strong><br>Address: <strong>650 West Ave 3012 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
