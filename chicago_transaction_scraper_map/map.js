@@ -23,15 +23,15 @@ function mapDetailsFunction(mapID, visibility, source) {
             'circle-color': [
                 'match',
                 ['get','PUB_YEAR'],
-                '2018', 
+                2018, 
                 '#FFA500', // orange
-                '2019', 
+                2019, 
                 '#0000FF', // blue
-                '2020', 
+                2020, 
                 '#FFFF00', // yellow
-                '2021', 
+                2021, 
                 '#00FF00', // green
-                '2022', 
+                2022, 
                 '#FF0000', // red
                 '#ccc'],
             'circle-stroke-color': '#000000',
