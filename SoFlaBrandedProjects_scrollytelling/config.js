@@ -10,7 +10,7 @@
 // "<p>The disclosed land acquisitions in downtown Miami total more than $230 million. This doesn't include other projects in Brickell, Edgewater and Wynwood.</p>";
 
 let introDiv =
-"<p style='font-size:20px;'>Scroll down for an inside look at South Florida's branded condo boom.</p>" +
+"<p style='font-size:20px;'>Scroll down for a guided, inside look at South Florida's branded condo boom.</p>" +
 "<p> &#8681;  &#8681;  &#8681;</p>"
 
 // let bylineDiv = "<p><em>By Adam Farence. Research by Lidia Dinkova and Katherine Kallergis</em></p>";
@@ -35,6 +35,9 @@ let divChapter3 =
   '<img src="images/WaldorfAstoria.jpg">' +
   '<p class="imageCredit">Insert credit here...</p>' +
   "<p>PMG, Greybook, Mohari Hospitality, S2 Development and Hilton plan the Waldorf Astoria, a 100-story tower with 360 condos and 205 hotel rooms.</p>";
+
+let divChapter4 = 
+"<p style='font-size:20px;'>Most branded projects are in Miami.</p>"
 
 var config = {
   style: "mapbox://styles/trddata/clcjj6iyv009a15qs5sv5wc5z",
@@ -161,11 +164,32 @@ var config = {
       ],
       onChapterExit: [
         {
-          layer: "overallMap2",
+          layer: "MiamiCenter",
           opacity: .5,
           duration: 300,
         },
       ],
+    },
+    {
+      id: "MiamiCenter",
+      alignment: "left",
+      hidden: false,
+      title: "",
+      image: "",
+      description: "",
+      chapterDiv: divChapter4,
+      location: {
+        center: [-80.199,25.785],
+        zoom: 12,
+        zoomSmall: 7,
+        pitch: 0,
+        bearing: 0,
+      },
+      mapAnimation: "flyTo",
+      rotateAnimation: false,
+      callback: "",
+      onChapterEnter: "300 Biscayne Boulevard in Miami",
+      onChapterExit: "overallMap2",
     },
     {
       id: "overallMap2",
