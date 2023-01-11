@@ -19,31 +19,31 @@ let introDiv =
 //   '<p><a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox</a> | <a href="http://www.openstreetmap.org/about/" target="_blank">© OpenStreetMap</a>';
 
 let divChapter1 =
-  "<h3>1420 South Miami Avenue in Miami | Cipriani Residences </h3>" +
+  "<h3>Cipriani Residences | 1420 South Miami Avenue in Miami </h3>" +
   '<img src="images/Cipriani Residences Miami Crown.jpg">' +
   '<p class="imageCredit">Credit: The Boundary</p>' +
   "<p>Mast Capital plans a new 80-story condo tower, the first Cipriani-branded residential building in the U.S. It is expected to have 397 units, according to a press release. </p>";
 
 let divChapter2 =
-  "<h3>18401 Collins Avenue in Sunny Isles Beach | Bentley Residences</h3>" +
+  "<h3>Bentley Residences | 18401 Collins Avenue in Sunny Isles Beach</h3>" +
   '<img src="images/Dezer-BentleyTower-05-Beach_View-03.jpg">' +
   '<p class="imageCredit">Credit: Dezer Development</p>' +
   "<p>Dezer Development plans a 61-story condo tower with 216 units. Dezer partnered with Bentley Motors to develop the luxury automotive brand's first residential building in the world.</p>";
 
 let divChapter3 =
-  "<h3>300 Biscayne Boulevard in Miami | Waldorf Astoria Hotel and Residences</h3>" +
+  "<h3>Waldorf Astoria Hotel and Residences | 300 Biscayne Boulevard in Miami</h3>" +
   '<img src="images/WaldorfAstoria.jpg">' +
   '<p class="imageCredit">Credit: ArX Solutions</p>' +
   "<p>PMG, Greybook, Mohari Hospitality, S2 Development and Hilton plan the Waldorf Astoria, a 100-story tower with 360 condos and 205 hotel rooms.</p>";
 
 let divChapter4 =
-  "<h3>1901 Collins Avenue in Miami Beach | Auberge Residences at the Shore Club</h3>" +
+  "<h3>Auberge Residences at the Shore Club | 1901 Collins Avenue in Miami Beach</h3>" +
   '<img src="images/auberge_residences.png">' +
   '<p class="imageCredit">Credit: Kobi Karp Architecture & Interior Design</p>' +
   "<p>Witkoff and Monroe Capital plan the Auberge Residences at the Shore Club, a 17-story tower with 49-units. Douglas Elliman will lead sales of the Auberge-branded hotel and development.</p>";
 
 let divChapter5 = 
-"<p style='font-size:20px;'>Most branded projects are in Miami.</p>"
+"<p style='font-size:20px;'>South Florida has become a hub for branded condo projects, with more than two dozen in the planning stages or under construction in the tri-county region. Read more below.</p>"
 
 var config = {
   style: "mapbox://styles/trddata/clcjj6iyv009a15qs5sv5wc5z",
