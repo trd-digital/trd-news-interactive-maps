@@ -327,3 +327,29 @@ map.on("load", function () {
 /* Here we watch for any resizing of the screen to
 adjust our scrolling setup */
 window.addEventListener("resize", scroller.resize);
+
+// Create the popup
+map.on('click', '1420 South Miami Avenue in Miami', function (e) {
+    let full_address = e.features[0].properties.full_address;
+    let project_name = e.features[0].properties.project_name;
+    let developers = e.features[0].properties.developers;
+    let brokerage = e.features[0].properties.brokerage;
+    let brand = e.features[0].properties.brand;
+    let description = e.features[0].properties.description;
+    new mapboxgl.Popup()
+        .setLngLat(e.lngLat)
+        .setHTML('<h2>' + project_name + '</h2>' 
+        + '<strong>Developers:</strong> ' + developers + '<br>'
+        + '<strong>Brokerage:</strong> ' + brokerage + '<br>'
+        + '<strong>Brand:</strong>' + brand + '<br><br>'
+        + '<strong>Description:</strong> ' + description)
+        .addTo(map);
+});
+// Change the cursor to a pointer when the mouse is over the defined layer.
+map.on('mouseenter', '1420 South Miami Avenue in Miami', function () {
+    map.getCanvas().style.cursor = 'pointer';
+});
+// Change it back to a pointer when it leaves.
+map.on('mouseleave', '1420 South Miami Avenue in Miami', function () {
+    map.getCanvas().style.cursor = '';
+});
