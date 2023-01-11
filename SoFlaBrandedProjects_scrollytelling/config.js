@@ -59,7 +59,7 @@ var config = {
       hidden: true,
       chapterDiv: [],
       location: {
-        center: [-80.1921083,26.2504704],
+        center: [-80.1921083,26.4304704],
         zoom: 7,
         zoomSmall: 7,
         pitch: 0,
