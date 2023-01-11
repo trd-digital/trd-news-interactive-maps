@@ -230,12 +230,12 @@ map.on("load", function () {
         "circle-radius": [
           'interpolate',
           // Set the exponential rate of change to 0.5
-          ['exponential', 0.7],
+          ['exponential', 2.5],
           ['zoom'],
-          13,
-          10,
-          18,
-          17
+          1,
+          7,
+          20,
+          90
           ],
           "circle-opacity": 0.9,
           "circle-color":"#db3eb1",
@@ -243,6 +243,7 @@ map.on("load", function () {
           "circle-stroke-width": 1
       },
     },
+    'waterway-label'
   );
   map.addLayer(
     {
@@ -256,12 +257,12 @@ map.on("load", function () {
         "circle-radius": [
           'interpolate',
           // Set the exponential rate of change to 0.5
-          ['exponential', 0.7],
+          ['exponential', 2.5],
           ['zoom'],
-          13,
-          10,
-          18,
-          17
+          1,
+          7,
+          20,
+          90
           ],
           "circle-opacity": 0.9,
           "circle-color":"#db3eb1",
@@ -269,6 +270,7 @@ map.on("load", function () {
           "circle-stroke-width": 1
       },
     },
+    'waterway-label'
   );
   map.addLayer(
     {
@@ -282,12 +284,12 @@ map.on("load", function () {
         "circle-radius": [
           'interpolate',
           // Set the exponential rate of change to 0.5
-          ['exponential', 0.7],
+          ['exponential', 2.5],
           ['zoom'],
-          13,
-          10,
-          18,
-          17
+          1,
+          7,
+          20,
+          90
           ],
           "circle-opacity": 0.9,
           "circle-color":"#db3eb1",
@@ -295,6 +297,7 @@ map.on("load", function () {
           "circle-stroke-width": 1
       },
     },
+    'waterway-label'
   );
 
   // Setup the instance, pass callback functions

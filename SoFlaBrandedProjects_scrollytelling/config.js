@@ -10,7 +10,8 @@
 // "<p>The disclosed land acquisitions in downtown Miami total more than $230 million. This doesn't include other projects in Brickell, Edgewater and Wynwood.</p>";
 
 let introDiv =
-"<p>South Florida's Iconic Branded Projects:</p>"
+"<p style='font-size:20px;'>Scroll down for an inside look at South Florida's branded condo boom.</p>" +
+"<p> &#8681;  &#8681;  &#8681;</p>"
 
 // let bylineDiv = "<p><em>By Adam Farence. Research by Lidia Dinkova and Katherine Kallergis</em></p>";
 
@@ -19,18 +20,20 @@ let introDiv =
 
 let divChapter1 =
   "<h3>1420 South Miami Avenue in Miami | Cipriani Residences </h3>" +
-  // '<img src="images/WaldorfAstoria.jpg">' +
-  // '<p class="imageCredit">Insert credit here...</p>' +
+  '<img src="images/Cipriani Residences Miami Crown.jpg">' +
+  '<p class="imageCredit">Credit: The Boundary</p>' +
   "<p>Mast Capital plans a new 80-story condo tower, the first Cipriani-branded residential building in the U.S. It is expected to have 397 units, according to a press release. </p>";
 
 let divChapter2 =
   "<h3>18401 Collins Avenue in Sunny Isles Beach | Bentley Residences</h3>" +
+  '<img src="images/Dezer-BentleyTower-05-Beach_View-03.jpg">' +
+  '<p class="imageCredit">Credit: TK TK</p>' +
   "<p>Dezer Development plans a 61-story condo tower with 216 units. Dezer partnered with Bentley Motors to develop the luxury automotive brand's first residential building in the world.</p>";
 
 let divChapter3 =
   "<h3>300 Biscayne Boulevard in Miami | Waldorf Astoria Hotel and Residences</h3>" +
-  // '<img src="images/OneBrickell.jpg">' +
-  // '<p class="imageCredit">Insert credit here...</p>' +
+  '<img src="images/WaldorfAstoria.jpg">' +
+  '<p class="imageCredit">Insert credit here...</p>' +
   "<p>PMG, Greybook, Mohari Hospitality, S2 Development and Hilton plan the Waldorf Astoria, a 100-story tower with 360 condos and 205 hotel rooms.</p>";
 
 var config = {
@@ -40,7 +43,7 @@ var config = {
   markerColor: "#db3eb1",
   theme: "light",
   use3dTerrain: false,
-  topTitle: [],
+  topTitle: introDiv,
   title: [],
   subtitle: "",
   byline: [],
@@ -49,13 +52,13 @@ var config = {
   chapters: [
     {
       id: "overallMap",
-      alignment: "left",
-      hidden: false,
-      chapterDiv: introDiv,
+      alignment: "full",
+      hidden: true,
+      chapterDiv: [],
       location: {
         center: [-80.1921083,26.2504704],
         zoom: 7,
-        zoomSmall: 11,
+        zoomSmall: 7,
         pitch: 0,
         bearing: 0,
       },
