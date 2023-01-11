@@ -54,7 +54,7 @@ var config = {
       chapterDiv: introDiv,
       location: {
         center: [-80.1921083,26.2504704],
-        zoom: 8,
+        zoom: 7,
         zoomSmall: 11,
         pitch: 0,
         bearing: 0,
@@ -175,7 +175,7 @@ var config = {
       location: {
         center: [-80.1921083,26.2504704],
         zoom: 8,
-        zoomSmall: 11,
+        zoomSmall: 7,
         pitch: 0,
         bearing: 0,
       },

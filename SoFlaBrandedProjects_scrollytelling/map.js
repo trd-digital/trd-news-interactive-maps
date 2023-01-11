@@ -227,10 +227,20 @@ map.on("load", function () {
         data: "data/SoFla_branded_projects.geojson",
       },
       paint: {
-        "circle-color": "#db3eb1",
-        "circle-stroke-color": "#4d4d4d",
-        "circle-stroke-width": 0.5,
-        "circle-radius": 14
+        "circle-radius": [
+          'interpolate',
+          // Set the exponential rate of change to 0.5
+          ['exponential', 0.7],
+          ['zoom'],
+          13,
+          10,
+          18,
+          17
+          ],
+          "circle-opacity": 0.9,
+          "circle-color":"#db3eb1",
+          "circle-stroke-color": "#4d4d4d",
+          "circle-stroke-width": 1
       },
     },
   );
@@ -243,10 +253,20 @@ map.on("load", function () {
         data: "data/SoFla_branded_projects.geojson",
       },
       paint: {
-        "circle-color": "#db3eb1",
-        "circle-stroke-color": "#4d4d4d",
-        "circle-stroke-width": 0.5,
-        "circle-radius": 14
+        "circle-radius": [
+          'interpolate',
+          // Set the exponential rate of change to 0.5
+          ['exponential', 0.7],
+          ['zoom'],
+          13,
+          10,
+          18,
+          17
+          ],
+          "circle-opacity": 0.9,
+          "circle-color":"#db3eb1",
+          "circle-stroke-color": "#4d4d4d",
+          "circle-stroke-width": 1
       },
     },
   );
@@ -259,10 +279,20 @@ map.on("load", function () {
         data: "data/SoFla_branded_projects.geojson",
       },
       paint: {
-        "circle-color": "#db3eb1",
-        "circle-stroke-color": "#4d4d4d",
-        "circle-stroke-width": 0.5,
-        "circle-radius": 14
+        "circle-radius": [
+          'interpolate',
+          // Set the exponential rate of change to 0.5
+          ['exponential', 0.7],
+          ['zoom'],
+          13,
+          10,
+          18,
+          17
+          ],
+          "circle-opacity": 0.9,
+          "circle-color":"#db3eb1",
+          "circle-stroke-color": "#4d4d4d",
+          "circle-stroke-width": 1
       },
     },
   );
