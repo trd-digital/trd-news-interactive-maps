@@ -187,7 +187,7 @@ var config = {
       location: {
         center: [-80.128334,25.7950703],
         zoom: 17,
-        zoomSmall: 7,
+        zoomSmall: 16,
         pitch: 0,
         bearing: 0,
       },
@@ -208,7 +208,7 @@ var config = {
       location: {
         center: [-80.199,25.785],
         zoom: 12.5,
-        zoomSmall: 7,
+        zoomSmall: 12,
         pitch: 40,
         bearing: 30,
       },
