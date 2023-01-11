@@ -27,16 +27,22 @@ let divChapter1 =
 let divChapter2 =
   "<h3>18401 Collins Avenue in Sunny Isles Beach | Bentley Residences</h3>" +
   '<img src="images/Dezer-BentleyTower-05-Beach_View-03.jpg">' +
-  '<p class="imageCredit">Credit: TK TK</p>' +
+  '<p class="imageCredit">Credit: Dezer Development</p>' +
   "<p>Dezer Development plans a 61-story condo tower with 216 units. Dezer partnered with Bentley Motors to develop the luxury automotive brand's first residential building in the world.</p>";
 
 let divChapter3 =
   "<h3>300 Biscayne Boulevard in Miami | Waldorf Astoria Hotel and Residences</h3>" +
   '<img src="images/WaldorfAstoria.jpg">' +
-  '<p class="imageCredit">Insert credit here...</p>' +
+  '<p class="imageCredit">Credit: ArX Solutions</p>' +
   "<p>PMG, Greybook, Mohari Hospitality, S2 Development and Hilton plan the Waldorf Astoria, a 100-story tower with 360 condos and 205 hotel rooms.</p>";
 
-let divChapter4 = 
+let divChapter4 =
+  "<h3>1901 Collins Avenue in Miami Beach | Auberge Residences at the Shore Club</h3>" +
+  '<img src="images/auberge_residences.png">' +
+  '<p class="imageCredit">Credit: Kobi Karp Architecture & Interior Design</p>' +
+  "<p>Witkoff and Monroe Capital plan the Auberge Residences at the Shore Club, a 17-story tower with 49-units. Douglas Elliman will lead sales of the Auberge-branded hotel and development.</p>";
+
+let divChapter5 = 
 "<p style='font-size:20px;'>Most branded projects are in Miami.</p>"
 
 var config = {
@@ -59,7 +65,7 @@ var config = {
       hidden: true,
       chapterDiv: [],
       location: {
-        center: [-80.1921083,26.4304704],
+        center: [-80.1921083,26.04704],
         zoom: 7,
         zoomSmall: 7,
         pitch: 0,
@@ -73,7 +79,7 @@ var config = {
     },
     {
       id: "1420 South Miami Avenue in Miami",
-      alignment: "left",
+      alignment: "right",
       hidden: false,
       title: "",
       image: "",
@@ -113,7 +119,7 @@ var config = {
       description: "",
       chapterDiv: divChapter2,
       location: {
-        center: [-80.120438	,25.946842],
+        center: [-80.1208082,25.946942],
         zoom: 17.48,
         zoomSmall: 16,
         pitch: 45,
@@ -164,23 +170,23 @@ var config = {
       ],
       onChapterExit: [
         {
-          layer: "MiamiCenter",
+          layer: "1901 Collins Avenue in Miami Beach",
           opacity: .5,
           duration: 300,
         },
       ],
     },
     {
-      id: "MiamiCenter",
-      alignment: "left",
+      id: "1901 Collins Avenue in Miami Beach",
+      alignment: "right",
       hidden: false,
       title: "",
       image: "",
       description: "",
       chapterDiv: divChapter4,
       location: {
-        center: [-80.199,25.785],
-        zoom: 12,
+        center: [-80.128334,25.7950703],
+        zoom: 17,
         zoomSmall: 7,
         pitch: 0,
         bearing: 0,
@@ -189,6 +195,27 @@ var config = {
       rotateAnimation: false,
       callback: "",
       onChapterEnter: "300 Biscayne Boulevard in Miami",
+      onChapterExit: "MiamiCenter",
+    },
+    {
+      id: "MiamiCenter",
+      alignment: "left",
+      hidden: false,
+      title: "",
+      image: "",
+      description: "",
+      chapterDiv: divChapter5,
+      location: {
+        center: [-80.199,25.785],
+        zoom: 12.5,
+        zoomSmall: 7,
+        pitch: 40,
+        bearing: 30,
+      },
+      mapAnimation: "flyTo",
+      rotateAnimation: false,
+      callback: "",
+      onChapterEnter: "1901 Collins Avenue in Miami Beach",
       onChapterExit: "overallMap2",
     },
     {

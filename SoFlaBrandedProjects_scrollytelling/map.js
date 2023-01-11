@@ -368,14 +368,14 @@ map.on('click', '1420 South Miami Avenue in Miami', function (e) {
     let developers = e.features[0].properties.developers;
     let brokerage = e.features[0].properties.brokerage;
     let brand = e.features[0].properties.brand;
-    let description = e.features[0].properties.description;
+    let description_link = e.features[0].properties.description_link;
     new mapboxgl.Popup()
         .setLngLat(e.lngLat)
         .setHTML('<h2>' + project_name + '</h2>' 
         + '<strong>Developers:</strong> ' + developers + '<br>'
         + '<strong>Brokerage:</strong> ' + brokerage + '<br>'
-        + '<strong>Brand:</strong>' + brand + '<br><br>'
-        + '<strong>Description:</strong> ' + description)
+        + '<strong>Brand:</strong> ' + brand + '<br><br>'
+        + '<strong>Description:</strong> ' + description_link)
         .addTo(map);
 });
 // Change the cursor to a pointer when the mouse is over the defined layer.
