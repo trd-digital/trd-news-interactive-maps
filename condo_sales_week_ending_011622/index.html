@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_cae03c49bd4b96fcbd01d61cc706e90a {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>Recent Miami-Dade Condo Sales </b></h3>
+             
+    
+                <p align="center" style="vertical-align: bottom; font-size:13px"><i>January 8th - January 14th</i></p>
+                
+    
+            <div class="folium-map" id="map_cae03c49bd4b96fcbd01d61cc706e90a" ></div>
+        
+</body>
+<script>    
+    
+            var map_cae03c49bd4b96fcbd01d61cc706e90a = L.map(
+                "map_cae03c49bd4b96fcbd01d61cc706e90a",
+                {
+                    center: [25.81539573, -80.15154480999999],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 10,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_d9a7c9e95e883073faa17e188c44fb79 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_cae03c49bd4b96fcbd01d61cc706e90a);
+        
+    
+            var marker_d3ca2cbe25fe2ec4248ad797ac2bce73 = L.marker(
+                [25.729886, -80.2368583],
+                {}
+            ).addTo(map_cae03c49bd4b96fcbd01d61cc706e90a);
+        
+    
+            marker_d3ca2cbe25fe2ec4248ad797ac2bce73.bindTooltip(
+                `<div>
+                     Building Name: <strong>Grove at Grand Bay </strong><br>     Sale Price: <strong>$7,600,000.00</strong><br>Days on Market:     <strong>137</strong><br>Listing Agent: <strong>Sandra Masis     </strong><br>Buying Agent: <strong>Isabel Castro</strong><br>Price sq ft:     <strong>$1,635.46</strong><br>Address: <strong>2675 S Bayshore Dr 901-S Coconut Grove</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_2d0959f820f2e9c778c631cfcf442443 = L.marker(
+                [25.784171, -80.1900783],
+                {}
+            ).addTo(map_cae03c49bd4b96fcbd01d61cc706e90a);
+        
+    
+            marker_2d0959f820f2e9c778c631cfcf442443.bindTooltip(
+                `<div>
+                     Building Name: <strong>One Thousand Museum </strong><br>     Sale Price: <strong>$7,600,000.00</strong><br>Days on Market:     <strong>237</strong><br>Listing Agent: <strong>Patricia Zimmermann     </strong><br>Buying Agent: <strong>Dina Goldentayer</strong><br>Price sq ft:     <strong>$1,558.65</strong><br>Address: <strong>1000 Biscayne Blvd 3601 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_f431323db6aef5e11842c203c9be9349 = L.marker(
+                [25.8113373, -80.12262849999999],
+                {}
+            ).addTo(map_cae03c49bd4b96fcbd01d61cc706e90a);
+        
+    
+            marker_f431323db6aef5e11842c203c9be9349.bindTooltip(
+                `<div>
+                     Building Name: <strong>Mosaic </strong><br>     Sale Price: <strong>$3,300,000.00</strong><br>Days on Market:     <strong>94</strong><br>Listing Agent: <strong>Steven Koleno     </strong><br>Buying Agent: <strong>Non Member Listing Agent</strong><br>Price sq ft:     <strong>$1,813.19</strong><br>Address: <strong>3801 Collins Ave 606 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_f0df7febe940eb70cbb69b92e486e7ce = L.marker(
+                [25.7719135, -80.1380353],
+                {}
+            ).addTo(map_cae03c49bd4b96fcbd01d61cc706e90a);
+        
+    
+            marker_f0df7febe940eb70cbb69b92e486e7ce.bindTooltip(
+                `<div>
+                     Building Name: <strong>Icon South Beach </strong><br>     Sale Price: <strong>$3,150,000.00</strong><br>Days on Market:     <strong>3</strong><br>Listing Agent: <strong>Giorgio Vecchi     </strong><br>Buying Agent: <strong>Fabrizio Pellicciotti</strong><br>Price sq ft:     <strong>$1,629.59</strong><br>Address: <strong>450 Alton Rd 2902 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_db1273e11d580930b6eb2342e6886204 = L.marker(
+                [25.8424476, -80.1203048],
+                {}
+            ).addTo(map_cae03c49bd4b96fcbd01d61cc706e90a);
+        
+    
+            marker_db1273e11d580930b6eb2342e6886204.bindTooltip(
+                `<div>
+                     Building Name: <strong>The Bath Club </strong><br>     Sale Price: <strong>$2,440,000.00</strong><br>Days on Market:     <strong>29</strong><br>Listing Agent: <strong>Joanne Jones     </strong><br>Buying Agent: <strong>Krisztian Nagy</strong><br>Price sq ft:     <strong>$1,185.04</strong><br>Address: <strong>5959 Collins Ave 1701 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_4065858a5506954c64d91bf4cfcd867e = L.marker(
+                [25.7686007, -80.1361615],
+                {}
+            ).addTo(map_cae03c49bd4b96fcbd01d61cc706e90a);
+        
+    
+            marker_4065858a5506954c64d91bf4cfcd867e.bindTooltip(
+                `<div>
+                     Building Name: <strong>Marea South Beach </strong><br>     Sale Price: <strong>$2,100,000.00</strong><br>Days on Market:     <strong>162</strong><br>Listing Agent: <strong>Geane Brito     </strong><br>Buying Agent: <strong>Natalia Figueroa</strong><br>Price sq ft:     <strong>$1,212.47</strong><br>Address: <strong>801 S Pointe Dr 202 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_002893532b2034238aaed292f2b04ef9 = L.marker(
+                [25.9343529, -80.1210992],
+                {}
+            ).addTo(map_cae03c49bd4b96fcbd01d61cc706e90a);
+        
+    
+            marker_002893532b2034238aaed292f2b04ef9.bindTooltip(
+                `<div>
+                     Building Name: <strong>Jade Ocean </strong><br>     Sale Price: <strong>$1,620,000.00</strong><br>Days on Market:     <strong>78</strong><br>Listing Agent: <strong>Romina Kotliar     </strong><br>Buying Agent: <strong>Maria Kunigonis</strong><br>Price sq ft:     <strong>$1,395.35</strong><br>Address: <strong>17121 Collins Ave 2607 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_89f9a5c39f8ea00e9f0a965e75e6dd12 = L.marker(
+                [25.9722404, -80.1252914],
+                {}
+            ).addTo(map_cae03c49bd4b96fcbd01d61cc706e90a);
+        
+    
+            marker_89f9a5c39f8ea00e9f0a965e75e6dd12.bindTooltip(
+                `<div>
+                     Building Name: <strong>Atlantic II </strong><br>     Sale Price: <strong>$1,550,000.00</strong><br>Days on Market:     <strong>71</strong><br>Listing Agent: <strong>Priscila Camargo     </strong><br>Buying Agent: <strong>Gustavo Blachman</strong><br>Price sq ft:     <strong>$584.91</strong><br>Address: <strong>21150 NE 38 Ave 2304 Aventura</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_7419f6dba33e6cd1d0f6dc8c206155e0 = L.marker(
+                [25.7690569, -80.186713],
+                {}
+            ).addTo(map_cae03c49bd4b96fcbd01d61cc706e90a);
+        
+    
+            marker_7419f6dba33e6cd1d0f6dc8c206155e0.bindTooltip(
+                `<div>
+                     Building Name: <strong>Carbonell </strong><br>     Sale Price: <strong>$1,350,000.00</strong><br>Days on Market:     <strong>93</strong><br>Listing Agent: <strong>Eric Lastra     </strong><br>Buying Agent: <strong>Tatiana Costa-Martinez</strong><br>Price sq ft:     <strong>$756.73</strong><br>Address: <strong>901 Brickell Key Blvd 2707 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_734263a016307b67002f07cc49296a18 = L.marker(
+                [25.769951, -80.1382778],
+                {}
+            ).addTo(map_cae03c49bd4b96fcbd01d61cc706e90a);
+        
+    
+            marker_734263a016307b67002f07cc49296a18.bindTooltip(
+                `<div>
+                     Building Name: <strong>Yacht Club at Portofino</strong><br>     Sale Price: <strong>$1,225,000.00</strong><br>Days on Market:     <strong>58</strong><br>Listing Agent: <strong>David Veit PA     </strong><br>Buying Agent: <strong>Todd Nordstrom</strong><br>Price sq ft:     <strong>$1,144.86</strong><br>Address: <strong>90 Alton Rd</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
