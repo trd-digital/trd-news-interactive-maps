@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_5f4c8315e1876745f9de9a6f82441d93 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>Recent Miami-Dade Condo Sales </b></h3>
+             
+    
+                <p align="center" style="vertical-align: bottom; font-size:13px"><i>January 22nd - January 28th</i></p>
+                
+    
+            <div class="folium-map" id="map_5f4c8315e1876745f9de9a6f82441d93" ></div>
+        
+</body>
+<script>    
+    
+            var map_5f4c8315e1876745f9de9a6f82441d93 = L.map(
+                "map_5f4c8315e1876745f9de9a6f82441d93",
+                {
+                    center: [25.876318379999997, -80.14224444999999],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 10,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_d5975381a779867b673810381b184f5c = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_5f4c8315e1876745f9de9a6f82441d93);
+        
+    
+            var marker_be4b3825915b9614c19ffad46442580d = L.marker(
+                [25.8758278, -80.1210758],
+                {}
+            ).addTo(map_5f4c8315e1876745f9de9a6f82441d93);
+        
+    
+            marker_be4b3825915b9614c19ffad46442580d.bindTooltip(
+                `<div>
+                     Building Name: <strong>Arte Surfside </strong><br>     Sale Price: <strong>$17,000,000.00</strong><br>Days on Market:     <strong>671</strong><br>Price sq ft:     <strong>$2,437.28</strong><br>Address: <strong>8955 Collins Ave 201 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_56a449d18e46ec28d20fa03a15506794 = L.marker(
+                [25.9521284, -80.11970810000001],
+                {}
+            ).addTo(map_5f4c8315e1876745f9de9a6f82441d93);
+        
+    
+            marker_56a449d18e46ec28d20fa03a15506794.bindTooltip(
+                `<div>
+                     Building Name: <strong>Residences by Armani Casa </strong><br>     Sale Price: <strong>$4,100,000.00</strong><br>Days on Market:     <strong>235</strong><br>Price sq ft:     <strong>$1,290.93</strong><br>Address: <strong>18975 Collins Ave 1802 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_3ae233acc4d3aa6136e6c56277253257 = L.marker(
+                [25.8932241, -80.13125509999999],
+                {}
+            ).addTo(map_5f4c8315e1876745f9de9a6f82441d93);
+        
+    
+            marker_3ae233acc4d3aa6136e6c56277253257.bindTooltip(
+                `<div>
+                     Building Name: <strong>Le Nautique at Haulover </strong><br>     Sale Price: <strong>$2,800,000.00</strong><br>Days on Market:     <strong>74</strong><br>Price sq ft:     <strong>$875.00</strong><br>Address: <strong>10261 E Bay Harbor Dr 1201 Bay Harbor Islands</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_2146902c373014402ea5ad571e2c05ea = L.marker(
+                [25.8072459, -80.18560169999999],
+                {}
+            ).addTo(map_5f4c8315e1876745f9de9a6f82441d93);
+        
+    
+            marker_2146902c373014402ea5ad571e2c05ea.bindTooltip(
+                `<div>
+                     Building Name: <strong>One Paraiso </strong><br>     Sale Price: <strong>$1,700,000.00</strong><br>Days on Market:     <strong>184</strong><br>Price sq ft:     <strong>$1,040.39</strong><br>Address: <strong>3131 NE 7th Ave  4301 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_86433be288677e3cec87c389e4729951 = L.marker(
+                [25.955682, -80.11954759999999],
+                {}
+            ).addTo(map_5f4c8315e1876745f9de9a6f82441d93);
+        
+    
+            marker_86433be288677e3cec87c389e4729951.bindTooltip(
+                `<div>
+                     Building Name: <strong>Ocean One Condo </strong><br>     Sale Price: <strong>$1,632,500.00</strong><br>Days on Market:     <strong>1</strong><br>Price sq ft:     <strong>$929.67</strong><br>Address: <strong>19333 Collins Ave 1207 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_d4c436beb54f879989b07d4d4acbc09a = L.marker(
+                [25.9341829, -80.1209647],
+                {}
+            ).addTo(map_5f4c8315e1876745f9de9a6f82441d93);
+        
+    
+            marker_d4c436beb54f879989b07d4d4acbc09a.bindTooltip(
+                `<div>
+                     Building Name: <strong>Ocean Four Condominium </strong><br>     Sale Price: <strong>$1,470,000.00</strong><br>Days on Market:     <strong>40</strong><br>Price sq ft:     <strong>$894.16</strong><br>Address: <strong>17021 Collins Ave 3903 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e8f6143143a38053bc7a1bac83f97b91 = L.marker(
+                [25.7966352, -80.18792409999999],
+                {}
+            ).addTo(map_5f4c8315e1876745f9de9a6f82441d93);
+        
+    
+            marker_e8f6143143a38053bc7a1bac83f97b91.bindTooltip(
+                `<div>
+                     Building Name: <strong>Paramount Bay </strong><br>     Sale Price: <strong>$1,450,000.00</strong><br>Days on Market:     <strong>68</strong><br>Price sq ft:     <strong>$913.10</strong><br>Address: <strong>2020 N Bayshore Dr 3401 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_203df9ee12b214951fcb5985254e5d52 = L.marker(
+                [25.8483641, -80.1196763],
+                {}
+            ).addTo(map_5f4c8315e1876745f9de9a6f82441d93);
+        
+    
+            marker_203df9ee12b214951fcb5985254e5d52.bindTooltip(
+                `<div>
+                     Building Name: <strong>Bel-Aire on the Ocean</strong><br>     Sale Price: <strong>$1,395,000.00</strong><br>Days on Market:     <strong>34</strong><br>Price sq ft:     <strong>$1,271.65</strong><br>Address: <strong>6515 Collins Ave PH-1908 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_348df59ce3aed7377819be90cc503b22 = L.marker(
+                [25.8072459, -80.18560169999999],
+                {}
+            ).addTo(map_5f4c8315e1876745f9de9a6f82441d93);
+        
+    
+            marker_348df59ce3aed7377819be90cc503b22.bindTooltip(
+                `<div>
+                     Building Name: <strong>One Paraiso </strong><br>     Sale Price: <strong>$1,350,000.00</strong><br>Days on Market:     <strong>41</strong><br>Price sq ft:     <strong>$884.67</strong><br>Address: <strong>3131 NE 7th Ave  2303 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_a26c5683e16e9b11408dd8c379fdd505 = L.marker(
+                [25.8926475, -80.1310894],
+                {}
+            ).addTo(map_5f4c8315e1876745f9de9a6f82441d93);
+        
+    
+            marker_a26c5683e16e9b11408dd8c379fdd505.bindTooltip(
+                `<div>
+                     Building Name: <strong>Sereno</strong><br>     Sale Price: <strong>$1,300,000.00</strong><br>Days on Market:     <strong>4</strong><br>Price sq ft:     <strong>$1,218.37</strong><br>Address: <strong>10201 E Bay Harbo Drive</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
