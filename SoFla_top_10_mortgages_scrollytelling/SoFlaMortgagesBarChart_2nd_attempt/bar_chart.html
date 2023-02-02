@@ -17,7 +17,7 @@
 <script>
 var svg = d3.select("svg"),
             margin = 200,
-            width = svg.attr("width") - margin,
+            width = svg.attr("width") - 500,
             height = svg.attr("height") - margin
 
 // Bar chart title
@@ -36,7 +36,7 @@ var xScale = d3.scaleBand().range([0, width]).padding(0.4),
 
 // Create SVG...I think
 var g = svg.append("g")
-            .attr("transform", "translate(" + 100 + "," + 100 + ")");
+            .attr("transform", "translate(" + 50 + "," + 100 + ")");
 
     // Read in data
     d3.csv("construction_loan_roundup - Sheet2.csv", function(error, data) {
