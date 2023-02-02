@@ -15,8 +15,9 @@ let introDiv =
 
 // let bylineDiv = "<p><em>By Adam Farence. Research by Lidia Dinkova and Katherine Kallergis</em></p>";
 
-// let footerDiv =
-//   '<p><a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox</a> | <a href="http://www.openstreetmap.org/about/" target="_blank">© OpenStreetMap</a>';
+let footerDiv =
+'<figure><div class="container"><div class="iframe-wrap"><iframe src="SoFlaMortgagesBarChart_2nd_attempt/bar_chart.html" width="100%" height="600" frameBorder="0" scrolling="no"></iframe></div></div></figure>' +
+"<p style='font-size:20px;'>South Florida has notched major construction mortgages in the past year. Read more below.</p>";
 
 let divChapter1 =
   "<h3>Nautilus 220 | 220 Lake Shore Drive in Lake Park</h3>" +
@@ -37,6 +38,7 @@ let divChapter3 =
   "<p>Bank OZK is the lender for Wynwood Plaza, a mixed-use office, apartment and retail project developed by a group led by L&L Holding Company and Oak Row Equities. They secured $215 million in construction financing last month, marking the fifth largest loan in a year.</p>";
 
 let divChapter4 = 
+'<script src="SoFlaMortgagesBarChart_2nd_attempt/barchart.js"></script>' +
 "<p style='font-size:20px;'>South Florida has notched major construction mortgages in the past year. Read more below.</p>"
 
 var config = {
@@ -51,7 +53,7 @@ var config = {
   subtitle: "",
   byline: [],
   description: [],
-  footer: [],
+  footer: footerDiv,
   chapters: [
     {
       id: "overallMap",
@@ -179,40 +181,40 @@ var config = {
         },
       ],
     },
-    {
-      id: "interactive_layer", 
-      alignment: "right",
-      hidden: false,
-      title: "",
-      image: "",
-      description: "",
-      chapterDiv: divChapter4,
-      location: {
-        center: [
-          -80.20672777833579, 25.805596491963456
-      ],
-        zoom: 12,
-        zoomSmall: 14,
-        pitch: 54.5,
-        bearing: -30,
-      },
-      mapAnimation: "flyTo",
-      rotateAnimation: false,
-      callback: "",
-      onChapterEnter: [
-        {
-          layer: "interactive_layer",
-          opacity: 1,
-          duration: 300,
-        },
-      ],
-      onChapterExit: [
-        {
-          layer: "interactive_layer",
-          opacity: .5,
-          duration: 300,
-        },
-      ],
-    },
+    // {
+    //   id: "interactive_layer", 
+    //   alignment: "full",
+    //   hidden: false,
+    //   title: "",
+    //   image: "",
+    //   description: "",
+    //   chapterDiv: divChapter4,
+    //   location: {
+    //     center: [
+    //       -80.20672777833579, 25.805596491963456
+    //   ],
+    //     zoom: 12,
+    //     zoomSmall: 14,
+    //     pitch: 54.5,
+    //     bearing: -30,
+    //   },
+    //   mapAnimation: "flyTo",
+    //   rotateAnimation: false,
+    //   callback: "",
+    //   onChapterEnter: [
+    //     {
+    //       layer: "interactive_layer",
+    //       opacity: 1,
+    //       duration: 300,
+    //     },
+    //   ],
+    //   onChapterExit: [
+    //     {
+    //       layer: "interactive_layer",
+    //       opacity: .5,
+    //       duration: 300,
+    //     },
+    //   ],
+    // },
   ],
 };
