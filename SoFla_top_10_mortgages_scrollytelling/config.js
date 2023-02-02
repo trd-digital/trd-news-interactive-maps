@@ -22,19 +22,16 @@ let footerDiv =
 let divChapter1 =
   "<h3>Nautilus 220 | 220 Lake Shore Drive in Lake Park</h3>" +
   '<img src="images/Nautilus 220_Exterior Marina_062022.jpg">' +
-  '<p class="imageCredit">Credit: TK TK</p>' +
   "<p>Forest Development and Dan Kodsi's Royal Palm Companies secured a $269 million construction loan from Fortress Investment Group for Nautilus 220, a waterfront condo project in Palm Beach County's Lake Park. The loan closed in July.</p>";
 
 let divChapter2 =
   "<h3>Aman Miami Beach | 3425 Collins Avenue in Miami Beach</h3>" +
   '<img src="images/Aman Hotel _ Residences Miami Beach.jpg">' +
-  '<p class="imageCredit">Credit: TK TK</p>' +
   "<p>Vlad Doronin and Len Blavatnik closed on a $242.4 million construction loan from Bank OZK for the oceanfront Aman Miami Beach condo and hotel development in January.</p>";
 
 let divChapter3 =
   "<h3>Wynwood Plaza | 95 Northwest 29th Street in Miami</h3>" +
   '<img src="images/The Wynwood Plaza - Office Tower - Credit Gensler.jpg">' +
-  '<p class="imageCredit">Credit: TK TK</p>' +
   "<p>Bank OZK is the lender for Wynwood Plaza, a mixed-use office, apartment and retail project developed by a group led by L&L Holding Company and Oak Row Equities. They secured $215 million in construction financing last month, marking the fifth largest loan in a year.</p>";
 
 let divChapter4 = 
