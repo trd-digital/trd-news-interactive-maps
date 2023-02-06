@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_b0aeaa7fd076b1bfd5d2849acd1c181d {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>Recent Miami-Dade Condo Sales </b></h3>
+             
+    
+                <p align="center" style="vertical-align: bottom; font-size:13px"><i>January 29th - February 4th</i></p>
+                
+    
+            <div class="folium-map" id="map_b0aeaa7fd076b1bfd5d2849acd1c181d" ></div>
+        
+</body>
+<script>    
+    
+            var map_b0aeaa7fd076b1bfd5d2849acd1c181d = L.map(
+                "map_b0aeaa7fd076b1bfd5d2849acd1c181d",
+                {
+                    center: [25.81935952, -80.14554215999999],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 10,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_c1a33ae9b5f245f330d780ad20dd6680 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_b0aeaa7fd076b1bfd5d2849acd1c181d);
+        
+    
+            var marker_e32ab41f967470da539e9f3520a8b923 = L.marker(
+                [25.7672315, -80.1327611],
+                {}
+            ).addTo(map_b0aeaa7fd076b1bfd5d2849acd1c181d);
+        
+    
+            marker_e32ab41f967470da539e9f3520a8b923.bindTooltip(
+                `<div>
+                     Building Name: <strong>Continuum South Tower </strong><br>    Sale Price: <strong>$10,250,000.00</strong><br>    Days on Market: <strong>95</strong><br>    Listing Agent: <strong>Douglas Elliman</strong><br>    Buying Agent: <strong>Matthew Wilkens</strong><br>    Price sq ft: <strong>$4,086.92</strong><br>    Address: <strong>100 S Pointe Dr 1206 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_2260ef5b072fd15dfd1686dd96f27517 = L.marker(
+                [25.7685326, -80.13755619999999],
+                {}
+            ).addTo(map_b0aeaa7fd076b1bfd5d2849acd1c181d);
+        
+    
+            marker_2260ef5b072fd15dfd1686dd96f27517.bindTooltip(
+                `<div>
+                     Building Name: <strong>Murano at Portofino </strong><br>    Sale Price: <strong>$8,250,000.00</strong><br>    Days on Market: <strong>128</strong><br>    Listing Agent: <strong>Douglas Elliman</strong><br>    Buying Agent: <strong>Ekaterina Sizenova</strong><br>    Price sq ft: <strong>$2,451.71</strong><br>    Address: <strong>1000 S Pointe Dr 801 Miami Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_4598ee6b015350c74bf78dde191e900c = L.marker(
+                [25.9344014, -80.1210054],
+                {}
+            ).addTo(map_b0aeaa7fd076b1bfd5d2849acd1c181d);
+        
+    
+            marker_4598ee6b015350c74bf78dde191e900c.bindTooltip(
+                `<div>
+                     Building Name: <strong>Jade Ocean </strong><br>    Sale Price: <strong>$8,100,000.00</strong><br>    Days on Market: <strong>48</strong><br>    Listing Agent: <strong>One Sotheby's Int'l Realty</strong><br>    Buying Agent: <strong>Nicolas Pollini PA</strong><br>    Price sq ft: <strong>$972.16</strong><br>    Address: <strong>17121 Collins Ave 4803 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_d366aee3abdd7812ebca10683b4cdf19 = L.marker(
+                [25.9327557, -80.1210054],
+                {}
+            ).addTo(map_b0aeaa7fd076b1bfd5d2849acd1c181d);
+        
+    
+            marker_d366aee3abdd7812ebca10683b4cdf19.bindTooltip(
+                `<div>
+                     Building Name: <strong>Jade Signature </strong><br>    Sale Price: <strong>$6,450,000.00</strong><br>    Days on Market: <strong>387</strong><br>    Listing Agent: <strong>One Sotheby's Int'l Realty</strong><br>    Buying Agent: <strong>Wendy Cohen</strong><br>    Price sq ft: <strong>$1,479.02</strong><br>    Address: <strong>16901 Collins Ave 4601 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_c90cea0759df0a832b6d86a2652c5b1b = L.marker(
+                [25.7670461, -80.1944977],
+                {}
+            ).addTo(map_b0aeaa7fd076b1bfd5d2849acd1c181d);
+        
+    
+            marker_c90cea0759df0a832b6d86a2652c5b1b.bindTooltip(
+                `<div>
+                     Building Name: <strong>Rise Condo </strong><br>    Sale Price: <strong>$6,400,000.00</strong><br>    Days on Market: <strong>17</strong><br>    Listing Agent: <strong>Fortune Christie's Int'l Real Estate</strong><br>    Buying Agent: <strong>Banna Fakhoury</strong><br>    Price sq ft: <strong>$1,774.82</strong><br>    Address: <strong>88 SW 7th St PH 4204 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_df94e088ef34ec220759d49802fb6d14 = L.marker(
+                [25.9400518, -80.12056079999999],
+                {}
+            ).addTo(map_b0aeaa7fd076b1bfd5d2849acd1c181d);
+        
+    
+            marker_df94e088ef34ec220759d49802fb6d14.bindTooltip(
+                `<div>
+                     Building Name: <strong>Mansions at Acqualina </strong><br>    Sale Price: <strong>$6,250,000.00</strong><br>    Days on Market: <strong>292</strong><br>    Listing Agent: <strong>Acqualina Realty</strong><br>    Buying Agent: <strong>Michael Goldstein</strong><br>    Price sq ft: <strong>$1,356.04</strong><br>    Address: <strong>17749 Collins Ave 2102 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_61ef65b6845e1878cac000de24711024 = L.marker(
+                [25.6875547, -80.15912399999999],
+                {}
+            ).addTo(map_b0aeaa7fd076b1bfd5d2849acd1c181d);
+        
+    
+            marker_61ef65b6845e1878cac000de24711024.bindTooltip(
+                `<div>
+                     Building Name: <strong>Club Tower Two Condo </strong><br>    Sale Price: <strong>$3,400,000.00</strong><br>    Days on Market: <strong>146</strong><br>    Listing Agent: <strong>BHHS EWM Realty</strong><br>    Buying Agent: <strong>Michael P. Schnabel</strong><br>    Price sq ft: <strong>$1,218.64</strong><br>    Address: <strong>785 Crandon Blvd 801 Key Biscayne</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_a650e3eb2502b5bfcd3f85a228b52695 = L.marker(
+                [25.7851774, -80.1900783],
+                {}
+            ).addTo(map_b0aeaa7fd076b1bfd5d2849acd1c181d);
+        
+    
+            marker_a650e3eb2502b5bfcd3f85a228b52695.bindTooltip(
+                `<div>
+                     Building Name: <strong>Marquis Condo </strong><br>    Sale Price: <strong>$3,100,000.00</strong><br>    Days on Market: <strong>64</strong><br>    Listing Agent: <strong>EXP Realty LLC</strong><br>    Buying Agent: <strong>Nohemy Sanchez</strong><br>    Price sq ft: <strong>$815.79</strong><br>    Address: <strong>1100 Biscayne Blvd 5106 Miami</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_29b3c260e49bd13135bc081f83941f99 = L.marker(
+                [25.922045, -80.12199729999999],
+                {}
+            ).addTo(map_b0aeaa7fd076b1bfd5d2849acd1c181d);
+        
+    
+            marker_29b3c260e49bd13135bc081f83941f99.bindTooltip(
+                `<div>
+                     Building Name: <strong>Ritz Carlton Residences </strong><br>    Sale Price: <strong>$2,800,000.00</strong><br>    Days on Market: <strong>262</strong><br>    Listing Agent: <strong>IHB Brazil Realty LLC</strong><br>    Buying Agent: <strong>Wendy Cohen</strong><br>    Price sq ft: <strong>$1,935.04</strong><br>    Address: <strong>15701 Collins Ave 2903 Sunny Isles Beach</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_7ec284b05df1fba4d391904d1c3e5fb4 = L.marker(
+                [25.688799, -80.15683539999999],
+                {}
+            ).addTo(map_b0aeaa7fd076b1bfd5d2849acd1c181d);
+        
+    
+            marker_7ec284b05df1fba4d391904d1c3e5fb4.bindTooltip(
+                `<div>
+                     Building Name: <strong>Lake Tower Condo</strong><br>    Sale Price: <strong>$2,750,000.00</strong><br>    Days on Market: <strong>199</strong><br>    Listing Agent: <strong>BHHS EWM Realty</strong><br>    Buying Agent: <strong>Ingo Viehweg</strong><br>    Price sq ft: <strong>$1,056.88</strong><br>    Address: <strong>765 Crandon Blvd 505 Key Biscayne</strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
