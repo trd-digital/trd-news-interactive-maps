@@ -18,6 +18,17 @@
         integrity="sha256-LeU0tzGXsUojxMQgTdjRB74+q8RQhqUQoobY4+76cY8=" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"
         integrity="sha256-lQSRQ2EUXUKg2xkKTV+D0E3rACEAi1aI+809LI5drdc=" crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/extensions/filter-control/bootstrap-table-filter-control.min.css"
+        integrity="sha512-3wnb7LWbjgtAbFFhszzC2PrPQ5fo1OnqRJHd9QYn+8UCMWMqQQrl5BZBJQx+cluqVIaszGF0MyEefoMC0Izxqg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/extensions/filter-control/bootstrap-table-filter-control.min.js"
+        integrity="sha512-/h89z5K7yzd1hIhw94drUJKivJcDQ3e93pKwC9bxLgWWhO+cD0RxCplr6tccXu3S1gbowNTsPFcVt+KMdGLdKw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/extensions/filter-control/utils.min.js"
+        integrity="sha512-k7gAbgw7/TU4yrD6bbDMFpWSUnFeTaopF7PnmASKWFMM3E9pmRTCEnBpu4UXfyOlX6yh7PiqNoTwgO368jEbZA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
         function responseHandlerCsvWithoutHeader(csvText) {
@@ -31,27 +42,28 @@
         }
     </script>
 </head>
+<h2>2022 Brokerage Ranking</h2>
 <table id="table" data-toggle="table" data-pagination="true" data-page-size="10" data-escape="true"
-    data-response-handler="responseHandlerCsvToJson" data-sortable="true" data-sort-reset-page="true"
-    data-data-type="text" data-search="true" data-search-accent-neutralise="true" data-url="data.csv">
+    data-response-handler="responseHandlerCsvToJson" data-search="true" data-sortable="true" data-sort-reset-page="true"
+    data-data-type="text" data-show-columns="true" data-show-search-clear-button="false" data-url="data.csv">
     <thead>
         <tr>
             <th data-field="source_doc_id">Source ID</th>
             <th data-field="recorded_date" data-sortable="true">Recorded Data</th>
-            <th data-field="doc_date">Document ID</th>
-            <th data-field="doc_amount">Document Amount</th>
+            <th data-field="doc_date" data-sortable="true">Document ID</th>
+            <th data-field="doc_amount" data-sortable="true">Document Amount</th>
             <th data-field="borough" data-sortable="true">Borough</th>
-            <th data-field="addresses">Addresses</th>
-            <th data-field="source_doc_id">Source Document ID</th>
-            <th data-field="recorded_date">Record ID</th>
-            <th data-field="units">Units</th>
+            <th data-field="addresses" data-sortable="true">Addresses</th>
+            <th data-field="source_doc_id" data-sortable="true">Source Document ID</th>
+            <th data-field="recorded_date" data-sortable="true">Record Date</th>
+            <th data-field="units" data-sortable="true">Units</th>
             <th data-field="bbl" data-sortable="true">BBL</th>
-            <th data-field="new_dev_sale_type">Development Type</th>
+            <th data-field="new_dev_sale_type" data-sortable="true">Development Type</th>
             <th data-field="property_group" data-sortable="true">Proprty Group</th>
-            <th data-field="property_type">Property Type</th>
+            <th data-field="property_type" data-sortable="true">Property Type</th>
             <th data-field="neighborhood" data-sortable="true">Neighborhood</th>
-            <th data-field="Brokerage">Brokerage</th>
-            <th data-field="link_url">Link</th>
+            <th data-field="Brokerage" data-sortable="true">Brokerage</th>
+            <th data-field="link_url" data-sortable="true" data-formatter="nameFormatter">Link</th>
         </tr>
     </thead>
 </table>
@@ -91,7 +103,9 @@
             for (let headerIdx = 0; headerIdx < headers.length; headerIdx++) {
                 let header = headers[headerIdx]
                 if (fields.length > headerIdx) {
-                    row[header] = fields[headerIdx]
+
+                    row[header] = fields[headerIdx];
+
                 }
             }
             jsonRows[csvLineIdx] = row
@@ -101,9 +115,26 @@
         }
     }
 
-    function datesSorter(a, b) {
-        if (new Date(a) < new Date(b)) return 1;
-        if (new Date(a) > new Date(b)) return -1;
-        return 0;
+    function nameFormatter(value, row) {
+        var icon = row.id % 2 === 0 ? 'fa-star' : 'fa-star-and-crescent'
+        return '<a class="fa" target="_blanl" href="' + icon + '">Link</a>'
     }
 </script>
+<style>
+    h2 {
+        font-weight: bold;
+        float: left;
+        font-family: Merriweather, serif;
+        font-size: 1.5rem;
+        padding: 15px 10px;
+
+    }
+
+    th {
+        text-transform: uppercase;
+        font-size: .75rem;
+        color: #7d7d7d;
+        padding: 0.8rem 0rem !important;
+        white-space: nowrap;
+    }
+</style>
