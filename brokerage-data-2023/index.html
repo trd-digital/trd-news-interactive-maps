@@ -31,24 +31,25 @@
         }
     </script>
 </head>
-<table id="table" data-toggle="table" data-escape="true" data-response-handler="responseHandlerCsvToJson"
-    data-data-type="text" data-url="data.csv">
+<table id="table" data-toggle="table" data-pagination="true" data-page-size="10" data-escape="true"
+    data-response-handler="responseHandlerCsvToJson" data-sortable="true" data-sort-reset-page="true"
+    data-data-type="text" data-search="true" data-search-accent-neutralise="true" data-url="data.csv">
     <thead>
         <tr>
             <th data-field="source_doc_id">Source ID</th>
-            <th data-field="recorded_date">Recorded Data</th>
+            <th data-field="recorded_date" data-sortable="true">Recorded Data</th>
             <th data-field="doc_date">Document ID</th>
             <th data-field="doc_amount">Document Amount</th>
-            <th data-field="borough">Borough</th>
+            <th data-field="borough" data-sortable="true">Borough</th>
             <th data-field="addresses">Addresses</th>
             <th data-field="source_doc_id">Source Document ID</th>
             <th data-field="recorded_date">Record ID</th>
             <th data-field="units">Units</th>
-            <th data-field="bbl">BBL</th>
+            <th data-field="bbl" data-sortable="true">BBL</th>
             <th data-field="new_dev_sale_type">Development Type</th>
-            <th data-field="property_group">Proprty Group</th>
+            <th data-field="property_group" data-sortable="true">Proprty Group</th>
             <th data-field="property_type">Property Type</th>
-            <th data-field="neighborhood">Neighborhood</th>
+            <th data-field="neighborhood" data-sortable="true">Neighborhood</th>
             <th data-field="Brokerage">Brokerage</th>
             <th data-field="link_url">Link</th>
         </tr>
@@ -98,5 +99,11 @@
         return {
             rows: jsonRows
         }
+    }
+
+    function datesSorter(a, b) {
+        if (new Date(a) < new Date(b)) return 1;
+        if (new Date(a) > new Date(b)) return -1;
+        return 0;
     }
 </script>
