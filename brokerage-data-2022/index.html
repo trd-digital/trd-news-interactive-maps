@@ -1,398 +1,300 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Sample of BootStrap Table that render CSV file</title>
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <!-- bootstrap itself -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
-      integrity="sha256-7ZWbZUAi97rkirk4DcEp4GWDPkWpRMcNaEyXGsNXjLg="
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-    />
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
-      integrity="sha256-wMCQIK229gKxbUg3QWa544ypI4OoFlC2qQl8Q8xD8x8="
-      crossorigin="anonymous"
-    ></script>
-    <!-- jquery needed for bootstrap-table-->
-    <script
-      src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
-      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-      crossorigin="anonymous"
-    ></script>
+<head>
+  <meta charset="UTF-8" />
+  <title>Brokerage Data 2022</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- bootstrap itself -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+    integrity="sha256-7ZWbZUAi97rkirk4DcEp4GWDPkWpRMcNaEyXGsNXjLg=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
 
-    <!-- bootstrap-table-->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/bootstrap-table.min.css"
-      integrity="sha512-vaPSEKPBIWEWK+pGIwdLnPzw7S2Tr6rYVT05v+KN89YVpEJavFiY1dPzT+e1ZeyizjEPBicVxJ5QixXZw0Nopw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/bootstrap-table.min.js"
-      integrity="sha512-rZAhvMayqW5e/N+xdp011tYAIdxgMMJtKxUXx7scO4iBPSUXAKdkrKIPRu6tLr0O9V6Bs9QujJF3MqmgSNfYPA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-    <!-- Filter Control extation -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/extensions/filter-control/bootstrap-table-filter-control.min.css"
-      integrity="sha512-3wnb7LWbjgtAbFFhszzC2PrPQ5fo1OnqRJHd9QYn+8UCMWMqQQrl5BZBJQx+cluqVIaszGF0MyEefoMC0Izxqg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/extensions/filter-control/bootstrap-table-filter-control.min.js"
-      integrity="sha512-/h89z5K7yzd1hIhw94drUJKivJcDQ3e93pKwC9bxLgWWhO+cD0RxCplr6tccXu3S1gbowNTsPFcVt+KMdGLdKw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha256-wMCQIK229gKxbUg3QWa544ypI4OoFlC2qQl8Q8xD8x8=" crossorigin="anonymous"></script>
+  <!-- jquery needed for bootstrap-table-->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
-    <!-- Sticky header extation -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/extensions/sticky-header/bootstrap-table-sticky-header.min.css"
-      integrity="sha512-+d60APKv5qLS+Jz7TobSczIVV3uJ18TXO6Ge4odkaurLc4sT13CgqvOW117CL78wyPv0sNZ2iJQW1EPmsr/V+A=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/extensions/sticky-header/bootstrap-table-sticky-header.min.js"
-      integrity="sha512-RgKz840rC2wXKXWwXiJCeLb9pEu6iDnjS1SAnyGdOcHCBJQyDiGRsrMjEUgLkW97rPj21jZucpIl6NDI7mAnMA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-    <style>
-      h2 {
-        font-weight: bold;
-        float: left;
-        font-family: Merriweather, serif;
-        font-size: 1.5rem;
-        padding: 15px 10px;
-      }
+  <!-- bootstrap-table-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/bootstrap-table.min.css"
+    integrity="sha512-vaPSEKPBIWEWK+pGIwdLnPzw7S2Tr6rYVT05v+KN89YVpEJavFiY1dPzT+e1ZeyizjEPBicVxJ5QixXZw0Nopw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/bootstrap-table.min.js"
+    integrity="sha512-rZAhvMayqW5e/N+xdp011tYAIdxgMMJtKxUXx7scO4iBPSUXAKdkrKIPRu6tLr0O9V6Bs9QujJF3MqmgSNfYPA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Filter Control extation -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/extensions/filter-control/bootstrap-table-filter-control.min.css"
+    integrity="sha512-3wnb7LWbjgtAbFFhszzC2PrPQ5fo1OnqRJHd9QYn+8UCMWMqQQrl5BZBJQx+cluqVIaszGF0MyEefoMC0Izxqg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/extensions/filter-control/bootstrap-table-filter-control.min.js"
+    integrity="sha512-/h89z5K7yzd1hIhw94drUJKivJcDQ3e93pKwC9bxLgWWhO+cD0RxCplr6tccXu3S1gbowNTsPFcVt+KMdGLdKw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-      th {
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        color: #7d7d7d;
-        padding: 0.8rem 0rem !important;
-        white-space: nowrap;
-      }
+  <!-- Sticky header extation -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/extensions/sticky-header/bootstrap-table-sticky-header.min.css"
+    integrity="sha512-+d60APKv5qLS+Jz7TobSczIVV3uJ18TXO6Ge4odkaurLc4sT13CgqvOW117CL78wyPv0sNZ2iJQW1EPmsr/V+A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/extensions/sticky-header/bootstrap-table-sticky-header.min.js"
+    integrity="sha512-RgKz840rC2wXKXWwXiJCeLb9pEu6iDnjS1SAnyGdOcHCBJQyDiGRsrMjEUgLkW97rPj21jZucpIl6NDI7mAnMA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <style>
+    h2 {
+      font-weight: bold;
+      float: left;
+      font-family: Merriweather, serif;
+      font-size: 1.5rem;
+      padding: 15px 10px;
+    }
 
-      #select {
-        width: 100px;
-        display: inline-block;
-      }
-    </style>
+    th {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      color: #7d7d7d;
+      padding: 0.8rem 0rem !important;
+      white-space: nowrap;
+    }
 
-    <script>
-      function responseHandlerCsvWithoutHeader(csvText) {
-        // we should specify column names manually
-        let headers = [
-          "source_doc_id",
-          "recorded_date",
-          "doc_date",
-          "doc_amount",
-          "borough",
-          "addresses",
-          "units",
-          "bbl",
-          "new_dev_sale_type",
-          "property_group",
-          "property_type",
-          "neighborhood",
-          "Brokerage",
-          "link_url",
-        ];
+    #select {
+      width: 100px;
+      display: inline-block;
+    }
+  </style>
 
-        return responseHandlerCsvToJsonHeaders(csvText, headers);
-      }
-      function responseHandlerCsvToJson(csvText) {
-        let csvLines = csvText.split("\n");
-        if (csvLines.length <= 1) {
-          return {
-            rows: [],
-          };
-        }
-        let headers = csvLines[0].split("\t");
-        return csvLinesToJsonRows(csvLines.slice(1), headers);
-      }
-      function responseHandlerCsvToJsonHeaders(csvText, headers) {
-        let csvLines = csvText.split("\n");
-        return csvLinesToJsonRows(csvLines, headers);
-      }
-      function csvLinesToJsonRows(csvLines, headers) {
-        let jsonRows = [];
-        for (let csvLineIdx = 0; csvLineIdx < csvLines.length; csvLineIdx++) {
-          let csvLine = csvLines[csvLineIdx];
-          if (!csvLine) {
-            continue;
-          }
-          let fields = csvLine.split("\t");
-          let row = {};
-          if (fields.length === 0) {
-            continue;
-          }
-          for (let headerIdx = 0; headerIdx < headers.length; headerIdx++) {
-            let header = headers[headerIdx];
-            if (fields.length > headerIdx) {
-              row[header] = fields[headerIdx];
-            }
-          }
-          jsonRows[csvLineIdx] = row;
-        }
+  <script>
+    function responseHandlerCsvWithoutHeader(csvText) {
+      // we should specify column names manually
+      let headers = [
+        "source_doc_id",
+        "recorded_date",
+        "doc_date",
+        "doc_amount",
+        "borough",
+        "addresses",
+        "units",
+        "bbl",
+        "new_dev_sale_type",
+        "property_group",
+        "property_type",
+        "neighborhood",
+        "Brokerage",
+        "link_url",
+      ];
+
+      return responseHandlerCsvToJsonHeaders(csvText, headers);
+    }
+
+    function responseHandlerCsvToJson(csvText) {
+      let csvLines = csvText.split("\n");
+      if (csvLines.length <= 1) {
         return {
-          rows: jsonRows,
+          rows: [],
         };
       }
-      function isEmpty(value) {
+      let headers = csvLines[0].split("\t");
+      return csvLinesToJsonRows(csvLines.slice(1), headers);
+    }
+
+    function responseHandlerCsvToJsonHeaders(csvText, headers) {
+      let csvLines = csvText.split("\n");
+      return csvLinesToJsonRows(csvLines, headers);
+    }
+
+    function csvLinesToJsonRows(csvLines, headers) {
+      let jsonRows = [];
+      for (let csvLineIdx = 0; csvLineIdx < csvLines.length; csvLineIdx++) {
+        let csvLine = csvLines[csvLineIdx];
+        if (!csvLine) {
+          continue;
+        }
+        let fields = csvLine.split("\t");
+        let row = {};
+        if (fields.length === 0) {
+          continue;
+        }
+        for (let headerIdx = 0; headerIdx < headers.length; headerIdx++) {
+          let header = headers[headerIdx];
+          if (fields.length > headerIdx) {
+            row[header] = fields[headerIdx];
+          }
+        }
+        jsonRows[csvLineIdx] = row;
+      }
+      return {
+        rows: jsonRows,
+      };
+    }
+
+    function isEmpty(value) {
+      return (
+        value == "" || value == null || value == "null" || value == "N/A"
+      );
+    }
+
+    function currency(value, round = false) {
+      const si = [{
+          value: 1,
+          symbol: "",
+          digits: 0,
+        },
+        {
+          value: 1e3,
+          symbol: "K",
+          digits: 2,
+        },
+        {
+          value: 1e6,
+          symbol: "M",
+          digits: 3,
+        },
+        {
+          value: 1e9,
+          symbol: "B",
+          digits: 2,
+        },
+        {
+          value: 1e12,
+          symbol: "T",
+          digits: 2,
+        },
+      ];
+      const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+      const type = typeof value;
+      if ("string" === type) {
+        value = value.replace(/,|\$|%/g, "");
+        value = value.toUpperCase();
+        const str = value;
+        for (let i = 1; i < si.length; i++) {
+          const element = si[i];
+          if (str.includes(element.symbol)) {
+            value = value.replace(element.symbol, "");
+            value = parseFloat(value) * element.value;
+          }
+        }
+      }
+
+      let i;
+      for (i = si.length - 1; i > 0; i--) {
+        if (value >= si[i].value) break;
+      }
+      if (round === true) {
         return (
-          value == "" || value == null || value == "null" || value == "N/A"
+          "$" +
+          Math.round(value / si[i].value)
+          .toFixed()
+          .replace(rx, "$1") +
+          si[i].symbol
+        );
+      } else {
+        return (
+          "$" +
+          (value / si[i].value).toFixed(si[i].digits).replace(rx, "$1") +
+          si[i].symbol
         );
       }
+    }
 
-      function currency(value, round = false) {
-        const si = [
-          {
-            value: 1,
-            symbol: "",
-            digits: 0,
-          },
-          {
-            value: 1e3,
-            symbol: "K",
-            digits: 0,
-          },
-          {
-            value: 1e6,
-            symbol: "M",
-            digits: 1,
-          },
-          {
-            value: 1e9,
-            symbol: "B",
-            digits: 2,
-          },
-          {
-            value: 1e12,
-            symbol: "T",
-            digits: 2,
-          },
-        ];
-        const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-        const type = typeof value;
-        if ("string" === type) {
-          value = value.replace(/,|\$|%/g, "");
-          value = value.toUpperCase();
-          const str = value;
-          for (let i = 1; i < si.length; i++) {
-            const element = si[i];
-            if (str.includes(element.symbol)) {
-              value = value.replace(element.symbol, "");
-              value = parseFloat(value) * element.value;
-            }
-          }
-        }
-
-        let i;
-        for (i = si.length - 1; i > 0; i--) {
-          if (value >= si[i].value) break;
-        }
-        if (round === true) {
-          return (
-            "$" +
-            Math.round(value / si[i].value)
-              .toFixed()
-              .replace(rx, "$1") +
-            si[i].symbol
-          );
-        } else {
-          return (
-            "$" +
-            (value / si[i].value).toFixed(si[i].digits).replace(rx, "$1") +
-            si[i].symbol
-          );
-        }
+    function defaultFormatter(value, row) {
+      if (isEmpty(value)) {
+        return '<span class="text-muted">N/A</span>';
       }
+      return value;
+    }
 
-      function defaultFormatter(value, row) {
-        if (isEmpty(value)) {
-          return '<span class="text-muted">N/A</span>';
-        }
-        return value;
-      }
+    function sourceIdFormatter(value, row) {
+      return `<a target="_blank" href="https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=${value}">${value}</a>`;
+    }
 
-      function sourceIdFormatter(value, row) {
-        return `<a target="_blank" href="https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=${value}">${value}</a>`;
+    function addressFormatter(value, row) {
+      if (isEmpty(value)) {
+        return '<span class="text-muted">N/A</span>';
       }
+      return value.toUpperCase();
+    }
 
-      function addressFormatter(value, row) {
-        if (isEmpty(value)) {
-          return '<span class="text-muted">N/A</span>';
-        }
-        return value.toUpperCase();
+    function priceFormatter(value) {
+      if (isEmpty(value)) {
+        return '<span class="text-muted">N/A</span>';
       }
+      return value;
+    }
 
-      function priceFormatter(value) {
-        if (isEmpty(value)) {
-          return '<span class="text-muted">N/A</span>';
-        }
-        return currency(value);
+    function brokerageFormatter(value) {
+      if (isEmpty(value)) {
+        return '<span class="text-muted">N/A</span>';
       }
+      return value;
+    }
 
-      function brokerageFormatter(value) {
-        if (isEmpty(value)) {
-          return '<span class="text-muted">N/A</span>';
-        }
-        return value;
-      }
+    function boroughFilterData(data) {
+      return {
+        Manhattan: "Manhattan",
+        Queens: "Queens",
+        Brooklyn: "Brooklyn",
+        Bronx: "Bronx",
+        "Staten Island": "Staten Island",
+      };
+    }
+  </script>
+</head>
 
-      function boroughFilterData(data) {
-        return {
-          Manhattan: "Manhattan",
-          Queens: "Queens",
-          Brooklyn: "Brooklyn",
-          Bronx: "Bronx",
-          "Staten Island": "Staten Island",
-        };
-      }
-    </script>
-  </head>
-  <body class="m-2">
-    <h1 class="text-center">2022 Brokerage Ranking</h1>
-    <table
-      id="table"
-      data-toggle="table"
-      data-pagination="true"
-      data-page-size="10"
-      data-escape="true"
-      data-show-button-icons="true"
-      data-response-handler="responseHandlerCsvToJson"
-      data-search="true"
-      data-sortable="true"
-      data-sort-reset-page="true"
-      data-data-type="text"
-      data-show-columns="true"
-      data-show-search-clear-button="false"
-      data-filter-control="true"
-      data-show-search-clear-button="true"
-      data-sticky-header="true"
-      data-url="data.tsv"
-    >
-      <thead>
-        <tr>
-          <th
-            data-field="source_doc_id"
-            data-sortable="true"
-            data-formatter="sourceIdFormatter"
-          >
-            Source ID
-          </th>
-          <th
-            data-field="recorded_date"
-            data-sortable="true"
-            data-formatter="defaultFormatter"
-          >
-            Recorded Date
-          </th>
-          <th
-            data-field="doc_date"
-            data-sortable="true"
-            data-formatter="defaultFormatter"
-          >
-            Document Date
-          </th>
-          <th
-            data-field="doc_amount"
-            data-sortable="true"
-            data-formatter="priceFormatter"
-          >
-            Amount
-          </th>
-          <th
-            data-field="Brokerage"
-            data-sortable="true"
-            data-formatter="brokerageFormatter"
-          >
-            Brokerage
-          </th>
-          <th
-            data-field="addresses"
-            data-sortable="true"
-            data-formatter="addressFormatter"
-          >
-            Address
-          </th>
-          <th
-            data-field="units"
-            data-sortable="true"
-            data-formatter="defaultFormatter"
-          >
-            Units
-          </th>
-          <th
-            data-field="borough"
-            data-sortable="true"
-            data-formatter="defaultFormatter"
-            data-filter-control="select"
-            data-filter-data="func:boroughFilterData"
-            data-filter-control-placeholder="All"
-          >
-            Borough
-          </th>
-          <th
-            data-field="neighborhood"
-            data-sortable="true"
-            data-formatter="defaultFormatter"
-            data-filter-control="select"
-            data-filter-control-placeholder="All"
-          >
-            Neighborhood
-          </th>
-          <th
-            data-field="property_group"
-            data-sortable="true"
-            data-formatter="defaultFormatter"
-          >
-            Proprty Group
-          </th>
-          <th
-            data-field="property_type"
-            data-sortable="true"
-            data-filter-control="select"
-            data-filter-control-placeholder="All"
-            data-formatter="defaultFormatter"
-          >
-            Property Type
-          </th>
-          <th
-            data-field="new_dev_sale_type"
-            data-sortable="true"
-            data-formatter="defaultFormatter"
-          >
-            Development Type
-          </th>
-          <th
-            data-field="bbl"
-            data-sortable="true"
-            data-formatter="defaultFormatter"
-          >
-            BBL
-          </th>
-        </tr>
-      </thead>
-    </table>
-  </body>
+<body class="m-2">
+  <h1 class="text-center">2022 Brokerage Ranking</h1>
+  <table id="table" data-toggle="table" data-pagination="true" data-page-size="100" data-escape="true"
+    data-show-button-icons="true" data-response-handler="responseHandlerCsvToJson" data-search="true"
+    data-sortable="true" data-sort-reset-page="true" data-data-type="text" data-show-columns="true"
+    data-show-search-clear-button="false" data-filter-control="true" data-show-search-clear-button="true"
+    data-sticky-header="true" data-url="data.tsv">
+    <thead>
+      <tr>
+        <th data-field="source_doc_id" data-sortable="true" data-formatter="sourceIdFormatter">
+          Source ID
+        </th>
+        <th data-field="recorded_date" data-sortable="true" data-formatter="defaultFormatter">
+          Recorded Date
+        </th>
+        <th data-field="doc_date" data-sortable="true" data-formatter="defaultFormatter">
+          Document Date
+        </th>
+        <th data-field="doc_amount" data-sortable="true" data-formatter="priceFormatter">
+          Amount
+        </th>
+        <th data-field="Brokerage" data-sortable="true" data-formatter="brokerageFormatter">
+          Brokerage
+        </th>
+        <th data-field="addresses" data-sortable="true" data-formatter="addressFormatter">
+          Address
+        </th>
+        <th data-field="units" data-sortable="true" data-formatter="defaultFormatter">
+          Units
+        </th>
+        <th data-field="borough" data-sortable="true" data-formatter="defaultFormatter" data-filter-control="select"
+          data-filter-data="func:boroughFilterData" data-filter-control-placeholder="All">
+          Borough
+        </th>
+        <th data-field="neighborhood" data-sortable="true" data-formatter="defaultFormatter"
+          data-filter-control="select" data-filter-control-placeholder="All">
+          Neighborhood
+        </th>
+        <th data-field="property_group" data-sortable="true" data-formatter="defaultFormatter">
+          Proprty Group
+        </th>
+        <th data-field="property_type" data-sortable="true" data-filter-control="select"
+          data-filter-control-placeholder="All" data-formatter="defaultFormatter">
+          Property Type
+        </th>
+        <th data-field="new_dev_sale_type" data-sortable="true" data-formatter="defaultFormatter"
+          data-filter-control="select" data-filter-control-placeholder="All">
+          Development Type
+        </th>
+
+      </tr>
+    </thead>
+  </table>
+</body>
+
 </html>
