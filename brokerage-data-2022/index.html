@@ -240,6 +240,14 @@
         "Staten Island": "Staten Island",
       };
     }
+
+    $(document).ready(function () {
+      var myHeight = $("#the-content").height();
+      console.log(myHeight);
+      $('#table').bootstrapTable('resetView', {
+        height: myHeight
+      });
+    });
   </script>
 </head>
 
@@ -249,7 +257,7 @@
     data-show-button-icons="true" data-response-handler="responseHandlerCsvToJson" data-search="true"
     data-sortable="true" data-sort-reset-page="true" data-data-type="text" data-show-columns="true"
     data-show-search-clear-button="false" data-filter-control="true" data-show-search-clear-button="true"
-    data-sticky-header="true" data-url="data.tsv">
+    data-sticky-header="true" data-height="300" data-url="data.tsv">
     <thead>
       <tr>
         <th data-field="source_doc_id" data-sortable="true" data-formatter="sourceIdFormatter">
@@ -286,12 +294,9 @@
         </th>
         <th data-field="property_group" data-sortable="true" data-formatter="defaultFormatter"
           data-filter-control="select" data-filter-control-placeholder="All">
-          Proprty Group
+          Proprty Type
         </th>
-        <th data-field="property_type" data-sortable="true" data-filter-control="select"
-          data-filter-control-placeholder="All" data-formatter="defaultFormatter">
-          Property Type
-        </th>
+
         <th data-field="new_dev_sale_type" data-sortable="true" data-formatter="defaultFormatter"
           data-filter-control="select" data-filter-control-placeholder="All">
           Development Type
