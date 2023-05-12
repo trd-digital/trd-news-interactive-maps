@@ -43,12 +43,13 @@
     integrity="sha512-RgKz840rC2wXKXWwXiJCeLb9pEu6iDnjS1SAnyGdOcHCBJQyDiGRsrMjEUgLkW97rPj21jZucpIl6NDI7mAnMA=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <style>
-    h2 {
-      font-weight: bold;
-      float: left;
-      font-family: Merriweather, serif;
-      font-size: 1.5rem;
-      padding: 15px 10px;
+    header {
+      display: flex;
+      align-items: center;
+    }
+
+    h1 {
+      flex: 1 0 auto;
     }
 
     th {
@@ -244,62 +245,122 @@
 </head>
 
 <body class="m-2">
-  <h1 class="text-center">2022 Brokerage Ranking</h1>
-  <table id="table" data-toggle="table" data-pagination="true" data-page-size="100" data-escape="true"
-    data-show-button-icons="true" data-response-handler="responseHandlerCsvToJson" data-search="true"
-    data-sortable="true" data-sort-reset-page="true" data-data-type="text" data-show-columns="true"
-    data-show-search-clear-button="false" data-filter-control="true" data-show-search-clear-button="true"
-    data-sticky-header="true" data-url="data.tsv">
-    <thead>
-      <tr>
-        <th data-field="source_doc_id" data-sortable="true" data-formatter="sourceIdFormatter">
-          Source ID
-        </th>
-        <th data-field="recorded_date" data-sortable="true" data-formatter="defaultFormatter">
-          Recorded Date
-        </th>
-        <th data-field="doc_date" data-sortable="true" data-formatter="defaultFormatter">
-          Document Date
-        </th>
-        <th data-field="doc_amount" data-sortable="true" data-formatter="priceFormatter">
-          Amount
-        </th>
-        <th data-field="Brokerage" data-sortable="true" data-formatter="brokerageFormatter" data-searchable="true">
-          Brokerage
-        </th>
-        <th data-field="Broker" data-sortable="true" data-formatter="brokerageFormatter" data-searchable="true">
-          Broker
-        </th>
-        <th data-field="addresses" data-sortable="true" data-formatter="addressFormatter">
-          Address
-        </th>
-        <th data-field="units" data-sortable="true" data-formatter="defaultFormatter">
-          Units
-        </th>
-        <th data-field="borough" data-sortable="true" data-formatter="defaultFormatter" data-filter-control="select"
-          data-filter-data="func:boroughFilterData" data-filter-control-placeholder="All">
-          Borough
-        </th>
-        <th data-field="neighborhood" data-sortable="true" data-formatter="defaultFormatter"
-          data-filter-control="select" data-filter-control-placeholder="All">
-          Neighborhood
-        </th>
-        <th data-field="property_group" data-sortable="true" data-formatter="defaultFormatter"
-          data-filter-control="select" data-filter-control-placeholder="All">
-          Proprty Group
-        </th>
-        <th data-field="property_type" data-sortable="true" data-filter-control="select"
-          data-filter-control-placeholder="All" data-formatter="defaultFormatter">
-          Property Type
-        </th>
-        <th data-field="new_dev_sale_type" data-sortable="true" data-formatter="defaultFormatter"
-          data-filter-control="select" data-filter-control-placeholder="All">
-          Development Type
-        </th>
+  <header>
+    <h1 id="title">2022 Brokerage Ranking</h1>
+    <form>
+      <input type="search" id="table-search" value="" autocomplete="true" class="form-control" placeholder="Search...">
+    </form>
+  </header>
+  <table id="table"></table>
+  <div id="source-notes" class="text-muted">OURCE: TRD ANALYSIS OF CLOSED SALES IN BROOKLYN, MANHATTAN AND QUEENS BASED
+    ON PUBLICLY AVAILABLE LISTINGS AND DATA FROM FIRMS. INCLUDES RESIDENTIAL SALES (CONDOS, CO-OPS AND SINGLE-, TWO- AND
+    THREE-FAMILY HOMES WITH NO COMMERCIAL COMPONENT) RECORDED IN THE NEW YORK CITY REGISTER IN 2022. ONLY SELL-SIDE
+    DEALS WERE COUNTED. OFF-MARKET DEALS WERE NOT COUNTED. ALL FIRMS WERE CONTACTED, NOT ALL FIRMS PARTICIPATED.</div>
 
-      </tr>
-    </thead>
-  </table>
+  <script>
+    $(document).ready(function () {
+      function getHeight() {
+        let titleHeight = $('#title').height();
+        let sourceNotesHeight = $('#source-notes').height();
+        return window.innerHeight - (titleHeight + sourceNotesHeight + 50);
+      }
+      let config = {
+        height: getHeight(),
+        pagination: true,
+        pageSize: 100,
+        escape: true,
+        showButtonIcon: true,
+        responseHandler: "responseHandlerCsvToJson",
+        search: true,
+        searchSelector: "#table-search",
+        sortable: true,
+        sortResetPage: true,
+        dataType: "text",
+        filterControl: true,
+        url: "data.tsv",
+        columns: [{
+          field: "source_doc_id",
+          title: "Source ID",
+          sortable: true,
+          formatter: "sourceIdFormatter",
+        }, {
+          field: "recorded_date",
+          sortable: true,
+          formatter: "defaultFormatter",
+          title: "Recorded Date"
+        }, {
+          field: "doc_date",
+          sortable: true,
+          formatter: "defaultFormatter",
+          title: "Document Date"
+        }, {
+          field: "doc_amount",
+          sortable: true,
+          formatter: "priceFormatter",
+          title: "Amount"
+        }, {
+          field: "Brokerage",
+          sortable: true,
+          formatter: "brokerageFormatter",
+          title: "Brokerage"
+        }, {
+          field: "Broker",
+          sortable: true,
+          formatter: "brokerageFormatter",
+          title: "Broker"
+        }, {
+          field: "addresses",
+          sortable: true,
+          formatter: "addressFormatter",
+          title: "Address"
+        }, {
+          field: "units",
+          sortable: true,
+          formatter: "defaultFormatter",
+          title: "Units"
+        }, {
+          field: "borough",
+          sortable: true,
+          formatter: "defaultFormatter",
+          filterControl: "select",
+          filterData: "func:boroughFilterData",
+          filterControlPlaceholder: "All",
+          title: "Borough"
+        }, {
+          field: "neighborhood",
+          sortable: true,
+          formatter: "defaultFormatter",
+          filterControl: "select",
+          filterControlPlaceholder: "All",
+          title: "Neighborhood"
+        }, {
+          field: "property_group",
+          sortable: true,
+          formatter: "defaultFormatter",
+          filterControl: "select",
+          filterControlPlaceholder: "All",
+          title: "Proprty Type"
+        }, {
+          field: "new_dev_sale_type",
+          sortable: true,
+          formatter: "defaultFormatter",
+          filterControl: "select",
+          filterControlPlaceholder: "All",
+          title: "Development Type"
+        }],
+      };
+
+      window.addEventListener('resize', function () {
+        let height = window.innerHeight;
+        $table.bootstrapTable('resetView', {
+          height: getHeight()
+        });
+      });
+      let $table = $('#table');
+
+      $table.bootstrapTable(config);
+    });
+  </script>
 </body>
 
 </html>
