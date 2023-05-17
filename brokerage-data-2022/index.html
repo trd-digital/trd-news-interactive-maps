@@ -316,11 +316,6 @@
         filterControl: true,
         url: "data.tsv",
         columns: [{
-          field: "source_doc_id",
-          title: "Source ID",
-          sortable: true,
-          formatter: "sourceIdFormatter",
-        }, {
           field: "recorded_date",
           sortable: true,
           formatter: "defaultFormatter",
@@ -386,7 +381,12 @@
           filterControl: "select",
           filterControlPlaceholder: "All",
           title: "Development Type"
-        }],
+        }, {
+          field: "source_doc_id",
+          title: "Source ID",
+          sortable: true,
+          formatter: "sourceIdFormatter",
+        }, ],
       };
       let config2 = {
         escape: true,
@@ -394,6 +394,9 @@
         dataType: "text",
         url: "data2.tsv",
         columns: [{
+          field: "rank",
+          title: "Ranking",
+        }, {
           field: "brokerage",
           title: "Brokerage",
         }, {
