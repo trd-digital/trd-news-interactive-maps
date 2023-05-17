@@ -46,6 +46,7 @@
     header {
       display: flex;
       align-items: center;
+      justify-content: space-between;
     }
 
     h1 {
@@ -93,7 +94,6 @@
         "Broker",
         "link_url",
       ];
-
       return responseHandlerCsvToJsonHeaders(csvText, headers);
     }
 
@@ -108,7 +108,26 @@
       return csvLinesToJsonRows(csvLines.slice(1), headers);
     }
 
+    function responseHandlerCsvToJson2(csvText) {
+      console.log(csvText);
+      let csvLines = csvText.split("\n");
+      if (csvLines.length <= 1) {
+        return {
+          rows: [],
+        };
+      }
+      let headers = csvLines[0].split("\t");
+      console.log(headers);
+      return csvLinesToJsonRows(csvLines.slice(1), headers);
+    }
+
     function responseHandlerCsvToJsonHeaders(csvText, headers) {
+
+      let csvLines = csvText.split("\n");
+      return csvLinesToJsonRows(csvLines, headers);
+    }
+
+    function responseHandlerCsvToJsonHeaders2(csvText, headers) {
       let csvLines = csvText.split("\n");
       return csvLinesToJsonRows(csvLines, headers);
     }
@@ -254,6 +273,12 @@
 <body class="m-2">
   <header>
     <h1 id="title">2022 Brokerage Ranking</h1>
+  </header>
+  <h2 id="title">Top Brokrage</h2>
+  <table id="table_top"></table>
+  <hr />
+  <header>
+    <h2 id="title">Full Data</h2>
     <form>
       <input type="search" id="table-search" value="" autocomplete="true" class="form-control" placeholder="Search...">
     </form>
@@ -270,6 +295,11 @@
         let titleHeight = $('#title').height();
         let sourceNotesHeight = $('#source-notes').height();
         return window.innerHeight - (titleHeight + sourceNotesHeight + 50);
+      }
+
+      function getHeight2() {
+        let titleHeight = $('#title').height();
+        return window.innerHeight - (titleHeight + sourceNotesHeight + 50);;
       }
       let config = {
         height: getHeight(),
@@ -358,16 +388,36 @@
           title: "Development Type"
         }],
       };
-
+      let config2 = {
+        escape: true,
+        responseHandler: "responseHandlerCsvToJson2",
+        dataType: "text",
+        url: "data2.tsv",
+        columns: [{
+          field: "brokerage",
+          title: "Brokerage",
+        }, {
+          field: "number_of_brokerages",
+          title: "Number of Brokerages"
+        }, {
+          field: "total_doc_amount",
+          title: "Total Amount"
+        }],
+      };
       window.addEventListener('resize', function () {
         let height = window.innerHeight;
         $table.bootstrapTable('resetView', {
           height: getHeight()
         });
+        $table2.bootstrapTable('resetView', {
+          height: getHeigh2()
+        });
       });
       let $table = $('#table');
+      let $table2 = $('#table_top');
 
       $table.bootstrapTable(config);
+      $table2.bootstrapTable(config2);
     });
   </script>
 </body>
