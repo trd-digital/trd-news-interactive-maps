@@ -81,6 +81,24 @@
       }
 
     }
+
+    thead {
+      background-color: black;
+      color: white;
+    }
+
+    th {
+      color: white;
+      font-size: 15px
+    }
+
+    #table_top.table-striped>tbody>tr:nth-child(odd)>td {
+      background-color: #fff0d3;
+    }
+
+    #table.table-striped>tbody>tr:nth-child(odd)>td {
+      background-color: #d3edfb;
+    }
   </style>
 
   <script>
@@ -285,6 +303,12 @@
         "Staten Island": "Staten Island",
       };
     }
+
+    function headerStyle(column) {
+      return {
+        classes: 'thead-dark'
+      }
+    }
   </script>
 </head>
 
@@ -293,7 +317,7 @@
     <h1 id="title">2022 NYC residential deals</h1>
   </header>
   <h2 id="title">Top 10 2022 NYC residential deals by broker</h2>
-  <table id="table_top"></table>
+  <table id="table_top" class="table-striped"></table>
   <hr />
   <header>
     <h2 id="title">All 2022 NYC residential deals</h2>
@@ -301,7 +325,7 @@
       <input type="search" id="table-search" value="" autocomplete="true" class="form-control" placeholder="Search...">
     </form>
   </header>
-  <table id="table"></table>
+  <table id="table" class="table-striped"></table>
   <div id="source-notes" class="text-muted">SOURCE: TRD ANALYSIS OF CLOSED SALES IN BROOKLYN, MANHATTAN AND QUEENS BASED
     ON PUBLICLY AVAILABLE LISTINGS AND DATA FROM FIRMS. INCLUDES RESIDENTIAL SALES (CONDOS, CO-OPS AND SINGLE-, TWO- AND
     THREE-FAMILY HOMES WITH NO COMMERCIAL COMPONENT) RECORDED IN THE NEW YORK CITY REGISTER IN 2022. ONLY SELL-SIDE
@@ -321,6 +345,7 @@
       }
       let config = {
         height: getHeight(),
+        headerStyle: "headerStyle",
         pagination: true,
         pageSize: 100,
         escape: true,
