@@ -46,6 +46,7 @@
     header {
       display: flex;
       align-items: center;
+      justify-content: space-between;
     }
 
     h1 {
@@ -65,11 +66,38 @@
       display: inline-block;
     }
 
+    .bootstrap-table:first-of-type {
+      width: 50%;
+    }
+
     @media only screen and (max-width: 600px) {
       #source-notes {
         font-size: 10px;
       }
 
+      .bootstrap-table:first-of-type {
+        width: 100%;
+
+      }
+
+    }
+
+    thead {
+      background-color: black;
+      color: white;
+    }
+
+    th {
+      color: white;
+      font-size: 15px
+    }
+
+    #table_top.table-striped>tbody>tr:nth-child(odd)>td {
+      background-color: #fff0d3;
+    }
+
+    #table.table-striped>tbody>tr:nth-child(odd)>td {
+      background-color: #d3edfb;
     }
   </style>
 
@@ -93,7 +121,6 @@
         "Broker",
         "link_url",
       ];
-
       return responseHandlerCsvToJsonHeaders(csvText, headers);
     }
 
@@ -108,7 +135,24 @@
       return csvLinesToJsonRows(csvLines.slice(1), headers);
     }
 
+    function responseHandlerCsvToJson2(csvText) {
+      let csvLines = csvText.split("\n");
+      if (csvLines.length <= 1) {
+        return {
+          rows: [],
+        };
+      }
+      let headers = csvLines[0].split("\t");
+      return csvLinesToJsonRows(csvLines.slice(1), headers);
+    }
+
     function responseHandlerCsvToJsonHeaders(csvText, headers) {
+
+      let csvLines = csvText.split("\n");
+      return csvLinesToJsonRows(csvLines, headers);
+    }
+
+    function responseHandlerCsvToJsonHeaders2(csvText, headers) {
       let csvLines = csvText.split("\n");
       return csvLinesToJsonRows(csvLines, headers);
     }
@@ -142,6 +186,17 @@
       return (
         value == "" || value == null || value == "null" || value == "N/A"
       );
+    }
+
+    function priceSorter(a, b) {
+      var billA = Number(a.replace(/(^\$|,)/g, ''));
+      var billB = Number(b.replace(/(^\$|,)/g, ''));
+      if (billA < billB)
+        return -1;
+      if (billA > billB)
+        return 1;
+
+      return -0;
     }
 
     function currency(value, round = false) {
@@ -248,17 +303,29 @@
         "Staten Island": "Staten Island",
       };
     }
+
+    function headerStyle(column) {
+      return {
+        classes: 'thead-dark'
+      }
+    }
   </script>
 </head>
 
 <body class="m-2">
   <header>
-    <h1 id="title">2022 Brokerage Ranking</h1>
+    <h1 id="title">2022 NYC residential deals</h1>
+  </header>
+  <h2 id="title">Top 10 2022 NYC residential deals by broker</h2>
+  <table id="table_top" class="table-striped"></table>
+  <hr />
+  <header>
+    <h2 id="title">All 2022 NYC residential deals</h2>
     <form>
       <input type="search" id="table-search" value="" autocomplete="true" class="form-control" placeholder="Search...">
     </form>
   </header>
-  <table id="table"></table>
+  <table id="table" class="table-striped"></table>
   <div id="source-notes" class="text-muted">SOURCE: TRD ANALYSIS OF CLOSED SALES IN BROOKLYN, MANHATTAN AND QUEENS BASED
     ON PUBLICLY AVAILABLE LISTINGS AND DATA FROM FIRMS. INCLUDES RESIDENTIAL SALES (CONDOS, CO-OPS AND SINGLE-, TWO- AND
     THREE-FAMILY HOMES WITH NO COMMERCIAL COMPONENT) RECORDED IN THE NEW YORK CITY REGISTER IN 2022. ONLY SELL-SIDE
@@ -271,8 +338,14 @@
         let sourceNotesHeight = $('#source-notes').height();
         return window.innerHeight - (titleHeight + sourceNotesHeight + 50);
       }
+
+      function getHeight2() {
+        let titleHeight = $('#title').height();
+        return window.innerHeight - (titleHeight + sourceNotesHeight + 50);;
+      }
       let config = {
         height: getHeight(),
+        headerStyle: "headerStyle",
         pagination: true,
         pageSize: 100,
         escape: true,
@@ -286,11 +359,6 @@
         filterControl: true,
         url: "data.tsv",
         columns: [{
-          field: "source_doc_id",
-          title: "Source ID",
-          sortable: true,
-          formatter: "sourceIdFormatter",
-        }, {
           field: "recorded_date",
           sortable: true,
           formatter: "defaultFormatter",
@@ -304,6 +372,7 @@
           field: "doc_amount",
           sortable: true,
           formatter: "priceFormatter",
+          sorter: "priceSorter",
           title: "Amount"
         }, {
           field: "Brokerage",
@@ -355,19 +424,49 @@
           formatter: "defaultFormatter",
           filterControl: "select",
           filterControlPlaceholder: "All",
-          title: "Development Type"
+          title: "Sale Type"
+        }, {
+          field: "source_doc_id",
+          title: "Source ID",
+          sortable: true,
+          formatter: "sourceIdFormatter",
+        }, ],
+      };
+      let config2 = {
+        escape: true,
+        responseHandler: "responseHandlerCsvToJson2",
+        dataType: "text",
+        url: "data2.tsv",
+        columns: [{
+          field: "rank",
+          title: "Ranking",
+        }, {
+          field: "brokerage",
+          title: "Brokerage",
+        }, {
+          field: "number_of_brokerages",
+          title: "Number of Brokerages"
+        }, {
+          field: "total_doc_amount",
+          title: "Total Amount"
         }],
       };
+
 
       window.addEventListener('resize', function () {
         let height = window.innerHeight;
         $table.bootstrapTable('resetView', {
           height: getHeight()
         });
+        $table2.bootstrapTable('resetView', {
+          height: getHeigh2()
+        });
       });
       let $table = $('#table');
+      let $table2 = $('#table_top');
 
       $table.bootstrapTable(config);
+      $table2.bootstrapTable(config2);
     });
   </script>
 </body>
