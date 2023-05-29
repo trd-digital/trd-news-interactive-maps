@@ -26,50 +26,41 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-// Add event listener to the search form
-document.getElementById('search-form').addEventListener('submit', function (event) {
+  // Add event listener to the search form
+  document.getElementById('search-form').addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent form submission
 
     var address = document.getElementById('search-input').value;
 
     // Use the Mapbox Geocoding API to geocode the address
-    var geocodeUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(address) + '.json?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjbGM3c2NkaW40ZXhyM3Fwbm90NTNhMDVpIn0.pUxun7fhoJsjW9BUNB8UkQ';
+    var geocodeUrl =
+      'https://api.mapbox.com/geocoding/v5/mapbox.places/' +
+      encodeURIComponent(address) +
+      '.json?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjbGM3c2NkaW40ZXhyM3Fwbm90NTNhMDVpIn0.pUxun7fhoJsjW9BUNB8UkQ' +
+      '&bbox=-80.88,25.13,-79.99,25.98' + // Bounding box coordinates (lon, lat, lon, lat)
+      '&proximity=-80.2,25.75'; // Proximity bias coordinates (lon, lat)
 
     fetch(geocodeUrl)
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            if (data.features.length > 0) {
-                // Filter the results to Miami-Dade, Palm Beach, and Broward counties
-                var filteredResults = data.features.filter(function (feature) {
-                    var countyName = feature.context.find(function (context) {
-                        return context.id.includes('place');
-                    }).text;
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        if (data.features.length > 0) {
+          var coordinates = data.features[0].geometry.coordinates;
 
-                    return countyName === 'Miami' || countyName === 'Palm Beach' || countyName === 'Broward';
-                });
-
-                if (filteredResults.length > 0) {
-                    // Retrieve the coordinates of the first filtered result
-                    var coordinates = filteredResults[0].geometry.coordinates;
-
-                    // Zoom the map to the entered address
-                    map.flyTo({
-                        center: coordinates,
-                        zoom: 17
-                    });
-                } else {
-                    console.log('No results found in Miami-Dade, Palm Beach, or Broward counties');
-                }
-            } else {
-                console.log('No results found');
-            }
-        })
-        .catch(function (error) {
-            console.log('Error:', error);
-        });
-});
+          // Zoom the map to the entered address
+          map.flyTo({
+            center: coordinates,
+            zoom: 18
+          });
+        } else {
+          console.log('No results found');
+        }
+      })
+      .catch(function (error) {
+        console.log('Error:', error);
+      });
+  });
 
     // Create the popup
     map.on('click', 'agri_data', function (e) {
