@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Buffered polygons source and layer
         map.addSource('So_Fla_buffered_polygon', {
             type: 'geojson',
-            data: 'data/outer_polygon.geojson'
+            data: 'data/outer_polygon_final.geojson'
         });
 
         map.addLayer({
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Add the geojson source and layer
         map.addSource('SoFla_agri_data_source', {
             type: 'geojson',
-            data: 'data/SoFla_agri.geojson'
+            data: 'data/SoFla_agri_final.geojson'
         });
 
         map.addLayer({
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Restricted Properties source and layer
         map.addSource('restricted_export_data', {
             type: 'geojson',
-            data: 'data/restricted_export.geojson'
+            data: 'data/restricted_export_final.geojson'
         });
 
         map.addLayer({
