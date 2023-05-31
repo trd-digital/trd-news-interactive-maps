@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
 
-    var marker = null; // Declare the marker variable
+    var marker = null; // Declare marker variable
 
     map.on('load', function () {
         // Buffered polygons source and layer
