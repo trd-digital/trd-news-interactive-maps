@@ -165,12 +165,13 @@ document.addEventListener('DOMContentLoaded', function () {
         let city = e.features[0].properties.PHY_CITY;
         let folio = e.features[0].properties.PARCEL_ID;
         let zone = e.features[0].properties.DOR_UC;
+        let zone_desc = e.features[0].properties.DESC;
 
         new mapboxgl.Popup()
             .setLngLat(e.lngLat)
             .setHTML('<h2>' + address + ' ' + city + '</h2>'
                 + '<strong>Folio:</strong> ' + folio + '<br>'
-                + '<strong>Zone Description:</strong> ' + zone)
+                + '<strong>Zone Description:</strong> ' + zone + ': ' + zone_desc)
             .addTo(map);
     });
 });
