@@ -47,9 +47,9 @@ document.addEventListener('DOMContentLoaded', function () {
             type: 'fill',
             source: 'SoFla_agri_data_source',
             paint: {
-                'fill-color': '#FF0000',
-                'fill-outline-color': '#FF0000',
-                'fill-opacity': 0.7
+                'fill-color': '#454B1B', // Army green
+                'fill-outline-color': '#013220', // Dark green
+                'fill-opacity': 0.9
             }
         });
 
@@ -64,9 +64,9 @@ document.addEventListener('DOMContentLoaded', function () {
             type: 'fill',
             source: 'restricted_export_data',
             paint: {
-                'fill-color': '#A020F0', // purple
-                'fill-outline-color': '#9F2B68', // purple
-                'fill-opacity': 0.7
+                'fill-color': '#FF3131', // neon red
+                'fill-outline-color': '#000000', // black
+                'fill-opacity': 0.9
             }
         });
     });
@@ -174,4 +174,39 @@ document.addEventListener('DOMContentLoaded', function () {
                 + '<strong>Zone Description:</strong> ' + zone + ': ' + zone_desc)
             .addTo(map);
     });
+  
+    document.getElementById('buffered_polygon').addEventListener('change', function () {
+        const layerVisibility = this.checked ? 'visible' : 'none';
+        map.setLayoutProperty('buffered_polygon', 'visibility', layerVisibility);
+      });
+      
+      document.getElementById('SoFla_agri_data').addEventListener('change', function () {
+        const layerVisibility = this.checked ? 'visible' : 'none';
+        map.setLayoutProperty('SoFla_agri_data', 'visibility', layerVisibility);
+      });
+      
+      document.getElementById('restricted_properties').addEventListener('change', function () {
+        const layerVisibility = this.checked ? 'visible' : 'none';
+        map.setLayoutProperty('restricted_properties', 'visibility', layerVisibility);
+      }); 
+      
+        // Set initial state of checkboxes and layers
+    const checkboxes = document.querySelectorAll('.layer-toggle');
+    checkboxes.forEach(checkbox => {
+    checkbox.checked = true; // Set all checkboxes as checked
+
+    // Trigger change event to update layer visibility
+    checkbox.dispatchEvent(new Event('change'));
+    });
+
+    map.addControl(new mapboxgl.NavigationControl());
+
+    document.getElementById('zoom-in').addEventListener('click', function () {
+      map.zoomIn();
+    });
+
+    document.getElementById('zoom-out').addEventListener('click', function () {
+      map.zoomOut();
+    });
+
 });
