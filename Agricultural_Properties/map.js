@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Restricted Properties source and layer
+        // Critical Infrastructure Properties source and layer
         map.addSource('restricted_export_data', {
             type: 'geojson',
             data: 'data/restricted_export_final.geojson'
@@ -63,6 +63,22 @@ document.addEventListener('DOMContentLoaded', function () {
             id: 'restricted_properties',
             type: 'fill',
             source: 'restricted_export_data',
+            paint: {
+                'fill-color': '#9D00FF', // neon red
+                'fill-outline-color': '#000000', // black
+                'fill-opacity': 0.9
+            }
+        });
+        // Airport source and layer
+        map.addSource('airport_export_data', {
+          type: 'geojson',
+          data: 'data/airport_export_final.geojson'
+        });
+
+        map.addLayer({
+            id: 'airport_properties',
+            type: 'fill',
+            source: 'airport_export_data',
             paint: {
                 'fill-color': '#9D00FF', // neon red
                 'fill-outline-color': '#000000', // black
@@ -134,13 +150,23 @@ document.addEventListener('DOMContentLoaded', function () {
         map.getCanvas().style.cursor = '';
     });
 
-    // Change the cursor to a pointer when the mouse is over the SoFla_agri_data layer.
+    // Change the cursor to a pointer when the mouse is over the restricted layer.
     map.on('mouseenter', 'restricted_properties', function () {
         map.getCanvas().style.cursor = 'pointer';
     });
 
     // Change it back to the default cursor when it leaves.
     map.on('mouseleave', 'restricted_properties', function () {
+        map.getCanvas().style.cursor = '';
+    });
+
+    // Change the cursor to a pointer when the mouse is over the restricted layer.
+    map.on('mouseenter', 'airport_properties', function () {
+      map.getCanvas().style.cursor = 'pointer';
+    });
+
+    // Change it back to the default cursor when it leaves.
+    map.on('mouseleave', 'airport_properties', function () {
         map.getCanvas().style.cursor = '';
     });
 
@@ -174,6 +200,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 + '<strong>Zone Description:</strong> ' + zone + ': ' + zone_desc)
             .addTo(map);
     });
+      // Create the popup
+    map.on('click', 'airport_properties', function (e) {
+      let address = e.features[0].properties.Address;
+      let folio = e.features[0].properties.Folio;
+      let airport = e.features[0].properties.Airport
+
+      new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML('<h2>' + address + '</h2>'
+              + '<strong>Folio:</strong> ' + folio + '<br>'
+              + '<strong>Airport:</strong> ' + airport)
+          .addTo(map);
+    });
   
     document.getElementById('buffered_polygon').addEventListener('change', function () {
         const layerVisibility = this.checked ? 'visible' : 'none';
@@ -188,6 +227,11 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('restricted_properties').addEventListener('change', function () {
         const layerVisibility = this.checked ? 'visible' : 'none';
         map.setLayoutProperty('restricted_properties', 'visibility', layerVisibility);
+      }); 
+
+      document.getElementById('airport_properties').addEventListener('change', function () {
+        const layerVisibility = this.checked ? 'visible' : 'none';
+        map.setLayoutProperty('airport_properties', 'visibility', layerVisibility);
       }); 
       
         // Set initial state of checkboxes and layers
