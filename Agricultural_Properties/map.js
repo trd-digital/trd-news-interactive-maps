@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
             type: 'fill',
             source: 'SoFla_agri_data_source',
             paint: {
-                'fill-color': '#454B1B', // Army green
+                'fill-color': '#62FF00', // Army green
                 'fill-outline-color': '#013220', // Dark green
                 'fill-opacity': 0.9
             }
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
             type: 'fill',
             source: 'restricted_export_data',
             paint: {
-                'fill-color': '#FF3131', // neon red
+                'fill-color': '#9D00FF', // neon red
                 'fill-outline-color': '#000000', // black
                 'fill-opacity': 0.9
             }
