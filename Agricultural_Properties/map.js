@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/trddata/cl6h00632006t14o08g2ppqvj',
-        zoom: 8.5,
+        zoom: 6.5,
         center: [-80.2, 25.75]
     });
 
