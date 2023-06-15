@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>South Florida Property SB 264 Zoned Property</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="search-container">
+        <form id="search-form">
+            <input id="search-input" type="text" placeholder="Enter an address WITH the city name">
+            <button type="submit" id="search-button">Search</button>
+        </form>
+    </div>
+    <div id='map'></div>
+    <div class="mapboxgl-control-container">
+        <div class="toggle-row">
+          <input type="checkbox" id="buffered_polygon" class="layer-toggle">
+          <label for="buffered_polygon">Purchase Boundary</label><br>
+        </div>
+        <div class="toggle-row">
+          <input type="checkbox" id="SoFla_agri_data" class="layer-toggle">
+          <label for="SoFla_agri_data">Agricultural Properties</label><br>
+        </div>
+        <div class="toggle-row">
+          <input type="checkbox" id="restricted_properties" class="layer-toggle">
+          <label for="restricted_properties">Critical Infrastructure Properties</label>
+        </div>
+        <div class="toggle-row">
+          <input type="checkbox" id="airport_properties" class="layer-toggle">
+          <label for="airport_properties">Airports</label>
+        </div>
+        <div class="text-line">Purchase boundary: This boundary shows if a property falls within 10 miles of critical infrastructure facilities, which include airports, power plants, marinas and more. Does not include agricultural land.</div>
+        <div class="text-line">The Real Deal created this map with Mapbox, along with zoning and spatial data from the Florida Department of Revenue.</div>
+        <div class="separator"></div>
+      </div>  
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.js'></script>
+    <script type='text/javascript' src="map.js"></script>
+</body>
+</html>
