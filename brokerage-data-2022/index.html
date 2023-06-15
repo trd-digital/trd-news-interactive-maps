@@ -51,6 +51,17 @@
 
     h1 {
       flex: 1 0 auto;
+      font-size: 40px;
+      font-weight: bold;
+      padding-top: 30px;
+      text-align: center;
+    }
+
+    h2 {
+      flex: 1 0 auto;
+      font-size: 30px;
+      font-weight: bold;
+      padding-top: 40px;
     }
 
     th {
@@ -76,6 +87,10 @@
         font-size: 12px
       }
 
+      table th {
+        font-size: 12px
+      }
+
     }
 
     thead {
@@ -95,31 +110,26 @@
     #table.table-striped>tbody>tr:nth-child(odd)>td {
       background-color: #d3edfb;
     }
+
+    thead {
+      background-color: #1b69e1;
+      color: black;
+    }
+
+    th {
+      color: white;
+      font-size: 15px;
+      padding: 0 !important
+    }
+
+    #table_top.table-striped>tbody>tr:nth-child(odd)>td {
+      background-color: #fff0d3;
+    }
+
+    #table.table-striped>tbody>tr:nth-child(odd)>td {}
   </style>
 
   <script>
-    function responseHandlerCsvWithoutHeader(csvText) {
-      // we should specify column names manually
-      let headers = [
-        "source_doc_id",
-        "recorded_date",
-        "doc_date",
-        "doc_amount",
-        "borough",
-        "addresses",
-        "units",
-        "bbl",
-        "new_dev_sale_type",
-        "property_group",
-        "property_type",
-        "neighborhood",
-        "Brokerage",
-        "Broker",
-        "link_url",
-      ];
-      return responseHandlerCsvToJsonHeaders(csvText, headers);
-    }
-
     function responseHandlerCsvToJson(csvText) {
       let csvLines = csvText.split("\n");
       if (csvLines.length <= 1) {
@@ -139,11 +149,11 @@
         };
       }
       let headers = csvLines[0].split("\t");
-      return csvLinesToJsonRows(csvLines.slice(1), headers);
+      return
+      csvLinesToJsonRows(csvLines.slice(1), headers);
     }
 
     function responseHandlerCsvToJsonHeaders(csvText, headers) {
-
       let csvLines = csvText.split("\n");
       return csvLinesToJsonRows(csvLines, headers);
     }
@@ -187,8 +197,7 @@
     function priceSorter(a, b) {
       var billA = Number(a.replace(/(^\$|,)/g, ''));
       var billB = Number(b.replace(/(^\$|,)/g, ''));
-      if (billA < billB)
-        return -1;
+      if (billA < billB) return -1;
       if (billA > billB)
         return 1;
 
@@ -309,10 +318,61 @@
 </head>
 
 <body class="m-2">
-  <header>
-    <h1 id="title">2022 NYC residential deals</h1>
-  </header>
-  <h2 id="title">Top 10 2022 NYC residential deals by broker</h2>
+  <div class="container">
+    <h1 id="title">2022 NYC RESIDENTIAL DEALS</h1>
+    <div class="row row-cols-2">
+      <div class="col">
+        <header>
+          <h2 id="title">NYC TOP 10</h2>
+        </header>
+        <section class="container m-0 p-0">
+          <div class="row">
+            <div class="col-auto">
+              <table id="table_nyc" class="table-striped"></table>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="col">
+        <header>
+          <h2 id="title">MANHATTAN TOP 10</h2>
+        </header>
+        <section class="container m-0 p-0">
+          <div class="row">
+            <div class="col-auto">
+              <table id="table_manhattan" class="table-striped"></table>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="col">
+        <header>
+          <h2 id="title">QUEENS TOP 10 </h2>
+        </header>
+        <section class="container m-0 p-0">
+          <div class="row">
+            <div class="col-auto">
+              <table id="table_queens" class="table-striped"></table>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="col">
+        <header>
+          <h2 id="title">BROKLYN TOP 10</h2>
+        </header>
+        <section class="container m-0 p-0">
+          <div class="row">
+            <div class="col-auto">
+              <table id="table_brooklyn" class="table-striped"></table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <hr />
+
   <section class="container m-0 p-0">
     <div class="row">
       <div class="col-auto col-xl-8">
@@ -434,11 +494,68 @@
           formatter: "sourceIdFormatter",
         }, ],
       };
-      let config2 = {
+      let configNYC = {
         escape: true,
-        responseHandler: "responseHandlerCsvToJson2",
+        responseHandler: "responseHandlerCsvToJson",
         dataType: "text",
-        url: "data2.tsv",
+        url: "dataNYC.tsv",
+        columns: [{
+          field: "rank",
+          title: "Ranking",
+        }, {
+          field: "brokerage",
+          title: "Brokerage",
+        }, {
+          field: "number_of_brokerages",
+          title: "Number of Deals"
+        }, {
+          field: "total_doc_amount",
+          title: "Total Amount"
+        }]
+      };
+      let configManhattan = {
+        escape: true,
+        responseHandler: "responseHandlerCsvToJson",
+        dataType: "text",
+        url: "dataManhattan.tsv",
+        columns: [{
+          field: "rank",
+          title: "Ranking",
+        }, {
+          field: "brokerage",
+          title: "Brokerage",
+        }, {
+          field: "number_of_brokerages",
+          title: "Number of Deals"
+        }, {
+          field: "total_doc_amount",
+          title: "Total Amount"
+        }],
+      };
+      let configQueens = {
+        escape: true,
+        responseHandler: "responseHandlerCsvToJson",
+        dataType: "text",
+        url: "dataQueens.tsv",
+        columns: [{
+          field: "rank",
+          title: "Ranking",
+        }, {
+          field: "brokerage",
+          title: "Brokerage",
+        }, {
+          field: "number_of_brokerages",
+          title: "Number of Deals"
+        }, {
+          field: "total_doc_amount",
+          title: "Total Amount"
+        }],
+      };
+      let configBrooklyn = {
+        escape: true,
+        responseHandler: "responseHandlerCsvToJson",
+        dataType: "text",
+        url: "dataBrooklyn.tsv",
         columns: [{
           field: "rank",
           title: "Ranking",
@@ -465,10 +582,16 @@
         });
       });
       let $table = $('#table');
-      let $table2 = $('#table_top');
+      let $tableNYC = $('#table_nyc');
+      let $tableManhattan = $('#table_manhattan');
+      let $tableQueens = $('#table_queens');
+      let $tableBrooklyn = $('#table_brooklyn');
 
       $table.bootstrapTable(config);
-      $table2.bootstrapTable(config2);
+      $tableNYC.bootstrapTable(configNYC);
+      $tableManhattan.bootstrapTable(configManhattan);
+      $tableQueens.bootstrapTable(configQueens);
+      $tableBrooklyn.bootstrapTable(configBrooklyn);
     });
   </script>
 </body>
