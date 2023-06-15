@@ -107,27 +107,6 @@
   </style>
 
   <script>
-    function responseHandlerCsvWithoutHeader(csvText) {
-      // we should specify column names manually
-      let headers = [
-        "source_doc_id",
-        "recorded_date",
-        "doc_date",
-        "doc_amount",
-        "borough",
-        "addresses",
-        "units",
-        "bbl",
-        "new_dev_sale_type",
-        "property_group",
-        "property_type",
-        "neighborhood",
-        "Brokerage",
-        "Broker",
-        "link_url",
-      ];
-      return responseHandlerCsvToJsonHeaders(csvText, headers);
-    }
 
     function responseHandlerCsvToJson(csvText) {
       let csvLines = csvText.split("\n");
@@ -476,7 +455,7 @@ return window.innerHeight - (titleHeight + sourceNotesHeight + 50);;
       };
       let configNYC = {
       escape: true,
-      responseHandler: "responseHandlerCsvToJson2",
+      responseHandler: "responseHandlerCsvToJson",
       dataType: "text",
       url: "dataNYC.tsv",
       columns: [{
@@ -491,11 +470,11 @@ return window.innerHeight - (titleHeight + sourceNotesHeight + 50);;
       }, {
       field: "total_doc_amount",
       title: "Total Amount"
-      }],
+      }]
       };
       let configManhattan = {
       escape: true,
-      responseHandler: "responseHandlerCsvToJson2",
+      responseHandler: "responseHandlerCsvToJson",
       dataType: "text",
       url: "dataManhattan.tsv",
       columns: [{
@@ -514,7 +493,7 @@ return window.innerHeight - (titleHeight + sourceNotesHeight + 50);;
       };
       let configQueens = {
         escape: true,
-        responseHandler: "responseHandlerCsvToJson2",
+        responseHandler: "responseHandlerCsvToJson",
         dataType: "text",
         url: "dataQueens.tsv",
         columns: [{
@@ -533,7 +512,7 @@ return window.innerHeight - (titleHeight + sourceNotesHeight + 50);;
       };
       let configBrooklyn = {
         escape: true,
-        responseHandler: "responseHandlerCsvToJson2",
+        responseHandler: "responseHandlerCsvToJson",
         dataType: "text",
         url: "dataBrooklyn.tsv",
         columns: [{
