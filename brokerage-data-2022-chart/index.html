@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Brokerage Data 2022</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- bootstrap itself -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+    integrity="sha256-7ZWbZUAi97rkirk4DcEp4GWDPkWpRMcNaEyXGsNXjLg=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha256-wMCQIK229gKxbUg3QWa544ypI4OoFlC2qQl8Q8xD8x8=" crossorigin="anonymous"></script>
+  <!-- jquery needed for bootstrap-table-->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+  <!-- bootstrap-table-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/bootstrap-table.min.css"
+    integrity="sha512-vaPSEKPBIWEWK+pGIwdLnPzw7S2Tr6rYVT05v+KN89YVpEJavFiY1dPzT+e1ZeyizjEPBicVxJ5QixXZw0Nopw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/bootstrap-table.min.js"
+    integrity="sha512-rZAhvMayqW5e/N+xdp011tYAIdxgMMJtKxUXx7scO4iBPSUXAKdkrKIPRu6tLr0O9V6Bs9QujJF3MqmgSNfYPA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Filter Control extation -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/extensions/filter-control/bootstrap-table-filter-control.min.css"
+    integrity="sha512-3wnb7LWbjgtAbFFhszzC2PrPQ5fo1OnqRJHd9QYn+8UCMWMqQQrl5BZBJQx+cluqVIaszGF0MyEefoMC0Izxqg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/extensions/filter-control/bootstrap-table-filter-control.min.js"
+    integrity="sha512-/h89z5K7yzd1hIhw94drUJKivJcDQ3e93pKwC9bxLgWWhO+cD0RxCplr6tccXu3S1gbowNTsPFcVt+KMdGLdKw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <!-- Sticky header extation -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/extensions/sticky-header/bootstrap-table-sticky-header.min.css"
+    integrity="sha512-+d60APKv5qLS+Jz7TobSczIVV3uJ18TXO6Ge4odkaurLc4sT13CgqvOW117CL78wyPv0sNZ2iJQW1EPmsr/V+A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.4/extensions/sticky-header/bootstrap-table-sticky-header.min.js"
+    integrity="sha512-RgKz840rC2wXKXWwXiJCeLb9pEu6iDnjS1SAnyGdOcHCBJQyDiGRsrMjEUgLkW97rPj21jZucpIl6NDI7mAnMA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+  <style>
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    h1 {
+      flex: 1 0 auto;
+    }
+
+    th {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      color: #7d7d7d;
+      padding: 0.8rem 0rem !important;
+      white-space: nowrap;
+    }
+
+    #select {
+      width: 100px;
+      display: inline-block;
+    }
+
+    @media only screen and (max-width: 600px) {
+      #source-notes {
+        font-size: 10px;
+      }
+
+    }
+  </style>
+
+  <script>
+    function responseHandlerCsvWithoutHeader(csvText) {
+      // we should specify column names manually
+      let headers = [
+        "source_doc_id",
+        "recorded_date",
+        "doc_date",
+        "doc_amount",
+        "borough",
+        "addresses",
+        "units",
+        "bbl",
+        "new_dev_sale_type",
+        "property_group",
+        "property_type",
+        "neighborhood",
+        "Brokerage",
+        "Broker",
+        "link_url",
+      ];
+      return responseHandlerCsvToJsonHeaders(csvText, headers);
+    }
+
+    function responseHandlerCsvToJson(csvText) {
+      let csvLines = csvText.split("\n");
+      if (csvLines.length <= 1) {
+        return {
+          rows: [],
+        };
+      }
+      let headers = csvLines[0].split("\t");
+      return csvLinesToJsonRows(csvLines.slice(1), headers);
+    }
+
+    function responseHandlerCsvToJson2(csvText) {
+      console.log(csvText);
+      let csvLines = csvText.split("\n");
+      if (csvLines.length <= 1) {
+        return {
+          rows: [],
+        };
+      }
+      let headers = csvLines[0].split("\t");
+      console.log(headers);
+      return csvLinesToJsonRows(csvLines.slice(1), headers);
+    }
+
+    function responseHandlerCsvToJsonHeaders(csvText, headers) {
+
+      let csvLines = csvText.split("\n");
+      return csvLinesToJsonRows(csvLines, headers);
+    }
+
+    function responseHandlerCsvToJsonHeaders2(csvText, headers) {
+      let csvLines = csvText.split("\n");
+      return csvLinesToJsonRows(csvLines, headers);
+    }
+
+    function csvLinesToJsonRows(csvLines, headers) {
+      let jsonRows = [];
+      for (let csvLineIdx = 0; csvLineIdx < csvLines.length; csvLineIdx++) {
+        let csvLine = csvLines[csvLineIdx];
+        if (!csvLine) {
+          continue;
+        }
+        let fields = csvLine.split("\t");
+        let row = {};
+        if (fields.length === 0) {
+          continue;
+        }
+        for (let headerIdx = 0; headerIdx < headers.length; headerIdx++) {
+          let header = headers[headerIdx];
+          if (fields.length > headerIdx) {
+            row[header] = fields[headerIdx];
+          }
+        }
+        jsonRows[csvLineIdx] = row;
+      }
+      return {
+        rows: jsonRows,
+      };
+    }
+
+    function isEmpty(value) {
+      return (
+        value == "" || value == null || value == "null" || value == "N/A"
+      );
+    }
+
+    function currency(value, round = false) {
+      const si = [{
+          value: 1,
+          symbol: "",
+          digits: 0,
+        },
+        {
+          value: 1e3,
+          symbol: "K",
+          digits: 2,
+        },
+        {
+          value: 1e6,
+          symbol: "M",
+          digits: 3,
+        },
+        {
+          value: 1e9,
+          symbol: "B",
+          digits: 2,
+        },
+        {
+          value: 1e12,
+          symbol: "T",
+          digits: 2,
+        },
+      ];
+      const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+      const type = typeof value;
+      if ("string" === type) {
+        value = value.replace(/,|\$|%/g, "");
+        value = value.toUpperCase();
+        const str = value;
+        for (let i = 1; i < si.length; i++) {
+          const element = si[i];
+          if (str.includes(element.symbol)) {
+            value = value.replace(element.symbol, "");
+            value = parseFloat(value) * element.value;
+          }
+        }
+      }
+
+      let i;
+      for (i = si.length - 1; i > 0; i--) {
+        if (value >= si[i].value) break;
+      }
+      if (round === true) {
+        return (
+          "$" +
+          Math.round(value / si[i].value)
+          .toFixed()
+          .replace(rx, "$1") +
+          si[i].symbol
+        );
+      } else {
+        return (
+          "$" +
+          (value / si[i].value).toFixed(si[i].digits).replace(rx, "$1") +
+          si[i].symbol
+        );
+      }
+    }
+
+    function defaultFormatter(value, row) {
+      if (isEmpty(value)) {
+        return '<span class="text-muted">N/A</span>';
+      }
+      return value;
+    }
+
+    function sourceIdFormatter(value, row) {
+      return `<a target="_blank" href="https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=${value}">${value}</a>`;
+    }
+
+    function addressFormatter(value, row) {
+      if (isEmpty(value)) {
+        return '<span class="text-muted">N/A</span>';
+      }
+      return value.toUpperCase();
+    }
+
+    function priceFormatter(value) {
+      if (isEmpty(value)) {
+        return '<span class="text-muted">N/A</span>';
+      }
+      return value;
+    }
+
+    function brokerageFormatter(value) {
+      if (isEmpty(value)) {
+        return '<span class="text-muted">N/A</span>';
+      }
+      return value;
+    }
+
+    function boroughFilterData(data) {
+      return {
+        Manhattan: "Manhattan",
+        Queens: "Queens",
+        Brooklyn: "Brooklyn",
+        Bronx: "Bronx",
+        "Staten Island": "Staten Island",
+      };
+    }
+  </script>
+</head>
+
+<body class="m-2">
+  <header>
+    <h1 id="title">2022 NYC residential deals</h1>
+  </header>
+  <h2 id="title" class="text-center">Top 10 2022 NYC residential deals by broker</h2>
+  <div class="deals d-flex">
+    <div id="piechart_3d" style="width: 900px; height: 500px; margin:0 auto"></div>
+    <div id="piechart_3d_2" style="width: 900px; height: 500px; margin:0 auto"></div>
+  </div>
+  <hr />
+  <header>
+    <h2 id="title">All 2022 NYC residential deals</h2>
+    <form>
+      <input type="search" id="table-search" value="" autocomplete="true" class="form-control" placeholder="Search...">
+    </form>
+  </header>
+  <table id="table"></table>
+  <div id="source-notes" class="text-muted">SOURCE: TRD ANALYSIS OF CLOSED SALES IN BROOKLYN, MANHATTAN AND QUEENS BASED
+    ON PUBLICLY AVAILABLE LISTINGS AND DATA FROM FIRMS. INCLUDES RESIDENTIAL SALES (CONDOS, CO-OPS AND SINGLE-, TWO- AND
+    THREE-FAMILY HOMES WITH NO COMMERCIAL COMPONENT) RECORDED IN THE NEW YORK CITY REGISTER IN 2022. ONLY SELL-SIDE
+    DEALS WERE COUNTED. OFF-MARKET DEALS WERE NOT COUNTED. ALL FIRMS WERE CONTACTED, NOT ALL FIRMS PARTICIPATED.</div>
+
+  <script>
+    $(document).ready(function () {
+      function getHeight() {
+        let titleHeight = $('#title').height();
+        let sourceNotesHeight = $('#source-notes').height();
+        return window.innerHeight - (titleHeight + sourceNotesHeight + 50);
+      }
+
+      function getHeight2() {
+        let titleHeight = $('#title').height();
+        return window.innerHeight - (titleHeight + sourceNotesHeight + 50);;
+      }
+      let config = {
+        height: getHeight(),
+        pagination: true,
+        pageSize: 100,
+        escape: true,
+        showButtonIcon: true,
+        responseHandler: "responseHandlerCsvToJson",
+        search: true,
+        searchSelector: "#table-search",
+        sortable: true,
+        sortResetPage: true,
+        dataType: "text",
+        filterControl: true,
+        url: "data.tsv",
+        columns: [{
+          field: "recorded_date",
+          sortable: true,
+          formatter: "defaultFormatter",
+          title: "Recorded Date"
+        }, {
+          field: "doc_date",
+          sortable: true,
+          formatter: "defaultFormatter",
+          title: "Document Date"
+        }, {
+          field: "doc_amount",
+          sortable: true,
+          formatter: "priceFormatter",
+          title: "Amount"
+        }, {
+          field: "Brokerage",
+          sortable: true,
+          formatter: "brokerageFormatter",
+          filterControl: "input",
+          filterControlPlaceholder: "Search...",
+          title: "Brokerage"
+        }, {
+          field: "Broker",
+          sortable: true,
+          formatter: "brokerageFormatter",
+          title: "Broker"
+        }, {
+          field: "addresses",
+          sortable: true,
+          formatter: "addressFormatter",
+          title: "Address"
+        }, {
+          field: "units",
+          sortable: true,
+          formatter: "defaultFormatter",
+          title: "Units"
+        }, {
+          field: "borough",
+          sortable: true,
+          formatter: "defaultFormatter",
+          filterControl: "select",
+          filterData: "func:boroughFilterData",
+          filterControlPlaceholder: "All",
+          title: "Borough"
+        }, {
+          field: "neighborhood",
+          sortable: true,
+          formatter: "defaultFormatter",
+          filterControl: "select",
+          filterControlPlaceholder: "All",
+          title: "Neighborhood"
+        }, {
+          field: "property_group",
+          sortable: true,
+          formatter: "defaultFormatter",
+          filterControl: "select",
+          filterControlPlaceholder: "All",
+          title: "Proprty Type"
+        }, {
+          field: "new_dev_sale_type",
+          sortable: true,
+          formatter: "defaultFormatter",
+          filterControl: "select",
+          filterControlPlaceholder: "All",
+          title: "Development Type"
+        }, {
+          field: "source_doc_id",
+          title: "Source ID",
+          sortable: true,
+          formatter: "sourceIdFormatter",
+        }, ],
+      };
+      let config2 = {
+        escape: true,
+        responseHandler: "responseHandlerCsvToJson2",
+        dataType: "text",
+        url: "data2.tsv",
+        columns: [{
+          field: "rank",
+          title: "Ranking",
+        }, {
+          field: "brokerage",
+          title: "Brokerage",
+        }, {
+          field: "number_of_brokerages",
+          title: "Number of Brokerages"
+        }, {
+          field: "total_doc_amount",
+          title: "Total Amount"
+        }],
+      };
+      window.addEventListener('resize', function () {
+        let height = window.innerHeight;
+        $table.bootstrapTable('resetView', {
+          height: getHeight()
+        });
+        $table2.bootstrapTable('resetView', {
+          height: getHeigh2()
+        });
+      });
+      let $table = $('#table');
+      let $table2 = $('#table_top');
+
+      $table.bootstrapTable(config);
+      //$table2.bootstrapTable(config2);
+    });
+
+    google.charts.load("current", {
+      packages: ["corechart"]
+    });
+    google.charts.setOnLoadCallback(drawChart);
+    google.charts.setOnLoadCallback(drawChart_2);
+
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ['Brokrage', 'Amount'],
+        ['Corcoran Group', 8747602062],
+        ['Compass', 8618119752],
+        ['Douglas Ellima', 7873089765],
+        ['Brown Harris Stevens', 4106160401],
+        ['Sothebys International Realty', 1678890482],
+        ['SERHANT', 859366729],
+        ['Nest Seekers', 520584790],
+        ['Keller Williams Realty Landmark', 506584866],
+        ['CORE', 493706961],
+
+      ]);
+      var formatter = new google.visualization.NumberFormat({
+        prefix: '$'
+      });
+      formatter.format(data, 1);
+
+      var options = {
+        title: 'Top 10 2022 NYC residential deals by amount',
+        is3D: true,
+        titleTextStyle: {
+          fontSize: 20
+        }
+      };
+
+      var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+      chart.draw(data, options);
+    }
+
+    function drawChart_2() {
+      var data = google.visualization.arrayToDataTable([
+        ['Brokrage', 'Brokers'],
+        ['Compass', 5305],
+        ['Douglas Elliman', 4198],
+        ['The Corcoran Group', 4107],
+        ['Brown Harris Stevens', 2277],
+        ['Sothebys International Realty', 609],
+        ['Winzone Realty', 497],
+        ['EXP Realty', 474],
+        ['SERHANT', 425],
+        ['Nest Seekers', 392],
+
+      ]);
+
+      var options = {
+        title: 'Top 10 2022 NYC residential by Number Of Brokers',
+        is3D: true,
+        titleTextStyle: {
+          fontSize: 20
+        }
+      };
+
+      var chart = new google.visualization.PieChart(document.getElementById('piechart_3d_2'));
+      chart.draw(data, options);
+    }
+  </script>
+</body>
+
+</html>
