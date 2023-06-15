@@ -50,6 +50,17 @@
 
     h1 {
       flex: 1 0 auto;
+      font-size: 40px;
+      font-weight: bold;
+      padding-top:30px;
+      text-align: center;
+      }
+
+      h2 {
+      flex: 1 0 auto;
+      font-size: 30px;
+      font-weight: bold;
+      padding-top:40px;
     }
 
     th {
@@ -70,6 +81,31 @@
         font-size: 10px;
       }
 
+<<<<<<< Updated upstream
+=======
+      table th {
+        font-size: 12px
+      }
+
+    }
+
+    thead {
+      background-color: #1b69e1;
+      color: black;
+    }
+
+    th {
+      color: white;
+      font-size: 15px;
+      padding: 0 !important
+    }
+
+    #table_top.table-striped>tbody>tr:nth-child(odd)>td {
+      background-color: #fff0d3;
+    }
+
+    #table.table-striped>tbody>tr:nth-child(odd)>td {
+>>>>>>> Stashed changes
     }
   </style>
 
@@ -252,8 +288,67 @@
 </head>
 
 <body class="m-2">
+<<<<<<< Updated upstream
   <header>
     <h1 id="title">2022 Brokerage Ranking</h1>
+=======
+  <div class="container">
+    <h1 id="title">2022 NYC RESIDENTIAL DEALS</h1>
+    <div class="row row-cols-2">
+      <div class="col">
+        <header>
+          <h2 id="title">NYC TOP 10</h2>
+        </header>
+        <section class="container m-0 p-0">
+          <div class="row">
+            <div class="col-auto">
+              <table id="table_nyc" class="table-striped"></table>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="col">
+        <header>
+          <h2 id="title">MANHATTAN TOP 10</h2>
+        </header>
+        <section class="container m-0 p-0">
+          <div class="row">
+            <div class="col-auto">
+              <table id="table_manhattan" class="table-striped"></table>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="col">
+        <header>
+          <h2 id="title">QUEENS TOP 10 </h2>
+        </header>
+        <section class="container m-0 p-0">
+          <div class="row">
+            <div class="col-auto">
+              <table id="table_queens" class="table-striped"></table>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="col">
+                <header>
+                  <h2 id="title">BROKLYN TOP 10</h2>
+                  </header>
+                <section class="container m-0 p-0">
+                  <div class="row">
+                    <div class="col-auto">
+                      <table id="table_brooklyn" class="table-striped"></table>
+                    </div>
+                    </div>
+                    </section>
+      </div>
+      </div>
+      </div>
+  <hr />
+  <header>
+    <h2 id="title">All 2022 NYC residential deals</h2>
+>>>>>>> Stashed changes
     <form>
       <input type="search" id="table-search" value="" autocomplete="true" class="form-control" placeholder="Search...">
     </form>
@@ -355,7 +450,92 @@
           formatter: "defaultFormatter",
           filterControl: "select",
           filterControlPlaceholder: "All",
+<<<<<<< Updated upstream
           title: "Development Type"
+=======
+          title: "Sale Type"
+        }, {
+          field: "source_doc_id",
+          title: "Source ID",
+          sortable: true,
+          formatter: "sourceIdFormatter",
+        }, ],
+      };
+      let configNYC = {
+      escape: true,
+      responseHandler: "responseHandlerCsvToJson2",
+      dataType: "text",
+      url: "dataNYC.tsv",
+      columns: [{
+      field: "rank",
+      title: "Ranking",
+      }, {
+      field: "brokerage",
+      title: "Brokerage",
+      }, {
+      field: "number_of_brokerages",
+      title: "Number of Deals"
+      }, {
+      field: "total_doc_amount",
+      title: "Total Amount"
+      }],
+      };
+      let configManhattan = {
+      escape: true,
+      responseHandler: "responseHandlerCsvToJson2",
+      dataType: "text",
+      url: "dataManhattan.tsv",
+      columns: [{
+      field: "rank",
+      title: "Ranking",
+      }, {
+      field: "brokerage",
+      title: "Brokerage",
+      }, {
+      field: "number_of_brokerages",
+      title: "Number of Deals"
+      }, {
+      field: "total_doc_amount",
+      title: "Total Amount"
+      }],
+      };
+      let configQueens = {
+      escape: true,
+      responseHandler: "responseHandlerCsvToJson2",
+      dataType: "text",
+      url: "dataQueens.tsv",
+      columns: [{
+      field: "rank",
+      title: "Ranking",
+      }, {
+      field: "brokerage",
+      title: "Brokerage",
+      }, {
+      field: "number_of_brokerages",
+      title: "Number of Deals"
+      }, {
+      field: "total_doc_amount",
+      title: "Total Amount"
+      }],
+      };
+      let configBrooklyn = {
+        escape: true,
+        responseHandler: "responseHandlerCsvToJson2",
+        dataType: "text",
+        url: "dataBrooklyn.tsv",
+        columns: [{
+          field: "rank",
+          title: "Ranking",
+        }, {
+          field: "brokerage",
+          title: "Brokerage",
+        }, {
+          field: "number_of_brokerages",
+          title: "Number of Deals"
+        }, {
+          field: "total_doc_amount",
+          title: "Total Amount"
+>>>>>>> Stashed changes
         }],
       };
 
@@ -366,8 +546,21 @@
         });
       });
       let $table = $('#table');
+<<<<<<< Updated upstream
 
       $table.bootstrapTable(config);
+=======
+      let $tableNYC = $('#table_nyc');
+      let $tableManhattan = $('#table_manhattan');
+      let $tableQueens = $('#table_queens');
+      let $tableBrooklyn = $('#table_brooklyn');
+
+      $table.bootstrapTable(config);
+      $tableNYC.bootstrapTable(configNYC);
+      $tableManhattan.bootstrapTable(configManhattan);
+      $tableQueens.bootstrapTable(configQueens);
+      $tableBrooklyn.bootstrapTable(configBrooklyn);
+>>>>>>> Stashed changes
     });
   </script>
 </body>
