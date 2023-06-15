@@ -46,6 +46,7 @@
     header {
       display: flex;
       align-items: center;
+      justify-content: space-between;
     }
 
     h1 {
@@ -125,7 +126,6 @@
         "Broker",
         "link_url",
       ];
-
       return responseHandlerCsvToJsonHeaders(csvText, headers);
     }
 
@@ -140,7 +140,17 @@
       return csvLinesToJsonRows(csvLines.slice(1), headers);
     }
 
+    function responseHandlerCsvToJson2(csvText) {
+    let csvLines = csvText.split("\n");
+    if (csvLines.length <= 1) { return { rows: [], }; } let headers=csvLines[0].split("\t"); return
+      csvLinesToJsonRows(csvLines.slice(1), headers); }
+
     function responseHandlerCsvToJsonHeaders(csvText, headers) {
+let csvLines = csvText.split("\n");
+return csvLinesToJsonRows(csvLines, headers);
+}
+
+function responseHandlerCsvToJsonHeaders2(csvText, headers) {
       let csvLines = csvText.split("\n");
       return csvLinesToJsonRows(csvLines, headers);
     }
@@ -175,6 +185,15 @@
         value == "" || value == null || value == "null" || value == "N/A"
       );
     }
+
+    function priceSorter(a, b) {
+    var billA = Number(a.replace(/(^\$|,)/g, ''));
+    var billB = Number(b.replace(/(^\$|,)/g, ''));
+    if (billA < billB) return -1; if (billA> billB)
+      return 1;
+
+      return -0;
+      }
 
     function currency(value, round = false) {
       const si = [{
@@ -280,6 +299,11 @@
         "Staten Island": "Staten Island",
       };
     }
+function headerStyle(column) {
+return {
+classes: 'thead-dark'
+}
+}
   </script>
 </head>
 
@@ -290,50 +314,50 @@
       <div class="col">
         <header>
           <h2 id="title">NYC TOP 10</h2>
-        </header>
-        <section class="container m-0 p-0">
-          <div class="row">
-            <div class="col-auto">
-              <table id="table_nyc" class="table-striped"></table>
+          </header>
+          <section class="container m-0 p-0">
+            <div class="row">
+              <div class="col-auto">
+                <table id="table_nyc" class="table-striped"></table>
+              </div>
             </div>
+          </section>
           </div>
-        </section>
-      </div>
-      <div class="col">
-        <header>
-          <h2 id="title">MANHATTAN TOP 10</h2>
-        </header>
-        <section class="container m-0 p-0">
-          <div class="row">
-            <div class="col-auto">
-              <table id="table_manhattan" class="table-striped"></table>
-            </div>
+          <div class="col">
+            <header>
+              <h2 id="title">MANHATTAN TOP 10</h2>
+            </header>
+            <section class="container m-0 p-0">
+              <div class="row">
+                <div class="col-auto">
+                  <table id="table_manhattan" class="table-striped"></table>
+                </div>
+              </div>
+            </section>
           </div>
-        </section>
-      </div>
-      <div class="col">
-        <header>
-          <h2 id="title">QUEENS TOP 10 </h2>
-        </header>
-        <section class="container m-0 p-0">
-          <div class="row">
-            <div class="col-auto">
-              <table id="table_queens" class="table-striped"></table>
-            </div>
+          <div class="col">
+            <header>
+              <h2 id="title">QUEENS TOP 10 </h2>
+            </header>
+            <section class="container m-0 p-0">
+              <div class="row">
+                <div class="col-auto">
+                  <table id="table_queens" class="table-striped"></table>
+                </div>
+              </div>
+            </section>
           </div>
-        </section>
-      </div>
-      <div class="col">
+          <div class="col">
                 <header>
                   <h2 id="title">BROKLYN TOP 10</h2>
-                  </header>
+                </header>
                 <section class="container m-0 p-0">
                   <div class="row">
                     <div class="col-auto">
                       <table id="table_brooklyn" class="table-striped"></table>
                     </div>
-                    </div>
-                    </section>
+                  </div>
+                  </section>
       </div>
       </div>
       </div>
@@ -344,7 +368,7 @@
       <input type="search" id="table-search" value="" autocomplete="true" class="form-control" placeholder="Search...">
     </form>
   </header>
-  <table id="table"></table>
+  <table id="table" class="table-striped"></table>
   <div id="source-notes" class="text-muted">SOURCE: TRD ANALYSIS OF CLOSED SALES IN BROOKLYN, MANHATTAN AND QUEENS BASED
     ON PUBLICLY AVAILABLE LISTINGS AND DATA FROM FIRMS. INCLUDES RESIDENTIAL SALES (CONDOS, CO-OPS AND SINGLE-, TWO- AND
     THREE-FAMILY HOMES WITH NO COMMERCIAL COMPONENT) RECORDED IN THE NEW YORK CITY REGISTER IN 2022. ONLY SELL-SIDE
@@ -357,8 +381,13 @@
         let sourceNotesHeight = $('#source-notes').height();
         return window.innerHeight - (titleHeight + sourceNotesHeight + 50);
       }
+function getHeight2() {
+let titleHeight = $('#title').height();
+return window.innerHeight - (titleHeight + sourceNotesHeight + 50);;
+}
       let config = {
         height: getHeight(),
+        headerStyle: "headerStyle",
         pagination: true,
         pageSize: 100,
         escape: true,
@@ -372,11 +401,6 @@
         filterControl: true,
         url: "data.tsv",
         columns: [{
-          field: "source_doc_id",
-          title: "Source ID",
-          sortable: true,
-          formatter: "sourceIdFormatter",
-        }, {
           field: "recorded_date",
           sortable: true,
           formatter: "defaultFormatter",
@@ -390,6 +414,7 @@
           field: "doc_amount",
           sortable: true,
           formatter: "priceFormatter",
+          sorter: "priceSorter",
           title: "Amount"
         }, {
           field: "Brokerage",
@@ -488,23 +513,23 @@
       }],
       };
       let configQueens = {
-      escape: true,
-      responseHandler: "responseHandlerCsvToJson2",
-      dataType: "text",
-      url: "dataQueens.tsv",
-      columns: [{
-      field: "rank",
-      title: "Ranking",
-      }, {
-      field: "brokerage",
-      title: "Brokerage",
-      }, {
-      field: "number_of_brokerages",
-      title: "Number of Deals"
-      }, {
-      field: "total_doc_amount",
-      title: "Total Amount"
-      }],
+        escape: true,
+        responseHandler: "responseHandlerCsvToJson2",
+        dataType: "text",
+        url: "dataQueens.tsv",
+        columns: [{
+        field: "rank",
+        title: "Ranking",
+        }, {
+        field: "brokerage",
+        title: "Brokerage",
+        }, {
+        field: "number_of_brokerages",
+        title: "Number of Deals"
+        }, {
+        field: "total_doc_amount",
+        title: "Total Amount"
+        }],
       };
       let configBrooklyn = {
         escape: true,
