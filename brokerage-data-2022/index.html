@@ -79,6 +79,12 @@
 
 
     @media only screen and (max-width: 600px) {
+      h2 {
+      flex: 1 0 auto;
+      font-size: 20px;
+      font-weight: bold;
+      padding-top: 5px;
+      }
       #source-notes {
         font-size: 10px;
       }
@@ -102,15 +108,6 @@
       color: white;
       font-size: 15px
     }
-
-    #table_top.table-striped>tbody>tr:nth-child(odd)>td {
-      background-color: #fff0d3;
-    }
-
-    #table.table-striped>tbody>tr:nth-child(odd)>td {
-      background-color: #d3edfb;
-    }
-
     thead {
       background-color: #1b69e1;
       color: black;
@@ -320,7 +317,7 @@
 <body class="m-2">
   <div class="container">
     <h1 id="title">2022 NYC RESIDENTIAL DEALS</h1>
-    <div class="row row-cols-2">
+    <div class="row row-cols-md-2">
       <div class="col">
         <header>
           <h2 id="title">NYC TOP 10</h2>
@@ -398,12 +395,7 @@
       function getHeight() {
         let titleHeight = $('#title').height();
         let sourceNotesHeight = $('#source-notes').height();
-        return window.innerHeight - (titleHeight + sourceNotesHeight + 50);
-      }
-
-      function getHeight2() {
-        let titleHeight = $('#title').height();
-        return window.innerHeight - (titleHeight + sourceNotesHeight + 50);;
+        return window.innerHeight - (sourceNotesHeight + titleHeight );
       }
       let config = {
         height: getHeight(),
