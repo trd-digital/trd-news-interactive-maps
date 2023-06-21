@@ -71,6 +71,9 @@
       padding: 0.8rem 0rem !important;
       white-space: nowrap;
     }
+    tr td{
+    height: 63px
+    }
 
     #select {
       width: 100px;
@@ -84,6 +87,7 @@
       font-size: 20px;
       font-weight: bold;
       padding-top: 5px;
+      padding-right: 10px
       }
       #source-notes {
         font-size: 10px;
@@ -98,10 +102,12 @@
       }
 
     }
+    table th:first-child{
+    border-radius:9px 0 0 0px;
+    }
 
-    thead {
-      background-color: black;
-      color: white;
+    table th:last-child{
+    border-radius:0 9px 0px 0;
     }
 
     th {
@@ -109,8 +115,7 @@
       font-size: 15px
     }
     thead {
-      background-color: #1b69e1;
-      color: black;
+      background-color: #1099FD;
     }
 
     th {
@@ -324,7 +329,7 @@
         </header>
         <section class="container m-0 p-0">
           <div class="row">
-            <div class="col-auto">
+            <div class="col-auto px-0 px-md-3">
               <table id="table_nyc" class="table-striped"></table>
             </div>
           </div>
@@ -336,20 +341,8 @@
         </header>
         <section class="container m-0 p-0">
           <div class="row">
-            <div class="col-auto">
+            <div class="col-auto px-0 px-md-3">
               <table id="table_manhattan" class="table-striped"></table>
-            </div>
-          </div>
-        </section>
-      </div>
-      <div class="col">
-        <header>
-          <h2 id="title">QUEENS TOP 10 </h2>
-        </header>
-        <section class="container m-0 p-0">
-          <div class="row">
-            <div class="col-auto">
-              <table id="table_queens" class="table-striped"></table>
             </div>
           </div>
         </section>
@@ -360,8 +353,20 @@
         </header>
         <section class="container m-0 p-0">
           <div class="row">
-            <div class="col-auto">
+            <div class="col-auto px-0 px-md-3">
               <table id="table_brooklyn" class="table-striped"></table>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="col">
+        <header>
+          <h2 id="title">QUEENS TOP 10 </h2>
+        </header>
+        <section class="container m-0 p-0 px-0">
+          <div class="row">
+            <div class="col-auto px-0 px-md-3">
+              <table id="table_queens" class="table-striped"></table>
             </div>
           </div>
         </section>
@@ -372,16 +377,17 @@
 
   <section class="container m-0 p-0">
     <div class="row">
-      <div class="col-auto col-xl-8">
+      <div class="col-auto col-xl-8 px-0">
         <table id="table_top" class="table-striped"></table>
       </div>
     </div>
   </section>
   <hr />
   <header>
-    <h2 id="title" class="pt-md-1">All 2022 NYC residential deals</h2>
+    <h2 id="title" class="pt-md-1">All 2022 NYC RESIDENTAL DEALS</h2>
     <form>
-      <input type="search" id="table-search" value="" autocomplete="true" class="form-control" placeholder="Search...">
+      <input type="search" id="table-search" value="" autocomplete="true" class="form-control"
+        placeholder="Search Name">
     </form>
   </header>
   <table id="table" class="table-striped"></table>
