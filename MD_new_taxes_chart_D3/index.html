@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MD Proposed Property Taxes</title>
+  <style>
+    /* Add some styling to the table */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      cursor: pointer;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 5px;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <input type="text" id="search-input" placeholder="Search...">
+  <table id="data-table">
+    <thead>
+      <tr></tr> <!-- The table headers will be dynamically added here -->
+    </thead>
+    <tbody></tbody> <!-- The table rows will be dynamically added here -->
+  </table>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    // Load the data from the CSV file
+    d3.csv("MD_new_taxes_for_chart.csv").then(data => {
+      // Create table headers
+      const headers = Object.keys(data[0]);
+      d3.select("#data-table thead tr")
+        .selectAll("th")
+        .data(headers)
+        .enter()
+        .append("th")
+        .text(d => d)
+        .on("click", function (header) {
+          sortTable(header);
+        });
+
+      // Create table rows
+      const rows = d3.select("#data-table tbody")
+        .selectAll("tr")
+        .data(data)
+        .enter()
+        .append("tr");
+      
+      // Function to format values as currency
+      const currencyFormatter = d3.format("$,.2f");
+
+      // Populate table cells
+      rows.selectAll("td")
+        .data(d => Object.values(d))
+        .enter()
+        .append("td")
+        .text(d => d);
+
+      // Declare and initialize the sort direction variable
+      let sortDirection = 'asc';
+
+      // Function to sort the table by a column
+      function sortTable(header) {
+        const columnIndex = headers.indexOf(header);
+
+          // Toggle the sort direction
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+
+        rows.sort((a, b) => {
+          const valueA = a[header] || '';
+          const valueB = b[header] || '';
+
+        // Special handling for sorting the "Rank" column numerically
+        if (header === 'Rank') {
+          const sortFactor = sortDirection === 'asc' ? 1 : -1;
+          return sortFactor * (parseInt(valueA) - parseInt(valueB));
+        }
+
+        // Special handling for sorting the "Tansaction Volume" and "No. of Transactions" columns numerically
+        if (header === 'Transaction Volume' || 'No. of Transactions') {
+          const sortFactor = sortDirection === 'asc' ? 1 : -1;
+          return sortFactor * (parseInt(valueA) - parseInt(valueB));
+        }
+
+        // Function to format numerical columns
+        if (header === 'Transaction Volume') {
+            return currencyFormatter(valueA)
+          }
+
+        // Adjust the sorting logic based on the sort direction
+        if (sortDirection === 'asc') {
+          return valueA.localeCompare(valueB);
+        } else {
+          return valueB.localeCompare(valueA);
+        }
+      });
+
+        // Update the table rows
+        rows.selectAll("td")
+          .data(d => Object.values(d))
+          .text(d => d);
+      }
+
+
+      // Add event listeners to the header cells for sorting
+      const headerCells = d3.selectAll("#data-table th");
+      headerCells.on("click", function (event) {
+        const header = d3.select(this).text();
+        sortTable(header);
+      });
+
+
+      // Function to search for a value in the table
+      d3.select("#search-input")
+        .on("input", function () {
+          const searchTerm = this.value.trim().toLowerCase();
+
+          if (searchTerm !== "") {
+            const filteredData = data.filter(d => {
+              return Object.values(d).some(value =>
+                value.toLowerCase().includes(searchTerm)
+              );
+            });
+
+            const filteredRows = d3.select("#data-table tbody")
+              .selectAll("tr")
+              .data(filteredData, d => d[headers[0]]);
+
+            // Update table rows with filtered data
+            filteredRows.enter()
+              .append("tr")
+              .selectAll("td")
+              .data(d => Object.values(d))
+              .enter()
+              .append("td")
+              .text(d => d);
+
+            filteredRows.exit().remove();
+          } else {
+            // Reset the table to show all rows
+            rows.style("display", "table-row");
+          }
+        });
+    });
+  </script>
+</body>
+</html>
