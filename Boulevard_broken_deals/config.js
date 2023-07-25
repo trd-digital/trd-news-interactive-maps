@@ -1,30 +1,82 @@
-// let topTitleDiv = "<h4>South Florida</h4>";
-
-// let titleDiv =
-//   "<h1>Here are the resi projects planned for downtown Miami</h1>";
-
-// let descriptionDiv =
-// "<p>The rules don't seen to apply to Miami.</p>" +
-// "<p>Despite economists predicting a global recession, developers are betting big on downtown Miami. Projects under construction and those planned since the start of the year expect to bring a whopping 7,000-plus apartments and condos to the Magic City.</p>" + 
-// "<p>According to an analysis by <em>The Real Deal</em>, 1,358 condos are in the works and 3,793 apartments are planned. More than 2,000 additional units are not yet specified as condos or rentals.</p>" +
-// "<p>The disclosed land acquisitions in downtown Miami total more than $230 million. This doesn't include other projects in Brickell, Edgewater and Wynwood.</p>";
+// Ensure HTML updates have been applied before creating the chart
+setTimeout(createChart, 0);
 
 let introDiv =
 "<p style='font-size:20px;'>Scroll down for a guided round-up of the Boulveard of Broken Deals.</p>" +
 "<p> &#8681;  &#8681;  &#8681;</p>"
 
-// let bylineDiv = "<p><em>By Adam Farence. Research by Lidia Dinkova and Katherine Kallergis</em></p>";
-
-// let footerDiv =
-// "<p style='font-size:20px;'>South Florida has notched major construction mortgages in the past year. Read more below.</p>";
-
 let divChapter1 =
   "<h3>600 West Jackson</h3>" +
-  "<p><strong>Status:</strong> Sold in Oct. 2022, for $10.8M ($92 psf)<br><strong>Current mortgage:</strong> $7.8M, Lake Forest Bank & Trust for acquisition, Oct. 2022<br><strong>Landlord/Buyer:</strong> Farbman Group<br><strong>Seller:</strong> Stockbridge Capital Group<br><strong>Last sale price:</strong> $23.5M, 2017 ($200 psf)<br><strong>Last mortgage:</strong> $20.5M, Citizens Bank, Feb. 2018<br><strong>Year built:</strong> 1911</p>";
+  "<p><strong>Status:</strong> Sold in Oct. 2022, for $10.8M ($92 psf)<br><strong>Current mortgage:</strong> $7.8M, Lake Forest Bank & Trust for acquisition, Oct. 2022<br><strong>Landlord/Buyer:</strong> Farbman Group<br><strong>Seller:</strong> Stockbridge Capital Group<br><strong>Last sale price:</strong> $23.5M, 2017 ($200 psf)<br><strong>Last mortgage:</strong> $20.5M, Citizens Bank, Feb. 2018<br><strong>Year built:</strong> 1911</p>" +
+  "<canvas id='600_West_Jackson'></canvas>";
 
 let divChapter2 =
   "<h3>300 South Riverside Plaza</h3>" +
-  "<p><strong>Status:</strong> Leasehold owner in default<br><strong>Leasehold owner:</strong> JV of David Werner and Joseph Mizrachi<br><strong>Current leasehold mortgage:</strong> $175M, Shinhan Investment Corp., 2017 (in default, per Morningstar)<br><strong>Ground lease debt:</strong> $167M, CMBS debt originated by Morgan Stanley<br><strong>Ground landlord:</strong> JV of Rubin Schron and David Lowenfeld<br><strong>Last sale price:</strong> $220M for land only, 2015<br><strong>Year built:</strong> 1987</p>";
+  "<p><strong>Status:</strong> Leasehold owner in default<br><strong>Leasehold owner:</strong> JV of David Werner and Joseph Mizrachi<br><strong>Current leasehold mortgage:</strong> $175M, Shinhan Investment Corp., 2017 (in default, per Morningstar)<br><strong>Ground lease debt:</strong> $167M, CMBS debt originated by Morgan Stanley<br><strong>Ground landlord:</strong> JV of Rubin Schron and David Lowenfeld<br><strong>Last sale price:</strong> $220M for land only, 2015<br><strong>Year built:</strong> 1987</p>" +
+  "<canvas id='300_SOUTH_RIVERSIDE_PLAZA'></canvas>";
+
+  function createChart() {
+    var ctx = document.getElementById('600_West_Jackson').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Sold', 'Current mortgage', 'Last sale price', 'Last mortgage'],
+            datasets: [{
+                label: 'Amount in M$',
+                data: [10.8, 7.8, 23.5, 20.5],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    var ctx = document.getElementById('300_SOUTH_RIVERSIDE_PLAZA').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Leasehold mortgage', 'Ground lease debt', 'Last sale price (land only)'],
+            datasets: [{
+                label: 'Amount in M$',
+                data: [175, 167, 220],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+  }
 
 let divChapter3 =
   "<h3>311 South Wacker</h3>" +
@@ -293,7 +345,7 @@ var config = {
         {
           layer: "overallMap",
           opacity: .5,
-          duration: 100,
+          duration: 1000,
         },
       ],
     },
@@ -321,7 +373,7 @@ var config = {
         {
           layer: "overallMap",
           opacity: 1,
-          duration: 100,
+          duration: 1000,
         },
       ],
       onChapterExit: [
