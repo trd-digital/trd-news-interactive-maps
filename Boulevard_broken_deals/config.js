@@ -40,8 +40,7 @@ let divChapter5 =
 
 let divChapter6 =
 "<h3>175 West Jackson</h3>" +
-"<p><strong>Status: </strong>In receivership, for sale<br><strong>Owner: </strong>Brookfield Asset Management<br><strong>Last mortgage: </strong>$280M CMBS debt originated by German American Capital Corp., 2013<br><strong>Appraised value at loan issuance: </strong>$410M, 2013 ($292 psf)<br><strong>Last sale price: </strong>$306M, 2018 ($220 psf)<br><strong>Occupancy: </strong>59% leased<br><strong>Latest appraisal: </strong>$195M, 2022 ($139 psf)<br><strong>Year built: </strong>1912</p>" + 
-"<p>Based on the property's declining performance and assumed valuation, weakened submarket fundamentals, and Brookfield's demonstrated willingness to walk away from underperforming assets, DBRS Morningstar's analysis of this loan included a hypothetical liquidation scenario, using a haircut to the 2018 purchase price, which resulted in an implied loss severity of nearly 55%.</p>";
+"<p><strong>Status: </strong>In receivership, for sale<br><strong>Owner: </strong>Brookfield Asset Management<br><strong>Last mortgage: </strong>$280M CMBS debt originated by German American Capital Corp., 2013<br><strong>Appraised value at loan issuance: </strong>$410M, 2013 ($292 psf)<br><strong>Last sale price: </strong>$306M, 2018 ($220 psf)<br><strong>Occupancy: </strong>59% leased<br><strong>Latest appraisal: </strong>$195M, 2022 ($139 psf)<br><strong>Year built: </strong>1912</p>";
 
 let divChapter7 =
 "<h3>141 West Jackson (Board of Trade building)</h3>" +
@@ -170,8 +169,8 @@ var config = {
         center: [
           -87.6358341039168, 41.87746610600508
       ],
-        zoom: 18.27,
-        zoomSmall: 16,
+        zoom: 16.57,
+        zoomSmall: 14,
         pitch: 54.5,
         bearing: .74,
       },
@@ -205,10 +204,10 @@ var config = {
         center: [
           -87.6345354327526, 41.87844060637044
       ],
-        zoom: 18.27,
+        zoom: 18,
         zoomSmall: 16,
-        pitch: 54.5,
-        bearing: .74,
+        pitch: 24.5,
+        bearing: .34,
       },
       mapAnimation: "flyTo",
       rotateAnimation: false,
@@ -240,9 +239,9 @@ var config = {
         center: [
           -87.63415273275267, 41.8778660410773
       ],
-        zoom: 18.27,
+        zoom: 18,
         zoomSmall: 16,
-        pitch: 54.5,
+        pitch: 34.5,
         bearing: .74,
       },
       mapAnimation: "flyTo",
@@ -275,8 +274,8 @@ var config = {
         center: [
           -87.63321063275266, 41.87784860614844
       ],
-        zoom: 18.27,
-        zoomSmall: 16,
+        zoom: 17.27,
+        zoomSmall: 15,
         pitch: 54.5,
         bearing: .74,
       },
@@ -294,7 +293,7 @@ var config = {
         {
           layer: "overallMap",
           opacity: .5,
-          duration: 300,
+          duration: 100,
         },
       ],
     },
@@ -310,9 +309,9 @@ var config = {
         center: [
           -87.63241173275266, 41.87801498289714
       ],
-        zoom: 18.27,
-        zoomSmall: 16,
-        pitch: 54.5,
+        zoom: 17.27,
+        zoomSmall: 15,
+        pitch: 34.5,
         bearing: .74,
       },
       mapAnimation: "flyTo",
@@ -322,7 +321,7 @@ var config = {
         {
           layer: "overallMap",
           opacity: 1,
-          duration: 300,
+          duration: 100,
         },
       ],
       onChapterExit: [
@@ -345,9 +344,9 @@ var config = {
         center: [
           -87.63123527508087, 41.877800394499864
       ],
-        zoom: 18.27,
-        zoomSmall: 16,
-        pitch: 54.5,
+        zoom: 17.27,
+        zoomSmall: 15,
+        pitch: 34.5,
         bearing: .74,
       },
       mapAnimation: "flyTo",
@@ -380,9 +379,9 @@ var config = {
         center: [
           -87.62546450391677, 41.877994894548436
       ],
-        zoom: 18.27,
-        zoomSmall: 16,
-        pitch: 54.5,
+        zoom: 16.27,
+        zoomSmall: 15,
+        pitch: 34.5,
         bearing: .74,
       },
       mapAnimation: "flyTo",

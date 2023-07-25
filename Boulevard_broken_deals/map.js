@@ -224,7 +224,7 @@ map.on("load", function () {
       type: "circle",
       source: {
         type: "geojson",
-        data: "data/BradyBundchen_real_estate.geojson",
+        data: "data/BoulevardBrokenDeals.geojson",
       },
       paint: {
         "circle-radius": [
@@ -237,9 +237,9 @@ map.on("load", function () {
           20,
           90
           ],
-          "circle-opacity": 0.9,
-          "circle-color":"#db3eb1",
-          "circle-stroke-color": "#4d4d4d",
+          "circle-opacity": 1,
+          "circle-color":"#FFFFFF",
+          "circle-stroke-color": "#000000",
           "circle-stroke-width": 1
       },
     },
