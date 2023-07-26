@@ -4,8 +4,7 @@ setTimeout(createChart, 0);
 let chartTitle = "$ Amount in Millions"
 
 let introDiv =
-"<p style='font-size:20px;'>Scroll down for a guided round-up of the Boulveard of Broken Deals.</p>" +
-"<p> &#8681;  &#8681;  &#8681;</p>"
+"<p style='font-size:20px;'>Click a dot for more information or scroll down for interactive content.</p>"
 
 let divChapter1 =
   "<h3>600 West Jackson</h3>" +
@@ -14,28 +13,28 @@ let divChapter1 =
 
 let divChapter2 =
   "<h3>300 South Riverside Plaza</h3>" +
-  "<p><strong>Status:</strong> Leasehold owner in default<br><strong>Leasehold owner:</strong> JV of David Werner and Joseph Mizrachi<br><strong>Current leasehold mortgage:</strong> $175M, Shinhan Investment Corp., 2017 (in default, per Morningstar)<br><strong>Ground lease debt:</strong> $167M, CMBS debt originated by Morgan Stanley<br><strong>Ground landlord:</strong> JV of Rubin Schron and David Lowenfeld<br><strong>Last sale price:</strong> $220M for land only, 2015<br><strong>Year built:</strong> 1987</p>" +
-  "<canvas id='300_South_Riverside_Plaza'></canvas>";
+  // "<p><strong>Status:</strong> Leasehold owner in default<br><strong>Leasehold owner:</strong> JV of David Werner and Joseph Mizrachi<br><strong>Current leasehold mortgage:</strong> $175M, Shinhan Investment Corp., 2017 (in default, per Morningstar)<br><strong>Ground lease debt:</strong> $167M, CMBS debt originated by Morgan Stanley<br><strong>Ground landlord:</strong> JV of Rubin Schron and David Lowenfeld<br><strong>Last sale price:</strong> $220M for land only, 2015<br><strong>Year built:</strong> 1987</p>" +
+  "<canvas id='300_South_Riverside_Plaza' height='400'></canvas>";
 
 let divChapter3 =
   "<h3>311 South Wacker</h3>" +
-  "<p><strong>Status:</strong> For sale, since Sept. 2021<br><strong>Owner:</strong> JV of Zeller Realty and Cindat<br><strong>Current first mortgage:</strong> $215M, Morgan Stanley, 2018<br><strong>Mezzanine loan:</strong> Approx. $90M, Nuveen, 2018<br><strong>Occupancy:</strong> 61% leased<br><strong>Last sale price:</strong> $302M, 2014 ($230 psf) plus $38M spent on renovations<br><strong>Year built:</strong> 1990</p>" +
-  "<canvas id='311_South_Wacker'></canvas>";
+  // "<p><strong>Status:</strong> For sale, since Sept. 2021<br><strong>Owner:</strong> JV of Zeller Realty and Cindat<br><strong>Current first mortgage:</strong> $215M, Morgan Stanley, 2018<br><strong>Mezzanine loan:</strong> Approx. $90M, Nuveen, 2018<br><strong>Occupancy:</strong> 61% leased<br><strong>Last sale price:</strong> $302M, 2014 ($230 psf) plus $38M spent on renovations<br><strong>Year built:</strong> 1990</p>" +
+  "<canvas id='311_South_Wacker' height='400'></canvas>";
 
 let divChapter4 = 
   "<h3>216 West Jackson</h3>" +
-  "<p><strong>Status:</strong> In receivership<br><strong>Owner:</strong> Marc Realty<br><strong>Current mortgage:</strong> $16.5M, CMBS debt originated by German American Capital Corp., 2013<br><strong>Occupancy:</strong> 26% leased<br><strong>Last sale price:</strong> $22.3M, 2013 ($112 psf)<br><strong>Latest appraisal:</strong> $7M, July 2023<br><strong>Year built:</strong> 1897</p>" +
-  "<canvas id='216_West_Jackson'></canvas>";
+  // "<p><strong>Status:</strong> In receivership<br><strong>Owner:</strong> Marc Realty<br><strong>Current mortgage:</strong> $16.5M, CMBS debt originated by German American Capital Corp., 2013<br><strong>Occupancy:</strong> 26% leased<br><strong>Last sale price:</strong> $22.3M, 2013 ($112 psf)<br><strong>Latest appraisal:</strong> $7M, July 2023<br><strong>Year built:</strong> 1897</p>" +
+  "<canvas id='216_West_Jackson' height='400'></canvas>";
 
 let divChapter5 = 
   "<h3>209 West Jackson</h3>" +
-  "<p><strong>Status: </strong>Lender-owned via deed in lieu of foreclosure, June 2023<br><strong>Owner: </strong>ACRES Capital, following surrender by Market Street Partners<br><strong>Last mortgage: </strong>$25M CMBS debt originated by ACRES Capital<br><strong>Last sale price: </strong>$23.3M, 2018 ($162 psf)<br><strong>Year built: </strong>1896" +
-  "<canvas id='209_West_Jackson'></canvas>";
+  // "<p><strong>Status: </strong>Lender-owned via deed in lieu of foreclosure, June 2023<br><strong>Owner: </strong>ACRES Capital, following surrender by Market Street Partners<br><strong>Last mortgage: </strong>$25M CMBS debt originated by ACRES Capital<br><strong>Last sale price: </strong>$23.3M, 2018 ($162 psf)<br><strong>Year built: </strong>1896" +
+   "<canvas id='209_West_Jackson' height='400'></canvas>";
 
 let divChapter6 =
   "<h3>175 West Jackson</h3>" +
-  "<p><strong>Status: </strong>In receivership, for sale<br><strong>Owner: </strong>Brookfield Asset Management<br><strong>Last mortgage: </strong>$280M CMBS debt originated by German American Capital Corp., 2013<br><strong>Appraised value at loan issuance: </strong>$410M, 2013 ($292 psf)<br><strong>Last sale price: </strong>$306M, 2018 ($220 psf)<br><strong>Occupancy: </strong>59% leased<br><strong>Latest appraisal: </strong>$195M, 2022 ($139 psf)<br><strong>Year built: </strong>1912</p>" +
-  "<canvas id='175_West_Jackson'></canvas>";
+  // "<p><strong>Status: </strong>In receivership, for sale<br><strong>Owner: </strong>Brookfield Asset Management<br><strong>Last mortgage: </strong>$280M CMBS debt originated by German American Capital Corp., 2013<br><strong>Appraised value at loan issuance: </strong>$410M, 2013 ($292 psf)<br><strong>Last sale price: </strong>$306M, 2018 ($220 psf)<br><strong>Occupancy: </strong>59% leased<br><strong>Latest appraisal: </strong>$195M, 2022 ($139 psf)<br><strong>Year built: </strong>1912</p>" +
+  "<canvas id='175_West_Jackson' height='400'></canvas>";
 
 let divChapter7 =
   "<h3>141 West Jackson (Board of Trade building)</h3>" +
@@ -44,13 +43,13 @@ let divChapter7 =
 
 let divChapter8 =
   "<h3>111 West Jackson</h3>" +
-  "<p><strong>Status: </strong>Borrower in danger of imminent default<br><strong>Owner: </strong>Melohn Group<br><strong>Current mortgage: </strong>$105M CMBS debt originated by Nataxis, 2017, matures Dec. 2027<br><strong>Occupancy: </strong>65% leased<br><strong>Last sale price: </strong>$135M, 2013 ($235 psf)<br><strong>Year built: </strong>1962" +
-  "<canvas id='111_West_Jackson'></canvas>";
+  // "<p><strong>Status: </strong>Borrower in danger of imminent default<br><strong>Owner: </strong>Melohn Group<br><strong>Current mortgage: </strong>$105M CMBS debt originated by Nataxis, 2017, matures Dec. 2027<br><strong>Occupancy: </strong>65% leased<br><strong>Last sale price: </strong>$135M, 2013 ($235 psf)<br><strong>Year built: </strong>1962" +
+  "<canvas id='111_West_Jackson' height='400'></canvas>";
 
 let divChapter9 = 
   "<h3>55 East Jackson</h3>" +
-  "<p><strong>Status: </strong>Leasehold owner in default of ground lease<br><strong>Leasehold owner: </strong>Firenze Group<br><strong>Current leasehold mortgage: </strong>$44M CMBS debt originated by Ready Capital, 2019<br><strong>Ground lease debt: </strong>None<br><strong>Ground landlord: </strong>Marc Realty<br><strong>Occupancy: </strong>47% leased<br><strong>Last sale price:</strong> $64M for leasehold only, 2019<br><strong>Year built: </strong>1961</p>" +
-  "<canvas id='55_East_Jackson'></canvas>";
+  // "<p><strong>Status: </strong>Leasehold owner in default of ground lease<br><strong>Leasehold owner: </strong>Firenze Group<br><strong>Current leasehold mortgage: </strong>$44M CMBS debt originated by Ready Capital, 2019<br><strong>Ground lease debt: </strong>None<br><strong>Ground landlord: </strong>Marc Realty<br><strong>Occupancy: </strong>47% leased<br><strong>Last sale price:</strong> $64M for leasehold only, 2019<br><strong>Year built: </strong>1961</p>" +
+  "<canvas id='55_East_Jackson' height='400'></canvas>";
 
   function createChart() {
     var ctx = document.getElementById('600_West_Jackson').getContext('2d');
@@ -180,7 +179,7 @@ let divChapter9 =
                 borderWidth: 1
             },        
             {
-              label: 'Renovations',
+              label: ' $ Amount in millions for renovations',
               data: [0, 0, 38], 
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               borderColor: 'rgba(75, 192, 192, 1)',
