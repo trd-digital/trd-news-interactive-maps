@@ -1,7 +1,7 @@
 // Ensure HTML updates have been applied before creating the chart
 setTimeout(createChart, 0);
 
-let legend = "$ Amount in Millions"
+let chartTitle = "$ Amount in Millions"
 
 let introDiv =
 "<p style='font-size:20px;'>Scroll down for a guided round-up of the Boulveard of Broken Deals.</p>" +
@@ -59,7 +59,7 @@ let divChapter9 =
         data: {
             labels: ['Sold', 'Current mortgage', 'Last sale price', 'Last mortgage'],
             datasets: [{
-                label: legend,
+                label: chartTitle,
                 data: [10.8, 7.8, 23.5, 20.5],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
@@ -77,6 +77,23 @@ let divChapter9 =
             }]
         },
         options: {
+          plugins: {
+            title: {
+                display: true,
+                text: chartTitle,  // Set your chart title here
+                font: {
+                    size: 12,
+                    weight: 'bold'
+                },
+                padding: {
+                    top: 10,
+                    bottom: 30
+                }
+            },
+            legend: {
+                display: false
+            },
+        },
             scales: {
                 y: {
                     beginAtZero: true
@@ -90,7 +107,7 @@ let divChapter9 =
         data: {
             labels: ['Leasehold mortgage', 'Ground lease debt', 'Last sale price (land only)'],
             datasets: [{
-                label: legend,
+                label: chartTitle,
                 data: [175, 167, 220],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
@@ -106,6 +123,23 @@ let divChapter9 =
             }]
         },
         options: {
+          plugins: {
+            title: {
+                display: true,
+                text: chartTitle,  // Set your chart title here
+                font: {
+                    size: 12,
+                    weight: 'bold'
+                },
+                padding: {
+                    top: 10,
+                    bottom: 30
+                }
+            },
+            legend: {
+                display: false
+            },
+        },
             scales: {
                 y: {
                     beginAtZero: true
@@ -117,41 +151,67 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Current first mortgage', 'Risk of Loss', 'Last sale price','Renovations'],
+            labels: ['First mortgage', 'Risk of Loss', 'Last sale price'],
             datasets: [{
-                label: legend,
-                data: [215, 90, 302, 38],
+                label: chartTitle,
+                data: [215, 90, 302],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
                     'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)'
                 ],
                 borderColor: [
                     'rgba(255, 99, 132, 1)',
                     'rgba(54, 162, 235, 1)',
                     'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)'
                 ],
                 borderWidth: 1
-            }]
+            },        
+            {
+              label: 'Renovations',
+              data: [0, 0, 38], 
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+          }]
         },
         options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+          plugins: {
+            title: {
+                display: true,
+                text: chartTitle,  // Set your chart title here
+                font: {
+                    size: 12,
+                    weight: 'bold'
+                },
+                padding: {
+                    top: 10,
+                    bottom: 30
                 }
-            }
+            },
+            legend: {
+                display: false
+            },
+        },
+        scales: {
+          x: {
+              stacked: true,
+          },
+          y: {
+              beginAtZero: true,
+              stacked: true,
+          }
         }
+      }
     });
     var ctx = document.getElementById('216_West_Jackson').getContext('2d');
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Current mortgage (in default)','Last sale price','Latest appraisal'],
+            labels: ['Last sale price','Latest appraisal','Current mortgage (in default)'],
             datasets: [{
-                label: legend,
-                data: [16.5, 22.3, 7],
+                label: chartTitle,
+                data: [22.3, 7, 16.5],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
@@ -166,6 +226,23 @@ let divChapter9 =
             }]
         },
         options: {
+          plugins: {
+            title: {
+                display: true,
+                text: chartTitle,  // Set your chart title here
+                font: {
+                    size: 12,
+                    weight: 'bold'
+                },
+                padding: {
+                    top: 10,
+                    bottom: 30
+                }
+            },
+            legend: {
+                display: false
+            },
+        },
             scales: {
                 y: {
                     beginAtZero: true
@@ -177,10 +254,10 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['CMBS Debt resolved via deed in lieu','Last sale price'],
+            labels: ['Last sale price','CMBS Debt resolved via deed in lieu'],
             datasets: [{
-                label: legend,
-                data: [25, 23.3],
+                label: chartTitle,
+                data: [23.3,25],
                 backgroundColor: [
                   'rgba(255, 99, 132, 0.2)',
                   'rgba(54, 162, 235, 0.2)'
@@ -193,6 +270,23 @@ let divChapter9 =
             }]
         },
         options: {
+          plugins: {
+            title: {
+                display: true,
+                text: chartTitle,  // Set your chart title here
+                font: {
+                    size: 12,
+                    weight: 'bold'
+                },
+                padding: {
+                    top: 10,
+                    bottom: 30
+                }
+            },
+            legend: {
+                display: false
+            },
+        },
             scales: {
                 y: {
                     beginAtZero: true
@@ -204,10 +298,10 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Appraised value at loan issuance','Last sale price','Last appraisal'],
+            labels: ['Last sale price','Last appraisal','Appraised value at loan issuance'],
             datasets: [{
-                label: legend,
-                data: [410, 306, 195],
+                label: chartTitle,
+                data: [306, 195, 410],
                 backgroundColor: [
                   'rgba(255, 99, 132, 0.2)',
                   'rgba(54, 162, 235, 0.2)',
@@ -222,6 +316,23 @@ let divChapter9 =
             }]
         },
         options: {
+          plugins: {
+            title: {
+                display: true,
+                text: chartTitle,  // Set your chart title here
+                font: {
+                    size: 12,
+                    weight: 'bold'
+                },
+                padding: {
+                    top: 10,
+                    bottom: 30
+                }
+            },
+            legend: {
+                display: false
+            },
+        },
             scales: {
                 y: {
                     beginAtZero: true
@@ -233,42 +344,66 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Last senior mortgage','Mortgage balance at time of January transfer','Mezzanine debt','Balance at time of January transfer','Amount of previous debt package borrower paid before deed-in-lieu'],
+            labels: ['Last senior mortgage','Mortgage balance at January transfer','Previous debt package borrower paid'],
             datasets: [{
-                label: legend,
-                data: [198, 168, 58, 49, 39],
+                label: chartTitle,
+                data: [198, 168, 39],
                 backgroundColor: [
                   'rgba(255, 99, 132, 0.2)',
                   'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(255, 99, 132, 0.2)'
-              ],
-              borderColor: [
+                  'rgba(255, 206, 86, 0.2)'
+                ],
+                borderColor: [
                   'rgba(255, 99, 132, 1)',
                   'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(255, 99, 132, 1)'
-              ],
+                  'rgba(255, 206, 86, 1)'
+                ],
                 borderWidth: 1
+            },
+            {
+                label: 'Mezzanine debt in Millions',
+                data: [58, 0, 0, 0],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
             }]
         },
         options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+          plugins: {
+            title: {
+              display: true,
+              text: chartTitle,  // Set your chart title here
+              font: {
+                  size: 12,
+                  weight: 'bold'
+              },
+              padding: {
+                  top: 10,
+                  bottom: 30
+              }
+          },
+              legend: {
+                  display: false  // Hide legend
+              }
+          },
+          scales: {
+              x: {
+                  stacked: true,
+              },
+              y: {
+                  beginAtZero: true,
+                  stacked: true,
+              }
+          }
+      }      
+    }); 
     var ctx = document.getElementById('111_West_Jackson').getContext('2d');
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: ['Current mortgage','Last sale price'],
             datasets: [{
-                label: legend,
+                label: chartTitle,
                 data: [105, 135],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
@@ -282,6 +417,23 @@ let divChapter9 =
             }]
         },
         options: {
+          plugins: {
+            title: {
+                display: true,
+                text: chartTitle,  // Set your chart title here
+                font: {
+                    size: 12,
+                    weight: 'bold'
+                },
+                padding: {
+                    top: 10,
+                    bottom: 30
+                }
+            },
+            legend: {
+                display: false
+            },
+        },
             scales: {
                 y: {
                     beginAtZero: true
@@ -293,10 +445,10 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Current leasehold mortgage', 'Last sale price'],
+            labels: ['Last sale price', 'Current leasehold mortgage'],
             datasets: [{
-                label: legend,
-                data: [44, 64],
+                label: chartTitle,
+                data: [64, 44],
                 backgroundColor: [
                   'rgba(255, 99, 132, 0.2)',
                   'rgba(54, 162, 235, 0.2)'
@@ -309,6 +461,23 @@ let divChapter9 =
           }]
         },
         options: {
+          plugins: {
+            title: {
+                display: true,
+                text: chartTitle,  // Set your chart title here
+                font: {
+                    size: 12,
+                    weight: 'bold'
+                },
+                padding: {
+                    top: 10,
+                    bottom: 30
+                }
+            },
+            legend: {
+                display: false
+            },
+        },
             scales: {
                 y: {
                     beginAtZero: true
