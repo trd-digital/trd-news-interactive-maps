@@ -517,7 +517,7 @@ var config = {
       hidden: true,
       chapterDiv: [],
       location: {
-        center: [-87.64285710391677,41.87825679461387],
+        center: [-87.63985710391677,41.88325679461387],
         zoom: 13,
         zoomSmall: 13,
         pitch: 0,
@@ -553,14 +553,14 @@ var config = {
         {
           layer: "overallMap",
           opacity: 1,
-          duration: 300,
+          duration: 1000000000000,
         },
       ],
       onChapterExit: [
         {
           layer: "overallMap",
           opacity: .5,
-          duration: 300,
+          duration: 1000000000000,
         },
       ],
     },
@@ -588,14 +588,14 @@ var config = {
         {
           layer: "overallMap",
           opacity: 1,
-          duration: 300,
+          duration: 1000000000000,
         },
       ],
       onChapterExit: [
         {
           layer: "overallMap",
           opacity: 0.5,
-          duration: 300,
+          duration: 1000000000000,
         },
       ],
     },
@@ -623,14 +623,14 @@ var config = {
         {
           layer: "overallMap",
           opacity: 1,
-          duration: 300,
+          duration: 1000000000000,
         },
       ],
       onChapterExit: [
         {
           layer: "overallMap",
           opacity: .5,
-          duration: 300,
+          duration: 1000000000000,
         },
       ],
     },
@@ -658,14 +658,14 @@ var config = {
         {
           layer: "overallMap",
           opacity: 1,
-          duration: 300,
+          duration: 1000000000000,
         },
       ],
       onChapterExit: [
         {
           layer: "overallMap",
           opacity: .5,
-          duration: 300,
+          duration: 1000000000000,
         },
       ],
     },
@@ -693,14 +693,14 @@ var config = {
         {
           layer: "overallMap",
           opacity: 1,
-          duration: 300,
+          duration: 1000000000000,
         },
       ],
       onChapterExit: [
         {
           layer: "overallMap",
           opacity: .5,
-          duration: 300,
+          duration: 1000000000000,
         },
       ],
     },
@@ -728,14 +728,14 @@ var config = {
         {
           layer: "overallMap",
           opacity: 1,
-          duration: 300,
+          duration: 1000000000000,
         },
       ],
       onChapterExit: [
         {
           layer: "overallMap",
           opacity: .5,
-          duration: 1000,
+          duration: 1000000000000,
         },
       ],
     },
@@ -763,14 +763,14 @@ var config = {
         {
           layer: "overallMap",
           opacity: 1,
-          duration: 1000,
+          duration: 1000000000000,
         },
       ],
       onChapterExit: [
         {
           layer: "overallMap",
           opacity: .5,
-          duration: 300,
+          duration: 1000000000000,
         },
       ],
     },
@@ -798,14 +798,14 @@ var config = {
         {
           layer: "overallMap",
           opacity: 1,
-          duration: 300,
+          duration: 1000000000000,
         },
       ],
       onChapterExit: [
         {
           layer: "overallMap",
           opacity: .5,
-          duration: 300,
+          duration: 1000000000000,
         },
       ],
     },
@@ -833,14 +833,14 @@ var config = {
         {
           layer: "overallMap",
           opacity: 1,
-          duration: 300,
+          duration: 1000000000000,
         },
       ],
       onChapterExit: [
         {
           layer: "overallMap",
           opacity: .5,
-          duration: 300,
+          duration: 1000000000000,
         },
       ],
     },
