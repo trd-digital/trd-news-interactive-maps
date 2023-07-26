@@ -9,8 +9,8 @@ let introDiv =
 
 let divChapter1 =
   "<h3>600 West Jackson</h3>" +
-  "<p><strong>Status:</strong> Sold in Oct. 2022, for $10.8M ($92 psf)<br><strong>Current mortgage:</strong> $7.8M, Lake Forest Bank & Trust, Oct. 2022<br><strong>Landlord/Buyer:</strong> Farbman Group<br><strong>Seller:</strong> Stockbridge Capital Group<br><strong>Last sale price:</strong> $23.5M, 2017 ($200 psf)<br><strong>Last mortgage:</strong> $20.5M, Citizens Bank, Feb. 2018<br><strong>Year built:</strong> 1911</p>" +
-  "<canvas id='600_West_Jackson'></canvas>";
+//  "<p><strong>Status:</strong> Sold in Oct. 2022, for $10.8M ($92 psf)<br><strong>Current mortgage:</strong> $7.8M, Lake Forest Bank & Trust, Oct. 2022<br><strong>Landlord/Buyer:</strong> Farbman Group<br><strong>Seller:</strong> Stockbridge Capital Group<br><strong>Last sale price:</strong> $23.5M, 2017 ($200 psf)<br><strong>Last mortgage:</strong> $20.5M, Citizens Bank, Feb. 2018<br><strong>Year built:</strong> 1911</p>" +
+  "<canvas id='600_West_Jackson' height='400'></canvas>";
 
 let divChapter2 =
   "<h3>300 South Riverside Plaza</h3>" +
@@ -39,8 +39,8 @@ let divChapter6 =
 
 let divChapter7 =
   "<h3>141 West Jackson (Board of Trade building)</h3>" +
-  "<p><strong>Status: </strong>Lender-owned via deed in lieu of foreclosure<br><strong>Owner: </strong>Apollo Global Management, following surrender by JV of Glenstar and Oaktree Capital Management<br><strong>Last senior mortgage: </strong>$198M, Apollo Global, 2020 ($168M balance at time of January transfer)<br><strong>Mezzanine debt: </strong>$58M, CIM Group, 2020 ($49M balance at time of January transfer)<br><strong>Occupancy: </strong>85% leased<br><strong>Last sale price: </strong>$152M, 2012 ($109 psf)<br><strong>Year built: </strong>1930" +
-  "<canvas id='141_West_Jackson'></canvas>";
+//  "<p><strong>Status: </strong>Lender-owned via deed in lieu of foreclosure<br><strong>Owner: </strong>Apollo Global Management, following surrender by JV of Glenstar and Oaktree Capital Management<br><strong>Last senior mortgage: </strong>$198M, Apollo Global, 2020 ($168M balance at time of January transfer)<br><strong>Mezzanine debt: </strong>$58M, CIM Group, 2020 ($49M balance at time of January transfer)<br><strong>Occupancy: </strong>85% leased<br><strong>Last sale price: </strong>$152M, 2012 ($109 psf)<br><strong>Year built: </strong>1930" +
+  "<canvas id='141_West_Jackson' height='400'></canvas>";
 
 let divChapter8 =
   "<h3>111 West Jackson</h3>" +
@@ -77,6 +77,8 @@ let divChapter9 =
             }]
         },
         options: {
+          responsive: true,
+          maintainAspectRatio: true,
           plugins: {
             title: {
                 display: true,
@@ -96,7 +98,17 @@ let divChapter9 =
         },
             scales: {
                 y: {
-                    beginAtZero: true
+                beginAtZero: true,
+                stacked: true,
+                ticks: {
+                    min: 3,    // minimum will be 0, unless there is a lower value.
+                    // OR //
+                    suggestedMin: 0, // minimum suggested value for scale
+                    // And as a hard-coded option
+                    // min: 0,   // minimum value will be 0.
+                    max: 30,  // maximum value for the scale
+                    stepSize: 10   // step size
+                }
                 }
             }
         }
@@ -507,8 +519,8 @@ var config = {
       chapterDiv: [],
       location: {
         center: [-87.64285710391677,41.87825679461387],
-        zoom: 10,
-        zoomSmall: 10,
+        zoom: 13,
+        zoomSmall: 13,
         pitch: 0,
         bearing: 0,
       },

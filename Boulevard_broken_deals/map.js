@@ -303,6 +303,41 @@ map.on("load", function () {
     });
 });
 
+// Create the popup
+map.on('click', 'scrolly_layer', function (e) {
+  new mapboxgl.Popup()
+      .setLngLat([-87.6428571,41.87825679])
+      .setHTML('<h2>600 West Jackson</h2>'
+      + '<p><strong>Status: </strong>Sold in Oct. 2022, for $10.8M ($92 psf)</p>'
+      + '<p><strong>Current mortgage:</strong> $7.8M, Lake Forest Bank & Trust, Oct. 2022</p>'
+      + '<p><strong>Landlord/Buyer:</strong> Farbman Group</p>'
+      + '<p><strong>Seller:</strong> Stockbridge Capital Group</p>'
+      + '<p><strong>Last sale price:</strong> $23.5M, 2017 ($200 psf)</p>'
+      + '<p><strong>Last mortgage:</strong> $20.5M, Citizens Bank, Feb. 2018</p>'
+      + '<p><strong>Year built:</strong> 1911</p>')
+      .addTo(map);
+
+  new mapboxgl.Popup()
+      .setLngLat([-87.63241173,41.87801498])
+      .setHTML('<h2>141 West Jackson</h2>'
+      + '<p><strong>Status: </strong>Lender-owned via deed in lieu of foreclosure</p>'
+      + '<p><strong>Owner:</strong> Apollo Global Management, following surrender by JV of Glenstar and Oaktree Capital Management</p>'
+      + '<p><strong>Last senior mortgage:</strong> $198M, Apollo Global, 2020 ($168M balance at time of January transfer)</p>'
+      + '<p><strong>Mezzanine debt:</strong> $58M, CIM Group, 2020 ($49M balance at time of January transfer)</p>'
+      + '<p><strong>Occupancy:</strong> 85% leased</p>'
+      + '<p><strong>Last sale price:</strong> $152M, 2012 ($109 psf)</p>'
+      + '<p><strong>Year built:</strong> 1930</p>')
+      .addTo(map);
+});
+// Change the cursor to a pointer when the mouse is over the NAME layer.
+map.on('mouseenter', 'scrolly_layer', function () {
+  map.getCanvas().style.cursor = 'pointer';
+});
+// Change it back to a pointer when it leaves.
+map.on('mouseleave', 'scrolly_layer', function () {
+  map.getCanvas().style.cursor = '';
+});
+
 /* Here we watch for any resizing of the screen to
 adjust our scrolling setup */
 window.addEventListener("resize", scroller.resize);
