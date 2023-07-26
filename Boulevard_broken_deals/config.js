@@ -49,7 +49,7 @@ let divChapter8 =
 
 let divChapter9 = 
   "<h3>55 East Jackson</h3>" +
-  "<p><strong>Status: </strong>Leasehold owner in default of ground lease<br><strong>Leasehold owner: </strong>Firenze Group<br><strong>Current leasehold mortgage: </strong>$44M CMBS debt originated by Ready Capital, 2019<br><strong>Ground lease debt: </strong>None<br><strong>Ground landlord: </strong>Marc Realty<br><strong>Occupancy: </strong><br>47% leasedLast sale price: $64M for leasehold only, 2019<br><strong>Year built: </strong>1961</p>" +
+  "<p><strong>Status: </strong>Leasehold owner in default of ground lease<br><strong>Leasehold owner: </strong>Firenze Group<br><strong>Current leasehold mortgage: </strong>$44M CMBS debt originated by Ready Capital, 2019<br><strong>Ground lease debt: </strong>None<br><strong>Ground landlord: </strong>Marc Realty<br><strong>Occupancy: </strong>47% leased<br><strong>Last sale price:</strong> $64M for leasehold only, 2019<br><strong>Year built: </strong>1961</p>" +
   "<canvas id='55_East_Jackson'></canvas>";
 
   function createChart() {
@@ -344,7 +344,7 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Last mortgage','Mortgage balance at January transfer'],
+            labels: ['Last mortgage','Mortgage balance at transfer'],
             datasets: [{
                 label: chartTitle,
                 data: [198, 168],
