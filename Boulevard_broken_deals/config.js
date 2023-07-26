@@ -4,7 +4,7 @@ setTimeout(createChart, 0);
 let chartTitle = "$ Amount in Millions"
 
 let introDiv =
-"<p style='font-size:20px;'>Click a dot for more information or scroll down for interactive content.</p>"
+"<p style='font-size:25px;'>Click a dot for more information or scroll down for interactive content.</p>"
 
 let divChapter1 =
   "<h3>600 West Jackson</h3>" +
@@ -504,7 +504,7 @@ var config = {
   markerColor: "#db3eb1",
   theme: "light",
   use3dTerrain: false,
-  topTitle: introDiv,
+  topTitle: [],
   title: [],
   subtitle: "",
   byline: [],
