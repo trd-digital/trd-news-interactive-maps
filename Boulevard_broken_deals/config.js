@@ -151,7 +151,7 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['First mortgage', 'Risk of Loss', 'Last sale price'],
+            labels: ['First mortgage', 'Mezzanine loan', 'Last sale price'],
             datasets: [{
                 label: chartTitle,
                 data: [215, 90, 302],
@@ -254,7 +254,7 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Last sale price','CMBS Debt resolved via deed in lieu'],
+            labels: ['Last sale price','Last mortgage, resolved via deed in lieu'],
             datasets: [{
                 label: chartTitle,
                 data: [23.3,25],
@@ -298,7 +298,7 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Last sale price','Last appraisal','Appraised value at loan issuance'],
+            labels: ['Last sale price','Latest appraisal','Appraised value at loan issuance'],
             datasets: [{
                 label: chartTitle,
                 data: [306, 195, 410],
@@ -344,25 +344,23 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Last senior mortgage','Mortgage balance at January transfer','Previous debt package borrower paid'],
+            labels: ['Last mortgage','Mortgage balance at January transfer'],
             datasets: [{
                 label: chartTitle,
-                data: [198, 168, 39],
+                data: [198, 168],
                 backgroundColor: [
                   'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)'
+                  'rgba(54, 162, 235, 0.2)'
                 ],
                 borderColor: [
                   'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)'
+                  'rgba(54, 162, 235, 1)'
                 ],
                 borderWidth: 1
             },
             {
                 label: 'Mezzanine debt in Millions',
-                data: [58, 0, 0, 0],
+                data: [58, 49],
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
@@ -401,10 +399,10 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Current mortgage','Last sale price'],
+            labels: ['Last sale price','Current mortgage (in default)'],
             datasets: [{
                 label: chartTitle,
-                data: [105, 135],
+                data: [135, 105],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)'
@@ -445,7 +443,7 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Last sale price', 'Current leasehold mortgage'],
+            labels: ['Last sale price', 'Current leasehold mortgage (in default)'],
             datasets: [{
                 label: chartTitle,
                 data: [64, 44],
