@@ -1,7 +1,7 @@
 // Ensure HTML updates have been applied before creating the chart
 setTimeout(createChart, 0);
 
-let chartTitle = "$ Amount in Millions"
+let chartTitle = "$$$ Amount in Millions"
 
 let introDiv =
 "<p style='font-size:25px;'>Click a dot for more information or scroll down for interactive content.</p>"
@@ -219,7 +219,7 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Last sale price','Latest appraisal','Current mortgage (in default)'],
+            labels: ['Last sale price','Latest appraisal','Current loan (in default)'],
             datasets: [{
                 label: chartTitle,
                 data: [22.3, 7, 16.5],
@@ -265,7 +265,7 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Last sale price','Last mortgage, resolved via deed in lieu'],
+            labels: ['Last sale price','Last loan, deed in lieu'],
             datasets: [{
                 label: chartTitle,
                 data: [23.3,25],
@@ -309,7 +309,7 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Last sale price','Latest appraisal','Appraised value at loan issuance'],
+            labels: ['Last sale price','Latest appraisal','Appraised value, 2013'],
             datasets: [{
                 label: chartTitle,
                 data: [306, 195, 410],
@@ -355,7 +355,7 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Last mortgage','Mortgage balance at transfer'],
+            labels: ['Last mortgage','Unpaid debt balance'],
             datasets: [{
                 label: chartTitle,
                 data: [198, 168],
@@ -410,7 +410,7 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Last sale price','Current mortgage (in default)'],
+            labels: ['Last sale price','Current loan, in default'],
             datasets: [{
                 label: chartTitle,
                 data: [135, 105],
@@ -454,7 +454,7 @@ let divChapter9 =
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Last sale price', 'Current leasehold mortgage (in default)'],
+            labels: ['Last sale price', 'Leasehold loan, in default'],
             datasets: [{
                 label: chartTitle,
                 data: [64, 44],

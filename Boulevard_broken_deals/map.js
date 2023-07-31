@@ -269,6 +269,8 @@ map.on("load", function () {
         center: chapter.location.center,
         pitch: chapter.location.pitch,
         zoom: thisZoom,
+        speed: 0.2, // Adjust this value as needed to change the transition speed
+        curve: 1 // Optional, this value would affect the flight speed curve
       };
       map[chapter.mapAnimation || "flyTo"](thisLocation);
       if (config.showMarkers) {
