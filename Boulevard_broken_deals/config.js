@@ -513,7 +513,7 @@ var config = {
   chapters: [
     {
       id: "overallMap",
-      alignment: "full",
+      alignment: "center",
       hidden: true,
       chapterDiv: [],
       location: {
@@ -531,7 +531,7 @@ var config = {
     },
     {
       id: "600 West Jackson",
-      alignment: "right",
+      alignment: "center",
       hidden: false,
       title: "",
       image: "",
@@ -566,7 +566,7 @@ var config = {
     },
     {
       id: "300 South Riverside Plaza", 
-      alignment: "right",
+      alignment: "center",
       hidden: false,
       title: "",
       image: "",
@@ -601,7 +601,7 @@ var config = {
     },
     {
       id: "311 South Wacker", 
-      alignment: "right",
+      alignment: "center",
       hidden: false,
       title: "",
       image: "",
@@ -636,7 +636,7 @@ var config = {
     },
     {
       id: "216 West Jackson", 
-      alignment: "right",
+      alignment: "center",
       hidden: false,
       title: "",
       image: "",
@@ -671,7 +671,7 @@ var config = {
     },
     {
       id: "209 West Jackson", 
-      alignment: "right",
+      alignment: "center",
       hidden: false,
       title: "",
       image: "",
@@ -706,7 +706,7 @@ var config = {
     },
     {
       id: "175 West Jackson", 
-      alignment: "right",
+      alignment: "center",
       hidden: false,
       title: "",
       image: "",
@@ -741,7 +741,7 @@ var config = {
     },
     {
       id: "141 West Jackson (Board of Trade building)", 
-      alignment: "right",
+      alignment: "center",
       hidden: false,
       title: "",
       image: "",
@@ -776,7 +776,7 @@ var config = {
     },
     {
       id: "111 West Jackson", 
-      alignment: "right",
+      alignment: "center",
       hidden: false,
       title: "",
       image: "",
@@ -811,7 +811,7 @@ var config = {
     },
     {
       id: "55 East Jackson", 
-      alignment: "right",
+      alignment: "center",
       hidden: false,
       title: "",
       image: "",
