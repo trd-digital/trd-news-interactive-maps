@@ -611,8 +611,8 @@ var config = {
         center: [
           -87.6358341039168, 41.87746610600508
       ],
-        zoom: 16.57,
-        zoomSmall: 14,
+        zoom: 17.57,
+        zoomSmall: 15,
         pitch: 54.5,
         bearing: .74,
       },
@@ -716,8 +716,8 @@ var config = {
         center: [
           -87.63321063275266, 41.87784860614844
       ],
-        zoom: 17.27,
-        zoomSmall: 15,
+        zoom: 17.57,
+        zoomSmall: 15.5,
         pitch: 54.5,
         bearing: .74,
       },
