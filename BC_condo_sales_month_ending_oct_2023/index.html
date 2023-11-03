@@ -1,0 +1,2414 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_572b0e24ae4b3420c96c563807c54188 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>October 2023 Condo Sales</b></h3>
+             
+    
+            <div class="folium-map" id="map_572b0e24ae4b3420c96c563807c54188" ></div>
+        
+</body>
+<script>    
+    
+            var map_572b0e24ae4b3420c96c563807c54188 = L.map(
+                "map_572b0e24ae4b3420c96c563807c54188",
+                {
+                    center: [26.165640275294113, -80.19451622705883],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 10,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+
+        function geo_json_44df16d77e42c8de3842438d8c58d42e_onEachFeature(feature, layer) {
+            layer.on({
+            });
+        };
+        var geo_json_44df16d77e42c8de3842438d8c58d42e = L.geoJson(null, {
+                onEachFeature: geo_json_44df16d77e42c8de3842438d8c58d42e_onEachFeature,
+            
+        });
+
+        function geo_json_44df16d77e42c8de3842438d8c58d42e_add (data) {
+            geo_json_44df16d77e42c8de3842438d8c58d42e
+                .addData(data)
+                .addTo(map_572b0e24ae4b3420c96c563807c54188);
+        }
+            geo_json_44df16d77e42c8de3842438d8c58d42e_add({"bbox": [-80.88155753230971, 25.956616319548033, -80.07128554463546, 26.355530782230954], "features": [{"bbox": [-80.88155753230971, 25.95688760050852, -80.29697207838343, 26.334981085304772], "geometry": {"coordinates": [[[-80.39422030723257, 26.334981085304772], [-80.29712116990044, 26.334433498260665], [-80.29697207838343, 26.334432767055844], [-80.29697246616357, 26.334368576287996], [-80.29699107082338, 26.330530403362125], [-80.2970068210314, 26.3272905823925], [-80.29704180784726, 26.3200211525496], [-80.29708895256769, 26.311071526609176], [-80.29713428699493, 26.30212279771358], [-80.2971705739494, 26.294839593194016], [-80.29720709939511, 26.28755638248096], [-80.2972407619183, 26.28028140379542], [-80.2972744103553, 26.2730061884436], [-80.297309539981, 26.265735787501118], [-80.29734490961403, 26.258465151143522], [-80.29738004934178, 26.251187857731562], [-80.2974149191928, 26.243910555661447], [-80.29744232005584, 26.23664673623496], [-80.29746970628261, 26.22938290944639], [-80.29754062239908, 26.218381611042012], [-80.29756491337889, 26.208239806352104], [-80.2975838791679, 26.203851793848713], [-80.29759681203215, 26.200934247079942], [-80.29762844260611, 26.19362844985728], [-80.2976484320857, 26.189320905195018], [-80.36702281173963, 26.127989921570464], [-80.42145803242911, 26.1412150690514], [-80.4239121590664, 26.141815041468604], [-80.42895415971209, 26.143003240613616], [-80.4413461961649, 26.146035996912143], [-80.4506791672964, 26.147422744252122], [-80.45066941563567, 26.14592443038584], [-80.45060836119141, 26.143230279277407], [-80.45011485373972, 26.141267681984736], [-80.4437102904727, 26.112816363239133], [-80.44368931916395, 26.112740164528468], [-80.44275503163743, 26.10952585256638], [-80.4427132904452, 26.102314211571134], [-80.44263400849032, 26.094879337743482], [-80.44232524433582, 26.087650143001916], [-80.44235949942028, 26.08042203750021], [-80.44227950343384, 26.07319348335307], [-80.44208502249006, 26.0659647089988], [-80.44189130029935, 26.058632528705804], [-80.44192553704546, 26.051404623949292], [-80.44198258754382, 26.04418000991324], [-80.44136367626268, 26.03654925644278], [-80.44139773062473, 26.029359618137757], [-80.44110153491555, 26.021869494451963], [-80.44080536840893, 26.01437913377751], [-80.44083683888348, 26.007788785618583], [-80.44054070663937, 26.000298410733354], [-80.44057617322872, 25.992809540070542], [-80.43994736000101, 25.985617294938656], [-80.43998142277177, 25.978427837000417], [-80.43968563470614, 25.970937433179902], [-80.43938703559354, 25.964046106391134], [-80.43938115730349, 25.957043561694825], [-80.43938126374941, 25.957021093130525], [-80.44045683856483, 25.957024336425093], [-80.45522215825935, 25.957360816833322], [-80.47120548495056, 25.957352204759825], [-80.4997793949556, 25.957189610999116], [-80.5640949203785, 25.95688760050852], [-80.60359631949379, 25.95694701872999], [-80.68011454620004, 25.956892554057347], [-80.68009879779697, 25.978659171351502], [-80.7162846007825, 25.97889490517004], [-80.74978694187381, 25.97893607440712], [-80.77650717519191, 25.97900273552717], [-80.8360136585909, 25.979283480960934], [-80.83695252720689, 25.9792620723091], [-80.87313886520543, 25.979449644534178], [-80.87306311146469, 26.000380612976386], [-80.87359480632215, 26.014691369431485], [-80.87420419561238, 26.035266534445945], [-80.87473715709336, 26.052466590625862], [-80.8757277981932, 26.086435010169087], [-80.87641392672847, 26.110517966901185], [-80.87748115601886, 26.13670981748558], [-80.87946413592562, 26.17239661708849], [-80.87977008660884, 26.204553986716707], [-80.87974537951976, 26.236500463581475], [-80.87989941881045, 26.250374569706292], [-80.88000159224124, 26.259320631363842], [-80.88058816735757, 26.289432288372524], [-80.88150666393734, 26.329639542001814], [-80.88155753230971, 26.33165738840111], [-80.88153225560316, 26.333743264437608], [-80.84918225808464, 26.333764921696343], [-80.8235255712032, 26.333780338064788], [-80.78333510006507, 26.333784145100847], [-80.77595404349961, 26.333801915445623], [-80.74977828122788, 26.33385100703707], [-80.73242033363015, 26.33390998686679], [-80.68472188768433, 26.333961804178085], [-80.65076741767567, 26.33403900051206], [-80.6083128320732, 26.334087011435496], [-80.57313815823576, 26.334307549097907], [-80.54829651210056, 26.334364390975075], [-80.54007473903793, 26.334406107940744], [-80.49978484808494, 26.334627672484356], [-80.39422030723257, 26.334981085304772]]], "type": "Polygon"}, "id": "0", "properties": {"AREA": 22287174600.4, "COUNTY_NAM": "BROWARD", "DEP_CODE": 6.0, "PERIMETER": 653166.7482559, "SHAPE_AREA": 22287174600.4, "SHAPE_LEN": 653166.748256}, "type": "Feature"}, {"bbox": [-80.4506791672964, 25.956616319548033, -80.07128554463546, 26.355530782230954], "geometry": {"coordinates": [[[-80.4413461961649, 26.146035996912143], [-80.42895415971209, 26.143003240613616], [-80.4239121590664, 26.141815041468604], [-80.42145803242911, 26.1412150690514], [-80.36702281173963, 26.127989921570464], [-80.2976484320857, 26.189320905195018], [-80.29762844260611, 26.19362844985728], [-80.29759681203215, 26.200934247079942], [-80.2975838791679, 26.203851793848713], [-80.29756491337889, 26.208239806352104], [-80.29754062239908, 26.218381611042012], [-80.29746970628261, 26.22938290944639], [-80.29744232005584, 26.23664673623496], [-80.2974149191928, 26.243910555661447], [-80.29738004934178, 26.251187857731562], [-80.29734490961403, 26.258465151143522], [-80.297309539981, 26.265735787501118], [-80.2972744103553, 26.2730061884436], [-80.2972407619183, 26.28028140379542], [-80.29720709939511, 26.28755638248096], [-80.2971705739494, 26.294839593194016], [-80.29713428699493, 26.30212279771358], [-80.29708895256769, 26.311071526609176], [-80.29704180784726, 26.3200211525496], [-80.2970068210314, 26.3272905823925], [-80.29699107082338, 26.330530403362125], [-80.29697246616357, 26.334368576287996], [-80.29697156416663, 26.33456000357406], [-80.29696771954255, 26.355530782230954], [-80.28901432042514, 26.35315996791695], [-80.2266961869747, 26.33456832914416], [-80.20801339022239, 26.328988221283183], [-80.20421104161947, 26.327852058568727], [-80.204052295978, 26.32785094799321], [-80.18555044340438, 26.327778663150518], [-80.1692487788756, 26.327817400589012], [-80.10391512023816, 26.32782096186161], [-80.10267828997421, 26.327807723081115], [-80.10025174510959, 26.32780787333904], [-80.09943429643481, 26.327615211337037], [-80.09882249898438, 26.327214071203056], [-80.09838865157695, 26.32660084254622], [-80.09819641795251, 26.325701649439807], [-80.09856178509902, 26.324841726666204], [-80.09908747940163, 26.32387529063939], [-80.09881481192065, 26.323047348780232], [-80.09742394039415, 26.322499854668465], [-80.09686663326913, 26.3224245889335], [-80.09622694154483, 26.322672048511066], [-80.09598503310717, 26.323029533590294], [-80.0956612909473, 26.323638221813194], [-80.09521628499414, 26.324497405149376], [-80.09473440448491, 26.324961351306836], [-80.09397289588739, 26.325495284926618], [-80.09321193925994, 26.325957461688425], [-80.09273116495429, 26.32627766625135], [-80.09205290398005, 26.32634535748143], [-80.09153723202905, 26.326018614956908], [-80.09094109569106, 26.32579933843995], [-80.08994829652305, 26.325326281053417], [-80.08927622326824, 26.324603535264593], [-80.0891220343215, 26.32395606308296], [-80.08900978033067, 26.323021374260737], [-80.08866009515576, 26.32186967866537], [-80.08814979515893, 26.32086070227854], [-80.08773862420311, 26.320610264507337], [-80.07128554463546, 26.321033062203245], [-80.07412996874484, 26.283311863038293], [-80.07442766913677, 26.276144796778336], [-80.08089417250143, 26.240413714014647], [-80.08536672675294, 26.217848893874752], [-80.08994942121424, 26.19637097541749], [-80.09369504168839, 26.168731979589424], [-80.09762601879252, 26.14804571779302], [-80.09854511570407, 26.12763046881942], [-80.10145622696969, 26.108892921579965], [-80.10228926164716, 26.094342384525003], [-80.10681717672723, 26.078945827376877], [-80.10800734909206, 26.057662601102468], [-80.11038611232466, 26.037563423038193], [-80.11226401803644, 26.00991807026489], [-80.11399630109285, 26.001547967069392], [-80.11530753219334, 25.975072318026147], [-80.11782787691286, 25.97519064333017], [-80.12346564576708, 25.974985318570866], [-80.1234691451436, 25.974513283392305], [-80.12346994731965, 25.974405075226542], [-80.13394495267444, 25.97405500405], [-80.13396197778384, 25.974743360302718], [-80.15019451244325, 25.974317550992215], [-80.15808324444752, 25.97394272587108], [-80.16618447365632, 25.97367805420982], [-80.17445706234737, 25.97356980724302], [-80.18273098097123, 25.97330519288895], [-80.19100355614734, 25.97319599902529], [-80.19789843195574, 25.972922801067313], [-80.20599981903605, 25.972656127298887], [-80.21410118394797, 25.972388769886745], [-80.22220124590196, 25.972276853805973], [-80.23047580381765, 25.971853835632107], [-80.23823040159174, 25.97189485783512], [-80.24650390855668, 25.971626589979493], [-80.25443171946286, 25.97151197140148], [-80.26253297012818, 25.971241898557068], [-80.27063394208768, 25.970971370143648], [-80.27860883290944, 25.970824482346465], [-80.28671653737753, 25.970649379747083], [-80.29500850541268, 25.970281444764645], [-80.29489358378578, 25.964286136578345], [-80.2947875980002, 25.956792120737013], [-80.30292553246443, 25.956831527407925], [-80.31091284051297, 25.95686998920236], [-80.31874952373384, 25.956907072511864], [-80.32688750717566, 25.95694513265692], [-80.3348763962618, 25.95670944561471], [-80.34316503568995, 25.956747282584313], [-80.35100250935724, 25.956646435440092], [-80.3588385037662, 25.95681753379383], [-80.36712646058994, 25.956990413762163], [-80.37511604293074, 25.956616319548033], [-80.38310345356429, 25.956650569713904], [-80.3909402344797, 25.956683745749775], [-80.39922896198976, 25.956718373498244], [-80.40736705993879, 25.95675191033595], [-80.41520388247882, 25.95678377331958], [-80.42319136320563, 25.956815812385532], [-80.43117951196422, 25.956711224060367], [-80.43938124477249, 25.95686449804568], [-80.43938115730349, 25.957043561694825], [-80.43938703559354, 25.964046106391134], [-80.43968563470614, 25.970937433179902], [-80.43998142277177, 25.978427837000417], [-80.43994736000101, 25.985617294938656], [-80.44057617322872, 25.992809540070542], [-80.44054070663937, 26.000298410733354], [-80.44083683888348, 26.007788785618583], [-80.44080536840893, 26.01437913377751], [-80.44110153491555, 26.021869494451963], [-80.44139773062473, 26.029359618137757], [-80.44136367626268, 26.03654925644278], [-80.44198258754382, 26.04418000991324], [-80.44192553704546, 26.051404623949292], [-80.44189130029935, 26.058632528705804], [-80.44208502249006, 26.0659647089988], [-80.44227950343384, 26.07319348335307], [-80.44235949942028, 26.08042203750021], [-80.44232524433582, 26.087650143001916], [-80.44263400849032, 26.094879337743482], [-80.4427132904452, 26.102314211571134], [-80.44275503163743, 26.10952585256638], [-80.44368931916395, 26.112740164528468], [-80.4437102904727, 26.112816363239133], [-80.45011485373972, 26.141267681984736], [-80.45060836119141, 26.143230279277407], [-80.45066941563567, 26.14592443038584], [-80.4506791672964, 26.147422744252122], [-80.4413461961649, 26.146035996912143]]], "type": "Polygon"}, "id": "1", "properties": {"AREA": 12027371820.5, "COUNTY_NAM": null, "DEP_CODE": 0.0, "PERIMETER": 508206.45782718, "SHAPE_AREA": 12027371820.5, "SHAPE_LEN": 508206.457827}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_44df16d77e42c8de3842438d8c58d42e.bindTooltip(
+                `<div>
+                     Broward County
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var feature_group_97d6195accd855196f152ad07cd85f82 = L.featureGroup(
+                {}
+            ).addTo(map_572b0e24ae4b3420c96c563807c54188);
+        
+    
+            var marker_96535ddeda49e3d9a1deef7acf9bff66 = L.marker(
+                [26.1212729, -80.1052556],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_97d6195accd855196f152ad07cd85f82);
+        
+    
+            var icon_a8ad7724208863815e0e57cc24eb5b7a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_96535ddeda49e3d9a1deef7acf9bff66.setIcon(icon_a8ad7724208863815e0e57cc24eb5b7a);
+        
+    
+        var popup_59e04964f40c12be4d0f248845fb3581 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_2f966e11af64d2ea8575f490a938c71b = $(`<div id="html_2f966e11af64d2ea8575f490a938c71b" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$3,950,000<br>     <strong>Address: </strong>101 S Ft Lauderdale Bch Blvd #2701<br>     <strong>City: </strong>Fort Lauderdale<br>     <strong>Sold: </strong>October-31-2023<br>     <strong>Beds: </strong>3<br>     <strong>Baths: </strong>4.5<br>     <strong>Price per sf: </strong>$973<br>     <strong>Year Built: </strong>2007<br>     <strong>Price Rank: </strong>1     </html>     </div>`)[0];
+                popup_59e04964f40c12be4d0f248845fb3581.setContent(html_2f966e11af64d2ea8575f490a938c71b);
+            
+        
+
+        marker_96535ddeda49e3d9a1deef7acf9bff66.bindPopup(popup_59e04964f40c12be4d0f248845fb3581)
+        ;
+
+        
+    
+    
+            var marker_c9024e8cb355b7b7f8e2c34a242ecdc9 = L.marker(
+                [26.0959028, -80.1063464],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_97d6195accd855196f152ad07cd85f82);
+        
+    
+            var icon_f1c6ccb7d379e320a72a2d4562217149 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_c9024e8cb355b7b7f8e2c34a242ecdc9.setIcon(icon_f1c6ccb7d379e320a72a2d4562217149);
+        
+    
+        var popup_9ef60aa7477ca159788226c3ac58a3fc = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_43463976f01790066240b6831c4e216b = $(`<div id="html_43463976f01790066240b6831c4e216b" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$1,350,000<br>     <strong>Address: </strong>2200 S Ocean Ln #309<br>     <strong>City: </strong>Fort Lauderdale<br>     <strong>Sold: </strong>October-25-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$765<br>     <strong>Year Built: </strong>1969<br>     <strong>Price Rank: </strong>2     </html>     </div>`)[0];
+                popup_9ef60aa7477ca159788226c3ac58a3fc.setContent(html_43463976f01790066240b6831c4e216b);
+            
+        
+
+        marker_c9024e8cb355b7b7f8e2c34a242ecdc9.bindPopup(popup_9ef60aa7477ca159788226c3ac58a3fc)
+        ;
+
+        
+    
+    
+            var marker_190ed5eb9dfbc7bd7424e780308a15fb = L.marker(
+                [26.1867224, -80.103903],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_97d6195accd855196f152ad07cd85f82);
+        
+    
+            var icon_bb22ec2e22eb4451d780e301e306261e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_190ed5eb9dfbc7bd7424e780308a15fb.setIcon(icon_bb22ec2e22eb4451d780e301e306261e);
+        
+    
+        var popup_adec51c01df34d39bfa20b0c826380e2 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_72e5f601687a481a09990e8aad61bbd2 = $(`<div id="html_72e5f601687a481a09990e8aad61bbd2" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$1,250,000<br>     <strong>Address: </strong>3100 NE 47th Ct #303<br>     <strong>City: </strong>Fort Lauderdale<br>     <strong>Sold: </strong>October-2-2023<br>     <strong>Beds: </strong>3<br>     <strong>Baths: </strong>2.5<br>     <strong>Price per sf: </strong>$450<br>     <strong>Year Built: </strong>1982<br>     <strong>Price Rank: </strong>3     </html>     </div>`)[0];
+                popup_adec51c01df34d39bfa20b0c826380e2.setContent(html_72e5f601687a481a09990e8aad61bbd2);
+            
+        
+
+        marker_190ed5eb9dfbc7bd7424e780308a15fb.bindPopup(popup_adec51c01df34d39bfa20b0c826380e2)
+        ;
+
+        
+    
+    
+            var marker_4b71e9bc30a32ee0bd846f27cd626b2f = L.marker(
+                [26.1492936, -80.3281433],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_97d6195accd855196f152ad07cd85f82);
+        
+    
+            var icon_b409f4b5d504c4c815f0b4e49c0d9a48 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_4b71e9bc30a32ee0bd846f27cd626b2f.setIcon(icon_b409f4b5d504c4c815f0b4e49c0d9a48);
+        
+    
+        var popup_5ee0686ac1dc8d0b4e04c542c3da64f3 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_bc2bb37473847c53bdd6a6471d931a02 = $(`<div id="html_bc2bb37473847c53bdd6a6471d931a02" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$768,900<br>     <strong>Address: </strong>2000 Metropica Way #2403<br>     <strong>City: </strong>Sunrise<br>     <strong>Sold: </strong>October-25-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.5<br>     <strong>Price per sf: </strong>$652<br>     <strong>Year Built: </strong>2020<br>     <strong>Price Rank: </strong>4     </html>     </div>`)[0];
+                popup_5ee0686ac1dc8d0b4e04c542c3da64f3.setContent(html_bc2bb37473847c53bdd6a6471d931a02);
+            
+        
+
+        marker_4b71e9bc30a32ee0bd846f27cd626b2f.bindPopup(popup_5ee0686ac1dc8d0b4e04c542c3da64f3)
+        ;
+
+        
+    
+    
+            var marker_3e3c2bf7b1ba5b57f936afd3114e5259 = L.marker(
+                [26.1342436, -80.1078735],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_97d6195accd855196f152ad07cd85f82);
+        
+    
+            var icon_4317a08780f6c744bef5cf496616abae = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_3e3c2bf7b1ba5b57f936afd3114e5259.setIcon(icon_4317a08780f6c744bef5cf496616abae);
+        
+    
+        var popup_72986e221cf323fe5854971a87826fd2 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_d2c6ee9b4b3fa829fffda318eb7e749e = $(`<div id="html_d2c6ee9b4b3fa829fffda318eb7e749e" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$725,000<br>     <strong>Address: </strong>777 Bayshore #1705<br>     <strong>City: </strong>Fort Lauderdale<br>     <strong>Sold: </strong>October-3-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.5<br>     <strong>Price per sf: </strong>$398<br>     <strong>Year Built: </strong>1976<br>     <strong>Price Rank: </strong>5     </html>     </div>`)[0];
+                popup_72986e221cf323fe5854971a87826fd2.setContent(html_d2c6ee9b4b3fa829fffda318eb7e749e);
+            
+        
+
+        marker_3e3c2bf7b1ba5b57f936afd3114e5259.bindPopup(popup_72986e221cf323fe5854971a87826fd2)
+        ;
+
+        
+    
+    
+            var marker_55096a194f03dd2dba4291f4791d1b36 = L.marker(
+                [26.1734275, -80.0978815],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_97d6195accd855196f152ad07cd85f82);
+        
+    
+            var icon_b5a85e3891b97ed8472a50157384a4b8 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_55096a194f03dd2dba4291f4791d1b36.setIcon(icon_b5a85e3891b97ed8472a50157384a4b8);
+        
+    
+        var popup_cfa3465964bb7a0c32089b9af92da4fa = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_4ee0814ba4154f3cdf1918b9e137c806 = $(`<div id="html_4ee0814ba4154f3cdf1918b9e137c806" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$675,000<br>     <strong>Address: </strong>3700 Galt Ocean Dr #1215<br>     <strong>City: </strong>Fort Lauderdale<br>     <strong>Sold: </strong>October-27-2023<br>     <strong>Beds: </strong>3<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$453<br>     <strong>Year Built: </strong>1967<br>     <strong>Price Rank: </strong>6     </html>     </div>`)[0];
+                popup_cfa3465964bb7a0c32089b9af92da4fa.setContent(html_4ee0814ba4154f3cdf1918b9e137c806);
+            
+        
+
+        marker_55096a194f03dd2dba4291f4791d1b36.bindPopup(popup_cfa3465964bb7a0c32089b9af92da4fa)
+        ;
+
+        
+    
+    
+            var marker_38f7ce53f37bee0c3315b2da51806c63 = L.marker(
+                [26.1275915, -80.2601774],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_97d6195accd855196f152ad07cd85f82);
+        
+    
+            var icon_a08d84b507dbf36e3de4bdedaef90c10 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_38f7ce53f37bee0c3315b2da51806c63.setIcon(icon_a08d84b507dbf36e3de4bdedaef90c10);
+        
+    
+        var popup_6a548c512eab4b748941d78573331996 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_65c747f36328939debeb46100c6c4cb3 = $(`<div id="html_65c747f36328939debeb46100c6c4cb3" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$465,000<br>     <strong>Address: </strong>510 NW 84th Ave #545<br>     <strong>City: </strong>Plantation<br>     <strong>Sold: </strong>October-6-2023<br>     <strong>Beds: </strong>3<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$291<br>     <strong>Year Built: </strong>2007<br>     <strong>Price Rank: </strong>7     </html>     </div>`)[0];
+                popup_6a548c512eab4b748941d78573331996.setContent(html_65c747f36328939debeb46100c6c4cb3);
+            
+        
+
+        marker_38f7ce53f37bee0c3315b2da51806c63.bindPopup(popup_6a548c512eab4b748941d78573331996)
+        ;
+
+        
+    
+    
+            var marker_10cbcfad0b9fcf7912c06672b580ed67 = L.marker(
+                [26.170545, -80.1011105],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_97d6195accd855196f152ad07cd85f82);
+        
+    
+            var icon_17292228498c9f6655cae8d9ad3ffcdd = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_10cbcfad0b9fcf7912c06672b580ed67.setIcon(icon_17292228498c9f6655cae8d9ad3ffcdd);
+        
+    
+        var popup_b11d06acfea832512506db1e2814fc37 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_d3f8fc4c0634862cd19bc8b567d61e14 = $(`<div id="html_d3f8fc4c0634862cd19bc8b567d61e14" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$450,000<br>     <strong>Address: </strong>3333 NE 34th St #1708<br>     <strong>City: </strong>Fort Lauderdale<br>     <strong>Sold: </strong>October-5-2023<br>     <strong>Beds: </strong>3<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$321<br>     <strong>Year Built: </strong>1968<br>     <strong>Price Rank: </strong>8     </html>     </div>`)[0];
+                popup_b11d06acfea832512506db1e2814fc37.setContent(html_d3f8fc4c0634862cd19bc8b567d61e14);
+            
+        
+
+        marker_10cbcfad0b9fcf7912c06672b580ed67.bindPopup(popup_b11d06acfea832512506db1e2814fc37)
+        ;
+
+        
+    
+    
+            var marker_c122c90a229db537b14a1cffceb6bdba = L.marker(
+                [26.1153284, -80.3542501],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_97d6195accd855196f152ad07cd85f82);
+        
+    
+            var icon_432e0333219f7b943ff3b7c47c0d161b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_c122c90a229db537b14a1cffceb6bdba.setIcon(icon_432e0333219f7b943ff3b7c47c0d161b);
+        
+    
+        var popup_d2cb8dc6e310c0cb27aeeb2bfa3cc72e = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_d6837b0a4fc05607cd6da3c27a944468 = $(`<div id="html_d6837b0a4fc05607cd6da3c27a944468" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$445,000<br>     <strong>Address: </strong>536 Woodgate Cir Unit D<br>     <strong>City: </strong>Sunrise<br>     <strong>Sold: </strong>October-19-2023<br>     <strong>Beds: </strong>3<br>     <strong>Baths: </strong>2.5<br>     <strong>Price per sf: </strong>$318<br>     <strong>Year Built: </strong>1990<br>     <strong>Price Rank: </strong>9     </html>     </div>`)[0];
+                popup_d2cb8dc6e310c0cb27aeeb2bfa3cc72e.setContent(html_d6837b0a4fc05607cd6da3c27a944468);
+            
+        
+
+        marker_c122c90a229db537b14a1cffceb6bdba.bindPopup(popup_d2cb8dc6e310c0cb27aeeb2bfa3cc72e)
+        ;
+
+        
+    
+    
+            var marker_7e303954501aec24675b05abbe98663e = L.marker(
+                [25.9890122, -80.1200201],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_97d6195accd855196f152ad07cd85f82);
+        
+    
+            var icon_940cbf4cdd6a3298e5eceb10e9d373e8 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_7e303954501aec24675b05abbe98663e.setIcon(icon_940cbf4cdd6a3298e5eceb10e9d373e8);
+        
+    
+        var popup_ebb767bbc7c93b0b21030223622e0cd8 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_992673057f7c0f6dab12ae03f053bd01 = $(`<div id="html_992673057f7c0f6dab12ae03f053bd01" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$415,000<br>     <strong>Address: </strong>3800 S Ocean Dr #917<br>     <strong>City: </strong>Hollywood<br>     <strong>Sold: </strong>October-31-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$311<br>     <strong>Year Built: </strong>1973<br>     <strong>Price Rank: </strong>10     </html>     </div>`)[0];
+                popup_ebb767bbc7c93b0b21030223622e0cd8.setContent(html_992673057f7c0f6dab12ae03f053bd01);
+            
+        
+
+        marker_7e303954501aec24675b05abbe98663e.bindPopup(popup_ebb767bbc7c93b0b21030223622e0cd8)
+        ;
+
+        
+    
+    
+            var feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d = L.featureGroup(
+                {}
+            ).addTo(map_572b0e24ae4b3420c96c563807c54188);
+        
+    
+            var marker_f148c8ea2b5365fa7af29b81f9b6f589 = L.marker(
+                [26.2384644, -80.0896619],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_68d1b740ca75d60f3014c55b65a10da0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_f148c8ea2b5365fa7af29b81f9b6f589.setIcon(icon_68d1b740ca75d60f3014c55b65a10da0);
+        
+    
+        var popup_7fbe70df04ed04207522bd825ad431da = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_f8cab432313d64f0ca5c528488cc63a8 = $(`<div id="html_f8cab432313d64f0ca5c528488cc63a8" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$390,000<br>     <strong>Address: </strong>201 N Ocean Blvd #107<br>     <strong>City: </strong>Pompano Beach<br>     <strong>Sold: </strong>October-20-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$390<br>     <strong>Year Built: </strong>1966<br>     <strong>Price Rank: </strong>11     </html>     </div>`)[0];
+                popup_7fbe70df04ed04207522bd825ad431da.setContent(html_f8cab432313d64f0ca5c528488cc63a8);
+            
+        
+
+        marker_f148c8ea2b5365fa7af29b81f9b6f589.bindPopup(popup_7fbe70df04ed04207522bd825ad431da)
+        ;
+
+        
+    
+    
+            var marker_222db0266e0bbb5133ab9b50dd947a59 = L.marker(
+                [26.2191031, -80.1602582],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_98c5e00f19c5a3651e251120a242767e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_222db0266e0bbb5133ab9b50dd947a59.setIcon(icon_98c5e00f19c5a3651e251120a242767e);
+        
+    
+        var popup_24dd4e1542d4a0dea75de2116d735ef1 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_b9ca3d38da503444f7ee0c74445e307f = $(`<div id="html_b9ca3d38da503444f7ee0c74445e307f" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$386,500<br>     <strong>Address: </strong>2681 S Course Dr #101<br>     <strong>City: </strong>Pompano Beach<br>     <strong>Sold: </strong>October-11-2023<br>     <strong>Beds: </strong>3<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$278<br>     <strong>Year Built: </strong>1972<br>     <strong>Price Rank: </strong>12     </html>     </div>`)[0];
+                popup_24dd4e1542d4a0dea75de2116d735ef1.setContent(html_b9ca3d38da503444f7ee0c74445e307f);
+            
+        
+
+        marker_222db0266e0bbb5133ab9b50dd947a59.bindPopup(popup_24dd4e1542d4a0dea75de2116d735ef1)
+        ;
+
+        
+    
+    
+            var marker_33a70b8ad016c9cb37c81c26b636f4bc = L.marker(
+                [25.9999717, -80.1186725],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_abf9f0a480e61e86567f26d2bb14a222 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_33a70b8ad016c9cb37c81c26b636f4bc.setIcon(icon_abf9f0a480e61e86567f26d2bb14a222);
+        
+    
+        var popup_914346f1236374bed4d029e41d4d92a2 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_b266f3d3ac66e01cb229523c0f510d27 = $(`<div id="html_b266f3d3ac66e01cb229523c0f510d27" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$378,500<br>     <strong>Address: </strong>1600 S Ocean Dr Unit 17C<br>     <strong>City: </strong>Hollywood<br>     <strong>Sold: </strong>October-24-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.5<br>     <strong>Price per sf: </strong>$421<br>     <strong>Year Built: </strong>1971<br>     <strong>Price Rank: </strong>13     </html>     </div>`)[0];
+                popup_914346f1236374bed4d029e41d4d92a2.setContent(html_b266f3d3ac66e01cb229523c0f510d27);
+            
+        
+
+        marker_33a70b8ad016c9cb37c81c26b636f4bc.bindPopup(popup_914346f1236374bed4d029e41d4d92a2)
+        ;
+
+        
+    
+    
+            var marker_e29ac6a96b38be128483e82f4f2ce65b = L.marker(
+                [26.0923493, -80.2720238],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_b09649c828e221be00b1fde0a46dd338 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_e29ac6a96b38be128483e82f4f2ce65b.setIcon(icon_b09649c828e221be00b1fde0a46dd338);
+        
+    
+        var popup_fc1f0f80d96b5788096516aa538c2222 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_e6dd8cec9695cb32ee431262f71e9632 = $(`<div id="html_e6dd8cec9695cb32ee431262f71e9632" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$378,000<br>     <strong>Address: </strong>2131 SW 92nd Ter #1602<br>     <strong>City: </strong>Davie<br>     <strong>Sold: </strong>October-18-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$274<br>     <strong>Year Built: </strong>1981<br>     <strong>Price Rank: </strong>14     </html>     </div>`)[0];
+                popup_fc1f0f80d96b5788096516aa538c2222.setContent(html_e6dd8cec9695cb32ee431262f71e9632);
+            
+        
+
+        marker_e29ac6a96b38be128483e82f4f2ce65b.bindPopup(popup_fc1f0f80d96b5788096516aa538c2222)
+        ;
+
+        
+    
+    
+            var marker_ae9b9a9fd56df14fa8eb476bd18e6aa6 = L.marker(
+                [26.118358, -80.273528],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_eedfe24042c345e3622cc557ba380f7b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_ae9b9a9fd56df14fa8eb476bd18e6aa6.setIcon(icon_eedfe24042c345e3622cc557ba380f7b);
+        
+    
+        var popup_a61c88fd645a6fdf181df1a05bfd1617 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_e292eace8f9102351fe418ae15cd8ca0 = $(`<div id="html_e292eace8f9102351fe418ae15cd8ca0" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$370,000<br>     <strong>Address: </strong>100 Wimbledon Lake Dr #100<br>     <strong>City: </strong>Plantation<br>     <strong>Sold: </strong>October-30-2023<br>     <strong>Beds: </strong>3<br>     <strong>Baths: </strong>2.5<br>     <strong>Price per sf: </strong>$247<br>     <strong>Year Built: </strong>1975<br>     <strong>Price Rank: </strong>15     </html>     </div>`)[0];
+                popup_a61c88fd645a6fdf181df1a05bfd1617.setContent(html_e292eace8f9102351fe418ae15cd8ca0);
+            
+        
+
+        marker_ae9b9a9fd56df14fa8eb476bd18e6aa6.bindPopup(popup_a61c88fd645a6fdf181df1a05bfd1617)
+        ;
+
+        
+    
+    
+            var marker_f59cc7e62398d51974b908a33b873706 = L.marker(
+                [26.0009667, -80.3131899],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_abade2dd2762912f822344e4576f0929 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_f59cc7e62398d51974b908a33b873706.setIcon(icon_abade2dd2762912f822344e4576f0929);
+        
+    
+        var popup_9b5c734881c1fc365523195b22f50468 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_a5cb9296de39c494c78676eba6ae377d = $(`<div id="html_a5cb9296de39c494c78676eba6ae377d" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$350,000<br>     <strong>Address: </strong>900 SW 125th Way Unit R101<br>     <strong>City: </strong>Pembroke Pines<br>     <strong>Sold: </strong>October-3-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$232<br>     <strong>Year Built: </strong>1987<br>     <strong>Price Rank: </strong>16     </html>     </div>`)[0];
+                popup_9b5c734881c1fc365523195b22f50468.setContent(html_a5cb9296de39c494c78676eba6ae377d);
+            
+        
+
+        marker_f59cc7e62398d51974b908a33b873706.bindPopup(popup_9b5c734881c1fc365523195b22f50468)
+        ;
+
+        
+    
+    
+            var marker_d7f9bdbff5e8226139c99dec02468f6d = L.marker(
+                [26.2450516, -80.0879183],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_7830b5e6d9e6ea6959bd52c0375e69f9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_d7f9bdbff5e8226139c99dec02468f6d.setIcon(icon_7830b5e6d9e6ea6959bd52c0375e69f9);
+        
+    
+        var popup_5a0c66acc5957e98beadd0496bdfe78b = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_0aadda9115c147648df06d643497ea37 = $(`<div id="html_0aadda9115c147648df06d643497ea37" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$350,000<br>     <strong>Address: </strong>801 N Ocean Blvd #804<br>     <strong>City: </strong>Pompano Beach<br>     <strong>Sold: </strong>October-2-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$375<br>     <strong>Year Built: </strong>1977<br>     <strong>Price Rank: </strong>17     </html>     </div>`)[0];
+                popup_5a0c66acc5957e98beadd0496bdfe78b.setContent(html_0aadda9115c147648df06d643497ea37);
+            
+        
+
+        marker_d7f9bdbff5e8226139c99dec02468f6d.bindPopup(popup_5a0c66acc5957e98beadd0496bdfe78b)
+        ;
+
+        
+    
+    
+            var marker_8fd8aa791d6e249d892903562802ce82 = L.marker(
+                [26.0711991, -80.2277498],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_a695a0201806c6fd43c31c424bda1489 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_8fd8aa791d6e249d892903562802ce82.setIcon(icon_a695a0201806c6fd43c31c424bda1489);
+        
+    
+        var popup_b11968b9807eb3680445b2a0ff1e0d1e = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_585823b22cea147bf56d95b5df1e3760 = $(`<div id="html_585823b22cea147bf56d95b5df1e3760" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$325,777<br>     <strong>Address: </strong>6088 SW 41st St #20<br>     <strong>City: </strong>Davie<br>     <strong>Sold: </strong>October-31-2023<br>     <strong>Beds: </strong>3<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$283<br>     <strong>Year Built: </strong>1975<br>     <strong>Price Rank: </strong>18     </html>     </div>`)[0];
+                popup_b11968b9807eb3680445b2a0ff1e0d1e.setContent(html_585823b22cea147bf56d95b5df1e3760);
+            
+        
+
+        marker_8fd8aa791d6e249d892903562802ce82.bindPopup(popup_b11968b9807eb3680445b2a0ff1e0d1e)
+        ;
+
+        
+    
+    
+            var marker_ff149ef394870cd3adf55653b3ac71da = L.marker(
+                [26.144721, -80.2586281],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_5fdfc62c498962c7df712ce29264e785 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_ff149ef394870cd3adf55653b3ac71da.setIcon(icon_5fdfc62c498962c7df712ce29264e785);
+        
+    
+        var popup_ed7598833a2a76b69c2b62f521a99715 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_2fcf361e1f7733f039e7a70db43eb8e0 = $(`<div id="html_2fcf361e1f7733f039e7a70db43eb8e0" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$325,000<br>     <strong>Address: </strong>8059 NW 15th Mnr #8059<br>     <strong>City: </strong>Plantation<br>     <strong>Sold: </strong>October-10-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$314<br>     <strong>Year Built: </strong>1986<br>     <strong>Price Rank: </strong>19     </html>     </div>`)[0];
+                popup_ed7598833a2a76b69c2b62f521a99715.setContent(html_2fcf361e1f7733f039e7a70db43eb8e0);
+            
+        
+
+        marker_ff149ef394870cd3adf55653b3ac71da.bindPopup(popup_ed7598833a2a76b69c2b62f521a99715)
+        ;
+
+        
+    
+    
+            var marker_e9e46e1cf28211d2f4428b3810bde6ca = L.marker(
+                [26.1575902, -80.3155497],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_4653215dd68b8a41b6a3e24a37dd9bb8 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_e9e46e1cf28211d2f4428b3810bde6ca.setIcon(icon_4653215dd68b8a41b6a3e24a37dd9bb8);
+        
+    
+        var popup_2e8c7cc6f94d4053d67b17c2cb1ecc54 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_0f5607f8640451922dc970132bb408bb = $(`<div id="html_0f5607f8640451922dc970132bb408bb" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$325,000<br>     <strong>Address: </strong>2681 N Flamingo Rd Unit 1206S<br>     <strong>City: </strong>Sunrise<br>     <strong>Sold: </strong>October-9-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$279<br>     <strong>Year Built: </strong>2009<br>     <strong>Price Rank: </strong>20     </html>     </div>`)[0];
+                popup_2e8c7cc6f94d4053d67b17c2cb1ecc54.setContent(html_0f5607f8640451922dc970132bb408bb);
+            
+        
+
+        marker_e9e46e1cf28211d2f4428b3810bde6ca.bindPopup(popup_2e8c7cc6f94d4053d67b17c2cb1ecc54)
+        ;
+
+        
+    
+    
+            var marker_1c1707b61a38286fc2f3cbdbeb6c135b = L.marker(
+                [26.298201, -80.130688],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_9991e23701ced3b6c0c199872c558b9f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_1c1707b61a38286fc2f3cbdbeb6c135b.setIcon(icon_9991e23701ced3b6c0c199872c558b9f);
+        
+    
+        var popup_f6a46d92cb70e4cff6a0e4c8c5943cdd = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_1b6ecfa26cdfcca3a52723380f3c23f0 = $(`<div id="html_1b6ecfa26cdfcca3a52723380f3c23f0" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$320,000<br>     <strong>Address: </strong>1921 SW 15th St #25<br>     <strong>City: </strong>Deerfield Beach<br>     <strong>Sold: </strong>October-17-2023<br>     <strong>Beds: </strong>3<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$267<br>     <strong>Year Built: </strong>1983<br>     <strong>Price Rank: </strong>21     </html>     </div>`)[0];
+                popup_f6a46d92cb70e4cff6a0e4c8c5943cdd.setContent(html_1b6ecfa26cdfcca3a52723380f3c23f0);
+            
+        
+
+        marker_1c1707b61a38286fc2f3cbdbeb6c135b.bindPopup(popup_f6a46d92cb70e4cff6a0e4c8c5943cdd)
+        ;
+
+        
+    
+    
+            var marker_5272a50731559a3b21f8a48b595ad97c = L.marker(
+                [26.2792976, -80.0995568],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_7a2fc5bb3ca52c14d88c0d2f19456b80 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_5272a50731559a3b21f8a48b595ad97c.setIcon(icon_7a2fc5bb3ca52c14d88c0d2f19456b80);
+        
+    
+        var popup_b4ba4c3a62b27efbc694eeb08455318a = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_151d960aab8ea8792161ee38f84caee9 = $(`<div id="html_151d960aab8ea8792161ee38f84caee9" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$314,900<br>     <strong>Address: </strong>1750 NE 39th Ct #807<br>     <strong>City: </strong>Pompano Beach<br>     <strong>Sold: </strong>October-6-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$252<br>     <strong>Year Built: </strong>1984<br>     <strong>Price Rank: </strong>22     </html>     </div>`)[0];
+                popup_b4ba4c3a62b27efbc694eeb08455318a.setContent(html_151d960aab8ea8792161ee38f84caee9);
+            
+        
+
+        marker_5272a50731559a3b21f8a48b595ad97c.bindPopup(popup_b4ba4c3a62b27efbc694eeb08455318a)
+        ;
+
+        
+    
+    
+            var marker_d82d0fa0e9fa947ddd2e9d9dae86786a = L.marker(
+                [26.1222716, -80.3855573],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_ba3fefabd98e0679b193899dac5c8277 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_d82d0fa0e9fa947ddd2e9d9dae86786a.setIcon(icon_ba3fefabd98e0679b193899dac5c8277);
+        
+    
+        var popup_9776e75ac8f46ffb76bbe6485bba970a = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_3aef9ca22dc61bcdec59366c90cbf2a2 = $(`<div id="html_3aef9ca22dc61bcdec59366c90cbf2a2" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$307,000<br>     <strong>Address: </strong>401 Lakeview Dr #205<br>     <strong>City: </strong>Weston<br>     <strong>Sold: </strong>October-18-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$251<br>     <strong>Year Built: </strong>1980<br>     <strong>Price Rank: </strong>23     </html>     </div>`)[0];
+                popup_9776e75ac8f46ffb76bbe6485bba970a.setContent(html_3aef9ca22dc61bcdec59366c90cbf2a2);
+            
+        
+
+        marker_d82d0fa0e9fa947ddd2e9d9dae86786a.bindPopup(popup_9776e75ac8f46ffb76bbe6485bba970a)
+        ;
+
+        
+    
+    
+            var marker_17457ea9f5214b8435f883c655db33e0 = L.marker(
+                [26.1316857, -80.1071239],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_11dcd88c9f75083678e22850732d4313 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_17457ea9f5214b8435f883c655db33e0.setIcon(icon_11dcd88c9f75083678e22850732d4313);
+        
+    
+        var popup_7593262dd7790b8c7ca7f898bd259832 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_b2d2d6c49ea87aa488900716b91ac998 = $(`<div id="html_b2d2d6c49ea87aa488900716b91ac998" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$305,000<br>     <strong>Address: </strong>619 Orton Ave #404<br>     <strong>City: </strong>Fort Lauderdale<br>     <strong>Sold: </strong>October-6-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.5<br>     <strong>Price per sf: </strong>$368<br>     <strong>Year Built: </strong>1976<br>     <strong>Price Rank: </strong>24     </html>     </div>`)[0];
+                popup_7593262dd7790b8c7ca7f898bd259832.setContent(html_b2d2d6c49ea87aa488900716b91ac998);
+            
+        
+
+        marker_17457ea9f5214b8435f883c655db33e0.bindPopup(popup_7593262dd7790b8c7ca7f898bd259832)
+        ;
+
+        
+    
+    
+            var marker_0182fe05348faa314e550436864fd1d6 = L.marker(
+                [26.1204536, -80.1066482],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_4f1e6225d88791f5031f4c486c54a1c6 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_0182fe05348faa314e550436864fd1d6.setIcon(icon_4f1e6225d88791f5031f4c486c54a1c6);
+        
+    
+        var popup_a2157a387eb054116e4f6eced53ce30b = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_f2b932e6eed86aa6c0f602ff6548251a = $(`<div id="html_f2b932e6eed86aa6c0f602ff6548251a" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$300,000<br>     <strong>Address: </strong>200 S Birch #1204<br>     <strong>City: </strong>Fort Lauderdale<br>     <strong>Sold: </strong>October-31-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.0<br>     <strong>Price per sf: </strong>$nan<br>     <strong>Year Built: </strong>1970<br>     <strong>Price Rank: </strong>25     </html>     </div>`)[0];
+                popup_a2157a387eb054116e4f6eced53ce30b.setContent(html_f2b932e6eed86aa6c0f602ff6548251a);
+            
+        
+
+        marker_0182fe05348faa314e550436864fd1d6.bindPopup(popup_a2157a387eb054116e4f6eced53ce30b)
+        ;
+
+        
+    
+    
+            var marker_4164723dace1cef906764c7da55bbd15 = L.marker(
+                [26.0077457, -80.1775237],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_c3a578c640e577f78ad3276ccb942770 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_4164723dace1cef906764c7da55bbd15.setIcon(icon_c3a578c640e577f78ad3276ccb942770);
+        
+    
+        var popup_aa5c5d7468bb6f724a8566a81d1457fa = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_d89525c8e57720e334d30f47fad36d81 = $(`<div id="html_d89525c8e57720e334d30f47fad36d81" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$285,000<br>     <strong>Address: </strong>430 S Park Rd Unit 3-302<br>     <strong>City: </strong>Hollywood<br>     <strong>Sold: </strong>October-27-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$329<br>     <strong>Year Built: </strong>2006<br>     <strong>Price Rank: </strong>26     </html>     </div>`)[0];
+                popup_aa5c5d7468bb6f724a8566a81d1457fa.setContent(html_d89525c8e57720e334d30f47fad36d81);
+            
+        
+
+        marker_4164723dace1cef906764c7da55bbd15.bindPopup(popup_aa5c5d7468bb6f724a8566a81d1457fa)
+        ;
+
+        
+    
+    
+            var marker_492222814446469cae064e5290f28227 = L.marker(
+                [26.171847, -80.1027686],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_350c4938f77f015af34cc8bc63cbc261 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_492222814446469cae064e5290f28227.setIcon(icon_350c4938f77f015af34cc8bc63cbc261);
+        
+    
+        var popup_46b6d49508db595c2de76ed92e9d8420 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_7a267f19dbe541f232b9283a1f88d318 = $(`<div id="html_7a267f19dbe541f232b9283a1f88d318" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$285,000<br>     <strong>Address: </strong>3200 NE 36th St #822<br>     <strong>City: </strong>Fort Lauderdale<br>     <strong>Sold: </strong>October-4-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$254<br>     <strong>Year Built: </strong>1963<br>     <strong>Price Rank: </strong>27     </html>     </div>`)[0];
+                popup_46b6d49508db595c2de76ed92e9d8420.setContent(html_7a267f19dbe541f232b9283a1f88d318);
+            
+        
+
+        marker_492222814446469cae064e5290f28227.bindPopup(popup_46b6d49508db595c2de76ed92e9d8420)
+        ;
+
+        
+    
+    
+            var marker_5d7656a637d0d0dd50dfbd514e43d248 = L.marker(
+                [26.1947013, -80.1307825],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_fa802c1a8fe5eefe53f8a061a71b1488 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_5d7656a637d0d0dd50dfbd514e43d248.setIcon(icon_fa802c1a8fe5eefe53f8a061a71b1488);
+        
+    
+        var popup_8e885321ef61669dfe017bf1d2145252 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_a3dca469ad8ad8b1c3a9d8851a012578 = $(`<div id="html_a3dca469ad8ad8b1c3a9d8851a012578" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$285,000<br>     <strong>Address: </strong>1400 NE 54th St #107<br>     <strong>City: </strong>Fort Lauderdale<br>     <strong>Sold: </strong>October-10-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$299<br>     <strong>Year Built: </strong>1976<br>     <strong>Price Rank: </strong>28     </html>     </div>`)[0];
+                popup_8e885321ef61669dfe017bf1d2145252.setContent(html_a3dca469ad8ad8b1c3a9d8851a012578);
+            
+        
+
+        marker_5d7656a637d0d0dd50dfbd514e43d248.bindPopup(popup_8e885321ef61669dfe017bf1d2145252)
+        ;
+
+        
+    
+    
+            var marker_8ddc068c1802512c5e22045f8c0c0758 = L.marker(
+                [26.1978078, -80.1308639],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_905f0c2dfbf660bae7e7ed34eeaa8b18 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_8ddc068c1802512c5e22045f8c0c0758.setIcon(icon_905f0c2dfbf660bae7e7ed34eeaa8b18);
+        
+    
+        var popup_b1994f234790a2c943f71db21f97795f = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_8f4f85d841aa4301e941f17952dde998 = $(`<div id="html_8f4f85d841aa4301e941f17952dde998" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$285,000<br>     <strong>Address: </strong>1400 NE 57th St #102<br>     <strong>City: </strong>Fort Lauderdale<br>     <strong>Sold: </strong>October-31-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$331<br>     <strong>Year Built: </strong>1983<br>     <strong>Price Rank: </strong>29     </html>     </div>`)[0];
+                popup_b1994f234790a2c943f71db21f97795f.setContent(html_8f4f85d841aa4301e941f17952dde998);
+            
+        
+
+        marker_8ddc068c1802512c5e22045f8c0c0758.bindPopup(popup_b1994f234790a2c943f71db21f97795f)
+        ;
+
+        
+    
+    
+            var marker_b6405bbfcd8b8551fcf9a415f2e34548 = L.marker(
+                [26.1867102, -80.1146741],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_b173367c5f8e2927a3480adc88e0004a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_b6405bbfcd8b8551fcf9a415f2e34548.setIcon(icon_b173367c5f8e2927a3480adc88e0004a);
+        
+    
+        var popup_d2f69a310afabe66c30db6a79299b833 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_74e089aa3457423df13fc441c068ea18 = $(`<div id="html_74e089aa3457423df13fc441c068ea18" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$284,900<br>     <strong>Address: </strong>4812 NE 23rd Ave #4<br>     <strong>City: </strong>Fort Lauderdale<br>     <strong>Sold: </strong>October-2-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.0<br>     <strong>Price per sf: </strong>$380<br>     <strong>Year Built: </strong>1965<br>     <strong>Price Rank: </strong>30     </html>     </div>`)[0];
+                popup_d2f69a310afabe66c30db6a79299b833.setContent(html_74e089aa3457423df13fc441c068ea18);
+            
+        
+
+        marker_b6405bbfcd8b8551fcf9a415f2e34548.bindPopup(popup_d2f69a310afabe66c30db6a79299b833)
+        ;
+
+        
+    
+    
+            var marker_3af0859dff68c7ad8d1ae498ba162ae1 = L.marker(
+                [26.2889432, -80.1940512],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_849b6fe7e87532fbfa93770b5687ded6 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_3af0859dff68c7ad8d1ae498ba162ae1.setIcon(icon_849b6fe7e87532fbfa93770b5687ded6);
+        
+    
+        var popup_610d9549a2ed789b33bb2ae5e0c2136d = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_31a4c0b5e4f8ac455d1b71a23cc6909a = $(`<div id="html_31a4c0b5e4f8ac455d1b71a23cc6909a" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$275,000<br>     <strong>Address: </strong>5011 Wiles Rd #302<br>     <strong>City: </strong>Coconut Creek<br>     <strong>Sold: </strong>October-16-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$221<br>     <strong>Year Built: </strong>2002<br>     <strong>Price Rank: </strong>31     </html>     </div>`)[0];
+                popup_610d9549a2ed789b33bb2ae5e0c2136d.setContent(html_31a4c0b5e4f8ac455d1b71a23cc6909a);
+            
+        
+
+        marker_3af0859dff68c7ad8d1ae498ba162ae1.bindPopup(popup_610d9549a2ed789b33bb2ae5e0c2136d)
+        ;
+
+        
+    
+    
+            var marker_18dd009d529c6ec8ecc8dcceea75dd8c = L.marker(
+                [26.2126628, -80.1888578],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_9de3e7e0994b777609d27e8357cc451c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_18dd009d529c6ec8ecc8dcceea75dd8c.setIcon(icon_9de3e7e0994b777609d27e8357cc451c);
+        
+    
+        var popup_d8d072c7a9d213c5c21b2cbd23dd9a0f = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_6aeb8cd8988395e72cd6f3e8ee11136e = $(`<div id="html_6aeb8cd8988395e72cd6f3e8ee11136e" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$275,000<br>     <strong>Address: </strong>1263 SW 46th Ave #2109<br>     <strong>City: </strong>Pompano Beach<br>     <strong>Sold: </strong>October-26-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$305<br>     <strong>Year Built: </strong>1987<br>     <strong>Price Rank: </strong>32     </html>     </div>`)[0];
+                popup_d8d072c7a9d213c5c21b2cbd23dd9a0f.setContent(html_6aeb8cd8988395e72cd6f3e8ee11136e);
+            
+        
+
+        marker_18dd009d529c6ec8ecc8dcceea75dd8c.bindPopup(popup_d8d072c7a9d213c5c21b2cbd23dd9a0f)
+        ;
+
+        
+    
+    
+            var marker_8c4a19463209814e6d8abcdbc9ba606c = L.marker(
+                [26.2671709, -80.188773],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_9e322548aa3b21fd9e16147b702c7f6d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_8c4a19463209814e6d8abcdbc9ba606c.setIcon(icon_9e322548aa3b21fd9e16147b702c7f6d);
+        
+    
+        var popup_5c567e7c3865d39a082ee3a26f71e047 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_b8fe50b69dfb94c174ab7e55aa06b37e = $(`<div id="html_b8fe50b69dfb94c174ab7e55aa06b37e" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$272,500<br>     <strong>Address: </strong>3319 NW 47th Ave #3240<br>     <strong>City: </strong>Coconut Creek<br>     <strong>Sold: </strong>October-24-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$285<br>     <strong>Year Built: </strong>1985<br>     <strong>Price Rank: </strong>33     </html>     </div>`)[0];
+                popup_5c567e7c3865d39a082ee3a26f71e047.setContent(html_b8fe50b69dfb94c174ab7e55aa06b37e);
+            
+        
+
+        marker_8c4a19463209814e6d8abcdbc9ba606c.bindPopup(popup_5c567e7c3865d39a082ee3a26f71e047)
+        ;
+
+        
+    
+    
+            var marker_6c7e7b0b508d359106ce3d9d8e37c52c = L.marker(
+                [26.2984746, -80.2349632],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_6c7966621b4f65491aecef9623dabebf = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_6c7e7b0b508d359106ce3d9d8e37c52c.setIcon(icon_6c7966621b4f65491aecef9623dabebf);
+        
+    
+        var popup_4b1934c492d20adfc20e5b907590b8e6 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_008977a11cb71bf1b7fdc26a3c0fd6ed = $(`<div id="html_008977a11cb71bf1b7fdc26a3c0fd6ed" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$271,000<br>     <strong>Address: </strong>5661 Riverside Dr Unit 306b7<br>     <strong>City: </strong>Coral Springs<br>     <strong>Sold: </strong>October-17-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$285<br>     <strong>Year Built: </strong>1988<br>     <strong>Price Rank: </strong>34     </html>     </div>`)[0];
+                popup_4b1934c492d20adfc20e5b907590b8e6.setContent(html_008977a11cb71bf1b7fdc26a3c0fd6ed);
+            
+        
+
+        marker_6c7e7b0b508d359106ce3d9d8e37c52c.bindPopup(popup_4b1934c492d20adfc20e5b907590b8e6)
+        ;
+
+        
+    
+    
+            var marker_62ed4c18d1fe370ffad46a8d8dd08e8f = L.marker(
+                [26.2629987, -80.182487],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_167e9042cbceb7a94d2f4cb8df7f234f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_62ed4c18d1fe370ffad46a8d8dd08e8f.setIcon(icon_167e9042cbceb7a94d2f4cb8df7f234f);
+        
+    
+        var popup_cb732232d041533bc8a54ac428c65a32 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_0fba778401b1c9a840820aee27510e9a = $(`<div id="html_0fba778401b1c9a840820aee27510e9a" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$270,000<br>     <strong>Address: </strong>2760 NW 42nd Ave #1125<br>     <strong>City: </strong>Coconut Creek<br>     <strong>Sold: </strong>October-16-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$221<br>     <strong>Year Built: </strong>1980<br>     <strong>Price Rank: </strong>35     </html>     </div>`)[0];
+                popup_cb732232d041533bc8a54ac428c65a32.setContent(html_0fba778401b1c9a840820aee27510e9a);
+            
+        
+
+        marker_62ed4c18d1fe370ffad46a8d8dd08e8f.bindPopup(popup_cb732232d041533bc8a54ac428c65a32)
+        ;
+
+        
+    
+    
+            var marker_a871fbb8318678bb4c522479851ad482 = L.marker(
+                [26.2596494, -80.2890497],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_08c59e872aa0ae1d40b82d0fcd8c3e16 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_a871fbb8318678bb4c522479851ad482.setIcon(icon_08c59e872aa0ae1d40b82d0fcd8c3e16);
+        
+    
+        var popup_11a4ea00929c1ba51f2ea9795a01a023 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_68e967b6010448d7ce94736eea268fae = $(`<div id="html_68e967b6010448d7ce94736eea268fae" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$265,000<br>     <strong>Address: </strong>12231 Royal Palm Blvd Unit 4P<br>     <strong>City: </strong>Coral Springs<br>     <strong>Sold: </strong>October-6-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$241<br>     <strong>Year Built: </strong>1988<br>     <strong>Price Rank: </strong>36     </html>     </div>`)[0];
+                popup_11a4ea00929c1ba51f2ea9795a01a023.setContent(html_68e967b6010448d7ce94736eea268fae);
+            
+        
+
+        marker_a871fbb8318678bb4c522479851ad482.bindPopup(popup_11a4ea00929c1ba51f2ea9795a01a023)
+        ;
+
+        
+    
+    
+            var marker_a3eda0668dc8fe47ddefcaa9a6ff386d = L.marker(
+                [26.0290526, -80.2441567],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_721f1ff1566e663cb6a8aa0bf9915460 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_a3eda0668dc8fe47ddefcaa9a6ff386d.setIcon(icon_721f1ff1566e663cb6a8aa0bf9915460);
+        
+    
+        var popup_1881986e071e74ffb90085baf9505bd9 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_47d75a01f448ad21663800f1f9750832 = $(`<div id="html_47d75a01f448ad21663800f1f9750832" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$265,000<br>     <strong>Address: </strong>2170 NW 78th Ave #205<br>     <strong>City: </strong>Pembroke Pines<br>     <strong>Sold: </strong>October-11-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$322<br>     <strong>Year Built: </strong>2001<br>     <strong>Price Rank: </strong>37     </html>     </div>`)[0];
+                popup_1881986e071e74ffb90085baf9505bd9.setContent(html_47d75a01f448ad21663800f1f9750832);
+            
+        
+
+        marker_a3eda0668dc8fe47ddefcaa9a6ff386d.bindPopup(popup_1881986e071e74ffb90085baf9505bd9)
+        ;
+
+        
+    
+    
+            var marker_67b6e517df03f81faf1bac23c74abed4 = L.marker(
+                [26.007869, -80.1766518],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_17a3c7715dd971f674ffe484b5881e3a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_67b6e517df03f81faf1bac23c74abed4.setIcon(icon_17a3c7715dd971f674ffe484b5881e3a);
+        
+    
+        var popup_ba4d841b4650b57665c8d334cf335174 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_e8997f7b29b9ded0c59c223f9b20f6af = $(`<div id="html_e8997f7b29b9ded0c59c223f9b20f6af" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$263,000<br>     <strong>Address: </strong>420 S Park Rd Unit 2-208<br>     <strong>City: </strong>Hollywood<br>     <strong>Sold: </strong>October-11-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$321<br>     <strong>Year Built: </strong>1997<br>     <strong>Price Rank: </strong>38     </html>     </div>`)[0];
+                popup_ba4d841b4650b57665c8d334cf335174.setContent(html_e8997f7b29b9ded0c59c223f9b20f6af);
+            
+        
+
+        marker_67b6e517df03f81faf1bac23c74abed4.bindPopup(popup_ba4d841b4650b57665c8d334cf335174)
+        ;
+
+        
+    
+    
+            var marker_11ca8683d0347fa4c85f984fb6ead2ee = L.marker(
+                [26.2307651, -80.2538335],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_4a4f5d8dc7bc23a82ef660aa2393f51a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_11ca8683d0347fa4c85f984fb6ead2ee.setIcon(icon_4a4f5d8dc7bc23a82ef660aa2393f51a);
+        
+    
+        var popup_fccd97955e4d926af70a10e3268895f7 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_e179d4dd33f0437611f4fa2b078b03ac = $(`<div id="html_e179d4dd33f0437611f4fa2b078b03ac" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$255,000<br>     <strong>Address: </strong>11211 W Atlantic Blvd #104<br>     <strong>City: </strong>Coral Springs<br>     <strong>Sold: </strong>October-23-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$229<br>     <strong>Year Built: </strong>1991<br>     <strong>Price Rank: </strong>39     </html>     </div>`)[0];
+                popup_fccd97955e4d926af70a10e3268895f7.setContent(html_e179d4dd33f0437611f4fa2b078b03ac);
+            
+        
+
+        marker_11ca8683d0347fa4c85f984fb6ead2ee.bindPopup(popup_fccd97955e4d926af70a10e3268895f7)
+        ;
+
+        
+    
+    
+            var marker_d5dcfc95f47be2d9c1afaa4f4bd1c381 = L.marker(
+                [26.1233582, -80.2647622],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_01a28cba824c597e406f7d3ffadcb0ea = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_d5dcfc95f47be2d9c1afaa4f4bd1c381.setIcon(icon_01a28cba824c597e406f7d3ffadcb0ea);
+        
+    
+        var popup_001694bd103a3d3e11538c01c37cdebb = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_b735da80856cde565182e6d4329d9e3a = $(`<div id="html_b735da80856cde565182e6d4329d9e3a" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$248,000<br>     <strong>Address: </strong>301 N Pine Island Rd #121<br>     <strong>City: </strong>Plantation<br>     <strong>Sold: </strong>October-30-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.5<br>     <strong>Price per sf: </strong>$246<br>     <strong>Year Built: </strong>1976<br>     <strong>Price Rank: </strong>40     </html>     </div>`)[0];
+                popup_001694bd103a3d3e11538c01c37cdebb.setContent(html_b735da80856cde565182e6d4329d9e3a);
+            
+        
+
+        marker_d5dcfc95f47be2d9c1afaa4f4bd1c381.bindPopup(popup_001694bd103a3d3e11538c01c37cdebb)
+        ;
+
+        
+    
+    
+            var marker_f4861eba49677bca4907dd3100f24943 = L.marker(
+                [26.2178286, -80.1512434],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_62353cce71ce6748c73bef71142109c1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_f4861eba49677bca4907dd3100f24943.setIcon(icon_62353cce71ce6748c73bef71142109c1);
+        
+    
+        var popup_a57c6b8615bcc3973fe3adaaa24aa2f3 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_e93e636c247378f1c4d5c8380dd42e56 = $(`<div id="html_e93e636c247378f1c4d5c8380dd42e56" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$245,000<br>     <strong>Address: </strong>2228 N Cypress Bend Dr #403<br>     <strong>City: </strong>Pompano Beach<br>     <strong>Sold: </strong>October-19-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$297<br>     <strong>Year Built: </strong>1989<br>     <strong>Price Rank: </strong>41     </html>     </div>`)[0];
+                popup_a57c6b8615bcc3973fe3adaaa24aa2f3.setContent(html_e93e636c247378f1c4d5c8380dd42e56);
+            
+        
+
+        marker_f4861eba49677bca4907dd3100f24943.bindPopup(popup_a57c6b8615bcc3973fe3adaaa24aa2f3)
+        ;
+
+        
+    
+    
+            var marker_8003ffd717e3403722fa1b53bc5c7a2b = L.marker(
+                [26.2972714, -80.0826345],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_af0e9e098bd555262886a02e62f01132 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_8003ffd717e3403722fa1b53bc5c7a2b.setIcon(icon_af0e9e098bd555262886a02e62f01132);
+        
+    
+        var popup_d01cc63af0685186f16c4eab10b6b355 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_ec9cb932d81da2c69b8b1839a8acd794 = $(`<div id="html_ec9cb932d81da2c69b8b1839a8acd794" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$240,000<br>     <strong>Address: </strong>1444 SE 15th Ct #104<br>     <strong>City: </strong>Deerfield Beach<br>     <strong>Sold: </strong>October-25-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.0<br>     <strong>Price per sf: </strong>$296<br>     <strong>Year Built: </strong>1986<br>     <strong>Price Rank: </strong>42     </html>     </div>`)[0];
+                popup_d01cc63af0685186f16c4eab10b6b355.setContent(html_ec9cb932d81da2c69b8b1839a8acd794);
+            
+        
+
+        marker_8003ffd717e3403722fa1b53bc5c7a2b.bindPopup(popup_d01cc63af0685186f16c4eab10b6b355)
+        ;
+
+        
+    
+    
+            var marker_ba48f13d653e319c5e4c399bb73a8e6d = L.marker(
+                [26.260914, -80.24545],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_8e9c7601817fb6262089e0c9ff331f43 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_ba48f13d653e319c5e4c399bb73a8e6d.setIcon(icon_8e9c7601817fb6262089e0c9ff331f43);
+        
+    
+        var popup_02f8c1b5531382601dfb444cbcb388a1 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_670fdd08ea26437aa477ca989220eac8 = $(`<div id="html_670fdd08ea26437aa477ca989220eac8" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$238,000<br>     <strong>Address: </strong>2502 NW 89th Dr #2502<br>     <strong>City: </strong>Coral Springs<br>     <strong>Sold: </strong>October-25-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$280<br>     <strong>Year Built: </strong>1985<br>     <strong>Price Rank: </strong>43     </html>     </div>`)[0];
+                popup_02f8c1b5531382601dfb444cbcb388a1.setContent(html_670fdd08ea26437aa477ca989220eac8);
+            
+        
+
+        marker_ba48f13d653e319c5e4c399bb73a8e6d.bindPopup(popup_02f8c1b5531382601dfb444cbcb388a1)
+        ;
+
+        
+    
+    
+            var marker_b0215911a02f030549d0ac92e6dfb845 = L.marker(
+                [25.9944923, -80.3213977],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_183fcb88b2a018ef03e6dfa6b4bd0615 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_b0215911a02f030549d0ac92e6dfb845.setIcon(icon_183fcb88b2a018ef03e6dfa6b4bd0615);
+        
+    
+        var popup_96acc601fc745d9c7220e2ac419c3054 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_ebe466c3c73e7d30c7e00c1dd5c0ef50 = $(`<div id="html_ebe466c3c73e7d30c7e00c1dd5c0ef50" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$235,000<br>     <strong>Address: </strong>1501 SW 131st Way Unit 211P<br>     <strong>City: </strong>Pembroke Pines<br>     <strong>Sold: </strong>October-19-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$217<br>     <strong>Year Built: </strong>1992<br>     <strong>Price Rank: </strong>44     </html>     </div>`)[0];
+                popup_96acc601fc745d9c7220e2ac419c3054.setContent(html_ebe466c3c73e7d30c7e00c1dd5c0ef50);
+            
+        
+
+        marker_b0215911a02f030549d0ac92e6dfb845.bindPopup(popup_96acc601fc745d9c7220e2ac419c3054)
+        ;
+
+        
+    
+    
+            var marker_ee55dc2eea58ca8eda715bcda4cc01d1 = L.marker(
+                [26.2596591, -80.242979],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_3ab53507b0e63c697881bfa42c05e8eb = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_ee55dc2eea58ca8eda715bcda4cc01d1.setIcon(icon_3ab53507b0e63c697881bfa42c05e8eb);
+        
+    
+        var popup_ea93687c0fa4dd4ecd347816aabba01e = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_c62e8316a4cf6cfb78ddd9cb8642d230 = $(`<div id="html_c62e8316a4cf6cfb78ddd9cb8642d230" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$235,000<br>     <strong>Address: </strong>2369 NW 89th Dr #501<br>     <strong>City: </strong>Coral Springs<br>     <strong>Sold: </strong>October-2-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$297<br>     <strong>Year Built: </strong>1983<br>     <strong>Price Rank: </strong>45     </html>     </div>`)[0];
+                popup_ea93687c0fa4dd4ecd347816aabba01e.setContent(html_c62e8316a4cf6cfb78ddd9cb8642d230);
+            
+        
+
+        marker_ee55dc2eea58ca8eda715bcda4cc01d1.bindPopup(popup_ea93687c0fa4dd4ecd347816aabba01e)
+        ;
+
+        
+    
+    
+            var marker_c00b381492b2b497aee1d3684ebfb7bc = L.marker(
+                [25.9803484, -80.2673257],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_e1acd2d146882755ca9a18428142be9c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_c00b381492b2b497aee1d3684ebfb7bc.setIcon(icon_e1acd2d146882755ca9a18428142be9c);
+        
+    
+        var popup_b7b8303abf6dd2ad5b712c9fdbdbfed2 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_2107f224538c42fc21034475e8b87847 = $(`<div id="html_2107f224538c42fc21034475e8b87847" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$235,000<br>     <strong>Address: </strong>3199 Foxcroft Rd #103<br>     <strong>City: </strong>Miramar<br>     <strong>Sold: </strong>October-12-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$287<br>     <strong>Year Built: </strong>1984<br>     <strong>Price Rank: </strong>46     </html>     </div>`)[0];
+                popup_b7b8303abf6dd2ad5b712c9fdbdbfed2.setContent(html_2107f224538c42fc21034475e8b87847);
+            
+        
+
+        marker_c00b381492b2b497aee1d3684ebfb7bc.bindPopup(popup_b7b8303abf6dd2ad5b712c9fdbdbfed2)
+        ;
+
+        
+    
+    
+            var marker_7aefac699663fd2c547b1328fa0d3d3b = L.marker(
+                [26.0540141, -80.1350513],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_54bb0d15b6f0577840df83eb36a87c7e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_7aefac699663fd2c547b1328fa0d3d3b.setIcon(icon_54bb0d15b6f0577840df83eb36a87c7e);
+        
+    
+        var popup_579c324b03ceb5dacde5bab2efc330df = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_c3f59b144384fc7a2a7f0a0444b25b2a = $(`<div id="html_c3f59b144384fc7a2a7f0a0444b25b2a" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$230,000<br>     <strong>Address: </strong>505 E Dania Beach Blvd Unit 2L<br>     <strong>City: </strong>Dania<br>     <strong>Sold: </strong>October-5-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$193<br>     <strong>Year Built: </strong>1974<br>     <strong>Price Rank: </strong>47     </html>     </div>`)[0];
+                popup_579c324b03ceb5dacde5bab2efc330df.setContent(html_c3f59b144384fc7a2a7f0a0444b25b2a);
+            
+        
+
+        marker_7aefac699663fd2c547b1328fa0d3d3b.bindPopup(popup_579c324b03ceb5dacde5bab2efc330df)
+        ;
+
+        
+    
+    
+            var marker_9bbd47c619c50f49e7958161cda7cab4 = L.marker(
+                [26.2805666, -80.0955251],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_3f6c399bcd480b6104f231469c26af3a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_9bbd47c619c50f49e7958161cda7cab4.setIcon(icon_3f6c399bcd480b6104f231469c26af3a);
+        
+    
+        var popup_b830a386ccf15b1123446def29c43179 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_5d37acf154ff0294c1dd6bb5cf70006d = $(`<div id="html_5d37acf154ff0294c1dd6bb5cf70006d" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$220,000<br>     <strong>Address: </strong>1951 NE 39th St #243<br>     <strong>City: </strong>Lighthouse Point<br>     <strong>Sold: </strong>October-27-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$nan<br>     <strong>Year Built: </strong>1966<br>     <strong>Price Rank: </strong>48     </html>     </div>`)[0];
+                popup_b830a386ccf15b1123446def29c43179.setContent(html_5d37acf154ff0294c1dd6bb5cf70006d);
+            
+        
+
+        marker_9bbd47c619c50f49e7958161cda7cab4.bindPopup(popup_b830a386ccf15b1123446def29c43179)
+        ;
+
+        
+    
+    
+            var marker_418a4216e6c6bd954d69742aa10ad733 = L.marker(
+                [26.2585326, -80.2726884],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_92908227a120e452919738cd58d552e0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_418a4216e6c6bd954d69742aa10ad733.setIcon(icon_92908227a120e452919738cd58d552e0);
+        
+    
+        var popup_9c672ce91f94d73aeac335c94facbbc9 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_9be36300bdf43fafcad66fcc176f69e0 = $(`<div id="html_9be36300bdf43fafcad66fcc176f69e0" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$219,900<br>     <strong>Address: </strong>10988 Royal Palm Blvd Unit 4-2<br>     <strong>City: </strong>Coral Springs<br>     <strong>Sold: </strong>October-15-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$275<br>     <strong>Year Built: </strong>1982<br>     <strong>Price Rank: </strong>49     </html>     </div>`)[0];
+                popup_9c672ce91f94d73aeac335c94facbbc9.setContent(html_9be36300bdf43fafcad66fcc176f69e0);
+            
+        
+
+        marker_418a4216e6c6bd954d69742aa10ad733.bindPopup(popup_9c672ce91f94d73aeac335c94facbbc9)
+        ;
+
+        
+    
+    
+            var marker_87636b817dfcb5e2b4bbd71f71d9f527 = L.marker(
+                [26.2294425, -80.1225095],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_5aaa1eef2ec9e06312a78775de87c8c2 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_87636b817dfcb5e2b4bbd71f71d9f527.setIcon(icon_5aaa1eef2ec9e06312a78775de87c8c2);
+        
+    
+        var popup_f70d103926f1a8ec43af86e789ef4512 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_3f81e16974e9a8d50801c08f2d016a3d = $(`<div id="html_3f81e16974e9a8d50801c08f2d016a3d" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$219,000<br>     <strong>Address: </strong>138 S Cypress Rd #218<br>     <strong>City: </strong>Pompano Beach<br>     <strong>Sold: </strong>October-6-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$234<br>     <strong>Year Built: </strong>1977<br>     <strong>Price Rank: </strong>50     </html>     </div>`)[0];
+                popup_f70d103926f1a8ec43af86e789ef4512.setContent(html_3f81e16974e9a8d50801c08f2d016a3d);
+            
+        
+
+        marker_87636b817dfcb5e2b4bbd71f71d9f527.bindPopup(popup_f70d103926f1a8ec43af86e789ef4512)
+        ;
+
+        
+    
+    
+            var marker_766c2daaa4b7ebbeabb2b700b5f9706e = L.marker(
+                [26.2679473, -80.2386226],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_6cda01ef14dd88f1976e222d7509fddb = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_766c2daaa4b7ebbeabb2b700b5f9706e.setIcon(icon_6cda01ef14dd88f1976e222d7509fddb);
+        
+    
+        var popup_8993755dd11e14e93a5e8b24e806bd02 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_a7a00ae4bdb3f81aedb7870f04cc28a7 = $(`<div id="html_a7a00ae4bdb3f81aedb7870f04cc28a7" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$215,000<br>     <strong>Address: </strong>8421 Forest Hills Dr #308<br>     <strong>City: </strong>Coral Springs<br>     <strong>Sold: </strong>October-31-2023<br>     <strong>Beds: </strong>3<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$162<br>     <strong>Year Built: </strong>1977<br>     <strong>Price Rank: </strong>51     </html>     </div>`)[0];
+                popup_8993755dd11e14e93a5e8b24e806bd02.setContent(html_a7a00ae4bdb3f81aedb7870f04cc28a7);
+            
+        
+
+        marker_766c2daaa4b7ebbeabb2b700b5f9706e.bindPopup(popup_8993755dd11e14e93a5e8b24e806bd02)
+        ;
+
+        
+    
+    
+            var marker_90008e5b828e7a9440297a241e288856 = L.marker(
+                [26.2994379, -80.2356111],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_5ea8a2f244681b04fdc8dd61279a0a4f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_90008e5b828e7a9440297a241e288856.setIcon(icon_5ea8a2f244681b04fdc8dd61279a0a4f);
+        
+    
+        var popup_e7448772da63bd82c5ce7ca4e3af8927 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_efdbb49e200b4a2f1fe389ee6141eb76 = $(`<div id="html_efdbb49e200b4a2f1fe389ee6141eb76" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$212,000<br>     <strong>Address: </strong>5681 Riverside Dr #103<br>     <strong>City: </strong>Coral Springs<br>     <strong>Sold: </strong>October-11-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.0<br>     <strong>Price per sf: </strong>$260<br>     <strong>Year Built: </strong>1988<br>     <strong>Price Rank: </strong>52     </html>     </div>`)[0];
+                popup_e7448772da63bd82c5ce7ca4e3af8927.setContent(html_efdbb49e200b4a2f1fe389ee6141eb76);
+            
+        
+
+        marker_90008e5b828e7a9440297a241e288856.bindPopup(popup_e7448772da63bd82c5ce7ca4e3af8927)
+        ;
+
+        
+    
+    
+            var marker_60babdbe5308775961b7eba7e8330c54 = L.marker(
+                [26.1470623, -80.250452],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_d7f96615e2448acc0096b72ee440a4d8 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_60babdbe5308775961b7eba7e8330c54.setIcon(icon_d7f96615e2448acc0096b72ee440a4d8);
+        
+    
+        var popup_2e64f3eb50036cea26f9e0deae79ddb3 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_fa85dd92ab791d0168b04913920a85f5 = $(`<div id="html_fa85dd92ab791d0168b04913920a85f5" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$210,000<br>     <strong>Address: </strong>1701 NW 75th Ave #209<br>     <strong>City: </strong>Plantation<br>     <strong>Sold: </strong>October-7-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$221<br>     <strong>Year Built: </strong>1979<br>     <strong>Price Rank: </strong>53     </html>     </div>`)[0];
+                popup_2e64f3eb50036cea26f9e0deae79ddb3.setContent(html_fa85dd92ab791d0168b04913920a85f5);
+            
+        
+
+        marker_60babdbe5308775961b7eba7e8330c54.bindPopup(popup_2e64f3eb50036cea26f9e0deae79ddb3)
+        ;
+
+        
+    
+    
+            var marker_cb4fa386a92c9e14999e35f5044ae352 = L.marker(
+                [26.0014832, -80.1899783],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_b7d65dc384f0510a593f1ec0995a2d7d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_cb4fa386a92c9e14999e35f5044ae352.setIcon(icon_b7d65dc384f0510a593f1ec0995a2d7d);
+        
+    
+        var popup_5a1097f5018e174ae738b8e189b8f1a3 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_3129d51da744ef6abc54159c018d7a0c = $(`<div id="html_3129d51da744ef6abc54159c018d7a0c" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$210,000<br>     <strong>Address: </strong>950 Hillcrest Dr #401<br>     <strong>City: </strong>Hollywood<br>     <strong>Sold: </strong>October-26-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$212<br>     <strong>Year Built: </strong>1967<br>     <strong>Price Rank: </strong>54     </html>     </div>`)[0];
+                popup_5a1097f5018e174ae738b8e189b8f1a3.setContent(html_3129d51da744ef6abc54159c018d7a0c);
+            
+        
+
+        marker_cb4fa386a92c9e14999e35f5044ae352.bindPopup(popup_5a1097f5018e174ae738b8e189b8f1a3)
+        ;
+
+        
+    
+    
+            var marker_71914f7fbe8529b5800ce547ff5c0f52 = L.marker(
+                [26.1739449, -80.2466381],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_c759466d7740806928861d042f4ac2f0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_71914f7fbe8529b5800ce547ff5c0f52.setIcon(icon_c759466d7740806928861d042f4ac2f0);
+        
+    
+        var popup_2beb139b2f2d7ec993bc0286993db685 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_0f039b028c890cbdc14b097fa9ce53a3 = $(`<div id="html_0f039b028c890cbdc14b097fa9ce53a3" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$190,000<br>     <strong>Address: </strong>7100 Radice Ct #604<br>     <strong>City: </strong>Lauderhill<br>     <strong>Sold: </strong>October-3-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$137<br>     <strong>Year Built: </strong>1982<br>     <strong>Price Rank: </strong>55     </html>     </div>`)[0];
+                popup_2beb139b2f2d7ec993bc0286993db685.setContent(html_0f039b028c890cbdc14b097fa9ce53a3);
+            
+        
+
+        marker_71914f7fbe8529b5800ce547ff5c0f52.bindPopup(popup_2beb139b2f2d7ec993bc0286993db685)
+        ;
+
+        
+    
+    
+            var marker_ca09337f57e9d5455b8b373786b9770e = L.marker(
+                [26.1563887, -80.2162713],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_737dcd6fce92ba172ee719b15dc440a2 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_ca09337f57e9d5455b8b373786b9770e.setIcon(icon_737dcd6fce92ba172ee719b15dc440a2);
+        
+    
+        var popup_b0c2d0e73a99404a48450221087d46b4 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_c8173c8a9e3669b14c17c928515ce200 = $(`<div id="html_c8173c8a9e3669b14c17c928515ce200" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$187,500<br>     <strong>Address: </strong>4848 NW 24th Ct #318<br>     <strong>City: </strong>Lauderdale Lakes<br>     <strong>Sold: </strong>October-19-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$154<br>     <strong>Year Built: </strong>1979<br>     <strong>Price Rank: </strong>56     </html>     </div>`)[0];
+                popup_b0c2d0e73a99404a48450221087d46b4.setContent(html_c8173c8a9e3669b14c17c928515ce200);
+            
+        
+
+        marker_ca09337f57e9d5455b8b373786b9770e.bindPopup(popup_b0c2d0e73a99404a48450221087d46b4)
+        ;
+
+        
+    
+    
+            var marker_b9368a5adb6e0fcc3ec5878fc79bc297 = L.marker(
+                [26.026744, -80.2497843],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_6ab84f1ca73ea8adf95e39ea002dc000 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_b9368a5adb6e0fcc3ec5878fc79bc297.setIcon(icon_6ab84f1ca73ea8adf95e39ea002dc000);
+        
+    
+        var popup_9ccc983ff3a511545a38ada5725c0c44 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_f46c57e40d02b499c668da9bce597d37 = $(`<div id="html_f46c57e40d02b499c668da9bce597d37" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$185,000<br>     <strong>Address: </strong>2041 NW 81st Ave #426<br>     <strong>City: </strong>Pembroke Pines<br>     <strong>Sold: </strong>October-4-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>1.5<br>     <strong>Price per sf: </strong>$213<br>     <strong>Year Built: </strong>1973<br>     <strong>Price Rank: </strong>57     </html>     </div>`)[0];
+                popup_9ccc983ff3a511545a38ada5725c0c44.setContent(html_f46c57e40d02b499c668da9bce597d37);
+            
+        
+
+        marker_b9368a5adb6e0fcc3ec5878fc79bc297.bindPopup(popup_9ccc983ff3a511545a38ada5725c0c44)
+        ;
+
+        
+    
+    
+            var marker_1dc6c4eaee60f1a07f805da8ec23738e = L.marker(
+                [26.2000795, -80.2158865],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_64308613ce5493a9d8b42f26a5cdccce = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_1dc6c4eaee60f1a07f805da8ec23738e.setIcon(icon_64308613ce5493a9d8b42f26a5cdccce);
+        
+    
+        var popup_f1c8e4ea08054037673d874645f6dc1f = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_fdbbc212110c6071a1960ba653922ba2 = $(`<div id="html_fdbbc212110c6071a1960ba653922ba2" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$185,000<br>     <strong>Address: </strong>4955 E Sabal Palm Blvd #306<br>     <strong>City: </strong>Tamarac<br>     <strong>Sold: </strong>October-30-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$136<br>     <strong>Year Built: </strong>1984<br>     <strong>Price Rank: </strong>58     </html>     </div>`)[0];
+                popup_f1c8e4ea08054037673d874645f6dc1f.setContent(html_fdbbc212110c6071a1960ba653922ba2);
+            
+        
+
+        marker_1dc6c4eaee60f1a07f805da8ec23738e.bindPopup(popup_f1c8e4ea08054037673d874645f6dc1f)
+        ;
+
+        
+    
+    
+            var marker_f028621075bbc8e230c52a17b1975c47 = L.marker(
+                [26.0021578, -80.1828143],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_11ca72c2231fd8b0fb82121f3e32f269 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_f028621075bbc8e230c52a17b1975c47.setIcon(icon_11ca72c2231fd8b0fb82121f3e32f269);
+        
+    
+        var popup_65e4e915e04b92428f07322332c6f27b = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_d1e72dca4de9a6e3740a9e86bbe9a3c3 = $(`<div id="html_d1e72dca4de9a6e3740a9e86bbe9a3c3" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$185,000<br>     <strong>Address: </strong>3850 Washington St #805<br>     <strong>City: </strong>Hollywood<br>     <strong>Sold: </strong>October-31-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$159<br>     <strong>Year Built: </strong>1980<br>     <strong>Price Rank: </strong>59     </html>     </div>`)[0];
+                popup_65e4e915e04b92428f07322332c6f27b.setContent(html_d1e72dca4de9a6e3740a9e86bbe9a3c3);
+            
+        
+
+        marker_f028621075bbc8e230c52a17b1975c47.bindPopup(popup_65e4e915e04b92428f07322332c6f27b)
+        ;
+
+        
+    
+    
+            var marker_05108d72f36867db738041079763373b = L.marker(
+                [26.3054142, -80.1324437],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_e78f91f6b28c87cdb02c9b2700f91543 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_05108d72f36867db738041079763373b.setIcon(icon_e78f91f6b28c87cdb02c9b2700f91543);
+        
+    
+        var popup_2270cdcdd1c8b6a74ccbd84bea711afb = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_d81f0054af977de090988eee0c48066c = $(`<div id="html_d81f0054af977de090988eee0c48066c" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$180,000<br>     <strong>Address: </strong>336 Farnham P #336<br>     <strong>City: </strong>Deerfield Beach<br>     <strong>Sold: </strong>October-23-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>1.5<br>     <strong>Price per sf: </strong>$217<br>     <strong>Year Built: </strong>1976<br>     <strong>Price Rank: </strong>60     </html>     </div>`)[0];
+                popup_2270cdcdd1c8b6a74ccbd84bea711afb.setContent(html_d81f0054af977de090988eee0c48066c);
+            
+        
+
+        marker_05108d72f36867db738041079763373b.bindPopup(popup_2270cdcdd1c8b6a74ccbd84bea711afb)
+        ;
+
+        
+    
+    
+            var marker_d6a3aacbf240e564b1ccfa6c7bed8ea6 = L.marker(
+                [26.1245831, -80.2395405],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_ec5f30a6ccb27f97ad7dd47af0d809ce = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_d6a3aacbf240e564b1ccfa6c7bed8ea6.setIcon(icon_ec5f30a6ccb27f97ad7dd47af0d809ce);
+        
+    
+        var popup_8ec98d088919810e818fbf37ac02f7c5 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_178e3bfa7c5f954be3d1bdaae394e056 = $(`<div id="html_178e3bfa7c5f954be3d1bdaae394e056" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$180,000<br>     <strong>Address: </strong>6921 Cypress Rd Unit C24<br>     <strong>City: </strong>Plantation<br>     <strong>Sold: </strong>October-24-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$165<br>     <strong>Year Built: </strong>1969<br>     <strong>Price Rank: </strong>61     </html>     </div>`)[0];
+                popup_8ec98d088919810e818fbf37ac02f7c5.setContent(html_178e3bfa7c5f954be3d1bdaae394e056);
+            
+        
+
+        marker_d6a3aacbf240e564b1ccfa6c7bed8ea6.bindPopup(popup_8ec98d088919810e818fbf37ac02f7c5)
+        ;
+
+        
+    
+    
+            var marker_28520cf42c0d36130a7a7db851565817 = L.marker(
+                [26.2991672, -80.0965178],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_31b629b54de72908dd5b6ee2c7d74440 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_28520cf42c0d36130a7a7db851565817.setIcon(icon_31b629b54de72908dd5b6ee2c7d74440);
+        
+    
+        var popup_7011396185f8638cd7c7fe5ba86e13f3 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_d01f56fbc4b2a7827c7b3def7f8ef8f0 = $(`<div id="html_d01f56fbc4b2a7827c7b3def7f8ef8f0" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$176,000<br>     <strong>Address: </strong>1428 SE 4th Ave #272<br>     <strong>City: </strong>Deerfield Beach<br>     <strong>Sold: </strong>October-27-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.5<br>     <strong>Price per sf: </strong>$220<br>     <strong>Year Built: </strong>1973<br>     <strong>Price Rank: </strong>62     </html>     </div>`)[0];
+                popup_7011396185f8638cd7c7fe5ba86e13f3.setContent(html_d01f56fbc4b2a7827c7b3def7f8ef8f0);
+            
+        
+
+        marker_28520cf42c0d36130a7a7db851565817.bindPopup(popup_7011396185f8638cd7c7fe5ba86e13f3)
+        ;
+
+        
+    
+    
+            var marker_f475dfa8d96bd0baed940922759ad9b3 = L.marker(
+                [26.163139, -80.284376],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_246fc7e37554049c9557552b70bfd32f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_f475dfa8d96bd0baed940922759ad9b3.setIcon(icon_246fc7e37554049c9557552b70bfd32f);
+        
+    
+        var popup_358a3a5b2c0bd9058fba5a240f5b61eb = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_131af3b01426c007d82b8ed3937b5e3b = $(`<div id="html_131af3b01426c007d82b8ed3937b5e3b" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$170,000<br>     <strong>Address: </strong>2981 N Nob Hill Rd #102<br>     <strong>City: </strong>Sunrise<br>     <strong>Sold: </strong>October-23-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$125<br>     <strong>Year Built: </strong>1985<br>     <strong>Price Rank: </strong>63     </html>     </div>`)[0];
+                popup_358a3a5b2c0bd9058fba5a240f5b61eb.setContent(html_131af3b01426c007d82b8ed3937b5e3b);
+            
+        
+
+        marker_f475dfa8d96bd0baed940922759ad9b3.bindPopup(popup_358a3a5b2c0bd9058fba5a240f5b61eb)
+        ;
+
+        
+    
+    
+            var marker_990a2427e843a0de3c42702f14319a2d = L.marker(
+                [25.9989053, -80.1416537],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_7e11ae0980c95e5d5242c63b8dda18f1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_990a2427e843a0de3c42702f14319a2d.setIcon(icon_7e11ae0980c95e5d5242c63b8dda18f1);
+        
+    
+        var popup_18ac629ff95aad9bba19ad24bc53723f = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_62504b2066341764783e00371114a44b = $(`<div id="html_62504b2066341764783e00371114a44b" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$166,000<br>     <strong>Address: </strong>1733 Mayo St #1<br>     <strong>City: </strong>Hollywood<br>     <strong>Sold: </strong>October-12-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.0<br>     <strong>Price per sf: </strong>$307<br>     <strong>Year Built: </strong>1965<br>     <strong>Price Rank: </strong>64     </html>     </div>`)[0];
+                popup_18ac629ff95aad9bba19ad24bc53723f.setContent(html_62504b2066341764783e00371114a44b);
+            
+        
+
+        marker_990a2427e843a0de3c42702f14319a2d.bindPopup(popup_18ac629ff95aad9bba19ad24bc53723f)
+        ;
+
+        
+    
+    
+            var marker_8601c3b3571e34695e3a1fdd893960cf = L.marker(
+                [25.9989053, -80.1416537],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_45481f9a741774ff7fa921ed508ecc25 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_8601c3b3571e34695e3a1fdd893960cf.setIcon(icon_45481f9a741774ff7fa921ed508ecc25);
+        
+    
+        var popup_c173da01dff1d5b5168e3d0b33aafee2 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_d3988e93e0056b583abbba471e817dcf = $(`<div id="html_d3988e93e0056b583abbba471e817dcf" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$165,000<br>     <strong>Address: </strong>1733 Mayo St #2<br>     <strong>City: </strong>Hollywood<br>     <strong>Sold: </strong>October-12-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.0<br>     <strong>Price per sf: </strong>$306<br>     <strong>Year Built: </strong>1965<br>     <strong>Price Rank: </strong>65     </html>     </div>`)[0];
+                popup_c173da01dff1d5b5168e3d0b33aafee2.setContent(html_d3988e93e0056b583abbba471e817dcf);
+            
+        
+
+        marker_8601c3b3571e34695e3a1fdd893960cf.bindPopup(popup_c173da01dff1d5b5168e3d0b33aafee2)
+        ;
+
+        
+    
+    
+            var marker_69779dd1b20b65fcc3175f173f9a21cc = L.marker(
+                [26.1711749, -80.1649891],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_c0273612213575e4c15d96aace845026 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_69779dd1b20b65fcc3175f173f9a21cc.setIcon(icon_c0273612213575e4c15d96aace845026);
+        
+    
+        var popup_3fc35ef6c53b18c749b81c4b205ed8bc = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_2e551cab977f6e4b7c45a194c0a67549 = $(`<div id="html_2e551cab977f6e4b7c45a194c0a67549" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$165,000<br>     <strong>Address: </strong>113 Royal Park Dr Unit 1G<br>     <strong>City: </strong>Oakland Park<br>     <strong>Sold: </strong>October-24-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$169<br>     <strong>Year Built: </strong>1974<br>     <strong>Price Rank: </strong>66     </html>     </div>`)[0];
+                popup_3fc35ef6c53b18c749b81c4b205ed8bc.setContent(html_2e551cab977f6e4b7c45a194c0a67549);
+            
+        
+
+        marker_69779dd1b20b65fcc3175f173f9a21cc.bindPopup(popup_3fc35ef6c53b18c749b81c4b205ed8bc)
+        ;
+
+        
+    
+    
+            var marker_47ad51ac46a184e0656ffd934c4eb32b = L.marker(
+                [26.2096928, -80.1828422],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_5773073cf551335e3e001c4f6a5af1d9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_47ad51ac46a184e0656ffd934c4eb32b.setIcon(icon_5773073cf551335e3e001c4f6a5af1d9);
+        
+    
+        var popup_78f7de2f43298000b8adf4a3ab455ed7 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_794dba245ac9dd5ed3155fbe80477d74 = $(`<div id="html_794dba245ac9dd5ed3155fbe80477d74" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$164,200<br>     <strong>Address: </strong>4221 W Mcnab Rd #24<br>     <strong>City: </strong>Pompano Beach<br>     <strong>Sold: </strong>October-3-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.0<br>     <strong>Price per sf: </strong>$349<br>     <strong>Year Built: </strong>1989<br>     <strong>Price Rank: </strong>67     </html>     </div>`)[0];
+                popup_78f7de2f43298000b8adf4a3ab455ed7.setContent(html_794dba245ac9dd5ed3155fbe80477d74);
+            
+        
+
+        marker_47ad51ac46a184e0656ffd934c4eb32b.bindPopup(popup_78f7de2f43298000b8adf4a3ab455ed7)
+        ;
+
+        
+    
+    
+            var marker_0d0c2719e2e2f64b4bd6436c0e16dfb2 = L.marker(
+                [26.1482882, -80.2227638],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_9cae4c797833ea1f5ee14abe584f5099 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_0d0c2719e2e2f64b4bd6436c0e16dfb2.setIcon(icon_9cae4c797833ea1f5ee14abe584f5099);
+        
+    
+        var popup_d520f8de854774150e432b3dd424a88d = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_39cdb32c7ab53eafff52afe29cd195e9 = $(`<div id="html_39cdb32c7ab53eafff52afe29cd195e9" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$160,000<br>     <strong>Address: </strong>1817 NW 54th Ter Unit BB3<br>     <strong>City: </strong>Lauderhill<br>     <strong>Sold: </strong>October-20-2023<br>     <strong>Beds: </strong>3<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$119<br>     <strong>Year Built: </strong>1973<br>     <strong>Price Rank: </strong>68     </html>     </div>`)[0];
+                popup_d520f8de854774150e432b3dd424a88d.setContent(html_39cdb32c7ab53eafff52afe29cd195e9);
+            
+        
+
+        marker_0d0c2719e2e2f64b4bd6436c0e16dfb2.bindPopup(popup_d520f8de854774150e432b3dd424a88d)
+        ;
+
+        
+    
+    
+            var marker_8af54eae14195f8597971916dad92e57 = L.marker(
+                [26.3075675, -80.0959692],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_c5300e5f12240056ebc7819ce0c01f8d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_8af54eae14195f8597971916dad92e57.setIcon(icon_c5300e5f12240056ebc7819ce0c01f8d);
+        
+    
+        var popup_d65d66ea2b7240a39755aa91cd79591a = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_1539cec2c8c1009c16c76f347ab4d83e = $(`<div id="html_1539cec2c8c1009c16c76f347ab4d83e" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$160,000<br>     <strong>Address: </strong>555 SE 8th St #251<br>     <strong>City: </strong>Deerfield Beach<br>     <strong>Sold: </strong>October-2-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.5<br>     <strong>Price per sf: </strong>$173<br>     <strong>Year Built: </strong>1973<br>     <strong>Price Rank: </strong>69     </html>     </div>`)[0];
+                popup_d65d66ea2b7240a39755aa91cd79591a.setContent(html_1539cec2c8c1009c16c76f347ab4d83e);
+            
+        
+
+        marker_8af54eae14195f8597971916dad92e57.bindPopup(popup_d65d66ea2b7240a39755aa91cd79591a)
+        ;
+
+        
+    
+    
+            var marker_1d092075e19be06c3e844d7b5022f45b = L.marker(
+                [26.0037088, -80.3199634],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_6001b781d4b22d91d6c5226abf6faac1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_1d092075e19be06c3e844d7b5022f45b.setIcon(icon_6001b781d4b22d91d6c5226abf6faac1);
+        
+    
+        var popup_4e4da3da60167d9f8a59b610e9667079 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_ca8bd10ae6ae2c126f15da149f014dfd = $(`<div id="html_ca8bd10ae6ae2c126f15da149f014dfd" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$155,000<br>     <strong>Address: </strong>12950 SW 4th Ct Unit 202H<br>     <strong>City: </strong>Pembroke Pines<br>     <strong>Sold: </strong>October-13-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.0<br>     <strong>Price per sf: </strong>$185<br>     <strong>Year Built: </strong>1987<br>     <strong>Price Rank: </strong>70     </html>     </div>`)[0];
+                popup_4e4da3da60167d9f8a59b610e9667079.setContent(html_ca8bd10ae6ae2c126f15da149f014dfd);
+            
+        
+
+        marker_1d092075e19be06c3e844d7b5022f45b.bindPopup(popup_4e4da3da60167d9f8a59b610e9667079)
+        ;
+
+        
+    
+    
+            var marker_e30e839fa60d3c20ff28572b9dca3dab = L.marker(
+                [26.0016356, -80.3177135],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_40f35bc0f13e22b04ed43d27a23bf84d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_e30e839fa60d3c20ff28572b9dca3dab.setIcon(icon_40f35bc0f13e22b04ed43d27a23bf84d);
+        
+    
+        var popup_bde682d10f8244d12d5421876614184f = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_9fa65f7c9c9b9f27a6bd89d0aefff34e = $(`<div id="html_9fa65f7c9c9b9f27a6bd89d0aefff34e" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$150,000<br>     <strong>Address: </strong>701 SW 128th Ave Unit 214F<br>     <strong>City: </strong>Pembroke Pines<br>     <strong>Sold: </strong>October-24-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.0<br>     <strong>Price per sf: </strong>$179<br>     <strong>Year Built: </strong>1987<br>     <strong>Price Rank: </strong>71     </html>     </div>`)[0];
+                popup_bde682d10f8244d12d5421876614184f.setContent(html_9fa65f7c9c9b9f27a6bd89d0aefff34e);
+            
+        
+
+        marker_e30e839fa60d3c20ff28572b9dca3dab.bindPopup(popup_bde682d10f8244d12d5421876614184f)
+        ;
+
+        
+    
+    
+            var marker_e2309c04e29ece1f016a783bf43ba250 = L.marker(
+                [26.1480378, -80.2231124],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_5c08346046ceb4fa97d8368c749cce47 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_e2309c04e29ece1f016a783bf43ba250.setIcon(icon_5c08346046ceb4fa97d8368c749cce47);
+        
+    
+        var popup_440621ff32f9d2dea67531f18c23ee3c = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_58d1b22282f8e52d859f4942fd3c3b62 = $(`<div id="html_58d1b22282f8e52d859f4942fd3c3b62" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$150,000<br>     <strong>Address: </strong>1800 NW 55th Ave Unit 4U<br>     <strong>City: </strong>Lauderhill<br>     <strong>Sold: </strong>October-13-2023<br>     <strong>Beds: </strong>3<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$111<br>     <strong>Year Built: </strong>1973<br>     <strong>Price Rank: </strong>72     </html>     </div>`)[0];
+                popup_440621ff32f9d2dea67531f18c23ee3c.setContent(html_58d1b22282f8e52d859f4942fd3c3b62);
+            
+        
+
+        marker_e2309c04e29ece1f016a783bf43ba250.bindPopup(popup_440621ff32f9d2dea67531f18c23ee3c)
+        ;
+
+        
+    
+    
+            var marker_2f6130b4ef172356f14abb9ca6796879 = L.marker(
+                [26.305163, -80.133546],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_6b37eeb4b3bc6d1c8a85a5c2d8a05439 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_2f6130b4ef172356f14abb9ca6796879.setIcon(icon_6b37eeb4b3bc6d1c8a85a5c2d8a05439);
+        
+    
+        var popup_42b7104a8f297c17f579c53e65307ca8 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_fd0e1c5b29e4b4a29fe3f91afc6a48b9 = $(`<div id="html_fd0e1c5b29e4b4a29fe3f91afc6a48b9" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$149,000<br>     <strong>Address: </strong>4031 Farnham O<br>     <strong>City: </strong>Deerfield Beach<br>     <strong>Sold: </strong>October-18-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$152<br>     <strong>Year Built: </strong>1979<br>     <strong>Price Rank: </strong>73     </html>     </div>`)[0];
+                popup_42b7104a8f297c17f579c53e65307ca8.setContent(html_fd0e1c5b29e4b4a29fe3f91afc6a48b9);
+            
+        
+
+        marker_2f6130b4ef172356f14abb9ca6796879.bindPopup(popup_42b7104a8f297c17f579c53e65307ca8)
+        ;
+
+        
+    
+    
+            var marker_0e93c819b6f673073ba8c4815119684a = L.marker(
+                [26.2742285, -80.2651055],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_765a1918cdfe534383c6ad0260e4928a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_0e93c819b6f673073ba8c4815119684a.setIcon(icon_765a1918cdfe534383c6ad0260e4928a);
+        
+    
+        var popup_c61d8bf62fb2fca2c6ac9ac5a1915e22 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_d05468201d0879cb28e417cd47ffda97 = $(`<div id="html_d05468201d0879cb28e417cd47ffda97" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$145,000<br>     <strong>Address: </strong>3550 NW 104th Ave #33<br>     <strong>City: </strong>Coral Springs<br>     <strong>Sold: </strong>October-11-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$149<br>     <strong>Year Built: </strong>1975<br>     <strong>Price Rank: </strong>74     </html>     </div>`)[0];
+                popup_c61d8bf62fb2fca2c6ac9ac5a1915e22.setContent(html_d05468201d0879cb28e417cd47ffda97);
+            
+        
+
+        marker_0e93c819b6f673073ba8c4815119684a.bindPopup(popup_c61d8bf62fb2fca2c6ac9ac5a1915e22)
+        ;
+
+        
+    
+    
+            var marker_7992a9fdc44bc5b8b94bade5067945b4 = L.marker(
+                [26.2364828, -80.2308643],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_1ff492f70a899837f2069b5edef58aab = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_7992a9fdc44bc5b8b94bade5067945b4.setIcon(icon_1ff492f70a899837f2069b5edef58aab);
+        
+    
+        var popup_5e7946090bbfbfb88881a644aa1ec8dd = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_bea0ab0d60854f7fa94ce716f74b13da = $(`<div id="html_bea0ab0d60854f7fa94ce716f74b13da" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$145,000<br>     <strong>Address: </strong>550 NW 78th Ter #202<br>     <strong>City: </strong>Margate<br>     <strong>Sold: </strong>October-27-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$146<br>     <strong>Year Built: </strong>1974<br>     <strong>Price Rank: </strong>75     </html>     </div>`)[0];
+                popup_5e7946090bbfbfb88881a644aa1ec8dd.setContent(html_bea0ab0d60854f7fa94ce716f74b13da);
+            
+        
+
+        marker_7992a9fdc44bc5b8b94bade5067945b4.bindPopup(popup_5e7946090bbfbfb88881a644aa1ec8dd)
+        ;
+
+        
+    
+    
+            var marker_c1e8752818f968d2891847f2e191a964 = L.marker(
+                [26.1650757, -80.1252174],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_87aaac989c3f8a9e21e141c05c753585 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_c1e8752818f968d2891847f2e191a964.setIcon(icon_87aaac989c3f8a9e21e141c05c753585);
+        
+    
+        var popup_45e632bf879c2762bc57122279cefce9 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_c0386cefc26a0f4eba6785170de7ab26 = $(`<div id="html_c0386cefc26a0f4eba6785170de7ab26" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$140,000<br>     <strong>Address: </strong>3000 NE 16th Ave #313<br>     <strong>City: </strong>Oakland Park<br>     <strong>Sold: </strong>October-27-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.0<br>     <strong>Price per sf: </strong>$233<br>     <strong>Year Built: </strong>1966<br>     <strong>Price Rank: </strong>76     </html>     </div>`)[0];
+                popup_45e632bf879c2762bc57122279cefce9.setContent(html_c0386cefc26a0f4eba6785170de7ab26);
+            
+        
+
+        marker_c1e8752818f968d2891847f2e191a964.bindPopup(popup_45e632bf879c2762bc57122279cefce9)
+        ;
+
+        
+    
+    
+            var marker_65daf1d1d0cb95ea3374d3af81029b2d = L.marker(
+                [26.2106024, -80.1140448],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_668e4c14305790a4d91eefe34a25aa02 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_65daf1d1d0cb95ea3374d3af81029b2d.setIcon(icon_668e4c14305790a4d91eefe34a25aa02);
+        
+    
+        var popup_4ba9ef95bec5add11013522a8b3d0011 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_660812dab0b80a654b6651635ae035cf = $(`<div id="html_660812dab0b80a654b6651635ae035cf" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$130,000<br>     <strong>Address: </strong>2151 NE 68th St #226<br>     <strong>City: </strong>Fort Lauderdale<br>     <strong>Sold: </strong>October-11-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.5<br>     <strong>Price per sf: </strong>$153<br>     <strong>Year Built: </strong>1971<br>     <strong>Price Rank: </strong>77     </html>     </div>`)[0];
+                popup_4ba9ef95bec5add11013522a8b3d0011.setContent(html_660812dab0b80a654b6651635ae035cf);
+            
+        
+
+        marker_65daf1d1d0cb95ea3374d3af81029b2d.bindPopup(popup_4ba9ef95bec5add11013522a8b3d0011)
+        ;
+
+        
+    
+    
+            var marker_fdb5ed596114527bb0c903fd0a439c45 = L.marker(
+                [26.314515, -80.129391],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_52b422fc56ae8bc94e080a7426c0995b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_fdb5ed596114527bb0c903fd0a439c45.setIcon(icon_52b422fc56ae8bc94e080a7426c0995b);
+        
+    
+        var popup_374b3d21376f636e7d6d036d1521912e = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_23ac4e6277bc1badd588872462211e00 = $(`<div id="html_23ac4e6277bc1badd588872462211e00" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$129,900<br>     <strong>Address: </strong>3012 Swansea A #3012<br>     <strong>City: </strong>Deerfield Beach<br>     <strong>Sold: </strong>October-19-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.5<br>     <strong>Price per sf: </strong>$173<br>     <strong>Year Built: </strong>1978<br>     <strong>Price Rank: </strong>78     </html>     </div>`)[0];
+                popup_374b3d21376f636e7d6d036d1521912e.setContent(html_23ac4e6277bc1badd588872462211e00);
+            
+        
+
+        marker_fdb5ed596114527bb0c903fd0a439c45.bindPopup(popup_374b3d21376f636e7d6d036d1521912e)
+        ;
+
+        
+    
+    
+            var marker_fab4a5c50afb8f6adca24cc3a66b42a8 = L.marker(
+                [26.1438066, -80.2067408],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_1141e8dcea069da495a76d5589f067ef = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_fab4a5c50afb8f6adca24cc3a66b42a8.setIcon(icon_1141e8dcea069da495a76d5589f067ef);
+        
+    
+        var popup_ea8b76790a52d728edb73f250631b302 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_67f4116f83ec0cbcd05c4f71dcb6e845 = $(`<div id="html_67f4116f83ec0cbcd05c4f71dcb6e845" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$127,000<br>     <strong>Address: </strong>1330 NW 43rd Ave #102<br>     <strong>City: </strong>Lauderhill<br>     <strong>Sold: </strong>October-27-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$137<br>     <strong>Year Built: </strong>1969<br>     <strong>Price Rank: </strong>79     </html>     </div>`)[0];
+                popup_ea8b76790a52d728edb73f250631b302.setContent(html_67f4116f83ec0cbcd05c4f71dcb6e845);
+            
+        
+
+        marker_fab4a5c50afb8f6adca24cc3a66b42a8.bindPopup(popup_ea8b76790a52d728edb73f250631b302)
+        ;
+
+        
+    
+    
+            var marker_bdf463192a739d1f788a565d26696cde = L.marker(
+                [26.1591789, -80.2153299],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_8efb63d9fafca0d35fcc35b419601175 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_bdf463192a739d1f788a565d26696cde.setIcon(icon_8efb63d9fafca0d35fcc35b419601175);
+        
+    
+        var popup_44daad6b439bfaaf23619d0b58cc1e46 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_2bde0a01d49f804ddf495c629421aeb9 = $(`<div id="html_2bde0a01d49f804ddf495c629421aeb9" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$125,000<br>     <strong>Address: </strong>2601 NW 48th Ter #151<br>     <strong>City: </strong>Lauderdale Lakes<br>     <strong>Sold: </strong>October-6-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$130<br>     <strong>Year Built: </strong>1977<br>     <strong>Price Rank: </strong>80     </html>     </div>`)[0];
+                popup_44daad6b439bfaaf23619d0b58cc1e46.setContent(html_2bde0a01d49f804ddf495c629421aeb9);
+            
+        
+
+        marker_bdf463192a739d1f788a565d26696cde.bindPopup(popup_44daad6b439bfaaf23619d0b58cc1e46)
+        ;
+
+        
+    
+    
+            var marker_75ef8661eb374a29e4ef743339534f58 = L.marker(
+                [26.1992695, -80.2176395],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_662ab33febe346adc763cdd99db83dca = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_75ef8661eb374a29e4ef743339534f58.setIcon(icon_662ab33febe346adc763cdd99db83dca);
+        
+    
+        var popup_a48e87e375cc0d101982bf9b88ed8ee5 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_3da0c4d0dc79d28217b9eceb07ed712e = $(`<div id="html_3da0c4d0dc79d28217b9eceb07ed712e" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$115,000<br>     <strong>Address: </strong>6075 N Sabal Palm Blvd #313<br>     <strong>City: </strong>Tamarac<br>     <strong>Sold: </strong>October-30-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>1.0<br>     <strong>Price per sf: </strong>$119<br>     <strong>Year Built: </strong>1980<br>     <strong>Price Rank: </strong>81     </html>     </div>`)[0];
+                popup_a48e87e375cc0d101982bf9b88ed8ee5.setContent(html_3da0c4d0dc79d28217b9eceb07ed712e);
+            
+        
+
+        marker_75ef8661eb374a29e4ef743339534f58.bindPopup(popup_a48e87e375cc0d101982bf9b88ed8ee5)
+        ;
+
+        
+    
+    
+            var marker_958b6d081336fe2ec37d1fed8c081f38 = L.marker(
+                [26.2495536, -80.1844128],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_79cf3bfcc6ac6b0ba1e068c8f7feda8e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_958b6d081336fe2ec37d1fed8c081f38.setIcon(icon_79cf3bfcc6ac6b0ba1e068c8f7feda8e);
+        
+    
+        var popup_ca285ffaae457b8840145f376de485b6 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_e177224c82758a6eeb8e175a2076ea5e = $(`<div id="html_e177224c82758a6eeb8e175a2076ea5e" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$107,500<br>     <strong>Address: </strong>2504 Antigua Ter Unit G3<br>     <strong>City: </strong>Coconut Creek<br>     <strong>Sold: </strong>October-6-2023<br>     <strong>Beds: </strong>2<br>     <strong>Baths: </strong>2.0<br>     <strong>Price per sf: </strong>$93<br>     <strong>Year Built: </strong>1979<br>     <strong>Price Rank: </strong>82     </html>     </div>`)[0];
+                popup_ca285ffaae457b8840145f376de485b6.setContent(html_e177224c82758a6eeb8e175a2076ea5e);
+            
+        
+
+        marker_958b6d081336fe2ec37d1fed8c081f38.bindPopup(popup_ca285ffaae457b8840145f376de485b6)
+        ;
+
+        
+    
+    
+            var marker_ad6570ff3a492bf0690943b2bd356a3b = L.marker(
+                [26.1713734, -80.2303451],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_54181ac5ba80517a3e754ebe3aeeecfb = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_ad6570ff3a492bf0690943b2bd356a3b.setIcon(icon_54181ac5ba80517a3e754ebe3aeeecfb);
+        
+    
+        var popup_ee7ea99d11937fdacf54577c22d77b67 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_9a3c870d1eb8fe3fad4ea116164a400a = $(`<div id="html_9a3c870d1eb8fe3fad4ea116164a400a" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$105,000<br>     <strong>Address: </strong>3690 Inverrary Dr Unit 2M<br>     <strong>City: </strong>Lauderhill<br>     <strong>Sold: </strong>October-3-2023<br>     <strong>Beds: </strong>0<br>     <strong>Baths: </strong>1.0<br>     <strong>Price per sf: </strong>$250<br>     <strong>Year Built: </strong>1972<br>     <strong>Price Rank: </strong>83     </html>     </div>`)[0];
+                popup_ee7ea99d11937fdacf54577c22d77b67.setContent(html_9a3c870d1eb8fe3fad4ea116164a400a);
+            
+        
+
+        marker_ad6570ff3a492bf0690943b2bd356a3b.bindPopup(popup_ee7ea99d11937fdacf54577c22d77b67)
+        ;
+
+        
+    
+    
+            var marker_479f91b274411893cac73e3b77b08be4 = L.marker(
+                [26.1530091, -80.2156177],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_dc4fe6a3420bf03ab6e079630986225f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_479f91b274411893cac73e3b77b08be4.setIcon(icon_dc4fe6a3420bf03ab6e079630986225f);
+        
+    
+        var popup_d43839b497fbe286a90a2ccb1030d4eb = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_6c3f31698e5487c0f34703ce30cc9758 = $(`<div id="html_6c3f31698e5487c0f34703ce30cc9758" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$97,000<br>     <strong>Address: </strong>4851 NW 21st St #211<br>     <strong>City: </strong>Lauderhill<br>     <strong>Sold: </strong>October-12-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.5<br>     <strong>Price per sf: </strong>$105<br>     <strong>Year Built: </strong>1973<br>     <strong>Price Rank: </strong>84     </html>     </div>`)[0];
+                popup_d43839b497fbe286a90a2ccb1030d4eb.setContent(html_6c3f31698e5487c0f34703ce30cc9758);
+            
+        
+
+        marker_479f91b274411893cac73e3b77b08be4.bindPopup(popup_d43839b497fbe286a90a2ccb1030d4eb)
+        ;
+
+        
+    
+    
+            var marker_53c5c76fd050b996445457fc4ceb3e8d = L.marker(
+                [26.265849, -80.2333077],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d);
+        
+    
+            var icon_d2df8a26300a52b31a34a0d69933a8fd = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_53c5c76fd050b996445457fc4ceb3e8d.setIcon(icon_d2df8a26300a52b31a34a0d69933a8fd);
+        
+    
+        var popup_f40b56876bb06db33f49c6624347dd06 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_fbca913964da16297e0e1fddad426973 = $(`<div id="html_fbca913964da16297e0e1fddad426973" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Price: </strong>$67,000<br>     <strong>Address: </strong>3160 Holiday Springs Blvd #104<br>     <strong>City: </strong>Margate<br>     <strong>Sold: </strong>October-10-2023<br>     <strong>Beds: </strong>1<br>     <strong>Baths: </strong>1.5<br>     <strong>Price per sf: </strong>$92<br>     <strong>Year Built: </strong>1974<br>     <strong>Price Rank: </strong>85     </html>     </div>`)[0];
+                popup_f40b56876bb06db33f49c6624347dd06.setContent(html_fbca913964da16297e0e1fddad426973);
+            
+        
+
+        marker_53c5c76fd050b996445457fc4ceb3e8d.bindPopup(popup_f40b56876bb06db33f49c6624347dd06)
+        ;
+
+        
+    
+    
+            var tile_layer_1e01a1cf16d84c1fda0bc5812669fad0 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_572b0e24ae4b3420c96c563807c54188);
+        
+    
+            var layer_control_8d3baa8b7d2fad2e9b19751d1198b98e = {
+                base_layers : {
+                },
+                overlays :  {
+                    "Broward County" : geo_json_44df16d77e42c8de3842438d8c58d42e,
+                    "Top 10 Sales" : feature_group_97d6195accd855196f152ad07cd85f82,
+                    "All other sales" : feature_group_f8a1b78ce10bbdeb0e18217c1d465f2d,
+                },
+            };
+            L.control.layers(
+                layer_control_8d3baa8b7d2fad2e9b19751d1198b98e.base_layers,
+                layer_control_8d3baa8b7d2fad2e9b19751d1198b98e.overlays,
+                {"autoZIndex": true, "collapsed": false, "position": "topright"}
+            ).addTo(map_572b0e24ae4b3420c96c563807c54188);
+        
+</script>
