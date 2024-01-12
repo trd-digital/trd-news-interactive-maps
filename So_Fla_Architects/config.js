@@ -33,8 +33,8 @@ let divChapter5 =
   "<p class='image-credit'>Photo credit: ArX Solutions</p>";  
 
 var config = {
-  style: "mapbox://styles/trddata/clkbkxt1n000h01qk5hk20f9j",
-  accessToken: "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjbDdreW9oZzEwb3JzNDJvYmNnd2swbzBmIn0.ZJiADpTaqdGS3fiMUdFYFw",
+  style: "mapbox://styles/trddata/clrax4la3005701qogu72fl71",
+  accessToken: "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
   showMarkers: false,
   markerColor: "#db3eb1",
   theme: "light",
