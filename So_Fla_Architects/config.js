@@ -3,25 +3,25 @@ let introDiv =
 "<p> &#8681;  &#8681;  &#8681;</p>"
 
 let divChapter1 =
-  "<h3>4218 Northeast Second Avenue in Miami</h3>" +
+  "<h3>MIRAI Design District | 4218 Northeast Second Avenue in Miami</h3>" +
   "<p>Japanese architect Kengo Kuma is designing at least two projects in South Florida. In November, Lionheart Capital, Leviathan Development and Well Duo revealed Kuma will design their Miami Design District project.</p>" +
   "<img src='images/4218_NE_Second_Avenue_Miami.jpg'>" +
   "<p class='image-credit'>Photo credit: Kengo Kuma and Associates</p>";
 
 let divChapter2 =
-  "<h3>2175 and 2251 North Flagler Drive in West Palm Beach</h3>" +
+  "<h3>Jeff Green's Currie Park condo towers | 2175 and 2251 North Flagler Drive in West Palm Beach</h3>" +
   "<p>Jeff Greene plans a 152-unit condo project near Currie Park that would be designed by Herzog & de Meuron. The two-30-story tower, 152-unit project would sit on a 4.5-acre site.</p>" +
   "<img src='images/2175_and_2251_NorthFlaglerDrive_WPB.png'>" +
   "<p class='image-credit'>Photo credit: Jeff Greene/Herzog de Meuron</p>"; 
 
 let divChapter3 =
-  "<h3>1901 Collins Avenue in Miami Beach</h3>" +
+  "<h3>The Shore Club Private Collection | 1901 Collins Avenue in Miami Beach</h3>" +
   "<p>Witkoff and Monroe Capital are developing the Auberge-branded luxury condo and resort at the Shore Club property in Miami Beach. RAMSA is designing the oceanfront project alongside Kobi Karp Architecture & Interior Design.</p>" +
   "<img src='images/1901_Collins_Avenue_PC_the_Boundary.jpg'>" +
   "<p class='image-credit'>Photo credit: The Boundary</p>";   
 
 let divChapter4 = 
-  "<h3>8777 Collins Avenue in Surfside</h3>" +
+  "<h3>Damac's Surfside development | 8777 Collins Avenue in Surfside</h3>" +
   "<p>Damac Properties plans a 12-story, 57-unit boutique condo designed by Zaha Hadid Architects on the 1.8-acre oceanfront property. The plans call for up to six condos per floor, with units ranging from 4,000 square feet to 15,000 square feet.</p>" +
   "<img src='images/8777_Collins_Avenue.png'>" +
   "<p class='image-credit'>Photo credit: Damac Properties/Zaha Hadid Architects</p>";  
