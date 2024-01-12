@@ -1,5 +1,6 @@
 let introDiv =
-"<p style='font-size:25px;'>Click a dot for more information or scroll down for interactive content.</p>"
+"<p style='font-size:20px;'>Map of planned South Florida developments designed by major architects.</p>" +
+"<p> &#8681;  &#8681;  &#8681;</p>"
 
 let divChapter1 =
   "<h3>4218 Northeast Second Avenue in Miami</h3>" +
@@ -33,7 +34,7 @@ var config = {
   theme: "light",
   use3dTerrain: false,
   topTitle: [],
-  title: [],
+  title: introDiv,
   subtitle: "",
   byline: [],
   description: [],
