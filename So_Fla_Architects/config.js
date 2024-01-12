@@ -5,13 +5,13 @@ let divChapter1 =
   "<h3>4218 Northeast Second Avenue in Miami</h3>" +
   "<p>Japanese architect Kengo Kuma is designing at least two projects in South Florida. In November, Lionheart Capital, Leviathan Development and Well Duo revealed Kuma will design their Miami Design District project.</p>" +
   "<img src='images/4218_NE_Second_Avenue_Miami.jpg'>" +
-  "<p class='image-credit'>Photo Credit: HERE</p>";
+  "<p class='image-credit'>Photo Credit: Kengo Kuma and Associates</p>";
 
 let divChapter2 =
   "<h3>2175 and 2251 North Flagler Drive in West Palm Beach</h3>" +
   "<p>Jeff Greene plans a 152-unit condo project near Currie Park that would be designed by Herzog & de Meuron. The two-30-story tower, 152-unit project would sit on a 4.5-acre site.</p>" +
   "<img src='images/2175_and_2251_NorthFlaglerDrive_WPB.png'>" +
-  "<p class='image-credit'>Photo Credit: HERE</p>"; 
+  "<p class='image-credit'>Photo Credit: Jeff Greene/Herzog de Meuron</p>"; 
 
 let divChapter3 =
   "<h3>1901 Collins Avenue in Miami Beach</h3>" +
@@ -23,7 +23,7 @@ let divChapter4 =
   "<h3>8777 Collins Avenue in Surfside</h3>" +
   "<p>Damac Properties plans a 12-story, 57-unit boutique condo designed by Zaha Hadid Architects on the 1.8-acre oceanfront property. The plans call for up to six condos per floor, with units ranging from 4,000 square feet to 15,000 square feet.</p>" +
   "<img src='images/8777_Collins_Avenue.png'>" +
-  "<p class='image-credit'>Photo Credit: HERE</p>";  
+  "<p class='image-credit'>Photo Credit: Damac Properties/Zaha Hadid Architects</p>";  
 
 var config = {
   style: "mapbox://styles/trddata/clkbkxt1n000h01qk5hk20f9j",
@@ -102,7 +102,7 @@ var config = {
       chapterDiv: divChapter2,
       location: {
         center: [                     
-          -80.1233168, 25.8087909
+          -80.051332, 26.7341466
       ],
         zoom: 17.48,
         zoomSmall: 16,
@@ -137,7 +137,7 @@ var config = {
       chapterDiv: divChapter3,
       location: {
         center: [                    
-          -80.28635500000001, 25.7053567
+          -80.128334, 25.7950703
       ],
         zoom: 17.57,
         zoomSmall: 15,
