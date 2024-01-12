@@ -28,7 +28,7 @@ let divChapter4 =
 
 let divChapter5 = 
   "<h3>Waldorf Astoria Hotel & Residences, Miami | 300 Biscayne Boulevard</h3>" +
-  "<p>Damac Properties plans a 12-story, 57-unit boutique condo designed by Zaha Hadid Architects on the 1.8-acre oceanfront property. The plans call for up to six condos per floor, with units ranging from 4,000 square feet to 15,000 square feet.</p>" +
+  "<p>Uruguayan-Canadian architect Carlos Ott designed the planned Waldorf Astoria-branded supertall condo and hotel tower. Ott is working with Sieger Suarez Architects on the design for 1,049-foot-tower, a series of stacked cubes. It could be the tallest residential building south of New York City once completed in 2027.</p>" +
   "<img src='images/PMG-Waldorf_Astoria-01-CubeDetail-05.jpg'>" +
   "<p class='image-credit'>Photo credit: ArX Solutions</p>";  
 
