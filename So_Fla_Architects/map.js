@@ -309,9 +309,15 @@ map.on("load", function () {
 map.on('click', 'scrolly_layer', function (e) {
   let Address = e.features[0].properties.full_address;
   let Description = e.features[0].properties.description;
+  let Developers = e.features[0].properties.developers;
+  let Architects = e.features[0].properties.architects;
   new mapboxgl.Popup({maxWidth:'285px'})
       .setLngLat(e.lngLat)
       .setHTML('<h2>' + Address + '</h2>' +
+      '<hr style="border-top: 1px solid #ccc;">' +
+      '<strong>Developers:  ' + Developers + '</strong>' + '<br>' +
+      '<strong>Architects:  ' + Architects + '</strong>' + '<br>' +
+      '<hr style="border-top: 1px solid #ccc;">' +
       Description)
       .addTo(map);
 });
