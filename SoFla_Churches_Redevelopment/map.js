@@ -224,7 +224,7 @@ map.on("load", function () {
       type: "circle",
       source: {
         type: "geojson",
-        data: "data/SoFlaArchitects.geojson",
+        data: "data/SoFlaChurches.geojson",
       },
       paint: {
         "circle-radius": [
@@ -307,18 +307,16 @@ map.on("load", function () {
 
 // Create the popup
 map.on('click', 'scrolly_layer', function (e) {
-  let project_name = e.features[0].properties.project_name;
-  let Address = e.features[0].properties.full_address;
-  let Description = e.features[0].properties.description;
-  let Developers = e.features[0].properties.developers;
-  let Architects = e.features[0].properties.architects;
+  let church_name = e.features[0].properties.Property_name_Church_on_site;
+  let Address = e.features[0].properties.Address;
+  let Developers = e.features[0].properties.Developers;
+  let Description = e.features[0].properties.Project_details;
   new mapboxgl.Popup({maxWidth:'285px'})
       .setLngLat(e.lngLat)
-      .setHTML('<h2>'+ project_name + '</h2>' +
+      .setHTML('<h2>'+ church_name + '</h2>' +
       '<p><em>' + Address + '</em></p>' +
       '<hr style="border-top: 1px solid #ccc;">' +
       '<strong>Developers:  ' + Developers + '</strong>' + '<br>' +
-      '<strong>Architects:  ' + Architects + '</strong>' + '<br>' +
       '<hr style="border-top: 1px solid #ccc;">' +
       Description)
       .addTo(map);

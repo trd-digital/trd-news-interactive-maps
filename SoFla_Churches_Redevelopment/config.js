@@ -1,36 +1,22 @@
 let introDiv =
-"<p style='font-size:20px;'>Map of planned South Florida developments designed by major architects.</p>" +
+"<p style='font-size:20px;'>Map of planned South Florida religious redevelopment.</p>" +
 "<p> &#8681;  &#8681;  &#8681;</p>"
 
-let divChapter1 =
-  "<h3>MIRAI Design District | 4218 Northeast Second Avenue in Miami</h3>" +
-  "<p>Japanese architect Kengo Kuma is designing at least two projects in South Florida. In November, Lionheart Capital, Leviathan Development and Well Duo revealed Kuma will design their Miami Design District project.</p>" +
-  "<img src='images/4218_NE_Second_Avenue_Miami.jpg'>" +
-  "<p class='image-credit'>Photo credit: Kengo Kuma and Associates</p>";
+let divChapter1 = 
+  "<h3>Trinity Episcopal Cathedral | 464 Northeast 16th Street and 515 Northeast 15th Street</h3>" +
+  "<p>Designed by Sieger Suarez Architects, the project would have 462 apartments atop a 533-space garage.</p>";
 
 let divChapter2 =
-  "<h3>Jeff Green's Currie Park condo towers | 2175 and 2251 North Flagler Drive in West Palm Beach</h3>" +
-  "<p>Jeff Greene plans a 152-unit condo project near Currie Park that would be designed by Herzog & de Meuron. The two-30-story tower, 152-unit project would sit on a 4.5-acre site.</p>" +
-  "<img src='images/2175_and_2251_NorthFlaglerDrive_WPB.png'>" +
-  "<p class='image-credit'>Photo credit: Jeff Greene/Herzog de Meuron</p>"; 
+  "<h3>First Miami Presbyterian Church | 1901 Collins Avenue in Miami Beach</h3>" +
+  "<p>Key International and Arnaud Karsenti's 13th Floor Investments are partnering on a condo tower on a portion of First Miami Presbyterian Church's lot in Brickell.</p>";   
 
 let divChapter3 =
-  "<h3>The Shore Club Private Collection | 1901 Collins Avenue in Miami Beach</h3>" +
-  "<p>Witkoff and Monroe Capital are developing the Auberge-branded luxury condo and resort at the Shore Club property in Miami Beach. RAMSA is designing the oceanfront project alongside Kobi Karp Architecture & Interior Design.</p>" +
-  "<img src='images/1901_Collins_Avenue_PC_the_Boundary.jpg'>" +
-  "<p class='image-credit'>Photo credit: The Boundary</p>";   
+  "<h3>Christ United Methodist Church | 210-217 Northeast Third Street in Pompano Beach</h3>" +
+  "<p>The project will consist of two 10-story buildings with 319 apartments, combined, and 3,200 square feet of retail at 210-217 Northeast Third Street. Two pedestrian bridges over Northeast Second Street will connect the buildings.</p>";
 
-let divChapter4 = 
-  "<h3>Damac's Surfside development | 8777 Collins Avenue in Surfside</h3>" +
-  "<p>Damac Properties plans a 12-story, 57-unit boutique condo designed by Zaha Hadid Architects on the 1.8-acre oceanfront property. The plans call for up to six condos per floor, with units ranging from 4,000 square feet to 15,000 square feet.</p>" +
-  "<img src='images/8777_Collins_Avenue.png'>" +
-  "<p class='image-credit'>Photo credit: Damac Properties/Zaha Hadid Architects</p>";  
-
-let divChapter5 = 
-  "<h3>Waldorf Astoria Hotel & Residences, Miami | 300 Biscayne Boulevard</h3>" +
-  "<p>Uruguayan-Canadian architect Carlos Ott designed the planned Waldorf Astoria-branded supertall condo and hotel tower. Ott is working with Sieger Suarez Architects on the design for 1,049-foot-tower, a series of stacked cubes. It could be the tallest residential building south of New York City once completed in 2027.</p>" +
-  "<img src='images/PMG-Waldorf_Astoria-01-CubeDetail-05.jpg'>" +
-  "<p class='image-credit'>Photo credit: ArX Solutions</p>";  
+let divChapter4 =
+  "<h3>First Church of Christ, Scientist | 134 and 142 Lakeview Avenue, 809 South Flagler Drive</h3>" +
+  "<p>Steve Ross' Related Companies is developing a 25-story One Flagler next to the First Church of Christ, Scientist in downtown West Palm Beach.</p>";
 
 var config = {
   style: "mapbox://styles/trddata/clrax4la3005701qogu72fl71",
@@ -65,7 +51,7 @@ var config = {
       onChapterExit: [],
     },
     {
-      id: "4218 Northeast Second Avenue in Miami",
+      id: "Trinity Episcopal Cathedral",
       alignment: "center",
       hidden: false,
       title: "",
@@ -74,7 +60,8 @@ var config = {
       chapterDiv: divChapter1,
       location: {
         center: [                     
-          -80.19171290000001,25.8153646
+          -80.18650389999999,
+          25.7903332
       ],
         zoom: 17.79,
         zoomSmall: 16,
@@ -100,7 +87,7 @@ var config = {
       ],
     },
     {
-      id: "2175 and 2251 North Flagler Drive in West Palm Beach", 
+      id: "First Miami Presbyterian Church", 
       alignment: "center",
       hidden: false,
       title: "",
@@ -109,7 +96,8 @@ var config = {
       chapterDiv: divChapter2,
       location: {
         center: [                     
-          -80.051332, 26.7341466
+          -80.1917902,
+          25.7616798
       ],
         zoom: 17.48,
         zoomSmall: 16,
@@ -135,7 +123,7 @@ var config = {
       ],
     },
     {
-      id: "1901 Collins Avenue in Miami Beach", 
+      id: "Christ United Methodist Church", 
       alignment: "center",
       hidden: false,
       title: "",
@@ -144,7 +132,8 @@ var config = {
       chapterDiv: divChapter3,
       location: {
         center: [                    
-          -80.128334, 25.7950703
+          -80.1247667,
+          26.2378597
       ],
         zoom: 17.57,
         zoomSmall: 15,
@@ -170,7 +159,7 @@ var config = {
       ],
     },
     {
-      id: "8777 Collins Avenue in Surfside", 
+      id: "First Church of Christ, Scientist", 
       alignment: "center",
       hidden: false,
       title: "",
@@ -179,44 +168,10 @@ var config = {
       chapterDiv: divChapter4,
       location: {
         center: [                    
-          -80.12078679999999, 25.8730174
+          -80.18965969999999,
+          25.7946858
       ],
         zoom: 18,
-        zoomSmall: 16,
-        pitch: 24.5,
-        bearing: .34,
-      },
-      mapAnimation: "flyTo",
-      rotateAnimation: false,
-      callback: "",
-      onChapterEnter: [
-        {
-          layer: "overallMap",
-          opacity: 1,
-          duration: 1000000000000,
-        },
-      ],
-      onChapterExit: [
-        {
-          layer: "overallMap",
-          opacity: 1,
-          duration: 1000000000000,
-        },
-      ],
-    },
-    {
-      id: "300 Biscayne Boulevard in Miami", 
-      alignment: "center",
-      hidden: false,
-      title: "",
-      image: "",
-      description: "",
-      chapterDiv: divChapter5,
-      location: {
-        center: [                    
-          -80.1877681, 25.771434
-      ],
-        zoom: 16,
         zoomSmall: 16,
         pitch: 24.5,
         bearing: .34,
