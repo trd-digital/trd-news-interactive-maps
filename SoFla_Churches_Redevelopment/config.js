@@ -10,7 +10,9 @@ let divChapter1 =
 
 let divChapter2 =
   "<h3>First Miami Presbyterian Church | 609 Brickell Avenue in Miami</h3>" +
-  "<p>Key International and Arnaud Karsenti's 13th Floor Investments are partnering on a condo tower on a portion of First Miami Presbyterian Church's lot in Brickell.</p>";   
+  "<p>Key International and Arnaud Karsenti's 13th Floor Investments are partnering on a condo tower on a portion of First Miami Presbyterian Church's lot in Brickell.</p>" +
+  "<img src='images/First_Presbyterian_Screenshot.png'>" +
+  "<p class='image-credit'>Photo credit: Google Maps DOUBLE CHECK THIS</p>";  
 
 let divChapter3 =
   "<h3>Christ United Methodist Church | 210-217 Northeast Third Street in Pompano Beach</h3>" +
