@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Logarithmic Bar Chart with Tooltip</title>
+    <title>Logarithmic Bar Chart</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <style>
         .tooltip {
@@ -18,8 +18,8 @@
     </style>
 </head>
 <body>
-    <button id="toggleScale">Toggle Scale</button>
     <svg width="900" height="500"></svg>
+    <button id="toggleScale">Toggle Scale</button>
     <script>
         const margin = {top: 50, right: 20, bottom: 100, left: 40};
         const width = 900 - margin.left - margin.right,
@@ -57,7 +57,7 @@
             .domain(data.map(d => d.name));
 
 
-        const yScale = d3.scaleLog()
+        let yScale = d3.scaleLog()
             .range([height, 0])
             .domain([300_000, d3.max(data, d => d.value)]);
 
@@ -68,10 +68,21 @@
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+        // Define the tooltip div
         const tooltip = d3.select("body").append("div")
-            .attr("class", "tooltip");
+            .attr("class", "tooltip")
+            .style("opacity", 0);
 
-            g.selectAll(".bar")
+        // Create a formatter for currency
+        const currencyFormatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        });
+
+        // Bind click event to the bars
+        g.selectAll(".bar")
             .data(data)
             .enter().append("rect")
             .attr("class", "bar")
@@ -79,28 +90,76 @@
             .attr("y", d => yScale(d.value))
             .attr("width", xScale.bandwidth())
             .attr("height", d => height - yScale(d.value))
-            .attr("fill", "green") // Set bar color to green
+            .attr("fill", "green")
             .on("mouseover", function(event, d) {
-                // Increase opacity of the bar
-                d3.select(this).attr("opacity", 0.8);
+            // Increase opacity of the bar
+            d3.select(this).attr("opacity", 0.8);
 
-                // Add horizontal dashed line
-                g.append("line")
-                    .attr("class", "hover-line")
-                    .attr("x1", 0)
-                    .attr("x2", width)
-                    .attr("y1", yScale(d.value))
-                    .attr("y2", yScale(d.value))
-                    .style("stroke", "black")
-                    .style("stroke-dasharray", ("3, 3"));
-            })
-            .on("mouseout", function(d) {
-                // Reset bar opacity
-                d3.select(this).attr("opacity", 1);
+            // Add horizontal dashed line
+            g.append("line")
+                .attr("class", "hover-line")
+                .attr("x1", 0)
+                .attr("x2", width)
+                .attr("y1", yScale(d.value))
+                .attr("y2", yScale(d.value))
+                .style("stroke", "black")
+                .style("stroke-dasharray", ("3, 3"));
+        })
+        .on("mouseout", function(d) {
+            // Reset bar opacity
+            d3.select(this).attr("opacity", 1);
 
-                // Remove horizontal line
-                g.selectAll(".hover-line").remove();
+            // Remove horizontal line
+            g.selectAll(".hover-line").remove();
+        })
+            .on("click", function(event, d) {
+                event.stopPropagation(); // Stop the event from propagating to the document
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(d.name + "<br/>" + currencyFormatter.format(d.value))
+                    .style("left", (event.pageX) + "px")
+                    .style("top", (event.pageY - 28) + "px");
             });
+
+        // Hide tooltip when clicking anywhere else on the page
+        d3.select("body").on("click", function() {
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0);
+        });
+
+
+        // g.selectAll(".bar")
+        // .data(data)
+        // .enter().append("rect")
+        // .attr("class", "bar")
+        // .attr("x", d => xScale(d.name))
+        // .attr("y", d => yScale(d.value))
+        // .attr("width", xScale.bandwidth())
+        // .attr("height", d => height - yScale(d.value))
+        // .attr("fill", "green") // Set bar color to green
+        // .on("mouseover", function(event, d) {
+        //     // Increase opacity of the bar
+        //     d3.select(this).attr("opacity", 0.8);
+
+        //     // Add horizontal dashed line
+        //     g.append("line")
+        //         .attr("class", "hover-line")
+        //         .attr("x1", 0)
+        //         .attr("x2", width)
+        //         .attr("y1", yScale(d.value))
+        //         .attr("y2", yScale(d.value))
+        //         .style("stroke", "black")
+        //         .style("stroke-dasharray", ("3, 3"));
+        // })
+        // .on("mouseout", function(d) {
+        //     // Reset bar opacity
+        //     d3.select(this).attr("opacity", 1);
+
+        //     // Remove horizontal line
+        //     g.selectAll(".hover-line").remove();
+        // });
 
         // Append the title
         g.append("text")
@@ -114,108 +173,49 @@
 
         // Y axis
         g.append("g")
-            .call(d3.axisLeft(yScale).ticks(10, ",.1s"));
-
-        // Y axis label
-        g.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 0 - margin.left + 20) // Adjust this to move the label left or right
-            .attr("x", 0 - (height / 2))
-            .attr("dy", "-3em") // Adjust this to move the label up or down
-            .style("text-anchor", "middle")
-            .text("Value (Logarithmic)"); // Change this text for your y-axis label
-
-
-        function showTooltip(event, d) {
-        const formatter = new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            // These options ensure that the currency is displayed properly
-            minimumFractionDigits: 0, // No decimal places for whole numbers
-            maximumFractionDigits: 0  // No decimal places for whole numbers
-        });
-
-        tooltip.transition()
-            .duration(200)
-            .style("opacity", .9);
-        tooltip.html(d.name + "<br/>Value: " + formatter.format(d.value))
-            .style("left", (event.pageX) + "px")
-            .style("top", (event.pageY - 28) + "px");
-            }
-
-        function hideTooltip() {
-            tooltip.transition()
-                .duration(500)
-                .style("opacity", 0);
-        }
-
-        let currentScaleType = 'log';
-
-        function updateBars() {
-            const bars = gBars.selectAll(".bar")
-                .data(data);
-
-            bars.enter().append("rect")
-                .attr("class", "bar")
-                .merge(bars)
-                .transition()
-                .duration(1000)
-                .attr("x", d => xScale(d.name))
-                .attr("y", d => yScale(d.value))
-                .attr("width", xScale.bandwidth())
-                .attr("height", d => height - yScale(d.value))
-                .attr("fill", "green");
-
-            bars.exit().remove();
-        }
-
-        updateBars();
-
-        const gXAxis = svg.append("g")
-            .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(xScale));
-
-        const gYAxis = svg.append("g")
             .attr("class", "y-axis")
             .call(d3.axisLeft(yScale).ticks(10, ",.1s"));
 
-        d3.select("#toggleScale").on("click", function() {
-            currentScaleType = currentScaleType === 'log' ? 'linear' : 'log';
-            yScale = currentScaleType === 'log' ?
-                d3.scaleLog().range([height, 0]).domain([300_000, d3.max(data, d => d.value)]) :
-                d3.scaleLinear().range([height, 0]).domain([0, d3.max(data, d => d.value)]);
+            let currentScaleType = 'log'; // Default scale type
 
-            gYAxis.transition().duration(1000).call(d3.axisLeft(yScale).ticks(10, ",.1s"));
-            updateBars();
-        });
+        function updateChart() {
+        // Toggle the scale type
+        currentScaleType = currentScaleType === 'log' ? 'linear' : 'log';
 
-        // Function to update the chart with the selected scale type
-        function updateChart(scaleType) {
-            const yScale = scaleType === 'log' ?
-                d3.scaleLog().range([height, 0]).domain([300_000, d3.max(data, d => d.value)]) :
-                d3.scaleLinear().range([height, 0]).domain([0, d3.max(data, d => d.value)]);
+        // Define the new yScale based on the currentScaleType
+        yScale = currentScaleType === 'log' ?
+            d3.scaleLog().range([height, 0]).domain([300_000, d3.max(data, d => d.value)]) :
+            d3.scaleLinear().range([height, 0]).domain([0, d3.max(data, d => d.value)]);
 
-            // Update Y-axis
-            g.select(".y-axis").call(d3.axisLeft(yScale).ticks(10, ",.1s"));
-
-            // Update bars
-            g.selectAll(".bar")
-            .transition()
-            .duration(1000)
-            .attr("y", d => yScale(d.value))
-            .attr("height", d => height - yScale(d.value));
+        // Define a formatter based on the scale type
+        let formatTick;
+        if (currentScaleType === 'linear') {
+            // For linear scale, format as a rounded number without decimals
+            formatTick = d3.format("$.0s");
+        } else {
+            // For logarithmic scale, keep more detailed format
+            formatTick = d3.format("$.1s");
         }
 
-        // Toggle button event listener
+        // Update the Y-axis with the new format
+        g.select(".y-axis")
+        .transition()
+        .duration(1000)
+        .call(d3.axisLeft(yScale).ticks(10, formatTick));
+
+        // Update the bars
+        g.selectAll(".bar")
+        .transition()
+        .duration(1000)
+        .attr("y", d => yScale(d.value))
+        .attr("height", d => height - yScale(d.value));
+    }
+
+        // Attach an event listener to the toggle button
         d3.select("#toggleScale").on("click", function() {
-            currentScaleType = currentScaleType === 'log' ? 'linear' : 'log';
-            updateChart(currentScaleType);
+            updateChart();
         });
 
-        // Append the Y-axis with a class for easy selection
-        g.append("g")
-            .attr("class", "y-axis")
-            .call(d3.axisLeft(yScale).ticks(10, ",.1s"));
     </script>
 </body>
 </html>
