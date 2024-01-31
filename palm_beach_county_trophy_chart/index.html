@@ -117,7 +117,7 @@
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
-                tooltip.html(d.name + "<br/>" + currencyFormatter.format(d.value))
+                tooltip.html(d.name + "<br/>" + "Price: " + currencyFormatter.format(d.value))
                     .style("left", (event.pageX) + "px")
                     .style("top", (event.pageY - 28) + "px");
             });
@@ -128,38 +128,6 @@
                 .duration(500)
                 .style("opacity", 0);
         });
-
-
-        // g.selectAll(".bar")
-        // .data(data)
-        // .enter().append("rect")
-        // .attr("class", "bar")
-        // .attr("x", d => xScale(d.name))
-        // .attr("y", d => yScale(d.value))
-        // .attr("width", xScale.bandwidth())
-        // .attr("height", d => height - yScale(d.value))
-        // .attr("fill", "green") // Set bar color to green
-        // .on("mouseover", function(event, d) {
-        //     // Increase opacity of the bar
-        //     d3.select(this).attr("opacity", 0.8);
-
-        //     // Add horizontal dashed line
-        //     g.append("line")
-        //         .attr("class", "hover-line")
-        //         .attr("x1", 0)
-        //         .attr("x2", width)
-        //         .attr("y1", yScale(d.value))
-        //         .attr("y2", yScale(d.value))
-        //         .style("stroke", "black")
-        //         .style("stroke-dasharray", ("3, 3"));
-        // })
-        // .on("mouseout", function(d) {
-        //     // Reset bar opacity
-        //     d3.select(this).attr("opacity", 1);
-
-        //     // Remove horizontal line
-        //     g.selectAll(".hover-line").remove();
-        // });
 
         // Append the title
         g.append("text")
