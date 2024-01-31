@@ -4,19 +4,25 @@ let introDiv =
 
 let divChapter1 = 
   "<h3>Trinity Episcopal Cathedral | 464 Northeast 16th Street and 515 Northeast 15th Street</h3>" +
-  "<p>Designed by Sieger Suarez Architects, the project would have 462 apartments atop a 533-space garage.</p>";
+  "<p>Designed by Sieger Suarez Architects, the project would have 462 apartments atop a 533-space garage.</p>" +
+  "<img src='images/Trinity Episcopal Cathedral at 464 NE 16th St and 515 NE15th.jpg'>" +
+  "<p class='image-credit'>Photo credit: Key International</p>";  
 
 let divChapter2 =
-  "<h3>First Miami Presbyterian Church | 1901 Collins Avenue in Miami Beach</h3>" +
+  "<h3>First Miami Presbyterian Church | 609 Brickell Avenue in Miami</h3>" +
   "<p>Key International and Arnaud Karsenti's 13th Floor Investments are partnering on a condo tower on a portion of First Miami Presbyterian Church's lot in Brickell.</p>";   
 
 let divChapter3 =
   "<h3>Christ United Methodist Church | 210-217 Northeast Third Street in Pompano Beach</h3>" +
-  "<p>The project will consist of two 10-story buildings with 319 apartments, combined, and 3,200 square feet of retail at 210-217 Northeast Third Street. Two pedestrian bridges over Northeast Second Street will connect the buildings.</p>";
+  "<p>The project will consist of two 10-story buildings with 319 apartments, combined, and 3,200 square feet of retail at 210-217 Northeast Third Street. Two pedestrian bridges over Northeast Second Street will connect the buildings.</p>" +
+  "<img src='images/CPT-OT2 still N2 (1) (1).jpg'>" +
+  "<p class='image-credit'>Photo credit: Adache Group Architects</p>";  
 
 let divChapter4 =
   "<h3>First Church of Christ, Scientist | 134 and 142 Lakeview Avenue, 809 South Flagler Drive</h3>" +
-  "<p>Steve Ross' Related Companies is developing a 25-story One Flagler next to the First Church of Christ, Scientist in downtown West Palm Beach.</p>";
+  "<p>Steve Ross' Related Companies is developing a 25-story One Flagler next to the First Church of Christ, Scientist in downtown West Palm Beach.</p>" +
+  "<img src='images/One Flagler_Dusk Exterior.png'>" +
+  "<p class='image-credit'>Photo credit: Related Southeast</p>";  
 
 var config = {
   style: "mapbox://styles/trddata/clrax4la3005701qogu72fl71",
