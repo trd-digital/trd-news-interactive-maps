@@ -5,8 +5,8 @@ let introDiv =
 let divChapter1 = 
   "<h3>Trinity Episcopal Cathedral | 464 Northeast 16th Street and 515 Northeast 15th Street</h3>" +
   "<p>Designed by Sieger Suarez Architects, the project would have 462 apartments atop a 533-space garage.</p>" +
-  "<img src='images/Trinity Episcopal Cathedral at 464 NE 16th St and 515 NE15th.jpg'>" +
-  "<p class='image-credit'>Photo credit: Key International</p>";  
+  "<img src='images/TrinityCathedral_KeyInternational.png'>" +
+  "<p class='image-credit'>Photo credit: Sieger Suarez Architects</p>";  
 
 let divChapter2 =
   "<h3>First Miami Presbyterian Church | 609 Brickell Avenue in Miami</h3>" +
