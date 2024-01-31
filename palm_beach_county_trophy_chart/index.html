@@ -125,26 +125,40 @@
                 .style("opacity", 0);
         })
 
-        // Append the title
         g.append("text")
+            .attr("class","title")
             .attr("x", width / 2)
             .attr("y", 0 - (margin.top / 4)) // Adjusted position, relative to the top margin
             .attr("text-anchor", "middle")
             .style("font-size", "20px")
             .style("font-weight", "bold")
             .style("font-family","Calibri, Arial, sans-serif")
-            .text("How Palm Beach Trophy Property Towers in Value");
+            .text("How Palm Beach Trophy Property Towers in Value (Logarithmic)");
 
         // Y axis
         g.append("g")
             .attr("class", "y-axis")
             .call(d3.axisLeft(yScale).ticks(10, ",.1s"));
 
-            let currentScaleType = 'log'; // Default scale type
+        let currentScaleType = 'log'; // Default scale type
 
         function updateChart() {
         // Toggle the scale type
         currentScaleType = currentScaleType === 'log' ? 'linear' : 'log';
+
+            // Remove existing title
+        g.select("text.title").remove(); 
+
+        // Append new title based on current scale type
+        g.append("text")
+            .attr("class", "title") // Add class for easy selection
+            .attr("x", width / 2)
+            .attr("y", 0 - (margin.top / 4))
+            .attr("text-anchor", "middle")
+            .style("font-size", "20px")
+            .style("font-weight", "bold")
+            .style("font-family","Calibri, Arial, sans-serif")
+            .text(currentScaleType === 'log' ? "How Palm Beach Trophy Property Towers in Value (Logarithmic)" : "How Palm Beach Trophy Property Towers in Value (Linear)");
 
         // Define the new yScale based on the currentScaleType
         yScale = currentScaleType === 'log' ?
@@ -160,6 +174,27 @@
             // For logarithmic scale, keep more detailed format
             formatTick = d3.format("$.1s");
         }
+
+        // Append the title
+        // if (currentScaleType === 'log') {
+        //     g.append("text")
+        //     .attr("x", width / 2)
+        //     .attr("y", 0 - (margin.top / 4)) // Adjusted position, relative to the top margin
+        //     .attr("text-anchor", "middle")
+        //     .style("font-size", "20px")
+        //     .style("font-weight", "bold")
+        //     .style("font-family","Calibri, Arial, sans-serif")
+        //     .text("How Palm Beach Trophy Property Towers in Value (Logarithmic)");
+        // } else {
+        //     g.append("text")
+        //     .attr("x", width / 2)
+        //     .attr("y", 0 - (margin.top / 4)) // Adjusted position, relative to the top margin
+        //     .attr("text-anchor", "middle")
+        //     .style("font-size", "20px")
+        //     .style("font-weight", "bold")
+        //     .style("font-family","Calibri, Arial, sans-serif")
+        //     .text("How Palm Beach Trophy Property Towers in Value (Linear)");
+        // }
 
         // Update the Y-axis with the new format
         g.select(".y-axis")
