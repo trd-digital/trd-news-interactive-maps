@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Logarithmic Bar Chart</title>
+    <title>Linear Bar Chart</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <style>
         .tooltip {
@@ -9,7 +9,7 @@
             text-align: center;
             padding: 8px;
             font: 12px sans-serif;
-            background: lightsteelblue;
+            background: goldenrod;
             border: 0px;
             border-radius: 8px;
             pointer-events: none;
@@ -20,22 +20,25 @@
         width: 100px; /* Adjust as needed */
         height: auto;
     }
+
+    svg {
+    background-color: lightblue;
+    }
+
     </style>
 </head>
 <body>
     <svg width="900" height="500"></svg>
-    <button id="toggleScale">Toggle Scale</button>
     <script>
         const margin = {top: 50, right: 20, bottom: 100, left: 40};
         const width = 900 - margin.left - margin.right,
-              height = 500 - margin.top - margin.bottom;
+              height = 9000 - margin.top - margin.bottom;
 
         const svg = d3.select("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
 
         // data
         const data = [
@@ -62,7 +65,7 @@
             .domain(data.map(d => d.name));
 
 
-        let yScale = d3.scaleLog()
+        const yScale = d3.scaleLinear()
             .range([height, 0])
             .domain([300_000, d3.max(data, d => d.value)]);
 
@@ -95,7 +98,7 @@
             .attr("y", d => yScale(d.value))
             .attr("width", xScale.bandwidth())
             .attr("height", d => height - yScale(d.value))
-            .attr("fill", "green")
+            .attr("fill", "blue")
             .on("mouseover", function(event, d) {
             // Increase opacity of the bar
             d3.select(this).attr("opacity", 0.8);
@@ -143,82 +146,27 @@
         // Y axis
         g.append("g")
             .attr("class", "y-axis")
-            .call(d3.axisLeft(yScale).ticks(10, ",.1s"));
+            .call(d3.axisLeft(yScale).ticks(10, ",.0s"));
 
-        let currentScaleType = 'log'; // Default scale type
+        // Draw base (shadow)
+        svg.selectAll('.base')
+            .data(data)
+            .enter().append('rect')
+            .attr('x', d => xScale(d.name) + depth)
+            .attr('y', d => yScale(d.value) + depth)
+            .attr('width', xScale.bandwidth())
+            .attr('height', d => height - yScale(d.value))
+            .attr('fill', 'rgba(0,0,0,0.1)'); // Shadow color
 
-        function updateChart() {
-        // Toggle the scale type
-        currentScaleType = currentScaleType === 'log' ? 'linear' : 'log';
-
-            // Remove existing title
-        g.select("text.title").remove(); 
-
-        // Append new title based on current scale type
-        g.append("text")
-            .attr("class", "title") // Add class for easy selection
-            .attr("x", width / 2)
-            .attr("y", 0 - (margin.top / 4))
-            .attr("text-anchor", "middle")
-            .style("font-size", "20px")
-            .style("font-weight", "bold")
-            .style("font-family","Calibri, Arial, sans-serif")
-            .text(currentScaleType === 'log' ? "How Palm Beach Trophy Listings Stack Up to the Market" : "How Palm Beach Trophy Listings Stack Up to the Market");
-
-        // Define the new yScale based on the currentScaleType
-        yScale = currentScaleType === 'log' ?
-            d3.scaleLog().range([height, 0]).domain([300_000, d3.max(data, d => d.value)]) :
-            d3.scaleLinear().range([height, 0]).domain([0, d3.max(data, d => d.value)]);
-
-        // Define a formatter based on the scale type
-        let formatTick;
-        if (currentScaleType === 'linear') {
-            // For linear scale, format as a rounded number without decimals
-            formatTick = d3.format("$.0s");
-        } else {
-            // For logarithmic scale, keep more detailed format
-            formatTick = d3.format("$.1s");
-        }
-
-        // Append the title
-        // if (currentScaleType === 'log') {
-        //     g.append("text")
-        //     .attr("x", width / 2)
-        //     .attr("y", 0 - (margin.top / 4)) // Adjusted position, relative to the top margin
-        //     .attr("text-anchor", "middle")
-        //     .style("font-size", "20px")
-        //     .style("font-weight", "bold")
-        //     .style("font-family","Calibri, Arial, sans-serif")
-        //     .text("How Palm Beach Trophy Property Towers in Value (Logarithmic)");
-        // } else {
-        //     g.append("text")
-        //     .attr("x", width / 2)
-        //     .attr("y", 0 - (margin.top / 4)) // Adjusted position, relative to the top margin
-        //     .attr("text-anchor", "middle")
-        //     .style("font-size", "20px")
-        //     .style("font-weight", "bold")
-        //     .style("font-family","Calibri, Arial, sans-serif")
-        //     .text("How Palm Beach Trophy Property Towers in Value (Linear)");
-        // }
-
-        // Update the Y-axis with the new format
-        g.select(".y-axis")
-        .transition()
-        .duration(1000)
-        .call(d3.axisLeft(yScale).ticks(10, formatTick));
-
-        // Update the bars
-        g.selectAll(".bar")
-        .transition()
-        .duration(1000)
-        .attr("y", d => yScale(d.value))
-        .attr("height", d => height - yScale(d.value));
-    }
-
-        // Attach an event listener to the toggle button
-        d3.select("#toggleScale").on("click", function() {
-            updateChart();
-        });
+        // Draw side
+        svg.selectAll('.side')
+            .data(data)
+            .enter().append('rect')
+            .attr('x', d => xScale(d.name))
+            .attr('y', d => yScale(d.value))
+            .attr('width', depth)
+            .attr('height', d => height - yScale(d.value))
+            .attr('fill', 'rgba(0,0,0,0.2)'); // Side color
 
     </script>
 </body>
