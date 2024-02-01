@@ -21,18 +21,30 @@
         height: auto;
     }
 
+    .text-headline {
+    font-family: 'Knockout', sans-serif;
+    font-weight: 300; /* Adjust based on the font weight for Knockout you're using */
+    }
+
+    .text-default {
+        font-family: 'Open Sans', sans-serif;
+    }
+
     svg {
     background-color: lightblue;
     }
 
     </style>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Knockout:wght@300&display=swap" rel="stylesheet">
+    
 </head>
 <body>
     <svg width="900" height="500"></svg>
     <script>
         const margin = {top: 50, right: 20, bottom: 100, left: 40};
         const width = 900 - margin.left - margin.right,
-              height = 9000 - margin.top - margin.bottom;
+              height = 700 - margin.top - margin.bottom;
 
         const svg = d3.select("svg")
             .attr("width", width + margin.left + margin.right)
@@ -102,8 +114,7 @@
             .attr("height", d => height - yScale(d.value))
             .attr("fill", "blue")
             .on("mouseover", function(event, d) {
-            // Increase opacity of the bar
-            d3.select(this).attr("opacity", 0.8);
+            d3.select(this).attr("fill", "#00adee");
 
             // Add horizontal dashed line
             g.append("line")
@@ -125,7 +136,7 @@
         })
         .on("mouseout", function(d) {
             // Reset bar opacity
-            d3.select(this).attr("opacity", 1);
+            d3.select(this).attr("fill", "blue");
 
             // Remove horizontal line
             g.selectAll(".hover-line").remove();
@@ -136,7 +147,7 @@
         })
 
         g.append("text")
-            .attr("class","title")
+            .attr("class","text-headline")
             .attr("x", width / 2)
             .attr("y", 0 - (margin.top / 4)) // Adjusted position, relative to the top margin
             .attr("text-anchor", "middle")
