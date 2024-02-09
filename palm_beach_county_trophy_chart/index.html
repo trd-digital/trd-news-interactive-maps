@@ -19,20 +19,26 @@
         .tooltip img {
         width: 100px; /* Adjust as needed */
         height: auto;
-    }
+        }
 
-    .text-headline {
-    font-family: 'Knockout', sans-serif;
-    font-weight: 300; /* Adjust based on the font weight for Knockout you're using */
-    }
+        .text-headline {
+        font-family: 'Knockout', sans-serif;
+        font-weight: 300; /* Adjust based on the font weight for Knockout you're using */
+        }
 
-    .text-default {
-        font-family: 'Open Sans', sans-serif;
-    }
+        .text-default {
+            font-family: 'Open Sans', sans-serif;
+        }
 
-    svg {
-    background-color: lightblue;
-    }
+        svg {
+        background-color: lightblue;
+        }
+
+        @media (max-width: 600px) {
+            svg {
+                display: none;
+            }
+        }
 
     </style>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
@@ -144,6 +150,32 @@
             tooltip.html(d.name + "<br/>" + "Price: " + currencyFormatter.format(d.value))
                 .style("left", (event.pageX) + "px")
                 .style("top", (event.pageY - 28) + "px");
+
+            // Inside your mouseover event handler for the bars
+            const tooltipWidth = tooltip.node().getBoundingClientRect().width;
+            const tooltipHeight = tooltip.node().getBoundingClientRect().height;
+            
+            // Calculate positions with some padding from the cursor
+            let leftPosition = event.pageX + 10; // 10 pixels right from the cursor
+            let topPosition = event.pageY + 10; // 10 pixels below the cursor
+            
+            // Check if tooltip goes beyond the right edge of the window
+            if (leftPosition + tooltipWidth > window.innerWidth) {
+                leftPosition = event.pageX - tooltipWidth - 10; // Move to the left of the cursor
+            }
+            
+            // Check if tooltip goes beyond the bottom edge of the window
+            if (topPosition + tooltipHeight > window.innerHeight) {
+                topPosition = event.pageY - tooltipHeight - 10; // Move above the cursor
+            }
+            
+            tooltip.transition()
+                .duration(200)
+                .style("opacity", .9);
+            tooltip.html(d.name + "<br/>" + "Price: " + currencyFormatter.format(d.value))
+                .style("left", leftPosition + "px")
+                .style("top", topPosition + "px");
+
         })
         .on("mouseout", function(d) {
             // Reset bar opacity
