@@ -54,8 +54,8 @@
 
         // data
         const data = [
-            {name: 'US Median Home Price', value: 403_000},
-            {name: 'PBC Median Home Price', value: 480_000},
+            {name: 'US Median Home Price ($403,000)', value: 403_000},
+            {name: 'PBC Median Home Price ($480,000)', value: 480_000},
             {name: 'Palm Beach Median Home Price', value: 4_100_000},
             {name: '690 Island Dr', value: 52_900_000},
             {name: '710 S County Rd', value: 54_900_000},
@@ -220,15 +220,6 @@ function wrap(text, width) {
     });
 }
 
-        // Rotate the text labels
-        // svg.append("g")
-        //     .attr("transform", `translate(0,${height})`)
-        //     .call(d3.axisBottom(xScale))
-        //     .selectAll(".tick text")
-        //     .attr("transform", "rotate(-65)")
-        //     .style("text-anchor", "end");
-
-        // Then call the wrap function on the text selection
         // It's important to select the text elements again as the context has changed after rotation
         svg.selectAll(".tick text").call(wrap, 80); // Adjust '80' to the width constraint for wrapping
 
@@ -238,9 +229,9 @@ function wrap(text, width) {
             if (i < 2) {
                 d3.select(this)
                     // Move up by a more significant amount, increasing the negative value
-                    .attr("y", "-20") // Move up further by making this value more negative
+                    .attr("y", "-30") // Move up further by making this value more negative
                     // Adjust 'translate' values for further fine-tuning
-                    .attr("transform", "translate(-10,-20) rotate(-65)") // Adjust both translate and rotation
+                    .attr("transform", "translate(-25,-30) rotate(-65)") // Adjust both translate and rotation
                     .style("text-anchor", "start"); // Adjust anchor if necessary
             }
         });
