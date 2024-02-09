@@ -71,15 +71,14 @@
             {name: '1063/1071 N Ocean Blvd', value: 200_000_000},
         ];
 
+        const yScale = d3.scaleLinear()
+            .range([height, 0])
+            .domain([300_000, d3.max(data, d => d.value)]);
+
         const xScale = d3.scaleBand()
             .range([0, width])
             .padding(0.1)
             .domain(data.map(d => d.name));
-
-
-        const yScale = d3.scaleLinear()
-            .range([height, 0])
-            .domain([300_000, d3.max(data, d => d.value)]);
 
         // Append SVG group and transform it based on margins
         const g = d3.select("svg")
@@ -87,6 +86,17 @@
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // Drawing the x-axis
+        const xAxis = g.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(xScale));
+
+        // Rotating and wrapping all labels
+        xAxis.selectAll(".tick text")
+            .attr("transform", "rotate(-65)")
+            .style("text-anchor", "end")
+            .call(wrap, 80); // Assuming wrap is your text wrapping function
 
         // Define the tooltip div
         const tooltip = d3.select("body").append("div")
@@ -146,6 +156,7 @@
                 .style("opacity", 0);
         })
 
+        // Title
         g.append("text")
             .attr("class","text-headline")
             .attr("x", width / 2)
@@ -154,7 +165,7 @@
             .style("font-size", "20px")
             .style("font-weight", "bold")
             .style("font-family","Calibri, Arial, sans-serif")
-            .text("How Palm Beach Trophy Listings Stack Up to the Market");
+            .text("Stacking Up Palm Beach's Priciest Listings");
 
         // Y axis
         g.append("g")
@@ -220,6 +231,19 @@ function wrap(text, width) {
         // Then call the wrap function on the text selection
         // It's important to select the text elements again as the context has changed after rotation
         svg.selectAll(".tick text").call(wrap, 80); // Adjust '80' to the width constraint for wrapping
+
+        // Now, specifically select and adjust the first two labels
+        xAxis.selectAll(".tick text")
+            .each(function(d, i) {
+                if (i < 2) {
+                    d3.select(this)
+                        // Move up by a certain amount, you might need to adjust the 'y' offset
+                        .attr("y", -10)
+                        // Ensure 'transform' includes translation if needed, alongside rotation
+                        .attr("transform", "translate(-10,0) rotate(-65)") // Adjust 'translate' as needed
+                        .style("text-anchor", "start"); // Adjust anchor if necessary
+                }
+            });
 
     </script>
 </body>
