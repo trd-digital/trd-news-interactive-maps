@@ -221,29 +221,30 @@ function wrap(text, width) {
 }
 
         // Rotate the text labels
-        svg.append("g")
-            .attr("transform", `translate(0,${height})`)
-            .call(d3.axisBottom(xScale))
-            .selectAll(".tick text")
-            .attr("transform", "rotate(-65)")
-            .style("text-anchor", "end");
+        // svg.append("g")
+        //     .attr("transform", `translate(0,${height})`)
+        //     .call(d3.axisBottom(xScale))
+        //     .selectAll(".tick text")
+        //     .attr("transform", "rotate(-65)")
+        //     .style("text-anchor", "end");
 
         // Then call the wrap function on the text selection
         // It's important to select the text elements again as the context has changed after rotation
         svg.selectAll(".tick text").call(wrap, 80); // Adjust '80' to the width constraint for wrapping
 
-        // Now, specifically select and adjust the first two labels
-        xAxis.selectAll(".tick text")
-            .each(function(d, i) {
-                if (i < 2) {
-                    d3.select(this)
-                        // Move up by a certain amount, you might need to adjust the 'y' offset
-                        .attr("y", -10)
-                        // Ensure 'transform' includes translation if needed, alongside rotation
-                        .attr("transform", "translate(-10,0) rotate(-65)") // Adjust 'translate' as needed
-                        .style("text-anchor", "start"); // Adjust anchor if necessary
-                }
-            });
+    // Now, specifically select and adjust the first two labels
+    xAxis.selectAll(".tick text")
+        .each(function(d, i) {
+            if (i < 2) {
+                d3.select(this)
+                    // Move up by a more significant amount, increasing the negative value
+                    .attr("y", "-20") // Move up further by making this value more negative
+                    // Adjust 'translate' values for further fine-tuning
+                    .attr("transform", "translate(-10,-20) rotate(-65)") // Adjust both translate and rotation
+                    .style("text-anchor", "start"); // Adjust anchor if necessary
+            }
+        });
+
 
     </script>
 </body>
