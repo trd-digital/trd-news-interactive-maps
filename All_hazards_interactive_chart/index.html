@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Interactive Bar Chart</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+
+<script>
+// Make sure the path to your CSV is correct, especially if you're running this locally
+d3.csv("CoreLogicData - All Perils CoreLogic.csv").then(data => {
+    // Convert numerical data from strings to numbers
+    data.forEach(d => {
+        d["Base Scenario"] = +d["Base Scenario"];
+    });
+
+    
+    // Now data is ready to be used for visualization
+    createBarChart(data);
+});
+
+function createBarChart(data) {
+    const svg = d3.select('body').append('svg')
+                  .attr('width', 800)
+                  .attr('height', 600);
+
+    const xScale = d3.scaleBand()
+                     .range([0, 800])
+                     .domain(data.map(d => d.Category))
+                     .padding(0.2);
+
+    const yScale = d3.scaleLinear()
+                     .range([600, 0])
+                     .domain([0, d3.max(data, d => d["Base Scenario"])]);
+
+    svg.selectAll(".bar")
+       .data(data)
+       .enter().append("rect")
+       .attr("class", "bar")
+       .attr("x", d => xScale(d.Category))
+       .attr("width", xScale.bandwidth())
+       .attr("y", d => yScale(d["Base Scenario"]))
+       .attr("height", d => 600 - yScale(d["Base Scenario"]));
+
+    // Add the x-axis
+    svg.append("g")
+       .attr("transform", "translate(0," + 600 + ")")
+       .call(d3.axisBottom(xScale));
+
+    // Add the y-axis
+    svg.append("g")
+       .call(d3.axisLeft(yScale));
+}
+</script>
+
+</body>
+</html>
