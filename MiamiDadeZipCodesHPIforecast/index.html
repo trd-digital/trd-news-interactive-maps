@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Miami-Dade Zip Code Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map { height: 600px; }
+        .legend { background: white; padding: 10px; }
+        .tooltip { background: rgba(0,0,0,0.75); color: white; padding: 8px; display: none; position: absolute; z-index: 1000; }
+        @media (max-width: 768px) {
+            #map { display: none; } /* Hide on mobile */
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="legend" class="legend"></div>
+    <div id="tooltip" class="tooltip"></div>
+
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        const map = L.map('map').setView([25.7617, -80.1918], 11);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap contributors, © CARTO'
+}).addTo(map);
+
+    
+    // Define a continuous color scale using D3
+    const colorScale = d3.scaleLinear()
+                         .domain([20, 27]) // Assuming 0% to 100% range of '5 year forecast (23-28)'
+                         .range(["blue", "green"]); // Color range from green to red
+
+    function getColor(d) {
+        return colorScale(d);
+    }
+    
+        function onEachFeature(feature, layer) {
+            if (feature.properties && feature.properties.zip_code) {
+                var popupContent = `<strong>Zip Code:</strong> ${feature.properties.zip_code}<br>
+                                    <strong>5 Year Forecast (23-28):</strong> ${(feature.properties['5 year forecast (23-28)'] * 100).toFixed(2)}%`;
+                layer.bindPopup(popupContent);
+            }
+        }
+    
+        d3.json("HPI_Miami-Dade.geojson").then(function(geoJsonData) {
+            L.geoJson(geoJsonData, {
+                style: function(feature) {
+                    return {
+                        fillColor: getColor(feature.properties['5 year forecast (23-28)'] * 100),
+                        weight: 2,
+                        opacity: 1,
+                        color: 'white',
+                        fillOpacity: 0.7
+                    };
+                },
+                onEachFeature: onEachFeature
+            }).addTo(map);
+        });
+    </script>
+    
+</body>
+</html>
