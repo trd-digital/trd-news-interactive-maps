@@ -37,7 +37,7 @@
     
         function onEachFeature(feature, layer) {
             if (feature.properties && feature.properties.zip_code) {
-                var popupContent = `<strong>Zip Code:</strong> ${feature.properties.zip_code}<br>
+                var popupContent = `<strong>County:</strong> ${feature.properties.zip_code}<br>
                                     <strong>5 Year Forecast (23-28):</strong> ${(feature.properties['5 year forecast (23-28)'] * 100).toFixed(2)}%`;
                 layer.bindPopup(popupContent);
             }
