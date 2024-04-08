@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_1f8d88e2bb91b15237f332c77fca2ef7 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>Food First Liquidation</b></h3>
+             
+    
+            <div class="folium-map" id="map_1f8d88e2bb91b15237f332c77fca2ef7" ></div>
+        
+</body>
+<script>    
+    
+            var map_1f8d88e2bb91b15237f332c77fca2ef7 = L.map(
+                "map_1f8d88e2bb91b15237f332c77fca2ef7",
+                {
+                    center: [40.8994794, -73.7971734],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_0232e5b7b8159f91e1a88423dce6f563 = L.tileLayer(
+                "https://tile.jawg.io/jawg-streets/{z}/{x}/{y}{r}.png?access-token=Kr5DL29m5aQey4XgiDKLupcLHZyD0EZvbmORtosm3iyO47oCJavHcmt09qPe42hz",
+                {"attribution": "Map data \u0026copy; \u003ca href=\"https://www.jawg.io\" target=\"_blank\"\u003eJawg Maps\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_1f8d88e2bb91b15237f332c77fca2ef7);
+        
+    
+            var circle_marker_6fd31b7c3f77170b62582a4c0fcecb5c = L.circleMarker(
+                [40.8994794, -73.7971734],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_1f8d88e2bb91b15237f332c77fca2ef7);
+        
+    
+            circle_marker_6fd31b7c3f77170b62582a4c0fcecb5c.bindTooltip(
+                `<div>
+                     <div class="popup-content"><strong>Site Address:</strong> 1374 Boston Post Road, Bronx N<br>ew York, NY<br></div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
