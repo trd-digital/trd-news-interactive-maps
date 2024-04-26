@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_7fded9a9ff639178782fbdd9383c13a2 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+            <div class="folium-map" id="map_7fded9a9ff639178782fbdd9383c13a2" ></div>
+        
+</body>
+<script>    
+    
+            var map_7fded9a9ff639178782fbdd9383c13a2 = L.map(
+                "map_7fded9a9ff639178782fbdd9383c13a2",
+                {
+                    center: [41.76597029999999, -87.58750409999999],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 11.5,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_3b69b067f2613efe12a4d4e20cea40dd = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var marker_3aebde082b98db8d3bb0dafe8d164577 = L.marker(
+                [41.8003258, -87.589254],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_7e414c130f7b201a797cc6313e0e29e8 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_3aebde082b98db8d3bb0dafe8d164577.setIcon(icon_7e414c130f7b201a797cc6313e0e29e8);
+        
+    
+        var popup_8b2381dd906479e0ee81e8a2eaa483a5 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_39c03f6440e629080c6513455dd1de5c = $(`<div id="html_39c03f6440e629080c6513455dd1de5c" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>5220 S. Harper Avenue<br>     <strong>Address: </strong>5220 South Harper Avenue Chicago<br>     </html>     </div>`)[0];
+                popup_8b2381dd906479e0ee81e8a2eaa483a5.setContent(html_39c03f6440e629080c6513455dd1de5c);
+            
+        
+
+        marker_3aebde082b98db8d3bb0dafe8d164577.bindPopup(popup_8b2381dd906479e0ee81e8a2eaa483a5)
+        ;
+
+        
+    
+    
+            var marker_bfcb64f2f6d91360650215d5f2581bab = L.marker(
+                [41.78582189999999, -87.6168888],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_36e82f6fa3b0c46a52b242da421b55a1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_bfcb64f2f6d91360650215d5f2581bab.setIcon(icon_36e82f6fa3b0c46a52b242da421b55a1);
+        
+    
+        var popup_78010ab9bd5ffc472c43f3bfced9d748 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_7e785b2d9196293b865c761005e087de = $(`<div id="html_7e785b2d9196293b865c761005e087de" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Jackson Highlands<br>     <strong>Address: </strong>352-62 East 60th Street Chicago<br>     </html>     </div>`)[0];
+                popup_78010ab9bd5ffc472c43f3bfced9d748.setContent(html_7e785b2d9196293b865c761005e087de);
+            
+        
+
+        marker_bfcb64f2f6d91360650215d5f2581bab.bindPopup(popup_78010ab9bd5ffc472c43f3bfced9d748)
+        ;
+
+        
+    
+    
+            var marker_48f666e1cadbf5ccc572592d05bd70d7 = L.marker(
+                [41.7858519, -87.6161621],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_110b48c4ba7b25f32f04ae703785bf98 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_48f666e1cadbf5ccc572592d05bd70d7.setIcon(icon_110b48c4ba7b25f32f04ae703785bf98);
+        
+    
+        var popup_75d48a8b598dfdba0a44c5fdc2984788 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_a0a4efa08af7c183e06c5286123603b4 = $(`<div id="html_a0a4efa08af7c183e06c5286123603b4" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Jackson Highlands<br>     <strong>Address: </strong>366-70 East 60th Street Chicago<br>     </html>     </div>`)[0];
+                popup_75d48a8b598dfdba0a44c5fdc2984788.setContent(html_a0a4efa08af7c183e06c5286123603b4);
+            
+        
+
+        marker_48f666e1cadbf5ccc572592d05bd70d7.bindPopup(popup_75d48a8b598dfdba0a44c5fdc2984788)
+        ;
+
+        
+    
+    
+            var marker_d21efab059e2b29249dbe618fa82c90b = L.marker(
+                [41.7720303, -87.5731356],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_e33328f94711fa2c88613e57e6740292 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_d21efab059e2b29249dbe618fa82c90b.setIcon(icon_e33328f94711fa2c88613e57e6740292);
+        
+    
+        var popup_d935adf50ec0197303181b47c7954739 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_ee4eedeba71bb24257fc7fc1667aadfa = $(`<div id="html_ee4eedeba71bb24257fc7fc1667aadfa" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Jackson Highlands<br>     <strong>Address: </strong>6750 South Merrill Avenue Chicago<br>     </html>     </div>`)[0];
+                popup_d935adf50ec0197303181b47c7954739.setContent(html_ee4eedeba71bb24257fc7fc1667aadfa);
+            
+        
+
+        marker_d21efab059e2b29249dbe618fa82c90b.bindPopup(popup_d935adf50ec0197303181b47c7954739)
+        ;
+
+        
+    
+    
+            var marker_85fe4dbabedbe3308947fe1e6d0b496d = L.marker(
+                [41.76702359999999, -87.5722941],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_2438ab5b8abab37ab1a19b7d2c41287f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_85fe4dbabedbe3308947fe1e6d0b496d.setIcon(icon_2438ab5b8abab37ab1a19b7d2c41287f);
+        
+    
+        var popup_0e1d5429f3b46fbb1462916d610dce65 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_e63f8de055bfeb27ca64702b5a999753 = $(`<div id="html_e63f8de055bfeb27ca64702b5a999753" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Jackson Highlands<br>     <strong>Address: </strong>7031-37 South Merrill Avenue Chicago<br>     </html>     </div>`)[0];
+                popup_0e1d5429f3b46fbb1462916d610dce65.setContent(html_e63f8de055bfeb27ca64702b5a999753);
+            
+        
+
+        marker_85fe4dbabedbe3308947fe1e6d0b496d.bindPopup(popup_0e1d5429f3b46fbb1462916d610dce65)
+        ;
+
+        
+    
+    
+            var marker_5d61bc2b33697c956ed4c069aba9e154 = L.marker(
+                [41.7667539, -87.57228599999999],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_8c4b9a8c57b6ad00692d94a23d8c2824 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_5d61bc2b33697c956ed4c069aba9e154.setIcon(icon_8c4b9a8c57b6ad00692d94a23d8c2824);
+        
+    
+        var popup_278f4d3e58e9e4793123ba8c876051dc = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_a9a2ed6d20a0727bb425ae36ad87c825 = $(`<div id="html_a9a2ed6d20a0727bb425ae36ad87c825" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Jackson Highlands<br>     <strong>Address: </strong>7041-47 South Merrill Avenue Chicago<br>     </html>     </div>`)[0];
+                popup_278f4d3e58e9e4793123ba8c876051dc.setContent(html_a9a2ed6d20a0727bb425ae36ad87c825);
+            
+        
+
+        marker_5d61bc2b33697c956ed4c069aba9e154.bindPopup(popup_278f4d3e58e9e4793123ba8c876051dc)
+        ;
+
+        
+    
+    
+            var marker_1d918374f2492a349b3074346b3f5093 = L.marker(
+                [41.7713053, -87.57137519999999],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_924b8c3d47f484eb03f5c6d1ca1aef15 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_1d918374f2492a349b3074346b3f5093.setIcon(icon_924b8c3d47f484eb03f5c6d1ca1aef15);
+        
+    
+        var popup_b16a42707bc01d60968463b96ed2ab76 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_3058947f293576d49c2348744f776e2f = $(`<div id="html_3058947f293576d49c2348744f776e2f" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Jackson Highlands<br>     <strong>Address: </strong>6811 South Paxton Avenue Chicago<br>     </html>     </div>`)[0];
+                popup_b16a42707bc01d60968463b96ed2ab76.setContent(html_3058947f293576d49c2348744f776e2f);
+            
+        
+
+        marker_1d918374f2492a349b3074346b3f5093.bindPopup(popup_b16a42707bc01d60968463b96ed2ab76)
+        ;
+
+        
+    
+    
+            var marker_1bd999c90a761c12c5276090b485073c = L.marker(
+                [41.768335, -87.57177469999999],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_8aaad7c5b3b9b0f93c51289adccf33f5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_1bd999c90a761c12c5276090b485073c.setIcon(icon_8aaad7c5b3b9b0f93c51289adccf33f5);
+        
+    
+        var popup_38fbebd9d574cb88a28af738757b2b8e = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_e8c7107bd1477aa874995c552f533d0f = $(`<div id="html_e8c7107bd1477aa874995c552f533d0f" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Jackson Highlands<br>     <strong>Address: </strong>6952 South Paxton Avenue Chicago<br>     </html>     </div>`)[0];
+                popup_38fbebd9d574cb88a28af738757b2b8e.setContent(html_e8c7107bd1477aa874995c552f533d0f);
+            
+        
+
+        marker_1bd999c90a761c12c5276090b485073c.bindPopup(popup_38fbebd9d574cb88a28af738757b2b8e)
+        ;
+
+        
+    
+    
+            var marker_67f9faed38b469d28e575e2c23de445c = L.marker(
+                [41.77011040000001, -87.5737851],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_9e15bbe655a8685d1c667adcb55ce661 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_67f9faed38b469d28e575e2c23de445c.setIcon(icon_9e15bbe655a8685d1c667adcb55ce661);
+        
+    
+        var popup_94aa989cc44cac640ed391e1722b18da = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_20b7e2414ac94b1440b4d3e22129a74b = $(`<div id="html_20b7e2414ac94b1440b4d3e22129a74b" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Jackson Highlands<br>     <strong>Address: </strong>6849-59 South Clyde Avenue Chicago<br>     </html>     </div>`)[0];
+                popup_94aa989cc44cac640ed391e1722b18da.setContent(html_20b7e2414ac94b1440b4d3e22129a74b);
+            
+        
+
+        marker_67f9faed38b469d28e575e2c23de445c.bindPopup(popup_94aa989cc44cac640ed391e1722b18da)
+        ;
+
+        
+    
+    
+            var marker_a26f5b5599fefb5f0037fed8ddaccd9d = L.marker(
+                [41.7690394, -87.568957],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_0f1898d217e90b3a4fa67a0e53032de9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_a26f5b5599fefb5f0037fed8ddaccd9d.setIcon(icon_0f1898d217e90b3a4fa67a0e53032de9);
+        
+    
+        var popup_7575f2a69386ad7066e5de51e985bdce = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_2cfc94d901df3f0c6cbaa0ddb6fcf56d = $(`<div id="html_2cfc94d901df3f0c6cbaa0ddb6fcf56d" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Jackson Highlands<br>     <strong>Address: </strong>6920 South Oglesby Avenue Chicago<br>     </html>     </div>`)[0];
+                popup_7575f2a69386ad7066e5de51e985bdce.setContent(html_2cfc94d901df3f0c6cbaa0ddb6fcf56d);
+            
+        
+
+        marker_a26f5b5599fefb5f0037fed8ddaccd9d.bindPopup(popup_7575f2a69386ad7066e5de51e985bdce)
+        ;
+
+        
+    
+    
+            var marker_91646959384885335d5ce5a7147ee7b5 = L.marker(
+                [41.7618307, -87.58269849999999],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_334781812f9b617ce7571fc25ac57b2b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_91646959384885335d5ce5a7147ee7b5.setIcon(icon_334781812f9b617ce7571fc25ac57b2b);
+        
+    
+        var popup_e6780b4424dc2928e7992a0324092801 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_2a48ccd6648660c501bc060bae04362c = $(`<div id="html_2a48ccd6648660c501bc060bae04362c" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Ridgeland<br>     <strong>Address: </strong>7318-20 South Ridgeland Avenue Chicago<br>     </html>     </div>`)[0];
+                popup_e6780b4424dc2928e7992a0324092801.setContent(html_2a48ccd6648660c501bc060bae04362c);
+            
+        
+
+        marker_91646959384885335d5ce5a7147ee7b5.bindPopup(popup_e6780b4424dc2928e7992a0324092801)
+        ;
+
+        
+    
+    
+            var marker_7bbdd6d711f24c508f13ba7445de0fba = L.marker(
+                [41.7618803, -87.5821981],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_e9ca4f9d57a3be7b75cc163eb3ff0292 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_7bbdd6d711f24c508f13ba7445de0fba.setIcon(icon_e9ca4f9d57a3be7b75cc163eb3ff0292);
+        
+    
+        var popup_867c0d8fdebcb29932d139e4e6b608e1 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_fa3bb4eca096b19b9d17fb67c9751580 = $(`<div id="html_fa3bb4eca096b19b9d17fb67c9751580" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Ridgeland<br>     <strong>Address: </strong>7319-21 South Ridgeland Avenue Chicago<br>     </html>     </div>`)[0];
+                popup_867c0d8fdebcb29932d139e4e6b608e1.setContent(html_fa3bb4eca096b19b9d17fb67c9751580);
+            
+        
+
+        marker_7bbdd6d711f24c508f13ba7445de0fba.bindPopup(popup_867c0d8fdebcb29932d139e4e6b608e1)
+        ;
+
+        
+    
+    
+            var marker_219dbae30b6b8e0fc5dec50e4e2687c5 = L.marker(
+                [41.7605356, -87.5770924],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_57e33111d24dc2ea300b81c03c7ff9ed = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_219dbae30b6b8e0fc5dec50e4e2687c5.setIcon(icon_57e33111d24dc2ea300b81c03c7ff9ed);
+        
+    
+        var popup_e25f3be1e401f128c85c75eb863146f3 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_b5d719012280e6ed5289c69d57e849b9 = $(`<div id="html_b5d719012280e6ed5289c69d57e849b9" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Ridgeland<br>     <strong>Address: </strong>7403 South Euclid Avenue Chicago<br>     </html>     </div>`)[0];
+                popup_e25f3be1e401f128c85c75eb863146f3.setContent(html_b5d719012280e6ed5289c69d57e849b9);
+            
+        
+
+        marker_219dbae30b6b8e0fc5dec50e4e2687c5.bindPopup(popup_e25f3be1e401f128c85c75eb863146f3)
+        ;
+
+        
+    
+    
+            var marker_70aa8a60b61371007bcc4df53e3c5a6d = L.marker(
+                [41.7319763, -87.664433],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_0e37ffb5027d521434bf528904e9efe0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_70aa8a60b61371007bcc4df53e3c5a6d.setIcon(icon_0e37ffb5027d521434bf528904e9efe0);
+        
+    
+        var popup_f23631f45e3f2b5e0ae479416b9a4076 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_85b1270fceb119b647b23b9c534a989b = $(`<div id="html_85b1270fceb119b647b23b9c534a989b" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Adam Wells<br>     <strong>Address: </strong>1637 West 89th Street Chicago<br>     </html>     </div>`)[0];
+                popup_f23631f45e3f2b5e0ae479416b9a4076.setContent(html_85b1270fceb119b647b23b9c534a989b);
+            
+        
+
+        marker_70aa8a60b61371007bcc4df53e3c5a6d.bindPopup(popup_f23631f45e3f2b5e0ae479416b9a4076)
+        ;
+
+        
+    
+    
+            var marker_eea51343d5a33e41f944a6d677129882 = L.marker(
+                [41.7581764, -87.5637225],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_b6e702e005254c47bd2ea6472022731a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_eea51343d5a33e41f944a6d677129882.setIcon(icon_b6e702e005254c47bd2ea6472022731a);
+        
+    
+        var popup_6fdb6479f264129b23e9cf117ceaf7da = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_07f6876db7739ae9f595e9dbba84a920 = $(`<div id="html_07f6876db7739ae9f595e9dbba84a920" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Adam Wells<br>     <strong>Address: </strong>7527 South Essex Avenue Chicago<br>     </html>     </div>`)[0];
+                popup_6fdb6479f264129b23e9cf117ceaf7da.setContent(html_07f6876db7739ae9f595e9dbba84a920);
+            
+        
+
+        marker_eea51343d5a33e41f944a6d677129882.bindPopup(popup_6fdb6479f264129b23e9cf117ceaf7da)
+        ;
+
+        
+    
+    
+            var marker_ea69867f07ad1f3d4243a52fea0bb6c7 = L.marker(
+                [41.7576079, -87.56189479999999],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_219140d2747c7cc4baa406ebd3543ce7 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_ea69867f07ad1f3d4243a52fea0bb6c7.setIcon(icon_219140d2747c7cc4baa406ebd3543ce7);
+        
+    
+        var popup_989f61276657ca28abde12b125c85280 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_15396a922434fc84c0fd38835764a167 = $(`<div id="html_15396a922434fc84c0fd38835764a167" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Adam Wells<br>     <strong>Address: </strong>7548 South Colfax Avenue Chicago<br>     </html>     </div>`)[0];
+                popup_989f61276657ca28abde12b125c85280.setContent(html_15396a922434fc84c0fd38835764a167);
+            
+        
+
+        marker_ea69867f07ad1f3d4243a52fea0bb6c7.bindPopup(popup_989f61276657ca28abde12b125c85280)
+        ;
+
+        
+    
+    
+            var marker_791798e8f319ec4f28086f9e75204825 = L.marker(
+                [41.7567276, -87.61691809999999],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_f31609acc28511b795715b85c9397dba = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_791798e8f319ec4f28086f9e75204825.setIcon(icon_f31609acc28511b795715b85c9397dba);
+        
+    
+        var popup_016203c3f2b08984e0ebef2b56edf187 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_a8cb35b046dfa2b9cc24126ef167b083 = $(`<div id="html_a8cb35b046dfa2b9cc24126ef167b083" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Adam Wells<br>     <strong>Address: </strong>7556 South Calumet Avenue Chicago<br>     </html>     </div>`)[0];
+                popup_016203c3f2b08984e0ebef2b56edf187.setContent(html_a8cb35b046dfa2b9cc24126ef167b083);
+            
+        
+
+        marker_791798e8f319ec4f28086f9e75204825.bindPopup(popup_016203c3f2b08984e0ebef2b56edf187)
+        ;
+
+        
+    
+    
+            var marker_d5e860ddc5dd43c2f67bdcf5fffd92f6 = L.marker(
+                [41.7567533, -87.6161934],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_17e0cf97e66ceb17f5874bcb9d3fe883 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_d5e860ddc5dd43c2f67bdcf5fffd92f6.setIcon(icon_17e0cf97e66ceb17f5874bcb9d3fe883);
+        
+    
+        var popup_2708f858b0ef5019b224724b78322c5a = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_e13ba5acc62f512b51ba74863189b38c = $(`<div id="html_e13ba5acc62f512b51ba74863189b38c" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Adam Wells<br>     <strong>Address: </strong>7557 South Calumet Avenue Chicago<br>     </html>     </div>`)[0];
+                popup_2708f858b0ef5019b224724b78322c5a.setContent(html_e13ba5acc62f512b51ba74863189b38c);
+            
+        
+
+        marker_d5e860ddc5dd43c2f67bdcf5fffd92f6.bindPopup(popup_2708f858b0ef5019b224724b78322c5a)
+        ;
+
+        
+    
+    
+            var marker_37b959e3f68ce20ce24395515c14bbb2 = L.marker(
+                [41.7513501, -87.57151449999999],
+                {"fill": true, "radius": 5}
+            ).addTo(map_7fded9a9ff639178782fbdd9383c13a2);
+        
+    
+            var icon_f7b7296dd691a0bde3cd3af68c7ee14b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_37b959e3f68ce20ce24395515c14bbb2.setIcon(icon_f7b7296dd691a0bde3cd3af68c7ee14b);
+        
+    
+        var popup_289c633feed9050a94b64b06982f2b51 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_d570b6ce58c392f6074a3e2cf937a84d = $(`<div id="html_d570b6ce58c392f6074a3e2cf937a84d" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>Adam Wells<br>     <strong>Address: </strong>7900 South Paxton Avenue Chicago<br>     </html>     </div>`)[0];
+                popup_289c633feed9050a94b64b06982f2b51.setContent(html_d570b6ce58c392f6074a3e2cf937a84d);
+            
+        
+
+        marker_37b959e3f68ce20ce24395515c14bbb2.bindPopup(popup_289c633feed9050a94b64b06982f2b51)
+        ;
+
+        
+    
+</script>
