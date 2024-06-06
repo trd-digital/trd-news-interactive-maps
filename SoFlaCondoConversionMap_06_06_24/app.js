@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <strong>Project: ${properties['project name']}</strong> 
                     </div>
                     <div style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 2px dashed #ccc;">
-                        <strong>Developers: ${properties['developers']}</strong>
+                        <strong>Developer: ${properties['developers']}</strong>
                     </div>
                     <div>
                         ${properties['description_link']}
