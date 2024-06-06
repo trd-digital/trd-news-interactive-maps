@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', function() {
         zoom: 7
     });
 
+    // Add zoom and rotation controls to the map.
+    map.addControl(new mapboxgl.NavigationControl());
+
     document.addEventListener('DOMContentLoaded', function() {
         var infoBox = document.getElementById('info-box');
         positionInfoBox();
@@ -76,7 +79,7 @@ map.on('load', function() {
                         <strong>Landlord/Developer:</strong> ${properties['Landlord/Developer']}
                     </div>
                     <div style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 2px dashed #ccc;">
-                        <strong>Date filed:</strong> ${properties['Date filed']}
+                        <strong>Year filed:</strong> 2024
                     </div>
                     <div>
                         ${properties['Caption for map']}
