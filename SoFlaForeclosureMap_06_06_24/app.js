@@ -1,12 +1,19 @@
 // Your Mapbox access token
 mapboxgl.accessToken = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
 
+const bounds = [
+    [-81.0, 23.5], // [westLongitude, southLatitude]
+    [-79.0, 29.5]  // [eastLongitude, northLatitude]
+];
+
+
 document.addEventListener('DOMContentLoaded', function() {
     var map = new mapboxgl.Map({
         container: 'map',
         style: "mapbox://styles/trddata/clwiavdh402fr01qlf2g413ja",
-        center: [-80.17625652395229, 25.9132507932142],
-        zoom: 7
+        center: [-80.17625652395229, 26.5132507932142],
+        zoom: 8,
+        maxBounds: bounds
     });
 
     // Add zoom and rotation controls to the map.
