@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 source: 'assessments',
                 paint: {
                     // Specify paint properties here depending on the type of layer
-                    'circle-radius': 5,
+                    'circle-radius': 10,
                     'circle-color': '#FF0000',
                     'circle-stroke-width':1
                 }
@@ -74,13 +74,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         <strong>${properties.address}</strong> 
                     </div>
                     <div style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 2px dashed #ccc;">
-                        <strong>2021 Value ${properties['2021 value']}</strong>
+                        <strong>Category:</strong> ${properties['category']}
                     </div>
                     <div style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 2px dashed #ccc;">
-                        <strong>2024 Value ${properties['2024 value']}</strong>
+                        <strong>2021 Value:</strong> ${properties['2021 value']}
+                    </div>
+                    <div style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 2px dashed #ccc;">
+                        <strong>2024 Value:</strong> ${properties['2024 value']}
                     </div>
                     <div>
-                        <strong>Change ${properties['percent change in initial assessment']}:</strong>
+                        <strong>Change:</strong> ${properties['percent change in initial assessment']}
                     </div>`;
                 infoBox.style.display = 'block';
             } else {
