@@ -1,20 +1,24 @@
 // Your Mapbox access token
 mapboxgl.accessToken = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
 
-// const bounds = [
-//     [-81.0, 23.5], // [westLongitude, southLatitude]
-//     [-79.0, 29.5]  // [eastLongitude, northLatitude]
-// ];
+const centerMiami = [-80.1918, 25.7617]; // Miami's longitude and latitude
+const longitudeSpan = 1.5;
+const latitudeSpan = 0.75;
 
+const bounds = [
+    [centerMiami[0] - longitudeSpan, centerMiami[1] - latitudeSpan], // [westLongitude, southLatitude]
+    [centerMiami[0] + longitudeSpan, centerMiami[1] + latitudeSpan]  // [eastLongitude, northLatitude]
+];
 
 document.addEventListener('DOMContentLoaded', function() {
     var map = new mapboxgl.Map({
         container: 'map',
         style: "mapbox://styles/trddata/clcjj6iyv009a15qs5sv5wc5z",
-        center: [-80.17625652395229, 26.0132507932142],
+        center: centerMiami,
         zoom: 8,
-        // maxBounds: bounds
+        maxBounds: bounds
     });
+
 
     // Add zoom and rotation controls to the map.
     map.addControl(new mapboxgl.NavigationControl());
@@ -70,18 +74,22 @@ document.addEventListener('DOMContentLoaded', function() {
             var infoBox = document.getElementById('info-box');
             if (infoBox) {
                 infoBox.innerHTML = `
-                    <h3>SoFla Condo Conversions</h3>
+                    <h3>Multifamily to condo conversions in South Florida</h3>
                     <div style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 2px dashed #ccc;">
                         <strong>Project: ${properties['project name']}</strong> 
                     </div>
-                    <div>
+                    <div style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 2px dashed #ccc;">
                         <strong>Developers: ${properties['developers']}</strong>
+                    </div>
+                    <div>
+                        ${properties['description_link']}
                     </div>`;
                 infoBox.style.display = 'block';
             } else {
                 console.error('Info box element not found');
             }
         }
+
         
     
         // Enhance interactivity on hover
