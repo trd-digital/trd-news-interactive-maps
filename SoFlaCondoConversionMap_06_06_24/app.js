@@ -19,6 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
         maxBounds: bounds
     });
 
+    // Disable map dragging
+    map.dragPan.disable();
+
+
 
     // Add zoom and rotation controls to the map.
     map.addControl(new mapboxgl.NavigationControl());
