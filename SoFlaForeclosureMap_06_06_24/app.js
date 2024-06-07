@@ -1,9 +1,13 @@
 // Your Mapbox access token
 mapboxgl.accessToken = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
 
+const centerMiami = [-79.9918, 26.1617]; // Miami's longitude and latitude
+const longitudeSpan = 1.5;
+const latitudeSpan = 0.75;
+
 const bounds = [
-    [-81.0, 23.5], // [westLongitude, southLatitude]
-    [-79.0, 29.5]  // [eastLongitude, northLatitude]
+    [centerMiami[0] - longitudeSpan, centerMiami[1] - latitudeSpan], // [westLongitude, southLatitude]
+    [centerMiami[0] + longitudeSpan, centerMiami[1] + latitudeSpan]  // [eastLongitude, northLatitude]
 ];
 
 
@@ -11,8 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var map = new mapboxgl.Map({
         container: 'map',
         style: "mapbox://styles/trddata/clwiavdh402fr01qlf2g413ja",
-        center: [-80.17625652395229, 26.5132507932142],
-        zoom: 8,
+        center: centerMiami,
+        zoom: 6,
         maxBounds: bounds
     });
 
@@ -86,7 +90,7 @@ map.on('load', function() {
                         <strong>Landlord/Developer:</strong> ${properties['Landlord/Developer']}
                     </div>
                     <div style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 2px dashed #ccc;">
-                        <strong>Year filed:</strong> 2024
+                        <strong>Date filed:</strong> ${properties['Exact dates']}
                     </div>
                     <div>
                         ${properties['Caption for map']}
