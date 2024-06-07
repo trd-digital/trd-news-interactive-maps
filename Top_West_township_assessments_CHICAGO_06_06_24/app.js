@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
         container: 'map',
         style: "mapbox://styles/trddata/clwiavdh402fr01qlf2g413ja",
         center: [-87.67168443153632, 41.8546877490377],
-        zoom: 8,
+        zoom: 10,
         // maxBounds: bounds
     });
     // Add zoom and rotation controls to the map.
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 source: 'assessments',
                 paint: {
                     // Specify paint properties here depending on the type of layer
-                    'circle-radius': 10,
+                    'circle-radius': 7,
                     'circle-color': '#FF0000',
                     'circle-stroke-width':1
                 }
