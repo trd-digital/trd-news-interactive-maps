@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Mapbox Map</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <!-- Load Mapbox GL JS -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Load D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        #info-box {
+        position: absolute;
+        top: 10px; /* Adjust this value as needed */
+        left: 10px; /* Adjust this value as needed */
+        width: 30%; /* Adjust the width as needed */
+        max-height: 50%; /* Adjust the height as needed */
+        background: grey; /* Solid grey background */
+        border: 1px solid black; /* Thin black stroke */
+        padding: 10px;
+        border-radius: 5px;
+        z-index: 1;
+        font-family: 'Merriweather', serif; /* Use Merriweather font */
+        color: black; /* Font color, adjust if needed */
+        overflow: auto; /* Adds scroll to the box if content is too much */
+    }
+    .mapboxgl-ctrl-icon.mapboxgl-ctrl-zoom-in, .mapboxgl-ctrl-icon.mapboxgl-ctrl-zoom-out {
+    width: 30px; /* Sets the width of the button */
+    height: 30px; /* Sets the height of the button */
+    background-size: 30px 30px; /* Enlarges the icon to fit the new button size */
+    }
+
+    .mapboxgl-ctrl-icon.mapboxgl-ctrl-zoom-in:before {
+        content: '+'; /* Custom content for zoom-in button, if not using default */
+    }
+
+    .mapboxgl-ctrl-icon.mapboxlibctrl-zoom-out:before {
+        content: '−'; /* Custom content for zoom-out button, if not using default */
+    }
+
+
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="info-box" style="position: absolute; top: 10px; left: 10px; background: rgba(255, 255, 255, 0.8); padding: 10px; border-radius: 5px; z-index: 1; display: none;">
+        Click on a point to see information.
+    <script src="app.js"></script>
+</body>
+</html>
