@@ -1,7 +1,7 @@
 // Your Mapbox access token
 mapboxgl.accessToken = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
 
-const centerBrickell = [-80.1930, 25.7617]; // Updated coordinates for Brickell
+const centerBrickell = [-80.19100840226099, 25.765797274953503]; // Updated coordinates for Brickell
 
 // Smaller span values for a more focused area
 const longitudeSpan = 0.02;
@@ -90,12 +90,9 @@ map.on('load', function() {
             var infoBox = document.getElementById('info-box');
             if (infoBox) {
                 infoBox.innerHTML = `
-                    <h3>Brickell Sites Hitting the Market</h3>
+                    <h3>${properties['Address']}</h3>
                     <div style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 2px dashed #ccc;">
-                        <strong>Address:</strong> ${properties['Address']}
-                    </div>
-                    <div style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 2px dashed #ccc;">
-                        <strong>Details:</strong> ${properties['Details']}
+                       ${properties['Details']}
                     </div>`;
                 infoBox.style.display = 'block';
             } else {
