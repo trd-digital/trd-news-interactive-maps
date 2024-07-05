@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Mapbox Map</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <style>
+        body { margin: 0; padding: 0; }
+        #map {
+        position: absolute;
+        top: 0px; /* Adjust based on the height of your table */
+        bottom: 0;
+        width: 100%;
+        }
+
+        /* Custom CSS for popup */
+        .mapboxgl-popup-content {
+            border: 2px solid black; /* Black border around the popup content */
+            border-radius: 5px;
+            padding: 10px;
+            box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+            max-width: none; /* Remove max-width limitation */
+            width: 500px; /* Set a fixed width for the popup */
+        }
+
+        .mapboxgl-popup-close-button {
+            display: none; /* Hide the default close button */
+        }
+
+        .custom-popup .mapboxgl-popup-tip {
+            border-top-color: black; /* Ensure the popup tip matches the border */
+        }
+
+        .popup-entry {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Thin, opaque line between entries */
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+        }
+
+        .popup-entry:last-child {
+            border-bottom: none; /* Remove the border for the last entry */
+        }
+
+        .two-column {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .two-column .popup-entry {
+            width: calc(50% - 10px); /* Increase column width, account for separator */
+            box-sizing: border-box;
+            padding-right: 5px; /* Add padding to the right for the separator */
+        }
+
+        .column-separator {
+            width: 1px;
+            background-color: rgba(0, 0, 0, 0.1); /* Thin, opaque line */
+            margin-left: 5px; /* Space between columns and separator */
+            margin-right: 5px;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>   
+<div id="dataTable">
+    <table id="soFlaDataTable" class="table table-striped table-bordered" style="width:100%"></table>
+</div>
+<div id="map"></div>
+<script>
+    // MAPBOX STUFF
+    mapboxgl.accessToken = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
+
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: "mapbox://styles/trddata/clwiavdh402fr01qlf2g413ja",
+        center: [-80.17625652395229, 25.9132507932142], // Starting position [lng, lat]
+        zoom: 7
+    });
+
+    // Load GeoJSON data
+    fetch('SoFlaCondoMarketingNY.geojson')
+        .then(response => response.json())
+        .then(data => {
+            map.on('load', function() {
+                map.addSource('condos', {
+                    'type': 'geojson',
+                    'data': data
+                });
+
+                // Add a layer for condos with color based on the 'hex' property
+                map.addLayer({
+                    id: 'condos',
+                    type: 'circle',
+                    source: 'condos',
+                    paint: {
+                        'circle-radius': 10,
+                        'circle-color': ['get', 'Color'], // Use the 'hex' property for color
+                        'circle-opacity': 0.8,
+                        'circle-stroke-width': 1
+                    }
+                });
+
+                // Add popups
+                map.on('click', 'condos', function(e) {
+                    var coordinates = e.features[0].geometry.coordinates.slice();
+                    var properties = e.features[0].properties;
+                    var description = '';
+                    var entries = [];
+
+                    // Generate description with all valid data
+                    for (var key in properties) {
+                        if (properties[key] && properties[key] !== 'Data Not Found' && key !== 'Color') {
+                            if (key === 'Sale Price') {
+                                var salePrice = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(properties[key]);
+                                entries.push(`<div class="popup-entry"><strong>${key}</strong>: ${salePrice}</div>`);
+                            } else if (key === 'Building Sq. Ft') {
+                                var buildingSqFt = new Intl.NumberFormat('en-US').format(properties[key]);
+                                entries.push(`<div class="popup-entry"><strong>${key}</strong>: ${buildingSqFt}</div>`);
+                            } else if (key === 'Loan Amount') {
+                                var loanAmount = new Intl.NumberFormat('en-US').format(properties[key]);
+                                entries.push(`<div class="popup-entry"><strong>${key}</strong>: $${loanAmount}</div>`);
+                            } else {
+                                entries.push(`<div class="popup-entry"><strong>${key}</strong>: ${properties[key]}</div>`);
+                            }
+                        }
+                    }
+
+                    // Determine if the popup should be split into two columns
+                    var className = entries.length > 7 ? 'two-column' : ''; // Adjust the threshold as needed
+                    if (className === 'two-column') {
+                        var halfway = Math.ceil(entries.length / 2);
+                        var firstColumn = entries.slice(0, halfway).join('');
+                        var secondColumn = entries.slice(halfway).join('');
+                        description = `<div class="${className}">${firstColumn}<div class="column-separator"></div>${secondColumn}</div>`;
+                    } else {
+                        description = entries.join('');
+                    }
+
+                    new mapboxgl.Popup({ className: 'custom-popup' }) // Apply custom CSS class
+                        .setLngLat(coordinates)
+                        .setHTML(description)
+                        .addTo(map);
+                });
+
+                // Change cursor style on hover
+                map.on('mouseenter', 'condos', function() {
+                    map.getCanvas().style.cursor = 'pointer';
+                });
+                map.on('mouseleave', 'condos', function() {
+                    map.getCanvas().style.cursor = '';
+                });
+            });
+        });
+</script>
+</body>
+</html>
