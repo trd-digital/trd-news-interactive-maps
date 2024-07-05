@@ -19,6 +19,47 @@
         width: 100%;
         }
 
+        /* Custom CSS for the map title */
+        #mapTitle {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            z-index: 1;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Custom CSS for the legend */
+        #legend {
+            position: absolute;
+            bottom: 30px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            z-index: 1;
+            font-size: 14px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 3px;
+        }
+
         /* Custom CSS for popup */
         .mapboxgl-popup-content {
             border: 2px solid black; /* Black border around the popup content */
@@ -68,7 +109,9 @@
         }
     </style>
 </head>
-<body>   
+<body>
+<div id="mapTitle">South Florida condo projects registered in New York</div> <!-- Map Title -->   
+<div id="legend"></div> <!-- Legend Container -->
 <div id="dataTable">
     <table id="soFlaDataTable" class="table table-striped table-bordered" style="width:100%"></table>
 </div>
@@ -106,6 +149,25 @@
                         'circle-stroke-width': 1
                     }
                 });
+
+                // Dynamically create legend
+                var legend = document.getElementById('legend');
+                var companies = {};
+
+                data.features.forEach(function(feature) {
+                    var company = feature.properties["Sales and marketing brokerage"];
+                    var color = feature.properties["Color"];
+                    if (company && color && !companies[company]) {
+                        companies[company] = color;
+                    }
+                });
+
+                for (var company in companies) {
+                    var item = document.createElement('div');
+                    item.className = 'legend-item';
+                    item.innerHTML = '<div class="legend-color" style="background-color: ' + companies[company] + ';"></div><div>' + company + '</div>';
+                    legend.appendChild(item);
+                }
 
                 // Add popups
                 map.on('click', 'condos', function(e) {
