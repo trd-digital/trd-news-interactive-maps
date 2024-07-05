@@ -116,7 +116,7 @@
 
                     // Generate description with all valid data
                     for (var key in properties) {
-                        if (properties[key] && properties[key] !== 'Data Not Found' && key !== 'Color') {
+                        if (properties[key] && properties[key] !== 'Data Not Found' && key !== 'Color' && key != 'Company') {
                             if (key === 'Sale Price') {
                                 var salePrice = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(properties[key]);
                                 entries.push(`<div class="popup-entry"><strong>${key}</strong>: ${salePrice}</div>`);
