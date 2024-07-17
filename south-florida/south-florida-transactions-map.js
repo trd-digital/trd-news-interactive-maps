@@ -5,31 +5,44 @@ const trdMap = () => {
   const mapConfig = {
     container: "map", // container ID
     style: "mapbox://styles/mapbox/light-v10", // style URL
-    center: [-81.01876871961221, 26.351549067464248], // starting position [lng, lat]. Note that lat must be set between -90 and 90
+    center: {
+      lng: -80.38513016032842,
+      lat: 26.380126753919782,
+    },
     zoom: 8, // starting zoom
     attributionControl: false,
   };
 
   const legendMap = [
     {
+      value: 5_000_000,
       color: "#BBDEFB",
-      text: "<$500K",
+      text: "<$5M",
+      default: false,
     },
     {
+      value: 10_000_000,
       color: "#64B5F6",
-      text: "$500K - $1M",
+      text: "$5M - $10M",
+      default: false,
     },
     {
+      value: 20_000_000,
       color: "#2196F3",
-      text: "$1M - $2M",
+      text: "$10M - $20M",
+      default: false,
     },
     {
+      value: 50_000_000,
       color: "#1976D2",
-      text: "$2M - $5M",
+      text: "$20M - $50M",
+      default: false,
     },
     {
+      value: 100_000_000,
       color: "#0D47A1",
-      text: ">$5M",
+      text: ">$1B",
+      default: true,
     },
   ];
 
@@ -37,15 +50,8 @@ const trdMap = () => {
 
   const fn = {
     init: async () => {
-      mapObj = new mapboxgl.Map(mapConfig);
       fn.createLegend();
-
-      const data = await map.getData();
-
-      const sourceId = "south-florida-transactions";
-
-      map.addSource(sourceId, data.geoData);
-      map.addLayer(sourceId, data);
+      map.init();
     },
 
     createLegend: () => {
@@ -58,7 +64,38 @@ const trdMap = () => {
     },
   };
 
+  const helpers = {
+    getPointsColor: () => {
+      const colors = ["step", ["to-number", ["get", "Sale Price"], 0]];
+
+      legendMap.forEach((item) => {
+        colors.push(item.color);
+
+        if (!item.default) {
+          colors.push(item.value);
+        }
+      });
+
+      return colors;
+    },
+  };
+
   const map = {
+    init: async () => {
+      mapObj = new mapboxgl.Map(mapConfig);
+      mapObj.addControl(
+        new mapboxgl.NavigationControl({
+          showCompass: false,
+        }),
+        "top-right"
+      );
+      const sourceId = "south-florida-transactions";
+      const data = await map.getData();
+
+      map.addSource(sourceId, data.geoData);
+      map.addLayer(sourceId);
+    },
+
     getGeoJsonData: async () => {
       const url =
         "https://static.therealdeal.com/interactive-maps/map_data.geojson";
@@ -95,15 +132,18 @@ const trdMap = () => {
       });
     },
 
-    addLayer: (id, data) => {
+    addLayer: (id) => {
       mapObj.on("load", () => {
         mapObj.addLayer({
           type: "circle",
           id: id,
           source: id,
           filter: ["==", ["get", "Doc Type"], "DEED"], // Only show entries where Doc Type is DEED
+
           paint: {
-            "circle-radius": 10,
+            "circle-radius": 8,
+            "circle-color": helpers.getPointsColor(),
+            "circle-pitch-alignment": "map",
           },
         });
       });
