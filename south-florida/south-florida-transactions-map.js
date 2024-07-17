@@ -41,10 +41,114 @@ const trdMap = () => {
     {
       value: 100_000_000,
       color: "#0D47A1",
-      text: ">$1B",
+      text: ">$50M",
       default: true,
     },
   ];
+
+  const tooltipDisplayFields = {
+    title: {
+      field: "Physical Address",
+      label: "Address",
+    },
+    content: [
+      {
+        field: "Sale Price",
+        label: "Sale Price",
+        format: (value) => helpers.formatPrice(value),
+      },
+      {
+        field: "Use Code Description",
+        label: "Use Code",
+      },
+    ],
+  };
+
+  const modalDisplayFields = {
+    title: {
+      field: "Physical Address",
+      label: "Address",
+    },
+    content: [
+      { field: "Doc Type", label: "Doc Type" },
+      { field: "Instrument_Num", label: "Instrument Number" },
+      { field: "Record Date", label: "Record Date" },
+      { field: "Seller", label: "Seller" },
+      { field: "Buyer", label: "Buyer" },
+      {
+        field: "Sale Price",
+        label: "Sale Price",
+        format: (value) => helpers.formatPrice(value),
+      },
+      { field: "Folio", label: "Folio" },
+      { field: "Use Code Description", label: "Use Code Description" },
+      { field: "Building Sq. Ft", label: "Building Sq. Ft" },
+      { field: "Lot Size", label: "Lot Size" },
+      { field: "Date of Previous Sale", label: "Date of Previous Sale" },
+      { field: "Previous Owner Name", label: "Previous Owner Name" },
+      {
+        field: "Previous Sale Price",
+        label: "Previous Sale Price",
+      },
+      { field: "Physical Address", label: "Address" },
+      { field: "Mailing Address", label: "Mailing Address" },
+      {
+        field: "First Party Registered Agent Name & Address",
+        label: "First Party Registered Agent Name & Address",
+      },
+      { field: "First Party Status", label: "First Party Status" },
+      {
+        field: "First Party Document Number",
+        label: "First Party Document Number",
+      },
+      {
+        field: "First Party FEI/EIN Number",
+        label: "First Party FEI/EIN Number",
+      },
+      {
+        field: "First Party Mailing Address",
+        label: "First Party Mailing Address",
+      },
+      {
+        field: "First Party Principal Address",
+        label: "First Party Principal Address",
+      },
+      { field: "First Party State", label: "First Party State" },
+      { field: "First Party Date Filed", label: "First Party Date Filed" },
+      {
+        field: "Second Party Registered Agent Name & Address",
+        label: "Second Party Registered Agent Name & Address",
+      },
+      { field: "Second Party Status", label: "Second Party Status" },
+      {
+        field: "Second Party Document Number",
+        label: "Second Party Document Number",
+      },
+      {
+        field: "Second Party FEI/EIN Number",
+        label: "Second Party FEI/EIN Number",
+      },
+      {
+        field: "Second Party Mailing Address",
+        label: "Second Party Mailing Address",
+      },
+      {
+        field: "Second Party Principal Address",
+        label: "Second Party Principal Address",
+      },
+      { field: "Second Party State", label: "Second Party State" },
+      { field: "Second Party Date Filed", label: "Second Party Date Filed" },
+      {
+        field: "Lender",
+        label: "Lender",
+      },
+      {
+        field: "Loan Amount",
+        label: "Loan Amount",
+        format: (value) => helpers.formatPrice(value),
+      },
+    ],
+  };
 
   let mapObj;
 
@@ -78,6 +182,47 @@ const trdMap = () => {
 
       return colors;
     },
+
+    formatPrice: (value) => {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 0, // No decimal places
+        maximumFractionDigits: 0, // No decimal places
+      }).format(value);
+    },
+
+    cleanValue: (value) => {
+      if (
+        typeof value !== "string" ||
+        value === "" ||
+        value === null ||
+        value === undefined
+      ) {
+        return value;
+      }
+
+      const excludeValue = [
+        "null",
+        "undefined",
+        "n/a",
+        "na",
+        "none",
+        "not available",
+        "not applicable",
+        "no",
+        "0",
+        "false",
+        "unknown",
+        "data not found",
+        "nan",
+      ];
+
+      if (excludeValue.includes(value.toLowerCase())) {
+        return "";
+      }
+      return value;
+    },
   };
 
   const map = {
@@ -92,9 +237,9 @@ const trdMap = () => {
       const sourceId = "south-florida-transactions";
       const data = await map.getData();
 
-      map.addSource(sourceId, data.geoData);
-      map.addLayer(sourceId);
+      map.loadSalesDataOnMap(sourceId, data.geoData);
       map.tooltip(sourceId);
+      map.modal(sourceId);
     },
 
     getGeoJsonData: async () => {
@@ -105,36 +250,22 @@ const trdMap = () => {
       return data;
     },
 
-    getMaxSalePriceData: async () => {
-      const url =
-        "https://static.therealdeal.com/interactive-maps/max_sale_price.json";
-      const response = await fetch(url);
-      const data = await response.json();
-      return data;
-    },
-
     getData: async () => {
-      const promises = [map.getGeoJsonData(), map.getMaxSalePriceData()];
+      const promises = [map.getGeoJsonData()];
 
-      const [geoData, maxSalePriceData] = await Promise.all(promises);
+      const [geoData] = await Promise.all(promises);
 
       return {
         geoData,
-        maxSalePrice: maxSalePriceData.max_sale_price || 0,
       };
     },
 
-    addSource: (id, data) => {
+    loadSalesDataOnMap: (id, data) => {
       mapObj.on("load", () => {
         mapObj.addSource(id, {
           type: "geojson",
           data: data,
         });
-      });
-    },
-
-    addLayer: (id) => {
-      mapObj.on("load", () => {
         mapObj.addLayer({
           type: "circle",
           id: id,
@@ -142,7 +273,7 @@ const trdMap = () => {
           filter: ["==", ["get", "Doc Type"], "DEED"], // Only show entries where Doc Type is DEED
 
           paint: {
-            "circle-radius": 8,
+            "circle-radius": 6,
             "circle-color": helpers.getPointsColor(),
             "circle-pitch-alignment": "map",
           },
@@ -160,18 +291,26 @@ const trdMap = () => {
         mapObj.getCanvas().style.cursor = "pointer";
 
         const coordinates = e.features[0].geometry.coordinates.slice();
-        const salePrice = e.features[0].properties["Sale Price"];
-        const address = e.features[0].properties["Physical Address"];
-        const date = e.features[0].properties["Date"];
-        const buyer = e.features[0].properties["Buyer"];
-        const seller = e.features[0].properties["Seller"];
-        const docType = e.features[0].properties["Doc Type"];
+
+        const address =
+          e.features[0].properties[tooltipDisplayFields.title.field] ||
+          `Unknown ${tooltipDisplayFields.title.label}`;
+
+        let content = "";
+
+        tooltipDisplayFields.content.forEach((item) => {
+          const value = e.features[0].properties[item.field];
+          if (value) {
+            content += `<p><span>${item.label}:</span> <span>${
+              item.format ? item.format(value) : value
+            }</span></p>`;
+          }
+        });
 
         const html = `
                 <div class="popup-tooltip">
                     <h4 class="popup-title">${address}</h4>
-                    <p><span>Sale Price:</span> <span>$${salePrice}</span></p>
-                    <p><span>Doc Type:</span> <span>${docType}</span></p>
+                    ${content}
                 </div>
             `;
 
@@ -181,6 +320,42 @@ const trdMap = () => {
       mapObj.on("mouseleave", "south-florida-transactions", () => {
         mapObj.getCanvas().style.cursor = "";
         popup.remove();
+      });
+    },
+
+    modal: (id) => {
+      mapObj.on("click", id, (e) => {
+        const modal = document.querySelector("#modal");
+        const modalTitle = document.querySelector("#modal .modal-title");
+        const modalContent = document.querySelector("#modal .modal-body");
+
+        const address =
+          e.features[0].properties[modalDisplayFields.title.field] ||
+          `Unknown ${modalDisplayFields.title.label}`;
+        modalTitle.innerHTML = address;
+
+        let html = "";
+
+        modalDisplayFields.content.forEach((item) => {
+          const value = helpers.cleanValue(
+            e.features[0].properties[item.field]
+          );
+          if (value) {
+            html += `<p class="detail-item"><span class="detail-label">${
+              item.label
+            }:</span> <span class="detail-value">${
+              item.format ? item.format(value) : value
+            }</span></p>`;
+          }
+        });
+
+        modalContent.innerHTML = html;
+        modal.style.display = "block";
+
+        const close = document.querySelector("#modal .btn-close");
+        close.addEventListener("click", () => {
+          modal.style.display = "none";
+        });
       });
     },
   };
