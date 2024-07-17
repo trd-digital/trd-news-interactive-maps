@@ -261,6 +261,9 @@ const trdMap = () => {
       const sourceId = "transactions";
       const data = await map.getData();
 
+      map.loadMailingDataOnMap(sourceId + "Mailing", data.geoData);
+      map.tooltip(sourceId + "Mailing");
+      map.modal(sourceId + "Mailing");
       map.loadSalesDataOnMap(sourceId, data.geoData);
       map.tooltip(sourceId);
       map.modal(sourceId);
@@ -271,6 +274,18 @@ const trdMap = () => {
         "https://static.therealdeal.com/interactive-maps/map_data.geojson";
       const response = await fetch(url);
       const data = await response.json();
+
+      data.features.map((feature) => {
+        if (feature.properties["physical_address_lon"]) {
+          feature.properties["physical_address_lng"] =
+            feature.properties["physical_address_lon"];
+        }
+      });
+      data.features.filter(
+        (feature) =>
+          feature.properties["physical_address_lat"] !== 0 &&
+          feature.properties["physical_address_lng"] !== 0
+      );
       return data;
     },
 
@@ -299,6 +314,90 @@ const trdMap = () => {
           paint: {
             "circle-radius": 6,
             "circle-color": helpers.getPointsColor(),
+            "circle-pitch-alignment": "map",
+          },
+        });
+      });
+    },
+
+    getSellerMailingData: (features) => {
+      return features
+        .filter(
+          (feature) =>
+            feature.properties["seller_mailing_address_lat"] !== 0 &&
+            feature.properties["seller_mailing_address_lng"] !== 0 &&
+            feature.properties["seller_mailing_address_lat"] !==
+              feature.properties["physical_address_lat"] &&
+            feature.properties["seller_mailing_address_lng"] !==
+              feature.properties["physical_address_lng"]
+        )
+        .map((feature) => {
+          return {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [
+                feature.properties["seller_mailing_address_lng"],
+                feature.properties["seller_mailing_address_lat"],
+              ],
+            },
+            properties: {
+              ...feature.properties,
+              point_type: "seller",
+            },
+          };
+        });
+    },
+
+    getBuyerMailingData: (features) => {
+      return features
+        .filter(
+          (feature) =>
+            feature.properties["buyer_mailing_address_lat"] !== 0 &&
+            feature.properties["buyer_mailing_address_lng"] !== 0 &&
+            feature.properties["buyer_mailing_address_lat"] !==
+              feature.properties["physical_address_lat"] &&
+            feature.properties["buyer_mailing_address_lng"] !==
+              feature.properties["physical_address_lng"]
+        )
+        .map((feature) => {
+          return {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [
+                feature.properties["buyer_mailing_address_lng"],
+                feature.properties["buyer_mailing_address_lat"],
+              ],
+            },
+            properties: {
+              ...feature.properties,
+              point_type: "buyer",
+            },
+          };
+        });
+    },
+
+    loadMailingDataOnMap: (id, data) => {
+      const features = [
+        ...map.getSellerMailingData(data.features),
+        ...map.getBuyerMailingData(data.features),
+      ];
+      mapObj.on("load", () => {
+        mapObj.addSource(id, {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: features,
+          },
+        });
+        mapObj.addLayer({
+          type: "circle",
+          id: id,
+          source: id,
+          paint: {
+            "circle-radius": 8,
+            "circle-color": "#388e3c",
             "circle-pitch-alignment": "map",
           },
         });
