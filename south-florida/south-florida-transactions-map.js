@@ -11,6 +11,10 @@ const trdMap = () => {
     },
     zoom: 8, // starting zoom
     attributionControl: false,
+    scrollZoom: {
+      requireCtrl: true,
+    },
+    cooperativeGestures: window.self !== window.top, // this is set to true when page is loaded in an iframe
   };
 
   const legendMap = [
@@ -154,6 +158,7 @@ const trdMap = () => {
 
   const fn = {
     init: async () => {
+      fn.checkForIframe();
       fn.createLegend();
       map.init();
     },
@@ -165,6 +170,16 @@ const trdMap = () => {
         li.innerHTML = `<span class="legend-icon" style="background-color: ${item.color}"></span>${item.text}`;
         parent.appendChild(li);
       });
+    },
+
+    checkForIframe: () => {
+      if (fn.isIframe()) {
+        document.querySelector("body").classList.add("iframe");
+      }
+    },
+
+    isIframe: () => {
+      return window.self !== window.top;
     },
   };
 
@@ -234,7 +249,16 @@ const trdMap = () => {
         }),
         "top-right"
       );
-      const sourceId = "south-florida-transactions";
+
+      if (fn.isIframe()) {
+        mapObj.addControl(
+          new mapboxgl.FullscreenControl({
+            container: document.querySelector("body"),
+          })
+        );
+      }
+
+      const sourceId = "transactions";
       const data = await map.getData();
 
       map.loadSalesDataOnMap(sourceId, data.geoData);
@@ -317,7 +341,7 @@ const trdMap = () => {
         popup.setLngLat(coordinates).setHTML(html).addTo(mapObj);
       });
 
-      mapObj.on("mouseleave", "south-florida-transactions", () => {
+      mapObj.on("mouseleave", id, () => {
         mapObj.getCanvas().style.cursor = "";
         popup.remove();
       });
