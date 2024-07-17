@@ -94,6 +94,7 @@ const trdMap = () => {
 
       map.addSource(sourceId, data.geoData);
       map.addLayer(sourceId);
+      map.tooltip(sourceId);
     },
 
     getGeoJsonData: async () => {
@@ -146,6 +147,40 @@ const trdMap = () => {
             "circle-pitch-alignment": "map",
           },
         });
+      });
+    },
+
+    tooltip: (id) => {
+      const popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+      });
+
+      mapObj.on("mouseenter", id, (e) => {
+        mapObj.getCanvas().style.cursor = "pointer";
+
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const salePrice = e.features[0].properties["Sale Price"];
+        const address = e.features[0].properties["Physical Address"];
+        const date = e.features[0].properties["Date"];
+        const buyer = e.features[0].properties["Buyer"];
+        const seller = e.features[0].properties["Seller"];
+        const docType = e.features[0].properties["Doc Type"];
+
+        const html = `
+                <div class="popup-tooltip">
+                    <h4 class="popup-title">${address}</h4>
+                    <p><span>Sale Price:</span> <span>$${salePrice}</span></p>
+                    <p><span>Doc Type:</span> <span>${docType}</span></p>
+                </div>
+            `;
+
+        popup.setLngLat(coordinates).setHTML(html).addTo(mapObj);
+      });
+
+      mapObj.on("mouseleave", "south-florida-transactions", () => {
+        mapObj.getCanvas().style.cursor = "";
+        popup.remove();
       });
     },
   };
