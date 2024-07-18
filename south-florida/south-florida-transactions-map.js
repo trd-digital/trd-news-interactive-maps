@@ -322,9 +322,21 @@ const trdMap = () => {
         !isNaN(coordinates[1])
       );
     },
+
+    trackEvent: (action, label) => {
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: "event",
+          eventCategory: "south-florida-transactions-map",
+          eventAction: action,
+          eventLabel: label,
+        });
+      }
+    },
   };
 
   const map = {
+    currentZoom: mapConfig.zoom,
     init: async () => {
       mapObj = new mapboxgl.Map(mapConfig);
       mapObj.addControl(
@@ -352,6 +364,16 @@ const trdMap = () => {
       map.tooltip(sourceId);
       map.modal(sourceId);
       map.loadLinkDataOnMap(sourceId + "Link");
+      map.eventListeners();
+    },
+
+    eventListeners: () => {
+      mapObj.on("zoomend", (e) => {
+        const newZoom = e.target.getZoom();
+        const method = newZoom > map.currentZoom ? "zoom-in" : "zoom-out";
+        helpers.trackEvent("zoom", `${method} ${newZoom}`);
+        map.currentZoom = newZoom;
+      });
     },
 
     getGeoJsonData: async () => {
@@ -648,12 +670,13 @@ const trdMap = () => {
         modalContent.innerHTML = html;
         modalContent.scrollTop = 0;
         modal.style.display = "block";
+        helpers.trackEvent("detail-view", address.toLowerCase());
+      });
 
-        const close = document.querySelector("#modal .btn-close");
-        close.addEventListener("click", () => {
-          map.unLinkData("click");
-          modal.style.display = "none";
-        });
+      const close = document.querySelector("#modal .btn-close");
+      close.addEventListener("click", () => {
+        map.unLinkData("click");
+        modal.style.display = "none";
       });
     },
 
