@@ -220,13 +220,12 @@ const trdMap = () => {
     },
 
     cleanValue: (value) => {
-      if (
-        typeof value !== "string" ||
-        value === "" ||
-        value === null ||
-        value === undefined
-      ) {
+      if (typeof value !== "string") {
         return value;
+      }
+
+      if (value === "" || value === null || value === undefined) {
+        return "";
       }
 
       const excludeValue = [
