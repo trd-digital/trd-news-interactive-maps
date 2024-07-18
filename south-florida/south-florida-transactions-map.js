@@ -489,7 +489,7 @@ const trdMap = () => {
           id: id,
           source: id,
           paint: {
-            "circle-radius": 8,
+            "circle-radius": 6,
             "circle-color": [
               "case",
               ["==", ["get", "pointType"], "seller"],
