@@ -68,6 +68,7 @@ const trdMap = () => {
       {
         field: "pointType",
         label: "Party",
+        format: (value) => value.charAt(0).toUpperCase() + value.slice(1),
       },
     ],
   };
@@ -611,6 +612,7 @@ const trdMap = () => {
         });
 
         modalContent.innerHTML = html;
+        modalContent.scrollTop = 0;
         modal.style.display = "block";
 
         const close = document.querySelector("#modal .btn-close");
