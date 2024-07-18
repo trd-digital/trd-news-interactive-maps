@@ -2,9 +2,13 @@ const trdMap = () => {
   mapboxgl.accessToken =
     "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
 
+  const userTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+
   const mapConfig = {
     container: "map", // container ID
-    style: "mapbox://styles/mapbox/light-v10", // style URL
+    style: `mapbox://styles/mapbox/${userTheme}-v10`, // style URL
     center: {
       lng: -80.38513016032842,
       lat: 26.380126753919782,
@@ -20,31 +24,46 @@ const trdMap = () => {
   const legendMap = [
     {
       value: 5_000_000,
-      color: "#BBDEFB",
+      color: {
+        light: "#90CAF9",
+        dark: "#90CAF9",
+      },
       text: "<$5M",
       default: false,
     },
     {
       value: 10_000_000,
-      color: "#64B5F6",
+      color: {
+        light: "#42A5F5",
+        dark: "#42A5F5",
+      },
       text: "$5M - $10M",
       default: false,
     },
     {
       value: 20_000_000,
-      color: "#2196F3",
+      color: {
+        light: "#1E88E5",
+        dark: "#1E88E5",
+      },
       text: "$10M - $20M",
       default: false,
     },
     {
       value: 50_000_000,
-      color: "#1976D2",
+      color: {
+        light: "#1565C0",
+        dark: "#1565C0",
+      },
       text: "$20M - $50M",
       default: false,
     },
     {
       value: 100_000_000,
-      color: "#0D47A1",
+      color: {
+        light: "#0D47A1",
+        dark: "#0D47A1",
+      },
       text: ">$50M",
       default: true,
     },
@@ -163,17 +182,26 @@ const trdMap = () => {
 
   const fn = {
     init: async () => {
+      fn.setUserTheme();
       fn.checkForIframe();
       fn.createLegend();
       fn.collapseLegend();
       map.init();
     },
 
+    setUserTheme: () => {
+      document.querySelector("body").setAttribute("data-bs-theme", userTheme);
+    },
+
     createLegend: () => {
       const parent = document.querySelector("#legend-content ul");
       legendMap.forEach((item) => {
         const li = document.createElement("li");
-        li.innerHTML = `<span class="legend-icon" style="background-color: ${item.color}"></span>${item.text}`;
+        const color = helpers.pickUserThemeColor(
+          item.color.light,
+          item.color.dark
+        );
+        li.innerHTML = `<span class="legend-icon" style="background-color: ${color}"></span>${item.text}`;
         parent.appendChild(li);
       });
     },
@@ -197,11 +225,17 @@ const trdMap = () => {
   };
 
   const helpers = {
+    pickUserThemeColor: (lightColor, darkColor) => {
+      return userTheme === "dark" ? darkColor : lightColor;
+    },
+
     getPointsColor: () => {
       const colors = ["step", ["to-number", ["get", "Sale Price"], 0]];
 
       legendMap.forEach((item) => {
-        colors.push(item.color);
+        colors.push(
+          helpers.pickUserThemeColor(item.color.light, item.color.dark)
+        );
 
         if (!item.default) {
           colors.push(item.value);
@@ -367,7 +401,7 @@ const trdMap = () => {
             "circle-radius": 6,
             "circle-color": helpers.getPointsColor(),
             "circle-pitch-alignment": "map",
-            "circle-stroke-color": "#ffcc80",
+            "circle-stroke-color": userTheme === "dark" ? "#FB8C00" : "#FFCC80",
             "circle-stroke-width": [
               "case",
               [">", ["get", "Loan Amount"], 0],
@@ -520,7 +554,7 @@ const trdMap = () => {
             "line-join": "round",
           },
           paint: {
-            "line-color": "#000000",
+            "line-color": userTheme ? "#f5f5f5" : "#212121",
             "line-width": 2,
           },
         });
