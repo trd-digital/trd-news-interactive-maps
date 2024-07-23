@@ -326,10 +326,12 @@ const trdMap = () => {
     trackEvent: (action, label) => {
       if (window.dataLayer) {
         window.dataLayer.push({
-          event: "event",
-          eventCategory: "south-florida-transactions-map",
-          eventAction: action,
-          eventLabel: label,
+          event: "event_tracking",
+          trd: {
+            category: "south-florida-transactions-map",
+            action: `map_${action}`,
+            label: label,
+          },
         });
       }
     },
@@ -670,7 +672,7 @@ const trdMap = () => {
         modalContent.innerHTML = html;
         modalContent.scrollTop = 0;
         modal.style.display = "block";
-        helpers.trackEvent("detail-view", address.toLowerCase());
+        helpers.trackEvent("detail_view", address.toLowerCase());
       });
 
       const close = document.querySelector("#modal .btn-close");
