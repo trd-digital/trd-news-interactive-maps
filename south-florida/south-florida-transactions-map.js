@@ -326,9 +326,9 @@ const trdMap = () => {
     trackEvent: (action, label) => {
       if (window.dataLayer) {
         window.dataLayer.push({
-          event: "event",
+          event: "event_tracking",
           eventCategory: "south-florida-transactions-map",
-          eventAction: action,
+          eventAction: `map - ${action}`,
           eventLabel: label,
         });
       }
