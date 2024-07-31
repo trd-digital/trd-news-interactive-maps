@@ -270,8 +270,18 @@
           document.body.setAttribute("data-bs-theme", "dark");
         }
 
+        const isEmptyValue = (value) => {
+          if (!value) return true;
+          if (value === "") return true;
+          if (typeof value === "string") {
+            if (value.trim() === "") return true;
+            if (excludeValue.includes(value.toLowerCase())) return true;
+          }
+          return false;
+        };
+
         const formatter = (value, row, index, field) => {
-          if (!value || excludeValue.includes(value)) {
+          if (isEmptyValue(value)) {
             return '<span class="text-muted">N/A</span>';
           }
 
