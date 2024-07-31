@@ -157,8 +157,10 @@
       .list-group {
         overflow-y: auto;
       }
-      .logo svg {
-        height: 25px;
+      @media (prefers-color-scheme: dark) {
+        .logo path:first-child {
+          fill: #fff;
+        }
       }
       h1 {
         font-family: "Merriweather", serif;
@@ -170,12 +172,13 @@
         color: var(--bs-color);
         text-decoration: none;
       }
+      .badge {
+        cursor: pointer;
+        --bs-badge-color: var(--bs-color);
+      }
       a.badge {
         text-decoration: none;
         --bs-badge-color: var(--bs-link-color);
-      }
-      .badge {
-        cursor: pointer;
       }
       .price {
         font-family: Merriweather;
@@ -201,7 +204,10 @@
     <main>
       <section class="card">
         <div class="card-body">
-          <a class="mb-3" href="https://therealdeal.com/data/?utm_source=embed&utm_medium=widget&utm_campaign=south_florida_sales">
+          <a
+            class="mb-2 d-block logo"
+            href="https://therealdeal.com/data/?utm_source=embed&utm_medium=widget&utm_campaign=south_florida_sales"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="90"
@@ -212,7 +218,7 @@
             >
               <g>
                 <path
-                  fill="#fff"
+                  fill="#000"
                   d="M23.148 0q.255 0 .41.206a.49.49 0 0 1 .204.411v6.069a.64.64 0 0 1-.204.463.55.55 0 0 1-.41.154h-6.35q-.256 0-.256.257v27.823a.64.64 0 0 1-.205.463.55.55 0 0 1-.41.154H8.655a.75.75 0 0 1-.461-.154.75.75 0 0 1-.154-.463V7.56q0-.257-.256-.257H1.69a.75.75 0 0 1-.46-.154.75.75 0 0 1-.155-.463V.617q0-.256.154-.411A.64.64 0 0 1 1.69 0zm17.481 36q-.562 0-.717-.514L36.43 21.857q-.051-.206-.256-.206h-.769q-.255 0-.256.258v13.474a.64.64 0 0 1-.204.463.55.55 0 0 1-.41.154h-7.272a.75.75 0 0 1-.461-.154.75.75 0 0 1-.154-.463V.617q0-.256.154-.411a.64.64 0 0 1 .46-.206h11.011q2.97 0 5.275 1.44 2.305 1.389 3.534 3.96 1.28 2.52 1.28 5.76 0 2.88-1.075 5.194-1.024 2.263-2.92 3.652a.34.34 0 0 0-.153.154q-.051.051 0 .154l4.404 14.966.051.206q0 .514-.563.514zM35.406 7.303q-.257 0-.257.257v7.303q0 .257.256.257h1.434q1.383 0 2.203-1.029t.819-2.828q0-1.903-.82-2.932-.819-1.028-2.202-1.028zM51.919 36a.75.75 0 0 1-.461-.154.75.75 0 0 1-.154-.463V.617q0-.256.154-.411a.64.64 0 0 1 .46-.206H61.7q4.917 0 7.887 2.777t2.97 7.354V25.87q0 4.576-2.97 7.354Q66.617 36 61.7 36zm7.886-7.56q0 .258.256.257l1.434-.051q1.076-.051 1.793-.926.717-.926.768-2.417V10.697q0-1.542-.717-2.468-.717-.927-1.895-.926h-1.383q-.255 0-.256.257z"
                 ></path>
                 <path
@@ -222,7 +228,7 @@
                 ></path>
               </g>
             </svg>
-          </div>
+          </a>
           <div class="d-flex justify-content-between align-items-start">
             <h1 class="card-title me-2">
               <a
