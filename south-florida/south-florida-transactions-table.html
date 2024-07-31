@@ -98,7 +98,20 @@
             format("woff"),
           url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.ttf")
             format("truetype");
-        font-weight: bold;
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "Proxima Nova";
+        src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.woff2")
+            format("woff2"),
+          url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.woff")
+            format("woff"),
+          url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.ttf")
+            format("truetype");
+        font-weight: 600;
         font-style: normal;
         font-display: swap;
       }
@@ -132,13 +145,14 @@
       .header-style {
         --bs-table-bg: #2196f3;
         --bs-table-color: #fff;
-        font-weight: 700;
+        font-weight: 600;
         font-style: normal;
         border-bottom: 2px solid #000;
         font-size: 16px;
       }
       .header-style .sorted {
-        --bs-table-bg: #1976d2;
+        --bs-table-bg: #0d47a1;
+        font-weight: bold;
       }
       @media (prefers-color-scheme: dark) {
         .header-style {
@@ -146,7 +160,7 @@
           --bs-table-color: #fff;
         }
         .header-style .sorted {
-          --bs-table-bg: #1565c0;
+          --bs-table-bg: #0d47a1;
         }
       }
       .header-style .sortable.both {
@@ -188,16 +202,40 @@
         const table = document.querySelector("#luxury-sales-table");
 
         const displayColumns = [
-          "Seller",
-          "Buyer",
-          "Doc Type",
-          "Record Date",
-          "Sale Price",
-          "Physical Address",
-          "Folio",
-          "Use Code Description",
-          "Building Sq. Ft",
-          "Date of Previous Sale",
+          { name: "Seller" },
+          { name: "Buyer" },
+          { name: "Doc Type" },
+          {
+            name: "Record Date",
+            sorterCallback: (a, b) => {
+              if (a === "Data Not Found" || b === "Data Not Found") {
+                return 0;
+              }
+              return new Date(a).getTime() - new Date(b).getTime();
+            },
+          },
+          { name: "Sale Price" },
+          { name: "Physical Address" },
+          { name: "Folio" },
+          { name: "Use Code Description" },
+          { name: "Sq. Ft" },
+        ];
+
+        const excludeValue = [
+          "null",
+          "undefined",
+          "n/a",
+          "na",
+          "none",
+          "not available",
+          "not applicable",
+          "no",
+          "0",
+          "false",
+          "unknown",
+          "data not found",
+          "nan",
+          "-",
         ];
 
         const tableConfig = {
@@ -232,20 +270,35 @@
           document.body.setAttribute("data-bs-theme", "dark");
         }
 
+        const isEmptyValue = (value) => {
+          if (!value) return true;
+          if (value === "") return true;
+          if (typeof value === "string") {
+            if (value.trim() === "") return true;
+            if (excludeValue.includes(value.toLowerCase())) return true;
+          }
+          return false;
+        };
+
         const formatter = (value, row, index, field) => {
-          if (value === "Data Not Found") {
+          if (isEmptyValue(value)) {
             return '<span class="text-muted">N/A</span>';
           }
 
-          if (field !== "sale_price") {
-            return value;
+          if (field === "sale_price") {
+            return new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "USD",
+              minimumFractionDigits: 0, // No decimal places
+              maximumFractionDigits: 0, // No decimal places
+            }).format(value);
           }
-          return new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-            minimumFractionDigits: 0, // No decimal places
-            maximumFractionDigits: 0, // No decimal places
-          }).format(value);
+
+          if (field === "record_date") {
+            return new Date(value).toLocaleDateString();
+          }
+
+          return value;
         };
 
         const columnConfig = {
@@ -261,8 +314,9 @@
         const mapDataToTable = (data) => {
           const columns = displayColumns.map((column) => ({
             ...columnConfig,
-            field: column.toLowerCase().replace(/ /g, "_"),
-            title: column,
+            field: column.name.toLowerCase().replace(/ /g, "_"),
+            title: column.name,
+            sorter: column.sorterCallback ? column.sorterCallback : undefined,
           }));
 
           const rows = data.features.map((feature) => {
