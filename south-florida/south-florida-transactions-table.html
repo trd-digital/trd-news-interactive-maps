@@ -314,7 +314,10 @@
         const mapDataToTable = (data) => {
           const columns = displayColumns.map((column) => ({
             ...columnConfig,
-            field: column.name.toLowerCase().replace(/ /g, "_"),
+            field: column.name
+              .toLowerCase()
+              .replace(/ /g, "_")
+              .replace(/\./g, ""),
             title: column.name,
             sorter: column.sorterCallback ? column.sorterCallback : undefined,
           }));
