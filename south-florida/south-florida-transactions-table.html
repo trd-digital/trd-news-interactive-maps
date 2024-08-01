@@ -66,14 +66,20 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     />
-    <!-- <link
+    <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-    /> -->
+    />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.1/dist/bootstrap-table.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/extensions/sticky-header/bootstrap-table-sticky-header.css"
+    />
+    <link rel="stylesheet" href="south-florida-transactions-table.css" />
+
     <!-- Google Tag Manager -->
     <script>
       (function (w, d, s, l, i) {
@@ -88,91 +94,6 @@
       })(window, document, "script", "dataLayer", "GTM-K694XL6");
     </script>
     <!-- End Google Tag Manager -->
-
-    <style>
-      @font-face {
-        font-family: "Proxima Nova";
-        src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.woff2")
-            format("woff2"),
-          url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.woff")
-            format("woff"),
-          url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.ttf")
-            format("truetype");
-        font-weight: 700;
-        font-style: normal;
-        font-display: swap;
-      }
-
-      @font-face {
-        font-family: "Proxima Nova";
-        src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.woff2")
-            format("woff2"),
-          url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.woff")
-            format("woff"),
-          url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.ttf")
-            format("truetype");
-        font-weight: 600;
-        font-style: normal;
-        font-display: swap;
-      }
-
-      @font-face {
-        font-family: "Proxima Nova";
-        src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.woff2")
-            format("woff2"),
-          url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.woff")
-            format("woff"),
-          url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.ttf")
-            format("truetype");
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-      }
-      :root {
-        --bs-font-sans-serif: "Proxima Nova", system-ui, -apple-system,
-          "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans",
-          Arial, sans-serif;
-        --bs-link-color-rgb: 0, 0, 0;
-      }
-      body {
-        font-family: var(--bs-font-sans-serif);
-        font-size: 14px;
-        line-height: 1.5;
-      }
-      main {
-        padding: 16px;
-      }
-      .header-style {
-        --bs-table-bg: #2196f3;
-        --bs-table-color: #fff;
-        font-weight: 600;
-        font-style: normal;
-        border-bottom: 2px solid #000;
-        font-size: 16px;
-      }
-      .header-style .sorted {
-        --bs-table-bg: #0d47a1;
-        font-weight: bold;
-      }
-      @media (prefers-color-scheme: dark) {
-        .header-style {
-          --bs-table-bg: #1976d2;
-          --bs-table-color: #fff;
-        }
-        .header-style .sorted {
-          --bs-table-bg: #0d47a1;
-        }
-      }
-      .header-style .sortable.both {
-        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-arrow-down-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/></svg>') !important;
-      }
-      .header-style .sortable.desc {
-        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-arrow-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"/></svg>') !important;
-      }
-      .header-style .sortable.asc {
-        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-arrow-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5"/></svg>') !important;
-      }
-    </style>
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
@@ -193,167 +114,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.1/dist/bootstrap-table.min.js"></script>
-
-    <script>
-      (function () {
-        const dataUrl =
-          "https://static.therealdeal.com/interactive-maps/map_data.geojson";
-
-        const table = document.querySelector("#luxury-sales-table");
-
-        const displayColumns = [
-          { name: "Seller" },
-          { name: "Buyer" },
-          { name: "Doc Type" },
-          {
-            name: "Record Date",
-            sorterCallback: (a, b) => {
-              if (a === "Data Not Found" || b === "Data Not Found") {
-                return 0;
-              }
-              return new Date(a).getTime() - new Date(b).getTime();
-            },
-          },
-          { name: "Sale Price" },
-          { name: "Physical Address" },
-          { name: "Folio" },
-          { name: "Use Code Description" },
-          { name: "Sq. Ft" },
-        ];
-
-        const excludeValue = [
-          "null",
-          "undefined",
-          "n/a",
-          "na",
-          "none",
-          "not available",
-          "not applicable",
-          "no",
-          "0",
-          "false",
-          "unknown",
-          "data not found",
-          "nan",
-          "-",
-        ];
-
-        const tableConfig = {
-          sortable: true,
-          search: true,
-          sortName: "record_date",
-          sortEmptyLast: true,
-          sortOrder: "desc",
-          classes: "table",
-          theadClasses: "header-style",
-          onSort: (name, order) => {
-            document
-              .querySelectorAll(".header-style .sorted")
-              .forEach((header) => {
-                header.classList.remove("sorted");
-              });
-            const header = document.querySelector(`[data-field="${name}"]`);
-            header.classList.add("sorted");
-          },
-          onPostHeader: () => {
-            document
-              .querySelectorAll(
-                ".header-style .sortable.desc, .header-style .sortable.asc"
-              )
-              .forEach((header) => {
-                header.parentNode.classList.add("sorted");
-              });
-          },
-        };
-
-        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-          document.body.setAttribute("data-bs-theme", "dark");
-        }
-
-        const isEmptyValue = (value) => {
-          if (!value) return true;
-          if (value === "") return true;
-          if (typeof value === "string") {
-            if (value.trim() === "") return true;
-            if (excludeValue.includes(value.toLowerCase())) return true;
-          }
-          return false;
-        };
-
-        const formatter = (value, row, index, field) => {
-          if (isEmptyValue(value)) {
-            return '<span class="text-muted">N/A</span>';
-          }
-
-          if (field === "sale_price") {
-            return new Intl.NumberFormat("en-US", {
-              style: "currency",
-              currency: "USD",
-              minimumFractionDigits: 0, // No decimal places
-              maximumFractionDigits: 0, // No decimal places
-            }).format(value);
-          }
-
-          if (field === "record_date") {
-            return new Date(value).toLocaleDateString();
-          }
-
-          return value;
-        };
-
-        const columnConfig = {
-          sortable: true,
-          formatter: formatter,
-        };
-
-        const getData = async (url) => {
-          const response = await fetch(url);
-          return response.json();
-        };
-
-        const mapDataToTable = (data) => {
-          const columns = displayColumns.map((column) => ({
-            ...columnConfig,
-            field: column.name
-              .toLowerCase()
-              .replace(/ /g, "_")
-              .replace(/\./g, ""),
-            title: column.name,
-            sorter: column.sorterCallback ? column.sorterCallback : undefined,
-          }));
-
-          const rows = data.features.map((feature) => {
-            const properties = feature.properties;
-            const row = {};
-
-            columns.forEach((column) => {
-              row[column.field] = properties[column.title];
-            });
-
-            return row;
-          });
-
-          return {
-            columns,
-            rows,
-          };
-        };
-
-        const renderTable = (data) => {
-          $(table).bootstrapTable({
-            ...tableConfig,
-            columns: data.columns,
-            data: data.rows,
-          });
-        };
-
-        getData(dataUrl)
-          .then(mapDataToTable)
-          .then(renderTable)
-          .catch((error) => {
-            console.error(error);
-          });
-      })();
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/extensions/sticky-header/bootstrap-table-sticky-header.min.js"></script>
+    <script src="south-florida-transactions-table.js"></script>
   </body>
 </html>

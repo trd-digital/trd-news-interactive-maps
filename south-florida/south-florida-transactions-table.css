@@ -1,0 +1,94 @@
+@font-face {
+  font-family: "Proxima Nova";
+  src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.woff2")
+      format("woff2"),
+    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.woff")
+      format("woff"),
+    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.ttf")
+      format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Proxima Nova";
+  src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.woff2")
+      format("woff2"),
+    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.woff")
+      format("woff"),
+    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.ttf")
+      format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Proxima Nova";
+  src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.woff2")
+      format("woff2"),
+    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.woff")
+      format("woff"),
+    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.ttf")
+      format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+:root {
+  --bs-font-sans-serif: "Proxima Nova", system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif;
+  --bs-link-color-rgb: 0, 0, 0;
+}
+body {
+  font-family: var(--bs-font-sans-serif);
+  font-size: 14px;
+  line-height: 1.5;
+}
+main {
+  padding: 8px;
+  margin-top: 56px;
+}
+.header-style {
+  --bs-table-bg: #2196f3;
+  --bs-table-color: #fff;
+  font-weight: 600;
+  font-style: normal;
+  border-bottom: 2px solid #000;
+  font-size: 16px;
+}
+.header-style .sorted {
+  --bs-table-bg: #0d47a1;
+  font-weight: bold;
+}
+@media (prefers-color-scheme: dark) {
+  .header-style {
+    --bs-table-bg: #1976d2;
+    --bs-table-color: #fff;
+  }
+  .header-style .sorted {
+    --bs-table-bg: #0d47a1;
+  }
+}
+.header-style .sortable.both {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-arrow-down-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/></svg>') !important;
+}
+.header-style .sortable.desc {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-arrow-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"/></svg>') !important;
+}
+.header-style .sortable.asc {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-arrow-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5"/></svg>') !important;
+}
+.fixed-table-toolbar {
+  position: fixed;
+  top: 0;
+  width: calc(100% - 16px);
+  z-index: 1;
+  background-color: var(--bs-body-bg);
+}
+
+.detail-icon {
+  font-size: 24px;
+  color: var(--bs-text-color);
+}
