@@ -287,10 +287,6 @@ const trdMap = () => {
 
     fixCoordinates: (feature) => {
       const fields = [
-        "seller_mailing_address_lat",
-        "seller_mailing_address_lng",
-        "buyer_mailing_address_lat",
-        "buyer_mailing_address_lng",
         "physical_address_lat",
         "physical_address_lng",
         "latitude",
@@ -359,13 +355,9 @@ const trdMap = () => {
       const sourceId = "transactions";
       const data = await map.getData();
 
-      map.loadMailingDataOnMap(sourceId + "Mailing", data.geoData);
-      map.tooltip(sourceId + "Mailing");
-      map.modal(sourceId + "Mailing");
       map.loadSalesDataOnMap(sourceId, data.geoData);
       map.tooltip(sourceId);
       map.modal(sourceId);
-      map.loadLinkDataOnMap(sourceId + "Link");
       map.eventListeners();
     },
 
@@ -437,154 +429,6 @@ const trdMap = () => {
       });
     },
 
-    getSellerMailingData: (features) => {
-      return features
-        .filter(
-          (feature) =>
-            feature.properties["seller_mailing_address_lat"] !== 0 &&
-            feature.properties["seller_mailing_address_lng"] !== 0 &&
-            helpers.convertToFloat(
-              feature.properties["seller_mailing_address_lat"]
-            ) !==
-              helpers.convertToFloat(
-                feature.properties["physical_address_lat"]
-              ) &&
-            helpers.convertToFloat(
-              feature.properties["seller_mailing_address_lng"]
-            ) !==
-              helpers.convertToFloat(
-                feature.properties["physical_address_lng"]
-              ) &&
-            helpers.convertToFloat(
-              feature.properties["seller_mailing_address_lat"]
-            ) !==
-              helpers.convertToFloat(
-                feature.properties["buyer_mailing_address_lat"]
-              ) &&
-            helpers.convertToFloat(
-              feature.properties["seller_mailing_address_lng"]
-            ) !==
-              helpers.convertToFloat(
-                feature.properties["buyer_mailing_address_lng"]
-              )
-        )
-        .map((feature) => {
-          return {
-            type: "Feature",
-            geometry: {
-              type: "Point",
-              coordinates: [
-                helpers.convertToFloat(
-                  feature.properties["seller_mailing_address_lng"]
-                ),
-                helpers.convertToFloat(
-                  feature.properties["seller_mailing_address_lat"]
-                ),
-              ],
-            },
-            properties: {
-              ...feature.properties,
-              pointType: "seller",
-            },
-          };
-        });
-    },
-
-    getBuyerMailingData: (features) => {
-      return features
-        .filter(
-          (feature) =>
-            feature.properties["buyer_mailing_address_lat"] !== 0 &&
-            feature.properties["buyer_mailing_address_lng"] !== 0 &&
-            helpers.convertToFloat(
-              feature.properties["buyer_mailing_address_lat"]
-            ) !==
-              helpers.convertToFloat(
-                feature.properties["physical_address_lat"]
-              ) &&
-            helpers.convertToFloat(
-              feature.properties["buyer_mailing_address_lng"]
-            ) !==
-              helpers.convertToFloat(feature.properties["physical_address_lng"])
-        )
-        .map((feature) => {
-          return {
-            type: "Feature",
-            geometry: {
-              type: "Point",
-              coordinates: [
-                helpers.convertToFloat(
-                  feature.properties["buyer_mailing_address_lng"]
-                ),
-                helpers.convertToFloat(
-                  feature.properties["buyer_mailing_address_lat"]
-                ),
-              ],
-            },
-            properties: {
-              ...feature.properties,
-              pointType: "buyer",
-            },
-          };
-        });
-    },
-
-    loadMailingDataOnMap: (id, data) => {
-      const features = [
-        ...map.getSellerMailingData(data.features),
-        ...map.getBuyerMailingData(data.features),
-      ];
-      mapObj.on("load", () => {
-        mapObj.addSource(id, {
-          type: "geojson",
-          data: {
-            type: "FeatureCollection",
-            features: features,
-          },
-        });
-        mapObj.addLayer({
-          type: "circle",
-          id: id,
-          source: id,
-          paint: {
-            "circle-radius": 6,
-            "circle-color": [
-              "case",
-              ["==", ["get", "pointType"], "seller"],
-              "#81C784", // seller
-              "#388e3c", // buyer
-            ],
-            "circle-pitch-alignment": "map",
-          },
-        });
-      });
-    },
-
-    loadLinkDataOnMap: (id) => {
-      mapObj.on("load", () => {
-        mapObj.addSource(id, {
-          type: "geojson",
-          data: {
-            type: "FeatureCollection",
-            features: [],
-          },
-        });
-        mapObj.addLayer({
-          type: "line",
-          id: id,
-          source: id,
-          layout: {
-            "line-cap": "round",
-            "line-join": "round",
-          },
-          paint: {
-            "line-color": userTheme ? "#f5f5f5" : "#212121",
-            "line-width": 2,
-          },
-        });
-      });
-    },
-
     tooltip: (id) => {
       const popup = new mapboxgl.Popup({
         closeButton: false,
@@ -596,20 +440,11 @@ const trdMap = () => {
 
         const coordinates = e.features[0].geometry.coordinates.slice();
 
-        map.linkData(e.features[0], "hover");
-
         const address =
           e.features[0].properties[tooltipDisplayFields.title.field] ||
           `Unknown ${tooltipDisplayFields.title.label}`;
 
-        const tooltipDisplayFieldsContent = [...tooltipDisplayFields.content];
-        if (e.features[0].properties["Loan Amount"] > 0) {
-          tooltipDisplayFieldsContent.push({
-            field: "Loan Amount",
-            label: "Loan Amount",
-            format: (value) => helpers.formatPrice(value),
-          });
-        }
+        const tooltipDisplayFieldsContent = tooltipDisplayFields.content;
 
         let content = "";
 
@@ -636,7 +471,6 @@ const trdMap = () => {
 
       mapObj.on("mouseleave", id, (e) => {
         mapObj.getCanvas().style.cursor = "";
-        map.unLinkData("hover");
         popup.remove();
       });
     },
@@ -646,8 +480,6 @@ const trdMap = () => {
         const modal = document.querySelector("#modal");
         const modalTitle = document.querySelector("#modal .modal-title");
         const modalContent = document.querySelector("#modal .modal-body");
-
-        map.linkData(e.features[0], "click");
 
         const address =
           e.features[0].properties[modalDisplayFields.title.field] ||
@@ -677,70 +509,7 @@ const trdMap = () => {
 
       const close = document.querySelector("#modal .btn-close");
       close.addEventListener("click", () => {
-        map.unLinkData("click");
         modal.style.display = "none";
-      });
-    },
-
-    linkData: (feature, eventType) => {
-      const propertyCoords = [
-        feature.properties["physical_address_lng"],
-        feature.properties["physical_address_lat"],
-      ];
-
-      const sellerCoords = [
-        feature.properties["seller_mailing_address_lng"],
-        feature.properties["seller_mailing_address_lat"],
-      ];
-
-      const buyerCoords = [
-        feature.properties["buyer_mailing_address_lng"],
-        feature.properties["buyer_mailing_address_lat"],
-      ];
-
-      const features =
-        eventType === "click"
-          ? []
-          : mapObj.getSource("transactionsLink")._data.features;
-      if (
-        helpers.isCoordinatesValid(propertyCoords) &&
-        helpers.isCoordinatesValid(sellerCoords) &&
-        helpers.isCoordinatesValid(buyerCoords)
-      ) {
-        features.push({
-          type: "Feature",
-          geometry: {
-            type: "LineString",
-            coordinates: [propertyCoords, sellerCoords, buyerCoords],
-          },
-          properties: {
-            eventType,
-          },
-        });
-      }
-
-      mapObj.getSource("transactionsLink").setData({
-        type: "FeatureCollection",
-        features: features,
-      });
-    },
-
-    unLinkData: (eventType) => {
-      if (eventType === "click") {
-        return mapObj.getSource("transactionsLink").setData({
-          type: "FeatureCollection",
-          features: [],
-        });
-      }
-      const features = mapObj
-        .getSource("transactionsLink")
-        ._data.features.filter(
-          (feature) => feature.properties.eventType === "click"
-        );
-
-      mapObj.getSource("transactionsLink").setData({
-        type: "FeatureCollection",
-        features: features,
       });
     },
   };
