@@ -219,7 +219,6 @@
             ? parseFloat(value.replace(/[$,]/g, ""))
             : value;
 
-        console.log(field, value, number);
         return new Intl.NumberFormat("en-US", {
           style: "currency",
           currency: "USD",
