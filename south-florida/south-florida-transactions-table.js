@@ -11,7 +11,7 @@
       dataField: "Record Date",
       name: "Record Date",
       sorterCallback: (a, b) => {
-        if (a === "Data Not Found" || b === "Data Not Found") {
+        if (isEmptyValue(a) || isEmptyValue(b)) {
           return 0;
         }
         return new Date(a).getTime() - new Date(b).getTime();
