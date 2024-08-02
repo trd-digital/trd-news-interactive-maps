@@ -57,9 +57,11 @@ const trdList = () => {
         );
       });
 
+      window.addEventListener("blur", helpers.autoScrollListStart);
       window.addEventListener("load", helpers.autoScrollListStart);
       list.addEventListener("mouseleave", helpers.autoScrollListStart);
       list.addEventListener("mouseenter", helpers.autoScrollListStop);
+      list.addEventListener("touchstart", helpers.autoScrollListStop);
     },
 
     getData: async (url) => {
