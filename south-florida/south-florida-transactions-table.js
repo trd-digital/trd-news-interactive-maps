@@ -26,7 +26,6 @@
 
   const displayFields = [
     "Doc Type",
-    "Instrument_Num",
     "Record Date",
     "Seller",
     "Buyer",
@@ -56,8 +55,6 @@
     "Second Party State",
     "Second Party Date Filed",
     "Full Address",
-    "UniqueID",
-    "TransactionID",
     "Lender",
     "Loan Amount",
   ];
@@ -77,6 +74,8 @@
     "data not found",
     "nan",
     "-",
+    "folio not found!",
+    "folio not found",
   ];
 
   const trackEvent = (action, label) => {
@@ -209,13 +208,27 @@
       }).format(value);
     }
 
-    if (field === "sale_price" || field === "loan_amount") {
-      return new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-        minimumFractionDigits: 0, // No decimal places
-        maximumFractionDigits: 0, // No decimal places
-      }).format(value);
+    if (
+      field === "sale_price" ||
+      field === "loan_amount" ||
+      field === "previous_sale_price"
+    ) {
+      try {
+        const number =
+          typeof value === "string"
+            ? parseFloat(value.replace(/[$,]/g, ""))
+            : value;
+
+        console.log(field, value, number);
+        return new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          minimumFractionDigits: 0, // No decimal places
+          maximumFractionDigits: 0, // No decimal places
+        }).format(number);
+      } catch (e) {
+        return value;
+      }
     }
 
     if (field === "record_date") {
