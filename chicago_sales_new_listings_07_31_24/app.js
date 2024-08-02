@@ -100,6 +100,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Show the legend
         document.getElementById('legend').style.display = 'block';
+
+        // Disable the default scroll zoom behavior
+        map.scrollZoom.disable();
+
+        // Function to handle enabling/disabling scroll zoom
+        function handleScrollZoom(event) {
+            if (event.ctrlKey || event.metaKey) {
+                map.scrollZoom.enable();
+            } else {
+                map.scrollZoom.disable();
+            }
+        }
+
+        // Add event listeners to handle enabling/disabling scroll zoom
+        window.addEventListener('keydown', handleScrollZoom);
+        window.addEventListener('keyup', handleScrollZoom);
+
+        // Add event listeners to handle enabling/disabling scroll zoom on mouse move
+        window.addEventListener('mousemove', handleScrollZoom);
     });
     
 
