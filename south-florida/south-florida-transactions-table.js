@@ -237,13 +237,29 @@
     return value;
   };
 
+  const formatterRowValue = (value, row, index, field) => {
+    if (isEmptyValue(value)) {
+      return '<span class="text-muted">N/A</span>';
+    }
+
+    if (field === "seller" || field === "buyer") {
+      // check the value is not link
+      if (!value.includes("http") && value.length > 40) {
+        return value.slice(0, 40) + "...";
+      }
+      return value;
+    }
+
+    return formatter(value, row, index, field);
+  };
+
   const getFieldName = (value) => {
     return value.toLowerCase().replace(/ /g, "_").replace(/\./g, "");
   };
 
   const columnConfig = {
     sortable: true,
-    formatter: formatter,
+    formatter: formatterRowValue,
   };
 
   const getData = async (url) => {
