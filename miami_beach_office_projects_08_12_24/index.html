@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Mapbox Map</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <!-- Load Mapbox GL JS -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Load D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+
+        .mapboxgl-popup {
+        max-width: 300px;
+    }
+
+    .mapboxgl-popup-content {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #333;
+        padding: 10px;
+        border: 2px solid #000000; /* Add border */
+        border-radius: 5px; /* Rounded corners (optional) */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add shadow (optional) */
+    }
+
+    .mapboxgl-popup-content h3 {
+        margin-top: 0;
+        font-size: 16px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+    }
+
+    .popup-field {
+        margin-bottom: 5px;
+    }
+
+    .popup-key {
+        font-weight: bold;
+    }
+
+    .popup-value {
+        color: #555;
+    }
+
+
+    .mapboxgl-ctrl-icon.mapboxgl-ctrl-zoom-in, .mapboxgl-ctrl-icon.mapboxgl-ctrl-zoom-out {
+        width: 30px; /* Sets the width of the button */
+        height: 30px; /* Sets the height of the button */
+        background-size: 30px 30px; /* Enlarges the icon to fit the new button size */
+    }
+
+    .mapboxgl-ctrl-icon.mapboxgl-ctrl-zoom-in:before {
+        content: '+'; /* Custom content for zoom-in button, if not using default */
+    }
+
+    .mapboxgl-ctrl-icon.mapboxlibctrl-zoom-out:before {
+        content: '−'; /* Custom content for zoom-out button, if not using default */
+    }
+
+    .map-legend {
+        position: absolute;
+        top: 40px;
+        left: 20px;
+        background: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        z-index: 1;
+    }
+
+    .map-legend h4 {
+        margin: 0;
+        font-size: 14px;
+    }
+
+    .legend-color {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        margin-right: 5px;
+        border: 1px solid #000;
+    }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="legend" class="map-legend">
+        <h4>Map Legend</h4>
+        <div><span class="legend-color" style="background-color: #00FFFF;"></span> New Listings</div>
+        <div><span class="legend-color" style="background-color: #FF0000;"></span> Seller Loss </div>
+        <div><span class="legend-color" style="background-color: #00FF00;"></span> Seller Gain</div>
+        <div><span class="legend-color" style="background-color: #ffffff;"></span> Unknown Loss/Gain</div>
+        <div><span class="legend-color" style="background-color: #FFFF00;"></span> Refinance</div>
+        <div><span class="legend-color" style="background-color: #000000;"></span> Foreclosure</div>
+        <div>*Denotes gap financing was needed</div>
+        <div>**Denotes borrower is disputing foreclosure</div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
