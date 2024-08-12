@@ -70,11 +70,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const properties = e.features[0].properties;
         let popupContent = '<div class="popup-content"><h3>Details</h3>';
         
-        const excludeFields = ['coordinates', 'Link ','geometry'];
+        const excludeFields = ['Name of Project','Developer','Status','coordinates', 'Link ','geometry'];
         for (const key in properties) {
             if (properties[key] !== 'nan' && !excludeFields.includes(key)) {
                 const titleCaseKey = key.replace(/\b\w/g, char => char.toUpperCase());
-                popupContent += `<div class="popup-field"><span class="popup-key">${titleCaseKey}:</span> <span class="popup-value">${properties[key]}</span></div>`;
+                popupContent += `<div class="popup-field">${properties[key]}</span></div>`;
             }
         }
         
