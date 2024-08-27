@@ -26,28 +26,19 @@ const trdMap = () => {
 
   const legendMap = [
     {
-      value: 250_000,
+      value: 500_000,
       color: {
         light: "#90CAF9",
         dark: "#90CAF9",
       },
-      text: "<$250K",
-      default: false,
-    },
-    {
-      value: 500_000,
-      color: {
-        light: "#42A5F5",
-        dark: "#42A5F5",
-      },
-      text: "$500K - $750K",
+      text: "<$500K",
       default: false,
     },
     {
       value: 750_000,
       color: {
-        light: "#1E88E5",
-        dark: "#1E88E5",
+        light: "#42A5F5",
+        dark: "#42A5F5",
       },
       text: "$750K - $1M",
       default: false,
@@ -55,8 +46,8 @@ const trdMap = () => {
     {
       value: 1_000_000,
       color: {
-        light: "#1565C0",
-        dark: "#1565C0",
+        light: "#1E88E5",
+        dark: "#1E88E5",
       },
       text: "$1M - $2.5M",
       default: false,
@@ -64,10 +55,19 @@ const trdMap = () => {
     {
       value: 2_500_000,
       color: {
+        light: "#1565C0",
+        dark: "#1565C0",
+      },
+      text: "$2.5M - $5M",
+      default: false,
+    },
+    {
+      value: 5_000_000,
+      color: {
         light: "#0D47A1",
         dark: "#0D47A1",
       },
-      text: ">$2.5M",
+      text: ">$5M",
       default: true,
     },
   ];
