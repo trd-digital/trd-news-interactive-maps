@@ -69,15 +69,17 @@ const сommercialOfficeMarket = () => {
 	let underConstruction = "";
 
 	const api = {
-		init: () => {
+		init: async () => {
 			api.setUserTheme();
 			api.setTooltips();
 			getParamValue = api.setGetParamValue(getParamKey);
 			api.setHeadline(getParamValue);
 			api.listenEvents();
-			api.startGettingData().then(() => {
-				api.renderListItems();
-			});
+			await api.startGettingData();
+			api.renderListItems();
+			// .then(() => {
+			// 	api.renderListItems();
+			// });
 		},
 
 		setUserTheme: () => {
@@ -121,27 +123,47 @@ const сommercialOfficeMarket = () => {
 			return response.json();
 		},
 
-		startGettingData: () => {
+		startGettingData: async () => {
 			try {
 				if (helpers.isEmpty(getParamKey)) throw new RangeError(`The getParamKey constant is empty.`);
 				if (helpers.isEmpty(getParamValue)) throw new RangeError(`The "${getParamKey}" GET parameter is empty.`);
 				if (!(getParamValue in trdMarkets)) throw (`The "${getParamValue}" GET parameter value was not found in the list of available markets.`);
 
-				api.getData(localDataUrl.vacancy_rates)
-					.then(api.getVacancyRate)
-					.catch(console.error);
+				const [
+					vacancyRates,
+					askingPrice,
+					netAbsorption,
+					cityOfficeInventory
+				] = await Promise.allSettled([
+					await api.getData(localDataUrl.vacancy_rates),
+					await api.getData(localDataUrl.asking_price),
+					await api.getData(localDataUrl.net_absorption),
+					await api.getData(localDataUrl.city_office_inventory)
+				]);
 
-				api.getData(localDataUrl.asking_price)
-					.then(api.getAskingPrice)
-					.catch(console.error);
+				api.getVacancyRate(vacancyRates.value);
+				api.getAskingPrice(askingPrice.value);
+				api.getNetAbsorption(netAbsorption.value);
+				api.getThreeRates(cityOfficeInventory.value);
 
-				api.getData(localDataUrl.net_absorption)
-					.then(api.getNetAbsorption)
-					.catch(console.error);
+				console.log( { vacancyRates, askingPrice, netAbsorption, cityOfficeInventory } );
 
-				api.getData(localDataUrl.city_office_inventory)
-					.then(api.getThreeRates)
-					.catch(console.error);
+
+				// api.getData(localDataUrl.vacancy_rates)
+				// 	.then(api.getVacancyRate)
+				// 	.catch(console.error);
+
+				// api.getData(localDataUrl.asking_price)
+				// 	.then(api.getAskingPrice)
+				// 	.catch(console.error);
+
+				// api.getData(localDataUrl.net_absorption)
+				// 	.then(api.getNetAbsorption)
+				// 	.catch(console.error);
+
+				// api.getData(localDataUrl.city_office_inventory)
+				// 	.then(api.getThreeRates)
+				// 	.catch(console.error);
 			} catch (e) {
 				if (e instanceof Error ||
 					e instanceof TypeError ||
@@ -164,6 +186,8 @@ const сommercialOfficeMarket = () => {
 			if (helpers.isEmpty(quarter)) throw new RangeError(`The saveVacancyRate method: No quarter keys were found in the data.`);
 
 			vacancyRate = data[quarter][id];
+
+			console.log( {vacancyRate} );
 		},
 
 		getAskingPrice: (data) => {
