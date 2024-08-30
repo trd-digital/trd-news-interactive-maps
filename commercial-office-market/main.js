@@ -2,7 +2,7 @@
 
 /**
  * Provide functionality for main points of the Commercial office market.
- * Contain the following API:
+ * Contains the following API:
  * 1. setUserTheme — Enable/disable Bootstrap dark theme.
  * 2. setTooltips — Enable all Bootstrap tooltips.
  * 3. setGetParamValue — Set getParamValue by getParamKey.
@@ -17,6 +17,7 @@ const сommercialOfficeMarket = () => {
 	let getParamValue = "";
 
 	// Headline init.
+	// Example for GET: ?market=broward, ?market=san_francisco
 	const headline = document.getElementById("commercial-office-market-headline"); // The <a> tag.
 	const trdHeadlines = {
 		broward: "Broward",
@@ -34,19 +35,20 @@ const сommercialOfficeMarket = () => {
 
 	// Data URLs init.
 	const localDataUrl = {
-		city_office_inventory: "data/city_office_inventory_tables_08_12_24.json",
-		vacancy_rates: "data/office_market_vacancy_rates.json",
-		asking_price: "data/asking_office_rents.json",
-		net_absorption: "data/net_absorption.json",
+		cityOfficeInventory: "data/city_office_inventory_tables_08_12_24.json",
+		vacancyRates: "data/office_market_vacancy_rates.json",
+		askingPrice: "data/asking_office_rents.json",
+		netAbsorption: "data/net_absorption.json",
 	};
 	const remoteDataUrl = {
-		city_office_inventory: "https://github.com/trd-digital/research-notebook/tree/main/Widget_Data/city_office_inventory_tables_08_12_24.json",
-		vacancy_rates: "https://github.com/trd-digital/research-notebook/tree/main/Widget_Data/office_market_vacancy_rates.json",
-		asking_price: "https://github.com/trd-digital/research-notebook/tree/main/Widget_Data/asking_office_rents.json",
-		net_absorption: "https://github.com/trd-digital/research-notebook/tree/main/Widget_Data/net_absorption.json",
+		cityOfficeInventory: "https://github.com/trd-digital/research-notebook/tree/main/Widget_Data/city_office_inventory_tables_08_12_24.json",
+		vacancyRates: "https://github.com/trd-digital/research-notebook/tree/main/Widget_Data/office_market_vacancy_rates.json",
+		askingPrice: "https://github.com/trd-digital/research-notebook/tree/main/Widget_Data/asking_office_rents.json",
+		netAbsorption: "https://github.com/trd-digital/research-notebook/tree/main/Widget_Data/net_absorption.json",
 	};
 
 	// Market data init.
+	// Example for GET: ?market=broward, ?market=san_francisco
 	const listGroup = document.getElementById("commercial-office-market-list-group"); // The <ul> tag.
 	const trdMarkets = {
 		broward: "Broward",
@@ -61,12 +63,14 @@ const сommercialOfficeMarket = () => {
 		san_antonio: "San Antonio",
 		san_francisco: "San Francisco",
 	};
-	let vacancyRate = "";
-	let askingPrice = "";
-	let netAbsorption = "";
-	let inventory = "";
-	let deliveriesYtd = "";
-	let underConstruction = "";
+	let result = {
+		vacancyRate: "",
+		askingPrice: "",
+		netAbsorption: "",
+		inventory: "",
+		deliveriesYtd: "",
+		underConstruction: "",
+	};
 
 	const api = {
 		init: async () => {
@@ -77,9 +81,6 @@ const сommercialOfficeMarket = () => {
 			api.listenEvents();
 			await api.startGettingData();
 			api.renderListItems();
-			// .then(() => {
-			// 	api.renderListItems();
-			// });
 		},
 
 		setUserTheme: () => {
@@ -130,40 +131,21 @@ const сommercialOfficeMarket = () => {
 				if (!(getParamValue in trdMarkets)) throw (`The "${getParamValue}" GET parameter value was not found in the list of available markets.`);
 
 				const [
-					vacancyRates,
-					askingPrice,
-					netAbsorption,
-					cityOfficeInventory
+					vacancyRatesData,
+					askingPriceData,
+					netAbsorptionData,
+					cityOfficeInventoryData,
 				] = await Promise.allSettled([
-					await api.getData(localDataUrl.vacancy_rates),
-					await api.getData(localDataUrl.asking_price),
-					await api.getData(localDataUrl.net_absorption),
-					await api.getData(localDataUrl.city_office_inventory)
+					await api.getData(localDataUrl.vacancyRates),
+					await api.getData(localDataUrl.askingPrice),
+					await api.getData(localDataUrl.netAbsorption),
+					await api.getData(localDataUrl.cityOfficeInventory),
 				]);
 
-				api.getVacancyRate(vacancyRates.value);
-				api.getAskingPrice(askingPrice.value);
-				api.getNetAbsorption(netAbsorption.value);
-				api.getThreeRates(cityOfficeInventory.value);
-
-				console.log( { vacancyRates, askingPrice, netAbsorption, cityOfficeInventory } );
-
-
-				// api.getData(localDataUrl.vacancy_rates)
-				// 	.then(api.getVacancyRate)
-				// 	.catch(console.error);
-
-				// api.getData(localDataUrl.asking_price)
-				// 	.then(api.getAskingPrice)
-				// 	.catch(console.error);
-
-				// api.getData(localDataUrl.net_absorption)
-				// 	.then(api.getNetAbsorption)
-				// 	.catch(console.error);
-
-				// api.getData(localDataUrl.city_office_inventory)
-				// 	.then(api.getThreeRates)
-				// 	.catch(console.error);
+				api.getVacancyRate(vacancyRatesData.value);
+				api.getAskingPrice(askingPriceData.value);
+				api.getNetAbsorption(netAbsorptionData.value);
+				api.getThreeRates(cityOfficeInventoryData.value);
 			} catch (e) {
 				if (e instanceof Error ||
 					e instanceof TypeError ||
@@ -185,9 +167,7 @@ const сommercialOfficeMarket = () => {
 			const quarter = helpers.getMaxQuarter(Object.keys(data));
 			if (helpers.isEmpty(quarter)) throw new RangeError(`The saveVacancyRate method: No quarter keys were found in the data.`);
 
-			vacancyRate = data[quarter][id];
-
-			console.log( {vacancyRate} );
+			result.vacancyRate = data[quarter][id];
 		},
 
 		getAskingPrice: (data) => {
@@ -199,7 +179,7 @@ const сommercialOfficeMarket = () => {
 			const quarter = helpers.getMaxQuarter(Object.keys(data));
 			if (helpers.isEmpty(quarter)) throw new RangeError(`The getAskingPrice method: No quarter keys were found in the data.`);
 
-			askingPrice = data[quarter][id];
+			result.askingPrice = data[quarter][id];
 		},
 
 		getNetAbsorption: (data) => {
@@ -211,7 +191,7 @@ const сommercialOfficeMarket = () => {
 			const quarter = helpers.getMaxQuarter(Object.keys(data));
 			if (helpers.isEmpty(quarter)) throw new RangeError(`The getNetAbsorption method: No quarter keys were found in the data.`);
 
-			netAbsorption = data[quarter][id];
+			result.netAbsorption = data[quarter][id];
 		},
 
 		getThreeRates: (data) => {
@@ -221,9 +201,9 @@ const сommercialOfficeMarket = () => {
 			const ids = helpers.getIdsByGetParam(officeMarkets, getParamValue);
 			if (!(0 in ids)) throw `The getThreeRates method: The requested "${getParamValue}" market was not found in the data of the "U.S. Office Markets" response key.`;
 
-			inventory = (("Inventory" in data) && (ids[0] in data["Inventory"]) ? data["Inventory"][ids[0]] : "");
-			deliveriesYtd = (("Deliveries 2024 YTD" in data) && (ids[0] in data["Deliveries 2024 YTD"]) ? data["Deliveries 2024 YTD"][ids[0]] : "");
-			underConstruction = (("Under Construction as of Q2 2024p" in data) && (ids[0] in data["Under Construction as of Q2 2024p"]) ? data["Under Construction as of Q2 2024p"][ids[0]] : "");
+			result.inventory = (("Inventory" in data) && (ids[0] in data["Inventory"]) ? data["Inventory"][ids[0]] : "");
+			result.deliveriesYtd = (("Deliveries 2024 YTD" in data) && (ids[0] in data["Deliveries 2024 YTD"]) ? data["Deliveries 2024 YTD"][ids[0]] : "");
+			result.underConstruction = (("Under Construction as of Q2 2024p" in data) && (ids[0] in data["Under Construction as of Q2 2024p"]) ? data["Under Construction as of Q2 2024p"][ids[0]] : "");
 		},
 
 		renderListItems: () => {
@@ -231,7 +211,7 @@ const сommercialOfficeMarket = () => {
 				<li class="list-group-item d-flex justify-content-between align-items-center">
 					<div class="list-group-item-name me-2">Vacancy Rate</div>
 					<div class="list-group-item-data">
-						<div class="rate">${vacancyRate}</div>
+						<div class="rate">${result.vacancyRate}</div>
 						<div class="rate-yoy">
 							<span class="number positive">+5%</span><span class="unit">YoY</span>
 						</div>
@@ -240,7 +220,7 @@ const сommercialOfficeMarket = () => {
 				<li class="list-group-item d-flex justify-content-between align-items-center">
 					<div class="list-group-item-name me-2">Asking Price Per Sf</div>
 					<div class="list-group-item-data">
-						<div class="rate">${askingPrice}</div>
+						<div class="rate">${result.askingPrice}</div>
 						<div class="rate-yoy">
 							<span class="number positive">+4%</span><span class="unit">YoY</span>
 						</div>
@@ -249,7 +229,7 @@ const сommercialOfficeMarket = () => {
 				<li class="list-group-item d-flex justify-content-between align-items-center">
 					<div class="list-group-item-name me-2">Net Absorption</div>
 					<div class="list-group-item-data">
-						<div class="rate">${netAbsorption}</div>
+						<div class="rate">${result.netAbsorption}</div>
 						<div class="rate-yoy">
 							<span class="number negative">-1%</span><span class="unit">YoY</span>
 						</div>
@@ -258,21 +238,21 @@ const сommercialOfficeMarket = () => {
 				<li class="list-group-item d-flex justify-content-between align-items-center">
 					<div class="list-group-item-name me-2">Inventory</div>
 					<div class="list-group-item-data">
-						<div class="rate">${inventory} sf</div>
+						<div class="rate">${result.inventory} sf</div>
 						<div class="rate-yoy">&nbsp;</div>
 					</div>
 				</li>
 				<li class="list-group-item d-flex justify-content-between align-items-center">
 					<div class="list-group-item-name me-2">Deliveries YTD</div>
 					<div class="list-group-item-data">
-						<div class="rate">${deliveriesYtd} sf</div>
+						<div class="rate">${result.deliveriesYtd} sf</div>
 						<div class="rate-yoy">&nbsp;</div>
 					</div>
 				</li>
 				<li class="list-group-item d-flex justify-content-between align-items-center">
 					<div class="list-group-item-name me-2">Under Construction</div>
 					<div class="list-group-item-data">
-						<div class="rate">${underConstruction} sf</div>
+						<div class="rate">${result.underConstruction} sf</div>
 						<div class="rate-yoy">&nbsp;</div>
 					</div>
 				</li>
