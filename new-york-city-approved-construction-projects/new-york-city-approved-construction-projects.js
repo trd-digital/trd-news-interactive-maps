@@ -28,7 +28,7 @@ const trdMap = () => {
         light: "#89CFF0",
         dark: "#89CFF0",
       },
-      text: "True",
+      text: ">= 0",
       default: false,
     },
     {
@@ -37,7 +37,7 @@ const trdMap = () => {
         light: "#FFC0CB",
         dark: "#FFC0CB",
       },
-      text: "False",
+      text: "< 0",
       default: false,
     },
   ];
