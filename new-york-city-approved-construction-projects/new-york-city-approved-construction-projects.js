@@ -73,6 +73,7 @@ const trdMap = () => {
       { field: "trd_job_type", label: "Project Type" },
       { field: "job_filing_number", label: "DOB Now Job Filing Number" },
       { field: "approval_date", label: "Approved" },
+      { field: "approval_quarter", label: "Quarter" },
       { field: "bin", label: "BIN" },
       { field: "bbl", label: "BBL" },
       { field: "trd_job_type", label: "Project Type" },
@@ -204,6 +205,7 @@ const trdMap = () => {
 
   const map = {
     currentZoom: mapConfig.zoom,
+    currentQuarter: "2024-Q1", // Default to Q1
     init: async () => {
       mapObj = new mapboxgl.Map(mapConfig);
       mapObj.addControl(
@@ -224,10 +226,14 @@ const trdMap = () => {
       const sourceId = "projects";
       const data = await map.getData();
 
+      // Initial load based on currentQuarter
       map.loadProjectDataOnMap(sourceId, data.geoData);
       map.tooltip(sourceId);
       map.modal(sourceId);
       map.eventListeners();
+
+      // Initialize the slider functionality
+      map.initializeSlider(data.geoData); // Pass data to slider function
     },
 
     eventListeners: () => {
@@ -240,8 +246,7 @@ const trdMap = () => {
     },
 
     getGeoJsonData: async () => {
-      const url =
-        "new-york-city-approved-construction-projects.geojson";
+      const url = "new-york-city-approved-construction-projects.geojson";
       const response = await fetch(url);
       const data = await response.json();
 
@@ -253,16 +258,17 @@ const trdMap = () => {
 
     getData: async () => {
       const promises = [map.getGeoJsonData()];
-
       const [geoData] = await Promise.all(promises);
-
       return {
         geoData,
       };
     },
 
     loadProjectDataOnMap: (id, data) => {
-      mapObj.on("load", () => {
+      // Add source and layer to the map
+      if (mapObj.getSource(id)) {
+        mapObj.getSource(id).setData(data); // Update data for existing source
+      } else {
         mapObj.addSource(id, {
           type: "geojson",
           data: data,
@@ -271,7 +277,6 @@ const trdMap = () => {
           type: "circle",
           id: id,
           source: id,
-
           paint: {
             "circle-color": [
               "case",
@@ -294,9 +299,49 @@ const trdMap = () => {
             "circle-opacity": 0.65,
           },
         });
+      }
+    },
+
+    filterDataByQuarter: (data, quarter) => {
+      const filteredFeatures = data.features.filter((feature) => {
+        return feature.properties.approval_quarter == quarter;
+      });
+      return {
+        type: "FeatureCollection",
+        features: filteredFeatures,
+      };
+    },
+
+    initializeSlider: (geoData) => {
+      const slider = document.getElementById("quarterSlider");
+      const label = document.getElementById("quarterLabel");
+
+      slider.addEventListener("input", function () {
+        const quarterMap = {
+          1: "2023-Q4",
+          2: "2024-Q1",
+          3: "2024-Q2",
+          4: "2024-Q3",
+        };
+        map.currentQuarter = quarterMap[this.value];
+        label.innerHTML = map.currentQuarter; // Update the label
+
+        // Update the map based on the new quarter
+        map.updateMapForQuarter(geoData);
       });
     },
 
+    updateMapForQuarter: (geoData) => {
+      const sourceId = "projects";
+
+      // Filter data for the selected quarter
+      const filteredData = map.filterDataByQuarter(geoData, map.currentQuarter);
+
+      // Update the map with the filtered data
+      map.loadProjectDataOnMap(sourceId, filteredData);
+    },
+
+    // Tooltip and modal handling remains unchanged
     tooltip: (id) => {
       const popup = new mapboxgl.Popup({
         closeButton: false,
@@ -307,31 +352,23 @@ const trdMap = () => {
         mapObj.getCanvas().style.cursor = "pointer";
 
         const coordinates = e.features[0].geometry.coordinates.slice();
-
-        const address =
-          e.features[0].properties[tooltipDisplayFields.title.field] ||
-          `Unknown ${tooltipDisplayFields.title.label}`;
-
-        const tooltipDisplayFieldsContent = tooltipDisplayFields.content;
+        const address = e.features[0].properties[tooltipDisplayFields.title.field] || `Unknown ${tooltipDisplayFields.title.label}`;
 
         let content = "";
 
-        tooltipDisplayFieldsContent.forEach((item) => {
-          const value = helpers.cleanValue(
-            e.features[0].properties[item.field]
-          );
+        tooltipDisplayFields.content.forEach((item) => {
+          const value = helpers.cleanValue(e.features[0].properties[item.field]);
           if (value) {
-            content += `<p><span>${item.label}:</span> <span>${item.format ? item.format(value) : value
-              }</span></p>`;
+            content += `<p><span>${item.label}:</span> <span>${item.format ? item.format(value) : value}</span></p>`;
           }
         });
 
         const html = `
-                <div class="popup-tooltip">
-                    <h4 class="popup-title">${address}</h4>
-                    ${content}
-                </div>
-            `;
+          <div class="popup-tooltip">
+              <h4 class="popup-title">${address}</h4>
+              ${content}
+          </div>
+        `;
 
         popup.setLngLat(coordinates).setHTML(html).addTo(mapObj);
       });
@@ -348,21 +385,15 @@ const trdMap = () => {
         const modalTitle = document.querySelector("#modal .modal-title");
         const modalContent = document.querySelector("#modal .modal-body");
 
-        const address =
-          e.features[0].properties[modalDisplayFields.title.field] ||
-          `Unknown ${modalDisplayFields.title.label}`;
+        const address = e.features[0].properties[modalDisplayFields.title.field] || `Unknown ${modalDisplayFields.title.label}`;
         modalTitle.innerHTML = address;
 
         let html = "";
 
         modalDisplayFields.content.forEach((item) => {
-          const value = helpers.cleanValue(
-            e.features[0].properties[item.field]
-          );
+          const value = helpers.cleanValue(e.features[0].properties[item.field]);
           if (value) {
-            html += `<p class="detail-item"><span class="detail-label">${item.label
-              }:</span> <span class="detail-value">${item.format ? item.format(value) : value
-              }</span></p>`;
+            html += `<p class="detail-item"><span class="detail-label">${item.label}:</span> <span class="detail-value">${item.format ? item.format(value) : value}</span></p>`;
           }
         });
 
@@ -378,6 +409,7 @@ const trdMap = () => {
       });
     },
   };
+
 
   fn.init();
 

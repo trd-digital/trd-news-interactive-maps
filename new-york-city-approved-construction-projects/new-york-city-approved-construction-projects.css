@@ -1,11 +1,8 @@
 @font-face {
   font-family: "Proxima Nova";
-  src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.woff2")
-      format("woff2"),
-    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.woff")
-      format("woff"),
-    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.ttf")
-      format("truetype");
+  src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.woff2") format("woff2"),
+    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.woff") format("woff"),
+    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -13,22 +10,21 @@
 
 @font-face {
   font-family: "Proxima Nova";
-  src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.woff2")
-      format("woff2"),
-    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.woff")
-      format("woff"),
-    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.ttf")
-      format("truetype");
+  src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.woff2") format("woff2"),
+    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.woff") format("woff"),
+    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
+
 :root {
   --bs-font-sans-serif: "Proxima Nova", system-ui, -apple-system, "Segoe UI",
     Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif;
   --bs-link-color-rgb: 0, 0, 0;
   --trd-margin: 0px;
 }
+
 body {
   font-family: var(--bs-font-sans-serif);
   font-size: 14px;
@@ -45,6 +41,7 @@ body {
   height: calc(100vh - var(--trd-margin) * 2);
   margin: var(--trd-margin);
 }
+
 #map {
   position: absolute;
   top: 0;
@@ -62,21 +59,26 @@ body {
   --bs-accordion-btn-padding-y: 8px;
   --bs-accordion-btn-padding-x: 16px;
 }
+
 .legend .accordion-button {
   font-weight: 700;
   font-family: "Merriweather", serif;
 }
+
 .legend .accordion-body {
   padding: 16px;
 }
+
 .legend ul {
   list-style: none;
   padding: 0;
 }
+
 .legend ul li {
   display: flex;
   align-items: center;
 }
+
 .legend-icon {
   width: 12px;
   height: 12px;
@@ -135,6 +137,7 @@ body {
   --bs-tooltip-bg: var(--bs-body-bg);
   --bs-tooltip-color: var(--bs-body-color);
 }
+
 .popup-title {
   font-size: 16px;
   font-family: "Merriweather", serif;
@@ -145,6 +148,7 @@ body {
   background-color: var(--bs-tooltip-bg);
   color: var(--bs-tooltip-color);
 }
+
 .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
   border-top-color: var(--bs-tooltip-bg);
 }
@@ -154,9 +158,22 @@ body {
   justify-content: space-between;
   margin-bottom: 0;
 }
+
 .mapboxgl-popup p span:nth-child(2) {
   font-weight: 700;
   word-wrap: break-word;
   flex: 0 1 60%;
   text-align: right;
+}
+
+#slider {
+  position: fixed;
+  bottom: calc(var(--trd-margin) + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background-color: rgb(33, 37, 41);
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
