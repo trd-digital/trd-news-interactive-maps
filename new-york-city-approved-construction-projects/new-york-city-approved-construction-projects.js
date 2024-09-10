@@ -13,7 +13,7 @@ const trdMap = () => {
       lng: -74.00597000,
       lat: 40.71427000,
     },
-    zoom: 8, // starting zoom
+    zoom: 9, // starting zoom
     attributionControl: false,
     scrollZoom: {
       requireCtrl: true,
