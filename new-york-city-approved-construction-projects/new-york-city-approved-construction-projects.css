@@ -51,9 +51,10 @@ body {
 
 .legend {
   position: fixed;
-  bottom: calc(var(--trd-margin) + 16px);
+  bottom: calc(var(--trd-margin) + 32px);
   right: calc(var(--trd-margin) + 16px);
   width: 150px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   --bs-accordion-active-bg: var(--bs-accordion-btn-bg);
   --bs-accordion-active-color: var(--bs-accordion-btn-color);
   --bs-accordion-btn-padding-y: 8px;
@@ -173,12 +174,45 @@ body {
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
-  background-color: rgb(33, 37, 41);
   padding: 10px;
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
 }
 
 #quarterSlider {
   width: 200px;
+}
+
+@media (max-width: 768px) {
+  .legend {
+    position: fixed;
+    bottom: calc(var(--trd-margin) + 32px);
+    right: calc(var(--trd-margin) + 16px);
+    width: 125px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --bs-accordion-active-bg: var(--bs-accordion-btn-bg);
+    --bs-accordion-active-color: var(--bs-accordion-btn-color);
+    --bs-accordion-btn-padding-y: 8px;
+    --bs-accordion-btn-padding-x: 16px;
+  }
+
+  #slider {
+    position: fixed;
+    bottom: calc(var(--trd-margin) + 32px);
+    width: 250px;
+    left: 30%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+  }
+
+  #quarterSlider {
+    width: 150px;
+  }
 }
