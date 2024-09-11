@@ -8,25 +8,28 @@
 		<!-- Primary meta tags. -->
 		<title>Commercial Office Market - The Real Deal</title>
 		<meta name="title" content="Commercial Office Market - The Real Deal" />
-		<!--[!]Need to correct--><meta name="description" content="The dataset includes the top 10 sales over $5 million for commercial and residential properties in Miami, Palm Beach, and Broward Counties over the past 30 days." />
-		<!--[!]Need to correct--><link rel="canonical" href="https://therealdeal.com/data/miami/2024/priciest-south-florida-sales/" />
+		<!-- [!] Should be modified. --><meta name="description" content="The dataset includes the top 10 sales over $5 million for commercial and residential properties in Miami, Palm Beach, and Broward Counties over the past 30 days." />
+		<!-- [!] Should be modified. --><link rel="canonical" href="https://therealdeal.com/data/miami/2024/priciest-south-florida-sales/" />
 
-		<!-- Open Graph/Facebook meta tags. [!]Those tags can be deleted or changed. -->
+		<!-- [!] Those tags should be deleted or modified. -->
+		 <!-- Open Graph/Facebook meta tags. -->
 		<meta property="og:type" content="website" />
-		<!--[!]Need to correct--><meta property="og:url" content="https://therealdeal.com/data/miami/2024/priciest-south-florida-sales/" />
+		<!-- [!] Should be modified. --><meta property="og:url" content="https://therealdeal.com/data/miami/2024/priciest-south-florida-sales/" />
 		<meta property="og:title" content="Commercial Office Market - The Real Deal" />
 		<meta property="og:description" content="Latest Commercial Office Market" />
 		<meta property="og:image" content="https://static.therealdeal.com/wp-content/uploads/2019/10/trd-logo-16x9.jpg" />
 
-		<!-- Twitter meta tags. [!]Those tags can be deleted or changed. -->
+		<!-- [!] Those tags should be deleted or modified. -->
+		<!-- Twitter meta tags. -->
 		<meta property="twitter:card" content="summary_large_image" />
-		<!--[!]Need to correct--><meta property="twitter:url" content="https://therealdeal.com/data/miami/2024/priciest-south-florida-sales/" />
+		<!-- [!] Should be modified. --><meta property="twitter:url" content="https://therealdeal.com/data/miami/2024/priciest-south-florida-sales/" />
 		<meta property="twitter:title" content="Commercial Office Market - The Real Deal" />
 		<meta property="twitter:description" content="Latest Commercial Office Market" />
 		<meta property="twitter:image" content="https://static.therealdeal.com/wp-content/uploads/2019/10/trd-logo-16x9.jpg" />
 
 		<!-- Google Tag Manager script. -->
-		<script>
+		<!-- [!] Temporary commented. -->
+		<!--<script>
 			(function (w, d, s, l, i) {
 				w[l] = w[l] || [];
 				w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
@@ -37,21 +40,24 @@
 				j.src = ("https://www.googletagmanager.com/gtm.js?id=" + i + dl);
 				f.parentNode.insertBefore(j, f);
 			})(window, document, "script", "dataLayer", "GTM-K694XL6");
-		</script>
+		</script>-->
 		<!-- End Google Tag Manager script. -->
 
 		<!-- Include Merriweather Google font. -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
-
+		
 		<!-- Bootstrap styles. -->
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+		<!-- [!] Temporary commented. -->
+		<!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />-->
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/bootstrap-icons.min.css" />
 
 		<!-- Main styles. -->
-		<link rel="stylesheet" href="fonts.css" media='all' />
-		<link rel="stylesheet" href="main.css" media='all' />
+		<link rel="stylesheet" href="css/fonts.css" media='all' />
+		<link rel="stylesheet" href="css/main.css" media='all' />
 	</head>
 	<body>
 		<!-- Google Tag Manager noscript. -->
@@ -62,10 +68,9 @@
 			style="display: none; visibility: hidden"></iframe></noscript>
 		<!-- End Google Tag Manager noscript. -->
 
-		<!-- Main. -->
 		<main>
 			<!-- Card. -->
-			<section class="commercial-office-market card">
+			<section class="com-office-market card">
 				<!-- Card > Card header. -->
 				<div class="card-header">
 					<div class="d-flex justify-content-between align-items-start">
@@ -82,11 +87,187 @@
 							</svg>
 						</a>
 						<div class="d-flex justify-content-between">
-							<a class="badge" href="https://therealdeal.com/data/" target="_blank">
+							<!-- Card > Card header > Box arrow icon. -->
+							<a class="button-icon button-icon-box-arrow" href="https://therealdeal.com/data/" target="_blank">
 								<i class="bi bi-box-arrow-up-right"></i>
 							</a>
+
+							<!-- Card > Card header > Filter icon and dropdown. -->
+							<div class="dropdown">
+								<button id="button-icon-filter" class="button-icon button-icon-filter" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+									<i class="bi bi-filter focus-ring"></i>
+								</button>
+								<div id="dropdown-markets" class="dropdown-menu">
+									<ul class="mb-0 me-3 ps-0 webkit-scrollbar">
+										<li>
+											<ul class="list-group">
+												<li class="list-group-item p-0">
+													<h5 class="text-uppercase mb-0 py-2">New York</h5>
+												</li>
+												<li class="list-group-item p-0">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-midtown" class="form-check-input me-1" type="radio" name="filter" value="new_york_midtown" />
+														<span>Midtown</span>
+													</label>
+												</li>
+												<li class="list-group-item p-0">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-midtown-south" class="form-check-input me-1" type="radio" name="filter" value="new_york_midtown_south" />
+														<span>Midtown South</span>
+													</label>
+												</li>
+												<li class="list-group-item p-0">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-downtown" class="form-check-input me-1" type="radio" name="filter" value="new_york_downtown" />
+														<span>Downtown</span>
+													</label>
+												</li>
+												<li class="list-group-item p-0">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-brooklyn" class="form-check-input me-1" type="radio" name="filter" value="new_york_brooklyn" />
+														<span>Brooklyn</span>
+													</label>
+												</li>
+											</ul>
+										</li>
+										<li>
+											<ul class="list-group">
+												<li class="list-group-item p-0">
+													<h5 class="text-uppercase mt-3 mb-0 py-2">South Florida</h5>
+												</li>
+												<li class="list-group-item p-0">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-miami-fl" class="form-check-input me-1" type="radio" name="filter" value="miami_fl" />
+														<span>Miami, FL</span>
+													</label>
+												</li>
+												<li class="list-group-item p-0">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-palm-beach-fl" class="form-check-input me-1" type="radio" name="filter" value="palm_beach_fl" />
+														<span>Palm Beach, FL</span>
+													</label>
+												</li>
+												<li class="list-group-item p-0">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-fort-lauderdale-fl" class="form-check-input me-1" type="radio" name="filter" value="fort_lauderdale_fl" />
+														<span>Fort Lauderdale, FL</span>
+													</label>
+												</li>
+											</ul>
+										</li>
+										<li>
+											<ul class="list-group">
+												<li class="list-group-item p-0">
+													<h5 class="text-uppercase mt-3 mb-0 py-2">Chicago</h5>
+												</li>
+												<li class="list-group-item p-0">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-chicago-il" class="form-check-input me-1" type="radio" name="filter" value="chicago_il" />
+														<span>Chicago, IL</span>
+													</label>
+												</li>
+											</ul>
+										</li>
+										<li>
+											<ul class="list-group">
+												<li class="list-group-item p-0">
+													<h5 class="text-uppercase mt-3 mb-0 py-2">Los Angeles</h5>
+												</li>
+												<li class="list-group-item p-0">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-los-angeles-cbd" class="form-check-input me-1" type="radio" name="filter" value="los_angeles_cbd" />
+														<span>Los Angeles CBD</span>
+													</label>
+												</li>
+												<li class="list-group-item p-0">
+													<label class="form-check-label py-2">
+														<input id="list-group-los-angeles-non-cbd" class="form-check-input me-1" type="radio" name="filter" value="los_angeles_non_cbd" />
+														<span>Los Angeles non-CBD</span>
+													</label>
+												</li>
+												<li class="list-group-item p-0">
+													<label class="form-check-label py-2">
+														<input id="list-group-orange-county-ca" class="form-check-input me-1" type="radio" name="filter" value="orange_county_ca" />
+														<span>Orange County, CA</span>
+													</label>
+												</li>
+												<li class="list-group-item p-0">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-inland-empire-ca" class="form-check-input me-1" type="radio" name="filter" value="inland_empire_ca" />
+														<span>Inland Empire, CA</span>
+													</label>
+												</li>
+											</ul>
+										</li>
+										<li>
+											<ul class="list-group">
+												<li class="list-group-item p-0">
+													<h5 class="text-uppercase mt-3 mb-0 py-2">San Francisco</h5>
+												</li>
+												<li class="list-group-item p-0">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-san-francisco-ca" class="form-check-input me-1" type="radio" name="filter" value="san_francisco_ca" />
+														<span>San Francisco, CA</span>
+													</label>
+												</li>
+												<li class="list-group-item p-0" title="Peninsula">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-san-mateo-county-ca" class="form-check-input me-1" type="radio" name="filter" value="san_mateo_county_ca" />
+														<span>San Mateo County, CA</span>
+													</label>
+												</li>
+												<li class="list-group-item p-0">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-oakland-east-bay-ca" class="form-check-input me-1" type="radio" name="filter" value="oakland_east_bay_ca" />
+														<span>Oakland/East Bay, CA</span>
+													</label>
+												</li>
+												<li class="list-group-item p-0" title="South Bay">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-san-jose-ca" class="form-check-input me-1" type="radio" name="filter" value="san_jose_ca" />
+														<span>San Jose, CA</span>
+													</label>
+												</li>
+											</ul>
+										</li>
+										<li>
+											<ul class="list-group">
+												<li class="list-group-item p-0">
+													<h5 class="text-uppercase mt-3 mb-0 py-2">Texas</h5>
+												</li>
+												<li class="list-group-item p-0">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-austin-tx" class="form-check-input me-1" type="radio" name="filter" value="austin_tx" />
+														<span>Austin, TX</span>
+													</label>
+												</li>
+												<li class="list-group-item p-0" title="Peninsula">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-dallas-tx" class="form-check-input me-1" type="radio" name="filter" value="dallas_tx" />
+														<span>Dallas, TX</span>
+													</label>
+												</li>
+												<li class="list-group-item p-0">
+													<label class="form-check-label py-2">
+														<input id="list-group-item-houston-tx" class="form-check-input me-1" type="radio" name="filter" value="houston_tx" />
+														<span>Houston, TX</span>
+													</label>
+												</li>
+											</ul>
+										</li>
+									</ul>
+									<div class="dropdown-button-container">
+										<div class="dropdown-divider mb-0"></div>
+										<div class="d-grid mt-2 mx-3">
+											<button id="dropdown-button-apply" class="dropdown-button dropdown-button-apply" type="button">Apply</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Card > Card header > Info icon. -->
 							<span
-								class="badge"
+								class="button-icon button-icon-info"
 								data-bs-toggle="tooltip"
 								data-bs-placement="bottom"
 								data-bs-title="Test for the info.">
@@ -95,18 +276,20 @@
 						</div>
 					</div>
 					<h1>
-						<a id="commercial-office-market-headline" class="text-capitalize" href="https://therealdeal.com/data/" target="_blank">Office Makret</a>
+						<a id="com-office-market-headline" class="text-capitalize" href="https://therealdeal.com/data/" target="_blank">Office Makret</a>
 					</h1>
 				</div>
 
 				<!-- Card > List group. -->
-				<ul id="commercial-office-market-list-group" class="list-group list-group-flush"></ul>
+				<ul id="com-office-market-list-group" class="com-office-market-list-group list-group list-group-flush"></ul>
 			</section>
 		</main>
 
 		<!-- Main scripts. -->
 		<!-- <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script> -->
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-		<script src="main.js"></script>
+		<!-- [!] Temporary commented. -->
+		<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>-->
+		<script src="js/bootstrap.bundle.min.js"></script>
+		<script src="js/main.js"></script>
 	</body>
 </html>
