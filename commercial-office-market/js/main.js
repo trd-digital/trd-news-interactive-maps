@@ -6,11 +6,10 @@
  * 1. initUserTheme — Enable Bootstrap dark theme.
  * 2. initTooltips — Enable all Bootstrap tooltips.
  * 3. setDropdown — Init Bootstrap dropdown.
- * 4. listenEvents — List events: redirect by click on list items
- *    and update list data by click on the Filter Apply button.
+ * 4. listenEvents — All events.
  * 5. getGetParamValue — Set legalKey by getParamKey.
  * 6. setResults — Get all data from files and set results.
- * 7. renderResults — Render and print the headline and list items data.
+ * 7. renderResults — Render and print the headline and list items.
  */
 const сommercialOfficeMarket = () => {
 	// Local and remote data.
@@ -31,7 +30,7 @@ const сommercialOfficeMarket = () => {
 	// 1. The "searchByDistrict" — used to retrieve the row ID from officeMarketsInventory data.
 	// Keys are the GET parameter values. Values are the search words.
 	// 2. The "rowId" and "accessKeys" — used to retrieve the data from officeMarketsInventory,
-	// vacancyRate, askingPrice, netAbsorption.
+	// vacancyRate, askingPrice, netAbsorption sources.
 	let connector = {
 		rowId: -1,
 		searchByDistrict: {
@@ -79,7 +78,7 @@ const сommercialOfficeMarket = () => {
 	const getParamKey = "market";
 	let legalKey = "";
 
-	// Headline init.
+	// Headline and list group.
 	const headline = document.getElementById("com-office-market-headline"); // The <a> tag.
 	const listGroup = document.getElementById("com-office-market-list-group"); // The <ul> tag.
 	
@@ -108,19 +107,6 @@ const сommercialOfficeMarket = () => {
 			api.setRadioInput();
 			await api.setResults();
 			if (!haveError) api.renderResults();
-
-
-			dropdownButtonApply.addEventListener("click", async() => {
-				const dropdownMarkets = document.getElementById("dropdown-markets"); // The <div> tag.
-				const input = dropdownMarkets.querySelector(`input[name="${filterName}"]:checked`);
-				const value = (input ? input.getAttribute("value") : "");
-				if (!helpers.isEmpty(value)) {
-					legalKey = value;
-					await api.setResults();
-					if (!haveError) api.renderResults();
-					dropdown.hide();
-				}
-			});
 		},
 
 		initUserTheme: () => {
@@ -136,18 +122,44 @@ const сommercialOfficeMarket = () => {
 
 		setDropdown: () => {
 			dropdown = new bootstrap.Dropdown(buttonIconFilter);
-
-			// S
-			buttonIconFilter.addEventListener('show.bs.dropdown', event => {
-				setTimeout(() => {
-					const input = event.target.parentElement.querySelector("input:checked");
-					input.scrollIntoView(true);
-				}, 20);
-			});
 		},
 
 		listenEvents: () => {
-			listGroup.addEventListener("click", helpers.redirect);
+			// Redirect when click on the list items.
+			listGroup.addEventListener("click", api.redirect);
+			
+			// Autoscroll to the checked input when the dropdown list is opened.
+			buttonIconFilter.addEventListener('show.bs.dropdown', (event) => api.autoscroll(event));
+
+			// Update and print results after new filter was chosen.
+			dropdownButtonApply.addEventListener("click", api.updateResults);
+		},
+
+		redirect: () => {
+			window.open("https://therealdeal.com/data/", "_blank");
+		},
+
+		autoscroll: (event) => {
+			setTimeout(() => {
+				const input = event.target.parentElement.querySelector("input:checked");
+				if (input) input.scrollIntoView(true);
+			}, 20);
+		},
+
+		updateResults: async () => {
+			const dropdownFilter = document.getElementById("dropdown-filter"); // The <div> tag.
+			const input = dropdownFilter.querySelector(`input[name="${filterName}"]:checked`);
+			const value = (input ? input.getAttribute("value") : "");
+			if (!helpers.isEmpty(value)) {
+				dropdown.hide();
+				if (legalKey != value) {
+					haveError = false;
+					connector.rowId = -1;
+					legalKey = value;
+					await api.setResults();
+					if (!haveError) api.renderResults();
+				}
+			}
 		},
 
 		getGetParamValue: (key) => {
@@ -163,13 +175,11 @@ const сommercialOfficeMarket = () => {
 
 		setRadioInput: () => {
 			if (!helpers.isEmpty(legalKey)) {
-				const dropdownMarkets = document.getElementById("dropdown-markets"); // The <div> tag.
-				const inputs = dropdownMarkets.querySelectorAll(`input[name="${filterName}"]`);
-				console.log(inputs);
+				const dropdownFilter = document.getElementById("dropdown-filter"); // The <div> tag.
+				const inputs = dropdownFilter.querySelectorAll(`input[name="${filterName}"]`);
 				inputs.forEach((element) => {
 					if (element.getAttribute("value") == legalKey) {
 						element.checked = true;
-						element.scrollIntoView(true);
 					}
 				});
 			}
@@ -196,7 +206,7 @@ const сommercialOfficeMarket = () => {
 					await api.fetchData(localDataUrls.askingPrice),
 					await api.fetchData(localDataUrls.netAbsorption),
 				]);
-
+				
 				api.setRowId(officeMarketsInventoryData.value);
 				api.setOfficeMarketsInventory(officeMarketsInventoryData.value);
 				api.setVacancyRate(vacancyRateData.value);
@@ -218,106 +228,14 @@ const сommercialOfficeMarket = () => {
 		setRowId: (data) => {
 			if (!(connector.accessKeys.officeMarkets in data)) throw new Error(`The setRowId method: The expected "${connector.accessKeys.officeMarkets}" key was not found in the data.`);
 
-			//if (connector.rowId < 0) {
-				const rowId = helpers.getRowId(data[ connector.accessKeys.officeMarkets ]);
+			if (connector.rowId < 0) {
+				const rowId = api.getRowId(data[ connector.accessKeys.officeMarkets ]);
 				if (rowId >= 0) {
 					connector.rowId = rowId;
 				} else {
 					throw Error(`The setRowId method: The requested "${connector.searchByDistrict[legalKey]}" market was not found in the data.`);
 				}
-			//}
-		},
-
-		setOfficeMarketsInventory: (data) => {
-			results.headline = ((connector.accessKeys.officeMarkets in data) && (connector.rowId in data[ connector.accessKeys.officeMarkets ]) ? data[ connector.accessKeys.officeMarkets ][ connector.rowId ] : "");
-			results.inventory = ((connector.accessKeys.inventory in data) && (connector.rowId in data[ connector.accessKeys.inventory ]) ? data[ connector.accessKeys.inventory ][ connector.rowId ] : "");
-			results.deliveries = ((connector.accessKeys.deliveries in data) && (connector.rowId in data[ connector.accessKeys.deliveries ]) ? data[ connector.accessKeys.deliveries ][ connector.rowId ] : "");
-			results.underConstruction = ((connector.accessKeys.underConstruction in data) && (connector.rowId in data[ connector.accessKeys.underConstruction ]) ? data[ connector.accessKeys.underConstruction ][ connector.rowId ] : "");
-		},
-
-		setVacancyRate: (data) => {
-			results.vacancyRate = ((connector.accessKeys.vacancyRate in data) && (connector.rowId in data[ connector.accessKeys.vacancyRate ]) ? data[ connector.accessKeys.vacancyRate ][ connector.rowId ] : "");
-			results.vacancyRatePercentChange = ((connector.accessKeys.vacancyRatePercentChange in data) && (connector.rowId in data[ connector.accessKeys.vacancyRatePercentChange ]) ? data[ connector.accessKeys.vacancyRatePercentChange ][ connector.rowId ] : "");
-		},
-
-		setAskingPrice: (data) => {
-			results.askingPrice = ((connector.accessKeys.askingPrice in data) && (connector.rowId in data[ connector.accessKeys.askingPrice ]) ? data[ connector.accessKeys.askingPrice ][ connector.rowId ] : "");
-			results.askingPricePercentChange = ((connector.accessKeys.askingPricePercentChange in data) && (connector.rowId in data[ connector.accessKeys.askingPricePercentChange ]) ? data[ connector.accessKeys.askingPricePercentChange ][ connector.rowId ] : "");
-		},
-
-		setNetAbsorption: (data) => {
-			results.netAbsorption = ((connector.accessKeys.netAbsorption in data) && (connector.rowId in data[ connector.accessKeys.netAbsorption ]) ? data[ connector.accessKeys.netAbsorption ][ connector.rowId ] : "");
-			results.netAbsorptionPercentChange = ((connector.accessKeys.netAbsorptionPercentChange in data) && (connector.rowId in data[ connector.accessKeys.netAbsorptionPercentChange ]) ? data[ connector.accessKeys.netAbsorptionPercentChange ][ connector.rowId ] : "");
-		},
-
-		renderResults: () => {
-			if (!helpers.isEmpty(results.headline)) {
-				const quarter = (!helpers.isEmpty(connector.accessKeys.vacancyRate) ? " " + connector.accessKeys.vacancyRate : "");
-				headline.innerHTML = `${results.headline} Office Makret${quarter}`;
 			}
-			listGroup.innerHTML = `
-				<li class="list-group-item d-flex justify-content-between align-items-center">
-					<div class="list-group-item-name me-2">Vacancy Rate</div>
-					<div class="list-group-item-data">
-						<div class="rate">${results.vacancyRate}</div>
-						<div class="rate-yoy">
-							<span class="number${helpers.getCssClass(results.vacancyRatePercentChange)}">${helpers.formatToPercent(results.vacancyRatePercentChange)}</span><span class="unit">YoY</span>
-						</div>
-					</div>
-				</li>
-				<li class="list-group-item d-flex justify-content-between align-items-center">
-					<div class="list-group-item-name me-2">Asking Price Per Sf</div>
-					<div class="list-group-item-data">
-						<div class="rate">${results.askingPrice}</div>
-						<div class="rate-yoy">
-							<span class="number${helpers.getCssClass(results.askingPricePercentChange)}">${helpers.formatToPercent(results.askingPricePercentChange)}</span><span class="unit">YoY</span>
-						</div>
-					</div>
-				</li>
-				<li class="list-group-item d-flex justify-content-between align-items-center">
-					<div class="list-group-item-name me-2">Net Absorption</div>
-					<div class="list-group-item-data">
-						<div class="rate">${results.netAbsorption}</div>
-						<div class="rate-yoy">
-							<span class="number${helpers.getCssClass(results.netAbsorptionPercentChange)}">${helpers.formatToPercent(results.netAbsorptionPercentChange)}</span><span class="unit">YoY</span>
-						</div>
-					</div>
-				</li>
-				<li class="list-group-item d-flex justify-content-between align-items-center">
-					<div class="list-group-item-name me-2">Inventory</div>
-					<div class="list-group-item-data">
-						<div class="rate">${results.inventory} sf</div>
-					</div>
-				</li>
-				<li class="list-group-item d-flex justify-content-between align-items-center">
-					<div class="list-group-item-name me-2">Deliveries YTD</div>
-					<div class="list-group-item-data">
-						<div class="rate">${results.deliveries} sf</div>
-					</div>
-				</li>
-				<li class="list-group-item d-flex justify-content-between align-items-center">
-					<div class="list-group-item-name me-2">Under Construction</div>
-					<div class="list-group-item-data">
-						<div class="rate">${results.underConstruction} sf</div>
-					</div>
-				</li>
-			`;
-		},
-	};
-
-	const helpers = {
-		isString: (value) => {
-			return (typeof value === 'string') || (value instanceof String);
-		},
-
-		isEmpty: (value) => {
-			return (!value) ||
-			(value === "") ||
-			(helpers.isString(value) && value.trim() === "");
-		},
-
-		redirect: () => {
-			window.open("https://therealdeal.com/data/", "_blank");
 		},
 
 		getRowId: (officeMarkets) => {
@@ -334,12 +252,165 @@ const сommercialOfficeMarket = () => {
 			return result;
 		},
 
-		formatToPercent: (value) => {
-			return (value > 0 ? "+" : "") + Math.round(value) + "%";
+		setOfficeMarketsInventory: (data) => {
+			if ((connector.accessKeys.officeMarkets in data) && (connector.rowId in data[ connector.accessKeys.officeMarkets ])) {
+				results.headline = (helpers.isString(data[ connector.accessKeys.officeMarkets ][ connector.rowId ]) ? data[ connector.accessKeys.officeMarkets ][ connector.rowId ] : "");
+			}
+			results.inventory = ((connector.accessKeys.inventory in data) && (connector.rowId in data[ connector.accessKeys.inventory ]) ? helpers.maybeInt(data[ connector.accessKeys.inventory ][ connector.rowId ]) : "");
+			results.deliveries = ((connector.accessKeys.deliveries in data) && (connector.rowId in data[ connector.accessKeys.deliveries ]) ? helpers.maybeInt(data[ connector.accessKeys.deliveries ][ connector.rowId ]) : "");
+			results.underConstruction = ((connector.accessKeys.underConstruction in data) && (connector.rowId in data[ connector.accessKeys.underConstruction ]) ? helpers.maybeInt(data[ connector.accessKeys.underConstruction ][ connector.rowId ]) : "");
 		},
 
-		getCssClass: (value) => {
+		setVacancyRate: (data) => {
+			results.vacancyRate = ((connector.accessKeys.vacancyRate in data) && (connector.rowId in data[ connector.accessKeys.vacancyRate ]) ? parseFloat(data[ connector.accessKeys.vacancyRate ][ connector.rowId ]) : "");
+			results.vacancyRatePercentChange = ((connector.accessKeys.vacancyRatePercentChange in data) && (connector.rowId in data[ connector.accessKeys.vacancyRatePercentChange ]) ? parseFloat(data[ connector.accessKeys.vacancyRatePercentChange ][ connector.rowId ]) : "");
+		},
+		
+		setAskingPrice: (data) => {
+			results.askingPrice = ((connector.accessKeys.askingPrice in data) && (connector.rowId in data[ connector.accessKeys.askingPrice ]) ? parseFloat(data[ connector.accessKeys.askingPrice ][ connector.rowId ]) : "");
+			results.askingPricePercentChange = ((connector.accessKeys.askingPricePercentChange in data) && (connector.rowId in data[ connector.accessKeys.askingPricePercentChange ]) ? parseFloat(data[ connector.accessKeys.askingPricePercentChange ][ connector.rowId ]) : "");
+		},
+		
+		setNetAbsorption: (data) => {
+			results.netAbsorption = ((connector.accessKeys.netAbsorption in data) && (connector.rowId in data[ connector.accessKeys.netAbsorption ]) ? helpers.maybeInt(data[ connector.accessKeys.netAbsorption ][ connector.rowId ]) : "");
+			results.netAbsorptionPercentChange = ((connector.accessKeys.netAbsorptionPercentChange in data) && (connector.rowId in data[ connector.accessKeys.netAbsorptionPercentChange ]) ? parseFloat(data[ connector.accessKeys.netAbsorptionPercentChange ][ connector.rowId ]) : "");
+		},
+
+		renderResults: () => {
+			// Show headline.
+			if (results.headline) {
+				const quarter = (connector.accessKeys.vacancyRate ? ` ${connector.accessKeys.vacancyRate}` : "");
+				headline.innerHTML = `${helpers.formatString(results.headline)} Office Market${quarter}`;
+			} else {
+				headline.innerHTML = `Office Market`;
+			}
+
+			// Prepare print.
+			let print = {
+				vacancyRate: helpers.formatFloat(results.vacancyRate, 1, "", "%"),
+				vacancyRatePercentChange: helpers.formatFloat(results.vacancyRatePercentChange, 0, (results.vacancyRatePercentChange > 0 ? "+" : ""), "%"),
+				askingPrice: helpers.formatFloat(results.askingPrice, 2, "$", ""),
+				askingPricePercentChange: helpers.formatFloat(results.askingPricePercentChange, 0, (results.askingPricePercentChange > 0 ? "+" : ""), "%"),
+				netAbsorption: helpers.formatInt(results.netAbsorption,  "", " sf"),
+				netAbsorptionPercentChange: helpers.formatFloat(results.netAbsorptionPercentChange, 0, (results.netAbsorptionPercentChange > 0 ? "+" : ""), "%"),
+				inventory: helpers.formatInt(results.inventory,  "", " sf"),
+				deliveries: helpers.formatInt(results.deliveries,  "", " sf"),
+				underConstruction: helpers.formatInt(results.underConstruction,  "", " sf"),
+			};
+			if (print.vacancyRatePercentChange) {
+				print.vacancyRatePercentChange = `<span class="number${helpers.getNumColorCssClass(results.vacancyRatePercentChange)}">${print.vacancyRatePercentChange}</span><span class="unit">YoY</span>`;
+			}
+			if (print.askingPricePercentChange) {
+				print.askingPricePercentChange = `<span class="number${helpers.getNumColorCssClass(results.askingPricePercentChange)}">${print.askingPricePercentChange}</span><span class="unit">YoY</span>`;
+			}
+			if (print.netAbsorptionPercentChange) {
+				print.netAbsorptionPercentChange = `<span class="number${helpers.getNumColorCssClass(results.netAbsorptionPercentChange)}">${print.netAbsorptionPercentChange}</span><span class="unit">YoY</span>`;
+			}
+
+			// Show list items.
+			listGroup.innerHTML = `
+				<li class="list-group-item d-flex justify-content-between align-items-center">
+					<div class="list-group-item-name me-2">Vacancy Rate</div>
+					<div class="list-group-item-data">
+						<div class="rate">${print.vacancyRate}</div>
+						<div class="rate-yoy">${print.vacancyRatePercentChange}</div>
+					</div>
+				</li>
+				<li class="list-group-item d-flex justify-content-between align-items-center">
+					<div class="list-group-item-name me-2">Asking Price Per Sf</div>
+					<div class="list-group-item-data">
+						<div class="rate">${print.askingPrice}</div>
+						<div class="rate-yoy">${print.askingPricePercentChange}</div>
+					</div>
+				</li>
+				<li class="list-group-item d-flex justify-content-between align-items-center">
+					<div class="list-group-item-name me-2">Net Absorption</div>
+					<div class="list-group-item-data">
+						<div class="rate">${print.netAbsorption}</div>
+						<div class="rate-yoy">${print.netAbsorptionPercentChange}</div>
+					</div>
+				</li>
+				<li class="list-group-item d-flex justify-content-between align-items-center">
+					<div class="list-group-item-name me-2">Inventory</div>
+					<div class="list-group-item-data">
+						<div class="rate">${print.inventory}</div>
+					</div>
+				</li>
+				<li class="list-group-item d-flex justify-content-between align-items-center">
+					<div class="list-group-item-name me-2">Deliveries YTD</div>
+					<div class="list-group-item-data">
+						<div class="rate">${print.deliveries}</div>
+					</div>
+				</li>
+				<li class="list-group-item d-flex justify-content-between align-items-center">
+					<div class="list-group-item-name me-2">Under Construction</div>
+					<div class="list-group-item-data">
+						<div class="rate">${print.underConstruction}</div>
+					</div>
+				</li>
+			`;
+		},
+	};
+
+	const helpers = {
+		formatString: (value) => {
+			let result = "";
+
+			if (helpers.isString(value)) {
+				result = value.replace(/\–/g, "-");
+			}
+
+			return result;
+		},
+
+		formatFloat: (value, precision, prefix, postfix) => {
+			let result = "";
+
+			if (helpers.isNumber(value)) {
+				result = prefix + parseFloat(value.toFixed(precision)) + postfix;
+			}
+
+			return result;
+		},
+
+		formatInt: (value, prefix, postfix) => {
+			let result = "";
+
+			if (helpers.isNumber(value)) {
+				result = prefix + value.toLocaleString("en-US") + postfix;
+			}
+
+			return result;
+		},
+
+		getNumColorCssClass: (value) => {
 			return (value >= 0 ? " positive" : " negative");
+		},
+
+		isString: (value) => {
+			return (typeof value === "string") || (value instanceof String);
+		},
+
+		isNumber: (value) => {
+			return (typeof value == "number" && !isNaN(value - value));
+		},
+
+		isEmpty: (value) => {
+			return (!value) ||
+			(value === "") ||
+			(helpers.isString(value) && value.trim() === "");
+		},
+
+		maybeInt: (value) => {
+			if (helpers.isNumber(value)) {
+				value = parseInt(value);
+			} else if (helpers.isString(value)) {
+				value = parseInt(value.replace(/\,/g, ""));
+			} else {
+				value = "";
+			}
+
+			return value;
 		},
 	};
 
@@ -347,6 +418,6 @@ const сommercialOfficeMarket = () => {
 };
 
 /**
- * Call сommercial office market.
+ * Call the Commercial Office Market.
  */
 сommercialOfficeMarket();
