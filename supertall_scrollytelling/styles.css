@@ -1,0 +1,84 @@
+/* Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    height: 100%;   /* Ensure the body takes full height */
+    overflow-x: hidden;  /* Prevent horizontal scrolling */
+}
+
+/* Main container for the scrollytelling layout */
+.scrollytelling-container {
+    position: relative;
+    height: 100vh;
+    width: 100vw;   /* Full viewport width */
+}
+
+/* The graphic section, which includes the SVG and Mapbox */
+.graphic-container {
+    position: fixed;  /* Fix the graphic-container to the viewport */
+    top: 0;
+    left: 0;
+    width: 100vw;     /* Make the SVG span the full width of the screen */
+    height: 100vh;    /* Full viewport height */
+    z-index: 1;       /* Ensure the graphic is behind the text */
+}
+
+/* The SVG that spans the full width and height of the screen */
+svg {
+    width: 100vw;     /* Full viewport width */
+    height: 100vh;    /* Full viewport height */
+    background-color: rgb(0, 51, 255);  /* Light blue background */
+}
+
+/* The scrolling text container */
+.scroller {
+    position: relative;
+    z-index: 2;       /* Ensure the text floats on top of the SVG */
+    padding: 0 50px;  /* Padding on the sides to control the text's horizontal space */
+    width: 40vw;      /* The text container takes 40% of the viewport width */
+    right: 0;         /* Stick to the right side of the screen */
+    top: 0;
+    float: right;
+    pointer-events: none;  /* Prevent interaction blocking the animation */
+}
+
+/* Styling for the scrollable text sections (cards) */
+.step {
+    padding: 20px;   /* Padding around the text */
+    margin: 40vh 0;  /* Keep the margin between text steps */
+    font-size: 1.5rem;
+    color: black;    /* Dark text color for contrast */
+    background-color: rgba(255, 255, 255, 0.7);  /* Transparent white background only under text */
+    border: 1px solid black;  /* Add a thin black border around each card */
+    pointer-events: none; /* Make the card itself click-through */
+}
+
+.step * {
+    pointer-events: all; /* Allow interaction with text or links inside the card */
+}
+
+/* Empty steps that should still take up space but not show any content */
+.step:empty {
+    min-height: 100vh;  /* Ensure empty steps take up scrolling space */
+    background: transparent;  /* No background color for empty steps */
+    border: none;  /* Remove borders for empty steps */
+    box-shadow: none;  /* Remove any shadow from empty steps */
+}
+
+/* Extra padding or height for the extra scroll space */
+.step:empty::before {
+    content: '';  /* Add empty content for scrolling */
+    display: block;
+    height: 80vh;  /* Adjust this for the extra scrolling space */
+}
+
+
+
+
+/* Graphic (mapbox or svg) styling */
+#graphic {
+    width: 100%;
+    height: 100vh;  /* Full height for the map */
+}
