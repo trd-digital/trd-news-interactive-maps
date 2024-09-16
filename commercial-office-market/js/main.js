@@ -142,7 +142,7 @@ const сommercialOfficeMarket = () => {
 		autoscroll: (event) => {
 			setTimeout(() => {
 				const input = event.target.parentElement.querySelector("input:checked");
-				if (input) input.scrollIntoView(true);
+				if (input) input.scrollIntoView({ behavior: "instant", block: "nearest", inline: "start", });
 			}, 20);
 		},
 
@@ -279,7 +279,7 @@ const сommercialOfficeMarket = () => {
 		renderResults: () => {
 			// Show headline.
 			if (results.headline) {
-				const quarter = (connector.accessKeys.vacancyRate ? ` ${connector.accessKeys.vacancyRate}` : "");
+				const quarter = (connector.accessKeys.vacancyRate ? ` ${helpers.formatQuarter(connector.accessKeys.vacancyRate)}` : "");
 				headline.innerHTML = `${helpers.formatString(results.headline)} Office Market${quarter}`;
 			} else {
 				headline.innerHTML = `Office Market`;
@@ -353,6 +353,16 @@ const сommercialOfficeMarket = () => {
 	};
 
 	const helpers = {
+		formatQuarter: (value) => {
+			let result = "";
+
+			if (helpers.isString(value)) {
+				result = value.replace("p", "");
+			}
+
+			return result;
+		},
+
 		formatString: (value) => {
 			let result = "";
 
