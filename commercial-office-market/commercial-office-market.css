@@ -1,0 +1,324 @@
+/* ==========================================================================
+   Fonts
+   ========================================================================== */
+
+/* [1] Proxima Nova font. */
+@font-face {
+  font-family: "Proxima Nova";
+  src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.woff2")
+      format("woff2"),
+    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.woff")
+      format("woff"),
+    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.ttf")
+      format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Proxima Nova";
+  src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.woff2")
+      format("woff2"),
+    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.woff")
+      format("woff"),
+    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.ttf")
+      format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Proxima Nova";
+  src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.woff2")
+      format("woff2"),
+    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.woff")
+      format("woff"),
+    url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.ttf")
+      format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ==========================================================================
+   General selectors
+   ========================================================================== */
+
+:root {
+  --bs-font-sans-serif: "Proxima Nova", system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif;
+}
+
+/* [1] Tags. */
+body {
+  line-height: 1.5;
+  font-family: var(--bs-font-sans-serif);
+}
+html,
+body,
+main {
+  height: 100%;
+}
+/*ul { cursor: pointer; }
+ul li {	pointer-events: none; }*/
+
+/* [2] Bootstrap > Dropdown. */
+.dropdown .dropdown-menu {
+  border-color: #e5e5e5;
+  border-radius: 3px;
+  padding-top: 18px;
+  padding-bottom: 18px;
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  -webkit-box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  -moz-box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  font-size: 14px;
+}
+.dropdown .dropdown-item:active {
+  background-color: #256bdb;
+}
+@media (prefers-color-scheme: dark) {
+  .dropdown .dropdown-menu {
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* ==========================================================================
+   Own selectors
+   ========================================================================== */
+
+/* [1] Dropdown button. */
+.dropdown .dropdown-button {
+  border: 0;
+  border-radius: 3px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  background-color: #4285f4;
+  color: #fff;
+}
+.dropdown .dropdown-button:hover {
+  background-color: #3476e0;
+}
+.dropdown .dropdown-button:active {
+  background-color: #2d6ed6;
+}
+@media (prefers-color-scheme: dark) {
+  .dropdown .dropdown-button {
+    background-color: #0b4aa7;
+  }
+  .dropdown .dropdown-button:hover {
+    background-color: #0b4296;
+  }
+  .dropdown .dropdown-button:active {
+    background-color: #0a3f8f;
+  }
+}
+
+/* [2] Webkit scrollbar. */
+.webkit-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.webkit-scrollbar::-webkit-scrollbar-track {
+  border-radius: 4px;
+  background-color: #f7f7f7;
+}
+.webkit-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #e0e0e0;
+}
+@media (prefers-color-scheme: dark) {
+  .webkit-scrollbar::-webkit-scrollbar-track {
+    background-color: #272c30;
+  }
+  .webkit-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #414447;
+  }
+}
+
+/* [3] Positive/negative indicator. */
+.positive {
+  color: #20a454;
+}
+.negative {
+  color: #eb4959;
+}
+@media (prefers-color-scheme: dark) {
+  .positive {
+    color: #33b065;
+  }
+  .negative {
+    color: #e34050;
+  }
+}
+
+/* ==========================================================================
+   Card
+   ========================================================================== */
+
+/* [1] Card. */
+.card {
+  height: 100%;
+}
+
+/* [2] Card > Card header. */
+.card .card-header {
+  border-bottom-color: #e0e0e0;
+  padding: 16px 10px 10px 10px;
+  background-color: var(--bs-body-bg);
+}
+.card .card-header .logo {
+  margin-bottom: 5px;
+}
+.card .card-header .button-icon {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  padding: 2px 8px;
+  line-height: 1;
+  color: #6b6b6b;
+  cursor: pointer;
+}
+.card .card-header .button-icon:hover,
+.card .card-header .button-icon:active,
+.card .card-header .button-icon.show {
+  color: #4285f4;
+}
+.card .card-header a.button-icon {
+  text-decoration: none;
+}
+.card .card-header .button-icon i {
+  font-size: 14px;
+}
+.card .card-header .dropdown .button-icon-filter {
+  border: 0;
+  background-color: transparent;
+}
+.card .card-header .dropdown .button-icon-filter i {
+  font-size: 17px;
+}
+.card .card-header .dropdown .dropdown-menu {
+  min-width: 13rem;
+  font-size: 12px;
+}
+.card .card-header .dropdown .dropdown-menu > ul {
+  overflow-y: scroll;
+  max-height: 12rem;
+  list-style: none;
+}
+.dropdown-shadow {
+  position: relative;
+  z-index: 1;
+  margin-top: 2px;
+  padding-top: 8px;
+  box-shadow: 0 -3px 8px 0 rgba(0, 0, 0, 0.06);
+  -webkit-box-shadow: 0 -3px 8px 0 rgba(0, 0, 0, 0.06);
+  -moz-box-shadow: 0 -3px 8px 0 rgba(0, 0, 0, 0.06);
+}
+.card .card-header .dropdown .list-group-item {
+  border: 0;
+}
+.card .card-header .dropdown h5 {
+  padding-right: 20px;
+  padding-left: 20px;
+  font-weight: 600;
+  font-size: 14px;
+}
+.card .card-header .dropdown label {
+  display: block;
+  padding-right: 20px;
+  padding-left: 20px;
+  cursor: pointer;
+}
+.card .card-header .dropdown .dropdown-button-apply {
+  font-size: 12px;
+}
+.card .card-header h1 {
+  margin-bottom: 0;
+  font-family: "Merriweather", serif;
+  font-weight: 900;
+  font-size: 16px;
+}
+.card .card-header h1 a {
+  text-decoration: none;
+  color: #393939;
+}
+@media (prefers-color-scheme: dark) {
+  .card .card-header {
+    border-bottom-color: #424549;
+  }
+  .card .card-header .logo path:first-child {
+    fill: #fff;
+  }
+  .card .card-header .button-icon {
+    color: #dee2e6;
+  }
+  .card .card-header .button-icon:hover,
+  .card .card-header .button-icon:active,
+  .card .card-header .button-icon.show {
+    color: #6ea8fe;
+  }
+  .card .card-header .dropdown .dropdown-menu {
+    border-color: #393d40;
+  }
+  .card .card-header .dropdown .dropdown-shadow {
+    box-shadow: 0 -3px 8px 0 rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: 0 -3px 8px 0 rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 0 -3px 8px 0 rgba(0, 0, 0, 0.15);
+  }
+  .card .card-header h1 a {
+    color: #dee2e6;
+  }
+}
+
+/* [3] Card > Commercial office market list group. */
+.card .com-office-market-list-group {
+  overflow-y: auto;
+  cursor: pointer;
+}
+.card .com-office-market-list-group li {
+  min-height: 40px;
+  border-color: #e0e0e0;
+  padding: 1px 10px;
+}
+.card .com-office-market-list-group .list-group-item-name {
+  font-family: "Proxima Nova", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: #2e2e2e;
+}
+.card .com-office-market-list-group .list-group-item-data {
+  font-family: "Proxima Nova", sans-serif;
+  font-weight: 400;
+}
+.card .com-office-market-list-group .list-group-item-data .rate {
+  padding-top: 5px;
+  line-height: 1;
+  text-align: right;
+  font-size: 14px;
+  color: #2e2e2e;
+}
+.card .com-office-market-list-group .list-group-item-data .rate-yoy {
+  padding-top: 5px;
+  padding-bottom: 3px;
+  text-align: right;
+  line-height: 1;
+  font-size: 10px;
+  color: #2e2e2e;
+}
+.card .com-office-market-list-group .list-group-item-data .rate-yoy .unit {
+  margin-left: 2px;
+}
+@media (prefers-color-scheme: dark) {
+  .card .com-office-market-list-group li {
+    border-color: #424549;
+  }
+  .card .com-office-market-list-group .list-group-item-name,
+  .card .com-office-market-list-group .list-group-item-data .rate,
+  .card .com-office-market-list-group .list-group-item-data .rate-yoy {
+    color: #dee2e6;
+  }
+}
