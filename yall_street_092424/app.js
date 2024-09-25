@@ -1,19 +1,17 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ';
 
-const excludedKeys = ['City_State','Renderings', 'Rendering URL', 'full_address', 'geocoded', 'lat', 'lon','offsetX','offsetY','offsetIndex'];
-
-const minCost = 65000000; // 65 million
-const maxCost = 500000000; // 500 million
-
-const offsets = {
-    1: [5, -10],    // Halved from [10, -20]
-    2: [-5, 10],    // Halved from [-10, 20]
-    3: [10, -5],    // Halved from [20, -10]
-    4: [-10, 5],    // Halved from [-20, 10]
-    5: [0, 10],     // Halved from [0, 20]
-    6: [10, 0],     // Halved from [20, 0]
-    // Add more as needed
-};
+const excludedKeys = [
+    'City_State',
+    'Renderings',
+    'Rendering URL',
+    'full_address',
+    'geocoded',
+    'lat',
+    'lon',
+    'offsetX',
+    'offsetY',
+    'offsetIndex'
+];
 
 const map = new mapboxgl.Map({
     container: 'map',
@@ -22,155 +20,293 @@ const map = new mapboxgl.Map({
     zoom: 11
 });
 
+/**
+ * Determines the optimal anchor position for the popup based on marker's screen position.
+ * @param {mapboxgl.Map} map - The Mapbox GL JS map instance.
+ * @param {mapboxgl.LngLatLike} coordinates - The geographical coordinates of the marker.
+ * @returns {string} - The anchor position ('top', 'bottom', 'left', 'right', etc.).
+ */
+function determinePopupAnchor(map, coordinates) {
+    // Project the coordinates to screen pixels
+    const point = map.project(coordinates);
+
+    // Get the map container's dimensions
+    const mapCanvas = map.getCanvas();
+    const mapRect = mapCanvas.getBoundingClientRect();
+    const mapWidth = mapRect.width;
+    const mapHeight = mapRect.height;
+
+    // Define padding from the edges
+    const padding = 100; // pixels
+
+    // Define the popup's assumed dimensions
+    const popupWidth = 300; // Adjust based on your popup's actual width
+    const popupHeight = 200; // Adjust based on your popup's actual height
+
+    // Determine horizontal anchor
+    let horizontalAnchor = 'center';
+    if (point.x < popupWidth / 2 + padding) {
+        horizontalAnchor = 'right';
+    } else if (point.x > mapWidth - popupWidth / 2 - padding) {
+        horizontalAnchor = 'left';
+    }
+
+    // Determine vertical anchor
+    let verticalAnchor = 'top';
+    if (point.y < popupHeight + padding) {
+        verticalAnchor = 'bottom';
+    } else if (point.y > mapHeight - padding) {
+        verticalAnchor = 'top';
+    }
+
+    // Combine horizontal and vertical anchors
+    if (horizontalAnchor === 'center') {
+        return verticalAnchor;
+    } else {
+        return `${verticalAnchor}-${horizontalAnchor}`;
+    }
+}
+
 map.on('load', () => {
+    // Add GeoJSON source with clustering enabled
     map.addSource('projects', {
         type: 'geojson',
-        data: 'data.geojson' // Replace with the path to your GeoJSON file
+        data: 'data.geojson', // Replace with the path to your GeoJSON file
+        cluster: true,
+        clusterMaxZoom: 14, // Max zoom to cluster points on
+        clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
     });
 
-    // ===== Low Zoom Layer (zoom < 12) =====
+    // ===== Cluster Circles Layer =====
     map.addLayer({
-        id: 'project-pins-lowzoom',
+        id: 'clusters',
+        type: 'circle',
+        source: 'projects',
+        filter: ['has', 'point_count'],
+        paint: {
+            // Use step expressions (clusters of different sizes)
+            'circle-color': [
+                'step',
+                ['get', 'point_count'],
+                '#51bbd6', // color for clusters with 0-100 points
+                100, '#f1f075', // color for clusters with 100-750 points
+                750, '#f28cb1' // color for clusters with 750+ points
+            ],
+            'circle-radius': [
+                'step',
+                ['get', 'point_count'],
+                20, // radius for clusters with 0-100 points
+                100, 30, // radius for clusters with 100-750 points
+                750, 40 // radius for clusters with 750+ points
+            ]
+        }
+    });
+
+    // ===== Cluster Count Labels Layer =====
+    map.addLayer({
+        id: 'cluster-count',
         type: 'symbol',
         source: 'projects',
-        minzoom: 0,
-        maxzoom: 12,
+        filter: ['has', 'point_count'],
         layout: {
-            'icon-image': 'custom-marker',
-            'icon-size': 0.8, // Adjusted size for smaller icons
-            'icon-allow-overlap': true,
-            'icon-ignore-placement': true,
-            'icon-offset': [
-                'match',
-                ['get', 'offsetIndex'],
-                1, ['literal', offsets[1]],
-                2, ['literal', offsets[2]],
-                3, ['literal', offsets[3]],
-                4, ['literal', offsets[4]],
-                5, ['literal', offsets[5]],
-                6, ['literal', offsets[6]],
-                ['literal', [0, 0]] // Default offset
-            ]
+            'text-field': '{point_count_abbreviated}',
+            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+            'text-size': 12
         },
         paint: {
-            'icon-halo-color': '#000', // Black stroke
-            'icon-halo-width': [
-                'interpolate',
-                ['linear'],
-                ['zoom'],
-                10, 1, // Stroke width at zoom 10
-                12, 2  // Stroke width at zoom 12
-            ]
+            'text-color': '#ffffff'
         }
     });
 
-    // ===== High Zoom Layer (zoom >= 12) =====
+    // ===== Unclustered Points Layer =====
     map.addLayer({
-        id: 'project-pins-highzoom',
+        id: 'unclustered-point',
         type: 'symbol',
         source: 'projects',
-        minzoom: 12,
-        maxzoom: 24,
+        filter: ['!', ['has', 'point_count']],
         layout: {
-            'icon-image': 'custom-marker',
-            'icon-size': 1.2, // Adjusted size for smaller icons
+            'icon-image': 'green-star', // Updated to use the custom SVG
+            'icon-size': 1.0, // Adjust size as needed (1.0 is original size)
             'icon-allow-overlap': true,
-            'icon-ignore-placement': true,
-            'icon-offset': ['literal', [0, 0]] // No offset at high zoom
+            'icon-ignore-placement': true
         },
         paint: {
-            'icon-halo-color': '#000', // Black stroke
-            'icon-halo-width': [
-                'interpolate',
-                ['linear'],
-                ['zoom'],
-                10, 1,
-                12, 2
-            ]
+            'icon-halo-color': '#000', // Black halo
+            'icon-halo-width': 1 // Fixed halo width
         }
     });
 
-    // ===== Custom Icon Setup =====
-    map.loadImage('red_resized.png', (error, image) => { // Ensure the path is correct
-        if (error) {
-            console.error('Error loading marker image:', error);
-            return;
+    // ===== Add Custom SVG Icon =====
+    const starSVG = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+      <!-- 11-Point Star Shape -->
+      <polygon
+        points="50,5
+                58,35
+                90,35
+                63,55
+                75,90
+                50,70
+                25,90
+                37,55
+                10,35
+                42,35
+                50,5"
+        fill="green"
+        stroke="black"
+        stroke-width="2"
+      />
+      <!-- Dollar Sign -->
+      <text x="50" y="60" font-size="25" text-anchor="middle" fill="yellow" font-family="Arial, Helvetica, sans-serif">$</text>
+    </svg>
+    `;
+
+    // Encode the SVG
+    const encodedStarSVG = encodeURIComponent(starSVG)
+      .replace(/'/g, '%27')
+      .replace(/"/g, '%22');
+
+    // Create Data URL
+    const starDataURL = `data:image/svg+xml;charset=UTF-8,${encodedStarSVG}`;
+
+    // Create a new Image object
+    const starImage = new Image();
+    starImage.src = starDataURL;
+
+    // Add the image to the map once it's loaded
+    starImage.onload = () => {
+        if (!map.hasImage('green-star')) { // Prevent duplicate images
+            map.addImage('green-star', starImage);
         }
-        map.addImage('custom-marker', image);
+    };
 
-        // Update both layers to use 'custom-marker'
-        map.setLayoutProperty('project-pins-lowzoom', 'icon-image', 'custom-marker');
-        map.setLayoutProperty('project-pins-highzoom', 'icon-image', 'custom-marker');
+    // ===== Add Custom Zoom Controls =====
+    // Get references to the custom zoom buttons
+    const zoomInButton = document.getElementById('zoom-in');
+    const zoomOutButton = document.getElementById('zoom-out');
+
+    // Attach event listeners
+    zoomInButton.addEventListener('click', () => {
+        map.zoomIn();
     });
-});
 
-// ===== Click Event for Project Pins =====
-map.on('click', ['project-pins-lowzoom', 'project-pins-highzoom'], (e) => {
-    const properties = e.features[0].properties;
-    let popupContent = '<div>';
+    zoomOutButton.addEventListener('click', () => {
+        map.zoomOut();
+    });
 
-    // Add the title
-    const title = properties['Address'] || 'Project Details';
-    popupContent += `<div class="popup-title">${title}</div>`;
+    // ===== Click Event for Clusters =====
+    map.on('click', 'clusters', (e) => {
+        const features = map.queryRenderedFeatures(e.point, {
+            layers: ['clusters']
+        });
+        const clusterId = features[0].properties.cluster_id;
+        map.getSource('projects').getClusterExpansionZoom(clusterId, (err, zoom) => {
+            if (err) return;
 
-    // Include the rendering image within a container
-    const renderingURL = properties['Rendering URL'];
-    if (renderingURL && renderingURL !== 'None') {
-        popupContent += `<div class="popup-image-container"><img src="${renderingURL}" alt="Rendering" class="popup-image"/></div>`;
-    }
+            map.easeTo({
+                center: features[0].geometry.coordinates,
+                zoom: zoom
+            });
+        });
+    });
 
-    // Highlight the Cost Estimate
-    const costEstimate = properties['Cost Estimate'];
-    if (costEstimate && costEstimate !== 'None') {
-        const formattedCost = `$${parseInt(costEstimate).toLocaleString()}`;
-        popupContent += `<h3 class="popup-list"><u>Cost Est: ${formattedCost}</u></h3>`;
-    }
+    // ===== Click Event for Unclustered Points =====
+    map.on('click', 'unclustered-point', (e) => {
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const properties = e.features[0].properties;
 
-    // List other properties
-    popupContent += '<ul class="popup-list">';
-    for (let key in properties) {
-        if (
-            properties.hasOwnProperty(key) &&
-            !excludedKeys.includes(key) &&
-            key !== 'Project Name' &&
-            key !== 'renderingURL' &&
-            key !== 'Cost Estimate' &&
-            key !== 'offsetIndex' // Exclude internal properties
-        ) {
-            const value = properties[key];
-            if (value && value !== 'None') {
-                popupContent += `<li><strong>${key}:</strong> ${value}</li>`;
+        // Handle if the map is zoomed out such that multiple copies of the feature are visible
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        // Determine the optimal popup anchor based on marker position
+        const anchor = determinePopupAnchor(map, coordinates);
+
+        // Construct popup content
+        let popupContent = '<div>';
+
+        // Add the title
+        const title = properties['Address'] || 'Project Details';
+        popupContent += `<div class="popup-title">${title}</div>`;
+
+        // Include the rendering image within a container
+        const renderingURL = properties['renderingURL']; // Ensure correct property name
+        if (renderingURL && renderingURL !== 'None') {
+            // Convert relative URL to absolute URL
+            const absoluteURL = new URL(renderingURL, window.location.origin).href;
+            popupContent += `<div class="popup-image-container"><img src="${absoluteURL}" alt="Rendering of ${title}" class="popup-image"/></div>`;
+        }
+
+        // Start the property list
+        popupContent += '<ul class="popup-list">';
+
+        // Highlight the Cost Estimate
+        const costEstimate = properties['Cost Estimate'];
+        if (costEstimate && costEstimate !== 'None') {
+            const formattedCost = `$${parseInt(costEstimate).toLocaleString()}`;
+            popupContent += `<li><strong>Cost Estimate:</strong> ${formattedCost}</li>`;
+        }
+
+        // List other properties
+        for (let key in properties) {
+            if (
+                properties.hasOwnProperty(key) &&
+                !excludedKeys.includes(key) &&
+                key !== 'Address' &&
+                key !== 'renderingURL' &&
+                key !== 'Cost Estimate'
+            ) {
+                const value = properties[key];
+                if (value && value !== 'None') {
+                    popupContent += `<li><strong>${key}:</strong> ${value}</li>`;
+                }
             }
         }
-    }
-    popupContent += '</ul></div>';
 
-    const popup = new mapboxgl.Popup({
-        closeButton: true,
-        closeOnClick: true
-    })
-    .setLngLat(e.lngLat)
-    .setHTML(popupContent)
-    .addTo(map);
+        // End the property list
+        popupContent += '</ul></div>';
 
-    // Add the fade-in class
-    const popupContentElement = popup.getElement().querySelector('.mapboxgl-popup-content');
-    popupContentElement.classList.add('fade-in');
+        // Create and add the popup with dynamic anchor
+        const popup = new mapboxgl.Popup({
+            closeButton: true,
+            closeOnClick: true,
+            anchor: anchor
+        })
+            .setLngLat(coordinates)
+            .setHTML(popupContent)
+            .addTo(map);
 
-    // Remove the popup with a fade-out effect
-    popup.on('close', () => {
-        popupContentElement.classList.remove('fade-in');
-        popupContentElement.classList.add('fade-out');
-        setTimeout(() => {
-            popup.remove();
-        }, 300); // Match the CSS transition duration
+        // Add the 'fade-in' class to make the popup visible
+        const popupContentElement = popup.getElement().querySelector('.mapboxgl-popup-content');
+        if (popupContentElement) {
+            popupContentElement.classList.add('fade-in');
+        }
+
+        // Optional: Add fade-out effect when popup is closed
+        popup.on('close', () => {
+            if (popupContentElement) {
+                popupContentElement.classList.remove('fade-in');
+                popupContentElement.classList.add('fade-out');
+                setTimeout(() => {
+                    popup.remove();
+                }, 300); // Match the CSS transition duration
+            }
+        });
     });
-});
 
-// ===== Cursor Change on Hover =====
-map.on('mouseenter', ['project-pins-lowzoom', 'project-pins-highzoom'], () => {
-    map.getCanvas().style.cursor = 'pointer';
-});
-map.on('mouseleave', ['project-pins-lowzoom', 'project-pins-highzoom'], () => {
-    map.getCanvas().style.cursor = '';
+    // ===== Change Cursor to Pointer on Hover =====
+    map.on('mouseenter', 'clusters', () => {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+    map.on('mouseleave', 'clusters', () => {
+        map.getCanvas().style.cursor = '';
+    });
+
+    map.on('mouseenter', 'unclustered-point', () => {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+    map.on('mouseleave', 'unclustered-point', () => {
+        map.getCanvas().style.cursor = '';
+    });
 });

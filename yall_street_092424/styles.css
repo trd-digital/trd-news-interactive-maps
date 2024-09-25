@@ -1,28 +1,47 @@
+/* styles.css */
+
 /* Map and body styles */
-body { margin: 0; padding: 0; }
-#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+body { 
+    margin: 0; 
+    padding: 0; 
+    height: 100%;
+}
+#map { 
+    position: absolute; 
+    top: 0; 
+    bottom: 0; 
+    width: 100%; 
+}
 
 /* Popup fade-in and fade-out */
 .mapboxgl-popup-content {
     opacity: 0;
-    transition: opacity 0.3s ease-in-out, border 1s ease-in-out;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
     font-family: 'Merriweather', serif;
     padding: 15px;
     background-color: rgba(255, 255, 255, 0.9); /* Slightly opaque */
     border: 2px solid transparent; /* Start with transparent border */
     border-radius: 5px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    animation: borderAnimation 1s ease-in-out forwards;
+    max-width: 300px; /* Adjusted to match popupWidth */
+    max-height: 400px; /* Set a maximum height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    width: auto; /* Allows the popup to adjust based on content */
+    box-sizing: border-box; /* Ensures padding doesn't affect overall width */
+    animation: borderAnimation 1s forwards; /* Apply border animation */
 }
 
 .mapboxgl-popup-content.fade-in {
     opacity: 1;
+    transform: scale(1);
 }
 
 .mapboxgl-popup-content.fade-out {
     opacity: 0;
+    transform: scale(0.95);
 }
 
+/* Border Animation Keyframes */
 @keyframes borderAnimation {
     0% {
         border-color: transparent;
@@ -45,6 +64,7 @@ body { margin: 0; padding: 0; }
     height: auto;
     display: block;
     border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
 /* Title styles */
@@ -70,7 +90,64 @@ body { margin: 0; padding: 0; }
     color: #555555;
 }
 
-/* Cursor styles */
+/* ==== Custom Zoom Controls ==== */
+
+/* Custom Zoom Controls Container */
+.custom-zoom-controls {
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    right: 10px; /* Adjust as needed */
+    display: flex;
+    flex-direction: column;
+    z-index: 1; /* Ensure it appears above the map */
+}
+
+/* Zoom Buttons */
+.zoom-button {
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 3px;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 5px;
+    font-size: 18px;
+    line-height: 26px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.zoom-button:hover {
+    background-color: #f0f0f0;
+    border-color: #999;
+}
+
+.zoom-button:active {
+    background-color: #e0e0e0;
+    border-color: #666;
+}
+
+/* ==== Responsive Adjustments ==== */
+
+/* Adjust popup width and content for smaller screens */
+@media (max-width: 600px) {
+    .mapboxgl-popup-content {
+        max-width: 95%; /* Increased from 90% */
+        padding: 10px; /* Slightly reduce padding for smaller viewports */
+        max-height: 300px; /* Adjust max-height for smaller screens */
+    }
+    
+    .popup-title {
+        font-size: 16px;
+    }
+    
+    .popup-image {
+        max-width: 90%;
+    }
+}
+
+/* ==== Cursor styles ==== */
 .mapboxgl-canvas {
     cursor: grab;
 }
