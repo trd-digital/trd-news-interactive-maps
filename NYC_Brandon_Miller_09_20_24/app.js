@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
         container: 'map',
         style: "mapbox://styles/trddata/clrax4la3005701qogu72fl71",
         center: centerNYC,
-        zoom: 9,
+        zoom: 10,
         maxBounds: bounds
     });
 
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     map.on('load', function() {
         // Load the GeoJSON data
-        fetch('out_put_brandon_miller_properties.geojson')
+        fetch('data.geojson')
             .then(response => response.json())
             .then(geojsonData => {
                 // Add the GeoJSON data as a source
@@ -69,30 +69,40 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('keyup', handleScrollZoom);
 
         // Fields to exclude from the popup
-        const excludeFields = ['Nabe', 'Acris link', 'LLC', 'State court',
-            'Federal court', 'Clips', 'Floors', 'SF', 'Units', 'Unnamed: 11',
-            'full_address', 'geocoded', 'lat', 'lon', 'geometry'];
+        const excludeFields = ['Address','Neighborhood', 'full_address', 'geocoded',
+       'lat', 'lon', 'geometry'];
 
         // Click event handler for displaying popups
         map.on('click', 'properties_layer', (e) => {
             const properties = e.features[0].properties;
-            let popupContent = '<div class="popup-content"><h3>Details</h3>';
+            
+            // Replace 'Details' with the address if available
+            const address = properties['Address'] || 'Details';  // Use 'Details' as fallback if no address
+            
+            let popupContent = `<div class="popup-content"><h3>${address}</h3>`;  // Dynamic heading
             
             for (const key in properties) {
                 if (properties[key] !== 'nan' && !excludeFields.includes(key)) {
                     // Convert key to title case
                     const titleCaseKey = key.replace(/\b\w/g, char => char.toUpperCase());
-                    popupContent += `<div class="popup-field"><span class="popup-key">${titleCaseKey}:</span> <span class="popup-value">${properties[key]}</span></div>`;
+        
+                    // Check if this is the Description key and has a hyperlink
+                    if (key === 'Description' && properties[key].includes('<a href=')) {
+                        popupContent += `<div class="popup-field"><span class="popup-key"></span> ${properties[key]}</div>`;
+                    } else {
+                        popupContent += `<div class="popup-field"><span class="popup-key"></span> <span class="popup-value">${properties[key]}</span></div>`;
+                    }
                 }
             }
-            
+        
             popupContent += '</div>';
-
+        
             new mapboxgl.Popup()
                 .setLngLat(e.lngLat)
-                .setHTML(popupContent)
+                .setHTML(popupContent)  // This will render the HTML
                 .addTo(map);
-        });
+        });        
+        
 
         // Enhance interactivity on hover
         map.on('mouseenter', 'properties_layer', function() {
