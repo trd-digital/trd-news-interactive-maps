@@ -17,7 +17,7 @@ const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/trddata/cluuic7cm008m01pa4xhx5gnh', // Replace with your Mapbox style URL
     center: [-96.7970, 32.7767], // Center coordinates [longitude, latitude]
-    zoom: 11
+    zoom: 8
 });
 
 /**
