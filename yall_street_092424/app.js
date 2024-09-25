@@ -1,17 +1,17 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ';
 
-const excludedKeys = ['Renderings', 'Rendering URL', 'full_address', 'geocoded', 'lat', 'lon'];
+const excludedKeys = ['City_State','Renderings', 'Rendering URL', 'full_address', 'geocoded', 'lat', 'lon','offsetX','offsetY','offsetIndex'];
 
 const minCost = 65000000; // 65 million
 const maxCost = 500000000; // 500 million
 
 const offsets = {
-    1: [10, -20],
-    2: [-10, 20],
-    3: [20, -10],
-    4: [-20, 10],
-    5: [0, 20],
-    6: [20, 0],
+    1: [5, -10],    // Halved from [10, -20]
+    2: [-5, 10],    // Halved from [-10, 20]
+    3: [10, -5],    // Halved from [20, -10]
+    4: [-10, 5],    // Halved from [-20, 10]
+    5: [0, 10],     // Halved from [0, 20]
+    6: [10, 0],     // Halved from [20, 0]
     // Add more as needed
 };
 
@@ -28,66 +28,93 @@ map.on('load', () => {
         data: 'data.geojson' // Replace with the path to your GeoJSON file
     });
 
-    // Load a custom marker image (adjust the path if necessary)
-    map.loadImage('marker-15.png', (error, image) => {
-        if (error) throw error;
+    // ===== Low Zoom Layer (zoom < 12) =====
+    map.addLayer({
+        id: 'project-pins-lowzoom',
+        type: 'symbol',
+        source: 'projects',
+        minzoom: 0,
+        maxzoom: 12,
+        layout: {
+            'icon-image': 'custom-marker',
+            'icon-size': 0.8, // Adjusted size for smaller icons
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-offset': [
+                'match',
+                ['get', 'offsetIndex'],
+                1, ['literal', offsets[1]],
+                2, ['literal', offsets[2]],
+                3, ['literal', offsets[3]],
+                4, ['literal', offsets[4]],
+                5, ['literal', offsets[5]],
+                6, ['literal', offsets[6]],
+                ['literal', [0, 0]] // Default offset
+            ]
+        },
+        paint: {
+            'icon-halo-color': '#000', // Black stroke
+            'icon-halo-width': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                10, 1, // Stroke width at zoom 10
+                12, 2  // Stroke width at zoom 12
+            ]
+        }
+    });
+
+    // ===== High Zoom Layer (zoom >= 12) =====
+    map.addLayer({
+        id: 'project-pins-highzoom',
+        type: 'symbol',
+        source: 'projects',
+        minzoom: 12,
+        maxzoom: 24,
+        layout: {
+            'icon-image': 'custom-marker',
+            'icon-size': 1.2, // Adjusted size for smaller icons
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-offset': ['literal', [0, 0]] // No offset at high zoom
+        },
+        paint: {
+            'icon-halo-color': '#000', // Black stroke
+            'icon-halo-width': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                10, 1,
+                12, 2
+            ]
+        }
+    });
+
+    // ===== Custom Icon Setup =====
+    map.loadImage('red_resized.png', (error, image) => { // Ensure the path is correct
+        if (error) {
+            console.error('Error loading marker image:', error);
+            return;
+        }
         map.addImage('custom-marker', image);
 
-        // Add the layer after the image is loaded
-        map.addLayer({
-            id: 'project-pins',
-            type: 'symbol',
-            source: 'projects',
-            layout: {
-                'icon-image': 'custom-marker',
-                'icon-size': 1.5,
-                'icon-allow-overlap': true,
-                'icon-ignore-placement': true,
-                'icon-offset': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    10,
-                    [
-                        'match',
-                        ['get', 'offsetIndex'],
-                        1, offsets[1],
-                        2, offsets[2],
-                        3, offsets[3],
-                        4, offsets[4],
-                        5, offsets[5],
-                        6, offsets[6],
-                        [0, 0] // Default offset
-                    ],
-                    12,
-                    [0, 0]
-                ]
-            },
-            paint: {
-                'icon-halo-color': '#000',
-                'icon-halo-width': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    10, 2,
-                    12, 0
-                ]
-            }
-        });
+        // Update both layers to use 'custom-marker'
+        map.setLayoutProperty('project-pins-lowzoom', 'icon-image', 'custom-marker');
+        map.setLayoutProperty('project-pins-highzoom', 'icon-image', 'custom-marker');
     });
 });
 
-// Click event for project pins
-map.on('click', 'project-pins', (e) => {
+// ===== Click Event for Project Pins =====
+map.on('click', ['project-pins-lowzoom', 'project-pins-highzoom'], (e) => {
     const properties = e.features[0].properties;
     let popupContent = '<div>';
 
     // Add the title
-    const title = properties['Project Name'] || 'Project Details';
+    const title = properties['Address'] || 'Project Details';
     popupContent += `<div class="popup-title">${title}</div>`;
 
     // Include the rendering image within a container
-    const renderingURL = properties['renderingURL'];
+    const renderingURL = properties['Rendering URL'];
     if (renderingURL && renderingURL !== 'None') {
         popupContent += `<div class="popup-image-container"><img src="${renderingURL}" alt="Rendering" class="popup-image"/></div>`;
     }
@@ -96,7 +123,7 @@ map.on('click', 'project-pins', (e) => {
     const costEstimate = properties['Cost Estimate'];
     if (costEstimate && costEstimate !== 'None') {
         const formattedCost = `$${parseInt(costEstimate).toLocaleString()}`;
-        popupContent += `<p><strong>Cost Estimate:</strong> ${formattedCost}</p>`;
+        popupContent += `<h3 class="popup-list"><u>Cost Est: ${formattedCost}</u></h3>`;
     }
 
     // List other properties
@@ -108,7 +135,7 @@ map.on('click', 'project-pins', (e) => {
             key !== 'Project Name' &&
             key !== 'renderingURL' &&
             key !== 'Cost Estimate' &&
-            key !== 'offsetIndex'
+            key !== 'offsetIndex' // Exclude internal properties
         ) {
             const value = properties[key];
             if (value && value !== 'None') {
@@ -140,11 +167,10 @@ map.on('click', 'project-pins', (e) => {
     });
 });
 
-// Change the cursor to a pointer when over project pins
-map.on('mouseenter', 'project-pins', () => {
+// ===== Cursor Change on Hover =====
+map.on('mouseenter', ['project-pins-lowzoom', 'project-pins-highzoom'], () => {
     map.getCanvas().style.cursor = 'pointer';
 });
-map.on('mouseleave', 'project-pins', () => {
+map.on('mouseleave', ['project-pins-lowzoom', 'project-pins-highzoom'], () => {
     map.getCanvas().style.cursor = '';
 });
-
