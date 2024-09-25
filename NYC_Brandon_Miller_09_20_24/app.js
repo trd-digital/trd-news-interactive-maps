@@ -6,7 +6,7 @@ const longitudeSpan = 1.5;
 const latitudeSpan = 0.75;
 
 excludeFields = ['Neighborhood', 'State', 'full_address',
-       'geocoded', 'lat', 'lon', 'geometry']
+       'geocoded', 'lat', 'lon', 'geometry','Address']
 
 const bounds = [
     [centerNYC[0] - longitudeSpan, centerNYC[1] - latitudeSpan], // [westLongitude, southLatitude]
