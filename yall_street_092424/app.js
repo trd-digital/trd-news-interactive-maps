@@ -234,8 +234,8 @@ map.on('load', () => {
         const renderingURL = properties['renderingURL']; // Ensure correct property name
         if (renderingURL && renderingURL !== 'None') {
             // Convert relative URL to absolute URL
-            const absoluteURL = new URL(renderingURL, window.location.origin).href;
-            popupContent += `<div class="popup-image-container"><img src="${absoluteURL}" alt="Rendering of ${title}" class="popup-image"/></div>`;
+            // const absoluteURL = new URL(renderingURL, window.location.origin).href;
+            popupContent += `<div class="popup-image-container"><img src="${renderingURL}" alt="Rendering of ${title}" class="popup-image"/></div>`;
         }
 
         // Start the property list
