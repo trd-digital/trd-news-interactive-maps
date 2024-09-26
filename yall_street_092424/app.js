@@ -1,5 +1,6 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ';
 
+// List of keys to exclude from the popup
 const excludedKeys = [
     'City_State',
     'Renderings',
@@ -13,6 +14,7 @@ const excludedKeys = [
     'offsetIndex'
 ];
 
+// Initialize the map
 const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/trddata/cluuic7cm008m01pa4xhx5gnh', // Replace with your Mapbox style URL
@@ -118,67 +120,58 @@ map.on('load', () => {
         }
     });
 
-    // ===== Unclustered Points Layer =====
-    map.addLayer({
-        id: 'unclustered-point',
-        type: 'symbol',
-        source: 'projects',
-        filter: ['!', ['has', 'point_count']],
-        layout: {
-            'icon-image': 'green-star', // Updated to use the custom SVG
-            'icon-size': 1.0, // Adjust size as needed (1.0 is original size)
-            'icon-allow-overlap': true,
-            'icon-ignore-placement': true
-        },
-        paint: {
-            'icon-halo-color': '#000', // Black halo
-            'icon-halo-width': 1 // Fixed halo width
-        }
-    });
-
     // ===== Add Custom SVG Icon =====
-    const starSVG = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
-      <!-- 11-Point Star Shape -->
-      <polygon
-        points="50,5
-                58,35
-                90,35
-                63,55
-                75,90
-                50,70
-                25,90
-                37,55
-                10,35
-                42,35
-                50,5"
-        fill="green"
-        stroke="black"
-        stroke-width="2"
-      />
-      <!-- Dollar Sign -->
-      <text x="50" y="60" font-size="25" text-anchor="middle" fill="yellow" font-family="Arial, Helvetica, sans-serif">$</text>
-    </svg>
-    `;
+    // Fetch the SVG file
+    fetch('images/spur_responsive.svg')
+        .then(response => response.text())
+        .then(svgContent => {
+            // Encode the SVG content to be used in a data URL
+            const encodedSVG = encodeURIComponent(svgContent)
+                .replace(/'/g, '%27')
+                .replace(/"/g, '%22');
 
-    // Encode the SVG
-    const encodedStarSVG = encodeURIComponent(starSVG)
-      .replace(/'/g, '%27')
-      .replace(/"/g, '%22');
+            // Create a data URL for the SVG image
+            const dataURL = `data:image/svg+xml;charset=UTF-8,${encodedSVG}`;
 
-    // Create Data URL
-    const starDataURL = `data:image/svg+xml;charset=UTF-8,${encodedStarSVG}`;
+            // Create a new Image object
+            const image = new Image();
+            image.onload = () => {
+                // Add the image to the map style
+                if (!map.hasImage('cowboy-spur')) {
+                    map.addImage('cowboy-spur', image);
+                }
 
-    // Create a new Image object
-    const starImage = new Image();
-    starImage.src = starDataURL;
+                // Now that the image is added, add the unclustered points layer
+                addUnclusteredPointsLayer();
+            };
+            image.onerror = (error) => {
+                console.error('Error loading SVG image:', error);
+            };
+            image.src = dataURL;
+        })
+        .catch(error => {
+            console.error('Error fetching SVG file:', error);
+        });
 
-    // Add the image to the map once it's loaded
-    starImage.onload = () => {
-        if (!map.hasImage('green-star')) { // Prevent duplicate images
-            map.addImage('green-star', starImage);
-        }
-    };
+    // Function to add the unclustered points layer after the image is loaded
+    function addUnclusteredPointsLayer() {
+        // ===== Unclustered Points Layer =====
+        map.addLayer({
+            id: 'unclustered-point',
+            type: 'symbol',
+            source: 'projects',
+            filter: ['!', ['has', 'point_count']],
+            layout: {
+                'icon-image': 'cowboy-spur', // Use your custom SVG
+                'icon-size': 1.0, // Adjust size as needed
+                'icon-allow-overlap': true,
+                'icon-ignore-placement': true
+            },
+            paint: {
+                // You can adjust paint properties here if needed
+            }
+        });
+    }
 
     // ===== Add Custom Zoom Controls =====
     // Get references to the custom zoom buttons
@@ -233,8 +226,6 @@ map.on('load', () => {
         // Include the rendering image within a container
         const renderingURL = properties['renderingURL']; // Ensure correct property name
         if (renderingURL && renderingURL !== 'None') {
-            // Convert relative URL to absolute URL
-            // const absoluteURL = new URL(renderingURL, window.location.origin).href;
             popupContent += `<div class="popup-image-container"><img src="${renderingURL}" alt="Rendering of ${title}" class="popup-image"/></div>`;
         }
 
