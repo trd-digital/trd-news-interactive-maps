@@ -49,16 +49,21 @@
 	--bs-font-sans-serif: "Proxima Nova", system-ui, -apple-system, "Segoe UI",
 	Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif;
 	--bs-btn-focus-shadow-rgb: 130,138,145;
-	--slate-gray-color: #6c757d;   /* Hint: Background inactivity. */
-	--dim-gray-color: #5c636a;     /* Hint: Background hover and focus. */
-	--davys-gray-2-color: #565e64; /* Hint: Background active. */ /* Border hover and focus. */
-	--davys-gray-1-color: #51585e; /* Hint: Border active. */
-	--cadet-gray-color: #a0a6ad;
+	--slate-gray-color: #6c757d;   /* Hint: Button background inactive. Button border inactive. */
+	--dim-gray-color: #5c636a;     /* Hint: Button background hover and focus. */
+	--davys-gray-color-2: #565e64; /* Hint: Button background active. Button border hover and focus. */
+	--davys-gray-color-1: #51585e; /* Hint: Button border active. */
+	--cadet-gray-color-1: #a0a6ad;
+	--cadet-gray-color-2: #9b9fa3;
 	--french-gray-color :#b4babf;
+	--outer-space-color: #495057;  /* Hint: Field border inactive. */
+	--platinum-color : #dee2e6;
+	--eerie-black-color: #212529;
 	--white-color: #fff;
 	--black-color: #000;
 }
 body {
+	overflow-y: scroll;
 	line-height: 1.5;
 	font-family: var(--bs-font-sans-serif);
 	font-size: 14px;
@@ -70,7 +75,7 @@ body {
 /* [2] Bootstrap > Toolbar. Global. */
 /* [2.1] Search. */
 .search .form-control:focus {
-	border-color: var(--cadet-gray-color);
+	border-color: var(--cadet-gray-color-1);
 	box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb), 0.5);
 }
 
@@ -87,6 +92,11 @@ body {
 }
 .columns-right.btn-group .dropdown-item:hover input[type="checkbox"] {
 	accent-color: var(--white-color);
+}
+@media (prefers-color-scheme: dark) {
+	.columns-right.btn-group .dropdown-item input[type="checkbox"] {
+		accent-color: var(--cadet-gray-color-2);
+	}
 }
 
 /* [3] Bootstrap > Pagination. Global. */
@@ -129,16 +139,16 @@ body {
 	--bs-pagination-focus-box-shadow: none;
 	--bs-pagination-focus-bg: var(--dim-gray-color);
 	--bs-pagination-focus-color: var(--white-color);
-	border-color: var(--davys-gray-2-color);
+	border-color: var(--davys-gray-color-2);
 }
 @media (prefers-color-scheme: dark) {
 	.page-link {
-		--bs-pagination-color: #dee2e6;
+		--bs-pagination-color: var(--platinum-color);
 	}
 	.disabled > .page-link,
 	.page-link.disabled {
-		--bs-pagination-disabled-bg: #212529;
-		/* --bs-pagination-disabled-color: #b4babf; */
+		--bs-pagination-disabled-bg: var(--eerie-black-color);
+		--bs-pagination-disabled-color: var(--davys-gray-color-2);
 	}
 }
 
@@ -149,7 +159,7 @@ body {
 	font-size: 14px;
 }
 .page-jump-to .form-control:focus {
-	border-color: var(--cadet-gray-color);
+	border-color: var(--cadet-gray-color-1);
 	box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb), 0.5);
 }
 .page-jump-to .btn {
@@ -160,12 +170,22 @@ body {
 .page-jump-to .btn::first-letter {
 	text-transform: uppercase;
 }
+@media (prefers-color-scheme: dark) {
+	.page-jump-to .form-control {
+		--bs-body-color: var(--platinum-color);
+	}
+}
 
 /* [3.3] Pagination info. */
 .pagination-info {
 	font-weight: 600;
 	font-size: 13px;
 	color: var(--slate-gray-color);
+}
+@media (prefers-color-scheme: dark) {
+	.pagination-info {
+		color: var(--platinum-color);
+	}
 }
 
 /* [3.4] Page list. */
@@ -193,6 +213,11 @@ body {
 }
 .page-list .dropdown-menu .dropdown-item:active {
 	--bs-dropdown-link-active-bg: var(--dim-gray-color);
+}
+@media (prefers-color-scheme: dark) {
+	.page-list {
+		color: var(--platinum-color);
+	}
 }
 
 /* ==========================================================================
@@ -238,6 +263,14 @@ body {
 .bootstrap-table .fixed-table-toolbar .dropdown-menu::-webkit-scrollbar-thumb {
 	border-radius: 10px;
 	background-color: #c1c1c1;
+}
+@media (prefers-color-scheme: dark) {
+	.bootstrap-table .fixed-table-toolbar .dropdown-menu::-webkit-scrollbar-track {
+	  background-color: #272c30;
+	}
+	.bootstrap-table .fixed-table-toolbar .dropdown-menu::-webkit-scrollbar-thumb {
+	  background-color: #414447;
+	}
 }
 
 /* [2] Bootstrap table > Fixed table pagination. */

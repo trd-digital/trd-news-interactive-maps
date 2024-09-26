@@ -240,16 +240,20 @@
 	};
 
 	const mapDetailRow = (key, row, i) => {
-		const value = row[key];
+		const fieldName = getFieldName(key);
+		const value = row[fieldName];
 		if (isEmptyValue(value)) {
 			return "";
 		}
+		const fieldIndex = Object.keys(displayFields).find(
+			(index) => displayFields[index] === key
+		);
 
 		return `<tr>
 			<td class="text-capitalize">
-			${tableFieldNames[i].replace(/_/g, " ")}
+			${tableFieldNames[fieldIndex].replace(/_/g, " ")}
 			</td>
-			<td>${formatter(value, row, i, key)}</td>
+			<td>${formatter(value, row, i, fieldName)}</td>
 		</tr>`;
 	};
 
@@ -257,7 +261,6 @@
 		const displayRows = displayFields.filter(
 			(field) => !isEmptyValue(row[getFieldName(field)])
 		);
-		const offset = displayRows.slice(0, Math.ceil(displayRows.length / 2)).length;
 
 		trackEvent(
 			"detail_open",
@@ -272,7 +275,7 @@
 							<tbody>
 								${displayRows
 									.slice(0, Math.ceil(displayRows.length / 2))
-									.map((key, i) => mapDetailRow(getFieldName(key), row, i))
+									.map((key, i) => mapDetailRow(key, row, i))
 									.join("")}
 							</tbody>
 						</table>
@@ -282,7 +285,7 @@
 							<tbody>
 								${displayRows
 									.slice(Math.ceil(displayRows.length / 2))
-									.map((key, i) => mapDetailRow(getFieldName(key), row, (i + offset)))
+									.map((key, i) => mapDetailRow(key, row, i))
 									.join("")}
 							</tbody>
 						</table>
@@ -349,19 +352,17 @@
 			columns: data.columns,
 			data: data.rows,
 		});
-
-		return true;
 	};
 
 	/**
-	 * Init sticky header offset Y section.
+	 * Final actions.
 	 */
 
-	const calcTopBarHeight = () => {
+	const calcTopBarHeight = (deviation) => {
 		const tableToolbar = document.querySelector(".fixed-table-toolbar");
 		const tablePagination = document.querySelector(".fixed-table-pagination");
 		const tableToolbarHeight = tableToolbar.offsetHeight;
-		const tablePaginationHeight = tablePagination.offsetHeight - 2;
+		const tablePaginationHeight = tablePagination.offsetHeight - deviation;
 
 		const margins = parseInt(window.getComputedStyle(tableToolbar).getPropertyValue("margin-top")) + 
 		parseInt(window.getComputedStyle(tableToolbar).getPropertyValue("margin-bottom")) +
@@ -375,7 +376,7 @@
 	};
 
 	const initStickyHeaderOffsetY = (needInitMain) => {
-		const topBarHeight = calcTopBarHeight();
+		const topBarHeight = calcTopBarHeight(2);
 		const areEqual = (topBarHeight === stickyHeaderOffsetY ? true : false);
 		if (!areEqual) {
 			stickyHeaderOffsetY = topBarHeight;
@@ -391,12 +392,63 @@
 		}
 	};
 
-	/**
-	 * Listen events section.
-	 */
+	const fixTableHeadHiding = () => {
+		const maxScrollPosition = Math.max(document.body.scrollHeight,
+			document.body.offsetHeight, 
+			document.documentElement.clientHeight,
+			document.documentElement.scrollHeight,
+			document.documentElement.offsetHeight) - window.innerHeight;
+		const offest = 1;
+		const currentScrollPosition = window.scrollY;
+
+		// If true, then need move scroll bar that to show table head.
+		if (currentScrollPosition > 0) {
+			if (currentScrollPosition > (maxScrollPosition - offest)) {
+				// Move scrollbar up then to previous position.
+				window.scrollTo({
+					top: currentScrollPosition - offest,
+					left: 0,
+					behavior: "instant",
+				});
+				window.scrollTo({
+					top: currentScrollPosition,
+					left: 0,
+					behavior: "instant",
+				});
+			} else {
+				// Move scroll bar down then to previous position.
+				window.scrollTo({
+					top: currentScrollPosition + offest,
+					left: 0,
+					behavior: "instant",
+				});
+				window.scrollTo({
+					top: currentScrollPosition,
+					left: 0,
+					behavior: "instant",
+				});
+			}
+		}
+	};
 
 	const listenEvents = () => {
+		// Update sticky header offset Y.
 		window.onresize = () => initStickyHeaderOffsetY(false);
+
+		// Fix Table Head hiding.
+		// The <thead> is hiding when any column toggle is clicked
+		// and browser scroll bar more then 0.
+		// Note, the click event does not work for Bootstrap dropdown menu,
+		// so we are using the "change" event.
+		const dropdownMenu = document.querySelector(".columns .dropdown-menu");
+		Array.from(dropdownMenu.getElementsByTagName("input")).forEach((inputCheckbox) => {
+			inputCheckbox.addEventListener("change", fixTableHeadHiding);
+		});
+	};
+
+	const finalActions = () => {
+		initStickyHeaderOffsetY(true);
+		listenEvents();
 	};
 
 	/**
@@ -406,8 +458,7 @@
 	getData(localDataUrl)
 		.then(mapDataToTable)
 		.then(renderTable)
-		.then(initStickyHeaderOffsetY)
-		.then(listenEvents)
+		.then(finalActions)
 		.catch((error) => {
 			console.error(error);
 		});
