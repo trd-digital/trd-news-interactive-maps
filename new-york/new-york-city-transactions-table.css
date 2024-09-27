@@ -1,0 +1,413 @@
+/* ==========================================================================
+   Fonts
+   ========================================================================== */
+
+/* [1] Proxima Nova font. */
+@font-face {
+	font-family: "Proxima Nova";
+	src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.woff2")
+		format("woff2"),
+		url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.woff")
+		format("woff"),
+		url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.ttf")
+		format("truetype");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Proxima Nova";
+	src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.woff2")
+		format("woff2"),
+		url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.woff")
+		format("woff"),
+		url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.ttf")
+		format("truetype");
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Proxima Nova";
+	src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.woff2")
+		format("woff2"),
+		url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.woff")
+		format("woff"),
+		url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.ttf")
+		format("truetype");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+/* ==========================================================================
+   General selectors
+   ========================================================================== */
+
+/* [1] Tags. */
+:root {
+	--bs-font-sans-serif: "Proxima Nova", system-ui, -apple-system, "Segoe UI",
+	Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif;
+	--bs-btn-focus-shadow-rgb: 130,138,145;
+	--slate-gray-color: #6c757d;   /* Hint: Button background inactive. Button border inactive. */
+	--dim-gray-color: #5c636a;     /* Hint: Button background hover and focus. */
+	--davys-gray-color-2: #565e64; /* Hint: Button background active. Button border hover and focus. */
+	--davys-gray-color-1: #51585e; /* Hint: Button border active. */
+	--cadet-gray-color-1: #a0a6ad;
+	--cadet-gray-color-2: #9b9fa3;
+	--french-gray-color :#b4babf;
+	--outer-space-color: #495057;  /* Hint: Field border inactive. */
+	--platinum-color : #dee2e6;
+	--eerie-black-color: #212529;
+	--white-color: #fff;
+	--black-color: #000;
+}
+body {
+	overflow-y: scroll;
+	line-height: 1.5;
+	font-family: var(--bs-font-sans-serif);
+	font-size: 14px;
+}
+/*main {
+	margin-top: 121px;
+}*/
+
+/* [2] Bootstrap > Toolbar. Global. */
+/* [2.1] Search. */
+.search .form-control:focus {
+	border-color: var(--cadet-gray-color-1);
+	box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb), 0.5);
+}
+
+/* [2.2] Toggle fields. */
+.columns-right.btn-group .dropdown-item:hover {
+	--bs-dropdown-link-hover-bg: var(--slate-gray-color);
+	--bs-dropdown-link-hover-color: var(--white-color);
+}
+.columns-right.btn-group .dropdown-item:active {
+	--bs-dropdown-link-active-bg: var(--dim-gray-color);
+}
+.columns-right.btn-group .dropdown-item input[type="checkbox"] {
+	accent-color: var(--slate-gray-color);
+}
+.columns-right.btn-group .dropdown-item:hover input[type="checkbox"] {
+	accent-color: var(--white-color);
+}
+@media (prefers-color-scheme: dark) {
+	.columns-right.btn-group .dropdown-item input[type="checkbox"] {
+		accent-color: var(--cadet-gray-color-2);
+	}
+}
+
+/* [3] Bootstrap > Pagination. Global. */
+/* [3.1] Pagination. */
+.page-link {
+	--bs-pagination-font-size: 14px;
+	--bs-pagination-color: var(--slate-gray-color);
+	font-weight: 600;
+}
+.page-link i {
+	font-size: 12px;
+}
+.page-link.active,
+.active > .page-link {
+	--bs-pagination-active-border-color: var(--slate-gray-color);
+	--bs-pagination-active-bg: var(--slate-gray-color);
+	cursor: default;
+}
+.disabled > .page-link,
+.page-link.disabled {
+	--bs-pagination-disabled-bg: var(--white-color);
+	--bs-pagination-disabled-color: var(--french-gray-color);
+}
+.disabled > .page-link:focus,
+.page-link.disabled:focus {
+	--bs-pagination-disabled-border-color: rgba(var(--bs-btn-focus-shadow-rgb), 0.5);
+}
+.page-link:hover {
+	--bs-pagination-hover-border-color: var(--slate-gray-color);
+	--bs-pagination-hover-bg: var(--slate-gray-color);
+	--bs-pagination-hover-color: var(--white-color);
+}
+.page-link:focus {
+	--bs-pagination-border-color: var(--slate-gray-color);
+	--bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb), 0.5);
+	--bs-pagination-focus-bg: var(--slate-gray-color);
+	--bs-pagination-focus-color: var(--white-color);
+}
+.page-link:active {
+	--bs-pagination-focus-box-shadow: none;
+	--bs-pagination-focus-bg: var(--dim-gray-color);
+	--bs-pagination-focus-color: var(--white-color);
+	border-color: var(--davys-gray-color-2);
+}
+@media (prefers-color-scheme: dark) {
+	.page-link {
+		--bs-pagination-color: var(--platinum-color);
+	}
+	.disabled > .page-link,
+	.page-link.disabled {
+		--bs-pagination-disabled-bg: var(--eerie-black-color);
+		--bs-pagination-disabled-color: var(--davys-gray-color-2);
+	}
+}
+
+/* [3.2] Page jump to. */
+.page-jump-to .form-control {
+	--bs-body-color: var(--slate-gray-color);
+	font-weight: 600;
+	font-size: 14px;
+}
+.page-jump-to .form-control:focus {
+	border-color: var(--cadet-gray-color-1);
+	box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb), 0.5);
+}
+.page-jump-to .btn {
+	--bs-btn-font-weight: 600;
+	--bs-btn-font-size: 12px;
+	text-transform: lowercase;
+}
+.page-jump-to .btn::first-letter {
+	text-transform: uppercase;
+}
+@media (prefers-color-scheme: dark) {
+	.page-jump-to .form-control {
+		--bs-body-color: var(--platinum-color);
+	}
+}
+
+/* [3.3] Pagination info. */
+.pagination-info {
+	font-weight: 600;
+	font-size: 13px;
+	color: var(--slate-gray-color);
+}
+@media (prefers-color-scheme: dark) {
+	.pagination-info {
+		color: var(--platinum-color);
+	}
+}
+
+/* [3.4] Page list. */
+.page-list {
+	font-weight: 600;
+	font-size: 13px;
+	color: var(--slate-gray-color);
+}
+.page-list .btn {
+	--bs-btn-font-weight: 600;
+	--bs-btn-font-size: 12px;
+}
+.page-list .dropdown-menu {
+	--bs-dropdown-font-size: 12px;
+}
+.page-list .dropdown-menu .dropdown-item {
+	font-weight: 600;
+}
+.page-list .dropdown-menu .dropdown-item.active {
+	--bs-dropdown-link-active-bg: var(--slate-gray-color);
+}
+.page-list .dropdown-menu .dropdown-item:hover {
+	--bs-dropdown-link-hover-bg: var(--slate-gray-color);
+	--bs-dropdown-link-hover-color: var(--white-color);
+}
+.page-list .dropdown-menu .dropdown-item:active {
+	--bs-dropdown-link-active-bg: var(--dim-gray-color);
+}
+@media (prefers-color-scheme: dark) {
+	.page-list {
+		color: var(--platinum-color);
+	}
+}
+
+/* ==========================================================================
+   Own selectors
+   ========================================================================== */
+
+/*...*/
+
+/* ==========================================================================
+   Bootstrap table
+   ========================================================================== */
+
+/* [1] Bootstrap table > Toolbar. */
+.bootstrap-table .fixed-table-toolbar {
+	position: fixed;
+	top: 0;
+	z-index: 102;
+	width: 100%;
+	padding-top: 20px;
+	padding-right: 10px;
+	padding-left: 10px;
+	background-color: var(--bs-body-bg);
+}
+
+/* [1.1] Search. */
+.bootstrap-table .fixed-table-toolbar .search {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+/* [1.2] Toggle fields. */
+.bootstrap-table .fixed-table-toolbar .columns-right.btn-group {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.bootstrap-table .fixed-table-toolbar .dropdown-menu::-webkit-scrollbar {
+	width: 6px;
+}
+.bootstrap-table .fixed-table-toolbar .dropdown-menu::-webkit-scrollbar-track {
+	border-radius: 4px;
+	background-color: #f1f1f1;
+}
+.bootstrap-table .fixed-table-toolbar .dropdown-menu::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-color: #c1c1c1;
+}
+@media (prefers-color-scheme: dark) {
+	.bootstrap-table .fixed-table-toolbar .dropdown-menu::-webkit-scrollbar-track {
+	  background-color: #272c30;
+	}
+	.bootstrap-table .fixed-table-toolbar .dropdown-menu::-webkit-scrollbar-thumb {
+	  background-color: #414447;
+	}
+}
+
+/* [2] Bootstrap table > Fixed table pagination. */
+.bootstrap-table .fixed-table-pagination {
+	position: fixed;
+	top: 57px;
+	z-index: 101;
+	width: 100%;
+	padding: 20px 10px 10px;
+	background-color: var(--bs-body-bg);
+}
+.bootstrap-table .fixed-table-pagination div.pagination {
+	display: flex;
+	flex-direction: row-reverse;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.bootstrap-table .fixed-table-pagination .pagination-detail {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+@media screen and (max-width: 909.98px) {
+	/*main {
+		margin-top: 166px;
+	}*/
+	.bootstrap-table .fixed-table-pagination div.pagination {
+		flex-direction: column-reverse;
+	}
+	.bootstrap-table .fixed-table-pagination .pagination-detail {
+		display: flex;
+		flex-direction: column;
+		margin-top: 10px;
+	}
+}
+@media screen and (max-width: 659.98px) {
+	.bootstrap-table .fixed-table-pagination {
+		display: flex;
+		flex-direction: column-reverse;
+	}
+	.bootstrap-table .fixed-table-pagination div.pagination,
+	.bootstrap-table .fixed-table-pagination .pagination-detail {
+		flex-direction: row;
+		justify-content: end;
+	}
+}
+@media screen and (max-width: 399.98px) {
+	.bootstrap-table .fixed-table-pagination div.pagination {
+		flex-direction: row-reverse;
+	}
+}
+
+/* [2.1] Pagination. */
+@media screen and (max-width: 399.98px) {
+	.bootstrap-table .fixed-table-pagination ul.pagination li:not(.page-pre, .page-next) {
+		display: none;
+	}
+}
+
+/* [2.2] Page jump to. */
+.bootstrap-table .fixed-table-pagination .page-jump-to {
+	margin-right: 10px;
+}
+.bootstrap-table .fixed-table-pagination .page-jump-to input {
+	margin-left: 0!important;
+}
+@media screen and (max-width: 909.98px) {
+	.bootstrap-table .fixed-table-pagination .page-jump-to {
+		display: block;
+		margin-right: 0;
+		margin-bottom: 10px;
+		text-align: right;
+	}
+	.bootstrap-table .fixed-table-pagination .page-jump-to input {
+		display: inline-block;
+		float: none!important;
+	}
+	.bootstrap-table .fixed-table-pagination .page-jump-to .btn {
+		position: relative;
+		top: -1px;
+		height: 34px;
+	}
+}
+@media screen and (max-width: 659.98px) {
+	.bootstrap-table .fixed-table-pagination .page-jump-to {
+		display: none;
+	}
+}
+@media screen and (max-width: 399.98px) {
+	.bootstrap-table .fixed-table-pagination .page-jump-to {
+		display: block;
+		margin-right: 10px;
+		margin-bottom: 0;
+	}
+}
+
+/* [2.3] Pagination info. */
+/*...*/
+
+/* [2.4] Page list. */
+@media screen and (max-width: 399.98px) {
+	.bootstrap-table .fixed-table-pagination .page-list {
+		display: none!important;
+	}
+}
+
+/* [3] Bootstrap table > Fixed table container. */
+.bootstrap-table .header-style {
+	--bs-table-bg: #2196f3;
+	--bs-table-color: var(--white-color);
+	border-bottom: 2px solid var(--black-color);
+	font-weight: 600;
+	font-style: normal;
+	font-size: 16px;
+}
+.bootstrap-table .header-style .sorted {
+	--bs-table-bg: #0d47a1;
+	font-weight: bold;
+}
+@media (prefers-color-scheme: dark) {
+	.bootstrap-table .header-style {
+		--bs-table-bg: #1976d2;
+		--bs-table-color: var(--white-color);
+	}
+	.bootstrap-table .header-style .sorted {
+		--bs-table-bg: #0d47a1;
+	}
+}
+.bootstrap-table .header-style .sortable.both {
+	background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-arrow-down-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/></svg>') !important;
+}
+.bootstrap-table .header-style .sortable.desc {
+	background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-arrow-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"/></svg>') !important;
+}
+.bootstrap-table .header-style .sortable.asc {
+	background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-arrow-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5"/></svg>') !important;
+}
+.bootstrap-table .detail-icon {
+	font-size: 24px;
+	color: var(--bs-text-color);
+}
