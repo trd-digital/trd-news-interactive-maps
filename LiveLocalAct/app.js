@@ -97,4 +97,4 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('mousemove', handleScrollZoom);
 });
 
-const excludeFields = ['full_address', 'geocoded','lat','lon','type','color','story_link','loan_int','loan_sh','type','Google Coordinates:']; // Add your field names to this array
+const excludeFields = ['full_address', 'geocoded','lat','lon','type','color','story_link','loan_int','loan_sh','type','Google coordinates']; // Add your field names to this array
