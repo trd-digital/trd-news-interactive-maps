@@ -1,0 +1,166 @@
+/* ==========================================================================
+   Fonts
+   ========================================================================== */
+
+/* [1] Proxima Nova font. */
+@font-face {
+	font-family: "Proxima Nova";
+	src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.woff2")
+			format("woff2"),
+		url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.woff")
+			format("woff"),
+		url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.ttf")
+			format("truetype");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Proxima Nova";
+	src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.woff2")
+			format("woff2"),
+		url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.woff")
+			format("woff"),
+		url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Semibold.ttf")
+			format("truetype");
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Proxima Nova";
+	src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.woff2")
+			format("woff2"),
+		url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.woff")
+			format("woff"),
+		url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.ttf")
+			format("truetype");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+/* ==========================================================================
+   General selectors
+   ========================================================================== */
+
+:root {
+	--bs-font-sans-serif: "Proxima Nova", system-ui, -apple-system, "Segoe UI",
+		"Roboto", "Helvetica Neue", "Noto Sans", "Liberation Sans", "Arial", sans-serif;
+}
+
+/* [1] Tags. */
+body {
+	line-height: 1.5;
+	font-family: var(--bs-font-sans-serif);
+}
+html,
+body,
+main {
+	height: 100%;
+}
+/*ul { cursor: pointer; }
+ul li {	pointer-events: none; }*/
+
+/* ==========================================================================
+   Own selectors
+   ========================================================================== */
+
+/*...*/
+
+/* ==========================================================================
+   Card
+   ========================================================================== */
+
+/* [1] Card. */
+.card {
+	height: 100%;
+}
+
+/* [2] Card > Card header. */
+.card .card-header {
+	border-bottom-color: #e0e0e0;
+	padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
+	background-color: var(--bs-body-bg);
+}
+.card .card-header .logo {
+	margin-bottom: 12px;
+}
+.card .card-header .button-icon {
+	display: flex;
+	flex-direction: row;
+	align-items: baseline;
+	padding: 4px 8px;
+	line-height: 1;
+	color: #6b6b6b;
+	cursor: pointer;
+}
+.card .card-header .button-icon:hover,
+.card .card-header .button-icon:active {
+	color: #0d6efd;
+}
+.card .card-header a.button-icon {
+	text-decoration: none;
+}
+.card .card-header .button-icon i {
+	font-size: 12px;
+}
+.card .card-header .button-icon-box-arrow {
+	color: #0d6efd;
+}
+.card .card-header h1 {
+	margin-bottom: 0;
+	font-family: "Merriweather", serif;
+	font-weight: 900;
+	font-size: 16px;
+}
+.card .card-header h1 a {
+	text-decoration: none;
+	color: #393939;
+}
+@media (prefers-color-scheme: dark) {
+	.card .card-header {
+		border-bottom-color: #424549;
+	}
+	.card .card-header .logo path:first-child {
+		fill: #fff;
+	}
+	.card .card-header .button-icon {
+		color: #dee2e6;
+	}
+	.card .card-header .button-icon:hover,
+	.card .card-header .button-icon:active {
+		color: #6ea8fe;
+	}
+	.card .card-header .button-icon-box-arrow {
+		color: #6ea8fe;
+	}
+	.card .card-header h1 a {
+		color: #dee2e6;
+	}
+}
+
+/* [3] Card > Luxury sales list. */
+.card .luxury-sales-list {
+	overflow-y: auto;
+	cursor: pointer;
+}
+.card .luxury-sales-list li {
+	min-height: 60px;
+}
+.card .luxury-sales-list li .price {
+	font-family: "Merriweather", serif;
+	font-weight: 700;
+	font-size: 1rem;
+}
+.card .luxury-sales-list li .date {
+	font-size: 0.75rem;
+}
+@media (prefers-color-scheme: dark) {
+	.card .luxury-sales-list li .price {
+		color: #44bf85 !important;
+	}
+	.card .luxury-sales-list li .date {
+		color: #cacfd3!important;
+	}
+}
