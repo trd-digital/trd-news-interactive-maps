@@ -1,236 +1,217 @@
-/**
- * Adds list items by top sale price to the Luxury Sales List.
- * Contains the following API:
- * 1. initUserTheme — Enable Bootstrap dark theme.
- * 2. initTooltips — Enable all Bootstrap tooltips.
- * 3. listenEvents — All events: redirect by click and
- * start/stop list auto scroll by blur, mouseleave,
- * mouseenter, touchstart.
- * 4. getData/renderListItems/startAutoScrollList — Get data from source file,
- * filter/sort/limit data, build the HTML and fill the Luxury Sales List.
- * Then run the auto scroll feautre.
- */
+const dataUrl =
+  "https://static.therealdeal.com/interactive-maps/new-york-city-transactions-map.geojson";
+
+const excludeValue = [
+  "null",
+  "undefined",
+  "n/a",
+  "na",
+  "none",
+  "not available",
+  "not applicable",
+  "no",
+  "0",
+  "false",
+  "unknown",
+  "data not found",
+  "nan",
+  "address not available",
+  "address unavailable",
+  "address not found",
+  "-",
+];
+
 const trdList = () => {
-	// Local and remote data.
-	const localDataUrl =
-		"data/new-york-city-transactions-map.geojson";
-	const remoteDataUrl =
-		"https://static.therealdeal.com/interactive-maps/new-york-city-transactions-map.geojson";
+  const list = document.querySelector("#luxury-sales-list");
 
-	// List group.
-	const listGroup = document.getElementById("luxury-sales-list"); // The <ul> tag.
-	const listLimit = 10;
+  const listLimit = 30;
 
-	// Scroller.
-	let scroller;
+  let scroller;
 
-	// Exclude values.
-	const excludeValue = [
-		"null",
-		"undefined",
-		"n/a",
-		"na",
-		"none",
-		"not available",
-		"not applicable",
-		"no",
-		"0",
-		"false",
-		"unknown",
-		"data not found",
-		"nan",
-		"address not available",
-		"address unavailable",
-		"address not found",
-		"-",
-	];
+  const fn = {
+    init: () => {
+      helpers.setUserPersistedTheme();
+      fn.setupTooltip();
+      fn.addEventListeners();
 
-	const api = {
-		init: () => {
-			api.initUserTheme();
-			api.initTooltips();
-			api.listenEvents();
-			api.getData(localDataUrl)
-				.then(api.renderListItems)
-				.catch(console.error)
-				.finally(api.startAutoScrollList);
-		},
+      fn.getData(dataUrl)
+        .then(fn.renderListItems)
+        .catch(console.error)
+        .finally(fn.autoScrollListEvent);
+    },
 
-		initUserTheme: () => {
-			if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-				document.body.setAttribute("data-bs-theme", "dark");
-			}
-		},
+    setupTooltip: () => {
+      const tooltipTriggerList = document.querySelectorAll(
+        '[data-bs-toggle="tooltip"]'
+      );
+      [...tooltipTriggerList].map(
+        (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+      );
+    },
 
-		initTooltips: () => {
-			const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-			[...tooltips].map((value) => new bootstrap.Tooltip(value));
-		},
+    addEventListeners: () => {
+      list.addEventListener("click", () => {
+        window.open(
+          "https://therealdeal.com/data/new-york/2024/nyc-transactions/?utm_source=embed&utm_medium=widget&utm_campaign=south_florida_sales",
+          "_blank"
+        );
+      });
 
-		listenEvents: () => {
-			// Redirect when click on the list items.
-			listGroup.addEventListener("click", api.redirect);
+      window.addEventListener("blur", helpers.autoScrollListStart);
+      window.addEventListener("load", helpers.autoScrollListStart);
+      list.addEventListener("mouseleave", helpers.autoScrollListStart);
+      list.addEventListener("mouseenter", helpers.autoScrollListStop);
+      list.addEventListener("touchstart", helpers.autoScrollListStop);
+    },
 
-			// Start or stop auto scroll actions as reaction
-			// on blur, mouseleave, mouseenter, touchstart events.
-			window.addEventListener("blur", api.startAutoScrollList);
-			listGroup.addEventListener("mouseleave", api.startAutoScrollList);
-			listGroup.addEventListener("mouseenter", api.stopAutoScrollList);
-			listGroup.addEventListener("touchstart", api.stopAutoScrollList);
-		},
+    getData: async (url) => {
+      const response = await fetch(url);
+      return response.json();
+    },
 
-		redirect: () => {
-			window.open("https://therealdeal.com/data/", "_blank");
-		},
+    renderListItems: (data) => {
+      const items = data.features
+        .filter(helpers.filterListEmptyData)
+        .sort(helpers.sortListBySalePrice)
+        .slice(0, listLimit)
+        .map((feature) => {
+          const properties = feature.properties;
+          let address = properties["Physical Address"];
+          const price = helpers.formatCurrency(properties["Sale Price"], true);
+          const date = helpers.formatDate(properties["Record Date"]);
 
-		startAutoScrollList: () => {
-			clearInterval(scroller);
-			api.runAutoScrollList();
-		},
+          return `
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="me-2">${address}</div>
+              <div>
+                <div class="text-success price">${price}</div>
+                <div class="text-muted date">${date}</div>
+              </div>
+            </li>
+          `;
+        })
+        .join("");
 
-		runAutoScrollList: () => {
-			const listHeight = listGroup.scrollHeight;
-			scroller = setInterval(() => {
-				if ((listGroup.scrollTop + listGroup.clientHeight) >= listHeight) {
-					listGroup.scrollTop = 0;
-				} else {
-					listGroup.scrollBy({
-						top: 1,
-						behavior: "smooth",
-					});
-				}
-			}, 10);
-		},
+      list.innerHTML = items;
+    },
 
-		stopAutoScrollList: () => {
-			clearInterval(scroller);
-		},
+    autoScrollList: () => {
+      const listHeight = list.scrollHeight;
+      scroller = setInterval(() => {
+        if (list.scrollTop + list.clientHeight >= listHeight) {
+          list.scrollTop = 0;
+        } else {
+          list.scrollBy({
+            top: 1,
+            behavior: "smooth",
+          });
+        }
+      }, 10);
+    },
+  };
 
-		getData: async (url) => {
-			const response = await fetch(url);
+  const helpers = {
+    setUserPersistedTheme: () => {
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.body.setAttribute("data-bs-theme", "dark");
+      }
+    },
 
-			return response.json();
-		},
+    autoScrollListStart: () => {
+      clearInterval(scroller);
+      fn.autoScrollList();
+    },
 
-		renderListItems: (data) => {
-			const items = data.features
-				.filter(api.filterListEmptyData)
-				.sort(api.sortListBySalePrice)
-				.slice(0, listLimit)
-				.map((feature) => {
-					const properties = feature.properties;
-					const address = properties["Physical Address"];
-					const price = helpers.formatCurrency(properties["Sale Price"], true);
-					const date = helpers.formatDate(properties["Record Date"]);
+    autoScrollListStop: () => {
+      clearInterval(scroller);
+    },
 
-					return `
-						<li class="list-group-item d-flex justify-content-between align-items-center">
-							<div class="me-2">${address}</div>
-							<div>
-								<div class="text-success price">${price}</div>
-								<div class="text-muted date">${date}</div>
-							</div>
-						</li>
-					`;
-				})
-				.join("");
+    filterListEmptyData: (data) => {
+      const properties = data.properties;
+      const address = properties["Physical Address"];
+      const price = properties["Sale Price"];
+      const date = properties["Record Date"];
 
-			listGroup.innerHTML = items;
-		},
+      return (
+        !helpers.isEmptyValue(price) &&
+        !helpers.isEmptyValue(date) &&
+        !helpers.isEmptyValue(address)
+      );
+    },
 
-		filterListEmptyData: (data) => {
-			const properties = data.properties;
-			const address = properties["Physical Address"];
-			const price = properties["Sale Price"];
-			const date = properties["Record Date"];
+    sortListBySalePrice: (a, b) => {
+      const priceA = a.properties["Sale Price"];
+      const priceB = b.properties["Sale Price"];
+      return priceB - priceA;
+    },
 
-			return (
-				!helpers.isEmptyValue(price) &&
-				!helpers.isEmptyValue(date) &&
-				!helpers.isEmptyValue(address)
-			);
-		},
+    isEmptyValue: (value) => {
+      if (!value) return true;
+      if (value === "") return true;
+      if (typeof value === "string") {
+        if (value.trim() === "") return true;
+        if (excludeValue.includes(value.toLowerCase())) return true;
+      }
+      return false;
+    },
 
-		sortListBySalePrice: (a, b) => {
-			const priceA = a.properties["Sale Price"];
-			const priceB = b.properties["Sale Price"];
+    cleanWhiteSpace: (str) => {
+      return str.toString().replace(/\s+/g, " ").trim();
+    },
 
-			return priceB - priceA;
-		},
-	};
+    formatCurrency: (currency, round = false) => {
+      const amount = parseInt(
+        // Clean string and keep only digits w/ decimal.
+        helpers.cleanWhiteSpace(currency.toString()).replace(/[^0-9.]/g, ""),
+        10
+      );
 
-	const helpers = {
-		isEmptyValue: (value) => {
-			if (!value) return true;
-			if (value === "") return true;
-			if (typeof value === "string") {
-				if (value.trim() === "") return true;
-				if (excludeValue.includes(value.toLowerCase())) return true;
-			}
+      try {
+        // Default zero decimal places for under a million, or when round=true
+        let maximumFractionDigits = 0;
 
-			return false;
-		},
+        if (round === false) {
+          if (amount > 1_000_000_000) {
+            maximumFractionDigits = 2; // Two decimals for a billion or more.
+          } else if (amount >= 1_000_000) {
+            maximumFractionDigits = 1; // One decimal for a million or more.
+          }
+        }
 
-		cleanWhiteSpace: (str) => {
-			return str.toString().replace(/\s+/g, " ").trim();
-		},
+        const formattedCurrency = `$${Intl.NumberFormat("en-US", {
+          notation: "compact",
+          maximumFractionDigits,
+        }).format(amount)}`;
 
-		formatCurrency: (currency, round = false) => {
-			const amount = parseInt(
-				// Clean string and keep only digits w/ decimal.
-				helpers.cleanWhiteSpace(currency.toString()).replace(/[^0-9.]/g, ""),
-				10
-			);
+        return formattedCurrency;
+      } catch (e) {
+        return amount.toString();
+      }
+    },
 
-			try {
-				// Default zero decimal places for under a million, or when round=true.
-				let maximumFractionDigits = 0;
+    formatDate: (
+      date,
+      dateTimeFormatOptions = {
+        year: "2-digit",
+        month: "numeric",
+        day: "numeric",
+        timeZone: "GMT",
+      }
+    ) => {
+      try {
+        const dateFormatted = new Intl.DateTimeFormat(
+          "en-US",
+          dateTimeFormatOptions
+        ).format(Date.parse(date.toString()));
 
-				if (round === false) {
-					if (amount > 1_000_000_000) {
-						maximumFractionDigits = 2; // Two decimals for a billion or more.
-					} else if (amount >= 1_000_000) {
-						maximumFractionDigits = 1; // One decimal for a million or more.
-					}
-				}
+        return dateFormatted;
+      } catch (e) {
+        return helpers.cleanWhiteSpace(date.toString());
+      }
+    },
+  };
 
-				const formattedCurrency = `$${Intl.NumberFormat("en-US", {
-					notation: "compact",
-					maximumFractionDigits,
-				}).format(amount)}`;
-
-				return formattedCurrency;
-			} catch (e) {
-				return amount.toString();
-			}
-		},
-
-		formatDate: (
-			date,
-			dateTimeFormatOptions = {
-				year: "2-digit",
-				month: "numeric",
-				day: "numeric",
-				timeZone: "GMT",
-			}
-		) => {
-			try {
-				const dateFormatted = new Intl.DateTimeFormat(
-					"en-US",
-					dateTimeFormatOptions
-				).format(Date.parse(date.toString()));
-
-				return dateFormatted;
-			} catch (e) {
-				return helpers.cleanWhiteSpace(date.toString());
-			}
-		},
-	};
-
-	api.init();
+  fn.init();
 };
 
-/**
- * Call the TRD List.
- */
 trdList();
