@@ -31,7 +31,6 @@
     "Sale Price",
     "Use Code Description",
     "Property Sq. Ft",
-    "Doc Date of Previous Sale",
     "Previous Owner Name",
     "Previous Sale Price",
     "Physical Address",
@@ -40,12 +39,9 @@
     "Building BBL",
     "Recorded Date of Previous Sale",
     "Doc Date of Previous Sale",
-    "Previous Owner Name",
-    "Previous Sale Price",
-    "Physical Address",
-    "Municipality",
-    "County",
     "Neighborhood",
+    "County",
+    "Municipality",
     "PropAppraiserURL",
   ];
 

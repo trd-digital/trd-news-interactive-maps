@@ -1,4 +1,7 @@
 const trdMap = () => {
+  const geojsonFilePath =
+    "https://static.therealdeal.com/interactive-maps/map_data.geojson";
+
   mapboxgl.accessToken =
     "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
 
@@ -371,9 +374,7 @@ const trdMap = () => {
     },
 
     getGeoJsonData: async () => {
-      const url =
-        "https://static.therealdeal.com/interactive-maps/map_data.geojson";
-      const response = await fetch(url);
+      const response = await fetch(geojsonFilePath);
       const data = await response.json();
 
       data.features.map((feature) => {
