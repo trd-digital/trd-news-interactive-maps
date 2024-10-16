@@ -2,6 +2,8 @@ const trdMap = () => {
   const geojsonFilePath =
     "https://static.therealdeal.com/interactive-maps/new-york-city-transactions-map.geojson";
 
+  const minimumSalePrice = 250_000;
+
   mapboxgl.accessToken =
     "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
 
@@ -13,10 +15,12 @@ const trdMap = () => {
     container: "map", // container ID
     style: `mapbox://styles/mapbox/${userTheme}-v10`, // style URL
     center: {
-      lat: 40.68098208589174,
-      lng: -74.09566324060523,
+      lat: 40.755327020390325,
+      lng: -73.95044562100685,
     },
-    zoom: 10, // starting zoom
+    zoom: 11, // starting zoom
+    minZoom: 10,
+    maxZoom: 17,
     attributionControl: false,
     scrollZoom: {
       requireCtrl: true,
@@ -26,16 +30,16 @@ const trdMap = () => {
 
   const legendMap = [
     {
-      value: 500_000,
+      value: 750_000,
       color: {
         light: "#90CAF9",
         dark: "#90CAF9",
       },
-      text: "<$500K",
+      text: "< $750K",
       default: false,
     },
     {
-      value: 750_000,
+      value: 1_000_000,
       color: {
         light: "#42A5F5",
         dark: "#42A5F5",
@@ -44,30 +48,30 @@ const trdMap = () => {
       default: false,
     },
     {
-      value: 1_000_000,
+      value: 3_000_000,
       color: {
         light: "#1E88E5",
         dark: "#1E88E5",
       },
-      text: "$1M - $2.5M",
+      text: "$1M - $3M",
       default: false,
     },
     {
-      value: 2_500_000,
+      value: 4_000_000,
       color: {
         light: "#1565C0",
         dark: "#1565C0",
       },
-      text: "$2.5M - $5M",
+      text: "$3M - $4M",
       default: false,
     },
     {
-      value: 5_000_000,
+      value: 300_000_000,
       color: {
         light: "#0D47A1",
         dark: "#0D47A1",
       },
-      text: ">$5M",
+      text: "> $5M",
       default: true,
     },
   ];
@@ -112,7 +116,14 @@ const trdMap = () => {
       { field: "BBL", label: "BBL" },
       { field: "Building BBL", label: "Building BBL" },
       { field: "Use Code Description", label: "Use Code Description" },
-      { field: "Property Sq. Ft", label: "Property Sq. Ft" },
+      {
+        field: "Property Sq. Ft",
+        label: "Property Sq. Ft",
+        format: (value) =>
+          new Intl.NumberFormat("en-US", {
+            style: "decimal",
+          }).format(value),
+      },
       {
         field: "Recorded Date of Previous Sale",
         label: "Recorded Date of Previous Sale",
@@ -131,8 +142,14 @@ const trdMap = () => {
       },
       { field: "Physical Address", label: "Address" },
       { field: "Neighborhood", label: "Neighborhood" },
-      { field: "Municipality", label: "Municipality" },
       { field: "County", label: "County" },
+      { field: "Municipality", label: "Municipality" },
+      {
+        field: "PropAppraiserURL",
+        label: "Property Appraiser URL",
+        format: (value) =>
+          `<a href="${value}" target="_blank" rel="noopener noreferrer">View Property</a>`,
+      },
     ],
   };
 
@@ -313,12 +330,13 @@ const trdMap = () => {
       const [geoData] = await Promise.all(promises);
 
       const filtered = geoData.features.filter((feature) => {
-        return parseInt(feature.properties["Sale Price"]) > 250000;
+        return parseInt(feature.properties["Sale Price"]) > minimumSalePrice;
       });
 
       return {
         geoData: {
-          ...geoData,
+          type: geoData.type,
+          crs: geoData.crs,
           features: filtered,
         },
       };
@@ -335,14 +353,17 @@ const trdMap = () => {
           type: "circle",
           id: id,
           source: id,
-          // filter: [
-          //   "==",
-          //   ["get", "Doc Type", ["at", 0, ["get", "Transactions"]]],
-          //   "DEED",
-          // ], // Only show entries where Doc Type is DEED
-
           paint: {
-            "circle-radius": 6,
+            "circle-radius": {
+              base: 1.75,
+              stops: [
+                [1, 1],
+                [10, 2],
+                [12, 4],
+                [15, 8],
+                [20, 16],
+              ],
+            },
             "circle-color": helpers.getPointsColor(),
             "circle-pitch-alignment": "map",
           },

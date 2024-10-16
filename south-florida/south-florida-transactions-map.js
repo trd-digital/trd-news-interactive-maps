@@ -31,7 +31,7 @@ const trdMap = () => {
         light: "#90CAF9",
         dark: "#90CAF9",
       },
-      text: "<$5M",
+      text: "< $5M",
       default: false,
     },
     {
@@ -67,7 +67,7 @@ const trdMap = () => {
         light: "#0D47A1",
         dark: "#0D47A1",
       },
-      text: ">$50M",
+      text: "> $50M",
       default: true,
     },
   ];
