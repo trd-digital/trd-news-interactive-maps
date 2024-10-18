@@ -1,3 +1,36 @@
+class MapboxGLButtonControl {
+  constructor({ className = "", title = "", eventHandler = evtHndlr }) {
+    this._className = className;
+    this._title = title;
+    this._eventHandler = eventHandler;
+  }
+
+  onAdd(map) {
+    this._icon = document.createElement("span");
+    this._icon.className = "mapboxgl-ctrl-icon";
+    this._icon.ariaHidden = true;
+    this._icon.title = this._title;
+
+    this._btn = document.createElement("button");
+    this._btn.className = this._className;
+    this._btn.type = "button";
+    this._btn.title = this._title;
+    this._btn.onclick = this._eventHandler;
+    this._btn.appendChild(this._icon);
+
+    this._container = document.createElement("div");
+    this._container.className = "mapboxgl-ctrl-group mapboxgl-ctrl";
+    this._container.appendChild(this._btn);
+
+    return this._container;
+  }
+
+  onRemove() {
+    this._container.parentNode.removeChild(this._container);
+    this._map = undefined;
+  }
+}
+
 const trdMap = () => {
   const geojsonFilePath =
     "https://static.therealdeal.com/interactive-maps/map_data.geojson";
@@ -5,9 +38,14 @@ const trdMap = () => {
   mapboxgl.accessToken =
     "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
 
+  let mapObj;
+  let mapData;
+
   const userTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
     : "light";
+
+  const filterEl = document.querySelector("#map-filters");
 
   const mapConfig = {
     container: "map", // container ID
@@ -17,6 +55,7 @@ const trdMap = () => {
       lat: 26.380126753919782,
     },
     zoom: 8, // starting zoom
+    minZoom: 8,
     attributionControl: false,
     scrollZoom: {
       requireCtrl: true,
@@ -181,7 +220,61 @@ const trdMap = () => {
     ],
   };
 
-  let mapObj;
+  const filterFields = [
+    {
+      title: "Days",
+      name: "days",
+      dataField: "Record Date",
+      fieldType: "radio",
+      fieldLayoutClass: "radio-group",
+      multiSelect: false,
+      defaultValue: "30",
+      options: [
+        {
+          label: "7 Days",
+          value: "7",
+        },
+        {
+          label: "15 Days",
+          value: "15",
+        },
+        {
+          label: "30 Days",
+          value: "30",
+        },
+      ],
+    },
+    {
+      title: "Property Type",
+      name: "property_type",
+      dataField: "Use Code Description",
+      fieldType: "checkbox",
+      fieldLayoutClass: "checkbox-list",
+      multiSelect: true,
+      options: [
+        {
+          label: "Single Family Home",
+          value: "SINGLE FAMILY",
+        },
+        {
+          label: "Multi-Family Dwelling",
+          value: "CONDOMINIUM",
+        },
+        {
+          label: "Commercial",
+          value: "COMMERCIAL",
+        },
+        {
+          label: "Vacant Land",
+          value: "VACANT LAND",
+        },
+        {
+          label: "Office Building",
+          value: "OFFICE BUILDING",
+        },
+      ],
+    },
+  ];
 
   const fn = {
     init: async () => {
@@ -189,6 +282,7 @@ const trdMap = () => {
       fn.checkForIframe();
       fn.createLegend();
       fn.collapseLegend();
+      fn.createFilters();
       map.init();
     },
 
@@ -200,23 +294,16 @@ const trdMap = () => {
       const parent = document.querySelector("#legend-content ul");
       legendMap.forEach((item) => {
         const li = document.createElement("li");
-        const color = helpers.pickUserThemeColor(
-          item.color.light,
-          item.color.dark
-        );
+        const color = helpers.pickThemeColor(item.color.light, item.color.dark);
         li.innerHTML = `<span class="legend-icon" style="background-color: ${color}"></span>${item.text}`;
         parent.appendChild(li);
       });
     },
 
     checkForIframe: () => {
-      if (fn.isIframe()) {
+      if (helpers.isIframe()) {
         document.querySelector("body").classList.add("iframe");
       }
-    },
-
-    isIframe: () => {
-      return window.self !== window.top;
     },
 
     collapseLegend: () => {
@@ -225,20 +312,41 @@ const trdMap = () => {
         legendBtn.click();
       }, 5000);
     },
+
+    createFilters: () => {
+      filters.init();
+    },
+
+    toggleTheme: () => {
+      const theme = document
+        .querySelector("body")
+        .getAttribute("data-bs-theme");
+      const newTheme = theme === "light" ? "dark" : "light";
+      mapObj.setStyle(`mapbox://styles/mapbox/${newTheme}-v10`);
+      document.querySelector("body").setAttribute("data-bs-theme", newTheme);
+      helpers.trackEvent("theme", newTheme);
+      map.load(mapData);
+    },
+
+    getTheme: () => {
+      return document.querySelector("body").getAttribute("data-bs-theme");
+    },
   };
 
   const helpers = {
-    pickUserThemeColor: (lightColor, darkColor) => {
-      return userTheme === "dark" ? darkColor : lightColor;
+    isIframe: () => {
+      return window.self !== window.top;
+    },
+
+    pickThemeColor: (lightColor, darkColor) => {
+      return fn.getTheme() === "dark" ? darkColor : lightColor;
     },
 
     getPointsColor: () => {
       const colors = ["step", ["to-number", ["get", "Sale Price"], 0]];
 
       legendMap.forEach((item) => {
-        colors.push(
-          helpers.pickUserThemeColor(item.color.light, item.color.dark)
-        );
+        colors.push(helpers.pickThemeColor(item.color.light, item.color.dark));
 
         if (!item.default) {
           colors.push(item.value);
@@ -336,9 +444,175 @@ const trdMap = () => {
     },
   };
 
+  const filters = {
+    onToggle: () => {
+      if (!filterEl || !filterFields?.length) return;
+
+      const isActive = filterEl.classList.contains("active");
+
+      filterEl.classList.toggle("active");
+      document.querySelector("button.map-filters").classList.toggle("active");
+      helpers.trackEvent("filters", isActive ? "close" : "open");
+    },
+
+    onClose: () => {
+      filterEl.classList.remove("active");
+      document.querySelector("button.map-filters").classList.remove("active");
+      helpers.trackEvent("filters", "close");
+    },
+
+    onSubmit: (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(filterEl);
+      const filters = {};
+
+      formData.forEach((value, key) => {
+        if (!filters[key]) {
+          filters[key] = [];
+        }
+
+        filters[key].push(value);
+      });
+
+      let filterData = mapData.geoData.features;
+      let filterApplied = false;
+
+      if (filters["days"]) {
+        const days = filters["days"][0];
+        const date = new Date();
+        date.setDate(date.getDate() - days);
+        filterData = mapData.geoData.features.filter((feature) => {
+          const recordDate = new Date(feature.properties["Record Date"]);
+          return recordDate >= date;
+        });
+        filterApplied = true;
+      }
+
+      if (filters["property_type"]) {
+        const propertyTypes = filters["property_type"];
+        filterData = filterData.filter((feature) => {
+          return propertyTypes.some((type) =>
+            feature.properties["Use Code Description"].includes(type)
+          );
+        });
+        filterApplied = true;
+      }
+
+      mapObj.getSource("transactions").setData({
+        type: "FeatureCollection",
+        features: filterData,
+      });
+
+      if (filterApplied) {
+        document.querySelector("button.map-filters").classList.add("applied");
+      } else {
+        document
+          .querySelector("button.map-filters")
+          .classList.remove("applied");
+      }
+
+      helpers.trackEvent("filters", "submit");
+    },
+
+    onReset: () => {
+      mapObj.getSource("transactions").setData(mapData.geoData);
+      document.querySelector("button.map-filters").classList.remove("applied");
+      helpers.trackEvent("filters", "reset");
+    },
+
+    eventListeners: () => {
+      if (!filterEl || !filterFields?.length) return;
+
+      const closeButtonEl = filterEl.querySelector(".map-filters-close");
+
+      if (closeButtonEl) {
+        closeButtonEl.addEventListener("click", filters.onClose);
+      }
+
+      filterEl.addEventListener("submit", filters.onSubmit);
+      filterEl.addEventListener("reset", filters.onReset);
+    },
+
+    init: () => {
+      if (!filterEl || !filterFields?.length) {
+        return;
+      }
+
+      filters.eventListeners();
+
+      const filterBodyEl = filterEl.querySelector(".map-filters-body");
+
+      if (!filterBodyEl) {
+        return;
+      }
+
+      filterFields.forEach((filterField) => {
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("filter-field-container");
+
+        filters.createHeader(filterField.title, wrapper);
+        filters.createFilterField(filterField, wrapper);
+
+        filterBodyEl.appendChild(wrapper);
+      });
+    },
+
+    createHeader: (text, parent) => {
+      const wrapper = document.createElement("div");
+      wrapper.classList.add("filter-field-header");
+
+      const heading = document.createElement("h5");
+      heading.classList.add("filter-field-title");
+      heading.innerText = text;
+
+      wrapper.appendChild(heading);
+
+      parent.appendChild(wrapper);
+    },
+
+    createFilterField: (filterField, parent) => {
+      const wrapper = document.createElement("div");
+      wrapper.classList.add("filter-field-body");
+
+      const field = document.createElement("div");
+      field.classList.add(filterField.fieldLayoutClass);
+
+      filterField.options.forEach((option) => {
+        const forId = `${filterField.name}_${option.value}`;
+        const fieldWrapper = document.createElement("div");
+        fieldWrapper.classList.add("filter-option-container");
+
+        const input = document.createElement("input");
+        input.id = forId;
+        input.type = filterField.fieldType;
+        input.name = filterField.name;
+        input.value = option.value;
+        if (option.value === filterField.defaultValue) {
+          input.checked = true;
+          input.setAttribute("checked", "checked");
+        }
+
+        fieldWrapper.appendChild(input);
+
+        const label = document.createElement("label");
+        label.classList.add("filter-option");
+        label.setAttribute("for", forId);
+        label.innerHTML += option.label;
+
+        fieldWrapper.appendChild(label);
+
+        field.appendChild(fieldWrapper);
+      });
+
+      wrapper.appendChild(field);
+      parent.appendChild(wrapper);
+    },
+  };
+
   const map = {
     currentZoom: mapConfig.zoom,
-    init: async () => {
+    init: () => {
       mapObj = new mapboxgl.Map(mapConfig);
       mapObj.addControl(
         new mapboxgl.NavigationControl({
@@ -347,7 +621,25 @@ const trdMap = () => {
         "top-right"
       );
 
-      if (fn.isIframe()) {
+      mapObj.addControl(
+        new MapboxGLButtonControl({
+          className: "map-filters",
+          title: "Filters",
+          eventHandler: filters.onToggle,
+        }),
+        "top-right"
+      );
+
+      mapObj.addControl(
+        new MapboxGLButtonControl({
+          className: "map-theme",
+          title: "Theme",
+          eventHandler: fn.toggleTheme,
+        }),
+        "top-right"
+      );
+
+      if (helpers.isIframe()) {
         mapObj.addControl(
           new mapboxgl.FullscreenControl({
             container: document.querySelector("body"),
@@ -355,16 +647,26 @@ const trdMap = () => {
         );
       }
 
-      const sourceId = "transactions";
-      const data = await map.getData();
-
-      map.loadSalesDataOnMap(sourceId, data.geoData);
-      map.tooltip(sourceId);
-      map.modal(sourceId);
       map.eventListeners();
     },
 
+    load: (data) => {
+      const sourceId = "transactions";
+      map.loadSalesDataOnMap(sourceId, data.geoData);
+      map.tooltip(sourceId);
+      map.modal(sourceId);
+    },
+
     eventListeners: () => {
+      mapObj.on("load", async () => {
+        mapData = await map.getData();
+        map.load(mapData);
+      });
+
+      mapObj.on("style.load", () => {
+        if (mapData) map.load(mapData);
+      });
+
       mapObj.on("zoomend", (e) => {
         const newZoom = e.target.getZoom();
         const method = newZoom > map.currentZoom ? "zoom-in" : "zoom-out";
@@ -403,11 +705,14 @@ const trdMap = () => {
     },
 
     loadSalesDataOnMap: (id, data) => {
-      mapObj.on("load", () => {
+      if (!mapObj.getSource(id)) {
         mapObj.addSource(id, {
           type: "geojson",
           data: data,
         });
+      }
+
+      if (!mapObj.getLayer(id)) {
         mapObj.addLayer({
           type: "circle",
           id: id,
@@ -415,10 +720,19 @@ const trdMap = () => {
           filter: ["==", ["get", "Doc Type"], "DEED"], // Only show entries where Doc Type is DEED
 
           paint: {
-            "circle-radius": 6,
+            "circle-radius": {
+              base: 1.75,
+              stops: [
+                [8, 4],
+                [12, 6],
+                [15, 8],
+                [20, 16],
+              ],
+            },
             "circle-color": helpers.getPointsColor(),
             "circle-pitch-alignment": "map",
-            "circle-stroke-color": userTheme === "dark" ? "#FB8C00" : "#FFCC80",
+            "circle-stroke-color":
+              fn.getTheme() === "dark" ? "#FB8C00" : "#FFCC80",
             "circle-stroke-width": [
               "case",
               [">", ["get", "Loan Amount"], 0],
@@ -427,7 +741,7 @@ const trdMap = () => {
             ],
           },
         });
-      });
+      }
     },
 
     tooltip: (id) => {
