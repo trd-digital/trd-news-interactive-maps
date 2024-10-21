@@ -244,5 +244,17 @@
     modalDisplayFields,
     filterFields,
     fetchDataFilterCallback,
+    mapLayerPaint: {
+      "circle-radius": {
+        base: 1.75,
+        stops: [
+          [1, 1],
+          [10, 2],
+          [12, 4],
+          [15, 8],
+          [20, 16],
+        ],
+      },
+    },
   });
 })();

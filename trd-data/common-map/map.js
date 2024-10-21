@@ -31,6 +31,37 @@ class MapboxGLButtonControl {
   }
 }
 
+const userTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+  ? "dark"
+  : "light";
+
+const trdTheme = {
+  init: () => {
+    document.querySelector("body").setAttribute("data-bs-theme", userTheme);
+  },
+
+  get: () => {
+    return document.querySelector("body").getAttribute("data-bs-theme");
+  },
+
+  isDark: () => trdTheme.get() === "dark",
+
+  set: (theme) => {
+    document.querySelector("body").setAttribute("data-bs-theme", theme);
+  },
+
+  onToggle: () => {
+    const siteTheme = document
+      .querySelector("body")
+      .getAttribute("data-bs-theme");
+    const newTheme = siteTheme === "light" ? "dark" : "light";
+    mapObj.setStyle(`mapbox://styles/mapbox/${newTheme}-v10`);
+    trdTheme.set(newTheme);
+    helpers.trackEvent("theme", newTheme);
+    map.load(mapData);
+  },
+};
+
 const trdDataCommonMap = (options) => {
   const defaults = {
     filePath: "",
@@ -49,6 +80,8 @@ const trdDataCommonMap = (options) => {
     filterFields: [],
     legendAutoCollapse: true,
     fetchDataFilterCallback: undefined,
+    mapLayerFilter: [],
+    mapLayerPaint: {},
   };
 
   const settings = Object.assign({}, defaults, options);
@@ -60,9 +93,6 @@ const trdDataCommonMap = (options) => {
 
   let mapObj;
   let mapData;
-  const userTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
 
   const mapConfig = {
     container: settings.mapElementId, // container ID
@@ -82,7 +112,7 @@ const trdDataCommonMap = (options) => {
 
   const fn = {
     init: async () => {
-      theme.init();
+      trdTheme.init();
       legend.init();
       filters.init();
       map.init();
@@ -95,37 +125,13 @@ const trdDataCommonMap = (options) => {
     },
   };
 
-  const theme = {
-    init: () => {
-      document.querySelector("body").setAttribute("data-bs-theme", userTheme);
-    },
-    get: () => {
-      return document.querySelector("body").getAttribute("data-bs-theme");
-    },
-
-    set: (theme) => {
-      document.querySelector("body").setAttribute("data-bs-theme", theme);
-    },
-
-    onToggle: () => {
-      const siteTheme = document
-        .querySelector("body")
-        .getAttribute("data-bs-theme");
-      const newTheme = siteTheme === "light" ? "dark" : "light";
-      mapObj.setStyle(`mapbox://styles/mapbox/${newTheme}-v10`);
-      theme.set(newTheme);
-      helpers.trackEvent("theme", newTheme);
-      map.load(mapData);
-    },
-  };
-
   const helpers = {
     isIframe: () => {
       return window.self !== window.top;
     },
 
     pickThemeColor: (lightColor, darkColor) => {
-      return theme.get() === "dark" ? darkColor : lightColor;
+      return trdTheme.isDark() ? darkColor : lightColor;
     },
 
     getPointsColor: () => {
@@ -542,7 +548,7 @@ const trdDataCommonMap = (options) => {
         new MapboxGLButtonControl({
           className: "map-theme",
           title: "Theme",
-          eventHandler: theme.onToggle,
+          eventHandler: trdTheme.onToggle,
         }),
         "top-right"
       );
@@ -618,19 +624,11 @@ const trdDataCommonMap = (options) => {
           type: "circle",
           id: id,
           source: id,
+          filters: settings.mapLayerFilter ? settings.mapLayerFilter : [],
           paint: {
-            "circle-radius": {
-              base: 1.75,
-              stops: [
-                [1, 1],
-                [10, 2],
-                [12, 4],
-                [15, 8],
-                [20, 16],
-              ],
-            },
             "circle-color": helpers.getPointsColor(),
             "circle-pitch-alignment": "map",
+            ...(settings.mapLayerPaint ? settings.mapLayerPaint : {}),
           },
         });
       }
