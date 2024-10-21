@@ -445,6 +445,10 @@ const trdMap = () => {
   };
 
   const filters = {
+    close: () => {
+      filterEl.classList.remove("active");
+      document.querySelector("button.map-filters").classList.remove("active");
+    },
     onToggle: () => {
       if (!filterEl || !filterFields?.length) return;
 
@@ -456,8 +460,7 @@ const trdMap = () => {
     },
 
     onClose: () => {
-      filterEl.classList.remove("active");
-      document.querySelector("button.map-filters").classList.remove("active");
+      filters.close();
       helpers.trackEvent("filters", "close");
     },
 
@@ -511,7 +514,7 @@ const trdMap = () => {
           .querySelector("button.map-filters")
           .classList.remove("applied");
       }
-
+      filters.close();
       helpers.trackEvent("filters", "submit");
     },
 
