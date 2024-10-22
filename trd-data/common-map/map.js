@@ -50,15 +50,15 @@ const trdTheme = {
     document.querySelector("body").setAttribute("data-bs-theme", theme);
   },
 
-  onToggle: () => {
+  onToggle: (_mapObj) => {
     const siteTheme = document
       .querySelector("body")
       .getAttribute("data-bs-theme");
     const newTheme = siteTheme === "light" ? "dark" : "light";
-    mapObj.setStyle(`mapbox://styles/mapbox/${newTheme}-v10`);
+    _mapObj.setStyle(`mapbox://styles/mapbox/${newTheme}-v10`);
     trdTheme.set(newTheme);
     helpers.trackEvent("theme", newTheme);
-    map.load(mapData);
+    _mapObj.load(mapData);
   },
 };
 
@@ -548,7 +548,7 @@ const trdDataCommonMap = (options) => {
         new MapboxGLButtonControl({
           className: "map-theme",
           title: "Theme",
-          eventHandler: trdTheme.onToggle,
+          eventHandler: () => trdTheme.onToggle(mapObj),
         }),
         "top-right"
       );
