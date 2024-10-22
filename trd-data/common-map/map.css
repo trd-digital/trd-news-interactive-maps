@@ -267,6 +267,11 @@ body {
   padding: 8px 16px;
 }
 
+.map-filters-body {
+  overflow-y: auto;
+  max-height: 320px;
+}
+
 .map-filters-header {
   display: flex;
   justify-content: space-between;
@@ -335,16 +340,24 @@ body {
   border-radius: 0 4px 4px 0;
 }
 
+.filter-field-body .checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
 .filter-field-body .checkbox-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
+.checkbox-group input,
 .checkbox-list input {
   display: none;
 }
 
+.checkbox-group label,
 .checkbox-list label {
   display: flex;
   align-items: center;
@@ -353,6 +366,7 @@ body {
   position: relative;
 }
 
+.checkbox-group label::before,
 .checkbox-list label::before {
   content: "";
   display: inline-block;
@@ -364,6 +378,7 @@ body {
   left: 0;
 }
 
+.checkbox-group input:checked + label::before,
 .checkbox-list input:checked + label::before {
   border: 1px solid #4285f4;
   background-color: white;
