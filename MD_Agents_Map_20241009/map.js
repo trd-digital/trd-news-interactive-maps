@@ -4,7 +4,8 @@ var map = L.map('map').setView([25.7939, -80.18825], 10.6);
 
 // Import map style tile layer from MapBox with api key
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a>',
+    attribution: 'Map created by Joseph Jungermann',
+    // attribution: 'Map created by Joseph Jungermann | Data by <a href="https://www.openstreetmap.org/">OpenStreetMap</a> and <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
     id: 'mapbox/dark-v9',
     tileSize: 512,
