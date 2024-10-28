@@ -87,8 +87,6 @@ const trdDataCommonMap = (options) => {
 
   const settings = Object.assign({}, defaults, options);
 
-  const minimumSalePrice = 250_000;
-
   mapboxgl.accessToken =
     "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
 
