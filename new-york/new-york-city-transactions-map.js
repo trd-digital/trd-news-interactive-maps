@@ -230,6 +230,7 @@
   window.map = trdDataCommonMap({
     filePath:
       "https://static.therealdeal.com/interactive-maps/new-york-city-transactions-map.geojson",
+    eventCategory: "new-york-transactions-map",
     mapElementId: "map",
     filterElementId: "map-filters",
     legendElementId: "legend",

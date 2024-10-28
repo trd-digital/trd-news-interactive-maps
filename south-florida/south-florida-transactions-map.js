@@ -253,6 +253,7 @@
   window.map = trdDataCommonMap({
     filePath:
       "https://static.therealdeal.com/interactive-maps/map_data.geojson",
+    eventCategory: "south-florida-transactions-map",
     mapElementId: "map",
     filterElementId: "map-filters",
     legendElementId: "legend",

@@ -82,6 +82,7 @@ const trdDataCommonMap = (options) => {
     fetchDataFilterCallback: undefined,
     mapLayerFilter: [],
     mapLayerPaint: {},
+    eventCategory: "unknown-map",
   };
 
   const settings = Object.assign({}, defaults, options);
@@ -188,7 +189,7 @@ const trdDataCommonMap = (options) => {
         window.dataLayer.push({
           event: "event_tracking",
           trd: {
-            category: "new-york-city-transactions-map",
+            category: settings.eventCategory,
             action: `map_${action}`,
             label: label,
           },
