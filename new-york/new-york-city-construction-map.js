@@ -165,16 +165,16 @@
     {
       title: "Days",
       name: "days",
-      dataField: "Filing Date",
+      dataField: "Instrument Status Date",
       fieldType: "radio",
       fieldLayoutClass: "radio-group",
       multiSelect: false,
-      defaultValue: "365",
+      defaultValue: "30",
       callback: (values, item) => {
         const days = values[0];
         const date = new Date();
         date.setDate(date.getDate() - days);
-        const recordDate = new Date(item.properties["Filing Date"]);
+        const recordDate = new Date(item.properties["Instrument Status Date"]);
         return recordDate >= date;
       },
       options: [
@@ -193,6 +193,10 @@
         {
           label: "1 Year",
           value: "365",
+        },
+        {
+          label: "2 Years",
+          value: "730",
         },
       ],
     },
@@ -242,7 +246,7 @@
       },
       options: [
         {
-          label: "Alteration",
+          label: "Major Alteration",
           value: "Major Alteration",
         },
         {
