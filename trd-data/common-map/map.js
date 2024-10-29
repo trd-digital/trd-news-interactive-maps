@@ -81,8 +81,11 @@ const trdDataCommonMap = (options) => {
     legendAutoCollapse: true,
     fetchDataFilterCallback: undefined,
     mapLayerFilter: [],
+    mapLayerFieldKey: "Sale Price",
     mapLayerPaint: {},
     eventCategory: "unknown-map",
+    paintCircleColorType: "step",
+    sourceId: "dataPoints",
   };
 
   const settings = Object.assign({}, defaults, options);
@@ -131,24 +134,6 @@ const trdDataCommonMap = (options) => {
 
     pickThemeColor: (lightColor, darkColor) => {
       return trdTheme.isDark() ? darkColor : lightColor;
-    },
-
-    getPointsColor: () => {
-      const colors = ["step", ["to-number", ["get", "Sale Price"], 0]];
-
-      if (!settings?.dataPointKeys?.length) {
-        return colors;
-      }
-
-      settings.dataPointKeys.forEach((item) => {
-        colors.push(helpers.pickThemeColor(item.color.light, item.color.dark));
-
-        if (!item.default) {
-          colors.push(item.value);
-        }
-      });
-
-      return colors;
     },
 
     cleanValue: (value) => {
@@ -457,7 +442,7 @@ const trdDataCommonMap = (options) => {
       const filterData = filters.getFilterFeatures();
       const filterApplied = filterData.length !== mapData.features.length;
 
-      mapObj.getSource("transactions").setData({
+      mapObj.getSource(settings.sourceId).setData({
         type: "FeatureCollection",
         features: filterData,
       });
@@ -477,7 +462,7 @@ const trdDataCommonMap = (options) => {
       if (!settings?.filterFields?.length) return;
 
       const filterData = filters.getFilterFeatures(mapData);
-      mapObj.getSource("transactions").setData({
+      mapObj.getSource(settings.sourceId).setData({
         type: "FeatureCollection",
         features: filterData,
       });
@@ -515,6 +500,58 @@ const trdDataCommonMap = (options) => {
       }
 
       return features;
+    },
+  };
+
+  const paintCircleColorTypes = {
+    step: () => {
+      const colors = [
+        "step",
+        ["to-number", ["get", settings.mapLayerFieldKey], 0],
+      ];
+
+      if (!settings?.dataPointKeys?.length) {
+        return colors;
+      }
+
+      settings.dataPointKeys.forEach((item) => {
+        colors.push(helpers.pickThemeColor(item.color.light, item.color.dark));
+
+        if (!item.default) {
+          colors.push(item.value);
+        }
+      });
+
+      return colors;
+    },
+    case: () => {
+      if (!settings?.dataPointKeys?.length) {
+        return ["circle-color", "black"];
+      }
+
+      const colors = ["case"];
+
+      settings.dataPointKeys
+        .filter((item) => !item.default)
+        .forEach((item) => {
+          const groupValue = item.value.split("|");
+          for (const value of groupValue) {
+            colors.push(["==", ["get", settings.mapLayerFieldKey], value]);
+            colors.push(
+              helpers.pickThemeColor(item.color.light, item.color.dark)
+            );
+          }
+        });
+
+      settings.dataPointKeys
+        .filter((item) => item.default)
+        .forEach((item) => {
+          colors.push(
+            helpers.pickThemeColor(item.color.light, item.color.dark)
+          );
+        });
+
+      return colors;
     },
   };
 
@@ -565,13 +602,12 @@ const trdDataCommonMap = (options) => {
     load: (data) => {
       if (!data) return;
 
-      const sourceId = "transactions";
-      map.loadSalesDataOnMap(sourceId, {
+      map.loadSalesDataOnMap(settings.sourceId, {
         ...data,
         features: filters.getFilterFeatures(data),
       });
-      map.tooltip(sourceId);
-      map.modal(sourceId);
+      map.tooltip(settings.sourceId);
+      map.modal(settings.sourceId);
     },
 
     eventListeners: () => {
@@ -625,8 +661,14 @@ const trdDataCommonMap = (options) => {
           source: id,
           filters: settings.mapLayerFilter ? settings.mapLayerFilter : [],
           paint: {
-            "circle-color": helpers.getPointsColor(),
             "circle-pitch-alignment": "map",
+            "circle-color":
+              settings.paintCircleColorType &&
+              Object.keys(paintCircleColorTypes).includes(
+                settings.paintCircleColorType
+              )
+                ? paintCircleColorTypes[settings.paintCircleColorType]()
+                : helpers.pickThemeColor("black", "white"),
             ...(settings.mapLayerPaint ? settings.mapLayerPaint : {}),
           },
         });
