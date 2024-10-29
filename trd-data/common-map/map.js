@@ -193,6 +193,11 @@ const trdDataCommonMap = (options) => {
 
       return value;
     },
+
+    formatInteger: (value) => {
+      return parseInt(value, 10);
+    },
+
     formatNumber: (value) => {
       return new Intl.NumberFormat("en-US", {
         style: "decimal",
@@ -700,6 +705,14 @@ const trdDataCommonMap = (options) => {
         tooltipDisplayFieldsContent.forEach((item) => {
           let value = helpers.cleanValue(e.features[0].properties[item.field]);
 
+          if (
+            item.filter &&
+            typeof item.filter === "function" &&
+            !item.filter(value)
+          ) {
+            value = "";
+          }
+
           if (value) {
             content += `<p><span>${
               item.label
@@ -742,9 +755,16 @@ const trdDataCommonMap = (options) => {
         let html = "";
 
         settings.modalDisplayFields.content.forEach((item) => {
-          const value = helpers.cleanValue(
-            e.features[0].properties[item.field]
-          );
+          let value = helpers.cleanValue(e.features[0].properties[item.field]);
+
+          if (
+            item.filter &&
+            typeof item.filter === "function" &&
+            !item.filter(value)
+          ) {
+            value = "";
+          }
+
           if (value) {
             html += `<p class="detail-item"><span class="detail-label">${
               item.label

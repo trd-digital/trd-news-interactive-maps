@@ -48,6 +48,17 @@
         field: "Instrument Type",
         label: "Type",
       },
+      {
+        field: "Filing Date",
+        label: "Filing Date",
+        format: "formatDate",
+      },
+      {
+        field: "Estimated Job Cost",
+        label: "Estimated Cost",
+        format: "formatPrice",
+        filter: (value) => value > 0,
+      },
     ],
   };
 
@@ -62,8 +73,8 @@
         field: "Instrument Number",
         label: "Number",
       },
-      { field: "BBL", label: "BBL", format: "formatNumber" },
-      { field: "BIN", label: "BIN", format: "formatNumber" },
+      { field: "BBL", label: "BBL", format: "formatInteger" },
+      { field: "BIN", label: "BIN", format: "formatInteger" },
       {
         field: "Property Address",
         label: "Address",
@@ -82,6 +93,7 @@
         field: "Estimated Job Cost",
         label: "Estimated Job Cost",
         format: "formatPrice",
+        filter: (value) => value > 0,
       },
       {
         field: "Total Construction Floor Area",
@@ -103,27 +115,49 @@
         label: "Selected Proposed Square Feet",
         format: "formatNumber",
       },
-      { field: "Proposed Dwelling units", label: "Proposed Dwelling units" },
-      { field: "Existing Dwelling Units", label: "Existing Dwelling Units" },
+      {
+        field: "Proposed Dwelling units",
+        label: "Proposed Dwelling units",
+        format: "formatInteger",
+      },
+      {
+        field: "Existing Dwelling Units",
+        label: "Existing Dwelling Units",
+        format: "formatInteger",
+      },
       {
         field: "Proposed Number of Stories",
         label: "Proposed Number of Stories",
+        format: "formatInteger",
       },
       {
         field: "Existing Number of Stories",
         label: "Existing Number of Stories",
       },
       { field: "Instrument Status", label: "Instrument Status" },
-      { field: "Instrument Status Date", label: "Instrument Status Date" },
+      {
+        field: "Instrument Status Date",
+        label: "Instrument Status Date",
+        format: "formatDate",
+      },
       { field: "Architect/Engineer Firm", label: "Architect/Engineer Firm" },
       { field: "Propery Owner", label: "Property Owner" },
       {
         field: "PLUTO Total Residential Units",
         label: "Total Residential Units",
+        format: "formatInteger",
       },
-      { field: "PLUTO Total Units", label: "Total Units" },
-      { field: "PLUTO Lot Area", label: "Lot Area" },
-      { field: "PLUTO Building Area", label: "Building Area" },
+      {
+        field: "PLUTO Total Units",
+        label: "Total Units",
+        format: "formatInteger",
+      },
+      { field: "PLUTO Lot Area", label: "Lot Area", format: "formatInteger" },
+      {
+        field: "PLUTO Building Area",
+        label: "Building Area",
+        format: "formatInteger",
+      },
     ],
   };
 
@@ -170,7 +204,6 @@
       fieldLayoutClass: "checkbox-group",
       multiSelect: true,
       callback: (values, item) => {
-        console.log("status", item.properties["Instrument Status"]);
         return values.some((value) => {
           if (value === "" || value.length === 0) {
             return item.properties["Instrument Status"] === "";
