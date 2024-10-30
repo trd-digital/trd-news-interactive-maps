@@ -109,7 +109,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             const titleCaseKey = key.replace(/\b\w/g, char => char.toUpperCase());
                             if (key === 'Description' && properties[key].includes('<a href=')) {
                                 popupContent += `<div class="popup-field"><span class="popup-key">${titleCaseKey}: </span> ${properties[key]}</div>`;
-                            } else {
+                            } else if (key === 'Total LL loan' || key === 'Total GL loan' || key === 'TOTAL LOAN') {
+                                popupContent += `<div class="popup-field"><span class="popup-key">${titleCaseKey}: </span><span class="popup-value">$${properties[key].toLocaleString()}M</span></div>`;
+                            }         
+                            else {
                                 popupContent += `<div class="popup-field"><span class="popup-key">${titleCaseKey}: </span><span class="popup-value">${properties[key]}</span></div>`;
                             }
                         }
