@@ -7,7 +7,7 @@ const latitudeSpan = 0.75;
 
 excludeFields = ['#', 'Street', 'City', 'County', 'State',
        'LL Lender', 'A-1', 'A-2', 'B', 'GL Lender', 'A-1.1',
-       'A-2.1', 'B.1', 'GL Lender 2', 'Unnamed: 16','Full_Address', 'geocoded', 'lat', 'lon', 'geometry']
+       'A-2.1', 'B.1', 'GL Lender 2', 'Unnamed: 16','Full_Address','Display_Address', 'geocoded', 'lat', 'lon', 'geometry']
 
 const bounds = [
     [centerNYC[0] - longitudeSpan, centerNYC[1] - latitudeSpan], // [westLongitude, southLatitude]
@@ -100,19 +100,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     const properties = e.features[0].properties;
 
                     // Replace 'Details' with the address if available
-                    const address = properties['Full_Address'] || 'Details';  // Use 'Details' as fallback if no address
+                    const address = properties['Display_Address'] || 'Details';  // Use 'Details' as fallback if no address
 
                     let popupContent = `<div class="popup-content"><h3>${address}</h3>`;
 
                     for (const key in properties) {
                         if (properties[key] !== 'nan' && !excludeFields.includes(key)) {
                             const titleCaseKey = key.replace(/\b\w/g, char => char.toUpperCase());
-                            if (key === 'Description' && properties[key].includes('<a href=')) {
+
+                            // Check if the key is "Lawsuit/Foreclosure" and the value is "Y"
+                            if (key === 'Lawsuit/foreclosure' && properties[key] === 'Y') {
+                                popupContent += `<div class="popup-field"><span class="popup-key">Subject of lawsuit</span></div>`;
+                            } else if (key === 'Description' && properties[key].includes('<a href=')) {
+                                // Handle Description field with hyperlink
                                 popupContent += `<div class="popup-field"><span class="popup-key">${titleCaseKey}: </span> ${properties[key]}</div>`;
-                            } else if (key === 'Total LL loan' || key === 'Total GL loan' || key === 'TOTAL LOAN') {
-                                popupContent += `<div class="popup-field"><span class="popup-key">${titleCaseKey}: </span><span class="popup-value">$${properties[key].toLocaleString()}M</span></div>`;
-                            }         
-                            else {
+                            } else {
+                                // Default display for other fields
                                 popupContent += `<div class="popup-field"><span class="popup-key">${titleCaseKey}: </span><span class="popup-value">${properties[key]}</span></div>`;
                             }
                         }
