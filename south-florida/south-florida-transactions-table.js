@@ -244,7 +244,7 @@
 
     if (field === "seller" || field === "buyer") {
       // check the value is not link
-      if (!value.includes("http") && value.length > 40) {
+      if (!value.startsWith("<a") && value.length > 40) {
         return value.slice(0, 40) + "...";
       }
       return value;
