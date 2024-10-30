@@ -114,6 +114,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             } else if (key === 'Description' && properties[key].includes('<a href=')) {
                                 // Handle Description field with hyperlink
                                 popupContent += `<div class="popup-field"><span class="popup-key">${titleCaseKey}: </span> ${properties[key]}</div>`;
+                            } else if (key === 'Landlord Loan' || key === 'Ground Lease Loan') {
+                                // Handle loan fields
+                                popupContent += `<div class="popup-field"><span class="popup-key">${titleCaseKey}: </span><span class="popup-value">$${properties[key]}M</span></div>`;
+
                             } else {
                                 // Default display for other fields
                                 popupContent += `<div class="popup-field"><span class="popup-key">${titleCaseKey}: </span><span class="popup-value">${properties[key]}</span></div>`;
