@@ -64,6 +64,12 @@
         format: "formatPrice",
         filter: (value) => value > 0,
       },
+      {
+        field: "Total Number of Units",
+        label: "Total Units",
+        format: "formatInteger",
+        filter: (value) => value > 0,
+      },
     ],
   };
 
@@ -89,8 +95,13 @@
         format: "formatInteger",
       },
       {
-        field: "Number of Resort Units",
-        label: "Number of Resort Units",
+        field: "Number of Residential Units",
+        label: "Number of Residential Units",
+        format: "formatInteger",
+      },
+      {
+        field: "Total Number of Condo Units",
+        label: "Total Number of Condo Units",
         format: "formatInteger",
       },
       {
@@ -104,8 +115,8 @@
         format: "formatInteger",
       },
       {
-        field: "Number of Residential Units",
-        label: "Number of Residential Units",
+        field: "Number of Resort Units",
+        label: "Number of Resort Units",
         format: "formatInteger",
       },
       {
@@ -130,22 +141,7 @@
       },
       {
         field: "Number of Units Sold - NY AG",
-        label: "Number of Units Sold - NY AG",
-        format: "formatInteger",
-      },
-      {
-        field: "Total Number of Units - PLUTO",
-        label: "Total Number of Units - PLUTO",
-        format: "formatInteger",
-      },
-      {
-        field: "Total Number of Residential Units - PLUTO",
-        label: "Total Number of Residential Units - PLUTO",
-        format: "formatInteger",
-      },
-      {
-        field: "Total Number of Condo Units",
-        label: "Total Number of Condo Units",
+        label: "Number of Units Sold",
         format: "formatInteger",
       },
       {
