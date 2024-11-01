@@ -1,18 +1,14 @@
 (function () {
   const dataUrl =
-    "https://static.therealdeal.com/interactive-maps/south-florida-condo-pipeline.geojson";
+    "https://static.therealdeal.com/interactive-maps/new-york-city-dob-now-job-filings-map.geojson";
 
   const table = document.querySelector("#luxury-sales-table");
 
   const displayColumns = [
-    { dataField: "Condo Name", name: "Project Name" },
-    { dataField: "Developer Name", name: "Developer Name" },
-    { dataField: "Primary Status", name: "Primary Status" },
-    { dataField: "Street City State Zip", name: "Address" },
-    { dataField: "Units", name: "Units" },
+    { dataField: "Instrument Status", name: "Status" },
     {
-      dataField: "Recorded Date",
-      name: "Recorded Date",
+      dataField: "Instrument Status Date",
+      name: "Status Date",
       sorterCallback: (a, b) => {
         if (isEmptyValue(a) || isEmptyValue(b)) {
           return 0;
@@ -20,36 +16,52 @@
         return new Date(a).getTime() - new Date(b).getTime();
       },
     },
-    { dataField: "County", name: "County" },
-    { dataField: "Managing Entity Name", name: "Managing Entity Name" },
-    { dataField: "Project Number", name: "Project Number" },
+    {
+      dataField: "Filing Date",
+      name: "Filing Date",
+      sorterCallback: (a, b) => {
+        if (isEmptyValue(a) || isEmptyValue(b)) {
+          return 0;
+        }
+        return new Date(a).getTime() - new Date(b).getTime();
+      },
+    },
+    { dataField: "Instrument Type", name: "Instrument Type" },
+    { dataField: "Property Address", name: "Property Address" },
+    { dataField: "Borough", name: "Borough" },
+    { dataField: "Estimated Job Cost", name: "Estimated Job Cost" },
+    {
+      dataField: "Total Construction Floor Area",
+      name: "Total Construction Floor Area",
+    },
+    {
+      dataField: "Total Building Square Footage",
+      name: "Total Building Square Footage",
+    },
   ];
 
   const displayFields = [
-    "Project Number",
-    "File Number",
-    "Condo Name",
-    "County",
-    "Street City State Zip",
-    "Units",
-    "Recorded Date",
-    "Primary Status",
-    "Secondary Status",
-    "Managing Entity Number",
-    "Managing Entity Name",
-    "Managing Entity Route",
-    "Managing Entity Street",
-    "Managing Entity City",
-    "Managing Entity State",
-    "Managing Entity Zip",
-    "Developer Name",
-    "Mailing Street",
-    "Mailing Address Line 2",
-    "Mailing Address Line 3",
-    "Mailing City",
-    "Mailing State",
-    "Mailing Zip",
-    "Mailing County Name",
+    "Instrument Number",
+    "Filing Date",
+    "Instrument Type",
+    "Description",
+    "BBL",
+    "BIN",
+    "Property Address",
+    "Borough",
+    "Estimated Job Cost",
+    "Total Construction Floor Area",
+    "Total Building Square Footage",
+    "Proposed Additional Square Feet",
+    "Selected Proposed Square Feet",
+    "Proposed Dwelling units",
+    "Existing Dwelling Units",
+    "Proposed Number of Stories",
+    "Existing Number of Stories",
+    "Instrument Status",
+    "Instrument Status Date",
+    "Architect/Engineer Firm",
+    "Propery Owner",
   ];
 
   const excludeValue = [
@@ -76,7 +88,7 @@
       window.dataLayer.push({
         event: "event_tracking",
         trd: {
-          category: "south-florida-condo-dev-planning-table",
+          category: "new-york-construction-table",
           action: `table_${action}`,
           label: label,
         },
@@ -139,10 +151,14 @@
     sortable: true,
     search: true,
     searchHighlight: true,
-    sortName: "recorded_date",
+    sortName: "instrument_status_date",
     sortEmptyLast: true,
     sortOrder: "desc",
     sortEmptylast: true,
+    pagination: true,
+    paginationVAlign: "top",
+    pageList: [10, 50, 100],
+    pageSize: 100,
     classes: "table table-responsive",
     theadClasses: "header-style",
     detailView: true,
@@ -195,16 +211,54 @@
       return '<span class="text-muted">N/A</span>';
     }
 
+    if (field === "instrument_status") {
+      return value.split("|")[0];
+    }
+
     if (
-      field === "file_number" ||
-      field === "units" ||
-      field === "managing_entity_zip" ||
-      field === "mailing_zip"
+      field === "bbl" ||
+      field === "bin" ||
+      field === "proposed_dwelling_units" ||
+      field === "existing_dwelling_units" ||
+      field === "proposed_number_of_stories" ||
+      field === "existing_number_of_stories"
     ) {
       return parseInt(value, 10);
     }
 
-    if (field === "recorded_date") {
+    if (
+      field === "total_construction_floor_area" ||
+      field === "selected_proposed_square_feet" ||
+      field === "total_building_square_footage"
+    ) {
+      return new Intl.NumberFormat("en-US", {
+        style: "decimal",
+      }).format(value);
+    }
+
+    if (field === "estimated_job_cost") {
+      try {
+        const number =
+          typeof value === "string"
+            ? parseFloat(value.replace(/[$,]/g, ""))
+            : value;
+
+        return new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          minimumFractionDigits: 0, // No decimal places
+          maximumFractionDigits: 0, // No decimal places
+        }).format(number);
+      } catch (e) {
+        return value;
+      }
+    }
+
+    if (field === "propappraiserurl" && value.includes("http")) {
+      return `<a href="${value}" target="_blank" rel="noopener noreferrer">View Property</a>`;
+    }
+
+    if (field === "instrument_status_date" || field === "filing_date") {
       return new Date(value).toLocaleDateString();
     }
 
@@ -216,9 +270,9 @@
       return '<span class="text-muted">N/A</span>';
     }
 
-    if (field === "seller" || field === "buyer") {
+    if (field === "sellers" || field === "buyers") {
       // check the value is not link
-      if (!value.startsWith("<a") && value.length > 40) {
+      if (!value.includes("http") && value.length > 40) {
         return value.slice(0, 40) + "...";
       }
       return value;
