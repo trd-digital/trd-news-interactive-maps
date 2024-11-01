@@ -251,7 +251,7 @@
 
   window.map = trdDataCommonMap({
     fetchDataFilterCallback: undefined,
-    eventCategory: "new-york-city-dev-planning-map",
+    eventCategory: "new-york-city-condo-dev-planning-map",
     filePath:
       "https://static.therealdeal.com/interactive-maps/new-york-ag-offering-plans-map.geojson",
     mapElementId: "map",
