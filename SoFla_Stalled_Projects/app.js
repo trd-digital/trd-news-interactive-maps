@@ -67,89 +67,36 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
     
-                // Add a layer for the cluster count labels
-                // map.addLayer({
-                //     id: 'cluster-count',
-                //     type: 'symbol',
-                //     source: 'properties',
-                //     filter: ['has', 'point_count'],  // Only show counts on clusters
-                //     layout: {
-                //         'text-field': '{point_count_abbreviated}',  // Display cluster count
-                //         'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-                //         'text-size': 12
-                //     }
-                // });
-    
-                // Add a layer for unclustered points
-                // map.addLayer({
-                //     id: 'unclustered-point',
-                //     type: 'circle',
-                //     source: 'properties',
-                //     filter: ['!', ['has', 'point_count']],  // Show only non-clustered points
-                //     paint: {
-                //         'circle-color': '#11b4da',
-                //         'circle-radius': 10,
-                //         'circle-stroke-width': 1,
-                //         'circle-stroke-color': '#fff'
-                //     }
-                // });
-    
-                // Event handler for popups on unclustered points
                 map.on('click', 'unclustered-point', (e) => {
                     const properties = e.features[0].properties;
                 
-                    // Use the project name as the main heading in the popup
-                    const projectName = properties['Project Name '] || 'Unnamed Project';
+                    // Start building the popup content
+                    let popupContent = `<div class="popup-content">`;
                 
-                    let popupContent = `<div class="popup-content"><h3>${projectName}</h3>`;
-                
-                    for (const key in properties) {
-                        if (properties[key] !== 'nan' && !excludeFields.includes(key) && key !== 'Caption For Map') {
-                            const titleCaseKey = key.replace(/\b\w/g, char => char.toUpperCase());
-                
-                            // Check if the key is "Lawsuit/Foreclosure" and the value is "Y"
-                            if (key === 'Lawsuit/foreclosure' && properties[key] === 'Y') {
-                                popupContent += `<div class="popup-field"><span class="popup-key">Subject of lawsuit</span></div>`;
-                            } else if (key === 'Description' && properties[key].includes('<a href=')) {
-                                // Handle Description field with hyperlink
-                                popupContent += `<div class="popup-field"><span class="popup-key">${titleCaseKey}: </span> ${properties[key]}</div>`;
-                            } else if (key === 'Landlord Loan' || key === 'Ground Lease Loan') {
-                                // Handle loan fields
-                                popupContent += `<div class="popup-field"><span class="popup-key">${titleCaseKey}: </span><span class="popup-value">$${properties[key]}M</span></div>`;
-                            } else {
-                                // Default display for other fields
-                                popupContent += `<div class="popup-field"><span class="popup-key">${titleCaseKey}: </span><span class="popup-value">${properties[key]}</span></div>`;
-                            }
-                        }
+                    // Add the project name (only the value) - notice the exact match with trailing space
+                    if (properties['Project Name ']) {
+                        popupContent += `<h3>${properties['Project Name ']}</h3>`;
                     }
                 
-                    popupContent += '</div>';
+                    // Add the status (both key and value)
+                    if (properties['Status']) {
+                        popupContent += `<div class="popup-field"><span class="popup-key">Status: </span><span class="popup-value">${properties['Status']}</span></div>`;
+                    }
                 
+                    // Add the details (only the value)
+                    if (properties['Details']) {
+                        popupContent += `<div class="popup-field">${properties['Details']}</div>`;
+                    }
+                
+                    popupContent += `</div>`;
+                
+                    // Display the popup
                     new mapboxgl.Popup()
                         .setLngLat(e.lngLat)
-                        .setHTML(popupContent)  // This will render the HTML
+                        .setHTML(popupContent)
                         .addTo(map);
-                });                
-
-    
-                // Zoom in when clicking on clusters
-                // map.on('click', 'clusters', (e) => {
-                //     const features = map.queryRenderedFeatures(e.point, {
-                //         layers: ['clusters']
-                //     });
-                //     const clusterId = features[0].properties.cluster_id;
-                //     map.getSource('properties').getClusterExpansionZoom(
-                //         clusterId,
-                //         (err, zoom) => {
-                //             if (err) return;
-    
-                //             map.easeTo({
-                //                 center: features[0].geometry.coordinates,
-                //                 zoom: zoom
-                //             });
-                //         }
-                //     );
-                // });
+                });                  
+                                             
     
                 // Enhance interactivity on hover
                 map.on('mouseenter', 'unclustered-point', function() {
@@ -159,14 +106,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 map.on('mouseleave', 'unclustered-point', function() {
                     map.getCanvas().style.cursor = '';
                 });
-    
-                // map.on('mouseenter', 'clusters', function() {
-                //     map.getCanvas().style.cursor = 'pointer';
-                // });
-    
-                // map.on('mouseleave', 'clusters', function() {
-                //     map.getCanvas().style.cursor = '';
-                // });
             })
             .catch(error => {
                 console.error('Error loading GeoJSON data:', error);
