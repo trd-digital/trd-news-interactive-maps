@@ -1,7 +1,7 @@
 // Your Mapbox access token
 mapboxgl.accessToken = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ"; 
 
-const centerMiami = [25.940768724223318, -80.35430834436464]; // NYC's longitude and latitude
+const centerMiami = [-80.35430834436464,25.940768724223318]; // Miami's longitude and latitude
 const longitudeSpan = 1.5;
 const latitudeSpan = 0.75;
 
@@ -17,7 +17,7 @@ const bounds = [
 document.addEventListener('DOMContentLoaded', function() {
     var map = new mapboxgl.Map({
         container: 'map',
-        style: "mapbox://styles/trddata/ck0e4y50i14as1cnx6qvtbxi6",
+        style: "mapbox://styles/mapbox/streets-v11",
         center: centerMiami,
         zoom: 3,
         minZoom: 3,
