@@ -18,14 +18,14 @@
       },
     },
     { dataField: "Address", name: "Address" },
-    { dataField: "borough", name: "borough" },
+    { dataField: "borough", name: "Borough" },
     { dataField: "Current Price", name: "Current Price" },
-    { dataField: "Total Number of Units", name: "Total Number of Units" },
+    { dataField: "Total Number of Units", name: "Total No. of Units" },
     {
       dataField: "Number of Units Sold - NY AG",
-      name: "Number of Units Sold",
+      name: "No. of Units Sold",
     },
-    { dataField: "Total Sold Dollar Amount", name: "Total Sold Dollar Amount" },
+    { dataField: "Total Sold Dollar Amount", name: "Total Sold Amount" },
   ];
 
   const displayFields = [

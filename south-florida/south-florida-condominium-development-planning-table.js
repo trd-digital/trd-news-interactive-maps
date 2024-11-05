@@ -6,7 +6,7 @@
 
   const displayColumns = [
     { dataField: "Condo Name", name: "Project Name" },
-    { dataField: "Developer Name", name: "Developer Name" },
+    { dataField: "Developer Name", name: "Developer" },
     { dataField: "Primary Status", name: "Primary Status" },
     { dataField: "Street City State Zip", name: "Address" },
     { dataField: "Units", name: "Units" },
@@ -21,8 +21,8 @@
       },
     },
     { dataField: "County", name: "County" },
-    { dataField: "Managing Entity Name", name: "Managing Entity Name" },
-    { dataField: "Project Number", name: "Project Number" },
+    { dataField: "Managing Entity Name", name: "Managing Entity" },
+    { dataField: "Project Number", name: "Project No." },
   ];
 
   const displayFields = [
