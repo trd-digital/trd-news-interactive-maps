@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         container: 'map',
         style: "mapbox://styles/mapbox/streets-v11",
         center: centerMiami,
-        zoom: 3,
+        zoom: 8,
         minZoom: 3,
         // maxBounds: bounds
     });
@@ -41,73 +41,72 @@ document.addEventListener('DOMContentLoaded', function() {
                 map.addSource('properties', {
                     type: 'geojson',
                     data: geojsonData,
-                    cluster: true,               // Enable clustering
-                    clusterMaxZoom: 14,           // Max zoom to cluster points
-                    clusterRadius: 50             // Radius of each cluster when clustering points (adjust as needed)
+                    // cluster: true,               // Enable clustering
+                    // clusterMaxZoom: 14,           // Max zoom to cluster points
+                    // clusterRadius: 50             // Radius of each cluster when clustering points (adjust as needed)
                 });
     
-                // Add a layer for clustered circles
-                map.addLayer({
-                    id: 'clusters',
-                    type: 'circle',
-                    source: 'properties',
-                    filter: ['has', 'point_count'],  // Only show cluster points
-                    paint: {
-                        'circle-color': [
-                            'step',
-                            ['get', 'point_count'],
-                            '#51bbd6',   // Color for small clusters
-                            100, '#f1f075', // Color for medium clusters
-                            750, '#f28cb1'  // Color for large clusters
-                        ],
-                        'circle-radius': [
-                            'step',
-                            ['get', 'point_count'],
-                            15, 100, 20, 750, 25  // Adjust sizes based on cluster size
-                        ]
-                    }
-                });
-    
-                // Add a layer for the cluster count labels
-                map.addLayer({
-                    id: 'cluster-count',
-                    type: 'symbol',
-                    source: 'properties',
-                    filter: ['has', 'point_count'],  // Only show counts on clusters
-                    layout: {
-                        'text-field': '{point_count_abbreviated}',  // Display cluster count
-                        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-                        'text-size': 12
-                    }
-                });
-    
-                // Add a layer for unclustered points
+                // Add a layer for unclustered points with color coding by status
                 map.addLayer({
                     id: 'unclustered-point',
                     type: 'circle',
                     source: 'properties',
                     filter: ['!', ['has', 'point_count']],  // Show only non-clustered points
                     paint: {
-                        'circle-color': '#11b4da',
+                        'circle-color': [
+                            'match',
+                            ['get', 'Status'],
+                            'Revived', '#00FF00',       // Green for "Revived"
+                            'Slow Moving', '#FFFF00',   // Yellow for "Slow Moving"
+                            'Stalled', '#FF0000',       // Red for "Stalled"
+                            '#11b4da'                   // Default color if status is not matched
+                        ],
                         'circle-radius': 10,
                         'circle-stroke-width': 1,
-                        'circle-stroke-color': '#fff'
+                        'circle-stroke-color': '#000000'
                     }
                 });
+    
+                // Add a layer for the cluster count labels
+                // map.addLayer({
+                //     id: 'cluster-count',
+                //     type: 'symbol',
+                //     source: 'properties',
+                //     filter: ['has', 'point_count'],  // Only show counts on clusters
+                //     layout: {
+                //         'text-field': '{point_count_abbreviated}',  // Display cluster count
+                //         'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                //         'text-size': 12
+                //     }
+                // });
+    
+                // Add a layer for unclustered points
+                // map.addLayer({
+                //     id: 'unclustered-point',
+                //     type: 'circle',
+                //     source: 'properties',
+                //     filter: ['!', ['has', 'point_count']],  // Show only non-clustered points
+                //     paint: {
+                //         'circle-color': '#11b4da',
+                //         'circle-radius': 10,
+                //         'circle-stroke-width': 1,
+                //         'circle-stroke-color': '#fff'
+                //     }
+                // });
     
                 // Event handler for popups on unclustered points
                 map.on('click', 'unclustered-point', (e) => {
                     const properties = e.features[0].properties;
-
-                    // Replace 'Details' with the address if available
-                    const address = properties['Display_Address'] || 'Details';  // Use 'Details' as fallback if no address
-
-                    let popupContent = `<div class="popup-content"><h3>${address}</h3>`;
-
+                
+                    // Use the project name as the main heading in the popup
+                    const projectName = properties['Project Name '] || 'Unnamed Project';
+                
+                    let popupContent = `<div class="popup-content"><h3>${projectName}</h3>`;
+                
                     for (const key in properties) {
-                        if (properties[key] !== 'nan' && !excludeFields.includes(key)) {
+                        if (properties[key] !== 'nan' && !excludeFields.includes(key) && key !== 'Caption For Map') {
                             const titleCaseKey = key.replace(/\b\w/g, char => char.toUpperCase());
-
+                
                             // Check if the key is "Lawsuit/Foreclosure" and the value is "Y"
                             if (key === 'Lawsuit/foreclosure' && properties[key] === 'Y') {
                                 popupContent += `<div class="popup-field"><span class="popup-key">Subject of lawsuit</span></div>`;
@@ -117,41 +116,40 @@ document.addEventListener('DOMContentLoaded', function() {
                             } else if (key === 'Landlord Loan' || key === 'Ground Lease Loan') {
                                 // Handle loan fields
                                 popupContent += `<div class="popup-field"><span class="popup-key">${titleCaseKey}: </span><span class="popup-value">$${properties[key]}M</span></div>`;
-
                             } else {
                                 // Default display for other fields
                                 popupContent += `<div class="popup-field"><span class="popup-key">${titleCaseKey}: </span><span class="popup-value">${properties[key]}</span></div>`;
                             }
                         }
                     }
-
+                
                     popupContent += '</div>';
-
+                
                     new mapboxgl.Popup()
                         .setLngLat(e.lngLat)
                         .setHTML(popupContent)  // This will render the HTML
                         .addTo(map);
-                });
+                });                
 
     
                 // Zoom in when clicking on clusters
-                map.on('click', 'clusters', (e) => {
-                    const features = map.queryRenderedFeatures(e.point, {
-                        layers: ['clusters']
-                    });
-                    const clusterId = features[0].properties.cluster_id;
-                    map.getSource('properties').getClusterExpansionZoom(
-                        clusterId,
-                        (err, zoom) => {
-                            if (err) return;
+                // map.on('click', 'clusters', (e) => {
+                //     const features = map.queryRenderedFeatures(e.point, {
+                //         layers: ['clusters']
+                //     });
+                //     const clusterId = features[0].properties.cluster_id;
+                //     map.getSource('properties').getClusterExpansionZoom(
+                //         clusterId,
+                //         (err, zoom) => {
+                //             if (err) return;
     
-                            map.easeTo({
-                                center: features[0].geometry.coordinates,
-                                zoom: zoom
-                            });
-                        }
-                    );
-                });
+                //             map.easeTo({
+                //                 center: features[0].geometry.coordinates,
+                //                 zoom: zoom
+                //             });
+                //         }
+                //     );
+                // });
     
                 // Enhance interactivity on hover
                 map.on('mouseenter', 'unclustered-point', function() {
@@ -162,13 +160,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     map.getCanvas().style.cursor = '';
                 });
     
-                map.on('mouseenter', 'clusters', function() {
-                    map.getCanvas().style.cursor = 'pointer';
-                });
+                // map.on('mouseenter', 'clusters', function() {
+                //     map.getCanvas().style.cursor = 'pointer';
+                // });
     
-                map.on('mouseleave', 'clusters', function() {
-                    map.getCanvas().style.cursor = '';
-                });
+                // map.on('mouseleave', 'clusters', function() {
+                //     map.getCanvas().style.cursor = '';
+                // });
             })
             .catch(error => {
                 console.error('Error loading GeoJSON data:', error);
