@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             '#11b4da'                   // Default color if status is not matched
                         ],
                         'circle-radius': 10,
-                        'circle-stroke-width': 1,
+                        'circle-stroke-width': 2,
                         'circle-stroke-color': '#000000'
                     }
                 });
@@ -74,8 +74,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     let popupContent = `<div class="popup-content">`;
                 
                     // Add the project name (only the value) - notice the exact match with trailing space
-                    if (properties['Project Name ']) {
-                        popupContent += `<h3>${properties['Project Name ']}</h3>`;
+                    if (properties['Project Name']) {
+                        popupContent += `<h3>${properties['Project Name']}</h3>`;
                     }
                 
                     // Add the status (both key and value)
