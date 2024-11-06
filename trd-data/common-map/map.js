@@ -220,6 +220,10 @@ const trdDataCommonMap = (options) => {
         day: "numeric",
       }).format(new Date(value));
     },
+
+    formatUrl: (value) => {
+      return `<a href="${value}" target="_blank" rel="noopener noreferrer">${value}</a>`;
+    },
   };
 
   const legend = {
@@ -756,6 +760,46 @@ const trdDataCommonMap = (options) => {
 
         settings.modalDisplayFields.content.forEach((item) => {
           let value = helpers.cleanValue(e.features[0].properties[item.field]);
+          if (item.field === "group") {
+            if (!item.fields || !item.fields.length) {
+              return;
+            }
+
+            const fieldValues = [];
+            item.fields.forEach((subField) => {
+              let subValue = helpers.cleanValue(
+                e.features[0].properties[subField.field]
+              );
+              if (
+                subField.filter &&
+                typeof subField.filter === "function" &&
+                !subField.filter(subValue)
+              ) {
+                subValue = "";
+              }
+
+              if (subValue) {
+                subValue = formatters.format(subValue, subField.format);
+                if (
+                  subField.field.endsWith("Zip") ||
+                  subField.field.endsWith("Line 2") ||
+                  subField.field.endsWith("Line 3")
+                ) {
+                  fieldValues.push(" " + subValue);
+                } else if (
+                  subField.field.endsWith("City") ||
+                  subField.field.endsWith("State")
+                ) {
+                  fieldValues.push(", " + subValue);
+                } else {
+                  fieldValues.push(
+                    formatters.format(subValue, subField.format)
+                  );
+                }
+              }
+            });
+            value = fieldValues.join("");
+          }
 
           if (
             item.filter &&

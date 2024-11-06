@@ -6,10 +6,7 @@
 
   const displayColumns = [
     { dataField: "Condo Name", name: "Project Name" },
-    { dataField: "Developer Name", name: "Developer" },
     { dataField: "Primary Status", name: "Primary Status" },
-    { dataField: "Street City State Zip", name: "Address" },
-    { dataField: "Units", name: "Units" },
     {
       dataField: "Recorded Date",
       name: "Recorded Date",
@@ -20,9 +17,15 @@
         return new Date(a).getTime() - new Date(b).getTime();
       },
     },
+    { dataField: "Developer Name", name: "Developer" },
+    { dataField: "TRD_Developer", name: "TRD Developer" },
+    { dataField: "Street City State Zip", name: "Address" },
+    { dataField: "Units", name: "Units" },
     { dataField: "County", name: "County" },
-    { dataField: "Managing Entity Name", name: "Managing Entity" },
-    { dataField: "Project Number", name: "Project No." },
+    {
+      dataField: "Property Website",
+      name: "Website",
+    },
   ];
 
   const displayFields = [
@@ -50,6 +53,8 @@
     "Mailing State",
     "Mailing Zip",
     "Mailing County Name",
+    "TRD_Developer",
+    "Property Website",
   ];
 
   const excludeValue = [
@@ -206,6 +211,13 @@
 
     if (field === "recorded_date") {
       return new Date(value).toLocaleDateString();
+    }
+
+    if (field === "property_website") {
+      if (isEmptyValue(value)) {
+        return '<span class="text-muted">N/A</span>';
+      }
+      return `<a href="${value}" target="_blank" rel="noopener noreferrer">Link</a>`;
     }
 
     return value;
