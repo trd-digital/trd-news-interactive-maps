@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_6f260773a1c759457c57e913b00fb45b {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+              <h3 align="center" style="font-size:16px"><b>Recent Miami-Dade Condo Sales </b></h3>
+             
+    
+                <p align="center" style="vertical-align: bottom; font-size:13px"><i>Nov. 3rd — Nov. 11th</i></p>
+                
+    
+            <div class="folium-map" id="map_6f260773a1c759457c57e913b00fb45b" ></div>
+        
+</body>
+<script>    
+    
+            var map_6f260773a1c759457c57e913b00fb45b = L.map(
+                "map_6f260773a1c759457c57e913b00fb45b",
+                {
+                    center: [26.51464242461538, -80.11641335538461],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 9.5,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var feature_group_dc13b4a793a7f35a380b1aa30d2fad2f = L.featureGroup(
+                {}
+            ).addTo(map_6f260773a1c759457c57e913b00fb45b);
+        
+    
+            var marker_c59f2e0a7b35f6e2478f801aaf0a26dc = L.marker(
+                [26.3472728, -80.0702119],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_dc13b4a793a7f35a380b1aa30d2fad2f);
+        
+    
+            var icon_05ebaf784bfbd093a553522e3e023f0a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_c59f2e0a7b35f6e2478f801aaf0a26dc.setIcon(icon_05ebaf784bfbd093a553522e3e023f0a);
+        
+    
+        var popup_1c981fc587f4b292c1b1e18fb2afc80c = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_66dea6660f27fa242657bb9188a025a7 = $(`<div id="html_66dea6660f27fa242657bb9188a025a7" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>350 S Ocean Blvd Unit 6-A<br>     <strong>Sale Price: </strong>$3,650,000.0<br>     <strong>Price sq ft: </strong>$1,447.0<br>     <strong>Square Footage: </strong>2,523.0<br>     <strong>Year Built: </strong>1977.0<br>     </html>     </div>`)[0];
+                popup_1c981fc587f4b292c1b1e18fb2afc80c.setContent(html_66dea6660f27fa242657bb9188a025a7);
+            
+        
+
+        marker_c59f2e0a7b35f6e2478f801aaf0a26dc.bindPopup(popup_1c981fc587f4b292c1b1e18fb2afc80c)
+        ;
+
+        
+    
+    
+            var feature_group_1efd86ef83d5ebe11f54f82978f7f8d4 = L.featureGroup(
+                {}
+            ).addTo(map_6f260773a1c759457c57e913b00fb45b);
+        
+    
+            var marker_b175d1ef05b84aad7425fbaa7be38904 = L.marker(
+                [26.4340099, -80.0638278],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_1efd86ef83d5ebe11f54f82978f7f8d4);
+        
+    
+            var icon_0182b35204181cc9f4074cd11ca8e4d3 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_b175d1ef05b84aad7425fbaa7be38904.setIcon(icon_0182b35204181cc9f4074cd11ca8e4d3);
+        
+    
+        var popup_ce95f2d2c137e68dc1f016c7c3976de0 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_dea454353149b82d86647fdd73e88a37 = $(`<div id="html_dea454353149b82d86647fdd73e88a37" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>2150 S Ocean Blvd Unit 2c<br>     <strong>Sale Price: </strong>$1,725,000.0<br>     <strong>Price sq ft: </strong>$733.0<br>     <strong>Square Footage: </strong>2,352.0<br>     <strong>Year Built: </strong>1979.0<br>     </html>     </div>`)[0];
+                popup_ce95f2d2c137e68dc1f016c7c3976de0.setContent(html_dea454353149b82d86647fdd73e88a37);
+            
+        
+
+        marker_b175d1ef05b84aad7425fbaa7be38904.bindPopup(popup_ce95f2d2c137e68dc1f016c7c3976de0)
+        ;
+
+        
+    
+    
+            var marker_f9a651e7acf9e35c13e5927a6bdd06f6 = L.marker(
+                [26.4631001, -80.0627291],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_1efd86ef83d5ebe11f54f82978f7f8d4);
+        
+    
+            var icon_ed76121958408f2c89afddaf6633d87a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_f9a651e7acf9e35c13e5927a6bdd06f6.setIcon(icon_ed76121958408f2c89afddaf6633d87a);
+        
+    
+        var popup_1377b34e71376ec681cef08b67a6e6dd = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_56b2b8b5d5f3dd26145b2f1833ea7801 = $(`<div id="html_56b2b8b5d5f3dd26145b2f1833ea7801" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>1000 Lowry St Ph -C<br>     <strong>Sale Price: </strong>$1,450,000.0<br>     <strong>Price sq ft: </strong>$687.0<br>     <strong>Square Footage: </strong>2,110.0<br>     <strong>Year Built: </strong>1966.0<br>     </html>     </div>`)[0];
+                popup_1377b34e71376ec681cef08b67a6e6dd.setContent(html_56b2b8b5d5f3dd26145b2f1833ea7801);
+            
+        
+
+        marker_f9a651e7acf9e35c13e5927a6bdd06f6.bindPopup(popup_1377b34e71376ec681cef08b67a6e6dd)
+        ;
+
+        
+    
+    
+            var marker_4fe57de5b182bf2ebbce917e3d1c7530 = L.marker(
+                [26.4576849, -80.0636641],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_1efd86ef83d5ebe11f54f82978f7f8d4);
+        
+    
+            var icon_2a3a104da5b5b45cbaea644b54d2ab8c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_4fe57de5b182bf2ebbce917e3d1c7530.setIcon(icon_2a3a104da5b5b45cbaea644b54d2ab8c);
+        
+    
+        var popup_2c56c3b198c870df59579000a9754fc9 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_d89357d4636f9a3d9c908474dc0d3165 = $(`<div id="html_d89357d4636f9a3d9c908474dc0d3165" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>200 Macfarlane Dr #705<br>     <strong>Sale Price: </strong>$1,300,000.0<br>     <strong>Price sq ft: </strong>$739.0<br>     <strong>Square Footage: </strong>1,760.0<br>     <strong>Year Built: </strong>1970.0<br>     </html>     </div>`)[0];
+                popup_2c56c3b198c870df59579000a9754fc9.setContent(html_d89357d4636f9a3d9c908474dc0d3165);
+            
+        
+
+        marker_4fe57de5b182bf2ebbce917e3d1c7530.bindPopup(popup_2c56c3b198c870df59579000a9754fc9)
+        ;
+
+        
+    
+    
+            var marker_9ea4d43f5d2059bcee109d7551cb9d4d = L.marker(
+                [26.3283021, -80.0744227],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_1efd86ef83d5ebe11f54f82978f7f8d4);
+        
+    
+            var icon_013e2bc25b64e3ff5aae7f5dfc53a931 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_9ea4d43f5d2059bcee109d7551cb9d4d.setIcon(icon_013e2bc25b64e3ff5aae7f5dfc53a931);
+        
+    
+        var popup_a4544fd1e19d436e679eca0c23d5d071 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_ebd76f2adc67cdebb8604679c72d5695 = $(`<div id="html_ebd76f2adc67cdebb8604679c72d5695" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>2000 S Ocean Blvd Unit 9-D<br>     <strong>Sale Price: </strong>$1,225,000.0<br>     <strong>Price sq ft: </strong>$991.0<br>     <strong>Square Footage: </strong>1,236.0<br>     <strong>Year Built: </strong>1971.0<br>     </html>     </div>`)[0];
+                popup_a4544fd1e19d436e679eca0c23d5d071.setContent(html_ebd76f2adc67cdebb8604679c72d5695);
+            
+        
+
+        marker_9ea4d43f5d2059bcee109d7551cb9d4d.bindPopup(popup_a4544fd1e19d436e679eca0c23d5d071)
+        ;
+
+        
+    
+    
+            var marker_d569472c0c6d5c6dabb5ab58b12819af = L.marker(
+                [26.4176361, -80.065297],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_1efd86ef83d5ebe11f54f82978f7f8d4);
+        
+    
+            var icon_7fba61ef42a8ead9f71f8d55c9039915 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_d569472c0c6d5c6dabb5ab58b12819af.setIcon(icon_7fba61ef42a8ead9f71f8d55c9039915);
+        
+    
+        var popup_f3bfcb279a06b0772b3c601bf63c23a9 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_6e59199495a8ae7bf4270cd20e8a4225 = $(`<div id="html_6e59199495a8ae7bf4270cd20e8a4225" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>3210 S Ocean Blvd #604<br>     <strong>Sale Price: </strong>$1,065,000.0<br>     <strong>Price sq ft: </strong>$505.0<br>     <strong>Square Footage: </strong>2,108.0<br>     <strong>Year Built: </strong>1991.0<br>     </html>     </div>`)[0];
+                popup_f3bfcb279a06b0772b3c601bf63c23a9.setContent(html_6e59199495a8ae7bf4270cd20e8a4225);
+            
+        
+
+        marker_d569472c0c6d5c6dabb5ab58b12819af.bindPopup(popup_f3bfcb279a06b0772b3c601bf63c23a9)
+        ;
+
+        
+    
+    
+            var marker_fe24d766d603f03e5e320c1d76494e00 = L.marker(
+                [26.7051244, -80.0561991],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_1efd86ef83d5ebe11f54f82978f7f8d4);
+        
+    
+            var icon_ee79a454f1538e931427a71746e11bd5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_fe24d766d603f03e5e320c1d76494e00.setIcon(icon_ee79a454f1538e931427a71746e11bd5);
+        
+    
+        var popup_59d9d6e862f63714a8a42e6f49aa30fb = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_543aaa3b490a96e27ff649dc6e4c2907 = $(`<div id="html_543aaa3b490a96e27ff649dc6e4c2907" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>550 Okeechobee Blvd #910<br>     <strong>Sale Price: </strong>$950,000.0<br>     <strong>Price sq ft: </strong>$561.0<br>     <strong>Square Footage: </strong>1,694.0<br>     <strong>Year Built: </strong>2008.0<br>     </html>     </div>`)[0];
+                popup_59d9d6e862f63714a8a42e6f49aa30fb.setContent(html_543aaa3b490a96e27ff649dc6e4c2907);
+            
+        
+
+        marker_fe24d766d603f03e5e320c1d76494e00.bindPopup(popup_59d9d6e862f63714a8a42e6f49aa30fb)
+        ;
+
+        
+    
+    
+            var marker_da21264385052aae2562066a40a58fbf = L.marker(
+                [26.702722, -80.0496733],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_1efd86ef83d5ebe11f54f82978f7f8d4);
+        
+    
+            var icon_eeeb85a6647eda365e87832e7775eee7 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_da21264385052aae2562066a40a58fbf.setIcon(icon_eeeb85a6647eda365e87832e7775eee7);
+        
+    
+        var popup_8031410308ad46ec9c25a8cce605ecc6 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_af025e71dc637bda941550a5c686a058 = $(`<div id="html_af025e71dc637bda941550a5c686a058" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>1200 S Flagler Dr #1706<br>     <strong>Sale Price: </strong>$930,000.0<br>     <strong>Price sq ft: </strong>$746.0<br>     <strong>Square Footage: </strong>1,247.0<br>     <strong>Year Built: </strong>1972.0<br>     </html>     </div>`)[0];
+                popup_8031410308ad46ec9c25a8cce605ecc6.setContent(html_af025e71dc637bda941550a5c686a058);
+            
+        
+
+        marker_da21264385052aae2562066a40a58fbf.bindPopup(popup_8031410308ad46ec9c25a8cce605ecc6)
+        ;
+
+        
+    
+    
+            var marker_aa85aaa08b1463becb4ca7443835521d = L.marker(
+                [26.4050039, -80.0655958],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_1efd86ef83d5ebe11f54f82978f7f8d4);
+        
+    
+            var icon_a11d543ec312ba341a440d441462889b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_aa85aaa08b1463becb4ca7443835521d.setIcon(icon_a11d543ec312ba341a440d441462889b);
+        
+    
+        var popup_87e658d26e60f37d985314f1792bfd8e = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_0e8e24c40250f24d98509823529f29c8 = $(`<div id="html_0e8e24c40250f24d98509823529f29c8" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>3908 S Ocean Blvd #564<br>     <strong>Sale Price: </strong>$800,000.0<br>     <strong>Price sq ft: </strong>$389.0<br>     <strong>Square Footage: </strong>2,057.0<br>     <strong>Year Built: </strong>1976.0<br>     </html>     </div>`)[0];
+                popup_87e658d26e60f37d985314f1792bfd8e.setContent(html_0e8e24c40250f24d98509823529f29c8);
+            
+        
+
+        marker_aa85aaa08b1463becb4ca7443835521d.bindPopup(popup_87e658d26e60f37d985314f1792bfd8e)
+        ;
+
+        
+    
+    
+            var marker_003d214c33e29a937db83148f1636094 = L.marker(
+                [26.6408774, -80.0412337],
+                {"fill": true, "radius": 5}
+            ).addTo(feature_group_1efd86ef83d5ebe11f54f82978f7f8d4);
+        
+    
+            var icon_9004cc32e49f5eed6c9283b14eeb4566 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_003d214c33e29a937db83148f1636094.setIcon(icon_9004cc32e49f5eed6c9283b14eeb4566);
+        
+    
+        var popup_eb320859ec081d4853946b321fe5b306 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_15defa4a81aea406d58c4cdc6e7cdd27 = $(`<div id="html_15defa4a81aea406d58c4cdc6e7cdd27" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>2165 Ibis Isle Rd #3<br>     <strong>Sale Price: </strong>$750,000.0<br>     <strong>Price sq ft: </strong>$505.0<br>     <strong>Square Footage: </strong>1,485.0<br>     <strong>Year Built: </strong>1969.0<br>     </html>     </div>`)[0];
+                popup_eb320859ec081d4853946b321fe5b306.setContent(html_15defa4a81aea406d58c4cdc6e7cdd27);
+            
+        
+
+        marker_003d214c33e29a937db83148f1636094.bindPopup(popup_eb320859ec081d4853946b321fe5b306)
+        ;
+
+        
+    
+    
+            var tile_layer_c403b278575253d1acc6199146821664 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_6f260773a1c759457c57e913b00fb45b);
+        
+    
+            var layer_control_add0b2b525f413db34592b76892ce990 = {
+                base_layers : {
+                },
+                overlays :  {
+                    "Top Sale" : feature_group_dc13b4a793a7f35a380b1aa30d2fad2f,
+                    "All other sales" : feature_group_1efd86ef83d5ebe11f54f82978f7f8d4,
+                },
+            };
+            L.control.layers(
+                layer_control_add0b2b525f413db34592b76892ce990.base_layers,
+                layer_control_add0b2b525f413db34592b76892ce990.overlays,
+                {"autoZIndex": true, "collapsed": false, "position": "topright"}
+            ).addTo(map_6f260773a1c759457c57e913b00fb45b);
+        
+</script>
