@@ -204,7 +204,7 @@
     fetchDataFilterCallback,
     eventCategory: "south-florida-condo-dev-planning-map",
     filePath:
-      "https://static.therealdeal.com/interactive-maps/south-florida-condo-pipeline.geojson",
+      "https://static.therealdeal.com/interactive-maps/south-florida-condo-pipeline-map_data.geojson",
     mapElementId: "map",
     filterElementId: "map-filters",
     legendElementId: "legend",

@@ -1,6 +1,6 @@
 (function () {
   const dataUrl =
-    "https://static.therealdeal.com/interactive-maps/south-florida-condo-pipeline.geojson";
+    "https://static.therealdeal.com/interactive-maps/south-florida-condo-pipeline-map_data.geojson";
 
   const table = document.querySelector("#luxury-sales-table");
 
