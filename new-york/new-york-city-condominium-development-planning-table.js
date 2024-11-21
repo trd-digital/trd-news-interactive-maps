@@ -5,8 +5,7 @@
   const table = document.querySelector("#luxury-sales-table");
 
   const displayColumns = [
-    { dataField: "Project Name", name: "Project Name" },
-    { dataField: "Instrument Status", name: "Status" },
+    { dataField: "Plan ID", name: "Plan ID" },
     {
       dataField: "Submitted Date",
       name: "Submitted Date",
@@ -17,38 +16,42 @@
         return new Date(a).getTime() - new Date(b).getTime();
       },
     },
-    { dataField: "Address", name: "Address" },
-    { dataField: "borough", name: "Borough" },
-    { dataField: "Current Price", name: "Current Price" },
-    { dataField: "Total Number of Units", name: "Total No. of Units" },
-    {
-      dataField: "Number of Units Sold - NY AG",
-      name: "No. of Units Sold",
-    },
-    { dataField: "Total Sold Dollar Amount", name: "Total Sold Amount" },
+    { dataField: "Instrument Status", name: "Status" },
+    { dataField: "Boro ID", name: "Boroughs" },
+    { dataField: "Project Name", name: "Project Name" },
+    { dataField: "Plan Type", name: "Plan Type" },
+    { dataField: "Sponsor", name: "Sponsor" },
+    { dataField: "Sponsor Address", name: "Sponsor Address" },
+    { dataField: "Inital Price", name: "Initial Price" },
+    { dataField: "BBLs", name: "BBLs" },
   ];
 
   const displayFields = [
-    "Project Name",
-    "Instrument Number",
-    "Address",
-    "borough",
+    "Plan ID",
     "Submitted Date",
     "Instrument Status",
-    "Current Price",
-    "Number of Commercial Units",
-    "Number of Resort Units",
-    "Number of Regulated Units",
-    "Number of NonRegulated Units",
+    "Accepted Date",
+    "Reviewed Date",
+    "Effective Date",
+    "Project Name",
+    "Boro ID",
+    "Address",
+    "Address2",
+    "Plan Type",
+    "Type of Offering",
+    "Construction Type",
+    "Sponsor",
+    "Sponsor Address",
+    "Principal Name",
+    "Title Function",
     "Number of Residential Units",
-    "Number of Storage Units",
-    "Number of Parking Units",
-    "Number of Other Units",
     "Total Number of Units",
-    "Number of Units Sold - NY AG",
-    "Total Number of Condo Units",
-    "Total Number of Condo Units Sold",
-    "Total Sold Dollar Amount",
+    "Rejected Date",
+    "Withdrawn Date",
+    "Abandoned Date",
+    "Inital Price",
+    "Current Price",
+    "BBLs",
   ];
 
   const excludeValue = [
@@ -199,23 +202,13 @@
     }
 
     if (
-      field === "number_of_commercial_units" ||
-      field === "number_of_resort_units" ||
-      field === "number_of_regulated_units" ||
-      field === "number_of_nonregulated_units" ||
       field === "number_of_residential_units" ||
-      field === "number_of_storage_units" ||
-      field === "number_of_parking_units" ||
-      field === "number_of_other_units" ||
-      field === "total_number_of_units" ||
-      field === "number_of_units_sold_-_ny_ag" ||
-      field === "total_number_of_condo_units" ||
-      field === "total_number_of_condo_units_sold"
+      field === "total_number_of_units"
     ) {
       return parseInt(value, 10);
     }
 
-    if (field === "current_price" || field === "total_sold_dollar_amount") {
+    if (field === "current_price" || field === "inital_price") {
       try {
         const number =
           typeof value === "string"
@@ -233,8 +226,34 @@
       }
     }
 
-    if (field === "submitted_date") {
+    if (
+      field === "submitted_date" ||
+      field === "accepted_date" ||
+      field === "reviewed_date" ||
+      field === "effective_date" ||
+      field === "rejected_date" ||
+      field === "withdrawn_date" ||
+      field === "abandoned_date"
+    ) {
       return new Date(value).toLocaleDateString();
+    }
+
+    if (field === "boro_id") {
+      if (value === "1") {
+        return "Manhattan";
+      }
+      if (value === "2") {
+        return "Bronx";
+      }
+      if (value === "3") {
+        return "Brooklyn";
+      }
+      if (value === "4") {
+        return "Queens";
+      }
+      if (value === "5") {
+        return "Staten Island";
+      }
     }
 
     return value;
@@ -243,14 +262,6 @@
   const formatterRowValue = (value, row, index, field) => {
     if (isEmptyValue(value)) {
       return '<span class="text-muted">N/A</span>';
-    }
-
-    if (field === "sellers" || field === "buyers") {
-      // check the value is not link
-      if (!value.includes("http") && value.length > 40) {
-        return value.slice(0, 40) + "...";
-      }
-      return value;
     }
 
     return formatter(value, row, index, field);
