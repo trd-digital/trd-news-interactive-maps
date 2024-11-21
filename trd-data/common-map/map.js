@@ -783,7 +783,8 @@ const trdDataCommonMap = (options) => {
                 if (
                   subField.field.endsWith("Zip") ||
                   subField.field.endsWith("Line 2") ||
-                  subField.field.endsWith("Line 3")
+                  subField.field.endsWith("Line 3") ||
+                  subField.field.endsWith("Address2")
                 ) {
                   fieldValues.push(" " + subValue);
                 } else if (

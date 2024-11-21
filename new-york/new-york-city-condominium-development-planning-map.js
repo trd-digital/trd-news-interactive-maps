@@ -33,10 +33,19 @@
         {
           text: "Abandoned",
           value: "Application Abandoned",
-          default: true,
+          default: false,
           color: {
             light: "#BF360C",
             dark: "#BF360C",
+          },
+        },
+        {
+          text: "Other",
+          value: "",
+          default: true,
+          color: {
+            light: "#000000",
+            dark: "#ffffff",
           },
         },
       ],
@@ -79,59 +88,67 @@
       label: "Project Name",
     },
     content: [
-      { field: "Instrument Number", label: "Instrument Number" },
-      { field: "Address", label: "Address" },
-      { field: "borough", label: "borough" },
+      { field: "Plan ID", label: "Plan ID" },
+      { field: "Instrument Status", label: "Instrument Status" },
       {
         field: "Submitted Date",
         label: "Submitted Date",
         format: "formatDate",
       },
-      { field: "Instrument Status", label: "Instrument Status" },
-      { field: "Current Price", label: "Current Price", format: "formatPrice" },
+      { field: "Accepted Date", label: "Accepted Date", format: "formatDate" },
+      { field: "Reviewed Date", label: "Reviewed Date", format: "formatDate" },
       {
-        field: "Number of Commercial Units",
-        label: "Number of Commercial Units",
-        format: "formatInteger",
+        field: "Effective Date",
+        label: "Effective Date",
+        format: "formatDate",
       },
+      { field: "Rejected Date", label: "Rejected Date", format: "formatDate" },
+      {
+        field: "Withdrawn Date",
+        label: "Withdrawn Date",
+        format: "formatDate",
+      },
+      {
+        field: "Abandoned Date",
+        label: "Abandoned Date",
+        format: "formatDate",
+      },
+      { field: "Project Name", label: "Project Name" },
+      {
+        field: "Boro ID",
+        label: "Boro ID",
+        format: (value) => {
+          return value === "1"
+            ? "Manhattan"
+            : value === "2"
+            ? "Bronx"
+            : value === "3"
+            ? "Brooklyn"
+            : value === "4"
+            ? "Queens"
+            : value === "5"
+            ? "Staten Island"
+            : value;
+        },
+      },
+      {
+        field: "group",
+        label: "Address",
+        fields: [
+          { field: "Address", label: "Address" },
+          { field: "Address2", label: "Address2" },
+        ],
+      },
+      { field: "Plan Type", label: "Plan Type" },
+      { field: "Type of Offering", label: "Type of Offering" },
+      { field: "Construction Type", label: "Construction Type" },
+      { field: "Sponsor", label: "Sponsor" },
+      { field: "Sponsor Address", label: "Sponsor Address" },
+      { field: "Principal Name", label: "Principal Name" },
+      { field: "Title Function", label: "Title Function" },
       {
         field: "Number of Residential Units",
         label: "Number of Residential Units",
-        format: "formatInteger",
-      },
-      {
-        field: "Total Number of Condo Units",
-        label: "Total Number of Condo Units",
-        format: "formatInteger",
-      },
-      {
-        field: "Number of Regulated Units",
-        label: "Number of Regulated Units",
-        format: "formatInteger",
-      },
-      {
-        field: "Number of NonRegulated Units",
-        label: "Number of NonRegulated Units",
-        format: "formatInteger",
-      },
-      {
-        field: "Number of Resort Units",
-        label: "Number of Resort Units",
-        format: "formatInteger",
-      },
-      {
-        field: "Number of Storage Units",
-        label: "Number of Storage Units",
-        format: "formatInteger",
-      },
-      {
-        field: "Number of Parking Units",
-        label: "Number of Parking Units",
-        format: "formatInteger",
-      },
-      {
-        field: "Number of Other Units",
-        label: "Number of Other Units",
         format: "formatInteger",
       },
       {
@@ -139,21 +156,9 @@
         label: "Total Number of Units",
         format: "formatInteger",
       },
-      {
-        field: "Number of Units Sold - NY AG",
-        label: "Number of Units Sold",
-        format: "formatInteger",
-      },
-      {
-        field: "Total Number of Condo Units Sold",
-        label: "Total Number of Condo Units Sold",
-        format: "formatInteger",
-      },
-      {
-        field: "Total Sold Dollar Amount",
-        label: "Total Sold Dollar Amount",
-        format: "formatPrice",
-      },
+      { field: "Inital Price", label: "Inital Price", format: "formatPrice" },
+      { field: "Current Price", label: "Current Price", format: "formatPrice" },
+      { field: "BBLs", label: "BBLs" },
     ],
   };
 
@@ -237,17 +242,6 @@
       ],
     },
   ];
-
-  // const list = [];
-
-  // fetchDataFilterCallback = (item) => {
-  //   if (!list.includes(item.properties["Instrument Status"])) {
-  //     list.push(item.properties["Instrument Status"]);
-  //   }
-  //   return true;
-  // };
-
-  // window.list = list;
 
   window.map = trdDataCommonMap({
     fetchDataFilterCallback: undefined,
