@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var map = new mapboxgl.Map({
         container: 'map',
         style: "mapbox://styles/mapbox/streets-v11", // Map style
-        center: [-74.006, 40.7128],                 // NYC coordinates
-        zoom: 10,                                   // Zoom level to focus on NYC
+        center: [-74.006, 40.7728],                 // NYC coordinates
+        zoom: 11,                                   // Zoom level to focus on NYC
         minZoom: 3                                  // Minimum zoom level
     });
 
