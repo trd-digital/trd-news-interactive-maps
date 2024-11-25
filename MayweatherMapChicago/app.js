@@ -5,33 +5,15 @@ document.addEventListener('DOMContentLoaded', function () {
     var map = new mapboxgl.Map({
         container: 'map',
         style: "mapbox://styles/mapbox/streets-v11", // Map style
-        center: [-77.7287597013019, 36.30456098188547],    // Approximate center of the US
-        zoom: 3,                                    // Initial zoom level
+        center: [-74.006, 40.7128],                 // NYC coordinates
+        zoom: 12,                                   // Zoom level to focus on NYC
         minZoom: 3                                  // Minimum zoom level
     });
 
     // Add zoom and rotation controls to the map
     map.addControl(new mapboxgl.NavigationControl());
 
-    // Define coordinates for NYC, Miami, and Chicago
-    const nyc = [-74.006, 40.7128];
-    const miami = [-80.1918, 25.7617];
-    const chicago = [-87.6298, 41.8781];
-
-    // Define bounds: [southwest, northeast]
-    const bounds = [
-        [chicago[0], miami[1]], // Southwest corner (Chicago's longitude, Miami's latitude)
-        [nyc[0], nyc[1]]        // Northeast corner (NYC's longitude, NYC's latitude)
-    ];
-
     map.on('load', function () {
-        // Immediately set the bounds without animation
-        map.fitBounds(bounds, {
-            padding: 50,
-            maxZoom: 6,
-            linear: false  // Disable animation for instant view
-        });
-
         // Load the GeoJSON data
         fetch('map_data.geojson')
             .then(response => response.json())
