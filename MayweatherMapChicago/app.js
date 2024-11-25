@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
         container: 'map',
         style: "mapbox://styles/mapbox/streets-v11", // Map style
         center: [-87.6298, 41.8801],                 // NYC coordinates
-        zoom: 14,                                   // Zoom level to focus on NYC
+        zoom: 12.5,                                   // Zoom level to focus on NYC
         minZoom: 3                                  // Minimum zoom level
     });
 
