@@ -1,12 +1,13 @@
 // Your Mapbox access token
 mapboxgl.accessToken = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";  
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     var map = new mapboxgl.Map({
         container: 'map',
         style: "mapbox://styles/mapbox/streets-v11", // Map style
-        zoom: 3,                                    // Initial zoom (overridden by fitBounds)
-        minZoom: 3                                  // Minimum zoom
+        center: [-98.35, 39.50],                    // Approximate center of the US
+        zoom: 3,                                    // Initial zoom level
+        minZoom: 3                                  // Minimum zoom level
     });
 
     // Add zoom and rotation controls to the map
@@ -23,12 +24,12 @@ document.addEventListener('DOMContentLoaded', function() {
         [nyc[0], nyc[1]]        // Northeast corner (NYC's longitude, NYC's latitude)
     ];
 
-    map.on('load', function() {
-        // Adjust the map to fit the defined bounds
+    map.on('load', function () {
+        // Immediately set the bounds without animation
         map.fitBounds(bounds, {
-            padding: 50,         // Add padding around the edges
-            maxZoom: 3,          // Maximum zoom level after fitting
-            linear: true         // Use linear easing for a smooth transition
+            padding: 50,
+            maxZoom: 6,
+            linear: false  // Disable animation for instant view
         });
 
         // Load the GeoJSON data
