@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var map = new mapboxgl.Map({
         container: 'map',
         style: "mapbox://styles/mapbox/streets-v11", // Map style
-        center: [-98.35, 39.50],                    // Approximate center of the US
+        center: [-77.7287597013019, 36.30456098188547],    // Approximate center of the US
         zoom: 3,                                    // Initial zoom level
         minZoom: 3                                  // Minimum zoom level
     });
