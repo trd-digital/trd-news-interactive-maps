@@ -75,14 +75,14 @@ const trdDataCommonMap = (options) => {
     minZoom: 10,
     legendKeys: [],
     dataPointKeys: [],
-    tooltipDisplayFields: {},
-    modalDisplayFields: {},
+    tooltipDisplayFields: undefined, // object
+    modalDisplayFields: undefined, // object
     filterFields: [],
     legendAutoCollapse: true,
     fetchDataFilterCallback: undefined,
     mapLayerFilter: [],
     mapLayerFieldKey: "Sale Price",
-    mapLayerPaint: {},
+    mapLayerPaint: undefined, // object
     eventCategory: "unknown-map",
     paintCircleColorType: "step",
     sourceId: "dataPoints",
@@ -580,14 +580,16 @@ const trdDataCommonMap = (options) => {
         "top-right"
       );
 
-      mapObj.addControl(
-        new MapboxGLButtonControl({
-          className: "map-filters",
-          title: "Filters",
-          eventHandler: filters.onToggle,
-        }),
-        "top-right"
-      );
+      if (settings?.filterFields?.length && settings?.filterElementId) {
+        mapObj.addControl(
+          new MapboxGLButtonControl({
+            className: "map-filters",
+            title: "Filters",
+            eventHandler: filters.onToggle,
+          }),
+          "top-right"
+        );
+      }
 
       mapObj.addControl(
         new MapboxGLButtonControl({
@@ -685,6 +687,13 @@ const trdDataCommonMap = (options) => {
     },
 
     tooltip: (id) => {
+      mapObj.on("mouseenter", id, (e) => {
+        mapObj.getCanvas().style.cursor = "pointer";
+      });
+      mapObj.on("mouseleave", id, (e) => {
+        mapObj.getCanvas().style.cursor = "";
+      });
+
       if (!settings?.tooltipDisplayFields) return;
 
       const popup = new mapboxgl.Popup({
@@ -693,8 +702,6 @@ const trdDataCommonMap = (options) => {
       });
 
       mapObj.on("mouseenter", id, (e) => {
-        mapObj.getCanvas().style.cursor = "pointer";
-
         const coordinates = e.features[0].geometry.coordinates.slice();
 
         const address =
@@ -738,7 +745,6 @@ const trdDataCommonMap = (options) => {
       });
 
       mapObj.on("mouseleave", id, (e) => {
-        mapObj.getCanvas().style.cursor = "";
         popup.remove();
       });
     },
@@ -811,12 +817,15 @@ const trdDataCommonMap = (options) => {
           }
 
           if (value) {
-            html += `<p class="detail-item"><span class="detail-label">${
-              item.label
-            }:</span> <span class="detail-value">${formatters.format(
+            html += `<p class="detail-item">`;
+            if (item.label) {
+              html += `<span class="detail-label">${item.label}:</span>`;
+            }
+            html += `<span class="detail-value">${formatters.format(
               value,
               item.format
-            )}</span></p>`;
+            )}</span>`;
+            html += `</p>`;
           }
         });
 
