@@ -14,6 +14,21 @@
     ],
   };
 
+  // Function to detect if the user is on a mobile device
+  const isMobileDevice = () => {
+    return /Mobi|Android|iPhone/i.test(navigator.userAgent);
+  };
+
+  // Set default map center coordinates
+  let mapCenterLat = 39.8283; // Default latitude (center of the US)
+  let mapCenterLng = -98.5795; // Default longitude (center of the US)
+
+  // Adjust map center for mobile devices
+  if (isMobileDevice()) {
+    mapCenterLat = 40.7128; // New York City latitude
+    mapCenterLng = -74.0060; // New York City longitude
+  }
+
   window.map = trdDataCommonMap({
     fetchDataFilterCallback: undefined,
     eventCategory: "beige-book",
@@ -22,8 +37,8 @@
     filterElementId: undefined,
     legendElementId: undefined,
     resultElementId: undefined,
-    mapCenterLat: 39.8283,
-    mapCenterLng: -98.5795,
+    mapCenterLat: mapCenterLat,
+    mapCenterLng: mapCenterLng,
     zoom: 4,
     minZoom: 3,
     modalDisplayFields,
