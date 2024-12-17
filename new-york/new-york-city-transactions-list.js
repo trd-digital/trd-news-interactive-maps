@@ -72,6 +72,7 @@ const trdList = () => {
     renderListItems: (data) => {
       const items = data.features
         .filter(helpers.filterListEmptyData)
+        .filter(helpers.filterToLast30Days)
         .sort(helpers.sortListBySalePrice)
         .slice(0, listLimit)
         .map((feature) => {
@@ -137,6 +138,14 @@ const trdList = () => {
         !helpers.isEmptyValue(date) &&
         !helpers.isEmptyValue(address)
       );
+    },
+
+    filterToLast30Days: (data) => {
+      const date = Date.parse(data.properties["Record Date"]);
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+      return date > thirtyDaysAgo;
     },
 
     sortListBySalePrice: (a, b) => {
