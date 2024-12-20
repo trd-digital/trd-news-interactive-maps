@@ -132,6 +132,7 @@ const commercialOfficeMarket = () => {
     listenEvents: () => {
       // Redirect when click on the list items.
       listGroup.addEventListener("click", api.redirect);
+      window.addEventListener("load", helpers.addGamTrackUrls);
 
       // AutoScroll to the checked input when the dropdown list is opened.
       buttonIconFilter.addEventListener("show.bs.dropdown", (event) =>
@@ -143,7 +144,10 @@ const commercialOfficeMarket = () => {
     },
 
     redirect: () => {
-      window.open("https://therealdeal.com/data/", "_blank");
+      window.open(
+        helpers.getGamTrackUrl("https://therealdeal.com/data/"),
+        "_blank"
+      );
     },
 
     autoScroll: (event) => {
@@ -551,6 +555,35 @@ const commercialOfficeMarket = () => {
       }
 
       return value;
+    },
+
+    getGamTrackUrl: (url) => {
+      if (!window.frameElement || !url || url === "") return url;
+
+      const clickUrlUnescaped = window.frameElement.getAttribute(
+        "data-click-url-unesc"
+      );
+      if (
+        !clickUrlUnescaped ||
+        !clickUrlUnescaped.startsWith("http://") ||
+        !clickUrlUnescaped.startsWith("https://")
+      ) {
+        return url;
+      }
+
+      const newUrl = new URL(clickUrlUnescaped);
+      if (newUrl.searchParams.has("adurl")) {
+        newUrl.searchParams.delete("adurl");
+      }
+      newUrl.searchParams.append("adurl", url);
+      return newUrl.toString();
+    },
+
+    addGamTrackUrls: () => {
+      const links = document.querySelectorAll("a");
+      links.forEach((link) => {
+        link.href = helpers.getGamTrackUrl(link.href);
+      });
     },
   };
 

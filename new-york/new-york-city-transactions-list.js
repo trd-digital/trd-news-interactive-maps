@@ -51,12 +51,12 @@ const trdList = () => {
 
     addEventListeners: () => {
       list.addEventListener("click", () => {
-        window.open(
-          "https://therealdeal.com/data/new-york/2024/nyc-transactions/?utm_source=embed&utm_medium=widget&utm_campaign=south_florida_sales",
-          "_blank"
+        const url = helpers.getGamTrackUrl(
+          "https://therealdeal.com/data/new-york/2024/nyc-transactions/?utm_source=embed&utm_medium=widget"
         );
+        window.open(url, "_blank");
       });
-
+      window.addEventListener("load", helpers.addGamTrackUrls);
       window.addEventListener("blur", helpers.autoScrollListStart);
       window.addEventListener("load", helpers.autoScrollListStart);
       list.addEventListener("mouseleave", helpers.autoScrollListStart);
@@ -116,6 +116,35 @@ const trdList = () => {
       if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
         document.body.setAttribute("data-bs-theme", "dark");
       }
+    },
+
+    getGamTrackUrl: (url) => {
+      if (!window.frameElement || !url || url === "") return url;
+
+      const clickUrlUnescaped = window.frameElement.getAttribute(
+        "data-click-url-unesc"
+      );
+      if (
+        !clickUrlUnescaped ||
+        !clickUrlUnescaped.startsWith("http://") ||
+        !clickUrlUnescaped.startsWith("https://")
+      ) {
+        return url;
+      }
+
+      const newUrl = new URL(clickUrlUnescaped);
+      if (newUrl.searchParams.has("adurl")) {
+        newUrl.searchParams.delete("adurl");
+      }
+      newUrl.searchParams.append("adurl", url);
+      return newUrl.toString();
+    },
+
+    addGamTrackUrls: () => {
+      const links = document.querySelectorAll("a");
+      links.forEach((link) => {
+        link.href = helpers.getGamTrackUrl(link.href);
+      });
     },
 
     autoScrollListStart: () => {
