@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Real Estate Lookup Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .filters {
+            margin-bottom: 20px;
+        }
+        .filters input, .filters select {
+            padding: 5px;
+            margin-right: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        a {
+            color: blue;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Real Estate Data Lookup</h1>
+
+    <div class="filters">
+        <input type="text" id="searchRegion" placeholder="Search Region">
+        
+        <select id="filterSector">
+            <option value="">All Sectors</option>
+            <!-- Options will be populated dynamically -->
+        </select>
+        
+        <select id="filterDatePeriod">
+            <option value="">All Date Periods</option>
+            <!-- Options will be populated dynamically -->
+        </select>
+        
+        <button id="applyFilters">Apply Filters</button>
+        <button id="resetFilters">Reset Filters</button>
+    </div>
+
+    <table id="resultsTable">
+        <thead>
+            <tr>
+                <th>Region</th>
+                <th>Display Title</th>
+                <th>Value</th>
+                <th>Last Updated</th>
+                <th>Date Period</th>
+                <th>Source</th>
+                <th>Sector</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data rows will be populated dynamically -->
+        </tbody>
+    </table>
+
+    <!-- Include PapaParse from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg==" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const csvUrl = 'TRD Data Snapshots - Snapshot2_0.csv'; // Replace with your CSV URL
+            let data = [];
+            let filteredData = [];
+
+            const searchRegion = document.getElementById('searchRegion');
+            const filterSector = document.getElementById('filterSector');
+            const filterDatePeriod = document.getElementById('filterDatePeriod');
+            const applyFilters = document.getElementById('applyFilters');
+            const resetFilters = document.getElementById('resetFilters');
+            const resultsTableBody = document.querySelector('#resultsTable tbody');
+
+            // Fetch and parse CSV data
+            Papa.parse(csvUrl, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    data = results.data;
+                    filteredData = data;
+                    populateFilters();
+                    displayResults(filteredData);
+                },
+                error: function(err) {
+                    console.error('Error loading CSV:', err);
+                }
+            });
+
+            // Populate filter dropdowns based on unique values
+            function populateFilters() {
+                const sectors = [...new Set(data.map(item => item.sector).filter(Boolean))].sort();
+                const datePeriods = [...new Set(data.map(item => item.date_period).filter(Boolean))].sort();
+
+                sectors.forEach(sector => {
+                    const option = document.createElement('option');
+                    option.value = sector;
+                    option.textContent = sector;
+                    filterSector.appendChild(option);
+                });
+
+                datePeriods.forEach(period => {
+                    const option = document.createElement('option');
+                    option.value = period;
+                    option.textContent = period;
+                    filterDatePeriod.appendChild(option);
+                });
+            }
+
+            // Apply filters based on user input
+            applyFilters.addEventListener('click', () => {
+                const regionQuery = searchRegion.value.trim().toLowerCase();
+                const selectedSector = filterSector.value;
+                const selectedDatePeriod = filterDatePeriod.value;
+
+                filteredData = data.filter(item => {
+                    const matchesRegion = regionQuery === '' || item.region.toLowerCase().includes(regionQuery);
+                    const matchesSector = selectedSector === '' || item.sector === selectedSector;
+                    const matchesDatePeriod = selectedDatePeriod === '' || item.date_period === selectedDatePeriod;
+                    return matchesRegion && matchesSector && matchesDatePeriod;
+                });
+
+                displayResults(filteredData);
+            });
+
+            // Reset filters and display all data
+            resetFilters.addEventListener('click', () => {
+                searchRegion.value = '';
+                filterSector.value = '';
+                filterDatePeriod.value = '';
+                filteredData = data;
+                displayResults(filteredData);
+            });
+
+            // Display data in the table
+            function displayResults(dataToDisplay) {
+                resultsTableBody.innerHTML = '';
+
+                if (dataToDisplay.length === 0) {
+                    const row = document.createElement('tr');
+                    const cell = document.createElement('td');
+                    cell.colSpan = 7;
+                    cell.textContent = 'No results found.';
+                    cell.style.textAlign = 'center';
+                    row.appendChild(cell);
+                    resultsTableBody.appendChild(row);
+                    return;
+                }
+
+                dataToDisplay.forEach(item => {
+                    const row = document.createElement('tr');
+
+                    // Region
+                    const regionCell = document.createElement('td');
+                    regionCell.textContent = item.region;
+                    row.appendChild(regionCell);
+
+                    // Display Title
+                    const titleCell = document.createElement('td');
+                    titleCell.textContent = item.display_title;
+                    row.appendChild(titleCell);
+
+                    // Value
+                    const valueCell = document.createElement('td');
+                    valueCell.textContent = item.value;
+                    row.appendChild(valueCell);
+
+                    // Last Updated
+                    const updatedCell = document.createElement('td');
+                    updatedCell.textContent = item.last_updated;
+                    row.appendChild(updatedCell);
+
+                    // Date Period
+                    const datePeriodCell = document.createElement('td');
+                    datePeriodCell.textContent = item.date_period;
+                    row.appendChild(datePeriodCell);
+
+                    // Source with hyperlink if available
+                    const sourceCell = document.createElement('td');
+                    if (item.Source_Link) {
+                        const link = document.createElement('a');
+                        link.href = item.Source_Link;
+                        link.textContent = item.Source;
+                        link.target = '_blank';
+                        sourceCell.appendChild(link);
+                    } else {
+                        sourceCell.textContent = 'N/A';
+                    }
+                    row.appendChild(sourceCell);
+
+                    // Dataset Tag
+                    const tagCell = document.createElement('td');
+                    tagCell.textContent = item.sector;
+                    row.appendChild(tagCell);
+
+                    resultsTableBody.appendChild(row);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
