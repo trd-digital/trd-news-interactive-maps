@@ -7,86 +7,28 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #f9f9f9;
         }
         .filters {
             margin-bottom: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
         }
-        .filters input, .filters select, .filters button {
+        .filters input, .filters select {
+            padding: 5px;
+            margin-right: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
             padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .filters button {
-            cursor: pointer;
-            background-color: #007BFF;
-            color: #fff;
-            border: none;
-        }
-        .filters button:hover {
-            background-color: #0056b3;
-        }
-        .group-card {
-            background-color: #fff;
             border: 1px solid #ddd;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .group-header {
-            padding: 15px;
-            cursor: pointer;
-            position: relative;
-        }
-        .group-header:hover {
-            background-color: #f1f1f1;
-        }
-        .group-header::after {
-            content: '▼';
-            position: absolute;
-            right: 20px;
-            transition: transform 0.3s;
-        }
-        .group-header.active::after {
-            transform: rotate(-180deg);
-        }
-        .group-details {
-            padding: 15px;
-            display: none;
-            border-top: 1px solid #ddd;
-        }
-        .entry {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        .entry:last-child {
-            border-bottom: none;
-        }
-        .entry-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .entry-value {
-            color: #555;
+        th {
+            background-color: #f4f4f4;
         }
         a {
-            color: #007BFF;
+            color: blue;
             text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        /* Responsive Design */
-        @media (max-width: 600px) {
-            .filters {
-                flex-direction: column;
-            }
-            .filters input, .filters select, .filters button {
-                width: 100%;
-            }
         }
     </style>
 </head>
@@ -111,37 +53,37 @@
         <button id="resetFilters">Reset Filters</button>
     </div>
 
-    <div id="resultsContainer">
-        <!-- Grouped Cards will be populated dynamically -->
-    </div>
+    <table id="resultsTable">
+        <thead>
+            <tr>
+                <th>Region</th>
+                <th>Display Title</th>
+                <th>Value</th>
+                <th>Last Updated</th>
+                <th>Date Period</th>
+                <th>Source</th>
+                <th>Sector</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data rows will be populated dynamically -->
+        </tbody>
+    </table>
 
     <!-- Include PapaParse from CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg==" crossorigin="anonymous"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const csvUrl = 'TRD Data Snapshots - Snapshot2_0.csv'; // Replace with your CSV URL
             let data = [];
             let filteredData = [];
-            let displayedColumns = [];
-
-            const excludedColumns = ['dataset_tag']; // Add column names to exclude here
 
             const searchRegion = document.getElementById('searchRegion');
             const filterSector = document.getElementById('filterSector');
             const filterDatePeriod = document.getElementById('filterDatePeriod');
             const applyFilters = document.getElementById('applyFilters');
             const resetFilters = document.getElementById('resetFilters');
-            const resultsContainer = document.getElementById('resultsContainer');
-
-            // Function to normalize header keys
-            function normalizeHeaders(item) {
-                const normalizedItem = {};
-                for (let key in item) {
-                    const normalizedKey = key.trim().toLowerCase().replace(/\s+/g, '_');
-                    normalizedItem[normalizedKey] = item[key];
-                }
-                return normalizedItem;
-            }
+            const resultsTableBody = document.querySelector('#resultsTable tbody');
 
             // Fetch and parse CSV data
             Papa.parse(csvUrl, {
@@ -149,24 +91,10 @@
                 header: true,
                 skipEmptyLines: true,
                 complete: function(results) {
-                    data = results.data.map(normalizeHeaders);
-                    console.log('Normalized Data:', data); // For debugging
-
-                    if (data.length === 0) {
-                        console.error('CSV contains no data.');
-                        return;
-                    }
-
-                    // Determine columns to display by excluding specified columns
-                    const allColumns = Object.keys(data[0]);
-                    displayedColumns = allColumns.filter(col => !excludedColumns.includes(col));
-
-                    // Populate filters
-                    populateFilters();
-
-                    // Initially display all data
+                    data = results.data;
                     filteredData = data;
-                    displayGroupedResults(filteredData);
+                    populateFilters();
+                    displayResults(filteredData);
                 },
                 error: function(err) {
                     console.error('Error loading CSV:', err);
@@ -200,13 +128,13 @@
                 const selectedDatePeriod = filterDatePeriod.value;
 
                 filteredData = data.filter(item => {
-                    const matchesRegion = regionQuery === '' || (item.region && item.region.toLowerCase().includes(regionQuery));
+                    const matchesRegion = regionQuery === '' || item.region.toLowerCase().includes(regionQuery);
                     const matchesSector = selectedSector === '' || item.sector === selectedSector;
                     const matchesDatePeriod = selectedDatePeriod === '' || item.date_period === selectedDatePeriod;
                     return matchesRegion && matchesSector && matchesDatePeriod;
                 });
 
-                displayGroupedResults(filteredData);
+                displayResults(filteredData);
             });
 
             // Reset filters and display all data
@@ -215,104 +143,71 @@
                 filterSector.value = '';
                 filterDatePeriod.value = '';
                 filteredData = data;
-                displayGroupedResults(filteredData);
+                displayResults(filteredData);
             });
 
-            // Function to validate URLs
-            function isValidURL(string) {
-                try {
-                    new URL(string);
-                    return true;
-                } catch (_) {
-                    return false;
-                }
-            }
-
-            // Function to group data based on specified fields
-            function groupData(dataArray) {
-                const groups = {};
-
-                dataArray.forEach(item => {
-                    const groupKey = `${item.region || 'N/A'}|${item.last_updated || 'N/A'}|${item.date_period || 'N/A'}|${item.source_link || 'N/A'}`;
-                    if (!groups[groupKey]) {
-                        groups[groupKey] = {
-                            region: item.region || 'N/A',
-                            last_updated: item.last_updated || 'N/A',
-                            date_period: item.date_period || 'N/A',
-                            source_link: item.source_link || 'N/A',
-                            entries: []
-                        };
-                    }
-                    groups[groupKey].entries.push({
-                        display_title: item.display_title || 'N/A',
-                        value: item.value || 'N/A'
-                    });
-                });
-
-                return Object.values(groups);
-            }
-
-            // Function to format header text (e.g., replace underscores with spaces and capitalize)
-            function formatHeader(header) {
-                return header
-                    .replace(/_/g, ' ')
-                    .replace(/\b\w/g, char => char.toUpperCase());
-            }
-
-            // Function to display grouped results
-            function displayGroupedResults(dataToDisplay) {
-                resultsContainer.innerHTML = ''; // Clear existing results
+            // Display data in the table
+            function displayResults(dataToDisplay) {
+                resultsTableBody.innerHTML = '';
 
                 if (dataToDisplay.length === 0) {
-                    const noDataDiv = document.createElement('div');
-                    noDataDiv.textContent = 'No results found.';
-                    noDataDiv.style.textAlign = 'center';
-                    noDataDiv.style.padding = '20px';
-                    resultsContainer.appendChild(noDataDiv);
+                    const row = document.createElement('tr');
+                    const cell = document.createElement('td');
+                    cell.colSpan = 7;
+                    cell.textContent = 'No results found.';
+                    cell.style.textAlign = 'center';
+                    row.appendChild(cell);
+                    resultsTableBody.appendChild(row);
                     return;
                 }
 
-                const groupedData = groupData(dataToDisplay);
-                console.log('Grouped Data:', groupedData); // For debugging
+                dataToDisplay.forEach(item => {
+                    const row = document.createElement('tr');
 
-                groupedData.forEach(group => {
-                    const card = document.createElement('div');
-                    card.classList.add('group-card');
+                    // Region
+                    const regionCell = document.createElement('td');
+                    regionCell.textContent = item.region;
+                    row.appendChild(regionCell);
 
-                    // Create group header
-                    const header = document.createElement('div');
-                    header.classList.add('group-header');
-                    header.innerHTML = `
-                        <strong>Region:</strong> ${group.region} | 
-                        <strong>Last Updated:</strong> ${group.last_updated} | 
-                        <strong>Date Period:</strong> ${group.date_period} | 
-                        <strong>Source:</strong> ${group.source_link !== 'N/A' ? `<a href="${group.source_link}" target="_blank">Source</a>` : 'N/A'}
-                    `;
-                    card.appendChild(header);
+                    // Display Title
+                    const titleCell = document.createElement('td');
+                    titleCell.textContent = item.display_title;
+                    row.appendChild(titleCell);
 
-                    // Create group details container
-                    const details = document.createElement('div');
-                    details.classList.add('group-details');
+                    // Value
+                    const valueCell = document.createElement('td');
+                    valueCell.textContent = item.value;
+                    row.appendChild(valueCell);
 
-                    group.entries.forEach(entry => {
-                        const entryDiv = document.createElement('div');
-                        entryDiv.classList.add('entry');
-                        entryDiv.innerHTML = `
-                            <div class="entry-title">${entry.display_title}</div>
-                            <div class="entry-value">Value: ${entry.value}</div>
-                        `;
-                        details.appendChild(entryDiv);
-                    });
+                    // Last Updated
+                    const updatedCell = document.createElement('td');
+                    updatedCell.textContent = item.last_updated;
+                    row.appendChild(updatedCell);
 
-                    card.appendChild(details);
-                    resultsContainer.appendChild(card);
+                    // Date Period
+                    const datePeriodCell = document.createElement('td');
+                    datePeriodCell.textContent = item.date_period;
+                    row.appendChild(datePeriodCell);
 
-                    // Add event listener to toggle details
-                    header.addEventListener('click', () => {
-                        const isVisible = details.style.display === 'block';
-                        details.style.display = isVisible ? 'none' : 'block';
-                        header.classList.toggle('active', !isVisible);
-                    });
+                    // Source with hyperlink if available
+                    const sourceCell = document.createElement('td');
+                    if (item.Source_Link) {
+                        const link = document.createElement('a');
+                        link.href = item.Source_Link;
+                        link.textContent = item.Source;
+                        link.target = '_blank';
+                        sourceCell.appendChild(link);
+                    } else {
+                        sourceCell.textContent = 'N/A';
+                    }
+                    row.appendChild(sourceCell);
+
+                    // Dataset Tag
+                    const tagCell = document.createElement('td');
+                    tagCell.textContent = item.sector;
+                    row.appendChild(tagCell);
+
+                    resultsTableBody.appendChild(row);
                 });
             }
         });
