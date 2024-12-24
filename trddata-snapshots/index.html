@@ -6,15 +6,15 @@
     <!-- Import Google Fonts for Merriweather -->
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS Variables for Color Scheme */
+        /* CSS Variables for Updated Color Scheme */
         :root {
-            --primary-color: #000000; /* Black for primary elements */
-            --secondary-color: #FFFFFF; /* White for backgrounds */
-            --accent-color: #0000FF; /* Blue for links */
-            --text-color: #000000; /* Black for text */
-            --background-color: #FFFFFF; /* White background */
-            --border-color: #CCCCCC; /* Light Grey Border */
-            --hover-shadow: rgba(0, 0, 0, 0.2); /* Shadow on hover */
+            --background-color: #000000; /* Black background */
+            --primary-color: #FFFFFF; /* White for labels and primary elements */
+            --text-color: #1E90FF; /* Dodger Blue for data text */
+            --accent-color: #1E90FF; /* Dodger Blue for links */
+            --secondary-color: #1A1A1A; /* Darker shade for card backgrounds */
+            --border-color: #333333; /* Dark Grey Border */
+            --hover-shadow: rgba(255, 255, 255, 0.2); /* Light shadow on hover */
         }
 
         /* Global Styles */
@@ -44,23 +44,28 @@
 
         .filters input, .filters select, .filters button {
             padding: 8px 12px; /* Reduced padding */
-            border: 1px solid var(--border-color); /* Light grey border */
+            border: 1px solid var(--border-color); /* Dark grey border */
             border-radius: 5px;
             font-size: 0.9em; /* Reduced font size */
-            background-color: #F9F9F9; /* Very light grey background */
-            color: var(--text-color); /* Black text */
-            transition: border-color 0.3s, box-shadow 0.3s;
+            background-color: #1A1A1A; /* Dark grey background */
+            color: var(--primary-color); /* White text */
+            transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s, color 0.3s;
+        }
+
+        .filters input::placeholder {
+            color: #AAAAAA; /* Light grey placeholder text */
         }
 
         .filters input:focus, .filters select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Subtle shadow on focus */
+            border-color: var(--accent-color);
+            box-shadow: 0 0 5px var(--accent-color); /* Blue shadow on focus */
             outline: none;
+            background-color: #262626; /* Slightly lighter dark grey on focus */
         }
 
         .filters button {
-            background-color: var(--primary-color);
-            color: var(--secondary-color);
+            background-color: var(--accent-color);
+            color: var(--primary-color);
             border: none;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.2s;
@@ -68,7 +73,7 @@
         }
 
         .filters button:hover {
-            background-color: #333333; /* Darker black on hover */
+            background-color: #1C86EE; /* Slightly darker blue on hover */
             transform: translateY(-2px);
             box-shadow: 0 4px 6px var(--hover-shadow);
         }
@@ -83,10 +88,10 @@
 
         /* Group Card Styles */
         .group-card {
-            background-color: #F2F2F2; /* Light grey background for cards */
-            border: 1px solid var(--border-color); /* Light grey border */
+            background-color: var(--secondary-color); /* Dark grey background for cards */
+            border: 1px solid var(--border-color); /* Dark grey border */
             border-radius: 8px; /* Rounded corners */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1); /* Subtle white shadow */
             display: flex;
             flex-direction: column;
             transition: transform 0.2s, box-shadow 0.2s;
@@ -94,7 +99,7 @@
 
         .group-card:hover {
             transform: translateY(-3px); /* Slight lift on hover */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.15); /* Enhanced white shadow */
         }
 
         /* Group Header Styles */
@@ -105,13 +110,13 @@
             cursor: pointer;
             position: relative;
             user-select: none;
-            background-color: var(--secondary-color); /* White background for header */
-            border-bottom: 1px solid var(--border-color); /* Light grey border */
+            background-color: #1A1A1A; /* Slightly lighter dark grey for header */
+            border-bottom: 1px solid var(--border-color); /* Dark grey border */
             transition: background-color 0.3s;
         }
 
         .group-header:hover {
-            background-color: #FAFAFA; /* Slightly darker on hover */
+            background-color: #262626; /* Slightly lighter on hover */
         }
 
         /* Header Items */
@@ -130,13 +135,13 @@
         .header-label {
             font-weight: 500;
             margin-right: 5px;
-            color: var(--primary-color);
+            color: var(--primary-color); /* White labels */
         }
 
         /* Separator Line Under Sector */
         .separator {
             height: 1px;
-            background-color: var(--border-color); /* Light grey */
+            background-color: var(--border-color); /* Dark grey */
             margin: 4px 0; /* Further reduced margin */
             width: 100%;
         }
@@ -145,7 +150,7 @@
         .group-details {
             padding: 10px 12px; /* Reduced padding */
             display: none; /* Initially hidden */
-            background-color: #FFFFFF; /* White background */
+            background-color: #000000; /* Black background for details */
             transition: max-height 0.3s ease, padding 0.3s ease;
         }
 
@@ -156,7 +161,7 @@
         /* Entry Styles */
         .entry {
             padding: 4px 0; /* Further reduced padding */
-            border-bottom: 1px solid #E0E0E0; /* Light grey border */
+            border-bottom: 1px solid #444444; /* Dark grey border */
         }
 
         .entry:last-child {
@@ -166,12 +171,12 @@
         .entry-title {
             font-weight: bold;
             margin-bottom: 2px; /* Further reduced margin */
-            color: var(--primary-color);
+            color: var(--primary-color); /* White titles */
             font-size: 0.85em; /* Further reduced font size */
         }
 
         .entry-value {
-            color: var(--text-color); /* Black text */
+            color: var(--text-color); /* Blue text for data */
             font-size: 0.8em; /* Further reduced font size */
         }
 
@@ -189,7 +194,7 @@
         }
 
         .source-entry a:hover {
-            color: #0000CC; /* Darker blue on hover */
+            color: #1C86EE; /* Slightly darker blue on hover */
             text-decoration: underline;
         }
 
@@ -201,11 +206,11 @@
         }
 
         #loadingIndicator {
-            color: var(--text-color); /* Black text */
+            color: var(--text-color); /* Blue text */
         }
 
         #errorMessage {
-            color: red;
+            color: #FF6347; /* Tomato color for errors */
         }
 
         /* Responsive Typography */
@@ -344,9 +349,11 @@
                         // Populate filters
                         populateFilters();
 
-                        // Initially display all data
-                        filteredData = data;
-                        displayGroupedResults(filteredData);
+                        // Set default search to "New York"
+                        searchRegion.value = "New York";
+
+                        // Apply default filter
+                        filterData();
                     },
                     error: function(err) {
                         loadingIndicator.style.display = 'none';
@@ -388,6 +395,7 @@
                             region: item.region || 'N/A',
                             last_updated: item.last_updated || 'N/A',
                             date_period: item.date_period || 'N/A',
+                            source: item.source || 'N/A', // Added source
                             source_link: item.source_link || 'N/A',
                             entries: []
                         };
@@ -411,7 +419,7 @@
                 }
             }
 
-            // Function to display grouped results
+            // Function to display grouped results with a limit of 16 cards
             function displayGroupedResults(dataToDisplay) {
                 resultsContainer.innerHTML = ''; // Clear existing results
 
@@ -420,12 +428,17 @@
                     noDataDiv.textContent = 'No results found.';
                     noDataDiv.style.textAlign = 'center';
                     noDataDiv.style.padding = '20px';
+                    noDataDiv.style.color = 'var(--text-color)'; /* Blue text */
                     resultsContainer.appendChild(noDataDiv);
                     return;
                 }
 
-                const groupedData = groupData(dataToDisplay);
+                // Group the data
+                let groupedData = groupData(dataToDisplay);
                 console.log('Grouped Data:', groupedData); // For debugging
+
+                // Limit the number of cards to 16
+                groupedData = groupedData.slice(0, 16);
 
                 groupedData.forEach(group => {
                     const card = document.createElement('div');
@@ -467,11 +480,11 @@
                     });
 
                     // Add Source link at the bottom of details
-                    if (group.source_link !== 'N/A' && isValidURL(group.source_link)) {
+                    if (group.source_link !== 'N/A' && isValidURL(group.source_link) && group.source !== 'N/A') {
                         const sourceDiv = document.createElement('div');
                         sourceDiv.classList.add('source-entry');
                         sourceDiv.innerHTML = `
-                            <a href="${group.source_link}" target="_blank">Source</a>
+                            <a href="${group.source_link}" target="_blank" rel="noopener noreferrer" aria-label="Source: ${group.source}">Source: ${group.source}</a>
                         `;
                         details.appendChild(sourceDiv);
                     }
