@@ -148,14 +148,16 @@
 
         /* Group Details Styles */
         .group-details {
-            padding: 10px 12px; /* Reduced padding */
-            display: none; /* Initially hidden */
+            max-height: 0; /* Collapsed by default */
+            overflow: hidden;
+            padding: 0 12px; /* Collapsed padding */
             background-color: #000000; /* Black background for details */
-            transition: max-height 0.3s ease, padding 0.3s ease;
+            transition: max-height 0.5s ease, padding 0.3s ease;
         }
 
         .group-details.show {
-            display: block;
+            max-height: 1000px; /* Adjust based on content */
+            padding: 10px 12px; /* Expanded padding */
         }
 
         /* Entry Styles */
@@ -438,7 +440,7 @@
                 console.log('Grouped Data:', groupedData); // For debugging
 
                 // Limit the number of cards to 16
-                groupedData = groupedData.slice(0, 16);
+                groupedData = groupedData.slice(0, 8);
 
                 groupedData.forEach(group => {
                     const card = document.createElement('div');
@@ -484,13 +486,22 @@
                         const sourceDiv = document.createElement('div');
                         sourceDiv.classList.add('source-entry');
                         sourceDiv.innerHTML = `
-                            <a href="${group.source_link}" target="_blank" rel="noopener noreferrer" aria-label="Source: ${group.source}">Source: ${group.source}</a>
+                            <a href="${group.source_link}" target="_blank" rel="noopener noreferrer" aria-label="Source: ${group.source}">${group.source}</a>
                         `;
                         details.appendChild(sourceDiv);
                     }
 
+                    // **Add the 'show' class to make details visible by default**
+                    details.classList.add('show');
+
                     card.appendChild(details);
                     resultsContainer.appendChild(card);
+
+                    // **Add the 'active' class to the header to reflect the expanded state**
+                    header.classList.add('active');
+
+                    // **Set aria-expanded to true since the details are visible by default**
+                    header.setAttribute('aria-expanded', 'true');
 
                     // Add event listener to toggle details
                     header.addEventListener('click', () => {
@@ -498,16 +509,17 @@
                         if (isVisible) {
                             details.classList.remove('show');
                             header.classList.remove('active');
+                            header.setAttribute('aria-expanded', 'false');
                         } else {
                             details.classList.add('show');
                             header.classList.add('active');
+                            header.setAttribute('aria-expanded', 'true');
                         }
                     });
 
                     // Add keyboard accessibility
                     header.setAttribute('tabindex', '0'); // Make focusable
                     header.setAttribute('role', 'button');
-                    header.setAttribute('aria-expanded', 'false');
 
                     header.addEventListener('keydown', (e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
@@ -516,9 +528,11 @@
                             if (isVisible) {
                                 details.classList.remove('show');
                                 header.classList.remove('active');
+                                header.setAttribute('aria-expanded', 'false');
                             } else {
                                 details.classList.add('show');
                                 header.classList.add('active');
+                                header.setAttribute('aria-expanded', 'true');
                             }
                         }
                     });
