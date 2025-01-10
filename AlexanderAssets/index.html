@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Alexander Assets</title>
+  <style>
+    /* Basic styling */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+    svg {
+      width: 100vw;
+      height: 100vh;
+      background: #fafafa;
+      border: 1px solid #ccc;
+    }
+    .tooltip {
+      position: absolute;
+      text-align: center;
+      width: auto;
+      padding: 6px;
+      font: 12px sans-serif;
+      background: #333;
+      color: #fff;
+      border-radius: 4px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <div id="tooltip" class="tooltip"></div>
+  <svg id="viz"></svg>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    /**********************************************
+     * 1. Define the data
+     **********************************************/
+    const nodesData = [
+      { id: "Oren Alexander",   type: "person" },
+      { id: "Tal Alexander",    type: "person" },
+      { id: "Alon Alexander",   type: "person" },
+      { id: "Shlomi Alexander", type: "person" },
+      { id: "Orly Alexander",   type: "person" },
+
+      { id: "2135 Lake Avenue, Miami Beach, FL 33140", type: "property" },
+      { id: "14652 Biscayne Boulevard North Miami FL", type: "property" },
+      { id: "25 Northwest 34 Street Miami, FL",        type: "property" },
+      { id: "14600 Biscayne Boulevard, North Miami Beach, FL 33181", type: "property" },
+      { id: "248 Bal Bay Drive, Bal Harbour, FL 33154-1313",         type: "property" },
+      { id: "969 West 34th Street, Miami Beach, FL",                 type: "property" },
+      { id: "3451 North Meridian Avenue, Miami Beach, FL",           type: "property" },
+      { id: "2687 Flamingo Drive, Miami Beach, FL 33140",            type: "property" },
+      { id: "5401 Collins Avenue, Unit 13-1 in Miami Beach (Carriage House Boat Slip)", type: "property" },
+      { id: "5401 Collins Avenue, Unit 13-2 in Miami Beach (Carriage House Boat Slip)", type: "property" },
+      { id: "1611 West 24th Street, Miami Beach, FL 33140",          type: "property" },
+
+      { id: "TRI Kent Capital",               type: "Legal Entity" },
+      { id: "DALEXANDER LLC",                 type: "Legal Entity" },
+      { id: "G & S INVESTMENTS OF MIAMI INC", type: "Legal Entity" },
+      { id: "3413 Miami Beach LLC",           type: "Legal Entity" },
+      { id: "CH13 LLC",                       type: "Legal Entity" },
+      { id: "1611 W 24 LLC",                  type: "Legal Entity" }
+    ];
+
+    const linksData = [
+      { source: "Oren Alexander",   target: "2135 Lake Avenue, Miami Beach, FL 33140" },
+      { source: "Oren Alexander",   target: "DALEXANDER LLC" },
+      { source: "DALEXANDER LLC",   target: "25 Northwest 34 Street Miami, FL" },
+      { source: "Shlomi Alexander", target: "TRI Kent Capital" },
+      { source: "Shlomi Alexander", target: "TRI Kent Capital" },
+      { source: "Shlomi Alexander", target: "248 Bal Bay Drive, Bal Harbour, FL 33154-1313" },
+      { source: "Orly Alexander", target: "248 Bal Bay Drive, Bal Harbour, FL 33154-1313" },
+      { source: "TRI Kent Capital", target: "14652 Biscayne Boulevard North Miami FL" },
+      { source: "Shlomi Alexander", target: "G & S INVESTMENTS OF MIAMI INC" },
+      { source: "Orly Alexander",   target: "G & S INVESTMENTS OF MIAMI INC" },
+      { source: "Alon Alexander",   target: "3413 Miami Beach LLC" },
+      { source: "3413 Miami Beach LLC", target: "969 West 34th Street, Miami Beach, FL" },
+      { source: "Alon Alexander",   target: "3451 North Meridian Avenue, Miami Beach, FL" },
+      { source: "Tal Alexander",    target: "2687 Flamingo Drive, Miami Beach, FL 33140" },
+
+      { source: "Oren Alexander",   target: "CH13 LLC" },
+      { source: "CH13 LLC",         target: "5401 Collins Avenue, Unit 13-1 in Miami Beach (Carriage House Boat Slip)" },
+      { source: "CH13 LLC",         target: "5401 Collins Avenue, Unit 13-2 in Miami Beach (Carriage House Boat Slip)" },
+      { source: "Oren Alexander",   target: "1611 W 24 LLC" },
+      { source: "1611 W 24 LLC",    target: "1611 West 24th Street, Miami Beach, FL 33140" },
+      { source: "G & S INVESTMENTS OF MIAMI INC", target: "14600 Biscayne Boulevard, North Miami Beach, FL 33181" },
+    ];
+
+    /**********************************************
+     * 2. Create the SVG canvas and groups
+     **********************************************/
+    const svg = d3.select("#viz");
+    const width = +svg.style("width").replace("px", "");
+    const height = +svg.style("height").replace("px", "");
+
+    // We'll create a 'g' for all the links/nodes so we can zoom/pan them together
+    const container = svg.append("g").attr("class", "container");
+
+    /**********************************************
+     * 3. Initialize the force simulation
+     **********************************************/
+    const simulation = d3.forceSimulation(nodesData)
+      // Lower the magnitude of repulsion
+      .force("charge", d3.forceManyBody().strength(-80))
+      // Link positions
+      .force("link", d3.forceLink(linksData)
+        .id(d => d.id)
+        .distance(90)      // slightly tighter
+        .strength(1.0)     // stronger link pull
+      )
+      // Pull everything toward the center
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      // Add gentle x/y forces to keep things from drifting too far
+      .force("x", d3.forceX(width / 2).strength(0.03))
+      .force("y", d3.forceY(height / 2).strength(0.03))
+      // Collide prevents nodes from overlapping too much
+      .force("collide", d3.forceCollide(35))
+      // Optional: speed up or slow down how quickly layout converges:
+      .alphaDecay(0.03);
+
+    /**********************************************
+     * 4. Draw links
+     **********************************************/
+    const link = container.selectAll(".link")
+      .data(linksData)
+      .enter()
+      .append("line")
+      .attr("class", "link")
+      .attr("stroke", "#999")
+      .attr("stroke-width", 2);
+
+    /**********************************************
+     * 5. Draw nodes (as circles)
+     **********************************************/
+    const node = container.selectAll(".node")
+      .data(nodesData)
+      .enter()
+      .append("circle")
+      .attr("class", "node")
+      .attr("r", 20)
+      .attr("fill", d => {
+        if (d.type === "person")       return "#1f77b4"; // blue
+        if (d.type === "Legal Entity") return "#ff7f0e"; // orange
+        if (d.type === "property")     return "#2ca02c"; // green
+        return "#ccc";                // default gray
+      })
+      .attr("stroke", "#fff")
+      .attr("stroke-width", 2)
+      .call(drag(simulation));
+
+    /**********************************************
+     * 6. Tooltip (Popup on click)
+     **********************************************/
+    const tooltip = d3.select("#tooltip");
+
+    node.on("click", (event, d) => {
+      const [x, y] = d3.pointer(event, svg.node());
+      
+      tooltip
+        .style("left", x + 10 + "px")
+        .style("top",  y + 10 + "px")
+        .style("opacity", 1)
+        .html(`
+          <strong>${d.id}</strong>
+        `);
+    });
+
+    // Hide tooltip if background is clicked
+    svg.on("click", (event) => {
+      if (event.target.tagName === "svg") {
+        tooltip.style("opacity", 0);
+      }
+    });
+
+    /**********************************************
+     * 7. Force Simulation Ticker
+     **********************************************/
+    simulation.on("tick", () => {
+      link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+
+      node
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y);
+    });
+
+    /**********************************************
+     * 8. Drag Functions
+     **********************************************/
+    function drag(simulation) {
+      function dragstarted(event, d) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+      }
+      function dragged(event, d) {
+        d.fx = event.x;
+        d.fy = event.y;
+      }
+      function dragended(event, d) {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+      }
+      return d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended);
+    }
+
+    /**********************************************
+     * 9. Add Zoom & Pan
+     **********************************************/
+    const zoom = d3.zoom()
+      // Set how far in/out we can zoom
+      .scaleExtent([0.5, 5])
+      // On zoom, transform the container
+      .on("zoom", (event) => {
+        container.attr("transform", event.transform);
+      });
+
+    // Attach zoom behavior to the SVG
+    svg.call(zoom);
+  </script>
+</body>
+</html>

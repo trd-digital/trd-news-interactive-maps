@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Real Estate Lookup Tool</title>
-    <!-- Import Google Fonts for Merriweather -->
+    <!-- Google Font: Merriweather -->
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS Variables for Updated Color Scheme */
+        /* CSS Variables for Dark Color Scheme */
         :root {
-            --background-color: #000000; /* Black background */
-            --primary-color: #FFFFFF; /* White for labels and primary elements */
-            --text-color: #1E90FF; /* Dodger Blue for data text */
-            --accent-color: #1E90FF; /* Dodger Blue for links */
-            --secondary-color: #1A1A1A; /* Darker shade for card backgrounds */
-            --border-color: #333333; /* Dark Grey Border */
+            --primary-color: #FFFFFF;   /* White text */
+            --secondary-color: #1A1A1A; /* Slightly lighter than black (card background) */
+            --accent-color: #1E90FF;    /* Dodger Blue for links and metric values */
+            --text-color: #FFFFFF;      /* White for general text */
+            --background-color: #121212; /* Dark background */
+            --border-color: #333333;    /* Dark grey border */
             --hover-shadow: rgba(255, 255, 255, 0.2); /* Light shadow on hover */
         }
 
@@ -42,30 +42,32 @@
             justify-content: center;
         }
 
-        .filters input, .filters select, .filters button {
-            padding: 8px 12px; /* Reduced padding */
-            border: 1px solid var(--border-color); /* Dark grey border */
+        .filters input,
+        .filters select,
+        .filters button {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
             border-radius: 5px;
-            font-size: 0.9em; /* Reduced font size */
-            background-color: #1A1A1A; /* Dark grey background */
-            color: var(--primary-color); /* White text */
-            transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s, color 0.3s;
+            font-size: 0.9em;
+            background-color: #2A2A2A;
+            color: var(--primary-color);
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
         .filters input::placeholder {
-            color: #AAAAAA; /* Light grey placeholder text */
+            color: #AAAAAA;
         }
 
-        .filters input:focus, .filters select:focus {
+        .filters input:focus,
+        .filters select:focus {
             border-color: var(--accent-color);
-            box-shadow: 0 0 5px var(--accent-color); /* Blue shadow on focus */
+            box-shadow: 0 0 5px var(--hover-shadow);
             outline: none;
-            background-color: #262626; /* Slightly lighter dark grey on focus */
         }
 
         .filters button {
             background-color: var(--accent-color);
-            color: var(--primary-color);
+            color: var(--secondary-color);
             border: none;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.2s;
@@ -73,7 +75,7 @@
         }
 
         .filters button:hover {
-            background-color: #1C86EE; /* Slightly darker blue on hover */
+            background-color: #187bcd;
             transform: translateY(-2px);
             box-shadow: 0 4px 6px var(--hover-shadow);
         }
@@ -81,172 +83,217 @@
         /* Results Container */
         #resultsContainer {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Adjusted min width */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
             align-items: start;
         }
 
         /* Group Card Styles */
         .group-card {
-            background-color: var(--secondary-color); /* Dark grey background for cards */
-            border: 1px solid var(--border-color); /* Dark grey border */
-            border-radius: 8px; /* Rounded corners */
-            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1); /* Subtle white shadow */
+            background-color: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
             transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+            position: relative;
         }
 
         .group-card:hover {
-            transform: translateY(-3px); /* Slight lift on hover */
-            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.15); /* Enhanced white shadow */
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
         }
 
         /* Group Header Styles */
         .group-header {
             display: flex;
-            flex-direction: column; /* Ensure vertical layout */
-            padding: 8px 12px; /* Further reduced padding */
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
             cursor: pointer;
-            position: relative;
             user-select: none;
-            background-color: #1A1A1A; /* Slightly lighter dark grey for header */
-            border-bottom: 1px solid var(--border-color); /* Dark grey border */
+            background-color: #2A2A2A;
+            border-bottom: 1px solid var(--border-color);
             transition: background-color 0.3s;
         }
 
         .group-header:hover {
-            background-color: #262626; /* Slightly lighter on hover */
+            background-color: #383838;
         }
 
-        /* Header Items */
-        .header-item {
-            display: flex;
-            align-items: center;
-            font-size: 0.85em; /* Further reduced font size */
-            margin-bottom: 4px; /* Reduced vertical spacing */
-            width: 100%; /* Ensure full width */
+        /* Region name */
+        .header-region {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--primary-color);
+            max-width: 45%;
+            word-wrap: break-word;
         }
 
-        .header-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .header-label {
-            font-weight: 500;
-            margin-right: 5px;
-            color: var(--primary-color); /* White labels */
-        }
-
-        /* Separator Line Under Sector */
-        .separator {
-            height: 1px;
-            background-color: var(--border-color); /* Dark grey */
-            margin: 4px 0; /* Further reduced margin */
-            width: 100%;
+        /* Classification with smaller font (0.75em) */
+        .header-classification {
+            font-size: 0.75em;
+            color: var(--primary-color);
+            max-width: 30%;
+            text-align: right;
+            word-wrap: break-word;
         }
 
         /* Group Details Styles */
         .group-details {
-            max-height: 0; /* Collapsed by default */
-            overflow: hidden;
-            padding: 0 12px; /* Collapsed padding */
-            background-color: #000000; /* Black background for details */
-            transition: max-height 0.5s ease, padding 0.3s ease;
+            padding: 16px;
+            display: none; /* Initially hidden */
+            background-color: var(--secondary-color);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
         }
 
         .group-details.show {
-            max-height: 1000px; /* Adjust based on content */
-            padding: 10px 12px; /* Expanded padding */
+            display: flex;
         }
 
-        /* Entry Styles */
-        .entry {
-            padding: 4px 0; /* Further reduced padding */
-            border-bottom: 1px solid #444444; /* Dark grey border */
+        /* Metrics List */
+        .metrics-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
-        .entry:last-child {
+        .metrics-list li {
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Thin line between metrics */
+        }
+
+        /* remove line from the last metric if you prefer no trailing line */
+        .metrics-list li:last-child {
             border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
 
-        .entry-title {
+        .metrics-title {
             font-weight: bold;
-            margin-bottom: 2px; /* Further reduced margin */
-            color: var(--primary-color); /* White titles */
-            font-size: 0.85em; /* Further reduced font size */
+            color: var(--primary-color);
+            font-size: 0.95em;
         }
 
-        .entry-value {
-            color: var(--text-color); /* Blue text for data */
-            font-size: 0.8em; /* Further reduced font size */
+        .metrics-value {
+            color: var(--accent-color);
+            font-size: 0.95em;
         }
 
-        /* Source Link in Details */
+        /* Submetrics anchored bottom-left, font-size .75em */
+        .submetrics {
+            padding-top: 25px;
+            /* margin-top: auto; */
+            font-size: 0.75em;
+            color: var(--primary-color);
+        }
+
+        .submetrics div {
+            margin-bottom: 4px;
+        }
+
+        /* Source Link on bottom-right, also .75em if desired */
         .source-entry {
-            padding: 4px 0; /* Consistent and reduced padding */
-            text-align: right; /* Align to the right */
+            text-align: right;
+            font-size: 0.55em;
+            margin-top: -15px;
         }
 
         .source-entry a {
             text-decoration: none;
-            color: var(--accent-color); /* Blue color for links */
+            color: var(--accent-color);
             font-weight: 500;
             transition: color 0.3s;
         }
 
         .source-entry a:hover {
-            color: #1C86EE; /* Slightly darker blue on hover */
+            color: #1C86EE;
             text-decoration: underline;
         }
 
         /* Loading and Error Messages */
-        #loadingIndicator, #errorMessage {
+        #loadingIndicator,
+        #errorMessage {
             text-align: center;
             padding: 20px;
             font-size: 1.1em;
-        }
-
-        #loadingIndicator {
-            color: var(--text-color); /* Blue text */
+            color: var(--primary-color);
         }
 
         #errorMessage {
-            color: #FF6347; /* Tomato color for errors */
+            color: #FF6347;
+        }
+
+        /* Spinner Styles (Optional) */
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 2s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Responsive Typography */
         @media (max-width: 768px) {
-            .group-header, .group-details {
-                padding: 6px 10px; /* Further reduced padding on small screens */
+            .group-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-region {
+                max-width: 100%;
+            }
+
+            .header-classification {
+                margin-top: 6px;
+                max-width: 100%;
+                text-align: left;
+            }
+
+            .metrics-list li {
+                margin-bottom: 10px;
+                padding-bottom: 8px;
+            }
+
+            .metrics-title,
+            .metrics-value {
+                font-size: 0.9em;
+            }
+
+            .submetrics {
+                font-size: 0.7em;
+            }
+
+            .source-entry {
+                font-size: 0.7em;
+                margin-top: 6px;
             }
 
             .filters {
                 gap: 10px;
             }
 
-            .filters input, .filters select, .filters button {
-                padding: 6px 10px; /* Further reduced padding */
-                font-size: 0.85em; /* Further reduced font size */
-            }
-
-            .entry {
-                padding: 2px 0; /* Further reduced padding */
-            }
-
-            .entry-title {
-                margin-bottom: 1px; /* Further reduced margin */
-                font-size: 0.8em; /* Further reduced font size */
-            }
-
-            .entry-value {
-                font-size: 0.75em; /* Further reduced font size */
-            }
-
-            .header-item {
-                font-size: 0.8em; /* Further reduced font size */
-                margin-right: 10px; /* Reduced horizontal spacing */
-                margin-bottom: 2px; /* Further reduced vertical spacing */
+            .filters input,
+            .filters select,
+            .filters button {
+                padding: 6px 10px;
+                font-size: 0.85em;
             }
         }
     </style>
@@ -255,47 +302,48 @@
 
     <h1>Real Estate Data Lookup</h1>
 
+    <!-- Filters Section -->
     <div class="filters">
         <input type="text" id="searchRegion" placeholder="Search Region">
-        
         <select id="filterSector">
             <option value="">All Sectors</option>
-            <!-- Options will be populated dynamically -->
+            <!-- Options added dynamically -->
         </select>
-        
         <select id="filterDatePeriod">
             <option value="">All Date Periods</option>
-            <!-- Options will be populated dynamically -->
+            <!-- Options added dynamically -->
         </select>
-        
-        <!-- Removed Apply Filters Button -->
         <button id="resetFilters">Reset Filters</button>
     </div>
 
     <!-- Loading Indicator -->
     <div id="loadingIndicator" style="display: none;">
-        Loading data, please wait...
+        <div class="spinner"></div>
+        <span>Loading data, please wait...</span>
     </div>
 
     <!-- Error Message -->
     <div id="errorMessage" style="display: none;">
-        Failed to load data. Please try again later.
+        Failed to load data. Please 
+        <button id="retryButton" style="background: none; border: none; color: var(--accent-color); text-decoration: underline; cursor: pointer;">
+            try again
+        </button>.
     </div>
 
-    <div id="resultsContainer">
-        <!-- Grouped Cards will be populated dynamically -->
-    </div>
+    <div id="resultsContainer"><!-- Dynamically populated --></div>
 
-    <!-- Include PapaParse from CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Include PapaParse -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"
+            integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer">
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const csvUrl = 'TRD Data Snapshots - Snapshot2_0.csv'; // Replace with your CSV URL
             let data = [];
-            let filteredData = [];
-            let displayedColumns = [];
 
-            const excludedColumns = ['dataset_tag']; // Add column names to exclude here
+            const excludedColumns = ['dataset_tag']; // columns to ignore
 
             const searchRegion = document.getElementById('searchRegion');
             const filterSector = document.getElementById('filterSector');
@@ -304,8 +352,9 @@
             const resultsContainer = document.getElementById('resultsContainer');
             const loadingIndicator = document.getElementById('loadingIndicator');
             const errorMessage = document.getElementById('errorMessage');
+            const retryButton = document.getElementById('retryButton');
 
-            // Debounce function to limit the rate of function execution
+            // Debounce function
             function debounce(func, delay) {
                 let debounceTimer;
                 return function() {
@@ -316,7 +365,7 @@
                 }
             }
 
-            // Function to normalize header keys
+            // Normalize CSV headers
             function normalizeHeaders(item) {
                 const normalizedItem = {};
                 for (let key in item) {
@@ -326,7 +375,18 @@
                 return normalizedItem;
             }
 
-            // Fetch and parse CSV data
+            // Extract hostname if fallback
+            function getHostname(url) {
+                try {
+                    const hostname = new URL(url).hostname;
+                    return hostname.startsWith('www.') ? hostname.slice(4) : hostname;
+                } catch (e) {
+                    console.error('Invalid URL:', url);
+                    return 'Source';
+                }
+            }
+
+            // Fetch CSV
             function fetchData() {
                 loadingIndicator.style.display = 'block';
                 Papa.parse(csvUrl, {
@@ -336,7 +396,7 @@
                     complete: function(results) {
                         loadingIndicator.style.display = 'none';
                         data = results.data.map(normalizeHeaders);
-                        console.log('Normalized Data:', data); // For debugging
+                        console.log('Normalized Data:', data);
 
                         if (data.length === 0) {
                             console.error('CSV contains no data.');
@@ -344,17 +404,9 @@
                             return;
                         }
 
-                        // Determine columns to display by excluding specified columns
-                        const allColumns = Object.keys(data[0]);
-                        displayedColumns = allColumns.filter(col => !excludedColumns.includes(col));
-
-                        // Populate filters
                         populateFilters();
-
-                        // Set default search to "New York"
+                        // Default search = "New York"
                         searchRegion.value = "New York";
-
-                        // Apply default filter
                         filterData();
                     },
                     error: function(err) {
@@ -365,7 +417,7 @@
                 });
             }
 
-            // Populate filter dropdowns based on unique values
+            // Populate filter dropdowns
             function populateFilters() {
                 const sectors = [...new Set(data.map(item => item.sector).filter(Boolean))].sort();
                 const datePeriods = [...new Set(data.map(item => item.date_period).filter(Boolean))].sort();
@@ -385,191 +437,232 @@
                 });
             }
 
-            // Function to group data based on specified fields (including sector)
+            // Group data
             function groupData(dataArray) {
                 const groups = {};
-
                 dataArray.forEach(item => {
-                    const groupKey = `${item.sector || 'N/A'}|${item.region || 'N/A'}|${item.last_updated || 'N/A'}|${item.date_period || 'N/A'}|${item.source_link || 'N/A'}`;
+                    const groupKey = `
+                      ${item.sector || 'N/A'}|
+                      ${item.region || 'N/A'}|
+                      ${item.last_updated || 'N/A'}|
+                      ${item.date_period || 'N/A'}|
+                      ${item.source_link || 'N/A'}
+                    `.trim();
+
                     if (!groups[groupKey]) {
                         groups[groupKey] = {
                             sector: item.sector || 'N/A',
                             region: item.region || 'N/A',
                             last_updated: item.last_updated || 'N/A',
                             date_period: item.date_period || 'N/A',
-                            source: item.source || 'N/A', // Added source
                             source_link: item.source_link || 'N/A',
+                            source: item.source || 'N/A', // Potential CSV column "Source"
                             entries: []
                         };
                     }
+
                     groups[groupKey].entries.push({
                         display_title: item.display_title || 'N/A',
                         value: item.value || 'N/A'
                     });
                 });
-
                 return Object.values(groups);
             }
 
-            // Function to validate URLs
-            function isValidURL(string) {
+            // Validate URL
+            function isValidURL(str) {
                 try {
-                    new URL(string);
+                    new URL(str);
                     return true;
                 } catch (_) {
                     return false;
                 }
             }
 
-            // Function to display grouped results with a limit of 16 cards
+            // Display results (up to 12), with Residential vs. Commercial logic
             function displayGroupedResults(dataToDisplay) {
-                resultsContainer.innerHTML = ''; // Clear existing results
+                resultsContainer.innerHTML = '';
 
                 if (dataToDisplay.length === 0) {
                     const noDataDiv = document.createElement('div');
                     noDataDiv.textContent = 'No results found.';
                     noDataDiv.style.textAlign = 'center';
                     noDataDiv.style.padding = '20px';
-                    noDataDiv.style.color = 'var(--text-color)'; /* Blue text */
                     resultsContainer.appendChild(noDataDiv);
                     return;
                 }
 
-                // Group the data
-                let groupedData = groupData(dataToDisplay);
-                console.log('Grouped Data:', groupedData); // For debugging
+                const grouped = groupData(dataToDisplay).slice(0, 12);
+                console.log('Grouped Data:', grouped);
 
-                // Limit the number of cards to 16
-                groupedData = groupedData.slice(0, 8);
+                // Residential vs. Commercial arrays
+                const residentialMetrics = [
+                    'Average Sales Price',
+                    'Average Price Per Sq Ft',
+                    'Number of Sales',
+                    'Days on Market',
+                    'Listing Inventory',
+                    'Months of Supply'
+                ];
+                const commercialMetrics = [
+                    'Absorption',
+                    'Asking psf',
+                    'Deliveries YTD',
+                    'Inventory',
+                    'Under Construction',
+                    'Vacancy Rate'
+                ];
 
-                groupedData.forEach(group => {
+                grouped.forEach(group => {
                     const card = document.createElement('div');
                     card.classList.add('group-card');
 
-                    // Create group header
+                    // header
                     const header = document.createElement('div');
                     header.classList.add('group-header');
                     header.innerHTML = `
-                        <div class="header-item">
-                            ${group.sector !== 'N/A' ? `<span>${group.sector}</span>` : `<span>N/A</span>`}
+                        <div class="header-region">
+                            ${group.region !== 'N/A' ? `<span>${group.region}</span>` : `<span>N/A</span>`}
                         </div>
-                        <div class="separator"></div>
-                        <div class="header-item">
-                            <span class="header-label">Region:</span> ${group.region}
+                        <div class="header-classification">
+                            ${group.sector !== 'N/A' ? group.sector : 'N/A'}
                         </div>
-                        <div class="header-item">
-                            <span class="header-label">Last Updated:</span> ${group.last_updated}
-                        </div>
-                        <div class="header-item">
-                            <span class="header-label">Date Period:</span> ${group.date_period}
-                        </div>
-                        <!-- Removed Source Link from Header -->
                     `;
                     card.appendChild(header);
 
-                    // Create group details container
+                    // details
                     const details = document.createElement('div');
                     details.classList.add('group-details');
 
-                    group.entries.forEach(entry => {
-                        const entryDiv = document.createElement('div');
-                        entryDiv.classList.add('entry');
-                        entryDiv.innerHTML = `
-                            <div class="entry-title">${entry.display_title}</div>
-                            <div class="entry-value">${entry.value}</div>
-                        `;
-                        details.appendChild(entryDiv);
-                    });
-
-                    // Add Source link at the bottom of details
-                    if (group.source_link !== 'N/A' && isValidURL(group.source_link) && group.source !== 'N/A') {
-                        const sourceDiv = document.createElement('div');
-                        sourceDiv.classList.add('source-entry');
-                        sourceDiv.innerHTML = `
-                            <a href="${group.source_link}" target="_blank" rel="noopener noreferrer" aria-label="Source: ${group.source}">${group.source}</a>
-                        `;
-                        details.appendChild(sourceDiv);
+                    // choose metrics
+                    let metricsToDisplay = residentialMetrics;
+                    if (group.sector && group.sector.toLowerCase() === 'commercial') {
+                        metricsToDisplay = commercialMetrics;
                     }
 
-                    // **Add the 'show' class to make details visible by default**
-                    details.classList.add('show');
+                    // build metrics list
+                    const metricsList = document.createElement('ul');
+                    metricsList.classList.add('metrics-list');
+
+                    metricsToDisplay.forEach(metricTitle => {
+                        const li = document.createElement('li');
+                        const foundEntry = group.entries.find(
+                            e => e.display_title && e.display_title.toLowerCase() === metricTitle.toLowerCase()
+                        );
+                        const val = foundEntry ? foundEntry.value : 'N/A';
+
+                        li.innerHTML = `
+                            <div class="metrics-title">${metricTitle}:</div>
+                            <div class="metrics-value">${val}</div>
+                        `;
+                        metricsList.appendChild(li);
+                    });
+
+                    details.appendChild(metricsList);
+
+                    // submetrics (Last Updated, Date Period)
+                    const submetrics = document.createElement('div');
+                    submetrics.classList.add('submetrics');
+
+                    const lu = group.last_updated !== 'N/A' ? group.last_updated : 'N/A';
+                    const dp = group.date_period !== 'N/A' ? group.date_period : 'N/A';
+
+                    submetrics.innerHTML = `
+                        <div><strong>Last Updated:</strong> ${lu}</div>
+                        <div><strong>Date Period:</strong> ${dp}</div>
+                    `;
+                    details.appendChild(submetrics);
+
+                    // source link bottom-right
+                    if (group.source_link !== 'N/A' && isValidURL(group.source_link)) {
+                        const sourceDiv = document.createElement('div');
+                        sourceDiv.classList.add('source-entry');
+
+                        // Prefer CSV's "source" text (ex: "Cushman & Wakefield", "Douglas Elliman")
+                        // fallback to hostname if missing or 'N/A'
+                        let linkText = (group.source && group.source !== 'N/A')
+                          ? group.source
+                          : getHostname(group.source_link);
+
+                        sourceDiv.innerHTML = `<a href="${group.source_link}" target="_blank">${linkText}</a>`;
+                        details.appendChild(sourceDiv);
+                    }
 
                     card.appendChild(details);
                     resultsContainer.appendChild(card);
 
-                    // **Add the 'active' class to the header to reflect the expanded state**
-                    header.classList.add('active');
-
-                    // **Set aria-expanded to true since the details are visible by default**
-                    header.setAttribute('aria-expanded', 'true');
-
-                    // Add event listener to toggle details
+                    // toggle details
                     header.addEventListener('click', () => {
                         const isVisible = details.classList.contains('show');
                         if (isVisible) {
                             details.classList.remove('show');
                             header.classList.remove('active');
-                            header.setAttribute('aria-expanded', 'false');
                         } else {
                             details.classList.add('show');
                             header.classList.add('active');
-                            header.setAttribute('aria-expanded', 'true');
                         }
                     });
 
-                    // Add keyboard accessibility
-                    header.setAttribute('tabindex', '0'); // Make focusable
+                    // keyboard accessibility
+                    header.setAttribute('tabindex', '0');
                     header.setAttribute('role', 'button');
+                    header.setAttribute('aria-expanded', 'false');
 
-                    header.addEventListener('keydown', (e) => {
+                    header.addEventListener('keydown', e => {
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
                             const isVisible = details.classList.contains('show');
                             if (isVisible) {
                                 details.classList.remove('show');
                                 header.classList.remove('active');
-                                header.setAttribute('aria-expanded', 'false');
                             } else {
                                 details.classList.add('show');
                                 header.classList.add('active');
-                                header.setAttribute('aria-expanded', 'true');
                             }
                         }
                     });
                 });
             }
 
-            // Function to filter data based on current filter values
+            /* Filter Data */
             function filterData() {
-                const regionQuery = searchRegion.value.trim().toLowerCase();
-                const selectedSector = filterSector.value;
-                const selectedDatePeriod = filterDatePeriod.value;
+                const reg = searchRegion.value.trim().toLowerCase();
+                const sec = filterSector.value;
+                const dp  = filterDatePeriod.value;
 
-                filteredData = data.filter(item => {
-                    const matchesRegion = regionQuery === '' || (item.region && item.region.toLowerCase().includes(regionQuery));
-                    const matchesSector = selectedSector === '' || item.sector === selectedSector;
-                    const matchesDatePeriod = selectedDatePeriod === '' || item.date_period === selectedDatePeriod;
-                    return matchesRegion && matchesSector && matchesDatePeriod;
+                const newData = data.filter(item => {
+                    const matchesRegion = reg === '' || (item.region && item.region.toLowerCase().includes(reg));
+                    const matchesSector = sec === '' || item.sector === sec;
+                    const matchesDate = dp === '' || item.date_period === dp;
+                    return matchesRegion && matchesSector && matchesDate;
                 });
 
-                displayGroupedResults(filteredData);
+                displayGroupedResults(newData);
             }
 
-            // Initialize data fetching
-            fetchData();
+            /* Initialization */
+            function init() {
+                fetchData();
+            }
+            init();
 
-            // Add event listeners for dynamic filtering
-            searchRegion.addEventListener('input', debounce(filterData, 300)); // Debounced for performance
+            /* Debounced dynamic filtering */
+            searchRegion.addEventListener('input', debounce(filterData, 300));
             filterSector.addEventListener('change', filterData);
             filterDatePeriod.addEventListener('change', filterData);
 
-            // Reset filters functionality
+            /* Reset filters */
             resetFilters.addEventListener('click', () => {
                 searchRegion.value = '';
                 filterSector.value = '';
                 filterDatePeriod.value = '';
-                filteredData = data;
-                displayGroupedResults(filteredData);
+                displayGroupedResults(data);
+            });
+
+            /* Retry button for errors */
+            retryButton && retryButton.addEventListener('click', () => {
+                errorMessage.style.display = 'none';
+                fetchData();
             });
         });
     </script>
