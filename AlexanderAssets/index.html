@@ -123,7 +123,7 @@
       <h3>Legend</h3>
       <div class="legend-item">
         <div class="legend-color" style="background-color: #ff7f0e;"></div>
-        <div>Legal Entity</div>
+        <div>Company Name</div>
       </div>
       <div class="legend-item">
         <div class="legend-color" style="background-color: #2ca02c;"></div>
@@ -162,13 +162,13 @@
       { id: "845 Chaparral Drive, Woody Creek, CO",          type: "property" },
 
       // Legal Entities
-      { id: "TRI Kent Capital",               type: "Legal Entity" },
-      { id: "DALEXANDER LLC",                 type: "Legal Entity" },
-      { id: "G & S INVESTMENTS OF MIAMI INC", type: "Legal Entity" },
-      { id: "3413 Miami Beach LLC",           type: "Legal Entity" },
-      { id: "CH13 LLC",                       type: "Legal Entity" },
-      { id: "1611 W 24 LLC",                  type: "Legal Entity" },
-      { id: "845 Chaparral LLC",                  type: "Legal Entity" },
+      { id: "TRI Kent Capital",               type: "Company Name" },
+      { id: "DALEXANDER LLC",                 type: "Company Name" },
+      { id: "G & S INVESTMENTS OF MIAMI INC", type: "Company Name" },
+      { id: "3413 Miami Beach LLC",           type: "Company Name" },
+      { id: "CH13 LLC",                       type: "Company Name" },
+      { id: "1611 W 24 LLC",                  type: "Company Name" },
+      { id: "845 Chaparral LLC",                  type: "Company Name" },
     ];
 
     const linksData = [
@@ -266,7 +266,7 @@
       .attr("fill", d => {
         // Person nodes will have an image on top
         if (d.type === "property")     return "#2ca02c"; // green
-        if (d.type === "Legal Entity") return "#ff7f0e"; // orange
+        if (d.type === "Company Name") return "#ff7f0e"; // orange
         return "#ccc"; // default or fallback color
       })
       .attr("stroke", "#fff")
