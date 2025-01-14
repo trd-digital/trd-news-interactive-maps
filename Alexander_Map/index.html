@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_c71c9c862a3740be5afdb6b967c1e8cf {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>    
+    
+<style>
+    .popup-content {
+        max-width: 200px; /* Adjusts the maximum width of the tooltip */
+        font-size: 12px;   /* Adjusts the font size */
+        word-wrap: break-word; /* Ensures long words wrap to the next line */
+    }
+    .leaflet-tooltip {
+        background-color: white;
+        border: 1px solid gray;
+        border-radius: 3px;
+        padding: 5px;
+    }
+</style>
+    
+             <h3 align="center" style="font-size:16px"><b>Known Alexander Properties</b></h3>
+             
+    
+            <div class="folium-map" id="map_c71c9c862a3740be5afdb6b967c1e8cf" ></div>
+        
+</body>
+<script>    
+    
+            var map_c71c9c862a3740be5afdb6b967c1e8cf = L.map(
+                "map_c71c9c862a3740be5afdb6b967c1e8cf",
+                {
+                    center: [26.89356430769231, -82.21042995384616],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 5,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_f217a63d8475643aea8c4aa21ce7d4aa = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_c71c9c862a3740be5afdb6b967c1e8cf);
+        
+    
+            var tile_layer_5ac2e16f896f8ebda7e7a59cdc9e2a81 = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {"attribution": "Mapbox", "detectRetina": false, "maxNativeZoom": 20, "maxZoom": 20, "minZoom": 1, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_c71c9c862a3740be5afdb6b967c1e8cf);
+        
+    
+            var marker_cluster_8c80071d180a0b3e1b489359e7aae06f = L.markerClusterGroup(
+                {}
+            );
+            map_c71c9c862a3740be5afdb6b967c1e8cf.addLayer(marker_cluster_8c80071d180a0b3e1b489359e7aae06f);
+        
+    
+            var circle_marker_232ee4732d727ae8b37e7799c2bc8266 = L.circleMarker(
+                [25.7981614, -80.1419985],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_8c80071d180a0b3e1b489359e7aae06f);
+        
+    
+            circle_marker_232ee4732d727ae8b37e7799c2bc8266.bindTooltip(
+                `<div>
+                     <div class="popup-content">Lake Avenue, Miami Beach, FL</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_5e58579afbeab9d1578c624ddc34b7c2 = L.circleMarker(
+                [25.9111226, -80.15776919999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_8c80071d180a0b3e1b489359e7aae06f);
+        
+    
+            circle_marker_5e58579afbeab9d1578c624ddc34b7c2.bindTooltip(
+                `<div>
+                     <div class="popup-content">14652 Biscayne Boulevard North<br>Miami FL</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_39f101cd75d9a318c2487d9f395cf310 = L.circleMarker(
+                [26.1186657, -80.2914477],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_8c80071d180a0b3e1b489359e7aae06f);
+        
+    
+            circle_marker_39f101cd75d9a318c2487d9f395cf310.bindTooltip(
+                `<div>
+                     <div class="popup-content">143 Nighthawk Avenue,<br>Plantation, FL 33324</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_b0eea08875090046d4099f4e53512680 = L.circleMarker(
+                [25.8084252, -80.1959614],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_8c80071d180a0b3e1b489359e7aae06f);
+        
+    
+            circle_marker_b0eea08875090046d4099f4e53512680.bindTooltip(
+                `<div>
+                     <div class="popup-content">25 Northwest 34 Street Miami,<br>FL</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_cf6664cd47ee913e628f71feb843dd07 = L.circleMarker(
+                [25.9105972, -80.1579146],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_8c80071d180a0b3e1b489359e7aae06f);
+        
+    
+            circle_marker_cf6664cd47ee913e628f71feb843dd07.bindTooltip(
+                `<div>
+                     <div class="popup-content">14600 Biscayne Boulevard,<br>North Miami Beach, FL 33181</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_aa744d26cdaa902f7c918d65c7349234 = L.circleMarker(
+                [25.8979995, -80.1282531],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_8c80071d180a0b3e1b489359e7aae06f);
+        
+    
+            circle_marker_aa744d26cdaa902f7c918d65c7349234.bindTooltip(
+                `<div>
+                     <div class="popup-content">Bal Bay Drive, Bal Harbour, FL<br>33154-1313</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_bb0a084aed922e8573c74578e669aba9 = L.circleMarker(
+                [25.8104285, -80.13561949999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_8c80071d180a0b3e1b489359e7aae06f);
+        
+    
+            circle_marker_bb0a084aed922e8573c74578e669aba9.bindTooltip(
+                `<div>
+                     <div class="popup-content">969 West 34th Street, Miami<br>Beach, FL</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_f8bee80c0c595f04d9abde53562221ca = L.circleMarker(
+                [25.8102754, -80.1341089],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_8c80071d180a0b3e1b489359e7aae06f);
+        
+    
+            circle_marker_f8bee80c0c595f04d9abde53562221ca.bindTooltip(
+                `<div>
+                     <div class="popup-content">North Meridian Avenue, Miami<br>Beach, FL</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_cb175ec16ee7c3c59f83fbf9f440ab92 = L.circleMarker(
+                [25.8044443, -80.1274464],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_8c80071d180a0b3e1b489359e7aae06f);
+        
+    
+            circle_marker_cb175ec16ee7c3c59f83fbf9f440ab92.bindTooltip(
+                `<div>
+                     <div class="popup-content">2687 Flamingo Drive, Miami<br>Beach, FL 33140</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_3b64113791a5a9266717b08576a5ef22 = L.circleMarker(
+                [25.8326965, -80.12008929999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_8c80071d180a0b3e1b489359e7aae06f);
+        
+    
+            circle_marker_3b64113791a5a9266717b08576a5ef22.bindTooltip(
+                `<div>
+                     <div class="popup-content">5401 Collins Avenue, Unit 13-1<br>in Miami Beach (Carriage House<br>Boat Slip)</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_425f625fde05cf90b70f548f7ba9f149 = L.circleMarker(
+                [25.8326965, -80.12008929999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_8c80071d180a0b3e1b489359e7aae06f);
+        
+    
+            circle_marker_425f625fde05cf90b70f548f7ba9f149.bindTooltip(
+                `<div>
+                     <div class="popup-content">5401 Collins Avenue, Unit 13-2<br>in Miami Beach (Carriage House<br>Boat Slip)</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_29aca860d4e95fa68eea4cc20c46a909 = L.circleMarker(
+                [25.8000302, -80.1443786],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_8c80071d180a0b3e1b489359e7aae06f);
+        
+    
+            circle_marker_29aca860d4e95fa68eea4cc20c46a909.bindTooltip(
+                `<div>
+                     <div class="popup-content">1611 West 24th Street, Miami<br>Beach, FL 33140</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_2999d7e83a29608659b17587e74bc624 = L.circleMarker(
+                [39.280793, -106.8805129],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_8c80071d180a0b3e1b489359e7aae06f);
+        
+    
+            circle_marker_2999d7e83a29608659b17587e74bc624.bindTooltip(
+                `<div>
+                     <div class="popup-content">845 Chaparral Drive, Woody<br>Creek, CO</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var layer_control_a4f375313f8fb9861d4e8a84c205299a = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_f217a63d8475643aea8c4aa21ce7d4aa,
+                },
+                overlays :  {
+                    "macro_element_8c80071d180a0b3e1b489359e7aae06f" : marker_cluster_8c80071d180a0b3e1b489359e7aae06f,
+                },
+            };
+            L.control.layers(
+                layer_control_a4f375313f8fb9861d4e8a84c205299a.base_layers,
+                layer_control_a4f375313f8fb9861d4e8a84c205299a.overlays,
+                {"autoZIndex": true, "collapsed": true, "position": "topright"}
+            ).addTo(map_c71c9c862a3740be5afdb6b967c1e8cf);
+        
+</script>
