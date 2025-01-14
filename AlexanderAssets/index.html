@@ -72,7 +72,7 @@
       padding: 10px;
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
       font-size: 14px;
-      width: 200px;
+      width: 100px;
     }
 
     .legend h3 {
@@ -132,10 +132,10 @@
   <div class="container-wrapper">
 
     <!-- Title -->
-    <div class="title">
+    <!-- <div class="title">
         <h1>Alexander Assets</h1>
         <p>The Alexander family and their assets</p>
-    </div>
+    </div> -->
     
     <!-- Tooltip -->
     <div id="tooltip" class="tooltip"></div>
@@ -256,7 +256,7 @@
       .force("charge", d3.forceManyBody().strength(-80)) // mild repulsion
       .force("link", d3.forceLink(linksData)
         .id(d => d.id)
-        .distance(90)
+        .distance(70)
         .strength(1.0))
       .force("center", d3.forceCenter(width / 2, height / 2))
       .force("x", d3.forceX(width / 2).strength(0.03))
