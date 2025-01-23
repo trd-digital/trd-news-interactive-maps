@@ -1,44 +1,44 @@
 (() => {
-  const minimumSalePrice = 10_000;
+  const minimumSalePrice = 0;
 
   const legendKeys = [
     {
       title: "Sales",
       options: [
         {
-          value: 50_000,
+          value: 250_000,
           color: {
             light: "#90CAF9",
             dark: "#90CAF9",
           },
-          text: "< $750K",
-          default: false,
-        },
-        {
-          value: 250_000,
-          color: {
-            light: "#42A5F5",
-            dark: "#42A5F5",
-          },
-          text: "$750K - $1M",
+          text: "< $250K",
           default: false,
         },
         {
           value: 500_000,
           color: {
-            light: "#1E88E5",
-            dark: "#1E88E5",
+            light: "#42A5F5",
+            dark: "#42A5F5",
           },
-          text: "$1M - $3M",
+          text: "$250K - $500K",
           default: false,
         },
         {
-          value: 1_000_000,
+          value: 750_000,
+          color: {
+            light: "#1E88E5",
+            dark: "#1E88E5",
+          },
+          text: "$500K - $750K",
+          default: false,
+        },
+        {
+          value: 2_000_000,
           color: {
             light: "#1565C0",
             dark: "#1565C0",
           },
-          text: "$3M - $4M",
+          text: "$750K - $2M",
           default: false,
         },
         {
@@ -47,7 +47,7 @@
             light: "#0D47A1",
             dark: "#0D47A1",
           },
-          text: "> $5M",
+          text: "> $2M",
           default: true,
         },
       ],
@@ -74,56 +74,50 @@
 
   const modalDisplayFields = {
     title: {
-      field: "Physical Address",
+      field: "Full Address",
       label: "Address",
     },
     content: [
       { field: "Doc Type", label: "Doc Type" },
       {
-        field: "Record Date",
-        label: "Record Date",
+        field: "Recorded Date",
+        label: "Recorded Date",
         format: "formatDate",
       },
-      { field: "Sellers", label: "Sellers" },
-      { field: "Buyers", label: "Buyers" },
+      { field: "Seller", label: "Seller" },
+      { field: "Buyer", label: "Buyer" },
       {
         field: "Sale Price",
         label: "Sale Price",
         format: "formatPrice",
       },
-      { field: "BBL", label: "BBL" },
-      { field: "Building BBL", label: "Building BBL" },
+      { field: "Folio", label: "Folio" },
+      { field: "Instrument Number", label: "Instrument Number" },
       { field: "Use Code Description", label: "Use Code Description" },
       {
-        field: "Property Sq. Ft",
-        label: "Property Sq. Ft",
-        format: "formatNumber",
-      },
-      {
-        field: "Recorded Date of Previous Sale",
-        label: "Recorded Date of Previous Sale",
+        field: "Doc Date",
+        label: "Doc Date",
         format: "formatDate",
       },
+      { field: "Assoc. Doc#", label: "Assoc. Doc#" },
       {
-        field: "Doc Date of Previous Sale",
-        label: "Doc Date of Previous Sale",
-        format: "formatDate",
+        field: "Mortgage Instrument Number",
+        label: "Mortgage Instrument Number",
       },
-      { field: "Previous Owner Name", label: "Previous Owner Name" },
+      { field: "Borrower", label: "Borrower" },
+      { field: "Lender", label: "Lender" },
+      { field: "Loan Amount", label: "Loan Amount" },
       {
-        field: "Previous Sale Price",
-        label: "Previous Sale Price",
-        format: "formatPrice",
-      },
-      { field: "Physical Address", label: "Address" },
-      { field: "Neighborhood", label: "Neighborhood" },
-      { field: "County", label: "County" },
-      { field: "Municipality", label: "Municipality" },
-      {
-        field: "PropAppraiserURL",
-        label: "Property Appraiser URL",
+        field: "Doc URL",
+        label: "Doc URL",
         format: (value) =>
           `<a href="${value}" target="_blank" rel="noopener noreferrer">View Property</a>`,
+      },
+      {
+        field: "Mortgage URL",
+        label: "Mortgage URL",
+        format: (value) =>
+          `<a href="${value}" target="_blank" rel="noopener noreferrer">View Mortgage</a>`,
       },
     ],
   };
@@ -136,7 +130,7 @@
       fieldType: "radio",
       fieldLayoutClass: "radio-group",
       multiSelect: false,
-      defaultValue: "90",
+      defaultValue: "30",
       callback: (values, item) => {
         const days = values[0];
         const date = new Date();
@@ -157,13 +151,44 @@
           label: "30 Days",
           value: "30",
         },
+      ],
+    },
+    {
+      title: "Property Type",
+      name: "property_type",
+      dataField: "Short Desc",
+      fieldType: "checkbox",
+      fieldLayoutClass: "checkbox-list",
+      multiSelect: true,
+      callback: (values, item) => {
+        return values.some((value) =>
+          item.properties["Short Desc"].includes(value)
+        );
+      },
+      options: [
         {
-          label: "60 Days",
-          value: "60",
+          label: "Commercial",
+          value: "Commercial",
         },
         {
-          label: "90 Days",
-          value: "90",
+          label: "Industrial",
+          value: "Industrial",
+        },
+        {
+          label: "Multi-Family",
+          value: "Multi-Family",
+        },
+        {
+          label: "Not-For-Profit",
+          value: "Not-For-Profit",
+        },
+        {
+          label: "Residential",
+          value: "Residential",
+        },
+        {
+          label: "Vacant",
+          value: "Vacant",
         },
       ],
     },
@@ -183,8 +208,8 @@
     resultElementId: "result",
     mapCenterLat: 41.88458437713242,
     mapCenterLng: -87.64766953501464,
-    zoom: 11,
-    minZoom: 10,
+    zoom: 8,
+    minZoom: 9,
     legendKeys,
     dataPointKeys: legendKeys[0].options,
     tooltipDisplayFields,
@@ -196,9 +221,9 @@
         base: 1.75,
         stops: [
           [1, 1],
-          [10, 2],
-          [12, 4],
-          [15, 8],
+          [10, 4],
+          [12, 8],
+          [15, 10],
           [20, 16],
         ],
       },
