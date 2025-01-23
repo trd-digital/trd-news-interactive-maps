@@ -130,7 +130,7 @@
       fieldType: "radio",
       fieldLayoutClass: "radio-group",
       multiSelect: false,
-      defaultValue: "30",
+      defaultValue: "60",
       callback: (values, item) => {
         const days = values[0];
         const date = new Date();
@@ -140,16 +140,16 @@
       },
       options: [
         {
-          label: "7 Days",
-          value: "7",
-        },
-        {
           label: "15 Days",
           value: "15",
         },
         {
           label: "30 Days",
           value: "30",
+        },
+        {
+          label: "60 Days",
+          value: "60",
         },
       ],
     },
@@ -194,10 +194,6 @@
     },
   ];
 
-  const fetchDataFilterCallback = (data) => {
-    return parseInt(data.properties["Sale Price"]) >= minimumSalePrice;
-  };
-
   window.map = trdDataCommonMap({
     filePath:
       "https://teststatic.therealdeal.com/interactive-maps/cook_county_transaction_map_data.geojson",
@@ -215,7 +211,6 @@
     tooltipDisplayFields,
     modalDisplayFields,
     filterFields,
-    fetchDataFilterCallback,
     mapLayerPaint: {
       "circle-radius": {
         base: 1.75,
