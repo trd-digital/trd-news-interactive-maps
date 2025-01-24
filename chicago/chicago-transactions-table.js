@@ -1,6 +1,6 @@
 (function () {
   const dataUrl =
-    "https://teststatic.therealdeal.com/interactive-maps/cook_county_transaction_map_data.geojson";
+    "https://static.therealdeal.com/interactive-maps/cook_county_transaction_map_data.geojson";
 
   const table = document.querySelector("#luxury-sales-table");
 
@@ -128,7 +128,7 @@
     sortable: true,
     search: true,
     searchHighlight: true,
-    sortName: "recorded_date",
+    sortName: "sale_price",
     sortEmptyLast: true,
     sortOrder: "desc",
     sortEmptylast: true,

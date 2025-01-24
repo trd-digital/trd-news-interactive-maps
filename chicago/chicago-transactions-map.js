@@ -194,9 +194,13 @@
     },
   ];
 
+  const fetchDataFilterCallback = (data) => {
+    return parseInt(data.properties["Sale Price"]) > minimumSalePrice;
+  };
+
   window.map = trdDataCommonMap({
     filePath:
-      "https://teststatic.therealdeal.com/interactive-maps/cook_county_transaction_map_data.geojson",
+      "https://static.therealdeal.com/interactive-maps/cook_county_transaction_map_data.geojson",
     eventCategory: "chicago-transactions-map",
     mapElementId: "map",
     filterElementId: "map-filters",
@@ -211,15 +215,15 @@
     tooltipDisplayFields,
     modalDisplayFields,
     filterFields,
+    fetchDataFilterCallback,
     mapLayerPaint: {
       "circle-radius": {
         base: 1.75,
         stops: [
           [1, 1],
           [10, 4],
-          [12, 8],
-          [15, 10],
-          [20, 16],
+          [15, 6],
+          [20, 8],
         ],
       },
     },
