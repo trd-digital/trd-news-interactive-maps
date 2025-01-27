@@ -159,6 +159,12 @@
       { field: "Inital Price", label: "Inital Price", format: "formatPrice" },
       { field: "Current Price", label: "Current Price", format: "formatPrice" },
       { field: "BBLs", label: "BBLs" },
+      { field: "Building Name", label: "Building Name" },
+      {
+        field: "Website",
+        label: "Website",
+        format: (value) => `<a href="${value}" target="_blank">Website</a>`,
+      },
     ],
   };
 
