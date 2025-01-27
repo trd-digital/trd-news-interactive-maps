@@ -52,6 +52,8 @@
     "Inital Price",
     "Current Price",
     "BBLs",
+    "Building Name",
+    "Website",
   ];
 
   const excludeValue = [
@@ -199,6 +201,10 @@
   const formatter = (value, row, index, field) => {
     if (isEmptyValue(value)) {
       return '<span class="text-muted">N/A</span>';
+    }
+
+    if (field === "website") {
+      return `<a href="${value}" target="_blank">Website</a>`;
     }
 
     if (
