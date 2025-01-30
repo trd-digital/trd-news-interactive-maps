@@ -1,670 +1,775 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Real Estate Lookup Tool</title>
-    <!-- Google Font: Merriweather -->
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        /* CSS Variables for Dark Color Scheme */
-        :root {
-            --primary-color: #FFFFFF;   /* White text */
-            --secondary-color: #1A1A1A; /* Slightly lighter than black (card background) */
-            --accent-color: #1E90FF;    /* Dodger Blue for links and metric values */
-            --text-color: #FFFFFF;      /* White for general text */
-            --background-color: #121212; /* Dark background */
-            --border-color: #333333;    /* Dark grey border */
-            --hover-shadow: rgba(255, 255, 255, 0.2); /* Light shadow on hover */
-        }
+  <meta charset="UTF-8">
+  <title>Real Estate Lookup Tool</title>
+  <!-- Google Font: Merriweather -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  >
 
-        /* Global Styles */
-        body {
-            font-family: 'Merriweather', serif;
-            margin: 0;
-            padding: 20px;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
+  <style>
+    /* 1) Light Mode (default) */
+    :root {
+      --primary-color: #000000;          /* Black text */
+      --secondary-color: #FFFFFF;        /* White card background */
+      --accent-color: #1E90FF;           /* Dodger Blue */
+      --text-color: #000000;             /* Black for general text */
+      --background-color: #F7F7F7;       /* Light grayish background */
+      --border-color: #CCCCCC;           /* Light gray border */
+      --hover-shadow: rgba(0, 0, 0, 0.1);/* Subtle shadow on hover */
+    }
 
-        h1 {
-            text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 30px;
-            font-size: 2em;
-        }
+    /*
+      2) Dark Mode if OS/browser prefers dark
+      If no override class is set, users who prefer dark
+      will see these variable overrides automatically.
+    */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --primary-color: #FFFFFF;
+        --secondary-color: #1A1A1A;
+        --accent-color: #1E90FF;
+        --text-color: #FFFFFF;
+        --background-color: #121212;
+        --border-color: #333333;
+        --hover-shadow: rgba(255, 255, 255, 0.2);
+      }
+    }
 
-        /* Filters Section */
-        .filters {
-            margin-bottom: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-        }
+    /*
+      3) Override Classes (ignore OS)
+         .override-light => forcibly light
+         .override-dark  => forcibly dark
+    */
+    .override-light {
+      --primary-color: #000000;
+      --secondary-color: #FFFFFF;
+      --accent-color: #1E90FF;
+      --text-color: #000000;
+      --background-color: #F7F7F7;
+      --border-color: #CCCCCC;
+      --hover-shadow: rgba(0, 0, 0, 0.1);
+    }
 
-        .filters input,
-        .filters select,
-        .filters button {
-            padding: 8px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            font-size: 0.9em;
-            background-color: #2A2A2A;
-            color: var(--primary-color);
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
+    .override-dark {
+      --primary-color: #FFFFFF;
+      --secondary-color: #1A1A1A;
+      --accent-color: #1E90FF;
+      --text-color: #FFFFFF;
+      --background-color: #121212;
+      --border-color: #333333;
+      --hover-shadow: rgba(255, 255, 255, 0.2);
+    }
 
-        .filters input::placeholder {
-            color: #AAAAAA;
-        }
+    /* ====== The rest of your existing styles, referencing the above variables ====== */
 
-        .filters input:focus,
-        .filters select:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 5px var(--hover-shadow);
-            outline: none;
-        }
+    /* Global Styles */
+    body {
+      font-family: 'Merriweather', serif;
+      margin: 0;
+      padding: 20px;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-        .filters button {
-            background-color: var(--accent-color);
-            color: var(--secondary-color);
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            font-weight: bold;
-        }
+    h1 {
+      text-align: center;
+      color: var(--primary-color);
+      margin-bottom: 30px;
+      font-size: 2em;
+    }
 
-        .filters button:hover {
-            background-color: #187bcd;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px var(--hover-shadow);
-        }
+    /* Filters Section */
+    .filters {
+      margin-bottom: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
 
-        /* Results Container */
-        #resultsContainer {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            align-items: start;
-        }
+    .filters input,
+    .filters select,
+    .filters button {
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      font-size: 0.9em;
+      background-color: var(--secondary-color); /* Might want to change for a nicer light background */
+      color: var(--primary-color);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
 
-        /* Group Card Styles */
-        .group-card {
-            background-color: var(--secondary-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s, box-shadow 0.2s;
-            height: 100%;
-            position: relative;
-        }
+    .filters input::placeholder {
+      color: #AAAAAA;
+    }
 
-        .group-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
-        }
+    .filters input:focus,
+    .filters select:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 5px var(--hover-shadow);
+      outline: none;
+    }
 
-        /* Group Header Styles */
-        .group-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            cursor: pointer;
-            user-select: none;
-            background-color: #2A2A2A;
-            border-bottom: 1px solid var(--border-color);
-            transition: background-color 0.3s;
-        }
+    .filters button {
+      background-color: var(--accent-color);
+      color: var(--secondary-color);
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      font-weight: bold;
+    }
 
-        .group-header:hover {
-            background-color: #383838;
-        }
+    .filters button:hover {
+      background-color: #187bcd;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px var(--hover-shadow);
+    }
 
-        /* Region name */
-        .header-region {
-            font-size: 1.1em;
-            font-weight: 700;
-            color: var(--primary-color);
-            max-width: 45%;
-            word-wrap: break-word;
-        }
+    /* Results Container */
+    #resultsContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      align-items: start;
+    }
 
-        /* Classification with smaller font (0.75em) */
-        .header-classification {
-            font-size: 0.75em;
-            color: var(--primary-color);
-            max-width: 30%;
-            text-align: right;
-            word-wrap: break-word;
-        }
+    /* Group Card Styles */
+    .group-card {
+      background-color: var(--secondary-color);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s;
+      height: 100%;
+      position: relative;
+    }
 
-        /* Group Details Styles */
-        .group-details {
-            padding: 16px;
-            display: none; /* Initially hidden */
-            background-color: var(--secondary-color);
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-        }
+    .group-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+    }
 
-        .group-details.show {
-            display: flex;
-        }
+    /* Group Header Styles */
+    .group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      cursor: pointer;
+      user-select: none;
+      background-color: (var(--secondary-color)); /* Might want a lighter color for light mode */
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 0.3s;
+    }
 
-        /* Metrics List */
-        .metrics-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+    .group-header:hover {
+      background-color: ((var(--secondary-color))); /* Might want a lighter color for light mode */
+    }
 
-        .metrics-list li {
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Thin line between metrics */
-        }
+    /* Region name */
+    .header-region {
+      font-size: 1.1em;
+      font-weight: 700;
+      color: var(--primary-color);
+      max-width: 45%;
+      word-wrap: break-word;
+    }
 
-        /* remove line from the last metric if you prefer no trailing line */
-        .metrics-list li:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
+    /* Classification (smaller font, 0.75em) */
+    .header-classification {
+      font-size: 0.75em;
+      color: var(--primary-color);
+      max-width: 30%;
+      text-align: right;
+      word-wrap: break-word;
+    }
 
-        .metrics-title {
-            font-weight: bold;
-            color: var(--primary-color);
-            font-size: 0.95em;
-        }
+    /* Group Details */
+    .group-details {
+      padding: 16px;
+      display: none; /* Initially hidden */
+      background-color: var(--secondary-color);
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
 
-        .metrics-value {
-            color: var(--accent-color);
-            font-size: 0.95em;
-        }
+    .group-details.show {
+      display: flex;
+    }
 
-        /* Submetrics anchored bottom-left, font-size .75em */
-        .submetrics {
-            padding-top: 25px;
-            /* margin-top: auto; */
-            font-size: 0.75em;
-            color: var(--primary-color);
-        }
+    /* Metrics List */
+    .metrics-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
-        .submetrics div {
-            margin-bottom: 4px;
-        }
+    .metrics-list li {
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-        /* Source Link on bottom-right, also .75em if desired */
-        .source-entry {
-            text-align: right;
-            font-size: 0.55em;
-            margin-top: -15px;
-        }
+    .metrics-list li:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
 
-        .source-entry a {
-            text-decoration: none;
-            color: var(--accent-color);
-            font-weight: 500;
-            transition: color 0.3s;
-        }
+    .metrics-title {
+      font-weight: bold;
+      color: var(--primary-color);
+      font-size: 0.95em;
+    }
 
-        .source-entry a:hover {
-            color: #1C86EE;
-            text-decoration: underline;
-        }
+    .metrics-value {
+      color: var(--accent-color);
+      font-size: 0.95em;
+    }
 
-        /* Loading and Error Messages */
-        #loadingIndicator,
-        #errorMessage {
-            text-align: center;
-            padding: 20px;
-            font-size: 1.1em;
-            color: var(--primary-color);
-        }
+    /* Submetrics */
+    .submetrics {
+      padding-top: 25px;
+      font-size: 0.75em;
+      color: var(--primary-color);
+    }
 
-        #errorMessage {
-            color: #FF6347;
-        }
+    .submetrics div {
+      margin-bottom: 4px;
+    }
 
-        /* Spinner Styles (Optional) */
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--accent-color);
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 2s linear infinite;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 10px;
-        }
+    /* Source Link on bottom-right */
+    .source-entry {
+      text-align: right;
+      font-size: 0.55em;
+      margin-top: -15px;
+    }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    .source-entry a {
+      text-decoration: none;
+      color: var(--accent-color);
+      font-weight: 500;
+      transition: color 0.3s;
+    }
 
-        /* Responsive Typography */
-        @media (max-width: 768px) {
-            .group-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+    .source-entry a:hover {
+      color: #1C86EE;
+      text-decoration: underline;
+    }
 
-            .header-region {
-                max-width: 100%;
-            }
+    /* Loading + Error Messages */
+    #loadingIndicator,
+    #errorMessage {
+      text-align: center;
+      padding: 20px;
+      font-size: 1.1em;
+      color: var(--primary-color);
+    }
 
-            .header-classification {
-                margin-top: 6px;
-                max-width: 100%;
-                text-align: left;
-            }
+    #errorMessage {
+      color: #FF6347; /* Red text for error messages */
+    }
 
-            .metrics-list li {
-                margin-bottom: 10px;
-                padding-bottom: 8px;
-            }
+    /* Spinner */
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid var(--accent-color);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 2s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
 
-            .metrics-title,
-            .metrics-value {
-                font-size: 0.9em;
-            }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
 
-            .submetrics {
-                font-size: 0.7em;
-            }
+    /* Responsive Typography */
+    @media (max-width: 768px) {
+      .group-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
 
-            .source-entry {
-                font-size: 0.7em;
-                margin-top: 6px;
-            }
+      .header-region {
+        max-width: 100%;
+      }
 
-            .filters {
-                gap: 10px;
-            }
+      .header-classification {
+        margin-top: 6px;
+        max-width: 100%;
+        text-align: left;
+      }
 
-            .filters input,
-            .filters select,
-            .filters button {
-                padding: 6px 10px;
-                font-size: 0.85em;
-            }
-        }
-    </style>
+      .metrics-list li {
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+      }
+
+      .metrics-title,
+      .metrics-value {
+        font-size: 0.9em;
+      }
+
+      .submetrics {
+        font-size: 0.7em;
+      }
+
+      .source-entry {
+        font-size: 0.7em;
+        margin-top: 6px;
+      }
+
+      .filters {
+        gap: 10px;
+      }
+
+      .filters input,
+      .filters select,
+      .filters button {
+        padding: 6px 10px;
+        font-size: 0.85em;
+      }
+    }
+  </style>
 </head>
 <body>
+  <!-- (Optional) Theme Toggle Button -->
+  <button id="themeToggleBtn" style="position: fixed; top: 10px; right: 10px; z-index: 999;">
+    Toggle Theme
+  </button>
 
-    <h1>Real Estate Data Lookup</h1>
+  <h1>Real Estate Data Lookup</h1>
 
-    <!-- Filters Section -->
-    <div class="filters">
-        <input type="text" id="searchRegion" placeholder="Search Region">
-        <select id="filterSector">
-            <option value="">All Sectors</option>
-            <!-- Options added dynamically -->
-        </select>
-        <select id="filterDatePeriod">
-            <option value="">All Date Periods</option>
-            <!-- Options added dynamically -->
-        </select>
-        <button id="resetFilters">Reset Filters</button>
-    </div>
+  <!-- Filters Section -->
+  <div class="filters">
+    <input type="text" id="searchRegion" placeholder="Search Region">
+    <select id="filterSector">
+      <option value="">All Sectors</option>
+      <!-- Options added dynamically -->
+    </select>
+    <select id="filterDatePeriod">
+      <option value="">All Date Periods</option>
+      <!-- Options added dynamically -->
+    </select>
+    <button id="resetFilters">Reset Filters</button>
+  </div>
 
-    <!-- Loading Indicator -->
-    <div id="loadingIndicator" style="display: none;">
-        <div class="spinner"></div>
-        <span>Loading data, please wait...</span>
-    </div>
+  <!-- Loading Indicator -->
+  <div id="loadingIndicator" style="display: none;">
+    <div class="spinner"></div>
+    <span>Loading data, please wait...</span>
+  </div>
 
-    <!-- Error Message -->
-    <div id="errorMessage" style="display: none;">
-        Failed to load data. Please 
-        <button id="retryButton" style="background: none; border: none; color: var(--accent-color); text-decoration: underline; cursor: pointer;">
-            try again
-        </button>.
-    </div>
+  <!-- Error Message -->
+  <div id="errorMessage" style="display: none;">
+    Failed to load data. Please
+    <button id="retryButton" style="background: none; border: none; color: var(--accent-color); text-decoration: underline; cursor: pointer;">
+      try again
+    </button>.
+  </div>
 
-    <div id="resultsContainer"><!-- Dynamically populated --></div>
+  <!-- Results Container -->
+  <div id="resultsContainer"><!-- Dynamically populated --></div>
 
-    <!-- Include PapaParse -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"
-            integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer">
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const csvUrl = 'TRD Data Snapshots - Snapshot2_0.csv'; // Replace with your CSV URL
-            let data = [];
+  <!-- PapaParse -->
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"
+    integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer">
+  </script>
 
-            const excludedColumns = ['dataset_tag']; // columns to ignore
+  <!-- Theme Toggle: 2-State with OS Preference Fallback -->
+  <script>
+    (function() {
+      const bodyEl = document.body;
+      const toggleBtn = document.getElementById('themeToggleBtn');
 
-            const searchRegion = document.getElementById('searchRegion');
-            const filterSector = document.getElementById('filterSector');
-            const filterDatePeriod = document.getElementById('filterDatePeriod');
-            const resetFilters = document.getElementById('resetFilters');
-            const resultsContainer = document.getElementById('resultsContainer');
-            const loadingIndicator = document.getElementById('loadingIndicator');
-            const errorMessage = document.getElementById('errorMessage');
-            const retryButton = document.getElementById('retryButton');
+      // On load, apply any saved override
+      const savedOverride = localStorage.getItem('themeOverride'); // 'light', 'dark', or null
+      if (savedOverride === 'light') {
+        bodyEl.classList.add('override-light');
+      } else if (savedOverride === 'dark') {
+        bodyEl.classList.add('override-dark');
+      }
 
-            // Debounce function
-            function debounce(func, delay) {
-                let debounceTimer;
-                return function() {
-                    const context = this;
-                    const args = arguments;
-                    clearTimeout(debounceTimer);
-                    debounceTimer = setTimeout(() => func.apply(context, args), delay);
-                }
+      // Determine the current *effective* theme (light or dark)
+      // i.e. check override classes, else system preference
+      function getEffectiveTheme() {
+        if (bodyEl.classList.contains('override-light')) return 'light';
+        if (bodyEl.classList.contains('override-dark')) return 'dark';
+
+        // No override => check OS
+        const prefersDark = window.matchMedia &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches;
+        return prefersDark ? 'dark' : 'light';
+      }
+
+      // Apply an override class
+      function applyOverride(theme) {
+        // Remove both possible override classes
+        bodyEl.classList.remove('override-light', 'override-dark');
+
+        // If forcing light
+        if (theme === 'light') {
+          bodyEl.classList.add('override-light');
+          localStorage.setItem('themeOverride', 'light');
+        }
+        // If forcing dark
+        else if (theme === 'dark') {
+          bodyEl.classList.add('override-dark');
+          localStorage.setItem('themeOverride', 'dark');
+        }
+      }
+
+      // Toggle handler: flip the current effective theme
+      toggleBtn.addEventListener('click', () => {
+        const currentTheme = getEffectiveTheme(); // 'light' or 'dark'
+        const newTheme = (currentTheme === 'light') ? 'dark' : 'light';
+        applyOverride(newTheme);
+      });
+    })();
+  </script>
+
+  <!-- Existing Script for Data Fetching/Rendering -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const csvUrl = 'TRD Data Snapshots - Snapshot2_0.csv'; // Replace with your CSV URL
+      let data = [];
+
+      const excludedColumns = ['dataset_tag']; // columns to ignore
+
+      const searchRegion = document.getElementById('searchRegion');
+      const filterSector = document.getElementById('filterSector');
+      const filterDatePeriod = document.getElementById('filterDatePeriod');
+      const resetFilters = document.getElementById('resetFilters');
+      const resultsContainer = document.getElementById('resultsContainer');
+      const loadingIndicator = document.getElementById('loadingIndicator');
+      const errorMessage = document.getElementById('errorMessage');
+      const retryButton = document.getElementById('retryButton');
+
+      // Debounce function
+      function debounce(func, delay) {
+        let debounceTimer;
+        return function() {
+          const context = this;
+          const args = arguments;
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(() => func.apply(context, args), delay);
+        };
+      }
+
+      // Normalize CSV headers
+      function normalizeHeaders(item) {
+        const normalizedItem = {};
+        for (let key in item) {
+          const normalizedKey = key.trim().toLowerCase().replace(/\s+/g, '_');
+          normalizedItem[normalizedKey] = item[key];
+        }
+        return normalizedItem;
+      }
+
+      // Extract hostname if fallback
+      function getHostname(url) {
+        try {
+          const hostname = new URL(url).hostname;
+          return hostname.startsWith('www.') ? hostname.slice(4) : hostname;
+        } catch (e) {
+          console.error('Invalid URL:', url);
+          return 'Source';
+        }
+      }
+
+      // Fetch CSV
+      function fetchData() {
+        loadingIndicator.style.display = 'block';
+        Papa.parse(csvUrl, {
+          download: true,
+          header: true,
+          skipEmptyLines: true,
+          complete: function(results) {
+            loadingIndicator.style.display = 'none';
+            data = results.data.map(normalizeHeaders);
+            console.log('Normalized Data:', data);
+
+            if (data.length === 0) {
+              console.error('CSV contains no data.');
+              errorMessage.style.display = 'block';
+              return;
             }
 
-            // Normalize CSV headers
-            function normalizeHeaders(item) {
-                const normalizedItem = {};
-                for (let key in item) {
-                    const normalizedKey = key.trim().toLowerCase().replace(/\s+/g, '_');
-                    normalizedItem[normalizedKey] = item[key];
-                }
-                return normalizedItem;
-            }
-
-            // Extract hostname if fallback
-            function getHostname(url) {
-                try {
-                    const hostname = new URL(url).hostname;
-                    return hostname.startsWith('www.') ? hostname.slice(4) : hostname;
-                } catch (e) {
-                    console.error('Invalid URL:', url);
-                    return 'Source';
-                }
-            }
-
-            // Fetch CSV
-            function fetchData() {
-                loadingIndicator.style.display = 'block';
-                Papa.parse(csvUrl, {
-                    download: true,
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: function(results) {
-                        loadingIndicator.style.display = 'none';
-                        data = results.data.map(normalizeHeaders);
-                        console.log('Normalized Data:', data);
-
-                        if (data.length === 0) {
-                            console.error('CSV contains no data.');
-                            errorMessage.style.display = 'block';
-                            return;
-                        }
-
-                        populateFilters();
-                        // Default search = "New York"
-                        searchRegion.value = "New York";
-                        filterData();
-                    },
-                    error: function(err) {
-                        loadingIndicator.style.display = 'none';
-                        console.error('Error loading CSV:', err);
-                        errorMessage.style.display = 'block';
-                    }
-                });
-            }
-
-            // Populate filter dropdowns
-            function populateFilters() {
-                const sectors = [...new Set(data.map(item => item.sector).filter(Boolean))].sort();
-                const datePeriods = [...new Set(data.map(item => item.date_period).filter(Boolean))].sort();
-
-                sectors.forEach(sector => {
-                    const option = document.createElement('option');
-                    option.value = sector;
-                    option.textContent = sector;
-                    filterSector.appendChild(option);
-                });
-
-                datePeriods.forEach(period => {
-                    const option = document.createElement('option');
-                    option.value = period;
-                    option.textContent = period;
-                    filterDatePeriod.appendChild(option);
-                });
-            }
-
-            // Group data
-            function groupData(dataArray) {
-                const groups = {};
-                dataArray.forEach(item => {
-                    const groupKey = `
-                      ${item.sector || 'N/A'}|
-                      ${item.region || 'N/A'}|
-                      ${item.last_updated || 'N/A'}|
-                      ${item.date_period || 'N/A'}|
-                      ${item.source_link || 'N/A'}
-                    `.trim();
-
-                    if (!groups[groupKey]) {
-                        groups[groupKey] = {
-                            sector: item.sector || 'N/A',
-                            region: item.region || 'N/A',
-                            last_updated: item.last_updated || 'N/A',
-                            date_period: item.date_period || 'N/A',
-                            source_link: item.source_link || 'N/A',
-                            source: item.source || 'N/A', // Potential CSV column "Source"
-                            entries: []
-                        };
-                    }
-
-                    groups[groupKey].entries.push({
-                        display_title: item.display_title || 'N/A',
-                        value: item.value || 'N/A'
-                    });
-                });
-                return Object.values(groups);
-            }
-
-            // Validate URL
-            function isValidURL(str) {
-                try {
-                    new URL(str);
-                    return true;
-                } catch (_) {
-                    return false;
-                }
-            }
-
-            // Display results (up to 12), with Residential vs. Commercial logic
-            function displayGroupedResults(dataToDisplay) {
-                resultsContainer.innerHTML = '';
-
-                if (dataToDisplay.length === 0) {
-                    const noDataDiv = document.createElement('div');
-                    noDataDiv.textContent = 'No results found.';
-                    noDataDiv.style.textAlign = 'center';
-                    noDataDiv.style.padding = '20px';
-                    resultsContainer.appendChild(noDataDiv);
-                    return;
-                }
-
-                const grouped = groupData(dataToDisplay).slice(0, 12);
-                console.log('Grouped Data:', grouped);
-
-                // Residential vs. Commercial arrays
-                const residentialMetrics = [
-                    'Average Sales Price',
-                    'Average Price Per Sq Ft',
-                    'Number of Sales',
-                    'Days on Market',
-                    'Listing Inventory',
-                    'Months of Supply'
-                ];
-                const commercialMetrics = [
-                    'Absorption',
-                    'Asking psf',
-                    'Deliveries YTD',
-                    'Inventory',
-                    'Under Construction',
-                    'Vacancy Rate'
-                ];
-
-                grouped.forEach(group => {
-                    const card = document.createElement('div');
-                    card.classList.add('group-card');
-
-                    // header
-                    const header = document.createElement('div');
-                    header.classList.add('group-header');
-                    header.innerHTML = `
-                        <div class="header-region">
-                            ${group.region !== 'N/A' ? `<span>${group.region}</span>` : `<span>N/A</span>`}
-                        </div>
-                        <div class="header-classification">
-                            ${group.sector !== 'N/A' ? group.sector : 'N/A'}
-                        </div>
-                    `;
-                    card.appendChild(header);
-
-                    // details
-                    const details = document.createElement('div');
-                    details.classList.add('group-details');
-
-                    // choose metrics
-                    let metricsToDisplay = residentialMetrics;
-                    if (group.sector && group.sector.toLowerCase() === 'commercial') {
-                        metricsToDisplay = commercialMetrics;
-                    }
-
-                    // build metrics list
-                    const metricsList = document.createElement('ul');
-                    metricsList.classList.add('metrics-list');
-
-                    metricsToDisplay.forEach(metricTitle => {
-                        const li = document.createElement('li');
-                        const foundEntry = group.entries.find(
-                            e => e.display_title && e.display_title.toLowerCase() === metricTitle.toLowerCase()
-                        );
-                        const val = foundEntry ? foundEntry.value : 'N/A';
-
-                        li.innerHTML = `
-                            <div class="metrics-title">${metricTitle}:</div>
-                            <div class="metrics-value">${val}</div>
-                        `;
-                        metricsList.appendChild(li);
-                    });
-
-                    details.appendChild(metricsList);
-
-                    // submetrics (Last Updated, Date Period)
-                    const submetrics = document.createElement('div');
-                    submetrics.classList.add('submetrics');
-
-                    const lu = group.last_updated !== 'N/A' ? group.last_updated : 'N/A';
-                    const dp = group.date_period !== 'N/A' ? group.date_period : 'N/A';
-
-                    submetrics.innerHTML = `
-                        <div><strong>Last Updated:</strong> ${lu}</div>
-                        <div><strong>Date Period:</strong> ${dp}</div>
-                    `;
-                    details.appendChild(submetrics);
-
-                    // source link bottom-right
-                    if (group.source_link !== 'N/A' && isValidURL(group.source_link)) {
-                        const sourceDiv = document.createElement('div');
-                        sourceDiv.classList.add('source-entry');
-
-                        // Prefer CSV's "source" text (ex: "Cushman & Wakefield", "Douglas Elliman")
-                        // fallback to hostname if missing or 'N/A'
-                        let linkText = (group.source && group.source !== 'N/A')
-                          ? group.source
-                          : getHostname(group.source_link);
-
-                        sourceDiv.innerHTML = `<a href="${group.source_link}" target="_blank">${linkText}</a>`;
-                        details.appendChild(sourceDiv);
-                    }
-
-                    card.appendChild(details);
-                    resultsContainer.appendChild(card);
-
-                    // toggle details
-                    header.addEventListener('click', () => {
-                        const isVisible = details.classList.contains('show');
-                        if (isVisible) {
-                            details.classList.remove('show');
-                            header.classList.remove('active');
-                        } else {
-                            details.classList.add('show');
-                            header.classList.add('active');
-                        }
-                    });
-
-                    // keyboard accessibility
-                    header.setAttribute('tabindex', '0');
-                    header.setAttribute('role', 'button');
-                    header.setAttribute('aria-expanded', 'false');
-
-                    header.addEventListener('keydown', e => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            const isVisible = details.classList.contains('show');
-                            if (isVisible) {
-                                details.classList.remove('show');
-                                header.classList.remove('active');
-                            } else {
-                                details.classList.add('show');
-                                header.classList.add('active');
-                            }
-                        }
-                    });
-                });
-            }
-
-            /* Filter Data */
-            function filterData() {
-                const reg = searchRegion.value.trim().toLowerCase();
-                const sec = filterSector.value;
-                const dp  = filterDatePeriod.value;
-
-                const newData = data.filter(item => {
-                    const matchesRegion = reg === '' || (item.region && item.region.toLowerCase().includes(reg));
-                    const matchesSector = sec === '' || item.sector === sec;
-                    const matchesDate = dp === '' || item.date_period === dp;
-                    return matchesRegion && matchesSector && matchesDate;
-                });
-
-                displayGroupedResults(newData);
-            }
-
-            /* Initialization */
-            function init() {
-                fetchData();
-            }
-            init();
-
-            /* Debounced dynamic filtering */
-            searchRegion.addEventListener('input', debounce(filterData, 300));
-            filterSector.addEventListener('change', filterData);
-            filterDatePeriod.addEventListener('change', filterData);
-
-            /* Reset filters */
-            resetFilters.addEventListener('click', () => {
-                searchRegion.value = '';
-                filterSector.value = '';
-                filterDatePeriod.value = '';
-                displayGroupedResults(data);
-            });
-
-            /* Retry button for errors */
-            retryButton && retryButton.addEventListener('click', () => {
-                errorMessage.style.display = 'none';
-                fetchData();
-            });
+            populateFilters();
+            // Default search = "New York"
+            searchRegion.value = "New York";
+            filterData();
+          },
+          error: function(err) {
+            loadingIndicator.style.display = 'none';
+            console.error('Error loading CSV:', err);
+            errorMessage.style.display = 'block';
+          }
         });
-    </script>
+      }
+
+      // Populate filter dropdowns
+      function populateFilters() {
+        const sectors = [...new Set(data.map(item => item.sector).filter(Boolean))].sort();
+        const datePeriods = [...new Set(data.map(item => item.date_period).filter(Boolean))].sort();
+
+        sectors.forEach(sector => {
+          const option = document.createElement('option');
+          option.value = sector;
+          option.textContent = sector;
+          filterSector.appendChild(option);
+        });
+
+        datePeriods.forEach(period => {
+          const option = document.createElement('option');
+          option.value = period;
+          option.textContent = period;
+          filterDatePeriod.appendChild(option);
+        });
+      }
+
+      // Group data
+      function groupData(dataArray) {
+        const groups = {};
+        dataArray.forEach(item => {
+          const groupKey = `
+            ${item.sector || 'N/A'}|
+            ${item.region || 'N/A'}|
+            ${item.last_updated || 'N/A'}|
+            ${item.date_period || 'N/A'}|
+            ${item.source_link || 'N/A'}
+          `.trim();
+
+          if (!groups[groupKey]) {
+            groups[groupKey] = {
+              sector: item.sector || 'N/A',
+              region: item.region || 'N/A',
+              last_updated: item.last_updated || 'N/A',
+              date_period: item.date_period || 'N/A',
+              source_link: item.source_link || 'N/A',
+              source: item.source || 'N/A',
+              entries: []
+            };
+          }
+
+          groups[groupKey].entries.push({
+            display_title: item.display_title || 'N/A',
+            value: item.value || 'N/A'
+          });
+        });
+        return Object.values(groups);
+      }
+
+      // Validate URL
+      function isValidURL(str) {
+        try {
+          new URL(str);
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      // Display results (up to 12), with Residential vs. Commercial logic
+      function displayGroupedResults(dataToDisplay) {
+        resultsContainer.innerHTML = '';
+
+        if (dataToDisplay.length === 0) {
+          const noDataDiv = document.createElement('div');
+          noDataDiv.textContent = 'No results found.';
+          noDataDiv.style.textAlign = 'center';
+          noDataDiv.style.padding = '20px';
+          resultsContainer.appendChild(noDataDiv);
+          return;
+        }
+
+        const grouped = groupData(dataToDisplay).slice(0, 12);
+        console.log('Grouped Data:', grouped);
+
+        // Residential vs. Commercial arrays
+        const residentialMetrics = [
+          'Average Sales Price',
+          'Average Price Per Sq Ft',
+          'Number of Sales',
+          'Days on Market',
+          'Listing Inventory',
+          'Months of Supply'
+        ];
+        const commercialMetrics = [
+          'Absorption',
+          'Asking psf',
+          'Deliveries YTD',
+          'Inventory',
+          'Under Construction',
+          'Vacancy Rate'
+        ];
+
+        grouped.forEach(group => {
+          const card = document.createElement('div');
+          card.classList.add('group-card');
+
+          // header
+          const header = document.createElement('div');
+          header.classList.add('group-header');
+          header.innerHTML = `
+            <div class="header-region">
+              ${group.region !== 'N/A' ? `<span>${group.region}</span>` : `<span>N/A</span>`}
+            </div>
+            <div class="header-classification">
+              ${group.sector !== 'N/A' ? group.sector : 'N/A'}
+            </div>
+          `;
+          card.appendChild(header);
+
+          // details
+          const details = document.createElement('div');
+          details.classList.add('group-details');
+
+          // choose metrics
+          let metricsToDisplay = residentialMetrics;
+          if (group.sector && group.sector.toLowerCase() === 'commercial') {
+            metricsToDisplay = commercialMetrics;
+          }
+
+          // build metrics list
+          const metricsList = document.createElement('ul');
+          metricsList.classList.add('metrics-list');
+
+          metricsToDisplay.forEach(metricTitle => {
+            const li = document.createElement('li');
+            const foundEntry = group.entries.find(
+              e => e.display_title && e.display_title.toLowerCase() === metricTitle.toLowerCase()
+            );
+            const val = foundEntry ? foundEntry.value : 'N/A';
+
+            li.innerHTML = `
+              <div class="metrics-title">${metricTitle}:</div>
+              <div class="metrics-value">${val}</div>
+            `;
+            metricsList.appendChild(li);
+          });
+
+          details.appendChild(metricsList);
+
+          // submetrics (Last Updated, Date Period)
+          const submetrics = document.createElement('div');
+          submetrics.classList.add('submetrics');
+
+          const lu = group.last_updated !== 'N/A' ? group.last_updated : 'N/A';
+          const dp = group.date_period !== 'N/A' ? group.date_period : 'N/A';
+
+          submetrics.innerHTML = `
+            <div><strong>Last Updated:</strong> ${lu}</div>
+            <div><strong>Date Period:</strong> ${dp}</div>
+          `;
+          details.appendChild(submetrics);
+
+          // source link bottom-right
+          if (group.source_link !== 'N/A' && isValidURL(group.source_link)) {
+            const sourceDiv = document.createElement('div');
+            sourceDiv.classList.add('source-entry');
+
+            let linkText = (group.source && group.source !== 'N/A')
+              ? group.source
+              : getHostname(group.source_link);
+
+            sourceDiv.innerHTML = `<a href="${group.source_link}" target="_blank">${linkText}</a>`;
+            details.appendChild(sourceDiv);
+          }
+
+          card.appendChild(details);
+          resultsContainer.appendChild(card);
+
+          // toggle details on click
+          header.addEventListener('click', () => {
+            const isVisible = details.classList.contains('show');
+            if (isVisible) {
+              details.classList.remove('show');
+              header.classList.remove('active');
+            } else {
+              details.classList.add('show');
+              header.classList.add('active');
+            }
+          });
+
+          // accessibility: toggle on "Enter" or "Space"
+          header.setAttribute('tabindex', '0');
+          header.setAttribute('role', 'button');
+          header.setAttribute('aria-expanded', 'false');
+
+          header.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              const isVisible = details.classList.contains('show');
+              if (isVisible) {
+                details.classList.remove('show');
+                header.classList.remove('active');
+              } else {
+                details.classList.add('show');
+                header.classList.add('active');
+              }
+            }
+          });
+        });
+      }
+
+      // Filter Data
+      function filterData() {
+        const reg = searchRegion.value.trim().toLowerCase();
+        const sec = filterSector.value;
+        const dp  = filterDatePeriod.value;
+
+        const newData = data.filter(item => {
+          const matchesRegion = reg === '' || (item.region && item.region.toLowerCase().includes(reg));
+          const matchesSector = sec === '' || item.sector === sec;
+          const matchesDate = dp === '' || item.date_period === dp;
+          return matchesRegion && matchesSector && matchesDate;
+        });
+
+        displayGroupedResults(newData);
+      }
+
+      // Initialization
+      function init() {
+        fetchData();
+      }
+      init();
+
+      // Debounced dynamic filtering
+      searchRegion.addEventListener('input', debounce(filterData, 300));
+      filterSector.addEventListener('change', filterData);
+      filterDatePeriod.addEventListener('change', filterData);
+
+      // Reset filters
+      resetFilters.addEventListener('click', () => {
+        searchRegion.value = '';
+        filterSector.value = '';
+        filterDatePeriod.value = '';
+        displayGroupedResults(data);
+      });
+
+      // Retry button for errors
+      retryButton && retryButton.addEventListener('click', () => {
+        errorMessage.style.display = 'none';
+        fetchData();
+      });
+    });
+  </script>
 </body>
 </html>
