@@ -157,16 +157,17 @@
 
     /* Group Header Styles */
     .group-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
-      cursor: pointer;
-      user-select: none;
-      background-color: (var(--secondary-color)); /* Might want a lighter color for light mode */
-      border-bottom: 1px solid var(--border-color);
-      transition: background-color 0.3s;
+    display: flex;
+    flex-direction: column; /* stack items top-to-bottom */
+    align-items: flex-start; /* left-align them (optional) */
+    padding: 12px 16px;
+    cursor: pointer;
+    user-select: none;
+    background-color: var(--secondary-color);
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.3s;
     }
+
 
     .group-header:hover {
       background-color: ((var(--secondary-color))); /* Might want a lighter color for light mode */
@@ -177,7 +178,7 @@
       font-size: 1.1em;
       font-weight: 700;
       color: var(--primary-color);
-      max-width: 45%;
+      max-width: 100%;
       word-wrap: break-word;
     }
 
@@ -628,13 +629,13 @@
           const header = document.createElement('div');
           header.classList.add('group-header');
           header.innerHTML = `
-            <div class="header-region">
-              ${group.region !== 'N/A' ? `<span>${group.region}</span>` : `<span>N/A</span>`}
-            </div>
             <div class="header-classification">
-              ${group.sector !== 'N/A' ? group.sector : 'N/A'}
+                ${group.sector !== 'N/A' ? group.sector : 'N/A'}
             </div>
-          `;
+            <div class="header-region">
+                ${group.region !== 'N/A' ? `<span>${group.region}</span>` : `<span>N/A</span>`}
+            </div>
+            `;
           card.appendChild(header);
 
           // details
