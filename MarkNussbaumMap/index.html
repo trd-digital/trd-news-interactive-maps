@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_1c8fc1b4a3e48003f35c434163770e40 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>    
+    
+<style>
+    .popup-content {
+        max-width: 200px; /* Adjusts the maximum width of the tooltip */
+        font-size: 12px;   /* Adjusts the font size */
+        word-wrap: break-word; /* Ensures long words wrap to the next line */
+    }
+    .leaflet-tooltip {
+        background-color: white;
+        border: 1px solid gray;
+        border-radius: 3px;
+        padding: 5px;
+    }
+</style>
+    
+             <h3 align="center" style="font-size:16px"><b>Mark J. Nussbaum Properties</b></h3>
+             
+    
+            <div class="folium-map" id="map_1c8fc1b4a3e48003f35c434163770e40" ></div>
+        
+</body>
+<script>    
+    
+            var map_1c8fc1b4a3e48003f35c434163770e40 = L.map(
+                "map_1c8fc1b4a3e48003f35c434163770e40",
+                {
+                    center: [41.756256, -87.645031],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_d8ab24bcd7536a2c5f307b37cf24a244 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_1c8fc1b4a3e48003f35c434163770e40);
+        
+    
+            var tile_layer_36e7f49097e2ffe17a08698e21dcf416 = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {"attribution": "Mapbox", "detectRetina": false, "maxNativeZoom": 20, "maxZoom": 20, "minZoom": 1, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_1c8fc1b4a3e48003f35c434163770e40);
+        
+    
+            var marker_cluster_ba80ca585fdda4410242c37d1040da3f = L.markerClusterGroup(
+                {}
+            );
+            map_1c8fc1b4a3e48003f35c434163770e40.addLayer(marker_cluster_ba80ca585fdda4410242c37d1040da3f);
+        
+    
+            var circle_marker_ec9087575c36d5bbda5efdd972663b97 = L.circleMarker(
+                [41.756256, -87.645031],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ba80ca585fdda4410242c37d1040da3f);
+        
+    
+            circle_marker_ec9087575c36d5bbda5efdd972663b97.bindTooltip(
+                `<div>
+                     <div class="popup-content">7551 S GREEN ST, CHICAGO</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_710e4f499302893a0e7a82b24fd33849 = L.circleMarker(
+                [41.7523146, -87.5837991],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ba80ca585fdda4410242c37d1040da3f);
+        
+    
+            circle_marker_710e4f499302893a0e7a82b24fd33849.bindTooltip(
+                `<div>
+                     <div class="popup-content">7830 S EAST END AVE, CHICAGO</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_fa49a3bf721f1f0f669632fca641f15e = L.circleMarker(
+                [41.7935367, -87.6538396],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ba80ca585fdda4410242c37d1040da3f);
+        
+    
+            circle_marker_fa49a3bf721f1f0f669632fca641f15e.bindTooltip(
+                `<div>
+                     <div class="popup-content">1135 W GARFIELD BLVD, CHICAGO</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_6e528e42749357076565394f658c647d = L.circleMarker(
+                [41.7886812, -87.6501301],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ba80ca585fdda4410242c37d1040da3f);
+        
+    
+            circle_marker_6e528e42749357076565394f658c647d.bindTooltip(
+                `<div>
+                     <div class="popup-content">1003 W 58TH ST, CHICAGO</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_09303ea85e4a72ce64eb45fae33e5848 = L.circleMarker(
+                [41.79439319999999, -87.66195689999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ba80ca585fdda4410242c37d1040da3f);
+        
+    
+            circle_marker_09303ea85e4a72ce64eb45fae33e5848.bindTooltip(
+                `<div>
+                     <div class="popup-content">5451 S LAFLIN ST, CHICAGO</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_41f51bc71a1bfd76ff1f14c7869400bb = L.circleMarker(
+                [41.760705, -87.590491],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ba80ca585fdda4410242c37d1040da3f);
+        
+    
+            circle_marker_41f51bc71a1bfd76ff1f14c7869400bb.bindTooltip(
+                `<div>
+                     <div class="popup-content">7359 S DORCHESTER AVE, CHICAGO</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_c5766f739e87d98e1b2335ef09a3924e = L.circleMarker(
+                [41.7465957, -87.66428359999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ba80ca585fdda4410242c37d1040da3f);
+        
+    
+            circle_marker_c5766f739e87d98e1b2335ef09a3924e.bindTooltip(
+                `<div>
+                     <div class="popup-content">8101 S MARSHFIELD AVE, CHICAGO</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_0c973ed84028ba8a3a8a2fb1a2b757c0 = L.circleMarker(
+                [41.7594284, -87.6354691],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ba80ca585fdda4410242c37d1040da3f);
+        
+    
+            circle_marker_0c973ed84028ba8a3a8a2fb1a2b757c0.bindTooltip(
+                `<div>
+                     <div class="popup-content">7411 S EGGLESTON AVE, CHICAGO</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_b5cc0d3b6de8b379a5415ab8124a42db = L.circleMarker(
+                [41.7889451, -87.649491],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ba80ca585fdda4410242c37d1040da3f);
+        
+    
+            circle_marker_b5cc0d3b6de8b379a5415ab8124a42db.bindTooltip(
+                `<div>
+                     <div class="popup-content">5757 S MORGAN ST, CHICAGO</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_70b9ced3e4ef068df90bb8894c0afdf7 = L.circleMarker(
+                [41.7675053, -87.62383100000001],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ba80ca585fdda4410242c37d1040da3f);
+        
+    
+            circle_marker_70b9ced3e4ef068df90bb8894c0afdf7.bindTooltip(
+                `<div>
+                     <div class="popup-content">6956 S WABASH AVE, CHICAGO</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_910e284e0f8e4bd2c465f8105f801fab = L.circleMarker(
+                [41.7571307, -87.5885059],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ba80ca585fdda4410242c37d1040da3f);
+        
+    
+            circle_marker_910e284e0f8e4bd2c465f8105f801fab.bindTooltip(
+                `<div>
+                     <div class="popup-content">7554 S BLACKSTONE AVE, CHICAGO</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_af88e03a4dd2dc5dad32648e2eeb24a1 = L.circleMarker(
+                [41.7617096, -87.62346579999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ba80ca585fdda4410242c37d1040da3f);
+        
+    
+            circle_marker_af88e03a4dd2dc5dad32648e2eeb24a1.bindTooltip(
+                `<div>
+                     <div class="popup-content">7300 S WABASH AVE, CHICAGO</div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var layer_control_17c318853b7a9f993595c8b2f873a114 = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_d8ab24bcd7536a2c5f307b37cf24a244,
+                },
+                overlays :  {
+                    "macro_element_ba80ca585fdda4410242c37d1040da3f" : marker_cluster_ba80ca585fdda4410242c37d1040da3f,
+                },
+            };
+            L.control.layers(
+                layer_control_17c318853b7a9f993595c8b2f873a114.base_layers,
+                layer_control_17c318853b7a9f993595c8b2f873a114.overlays,
+                {"autoZIndex": true, "collapsed": true, "position": "topright"}
+            ).addTo(map_1c8fc1b4a3e48003f35c434163770e40);
+        
+</script>
