@@ -17,7 +17,7 @@ const excludeValue = [
 const trdList = () => {
   const list = document.querySelector("#sales-list");
 
-  const listLimit = 30;
+  const listLimit = 100;
 
   let scroller;
 
@@ -42,7 +42,7 @@ const trdList = () => {
     addEventListeners: () => {
       list.addEventListener("click", () => {
         const url = helpers.getGamTrackUrl(
-          "https://therealdeal.com/data/?utm_source=embed&utm_medium=widget"
+          "https://therealdeal.com/data/new-york/2024/nyc-transactions/?utm_source=embed&utm_medium=widget"
         );
         window.open(url, "_blank");
       });
@@ -74,8 +74,8 @@ const trdList = () => {
 
           return `
             <li class="list-group-item d-flex justify-content-between align-items-start">
-              <div class="me-2">${address}</div>
-              <div>
+              <div class="me-2 left-side">${address}</div>
+              <div class="right-side">
                 <div class="text-success price">${price}</div>
                 <div class="text-muted date">${date}</div>
               </div>
@@ -156,6 +156,16 @@ const trdList = () => {
           break;
         }
       }
+
+      if (address) {
+        address = address.replace("Unit UNIT", "Unit ");
+        address = address.replace(", NY", "");
+        address = address.replace("NEW YORK", "MN");
+        address = address.replace("QUEENS", "QN");
+        address = address.replace("BROOKLYN", "BK");
+        address = address.replace("BRONX", "BX");
+        address = address.replace("STATEN ISLAND", "SI");
+      }
       return address;
     },
 
@@ -235,7 +245,8 @@ const trdList = () => {
         year: "2-digit",
         month: "numeric",
         day: "numeric",
-        timeZone: "GMT",
+        hour: "numeric",
+        minute: "numeric",
       }
     ) => {
       try {
