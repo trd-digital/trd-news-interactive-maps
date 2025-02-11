@@ -8,7 +8,6 @@
     href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;500;700&display=swap"
     rel="stylesheet"
   >
-
   <style>
     /* 1) Light Mode (default) */
     :root {
@@ -20,12 +19,7 @@
       --border-color: #CCCCCC;           /* Light gray border */
       --hover-shadow: rgba(0, 0, 0, 0.1);/* Subtle shadow on hover */
     }
-
-    /*
-      2) Dark Mode if OS/browser prefers dark
-      If no override class is set, users who prefer dark
-      will see these variable overrides automatically.
-    */
+    /* 2) Dark Mode if OS/browser prefers dark */
     @media (prefers-color-scheme: dark) {
       :root {
         --primary-color: #FFFFFF;
@@ -37,12 +31,7 @@
         --hover-shadow: rgba(255, 255, 255, 0.2);
       }
     }
-
-    /*
-      3) Override Classes (ignore OS)
-         .override-light => forcibly light
-         .override-dark  => forcibly dark
-    */
+    /* 3) Override Classes */
     .override-light {
       --primary-color: #000000;
       --secondary-color: #FFFFFF;
@@ -52,7 +41,6 @@
       --border-color: #CCCCCC;
       --hover-shadow: rgba(0, 0, 0, 0.1);
     }
-
     .override-dark {
       --primary-color: #FFFFFF;
       --secondary-color: #1A1A1A;
@@ -63,8 +51,6 @@
       --hover-shadow: rgba(255, 255, 255, 0.2);
     }
 
-    /* ====== The rest of your existing styles, referencing the above variables ====== */
-
     /* Global Styles */
     body {
       font-family: 'Merriweather', serif;
@@ -74,7 +60,6 @@
       color: var(--text-color);
       transition: background-color 0.3s, color 0.3s;
     }
-
     h1 {
       text-align: center;
       color: var(--primary-color);
@@ -90,7 +75,6 @@
       gap: 15px;
       justify-content: center;
     }
-
     .filters input,
     .filters select,
     .filters button {
@@ -98,22 +82,20 @@
       border: 1px solid var(--border-color);
       border-radius: 5px;
       font-size: 0.9em;
-      background-color: var(--secondary-color); /* Might want to change for a nicer light background */
+      background-color: var(--secondary-color);
       color: var(--primary-color);
       transition: border-color 0.3s, box-shadow 0.3s;
     }
-
     .filters input::placeholder {
       color: #AAAAAA;
     }
-
     .filters input:focus,
     .filters select:focus {
       border-color: var(--accent-color);
       box-shadow: 0 0 5px var(--hover-shadow);
       outline: none;
+      background-color: var(--secondary-color);
     }
-
     .filters button {
       background-color: var(--accent-color);
       color: var(--secondary-color);
@@ -122,11 +104,18 @@
       transition: background-color 0.3s, transform 0.2s;
       font-weight: bold;
     }
-
     .filters button:hover {
       background-color: #187bcd;
       transform: translateY(-2px);
       box-shadow: 0 4px 6px var(--hover-shadow);
+    }
+
+    /* Prevent autofill background override (for Chrome/WebKit) */
+    input:-webkit-autofill,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:hover {
+      -webkit-box-shadow: 0 0 0px 1000px var(--secondary-color) inset !important;
+      -webkit-text-fill-color: var(--primary-color) !important;
     }
 
     /* Results Container */
@@ -149,7 +138,6 @@
       height: 100%;
       position: relative;
     }
-
     .group-card:hover {
       transform: translateY(-3px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
@@ -157,23 +145,14 @@
 
     /* Group Header Styles */
     .group-header {
-    display: flex;
-    flex-direction: column; /* stack items top-to-bottom */
-    align-items: flex-start; /* left-align them (optional) */
-    padding: 12px 16px;
-    cursor: pointer;
-    user-select: none;
-    background-color: var(--secondary-color);
-    border-bottom: 1px solid var(--border-color);
-    transition: background-color 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 12px 16px;
+      background-color: var(--secondary-color);
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 0.3s;
     }
-
-
-    .group-header:hover {
-      background-color: ((var(--secondary-color))); /* Might want a lighter color for light mode */
-    }
-
-    /* Region name */
     .header-region {
       font-size: 1.1em;
       font-weight: 700;
@@ -181,8 +160,6 @@
       max-width: 100%;
       word-wrap: break-word;
     }
-
-    /* Classification (smaller font, 0.75em) */
     .header-classification {
       font-size: 0.75em;
       color: var(--primary-color);
@@ -191,19 +168,14 @@
       word-wrap: break-word;
     }
 
-    /* Group Details */
+    /* Group Details (Always Expanded) */
     .group-details {
       padding: 16px;
-      display: none; /* Initially hidden */
+      display: flex !important; /* Always visible */
       background-color: var(--secondary-color);
       flex-grow: 1;
-      display: flex;
       flex-direction: column;
       justify-content: flex-start;
-    }
-
-    .group-details.show {
-      display: flex;
     }
 
     /* Metrics List */
@@ -212,25 +184,21 @@
       padding: 0;
       margin: 0;
     }
-
     .metrics-list li {
       margin-bottom: 12px;
       padding-bottom: 10px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
-
     .metrics-list li:last-child {
       border-bottom: none;
       margin-bottom: 0;
       padding-bottom: 0;
     }
-
     .metrics-title {
       font-weight: bold;
       color: var(--primary-color);
       font-size: 0.95em;
     }
-
     .metrics-value {
       color: var(--accent-color);
       font-size: 0.95em;
@@ -242,25 +210,22 @@
       font-size: 0.75em;
       color: var(--primary-color);
     }
-
     .submetrics div {
       margin-bottom: 4px;
     }
 
-    /* Source Link on bottom-right */
+    /* Source Link */
     .source-entry {
       text-align: right;
       font-size: 0.55em;
       margin-top: -15px;
     }
-
     .source-entry a {
       text-decoration: none;
       color: var(--accent-color);
       font-weight: 500;
       transition: color 0.3s;
     }
-
     .source-entry a:hover {
       color: #1C86EE;
       text-decoration: underline;
@@ -274,9 +239,8 @@
       font-size: 1.1em;
       color: var(--primary-color);
     }
-
     #errorMessage {
-      color: #FF6347; /* Red text for error messages */
+      color: #FF6347;
     }
 
     /* Spinner */
@@ -291,7 +255,6 @@
       vertical-align: middle;
       margin-right: 10px;
     }
-
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -303,40 +266,32 @@
         flex-direction: column;
         align-items: flex-start;
       }
-
       .header-region {
         max-width: 100%;
       }
-
       .header-classification {
         margin-top: 6px;
         max-width: 100%;
         text-align: left;
       }
-
       .metrics-list li {
         margin-bottom: 10px;
         padding-bottom: 8px;
       }
-
       .metrics-title,
       .metrics-value {
         font-size: 0.9em;
       }
-
       .submetrics {
         font-size: 0.7em;
       }
-
       .source-entry {
         font-size: 0.7em;
         margin-top: 6px;
       }
-
       .filters {
         gap: 10px;
       }
-
       .filters input,
       .filters select,
       .filters button {
@@ -347,7 +302,7 @@
   </style>
 </head>
 <body>
-  <!-- (Optional) Theme Toggle Button -->
+  <!-- Theme Toggle Button -->
   <button id="themeToggleBtn" style="position: fixed; top: 10px; right: 10px; z-index: 999;">
     Toggle Theme
   </button>
@@ -362,7 +317,6 @@
       <!-- Options added dynamically -->
     </select>
     <select id="filterDatePeriod">
-      <option value="">All Date Periods</option>
       <!-- Options added dynamically -->
     </select>
     <button id="resetFilters">Reset Filters</button>
@@ -385,7 +339,7 @@
   <!-- Results Container -->
   <div id="resultsContainer"><!-- Dynamically populated --></div>
 
-  <!-- PapaParse -->
+  <!-- PapaParse Library -->
   <script
     src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"
     integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg=="
@@ -393,65 +347,46 @@
     referrerpolicy="no-referrer">
   </script>
 
-  <!-- Theme Toggle: 2-State with OS Preference Fallback -->
+  <!-- Theme Toggle Script -->
   <script>
     (function() {
       const bodyEl = document.body;
       const toggleBtn = document.getElementById('themeToggleBtn');
-
-      // On load, apply any saved override
-      const savedOverride = localStorage.getItem('themeOverride'); // 'light', 'dark', or null
+      const savedOverride = localStorage.getItem('themeOverride');
       if (savedOverride === 'light') {
         bodyEl.classList.add('override-light');
       } else if (savedOverride === 'dark') {
         bodyEl.classList.add('override-dark');
       }
-
-      // Determine the current *effective* theme (light or dark)
-      // i.e. check override classes, else system preference
       function getEffectiveTheme() {
         if (bodyEl.classList.contains('override-light')) return 'light';
         if (bodyEl.classList.contains('override-dark')) return 'dark';
-
-        // No override => check OS
-        const prefersDark = window.matchMedia &&
-          window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         return prefersDark ? 'dark' : 'light';
       }
-
-      // Apply an override class
       function applyOverride(theme) {
-        // Remove both possible override classes
         bodyEl.classList.remove('override-light', 'override-dark');
-
-        // If forcing light
         if (theme === 'light') {
           bodyEl.classList.add('override-light');
           localStorage.setItem('themeOverride', 'light');
-        }
-        // If forcing dark
-        else if (theme === 'dark') {
+        } else if (theme === 'dark') {
           bodyEl.classList.add('override-dark');
           localStorage.setItem('themeOverride', 'dark');
         }
       }
-
-      // Toggle handler: flip the current effective theme
       toggleBtn.addEventListener('click', () => {
-        const currentTheme = getEffectiveTheme(); // 'light' or 'dark'
-        const newTheme = (currentTheme === 'light') ? 'dark' : 'light';
+        const currentTheme = getEffectiveTheme();
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
         applyOverride(newTheme);
       });
     })();
   </script>
 
-  <!-- Existing Script for Data Fetching/Rendering -->
+  <!-- Data Fetching & Rendering Script -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const csvUrl = 'TRD Data Snapshots - Snapshot2_0.csv'; // Replace with your CSV URL
       let data = [];
-
-      const excludedColumns = ['dataset_tag']; // columns to ignore
 
       const searchRegion = document.getElementById('searchRegion');
       const filterSector = document.getElementById('filterSector');
@@ -483,7 +418,7 @@
         return normalizedItem;
       }
 
-      // Extract hostname if fallback
+      // Extract hostname from URL
       function getHostname(url) {
         try {
           const hostname = new URL(url).hostname;
@@ -494,7 +429,7 @@
         }
       }
 
-      // Fetch CSV
+      // Fetch CSV data
       function fetchData() {
         loadingIndicator.style.display = 'block';
         Papa.parse(csvUrl, {
@@ -505,17 +440,15 @@
             loadingIndicator.style.display = 'none';
             data = results.data.map(normalizeHeaders);
             console.log('Normalized Data:', data);
-
             if (data.length === 0) {
               console.error('CSV contains no data.');
               errorMessage.style.display = 'block';
               return;
             }
-
             populateFilters();
-            // Default search = "New York"
+            // Set default search region and default date option ("most_recent")
             searchRegion.value = "New York";
-            filterDatePeriod.value = "Q4 2024";
+            filterDatePeriod.value = "most_recent";
             filterData();
           },
           error: function(err) {
@@ -526,27 +459,72 @@
         });
       }
 
+      // Global custom order array (most recent first)
+      const customOrder = ["Q4 2024", "Q3 2024", "Q2 2024", "Q1 2024", "Q3 2023"];
+
       // Populate filter dropdowns
       function populateFilters() {
-        const sectors = [...new Set(data.map(item => item.sector).filter(Boolean))].sort();
-        const datePeriods = [...new Set(data.map(item => item.date_period).filter(Boolean))].sort();
+  // Get unique sectors from the CSV and sort them.
+  const sectors = [...new Set(data.map(item => item.sector).filter(Boolean))].sort();
+  
+  // Populate the filterSector dropdown
+  filterSector.innerHTML = '<option value="">All Sectors</option>'; // Clear and add default option
+  sectors.forEach(sector => {
+    const option = document.createElement('option');
+    option.value = sector;
+    option.textContent = sector;
+    filterSector.appendChild(option);
+  });
 
-        sectors.forEach(sector => {
-          const option = document.createElement('option');
-          option.value = sector;
-          option.textContent = sector;
-          filterSector.appendChild(option);
-        });
+  // Clear and populate the filterDatePeriod dropdown
+  filterDatePeriod.innerHTML = '';
+  const mostRecentOption = document.createElement('option');
+  mostRecentOption.value = 'most_recent';
+  mostRecentOption.textContent = 'Most Recent';
+  filterDatePeriod.appendChild(mostRecentOption);
 
-        datePeriods.forEach(period => {
-          const option = document.createElement('option');
-          option.value = period;
-          option.textContent = period;
-          filterDatePeriod.appendChild(option);
-        });
+  const datePeriods = [...new Set(data.map(item => item.date_period).filter(Boolean))]
+    .sort((a, b) => customOrder.indexOf(a) - customOrder.indexOf(b));
+  
+  datePeriods.forEach(period => {
+    const option = document.createElement('option');
+    option.value = period;
+    option.textContent = period;
+    filterDatePeriod.appendChild(option);
+  });
+
+  // Set default to "Most Recent"
+  filterDatePeriod.value = 'most_recent';
+}
+
+
+      // Filter data based on user input
+      function filterData() {
+        const reg = searchRegion.value.trim().toLowerCase();
+        const sec = filterSector.value;
+        const dpSelected = filterDatePeriod.value;
+        let newData;
+        if (dpSelected === 'most_recent') {
+          // If "Most Recent" is selected, filter only by region and sector,
+          // thereby returning entries from all date periods.
+          newData = data.filter(item => {
+            const matchesRegion = reg === '' || (item.region && item.region.toLowerCase().includes(reg));
+            const matchesSector = sec === '' || item.sector === sec;
+            return matchesRegion && matchesSector;
+          });
+        } else {
+          // Otherwise, filter by the specific date period selected.
+          newData = data.filter(item => {
+            const matchesRegion = reg === '' || (item.region && item.region.toLowerCase().includes(reg));
+            const matchesSector = sec === '' || item.sector === sec;
+            const matchesDate = item.date_period === dpSelected;
+            return matchesRegion && matchesSector && matchesDate;
+          });
+        }
+        displayGroupedResults(newData);
       }
 
-      // Group data
+      // Group data based on several keys
       function groupData(dataArray) {
         const groups = {};
         dataArray.forEach(item => {
@@ -557,7 +535,6 @@
             ${item.date_period || 'N/A'}|
             ${item.source_link || 'N/A'}
           `.trim();
-
           if (!groups[groupKey]) {
             groups[groupKey] = {
               sector: item.sector || 'N/A',
@@ -569,7 +546,6 @@
               entries: []
             };
           }
-
           groups[groupKey].entries.push({
             display_title: item.display_title || 'N/A',
             value: item.value || 'N/A'
@@ -588,10 +564,9 @@
         }
       }
 
-      // Display results (up to 12), with Residential vs. Commercial logic
+      // Display grouped results (cards are now always expanded)
       function displayGroupedResults(dataToDisplay) {
         resultsContainer.innerHTML = '';
-
         if (dataToDisplay.length === 0) {
           const noDataDiv = document.createElement('div');
           noDataDiv.textContent = 'No results found.';
@@ -600,11 +575,18 @@
           resultsContainer.appendChild(noDataDiv);
           return;
         }
-
-        const grouped = groupData(dataToDisplay).slice(0, 12);
+        let grouped = groupData(dataToDisplay);
+        
+        // If "Most Recent" is selected, sort groups solely by the custom order index.
+        if (filterDatePeriod.value === 'most_recent') {
+          grouped.sort((a, b) => customOrder.indexOf(a.date_period) - customOrder.indexOf(b.date_period));
+          // Do not limit the number of groups so that all time periods are shown.
+        } else {
+          grouped = grouped.slice(0, 12);
+        }
         console.log('Grouped Data:', grouped);
 
-        // Residential vs. Commercial arrays
+        // Define metrics for Residential vs. Commercial
         const residentialMetrics = [
           'Average Sales Price',
           'Average Price Per Sq Ft',
@@ -619,154 +601,95 @@
           'Absorption',
           'Inventory',
           'Deliveries YTD',
-          'Under Construction',
+          'Under Construction'
         ];
 
         grouped.forEach(group => {
           const card = document.createElement('div');
           card.classList.add('group-card');
 
-          // header
+          // Header (static)
           const header = document.createElement('div');
           header.classList.add('group-header');
           header.innerHTML = `
             <div class="header-classification">
-                ${group.sector !== 'N/A' ? group.sector : 'N/A'}
+              ${group.sector !== 'N/A' ? group.sector : 'N/A'}
             </div>
             <div class="header-region">
-                ${group.region !== 'N/A' ? `<span>${group.region}</span>` : `<span>N/A</span>`}
+              ${group.region !== 'N/A' ? `<span>${group.region}</span>` : `<span>N/A</span>`}
             </div>
-            `;
+          `;
           card.appendChild(header);
 
-          // details
+          // Details (always visible)
           const details = document.createElement('div');
           details.classList.add('group-details');
 
-          // choose metrics
+          // Choose metrics based on sector
           let metricsToDisplay = residentialMetrics;
           if (group.sector && group.sector.toLowerCase() === 'commercial') {
             metricsToDisplay = commercialMetrics;
           }
 
-          // build metrics list
+          // Build metrics list
           const metricsList = document.createElement('ul');
           metricsList.classList.add('metrics-list');
-
           metricsToDisplay.forEach(metricTitle => {
             const li = document.createElement('li');
             const foundEntry = group.entries.find(
               e => e.display_title && e.display_title.toLowerCase() === metricTitle.toLowerCase()
             );
             const val = foundEntry ? foundEntry.value : 'N/A';
-
             li.innerHTML = `
               <div class="metrics-title">${metricTitle}:</div>
               <div class="metrics-value">${val}</div>
             `;
             metricsList.appendChild(li);
           });
-
           details.appendChild(metricsList);
 
-          // submetrics (Last Updated, Date Period)
+          // Submetrics (Last Updated, Date Period)
           const submetrics = document.createElement('div');
           submetrics.classList.add('submetrics');
-
           const lu = group.last_updated !== 'N/A' ? group.last_updated : 'N/A';
           const dp = group.date_period !== 'N/A' ? group.date_period : 'N/A';
-
           submetrics.innerHTML = `
             <div><strong>Last Updated:</strong> ${lu}</div>
             <div><strong>Date Period:</strong> ${dp}</div>
           `;
           details.appendChild(submetrics);
 
-          // source link bottom-right
+          // Source link
           if (group.source_link !== 'N/A' && isValidURL(group.source_link)) {
             const sourceDiv = document.createElement('div');
             sourceDiv.classList.add('source-entry');
-
             let linkText = (group.source && group.source !== 'N/A')
               ? group.source
               : getHostname(group.source_link);
-
             sourceDiv.innerHTML = `<a href="${group.source_link}" target="_blank">${linkText}</a>`;
             details.appendChild(sourceDiv);
           }
-
           card.appendChild(details);
           resultsContainer.appendChild(card);
-
-          // toggle details on click
-          header.addEventListener('click', () => {
-            const isVisible = details.classList.contains('show');
-            if (isVisible) {
-              details.classList.remove('show');
-              header.classList.remove('active');
-            } else {
-              details.classList.add('show');
-              header.classList.add('active');
-            }
-          });
-
-          // accessibility: toggle on "Enter" or "Space"
-          header.setAttribute('tabindex', '0');
-          header.setAttribute('role', 'button');
-          header.setAttribute('aria-expanded', 'false');
-
-          header.addEventListener('keydown', e => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              const isVisible = details.classList.contains('show');
-              if (isVisible) {
-                details.classList.remove('show');
-                header.classList.remove('active');
-              } else {
-                details.classList.add('show');
-                header.classList.add('active');
-              }
-            }
-          });
         });
       }
 
-      // Filter Data
-      function filterData() {
-        const reg = searchRegion.value.trim().toLowerCase();
-        const sec = filterSector.value;
-        const dp  = filterDatePeriod.value;
-
-        const newData = data.filter(item => {
-          const matchesRegion = reg === '' || (item.region && item.region.toLowerCase().includes(reg));
-          const matchesSector = sec === '' || item.sector === sec;
-          const matchesDate = dp === '' || item.date_period === dp;
-          return matchesRegion && matchesSector && matchesDate;
-        });
-
-        displayGroupedResults(newData);
+      // Reset filters function
+      function resetAllFilters() {
+        searchRegion.value = '';
+        filterSector.value = '';
+        filterDatePeriod.value = 'most_recent';
+        displayGroupedResults(data);
       }
 
-      // Initialization
-      function init() {
-        fetchData();
-      }
-      init();
+      // Initialize
+      fetchData();
 
-      // Debounced dynamic filtering
+      // Event Listeners for dynamic filtering
       searchRegion.addEventListener('input', debounce(filterData, 300));
       filterSector.addEventListener('change', filterData);
       filterDatePeriod.addEventListener('change', filterData);
-
-      // Reset filters
-      resetFilters.addEventListener('click', () => {
-        searchRegion.value = '';
-        filterSector.value = '';
-        filterDatePeriod.value = '';
-        displayGroupedResults(data);
-      });
-
-      // Retry button for errors
+      resetFilters.addEventListener('click', resetAllFilters);
       retryButton && retryButton.addEventListener('click', () => {
         errorMessage.style.display = 'none';
         fetchData();
