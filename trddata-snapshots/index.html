@@ -4,10 +4,7 @@
   <meta charset="UTF-8">
   <title>Real Estate Lookup Tool</title>
   <!-- Google Font: Merriweather -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;500;700&display=swap"
-    rel="stylesheet"
-  >
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     /* 1) Light Mode (default) */
     :root {
@@ -260,6 +257,26 @@
       100% { transform: rotate(360deg); }
     }
 
+    /* Custom Date Filter Styles */
+    #dateFilterContainer {
+      position: relative;
+      display: inline-block;
+    }
+    #dateFilterInput {
+      cursor: pointer;
+    }
+    #dateFilterDropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: var(--secondary-color);
+      border: 1px solid var(--border-color);
+      padding: 10px;
+      display: none;
+      z-index: 100;
+      width: 200px;
+    }
+
     /* Responsive Typography */
     @media (max-width: 768px) {
       .group-header {
@@ -303,9 +320,7 @@
 </head>
 <body>
   <!-- Theme Toggle Button -->
-  <button id="themeToggleBtn" style="position: fixed; top: 10px; right: 10px; z-index: 999;">
-    Toggle Theme
-  </button>
+  <button id="themeToggleBtn" style="position: fixed; top: 10px; right: 10px; z-index: 999;">Toggle Theme</button>
 
   <h1>Real Estate Data Lookup</h1>
 
@@ -316,9 +331,22 @@
       <option value="">All Sectors</option>
       <!-- Options added dynamically -->
     </select>
-    <select id="filterDatePeriod">
-      <!-- Options added dynamically -->
-    </select>
+    <!-- Custom Date Filter UI -->
+    <div id="dateFilterContainer">
+      <input type="text" id="dateFilterInput" readonly placeholder="Select Date Period(s)">
+      <div id="dateFilterDropdown">
+        <div>
+          <input type="radio" name="dpOption" id="radioMostRecent" value="most_recent" checked>
+          <label for="radioMostRecent">Most Recent</label>
+        </div>
+        <div>
+          <input type="radio" name="dpOption" id="radioSelect" value="select">
+          <label for="radioSelect">Select Dates</label>
+        </div>
+        <div id="checkboxContainer" style="margin-top: 10px; display: none;"></div>
+        <button id="dateFilterApply" style="margin-top: 10px;">Apply</button>
+      </div>
+    </div>
     <button id="resetFilters">Reset Filters</button>
   </div>
 
@@ -331,21 +359,14 @@
   <!-- Error Message -->
   <div id="errorMessage" style="display: none;">
     Failed to load data. Please
-    <button id="retryButton" style="background: none; border: none; color: var(--accent-color); text-decoration: underline; cursor: pointer;">
-      try again
-    </button>.
+    <button id="retryButton" style="background: none; border: none; color: var(--accent-color); text-decoration: underline; cursor: pointer;">try again</button>.
   </div>
 
   <!-- Results Container -->
   <div id="resultsContainer"><!-- Dynamically populated --></div>
 
   <!-- PapaParse Library -->
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"
-    integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer">
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <!-- Theme Toggle Script -->
   <script>
@@ -390,12 +411,20 @@
 
       const searchRegion = document.getElementById('searchRegion');
       const filterSector = document.getElementById('filterSector');
-      const filterDatePeriod = document.getElementById('filterDatePeriod');
+      const dateFilterInput = document.getElementById('dateFilterInput');
+      const dateFilterDropdown = document.getElementById('dateFilterDropdown');
+      const radioMostRecent = document.getElementById('radioMostRecent');
+      const radioSelect = document.getElementById('radioSelect');
+      const checkboxContainer = document.getElementById('checkboxContainer');
+      const dateFilterApply = document.getElementById('dateFilterApply');
       const resetFilters = document.getElementById('resetFilters');
       const resultsContainer = document.getElementById('resultsContainer');
       const loadingIndicator = document.getElementById('loadingIndicator');
       const errorMessage = document.getElementById('errorMessage');
       const retryButton = document.getElementById('retryButton');
+
+      // Global custom order array (most recent first)
+      const customOrder = ["Q4 2024", "Q3 2024", "Q2 2024", "Q1 2024", "Q4 2023"];
 
       // Debounce function
       function debounce(func, delay) {
@@ -446,9 +475,10 @@
               return;
             }
             populateFilters();
-            // Set default search region and default date option ("most_recent")
+            // Set default values
             searchRegion.value = "New York";
-            filterDatePeriod.value = "most_recent";
+            // Default date filter: Most Recent (i.e. first entry)
+            dateFilterInput.value = customOrder[0];
             filterData();
           },
           error: function(err) {
@@ -459,68 +489,95 @@
         });
       }
 
-      // Global custom order array (most recent first)
-      const customOrder = ["Q4 2024", "Q3 2024", "Q2 2024", "Q1 2024", "Q3 2023"];
-
-      // Populate filter dropdowns
+      // Populate sector filter and set default for date filter
       function populateFilters() {
-  // Get unique sectors from the CSV and sort them.
-  const sectors = [...new Set(data.map(item => item.sector).filter(Boolean))].sort();
-  
-  // Populate the filterSector dropdown
-  filterSector.innerHTML = '<option value="">All Sectors</option>'; // Clear and add default option
-  sectors.forEach(sector => {
-    const option = document.createElement('option');
-    option.value = sector;
-    option.textContent = sector;
-    filterSector.appendChild(option);
-  });
+        // Populate sector dropdown
+        const sectors = [...new Set(data.map(item => item.sector).filter(Boolean))].sort();
+        filterSector.innerHTML = '<option value="">All Sectors</option>';
+        sectors.forEach(sector => {
+          const option = document.createElement('option');
+          option.value = sector;
+          option.textContent = sector;
+          filterSector.appendChild(option);
+        });
+        // Set default for date filter input to "Most Recent"
+        dateFilterInput.value = customOrder[0];
+      }
 
-  // Clear and populate the filterDatePeriod dropdown
-  filterDatePeriod.innerHTML = '';
-  const mostRecentOption = document.createElement('option');
-  mostRecentOption.value = 'most_recent';
-  mostRecentOption.textContent = 'Most Recent';
-  filterDatePeriod.appendChild(mostRecentOption);
+      // Populate checkboxes for selecting multiple dates (excluding the most recent)
+      function populateCheckboxes() {
+        checkboxContainer.innerHTML = "";
+        const otherDates = customOrder;
+        otherDates.forEach(date => {
+          const wrapper = document.createElement("div");
+          const cb = document.createElement("input");
+          cb.type = "checkbox";
+          cb.value = date;
+          cb.id = "dp_" + date;
+          const label = document.createElement("label");
+          label.htmlFor = cb.id;
+          label.textContent = date;
+          wrapper.appendChild(cb);
+          wrapper.appendChild(label);
+          checkboxContainer.appendChild(wrapper);
+        });
+      }
 
-  const datePeriods = [...new Set(data.map(item => item.date_period).filter(Boolean))]
-    .sort((a, b) => customOrder.indexOf(a) - customOrder.indexOf(b));
-  
-  datePeriods.forEach(period => {
-    const option = document.createElement('option');
-    option.value = period;
-    option.textContent = period;
-    filterDatePeriod.appendChild(option);
-  });
+      // Show/hide the custom dropdown when the date filter input is clicked
+      dateFilterInput.addEventListener("click", () => {
+        dateFilterDropdown.style.display = "block";
+      });
 
-  // Set default to "Most Recent"
-  filterDatePeriod.value = 'most_recent';
-}
+      // Radio button change events
+      radioMostRecent.addEventListener("change", () => {
+        if (radioMostRecent.checked) {
+          checkboxContainer.style.display = "none";
+        }
+      });
+      radioSelect.addEventListener("change", () => {
+        if (radioSelect.checked) {
+          checkboxContainer.style.display = "block";
+          populateCheckboxes();
+        }
+      });
 
+      // When "Apply" is clicked, update the date filter input and trigger filtering
+      dateFilterApply.addEventListener("click", () => {
+        let selectedDates;
+        if (radioMostRecent.checked) {
+          selectedDates = [customOrder[0]];
+        } else {
+          selectedDates = Array.from(checkboxContainer.querySelectorAll("input[type='checkbox']:checked"))
+                              .map(cb => cb.value);
+          // If none are selected, you could decide to default back to most recent:
+          if(selectedDates.length === 0) {
+            selectedDates = [customOrder[0]];
+            radioMostRecent.checked = true;
+            checkboxContainer.style.display = "none";
+          }
+        }
+        dateFilterInput.value = selectedDates.join(", ");
+        dateFilterDropdown.style.display = "none";
+        filterData();
+      });
 
       // Filter data based on user input
       function filterData() {
         const reg = searchRegion.value.trim().toLowerCase();
         const sec = filterSector.value;
-        const dpSelected = filterDatePeriod.value;
-        let newData;
-        if (dpSelected === 'most_recent') {
-          // If "Most Recent" is selected, filter only by region and sector,
-          // thereby returning entries from all date periods.
-          newData = data.filter(item => {
-            const matchesRegion = reg === '' || (item.region && item.region.toLowerCase().includes(reg));
-            const matchesSector = sec === '' || item.sector === sec;
-            return matchesRegion && matchesSector;
-          });
+        let effectiveDates;
+        // Determine effective dates based on the date filter input value.
+        if(dateFilterInput.value === customOrder[0]){
+          effectiveDates = [customOrder[0]];
         } else {
-          // Otherwise, filter by the specific date period selected.
-          newData = data.filter(item => {
-            const matchesRegion = reg === '' || (item.region && item.region.toLowerCase().includes(reg));
-            const matchesSector = sec === '' || item.sector === sec;
-            const matchesDate = item.date_period === dpSelected;
-            return matchesRegion && matchesSector && matchesDate;
-          });
+          effectiveDates = dateFilterInput.value.split(", ").filter(v => v);
         }
+        const newData = data.filter(item => {
+          const matchesRegion = reg === '' || (item.region && item.region.toLowerCase().includes(reg));
+          const matchesSector = sec === '' || item.sector === sec;
+          const matchesDate = effectiveDates.length === 0 || effectiveDates.includes(item.date_period);
+          return matchesRegion && matchesSector && matchesDate;
+        });
         displayGroupedResults(newData);
       }
 
@@ -564,7 +621,7 @@
         }
       }
 
-      // Display grouped results (cards are now always expanded)
+      // Display grouped results (cards are always expanded)
       function displayGroupedResults(dataToDisplay) {
         resultsContainer.innerHTML = '';
         if (dataToDisplay.length === 0) {
@@ -576,11 +633,9 @@
           return;
         }
         let grouped = groupData(dataToDisplay);
-        
-        // If "Most Recent" is selected, sort groups solely by the custom order index.
-        if (filterDatePeriod.value === 'most_recent') {
+        // If the date filter input equals the most recent date, sort groups by custom order index.
+        if (dateFilterInput.value === customOrder[0]) {
           grouped.sort((a, b) => customOrder.indexOf(a.date_period) - customOrder.indexOf(b.date_period));
-          // Do not limit the number of groups so that all time periods are shown.
         } else {
           grouped = grouped.slice(0, 12);
         }
@@ -627,7 +682,7 @@
 
           // Choose metrics based on sector
           let metricsToDisplay = residentialMetrics;
-          if (group.sector && group.sector.toLowerCase() === 'commercial') {
+          if (group.sector && group.sector.toLowerCase() === 'office') {
             metricsToDisplay = commercialMetrics;
           }
 
@@ -678,7 +733,10 @@
       function resetAllFilters() {
         searchRegion.value = '';
         filterSector.value = '';
-        filterDatePeriod.value = 'most_recent';
+        dateFilterInput.value = customOrder[0];
+        // Reset radio buttons
+        radioMostRecent.checked = true;
+        checkboxContainer.style.display = "none";
         displayGroupedResults(data);
       }
 
@@ -688,7 +746,7 @@
       // Event Listeners for dynamic filtering
       searchRegion.addEventListener('input', debounce(filterData, 300));
       filterSector.addEventListener('change', filterData);
-      filterDatePeriod.addEventListener('change', filterData);
+      // The custom date filter calls filterData() when "Apply" is clicked.
       resetFilters.addEventListener('click', resetAllFilters);
       retryButton && retryButton.addEventListener('click', () => {
         errorMessage.style.display = 'none';
