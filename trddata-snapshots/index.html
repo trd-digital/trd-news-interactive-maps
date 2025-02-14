@@ -685,9 +685,11 @@
         });
         
         // Optionally limit groups if not using the full range (here we only slice if the date filter is not most recent)
-        if(dateFilterInput.value !== customOrder[0]){
-          grouped = grouped.slice(0, 12);
-        }
+        // if(dateFilterInput.value !== customOrder[0]){
+        //   grouped = grouped.slice(0, 12);
+        // }
+        // Limit the number of results to 20
+        grouped = grouped.slice(0, 20);
         
         console.log('Grouped Data:', grouped);
 
