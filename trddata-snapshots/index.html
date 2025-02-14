@@ -277,6 +277,27 @@
       width: 200px;
     }
 
+    /* WebKit-based browsers */
+    ::-webkit-scrollbar {
+      width: 12px; /* Width of the scrollbar */
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1; /* Track color */
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #1E90FF; /* Thumb color */
+      border-radius: 6px;
+      border: 3px solid #f1f1f1; /* Creates padding around the thumb */
+    }
+
+    /* Firefox */
+    * {
+      scrollbar-width: thin; /* Options: auto, thin, none */
+      scrollbar-color: #1E90FF #f1f1f1; /* thumb color, track color */
+    }
+
     /* Responsive Typography */
     @media (max-width: 768px) {
       .group-header {
@@ -315,6 +336,7 @@
         padding: 6px 10px;
         font-size: 0.85em;
       }
+  
     }
   </style>
 </head>
