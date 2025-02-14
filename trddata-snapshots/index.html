@@ -480,10 +480,16 @@
               return;
             }
 
-          // After your data is loaded:
-          const regions = [...new Set(data.map(item => item.region).filter(Boolean))];
+          // After data is loaded, inside the PapaParse complete callback:
+          const regions = [...new Set(data.map(item => item.region).filter(Boolean))].sort();
           $("#searchRegion").autocomplete({
-            source: regions
+            source: regions,
+            select: function(event, ui) {
+              // Update the search input with the selected value
+              $("#searchRegion").val(ui.item.value);
+              // Trigger filtering automatically
+              filterData();
+            }
           });
 
             populateFilters();
