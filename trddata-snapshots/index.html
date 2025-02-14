@@ -168,7 +168,7 @@
     /* Group Details (Always Expanded) */
     .group-details {
       padding: 16px;
-      display: flex !important; /* Always visible */
+      display: flex !important;
       background-color: var(--secondary-color);
       flex-grow: 1;
       flex-direction: column;
@@ -475,9 +475,9 @@
               return;
             }
             populateFilters();
-            // Set default values
+            // Set default values:
             searchRegion.value = "New York";
-            // Default date filter: Most Recent (i.e. first entry)
+            // Default date filter input shows "Most Recent" (i.e. Q4 2024)
             dateFilterInput.value = customOrder[0];
             filterData();
           },
@@ -489,7 +489,7 @@
         });
       }
 
-      // Populate sector filter and set default for date filter
+      // Populate sector filter and set default for date filter input
       function populateFilters() {
         // Populate sector dropdown
         const sectors = [...new Set(data.map(item => item.sector).filter(Boolean))].sort();
@@ -504,11 +504,10 @@
         dateFilterInput.value = customOrder[0];
       }
 
-      // Populate checkboxes for selecting multiple dates (excluding the most recent)
+      // Populate checkboxes for selecting multiple dates (include all dates)
       function populateCheckboxes() {
         checkboxContainer.innerHTML = "";
-        const otherDates = customOrder;
-        otherDates.forEach(date => {
+        customOrder.forEach(date => {
           const wrapper = document.createElement("div");
           const cb = document.createElement("input");
           cb.type = "checkbox";
@@ -549,7 +548,7 @@
         } else {
           selectedDates = Array.from(checkboxContainer.querySelectorAll("input[type='checkbox']:checked"))
                               .map(cb => cb.value);
-          // If none are selected, you could decide to default back to most recent:
+          // If none are selected, default back to most recent
           if(selectedDates.length === 0) {
             selectedDates = [customOrder[0]];
             radioMostRecent.checked = true;
@@ -566,7 +565,7 @@
         const reg = searchRegion.value.trim().toLowerCase();
         const sec = filterSector.value;
         let effectiveDates;
-        // Determine effective dates based on the date filter input value.
+        // Determine effective dates from the dateFilterInput value.
         if(dateFilterInput.value === customOrder[0]){
           effectiveDates = [customOrder[0]];
         } else {
@@ -581,7 +580,7 @@
         displayGroupedResults(newData);
       }
 
-      // Group data based on several keys
+      // Group data based on several keys, and include ranking_priority from the CSV
       function groupData(dataArray) {
         const groups = {};
         dataArray.forEach(item => {
@@ -600,6 +599,8 @@
               date_period: item.date_period || 'N/A',
               source_link: item.source_link || 'N/A',
               source: item.source || 'N/A',
+              // Store ranking_priority (assuming it's numeric; if not, convert to int)
+              ranking_priority: parseInt(item.ranking_priority, 10) || 0,
               entries: []
             };
           }
@@ -633,12 +634,21 @@
           return;
         }
         let grouped = groupData(dataToDisplay);
-        // If the date filter input equals the most recent date, sort groups by custom order index.
-        if (dateFilterInput.value === customOrder[0]) {
-          grouped.sort((a, b) => customOrder.indexOf(a.date_period) - customOrder.indexOf(b.date_period));
-        } else {
+        
+        // Sort groups: first by ranking_priority (1 before 0), then by date period order
+        grouped.sort((a, b) => {
+          if (b.ranking_priority !== a.ranking_priority) {
+            return b.ranking_priority - a.ranking_priority;
+          } else {
+            return customOrder.indexOf(a.date_period) - customOrder.indexOf(b.date_period);
+          }
+        });
+        
+        // Optionally limit groups if not using the full range (here we only slice if the date filter is not most recent)
+        if(dateFilterInput.value !== customOrder[0]){
           grouped = grouped.slice(0, 12);
         }
+        
         console.log('Grouped Data:', grouped);
 
         // Define metrics for Residential vs. Commercial
@@ -734,7 +744,6 @@
         searchRegion.value = '';
         filterSector.value = '';
         dateFilterInput.value = customOrder[0];
-        // Reset radio buttons
         radioMostRecent.checked = true;
         checkboxContainer.style.display = "none";
         displayGroupedResults(data);
