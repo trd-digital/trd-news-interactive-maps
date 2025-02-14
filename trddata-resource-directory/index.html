@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resource Directory</title>
+  <!-- Papa Parse CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <style>
+    /* Base colors for light mode */
+    :root {
+      --background-color: #ffffff;
+      --text-color: #000000;
+      --accent-color: #007BFF; /* blue */
+      --card-background: #f9f9f9;
+      --input-border: #ccc;
+    }
+    /* Dark mode adjustments */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background-color: #121212;
+        --text-color: #ffffff;
+        --card-background: #1e1e1e;
+        --input-border: #444;
+      }
+    }
+    
+    /* Global styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      padding: 20px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    header .branding {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    header img.logo {
+      max-height: 50px;
+    }
+    
+    header h1 {
+      margin: 0;
+      font-size: 1.8em;
+    }
+    
+    /* Search bar styling */
+    .search-bar {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto 20px auto;
+    }
+    
+    .search-bar input {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid var(--input-border);
+      border-radius: 4px;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      transition: border 0.3s;
+    }
+    
+    .search-bar input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+    
+    /* Grid for resource cards */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    
+    /* Card design */
+    .card {
+      background-color: var(--card-background);
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.4em;
+      color: var(--accent-color);
+    }
+    
+    .card h2 a {
+      text-decoration: none;
+      color: inherit;
+    }
+    
+    .card .location {
+      font-size: 0.9em;
+      color: var(--text-color);
+      opacity: 0.8;
+      margin-bottom: 10px;
+    }
+    
+    .card p {
+      margin: 0;
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.8em;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="branding">
+      <h1>Resource Directory</h1>
+    </div>
+  </header>
+  
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search by region, name, or description..." />
+  </div>
+  
+  <main>
+    <div class="card-grid" id="resourceContainer">
+      <!-- Resource cards will be inserted here -->
+    </div>
+  </main>
+  
+  <footer>
+    &copy; 2025 Your Company Name. All rights reserved.
+  </footer>
+  
+  <script>
+    // Global resources array
+    let resources = [];
+    
+    // Reference to container and search input
+    const resourceContainer = document.getElementById('resourceContainer');
+    const searchInput = document.getElementById('searchInput');
+    
+    // Function to render resource cards
+    function renderResources(filterText = '') {
+      resourceContainer.innerHTML = '';
+      
+      const filteredResources = resources.filter(resource => {
+        const searchTarget = (resource.name + ' ' + resource.location + ' ' + resource.description).toLowerCase();
+        return searchTarget.includes(filterText.toLowerCase());
+      });
+      
+      filteredResources.forEach(resource => {
+        // Create card element
+        const card = document.createElement('div');
+        card.className = 'card';
+        
+        // Resource Name as a clickable link (with the hidden URL)
+        const title = document.createElement('h2');
+        const link = document.createElement('a');
+        link.href = resource.url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = resource.name;
+        title.appendChild(link);
+        
+        // Location information
+        const locationDiv = document.createElement('div');
+        locationDiv.className = 'location';
+        locationDiv.textContent = resource.location;
+        
+        // Description
+        const descriptionPara = document.createElement('p');
+        descriptionPara.textContent = resource.description;
+        
+        // Append all elements to the card
+        card.appendChild(title);
+        card.appendChild(locationDiv);
+        card.appendChild(descriptionPara);
+        
+        // Append the card to the grid
+        resourceContainer.appendChild(card);
+      });
+    }
+    
+    // Load CSV file from the local directory using Papa Parse
+    Papa.parse('trd_data_resource_directory.csv', {
+      download: true,
+      header: true,
+      complete: function(results) {
+        // Map CSV data to our resource object format
+        resources = results.data.map(r => ({
+          name: r['Name'],
+          location: r['Region/ City / Neighborhood'],
+          url: r['Research URL'],
+          description: r['Description']
+        }));
+        // Initial render
+        renderResources();
+      },
+      error: function(error) {
+        console.error("Error parsing CSV:", error);
+      }
+    });
+    
+    // Filter resources as the user types
+    searchInput.addEventListener('input', (event) => {
+      renderResources(event.target.value);
+    });
+  </script>
+</body>
+</html>
