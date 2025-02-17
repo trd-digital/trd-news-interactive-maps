@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_68a99c8dd02ac0672ae409e4fb29644f {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>    
+    
+<style>
+    .popup-content {
+        max-width: 600px; /* Adjusts the maximum width of the tooltip */
+        font-size: 12px;   /* Adjusts the font size */
+        word-wrap: break-word; /* Ensures long words wrap to the next line */
+    }
+    .leaflet-tooltip {
+        background-color: white;
+        border: 1px solid gray;
+        border-radius: 3px;
+        padding: 5px;
+    }
+</style>
+    
+    <h3 align="center" style="font-size:16px"><b>Midtown South Rezoning</b></h3>
+    
+            <div class="folium-map" id="map_68a99c8dd02ac0672ae409e4fb29644f" ></div>
+        
+</body>
+<script>    
+    
+            var map_68a99c8dd02ac0672ae409e4fb29644f = L.map(
+                "map_68a99c8dd02ac0672ae409e4fb29644f",
+                {
+                    center: [40.7542519, -73.9921913],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_2c4a89c2bd16ec31adad8c3470846434 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_68a99c8dd02ac0672ae409e4fb29644f);
+        
+    
+            var tile_layer_8675fb76e7bd35bc290c3aa9e4e9ea55 = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {"attribution": "Mapbox", "detectRetina": false, "maxNativeZoom": 20, "maxZoom": 20, "minZoom": 1, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_68a99c8dd02ac0672ae409e4fb29644f);
+        
+    
+            var marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3 = L.markerClusterGroup(
+                {}
+            );
+            map_68a99c8dd02ac0672ae409e4fb29644f.addLayer(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            var circle_marker_2e601927754279130cec3656b29fbeab = L.circleMarker(
+                [40.7542519, -73.9921913],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_2e601927754279130cec3656b29fbeab.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 539/543 8th Avenue<br>
+        <strong>Lot Area:</strong> 5,404 sf<br>
+        <strong>Zoning Change:</strong> M1-6D to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 4-5 story buildings with ground floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 87,615 zsf of residential (103 units), 215’ in height, 9,401 zsf of local retail<br>
+        <strong>Units:</strong> + 103 units<br>
+        <strong>Inclusionary Housing:</strong> + 20 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 4,616 zsf of local retail<br>
+        <strong>Office:</strong> - 70,516 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_c2bda4631e68c22c2b7b77208c529ba8 = L.circleMarker(
+                [40.7483748, -73.99546600000001],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_c2bda4631e68c22c2b7b77208c529ba8.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 253 W 28 St<br>
+        <strong>Lot Area:</strong> 6,016 sf<br>
+        <strong>Zoning Change:</strong> M1-6D to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 8 story mixed-use building with ground floor retail and office above and one dwelling unit.<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 94,540 zsf of residential (111 units), 415’ in height, 10,184 zsf of retail<br>
+        <strong>Units:</strong> + 110 units<br>
+        <strong>Inclusionary Housing:</strong> + 28 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 6,332 zsf of local retail<br>
+        <strong>Office:</strong> - 25,398 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_101a16e9dc4d076eb81bfbcb9fca71e5 = L.circleMarker(
+                [40.7479609, -73.9937149],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_101a16e9dc4d076eb81bfbcb9fca71e5.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 210/212 W 29/207 28 St<br>
+        <strong>Lot Area:</strong> 15,541 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Three 4-9 story loft buildings with ground-floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 256,966 zsf of residential (302 units), 345’ in height, 27,636 zsf of retail<br>
+        <strong>Units:</strong> + 302 units<br>
+        <strong>Inclusionary Housing:</strong> + 76 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 22,966 zsf of local retail<br>
+        <strong>Office:</strong> - 70,516 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_6748b8bfdaf2d0c92a5f4fc57952005d = L.circleMarker(
+                [40.7489682, -73.9950317],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_6748b8bfdaf2d0c92a5f4fc57952005d.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 253 W 29th Street<br>
+        <strong>Lot Area:</strong> 4,678 sf<br>
+        <strong>Zoning Change:</strong> M1-6D to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Surface parking<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 75,873 zsf of residential (89 units), 325’ in height, 8,140 zsf of retail<br>
+        <strong>Units:</strong> + 89 units<br>
+        <strong>Inclusionary Housing:</strong> + 23 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 8,140 zsf of local retail<br>
+        <strong>Office:</strong> N/A<br>
+        <strong>Warehouse:</strong> <br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_2d63b8d9af82df64f299082ce2263b01 = L.circleMarker(
+                [40.7492043, -73.9947578],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_2d63b8d9af82df64f299082ce2263b01.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 250 W 30th Street<br>
+        <strong>Lot Area:</strong> 5,643 sf<br>
+        <strong>Zoning Change:</strong> M1-6D to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 3-story office building<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 90,690 zsf of residential (106 units), 315’ in height, 9,819 zsf of retail<br>
+        <strong>Units:</strong> + 106 units<br>
+        <strong>Inclusionary Housing:</strong> + 27 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 9,819 zsf of local retail<br>
+        <strong>Office:</strong> - 12,886 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_86717b08789ef6512dd2628d521eca9b = L.circleMarker(
+                [40.74841199999999, -73.993873],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_86717b08789ef6512dd2628d521eca9b.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 223/225 W 29 St<br>
+        <strong>Lot Area:</strong> 4,969 sf<br>
+        <strong>Zoning Change:</strong> M1-6D to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Two 2-story buildings containing light industrial use<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 80,467 zsf of residential (94 units), 335’ in height, 8,665 zsf of retail<br>
+        <strong>Units:</strong> + 93 units<br>
+        <strong>Inclusionary Housing:</strong> + 24 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 8,665 zsf of local retail<br>
+        <strong>Office:</strong> - 3,676 zsf of industrial use<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_ac686bc65ada41efc93c8179af4f0813 = L.circleMarker(
+                [40.74882780000001, -73.9936215],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_ac686bc65ada41efc93c8179af4f0813.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 216, 220, 222 W 30th St<br>
+        <strong>Lot Area:</strong> 9,419 sf<br>
+        <strong>Zoning Change:</strong> M1-6D to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 2-story buildings with ground-floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 152,839 zsf of residential (179 units), 345’ in height, 16,387 zsf of retail<br>
+        <strong>Units:</strong> + 179 units<br>
+        <strong>Inclusionary Housing:</strong> + 45 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 4,281 zsf of local retail<br>
+        <strong>Office:</strong> - 2,011 zsf of industrial use<br>
+        <strong>Warehouse:</strong> <br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_ffa774493f30eb37f1a0048598e2a721 = L.circleMarker(
+                [40.7484702, -73.9927199],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_ffa774493f30eb37f1a0048598e2a721.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 356, 358, 360 7th Ave<br>
+        <strong>Lot Area:</strong> 5,279 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 3-4 story buildings with ground floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 85,763 zsf of residential (100 units), 215’ in height, 9,184 zsf of retail<br>
+        <strong>Units:</strong> + 100 units<br>
+        <strong>Inclusionary Housing:</strong> + 18 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 1,983 zsf of local retail<br>
+        <strong>Office:</strong> - 4,961 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_68c99ed6dfa2fc461d78e85bd9c11e74 = L.circleMarker(
+                [40.7525294, -73.9928762],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_68c99ed6dfa2fc461d78e85bd9c11e74.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 490 8th Avenue<br>
+        <strong>Lot Area:</strong> 4,838 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 1-story retail building<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 74,844 zsf of residential (91 units), 305’ in height, 8,418 zsf of retail<br>
+        <strong>Units:</strong> + 91 units<br>
+        <strong>Inclusionary Housing:</strong> + 23 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 240 zsf of local retail<br>
+        <strong>Office:</strong> N/A<br>
+        <strong>Warehouse:</strong> <br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_1518ad28bf9c7d356ac2bad592484ad1 = L.circleMarker(
+                [40.75320540000001, -73.9912901],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_1518ad28bf9c7d356ac2bad592484ad1.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 247 W 36 St<br>
+        <strong>Lot Area:</strong> 3,714 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 7-story building with ground floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 60,362 zsf of residential (70 units), 335’ in height, 6,462 zsf of retail<br>
+        <strong>Units:</strong> + 70 units<br>
+        <strong>Inclusionary Housing:</strong> + 18 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 4,722 zsf of local retail<br>
+        <strong>Office:</strong> - 18,797 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_b973232031f4b91bda885303e5da5cf0 = L.circleMarker(
+                [40.7534416, -73.99074569999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_b973232031f4b91bda885303e5da5cf0.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 232 W 37 St<br>
+        <strong>Lot Area:</strong> 3,536 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 5-story office building with ground floor retail<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 57,496 zsf of residential (67 units), 325’ in height, 6,151 zsf of retail<br>
+        <strong>Units:</strong> + 67 units<br>
+        <strong>Inclusionary Housing:</strong> + 17 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 3,976 zsf of local retail<br>
+        <strong>Office:</strong> - 10,820 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_d4ba5cb78d5fb3a62163864c8950bde3 = L.circleMarker(
+                [40.7528647, -73.9905459],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_d4ba5cb78d5fb3a62163864c8950bde3.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 223-225 W 36 St<br>
+        <strong>Lot Area:</strong> 5,3768 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Two 3- to 7-story buildings with ground floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 86,921 zsf of residential (102 units), 315’ in height, 9,356 zsf of retail<br>
+        <strong>Units:</strong> + 102 units<br>
+        <strong>Inclusionary Housing:</strong> + 26 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 4,457 zsf of local retail<br>
+        <strong>Office:</strong> - 18,113 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_32164790726dd8caa7192829d15b2d73 = L.circleMarker(
+                [40.75355080000001, -73.99018819999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_32164790726dd8caa7192829d15b2d73.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 221 W 37 St<br>
+        <strong>Lot Area:</strong> 4,061 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 6-story office building with ground floor retail<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 65,251 zsf of residential (76 units), 345’ in height, 7,066 zsf of retail<br>
+        <strong>Units:</strong> + 76 units<br>
+        <strong>Inclusionary Housing:</strong> + 19 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 4,891 zsf of local retail<br>
+        <strong>Office:</strong> - 16,252 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_743db069f442858ba74c893a13bcff3e = L.circleMarker(
+                [40.7540255, -73.9895336],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_743db069f442858ba74c893a13bcff3e.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 221 W 38 St<br>
+        <strong>Lot Area:</strong> 3,428 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 4-story office building with ground floor retail<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 55,440 zsf of residential (65 units), 325’ in height, 5,965 zsf of retail<br>
+        <strong>Units:</strong> + 65 units<br>
+        <strong>Inclusionary Housing:</strong> + 17 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 1,378 zsf of local retail<br>
+        <strong>Office:</strong> - 3,330 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_1fbe4f3c57525c58a6ec50d6d29ef56b = L.circleMarker(
+                [40.7538053, -73.9889275],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_1fbe4f3c57525c58a6ec50d6d29ef56b.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 203/205/207 W 38th St / 526 7<br>Ave<br>
+        <strong>Lot Area:</strong> 8,135 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Four 2-11 story office and light industrial buildings with ground floor retail<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 131,812 zsf of residential (155 units), 275’ in height, 14,153 zsf of retail<br>
+        <strong>Units:</strong> + 155 units<br>
+        <strong>Inclusionary Housing:</strong> + 39 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 1,542 zsf of local retail<br>
+        <strong>Office:</strong> - 28,153 zsf of office<br>
+        <strong>Warehouse:</strong> - 889 zsf of warehouse<br>
+        <strong>Industrial:</strong> -11,449 zsf of industrial
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_d2615f1a46e1d526e54d05ee207e4584 = L.circleMarker(
+                [40.7557792, -73.99064849999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_d2615f1a46e1d526e54d05ee207e4584.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 608, 620, 612, 618 8th Ave<br>
+        <strong>Lot Area:</strong> 9,965 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Five 3-6 story buildings with ground floor/second story retail, offices and residential units above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 120,349 zsf of residential (141 units), 275’ in height, 58,032 zsf of office<br>
+        <strong>Units:</strong> + 138 units<br>
+        <strong>Inclusionary Housing:</strong> + 36 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> - 13,112 zsf of local retail<br>
+        <strong>Office:</strong> + 56,594 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_85bc589193bf00b9d353234fa94a68e3 = L.circleMarker(
+                [40.755173, -73.98932959999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_85bc589193bf00b9d353234fa94a68e3.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 236 W 40 St<br>
+        <strong>Lot Area:</strong> 4,107 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 3-story office building with ground floor retail<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 66,678 zsf of residential (78 units), 325’ in height, 7,144 zsf of retail<br>
+        <strong>Units:</strong> + 78 units<br>
+        <strong>Inclusionary Housing:</strong> + 20 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 1,026 zsf of local retail<br>
+        <strong>Office:</strong> - 2,802 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_c6adcb40842aa5fd7b8cdbac85813ae4 = L.circleMarker(
+                [40.7669345, -73.9790627],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_c6adcb40842aa5fd7b8cdbac85813ae4.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 552/556/558 7 Ave<br>
+        <strong>Lot Area:</strong> 10,176 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Three 3-6 story buildings with ground floor/second story retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 165,128 zsf of residential (194 units), 245’ in height, 17,705 zsf of retail<br>
+        <strong>Units:</strong> + 194 units<br>
+        <strong>Inclusionary Housing:</strong> + 49 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> - 261 zsf of local retail<br>
+        <strong>Office:</strong> - 20,623 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_77045abc27f0eaac5d714a13f2f017fe = L.circleMarker(
+                [40.7437139, -73.99372819999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_77045abc27f0eaac5d714a13f2f017fe.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 131 W 23rd Street<br>
+        <strong>Lot Area:</strong> 18,592 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R11<br>
+        <strong>Existing Building &amp; Use:</strong> Partially vacant lot with decommissioned St. Vincent de Paul Church<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 202,774 zsf of residential (238 units), 275’ in height, 32,350 zsf of retail<br>
+        <strong>Units:</strong> + 238 units<br>
+        <strong>Inclusionary Housing:</strong> + 29 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 31,828 zsf of local retail<br>
+        <strong>Office:</strong> N/A<br>
+        <strong>Warehouse:</strong> <br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_05bd85753a1ad387f7a6d584d973e770 = L.circleMarker(
+                [40.7445317, -73.99405],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_05bd85753a1ad387f7a6d584d973e770.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 145/147 W 24 St<br>
+        <strong>Lot Area:</strong> 4,844 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R11<br>
+        <strong>Existing Building &amp; Use:</strong> Two 4- to 7-story office buildings with ground floor retail<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 67,319 zsf of residential (79 units), 275’ in height, 8,831 zsf of retail<br>
+        <strong>Units:</strong> + 79 units<br>
+        <strong>Inclusionary Housing:</strong> + 20 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 4,360 zsf of local retail<br>
+        <strong>Office:</strong> - 19,151 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_e3d5c16cb790f8dfcd4ae92bd7fb067a = L.circleMarker(
+                [40.7445056, -73.9938664],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_e3d5c16cb790f8dfcd4ae92bd7fb067a.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 139 W 24th Street<br>
+        <strong>Lot Area:</strong> 5,619 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R11<br>
+        <strong>Existing Building &amp; Use:</strong> 3-4 story office building<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 73,452 zsf of residential (86 units), 335’ in height, 9,775 zsf of retail<br>
+        <strong>Units:</strong> + 86 units<br>
+        <strong>Inclusionary Housing:</strong> + 22 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 9,775 zsf of local retail<br>
+        <strong>Office:</strong> - 7,062 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_24047cbaf105c7f0dd0353a781fc83b6 = L.circleMarker(
+                [40.7447215, -73.9925736],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_24047cbaf105c7f0dd0353a781fc83b6.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 115, 117 W 25th Street<br>
+        <strong>Lot Area:</strong> 4,697 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R11<br>
+        <strong>Existing Building &amp; Use:</strong> 3-4 story office building<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 62,174 zsf of residential (73 units), 265’ in height, 8,173 zsf of retail<br>
+        <strong>Units:</strong> + 73 units<br>
+        <strong>Inclusionary Housing:</strong> + 19 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 2,540 zsf of local retail<br>
+        <strong>Office:</strong> - 3,136 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_6624d241cfe4421a6f54cd513bdc0d1d = L.circleMarker(
+                [40.7461452, -73.9937678],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_6624d241cfe4421a6f54cd513bdc0d1d.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 287, 289 7th Avenue<br>
+        <strong>Lot Area:</strong> 4,386 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R11<br>
+        <strong>Existing Building &amp; Use:</strong> 4-story office buildings with ground-floor retail<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 58,132 zsf of residential (68 units), 255’ in height, 7,630 zsf of retail<br>
+        <strong>Units:</strong> + 68 units<br>
+        <strong>Inclusionary Housing:</strong> + 17 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 205 zsf of local retail<br>
+        <strong>Office:</strong> - 3,293 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_bb65ba84f3b31f71832ce29770bfd068 = L.circleMarker(
+                [40.7455241, -73.9928901],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_bb65ba84f3b31f71832ce29770bfd068.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 141/147 W 26 St<br>
+        <strong>Lot Area:</strong> 8,008 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R11<br>
+        <strong>Existing Building &amp; Use:</strong> 1-6-story office and apartment buildings with ground-floor retail<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 105,883 zsf of residential (124 units), 265’ in height, 13,934 zsf of retail<br>
+        <strong>Units:</strong> + 119 units<br>
+        <strong>Inclusionary Housing:</strong> + 31 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 7,884 zsf of local retail<br>
+        <strong>Office:</strong> - 12,594 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_af29383070b9f7f98dbdd459a35fb7fe = L.circleMarker(
+                [40.7452938, -73.99207799999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_af29383070b9f7f98dbdd459a35fb7fe.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 117 W 26 St<br>
+        <strong>Lot Area:</strong> 4,998 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R11<br>
+        <strong>Existing Building &amp; Use:</strong> 5-story building with ground-floor retail and offices and two dwelling units above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 66,165 zsf of residential (75 units), 275’ in height, 8,697 zsf of retail<br>
+        <strong>Units:</strong> + 119 units<br>
+        <strong>Inclusionary Housing:</strong> + 20 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 5,095 zsf of local retail<br>
+        <strong>Office:</strong> - 12,606 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_57424f410843d53a77dcf263f6238506 = L.circleMarker(
+                [40.7464463, -73.9928568],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_57424f410843d53a77dcf263f6238506.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 149 W 27 St<br>
+        <strong>Lot Area:</strong> 2,799 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R11<br>
+        <strong>Existing Building &amp; Use:</strong> 4-story office building with ground-floor retail<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 39,561 zsf of residential (46 units), 265’ in height, 5,243 zsf of retail<br>
+        <strong>Units:</strong> + 46 units<br>
+        <strong>Inclusionary Housing:</strong> + 12 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 2,985 zsf of local retail<br>
+        <strong>Office:</strong> - 6,773 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_02a71ac05a958491499ea3e708b8b31b = L.circleMarker(
+                [40.7461565, -73.9912721],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_02a71ac05a958491499ea3e708b8b31b.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 108, 110 W 28th Street<br>
+        <strong>Lot Area:</strong> 3,665 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R11<br>
+        <strong>Existing Building &amp; Use:</strong> 3- and 4-story buildings with ground-floor retail, warehouses and offices<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 51,896 zsf of residential (61 units), 265’ in height, 6,882 zsf of retail<br>
+        <strong>Units:</strong> + 61 units<br>
+        <strong>Inclusionary Housing:</strong> + 16 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 2,358 zsf of local retail<br>
+        <strong>Office:</strong> - 3,698 zsf of office<br>
+        <strong>Warehouse:</strong> - 3,782 zsf of warehouse<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_8a22b94fc2cf7127344756f12d6b413c = L.circleMarker(
+                [40.7473719, -73.99230469999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_8a22b94fc2cf7127344756f12d6b413c.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 154/156 W 29 St<br>
+        <strong>Lot Area:</strong> 4,845 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R11<br>
+        <strong>Existing Building &amp; Use:</strong> Two 2-4 story office buildings with ground-floor retail and one dwelling unit<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 64,109 zsf of residential (75 units), 265’ in height, 8,429 zsf of retail<br>
+        <strong>Units:</strong> + 74 units<br>
+        <strong>Inclusionary Housing:</strong> + 19 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 4,423 zsf of local retail<br>
+        <strong>Office:</strong> - 5,266 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_95ad273fd2c00f0ad4009d635a2182aa = L.circleMarker(
+                [40.7472491, -73.9919833],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_95ad273fd2c00f0ad4009d635a2182aa.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 142 W 29th Street<br>
+        <strong>Lot Area:</strong> 3,348 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R11<br>
+        <strong>Existing Building &amp; Use:</strong> 3-story office building with ground-floor retail and warehouses<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 44,253 zsf of residential (52 units), 265’ in height, 5,824 zsf of retail<br>
+        <strong>Units:</strong> + 52 units<br>
+        <strong>Inclusionary Housing:</strong> + 13 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 3,214 zsf of local retail<br>
+        <strong>Office:</strong> - 2,654 zsf of office<br>
+        <strong>Warehouse:</strong> - 1,358 zsf of warehouse<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_ef9cf43ec9f9b9abbd3936058c9bbd44 = L.circleMarker(
+                [40.7479361, -73.99254549999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_ef9cf43ec9f9b9abbd3936058c9bbd44.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 341, 343 7th Ave, 167 W 29th<br>St<br>
+        <strong>Lot Area:</strong> 6,368 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 3- and 4-story buildings with ground-floor retail and warehouses<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 102,570 zsf of residential (120 units), 255’ in height, 11,080 zsf of retail<br>
+        <strong>Units:</strong> + 120 units<br>
+        <strong>Inclusionary Housing:</strong> + 19 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 2,290 zsf of local retail<br>
+        <strong>Office:</strong> - 8,167 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_b8b40158ae105010670a43e10606a03d = L.circleMarker(
+                [40.74796020000001, -73.9916272],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_b8b40158ae105010670a43e10606a03d.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 140 W 30 St<br>
+        <strong>Lot Area:</strong> 11,534 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 1- and 5-story buildings with ground-floor retail and offices and warehouse space above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 195,942 zsf of residential (230 units), 345’ in height, 21,111 zsf of retail<br>
+        <strong>Units:</strong> + 230 units<br>
+        <strong>Inclusionary Housing:</strong> + 58 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 13,281 zsf of local retail<br>
+        <strong>Office:</strong> - 9,713 zsf of office<br>
+        <strong>Warehouse:</strong> - 9,935 zsf of warehouse<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_9463877378430d28db7c5bedda4a4c27 = L.circleMarker(
+                [40.747509, -73.99086],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_9463877378430d28db7c5bedda4a4c27.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 122 W 30th Street<br>
+        <strong>Lot Area:</strong> 15,198 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 4-story office building with ground-floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 245,688 zsf of residential (289 units), 435’ in height, 26,443 zsf of retail<br>
+        <strong>Units:</strong> + 289 units<br>
+        <strong>Inclusionary Housing:</strong> + 73 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 26,443 zsf of local retail<br>
+        <strong>Office:</strong> - 38,196 zsf of office<br>
+        <strong>Warehouse:</strong> - 9,935 zsf of warehouse<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_0e6b3384e332f0698f67810fd44a67be = L.circleMarker(
+                [40.7484263, -73.9909655],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_0e6b3384e332f0698f67810fd44a67be.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 140 W 31 St<br>
+        <strong>Lot Area:</strong> 5,126 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 4-story office building with ground-floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 83,200 zsf of residential (97 units), 335’ in height, 8,918 zsf of retail<br>
+        <strong>Units:</strong> + 97 units<br>
+        <strong>Inclusionary Housing:</strong> + 25 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 5,003 zsf of local retail<br>
+        <strong>Office:</strong> - 11,678 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_844c1c27b4cca60e10d9e81dbc01d51e = L.circleMarker(
+                [40.7481144, -73.9903107],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_844c1c27b4cca60e10d9e81dbc01d51e.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 120 W 31 St<br>
+        <strong>Lot Area:</strong> 10,334 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Surface parking and 8 –story office building with ground-floor retail<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 166,124 zsf of residential (195 units), 355’ in height, 17,798 zsf of retail<br>
+        <strong>Units:</strong> + 195 units<br>
+        <strong>Inclusionary Housing:</strong> + 49 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 15,188 zsf of local retail<br>
+        <strong>Office:</strong> - 25,700 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_3e1fdbe534a72d0d19cdccb1aa242a67 = L.circleMarker(
+                [40.7514727, -73.9881911],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_3e1fdbe534a72d0d19cdccb1aa242a67.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 124 W 36 St<br>
+        <strong>Lot Area:</strong> 7,944 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Two 4-7 story office buildings with ground floor retail<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 129,106 zsf of residential (151 units), 335’ in height, 13,803 zsf of retail<br>
+        <strong>Units:</strong> + 151 units<br>
+        <strong>Inclusionary Housing:</strong> + 38 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 1,333 zsf of local retail<br>
+        <strong>Office:</strong> - 22,440 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_f5eb0e543e34964216e175c99625098b = L.circleMarker(
+                [40.7428217, -73.992019],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_f5eb0e543e34964216e175c99625098b.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 67, 69 W 23rd Street<br>
+        <strong>Lot Area:</strong> 4,646 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 1- and 4-story buildings with ground-floor retail, offices and warehouses<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 48,363 zsf of residential (56 units), 205’ in height, 8,208 zsf of retail<br>
+        <strong>Units:</strong> + 56 units<br>
+        <strong>Inclusionary Housing:</strong> + 14 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 4,074 zsf of local retail<br>
+        <strong>Office:</strong> - 4,181 zsf of office<br>
+        <strong>Warehouse:</strong> - 4,277 zsf of warehouse<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_a9f01c2434bc57855e7ed6acc507940b = L.circleMarker(
+                [40.7434143, -73.9906752],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_a9f01c2434bc57855e7ed6acc507940b.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 32 W 25th Street<br>
+        <strong>Lot Area:</strong> 5,055 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 1-story retail building<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 82,080 zsf of residential (96 units), 315’ in height, 8,796 zsf of retail<br>
+        <strong>Units:</strong> + 96 units<br>
+        <strong>Inclusionary Housing:</strong> + 24 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 4,446 zsf of local retail<br>
+        <strong>Office:</strong> N/A<br>
+        <strong>Warehouse:</strong> <br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_a16f2553f1eed1c570c378051cbcb9d2 = L.circleMarker(
+                [40.7428849, -73.9903913],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_a16f2553f1eed1c570c378051cbcb9d2.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 17/19/23/25 W 24 St<br>
+        <strong>Lot Area:</strong> 4,945 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> 5-story boutique hotel and adjacent single story event space<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 80,297 zsf of residential (94 units), 335’ in height, 8,604 zsf of retail<br>
+        <strong>Units:</strong> + 91 units<br>
+        <strong>Inclusionary Housing:</strong> + 24 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 6,469 zsf of local retail<br>
+        <strong>Office:</strong> - 1,911 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_1381034c7dcf5ff580b28c345ef69938 = L.circleMarker(
+                [40.7439446, -73.99072869999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_1381034c7dcf5ff580b28c345ef69938.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 25, 29, 35, 39 W 25th St<br>
+        <strong>Lot Area:</strong> 22,755 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Surface parking<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 408,234 zsf of residential (480 units), 475’ in height, 238 seat elementary school<br>
+        <strong>Units:</strong> + 480 units<br>
+        <strong>Inclusionary Housing:</strong> + 120 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 238 school seats<br>
+        <strong>Office:</strong> N/A<br>
+        <strong>Warehouse:</strong> <br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_7f5e51967361998d587ca87cc026795c = L.circleMarker(
+                [40.7454828, -73.9896373],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_7f5e51967361998d587ca87cc026795c.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 38/40/42 W 28 St<br>
+        <strong>Lot Area:</strong> 7,548 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Three 5-story buildings with ground-floor retail and offices above and 4 DUs<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 121,438 zsf of residential (142 units), 325’ in height, 13,132 zsf of retail<br>
+        <strong>Units:</strong> + 138 units<br>
+        <strong>Inclusionary Housing:</strong> + 36 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 7,929 zsf of local retail<br>
+        <strong>Office:</strong> - 16,037 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_19a74a358f0d4039876e72ccdc242440 = L.circleMarker(
+                [40.74537309999999, -73.9894077],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_19a74a358f0d4039876e72ccdc242440.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 32/34/36 W 28 St<br>
+        <strong>Lot Area:</strong> 7,629 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Three 1-5 story buildings with ground floor retail and office above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 122,801 zsf of residential (144 units), 325’ in height, 13,281 zsf of retail<br>
+        <strong>Units:</strong> + 144 units<br>
+        <strong>Inclusionary Housing:</strong> + 36 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 6,873 zsf of local retail<br>
+        <strong>Office:</strong> - 12,258 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_cd21a0dc49532698048d5b9bb6ee00f2 = L.circleMarker(
+                [40.7453307, -73.9892799],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_cd21a0dc49532698048d5b9bb6ee00f2.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 24, 26 W 28th Street<br>
+        <strong>Lot Area:</strong> 7,430 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Three 1-5 story buildings with ground floor retail and office above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 120,647 zsf of residential (141 units), 375’ in height, 12,926 zsf of retail<br>
+        <strong>Units:</strong> + 141 units<br>
+        <strong>Inclusionary Housing:</strong> + 36 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> - 820 zsf of local retail<br>
+        <strong>Office:</strong> - 10,089 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_22cc0517ad4ee1110e955f54c9f1b160 = L.circleMarker(
+                [40.7451666, -73.9890404],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_22cc0517ad4ee1110e955f54c9f1b160.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 1177, 1179 Broadway<br>
+        <strong>Lot Area:</strong> 4,429 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Two 2-4 story buildings with ground-floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 45,994 zsf of residential (54 units), 195’ in height, 7,856 zsf of retail<br>
+        <strong>Units:</strong> + 54 units<br>
+        <strong>Inclusionary Housing:</strong> + 14 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 2,369 zsf of local retail<br>
+        <strong>Office:</strong> - 4,894 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_a4c41d578f1ccf5a3d7466aba48d5ed5 = L.circleMarker(
+                [40.746108, -73.989362],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_a4c41d578f1ccf5a3d7466aba48d5ed5.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 36 W 29th Street<br>
+        <strong>Lot Area:</strong> 6,571 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Stalled construction site<br>
+        <strong>No Action:</strong> Continuation of existing use / potential future commercial development<br>
+        <strong>With Action:</strong> 105,975 zsf of residential (124 units), 325’ in height, 11,434 zsf of retail<br>
+        <strong>Units:</strong> + 124 units<br>
+        <strong>Inclusionary Housing:</strong> + 31 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 11,434 zsf of local retail<br>
+        <strong>Office:</strong> N/A<br>
+        <strong>Warehouse:</strong> <br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_b62629173cd2a2adb07792dbdc916e09 = L.circleMarker(
+                [40.7454836, -73.9878398],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_b62629173cd2a2adb07792dbdc916e09.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 6, 8, 10 W 29th Street; 7 W<br>28th St<br>
+        <strong>Lot Area:</strong> 16,693 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Surface parking<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 224,530 zsf of residential (264 units), 325’ in height, 29,046 zsf of retail<br>
+        <strong>Units:</strong> + 264 units<br>
+        <strong>Inclusionary Housing:</strong> + 66 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 29,046 zsf of local retail<br>
+        <strong>Office:</strong> N/A<br>
+        <strong>Warehouse:</strong> <br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_fa8315bf3d55ac0bb5cbd0fa7e774f26 = L.circleMarker(
+                [40.7465194, -73.9891468],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_fa8315bf3d55ac0bb5cbd0fa7e774f26.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 39/43/45 W 29 St<br>
+        <strong>Lot Area:</strong> 10,364 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Three 4-12 story buildings with ground-floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 206,000 zsf of residential (242 units), 335’ in height, 22,051 zsf of retail<br>
+        <strong>Units:</strong> + 242 units<br>
+        <strong>Inclusionary Housing:</strong> + 61 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 12,843 zsf of local retail<br>
+        <strong>Office:</strong> - 71,619 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_1a89285af976605c6e9b3bab4d8b70f4 = L.circleMarker(
+                [40.7463197, -73.98828689999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_1a89285af976605c6e9b3bab4d8b70f4.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 1204/1212/1214 Broadway/28 W<br>30 St<br>
+        <strong>Lot Area:</strong> 18,521 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Four 1-4 story buildings with ground-floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 300,428 zsf of residential (353 units), 285’ in height, 32,227 zsf of retail<br>
+        <strong>Units:</strong> + 353 units<br>
+        <strong>Inclusionary Housing:</strong> + 89 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> - 12,041 zsf of local retail<br>
+        <strong>Office:</strong> - 18,112 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_99b8cefc0e7a73b66ed4aa7a6a29bf77 = L.circleMarker(
+                [40.7462871, -73.9877427],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_99b8cefc0e7a73b66ed4aa7a6a29bf77.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 3, 9, 11 W 29th Street; 8, 16,<br>18, 20, 22 W 30th Street; 270<br>5th Avenue<br>
+        <strong>Lot Area:</strong> 49,922 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R12 (C5-2 to remain)<br>
+        <strong>Existing Building &amp; Use:</strong> Majority vacant with underutilized buildings; Marble Collegiate Church noted but not part of site<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 757,097 zsf of residential (890 units), 455’ in height, 58,469 zsf of retail<br>
+        <strong>Units:</strong> + 883 units<br>
+        <strong>Inclusionary Housing:</strong> + 89 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 48,059 zsf of local retail<br>
+        <strong>Office:</strong> - 13,997 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_3a3df3574ad07bb7ddcbc2724410d247 = L.circleMarker(
+                [40.7463324, -73.986886],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_3a3df3574ad07bb7ddcbc2724410d247.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 3/5 W 30 St<br>
+        <strong>Lot Area:</strong> 5,026 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-8A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Two 4-5 story buildings with ground-floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 81,472 zsf of residential (95 units), 325’ in height, 8,747 zsf of retail<br>
+        <strong>Units:</strong> + 95 units<br>
+        <strong>Inclusionary Housing:</strong> + 24 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 5,952 zsf of local retail<br>
+        <strong>Office:</strong> - 15,695 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_d0cd1ab8a33ba30f18db615bb5a988a3 = L.circleMarker(
+                [40.749843, -73.9853837],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_d0cd1ab8a33ba30f18db615bb5a988a3.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 27/25/23/21 W 35 St<br>
+        <strong>Lot Area:</strong> 8,802 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Four 1-4 story buildings (retail and mixed retail/office)<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 104,234 zsf of residential (122 units), 335’ in height, 11,315 zsf of retail<br>
+        <strong>Units:</strong> + 122 units<br>
+        <strong>Inclusionary Housing:</strong> + 42 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 3,542 zsf of local retail<br>
+        <strong>Office:</strong> - 11,227 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_2af7ebd40be7a6f9cdc79bce05d925c5 = L.circleMarker(
+                [40.7497382, -73.9851911],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_2af7ebd40be7a6f9cdc79bce05d925c5.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 9, 21 W 35th Street<br>
+        <strong>Lot Area:</strong> 17,192 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Parking garage<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 315,540 zsf of residential (371 units), 345’ in height, 33,933 zsf of retail<br>
+        <strong>Units:</strong> + 371 units<br>
+        <strong>Inclusionary Housing:</strong> + 82 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 28,265 zsf of local retail<br>
+        <strong>Office:</strong> N/A<br>
+        <strong>Warehouse:</strong> <br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_b18ee1e5cf93d28e2c1f535d47538b20 = L.circleMarker(
+                [40.750782, -73.984798],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_b18ee1e5cf93d28e2c1f535d47538b20.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 28/30/32/34 W 37 St<br>
+        <strong>Lot Area:</strong> 12,273 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Four 2-5 story buildings with ground-floor/second story retail and offices and residences above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 201,048 zsf of residential (236 units), 325’ in height, 21,574 zsf of retail<br>
+        <strong>Units:</strong> + 230 units<br>
+        <strong>Inclusionary Housing:</strong> + 59 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 10,315 zsf of local retail<br>
+        <strong>Office:</strong> - 8,749 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_b03379a9795aea6c1157048fc5f818a8 = L.circleMarker(
+                [40.7506106, -73.9843513],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_b03379a9795aea6c1157048fc5f818a8.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 16/18 W 37th St<br>
+        <strong>Lot Area:</strong> 3,977 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Two 4 story buildings with ground floor/second story retail and offices/residences above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 59,520 zsf of residential (75 units), 325’ in height, 6,918 zsf of retail<br>
+        <strong>Units:</strong> + 230 units<br>
+        <strong>Inclusionary Housing:</strong> + 19 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 811 zsf of local retail<br>
+        <strong>Office:</strong> - 3,332 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_743df61a8b2fbef53162aa3709080c03 = L.circleMarker(
+                [40.7515977, -73.9845012],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_743df61a8b2fbef53162aa3709080c03.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 38/40 W 38 St<br>
+        <strong>Lot Area:</strong> 4,193 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Two 4-6 story buildings with ground-floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 67,904 zsf of residential (79 units), 335’ in height, 7,294 zsf of retail<br>
+        <strong>Units:</strong> + 79 units<br>
+        <strong>Inclusionary Housing:</strong> + 20 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 2,422 zsf of local retail<br>
+        <strong>Office:</strong> - 13,278 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_33fb12460be39451fa1bcea0bf659f8a = L.circleMarker(
+                [40.7514787, -73.98531009999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_33fb12460be39451fa1bcea0bf659f8a.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 45/47 W 37 St<br>
+        <strong>Lot Area:</strong> 4,120 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Two 3-4 story buildings with ground-floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 66,694 zsf of residential (78 units), 325’ in height, 7,169 zsf of retail<br>
+        <strong>Units:</strong> + 77 units<br>
+        <strong>Inclusionary Housing:</strong> + 20 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 3,428 zsf of local retail<br>
+        <strong>Office:</strong> - 3,676 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_0a9b7a56c290c762935c72600db549dc = L.circleMarker(
+                [40.7515977, -73.9845012],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_0a9b7a56c290c762935c72600db549dc.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 38/40 W 38 St<br>
+        <strong>Lot Area:</strong> 4,193 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Two 5-6 story buildings with ground-floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 94,540 zsf of residential (111 units), 415’ in height, 10,184 zsf of retail<br>
+        <strong>Units:</strong> + 110 units<br>
+        <strong>Inclusionary Housing:</strong> + 28 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 6,332 zsf of local retail<br>
+        <strong>Office:</strong> - 25,398 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_a76ec58cb827ab3dbb0417e6da931781 = L.circleMarker(
+                [40.7512171, -73.98380639999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_a76ec58cb827ab3dbb0417e6da931781.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 18/20 W 38 St<br>
+        <strong>Lot Area:</strong> 4,974 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Two 4-5 story buildings with ground floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 80,357 zsf of residential (94 units), 325’ in height, 8,653 zsf of retail<br>
+        <strong>Units:</strong> + 92 units<br>
+        <strong>Inclusionary Housing:</strong> + 24 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 4,956 zsf of local retail<br>
+        <strong>Office:</strong> - 9,635 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_f40149c07750dde4ca7985fe0ba4f3fd = L.circleMarker(
+                [40.75216340000001, -73.9842196],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_f40149c07750dde4ca7985fe0ba4f3fd.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 38/40 W 39 St<br>
+        <strong>Lot Area:</strong> 5,005 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Two 5 story buildings with ground-floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 80,790 zsf of residential (95 units), 325’ in height, 8,709 zsf of retail<br>
+        <strong>Units:</strong> + 95 units<br>
+        <strong>Inclusionary Housing:</strong> + 24 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 5,055 zsf of local retail<br>
+        <strong>Office:</strong> - 13,268 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_d499bd065b5d871b87496cadf251a106 = L.circleMarker(
+                [40.7518486, -73.9844492],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_d499bd065b5d871b87496cadf251a106.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 35 W 38 St<br>
+        <strong>Lot Area:</strong> 3,859 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> I 5 story buildings with ground-floor retail and offices above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 62,578 zsf of residential (73 units), 305’ in height, 6,713 zsf of retail<br>
+        <strong>Units:</strong> + 73 units<br>
+        <strong>Inclusionary Housing:</strong> + 19 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 3,885 zsf of local retail<br>
+        <strong>Office:</strong> - 7,656 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_83a18f41873aa0377ab4e19545e66763 = L.circleMarker(
+                [40.75174, -73.9835563],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_83a18f41873aa0377ab4e19545e66763.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 20 W 39 St<br>
+        <strong>Lot Area:</strong> 4,341 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> One 3 story structure occupied by a single cabaret use<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 69,649 zsf of residential (81 units), 325’ in height, 7,553 zsf of retail<br>
+        <strong>Units:</strong> + 81 units<br>
+        <strong>Inclusionary Housing:</strong> + 21 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> - 7,425 zsf of local retail<br>
+        <strong>Office:</strong> N/A<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_b3096a15570fea350a7297a255dca736 = L.circleMarker(
+                [40.7527093, -73.9843839],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3);
+        
+    
+            circle_marker_b3096a15570fea350a7297a255dca736.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Address:</strong> 43/45/47 W 39 St<br>
+        <strong>Lot Area:</strong> 6,435 sf<br>
+        <strong>Zoning Change:</strong> M1-6 to M1-9A/R12<br>
+        <strong>Existing Building &amp; Use:</strong> Three 1-5 story buildings with ground-floor retail and offices/residences above<br>
+        <strong>No Action:</strong> Continuation of existing use<br>
+        <strong>With Action:</strong> 95,383 zsf of residential (122 units), 335’ in height, 7,189 zsf of retail<br>
+        <strong>Units:</strong> + 111 units<br>
+        <strong>Inclusionary Housing:</strong> + 31 Inclusionary Housing units<br>
+        <strong>Local Retail:</strong> + 6,254 zsf of local retail<br>
+        <strong>Office:</strong> - 1,505 zsf of office<br>
+        <strong>Warehouse:</strong> N/A<br>
+        <strong>Industrial:</strong> N/A
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var layer_control_de3748d0d6c42ac7e83f68b0fe0f3da2 = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_2c4a89c2bd16ec31adad8c3470846434,
+                },
+                overlays :  {
+                    "macro_element_ea62e9b16d5a8945833bfacb7804ddb3" : marker_cluster_ea62e9b16d5a8945833bfacb7804ddb3,
+                },
+            };
+            L.control.layers(
+                layer_control_de3748d0d6c42ac7e83f68b0fe0f3da2.base_layers,
+                layer_control_de3748d0d6c42ac7e83f68b0fe0f3da2.overlays,
+                {"autoZIndex": true, "collapsed": true, "position": "topright"}
+            ).addTo(map_68a99c8dd02ac0672ae409e4fb29644f);
+        
+</script>
