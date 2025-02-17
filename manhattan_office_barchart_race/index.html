@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vertical Bar Chart Race</title>
+    <!-- Load D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      /* Basic styling */
+      body {
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f0f0f0;
+      }
+      svg {
+        display: block;
+        margin: auto;
+        background: #fff;
+        border: 1px solid #ccc;
+      }
+      /* Bars */
+      .bar {
+        fill: steelblue;
+      }
+      /* Value labels (numeric), positioned to the right of each bar */
+      .label {
+        font: 12px sans-serif;
+        text-anchor: start;
+        fill: black;
+      }
+      /* Style for the quarter (time) box */
+      .quarter-box rect {
+        fill: #ddd;
+        stroke: #333;
+        stroke-width: 2;
+      }
+      .quarter-box text {
+        font-size: 20px;
+        fill: #333;
+      }
+      /* Header text styling */
+      .headers text {
+        font-size: 16px;
+        fill: #333;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      // Dimensions and margins
+      const width = 800,
+            height = 600;
+      const margin = { top: 70, right: 20, bottom: 50, left: 20 };
+
+      // Create the SVG container
+      const svg = d3.select("body")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height);
+
+      // Create a header group to display column headers.
+      // We'll show all four: Quarter, Total Properties, Existing Supply s.f., and Completions s.f.
+      const headerY = margin.top - 30;  // position above the chart area
+      const headerGroup = svg.append("g")
+                             .attr("class", "headers");
+      // We'll place the Quarter header above the quarter box (which will be at the right).
+      headerGroup.append("text")
+                 .attr("x", width - 125)  // center of quarter box
+                 .attr("y", headerY)
+                 .attr("text-anchor", "middle")
+                 .text("Quarter");
+      // For the numeric headers, use our bar domain.
+      const numericHeaders = ["Total Properties", "Existing Supply s.f.", "Completions s.f."];
+      // Our xScale for bars (we use our categories array)
+      const categories = ["Total Properties", "Existing Supply", "Completions"];
+      const xScale = d3.scaleBand()
+                       .domain(categories)
+                       .range([margin.left, width - margin.right - 220]) // leave room on the right for quarter box and labels
+                       .padding(0.4);
+      numericHeaders.forEach((header, i) => {
+        headerGroup.append("text")
+                   .attr("x", xScale(categories[i]) + xScale.bandwidth() / 2)
+                   .attr("y", headerY)
+                   .attr("text-anchor", "middle")
+                   .text(header);
+      });
+
+      // Create a "quarter box" to display the current quarter.
+      const quarterBox = svg.append("g")
+                            .attr("class", "quarter-box");
+      quarterBox.append("rect")
+                .attr("x", width - 200)
+                .attr("y", margin.top)
+                .attr("width", 150)
+                .attr("height", 40);
+      const quarterText = quarterBox.append("text")
+                                    .attr("x", width - 125)  // centered in the rectangle
+                                    .attr("y", margin.top + 28)
+                                    .attr("text-anchor", "middle")
+                                    .text("");
+
+      // Maximum bar height (in pixels)
+      const maxBarHeight = 300;
+      // Create a y-scale mapping normalized values (0 to 1) to pixel positions.
+      const yScale = d3.scaleLinear()
+                       .domain([0, 1])
+                       .range([height - margin.bottom, height - margin.bottom - maxBarHeight]);
+
+      // Groups for bars and numeric labels (for the three metrics)
+      const barsGroup = svg.append("g").attr("class", "bars");
+      const labelsGroup = svg.append("g").attr("class", "value-labels");
+
+      // Formatter for numbers with thousands separators.
+      const formatNumber = d3.format(",");
+
+      // Helper function to parse a numeric string.
+      function parseNumber(str) {
+        return str === "" ? 0 : +str;
+      }
+
+      // Load the CSV data.
+      // CSV columns: Quarter, Total Properties, Existing Supply s.f., Completions s.f.
+      d3.csv("JLL_data.csv", function(d) {
+        return {
+          quarter: d.Quarter.trim(),
+          totalProperties: parseNumber(d["Total Properties"]),
+          existingSupply: parseNumber(d["Existing Supply s.f."]),
+          completions: parseNumber(d["Completions s.f."])
+        };
+      }).then(data => {
+        // The CSV is assumed to be ordered from newest (first row) to oldest (last row).
+        // Reverse the data so the animation starts with the oldest quarter.
+        const reversedData = data.slice().reverse();
+
+        // Compute maximum values for normalization.
+        const maxTotal = d3.max(reversedData, d => d.totalProperties);
+        const maxExisting = d3.max(reversedData, d => d.existingSupply);
+        const maxCompletions = d3.max(reversedData, d => d.completions);
+
+        // Build frames: each frame corresponds to one quarter.
+        // Each frame includes an array of objects for the three metrics with normalized values.
+        const frames = reversedData.map(d => ({
+          quarter: d.quarter,
+          values: categories.map(cat => {
+            let value, maxValue;
+            if (cat === "Total Properties") {
+              value = d.totalProperties;
+              maxValue = maxTotal;
+            } else if (cat === "Existing Supply") {
+              value = d.existingSupply;
+              maxValue = maxExisting;
+            } else if (cat === "Completions") {
+              value = d.completions;
+              maxValue = maxCompletions;
+            }
+            const norm = maxValue ? value / maxValue : 0;
+            return { category: cat, value: value, norm: norm };
+          })
+        }));
+
+        let index = 0;
+        // Update function: transitions the bars, numeric labels, and quarter box.
+        function update(frame) {
+          // Update the quarter box text.
+          quarterText.text(frame.quarter);
+
+          // Update the bars.
+          const bars = barsGroup.selectAll(".bar")
+                                .data(frame.values, d => d.category);
+          bars.enter()
+              .append("rect")
+              .attr("class", "bar")
+              .attr("x", d => xScale(d.category))
+              .attr("width", xScale.bandwidth())
+              .attr("y", yScale(0))
+              .attr("height", 0)
+            .merge(bars)
+              .transition()
+              .duration(1000)
+              .attr("y", d => yScale(d.norm))
+              .attr("height", d => yScale(0) - yScale(d.norm));
+
+          // Update the numeric labels.
+          // These are positioned to the right of each bar.
+          const labels = labelsGroup.selectAll(".label")
+                                    .data(frame.values, d => d.category);
+          labels.enter()
+                .append("text")
+                .attr("class", "label")
+                .attr("x", d => xScale(d.category) + xScale.bandwidth() + 5)
+                .attr("y", d => (yScale(d.norm) + yScale(0)) / 2)
+                .attr("dy", "0.35em")
+                .text(d => formatNumber(d.value))
+             .merge(labels)
+                .transition()
+                .duration(1000)
+                .attr("x", d => xScale(d.category) + xScale.bandwidth() + 5)
+                .attr("y", d => (yScale(d.norm) + yScale(0)) / 2)
+                .text(d => formatNumber(d.value));
+        }
+
+        // Start with the first (oldest) frame.
+        update(frames[index]);
+
+        // Update the frame every 1.5 seconds.
+        d3.interval(() => {
+          index = (index + 1) % frames.length;
+          update(frames[index]);
+        }, 1500);
+      }).catch(error => {
+        console.error("Error loading CSV data:", error);
+      });
+    </script>
+  </body>
+</html>
