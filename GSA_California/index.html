@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_f56d653586fa222a967ef387a0467616 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>    
+    
+<style>
+    .popup-content {
+        max-width: 600px; /* Adjusts the maximum width of the tooltip */
+        font-size: 12px;   /* Adjusts the font size */
+        word-wrap: break-word; /* Ensures long words wrap to the next line */
+    }
+    .leaflet-tooltip {
+        background-color: white;
+        border: 1px solid gray;
+        border-radius: 3px;
+        padding: 5px;
+    }
+</style>
+    
+    <h3 align="center" style="font-size:16px"><b>Federally Owned Buildings in LA County</b></h3>
+    
+            <div class="folium-map" id="map_f56d653586fa222a967ef387a0467616" ></div>
+        
+</body>
+<script>    
+    
+            var map_f56d653586fa222a967ef387a0467616 = L.map(
+                "map_f56d653586fa222a967ef387a0467616",
+                {
+                    center: [33.9834381, -118.22663],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 10,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_1969fe02fec87a8ed03b91c7a9e7a5f6 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_f56d653586fa222a967ef387a0467616);
+        
+    
+            var tile_layer_75dc51997fc9cc7724483f292200ef79 = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {"attribution": "Mapbox", "detectRetina": false, "maxNativeZoom": 20, "maxZoom": 20, "minZoom": 1, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_f56d653586fa222a967ef387a0467616);
+        
+    
+            var marker_cluster_693c99adec8f18d0deee7c023b48baba = L.markerClusterGroup(
+                {}
+            );
+            map_f56d653586fa222a967ef387a0467616.addLayer(marker_cluster_693c99adec8f18d0deee7c023b48baba);
+        
+    
+            var circle_marker_2626d145326b583623a1252b13e1e3ac = L.circleMarker(
+                [33.9834381, -118.22663],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_693c99adec8f18d0deee7c023b48baba);
+        
+    
+            circle_marker_2626d145326b583623a1252b13e1e3ac.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Name:</strong> N/A<br>    
+        <strong>Address:</strong> 6303 RUGBY AVE<br>
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_40f2969b3fa46882bd5a6e1338b49a2e = L.circleMarker(
+                [34.0534, -118.24006],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_693c99adec8f18d0deee7c023b48baba);
+        
+    
+            circle_marker_40f2969b3fa46882bd5a6e1338b49a2e.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Name:</strong> LOS ANGELES FED CTR<br>    
+        <strong>Address:</strong> 300 N LOS ANGELES ST<br>
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_50913fdfa31422b906c85b16bed874ae = L.circleMarker(
+                [34.05516, -118.24151],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_693c99adec8f18d0deee7c023b48baba);
+        
+    
+            circle_marker_50913fdfa31422b906c85b16bed874ae.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Name:</strong> N/A<br>    
+        <strong>Address:</strong> 312 N SPRING ST<br>
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_2648378f48ae61d5d073afcd23507246 = L.circleMarker(
+                [34.0554308, -118.45092],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_693c99adec8f18d0deee7c023b48baba);
+        
+    
+            circle_marker_2648378f48ae61d5d073afcd23507246.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Name:</strong> N/A<br>    
+        <strong>Address:</strong> 1260 S SEPULVEDA BLVD<br>
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_de50afc9ba4683503dbcd0145b748e3b = L.circleMarker(
+                [34.05284, -118.23926],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_693c99adec8f18d0deee7c023b48baba);
+        
+    
+            circle_marker_de50afc9ba4683503dbcd0145b748e3b.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Name:</strong> LOS ANGELES FED CTR<br>    
+        <strong>Address:</strong> 255 E TEMPLE ST<br>
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_f02d986fa461d0c09ed765e2494578e2 = L.circleMarker(
+                [34.0577021, -118.44776],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_693c99adec8f18d0deee7c023b48baba);
+        
+    
+            circle_marker_f02d986fa461d0c09ed765e2494578e2.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Name:</strong> N/A<br>    
+        <strong>Address:</strong> 11000 WILSHIRE BLVD<br>
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_6af3e650ebc38f1e7dbc4df4516b7922 = L.circleMarker(
+                [34.0539133, -118.2461],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_693c99adec8f18d0deee7c023b48baba);
+        
+    
+            circle_marker_6af3e650ebc38f1e7dbc4df4516b7922.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Name:</strong> N/A<br>    
+        <strong>Address:</strong> 350 W 1ST ST<br>
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_3b15c79106d8318ebca16b40b5e77639 = L.circleMarker(
+                [34.05577, -118.26706],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1, "radius": 9, "stroke": true, "weight": 1}
+            ).addTo(marker_cluster_693c99adec8f18d0deee7c023b48baba);
+        
+    
+            circle_marker_3b15c79106d8318ebca16b40b5e77639.bindTooltip(
+                `<div>
+                     
+    <div class="popup-content">
+        <strong>Name:</strong> N/A<br>    
+        <strong>Address:</strong> 1340 W 6TH ST<br>
+    </div>
+    
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var layer_control_56c6b1ba3cdd1c5032039554d7621b2f = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_1969fe02fec87a8ed03b91c7a9e7a5f6,
+                },
+                overlays :  {
+                    "macro_element_693c99adec8f18d0deee7c023b48baba" : marker_cluster_693c99adec8f18d0deee7c023b48baba,
+                },
+            };
+            L.control.layers(
+                layer_control_56c6b1ba3cdd1c5032039554d7621b2f.base_layers,
+                layer_control_56c6b1ba3cdd1c5032039554d7621b2f.overlays,
+                {"autoZIndex": true, "collapsed": true, "position": "topright"}
+            ).addTo(map_f56d653586fa222a967ef387a0467616);
+        
+</script>
