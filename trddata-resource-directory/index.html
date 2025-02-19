@@ -2,10 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Resource Directory</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Directory of Real Estate Data Sites</title>
+  
+  <!-- Google Fonts (Merriweather) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome (for icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
   <!-- Papa Parse CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  
   <style>
     /* Base colors for light mode */
     :root {
@@ -15,6 +24,7 @@
       --card-background: #f9f9f9;
       --input-border: #ccc;
     }
+    
     /* Dark mode adjustments */
     @media (prefers-color-scheme: dark) {
       :root {
@@ -28,7 +38,7 @@
     /* Global styles */
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Merriweather', serif; /* Use Merriweather here */
       background-color: var(--background-color);
       color: var(--text-color);
       padding: 20px;
@@ -42,19 +52,26 @@
       margin-bottom: 20px;
     }
     
-    header .branding {
+    .branding {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: 5px;
     }
     
-    header img.logo {
-      max-height: 50px;
-    }
-    
-    header h1 {
+    h1 {
       margin: 0;
       font-size: 1.8em;
+      font-weight: 700;
+    }
+    
+    /* Tagline under the main heading */
+    .tagline {
+      font-size: 1em;
+      opacity: 0.8;
+      margin-top: 5px;
+      text-align: center;
+      max-width: 600px;
     }
     
     /* Search bar styling */
@@ -66,25 +83,27 @@
     
     .search-bar input {
       width: 100%;
-      padding: 10px;
+      padding: 10px 15px;
       font-size: 1em;
       border: 1px solid var(--input-border);
       border-radius: 4px;
-      background-color: var(--background-color);
+      background-color: var(--card-background);
       color: var(--text-color);
-      transition: border 0.3s;
+      transition: border 0.3s, box-shadow 0.3s;
     }
     
     .search-bar input:focus {
       outline: none;
       border-color: var(--accent-color);
+      box-shadow: 0 0 5px var(--accent-color);
     }
     
     /* Grid for resource cards */
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
+      gap: 30px; /* Increased gap for more breathing room */
+      padding: 0 10px; /* Optional padding around the grid */
     }
     
     /* Card design */
@@ -94,40 +113,76 @@
       padding: 15px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
     }
     
     .card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
     
-    .card h2 {
-      margin-top: 0;
-      font-size: 1.4em;
-      color: var(--accent-color);
+    /* Card header for title with gradient background */
+    .card-header {
+      background: linear-gradient(135deg, #0053a4, #007BFF);
+      color: #fff;
+      padding: 10px;
+      border-radius: 6px 6px 0 0;
+      font-size: 1.2em;
+      font-weight: 700;
+      margin: -15px -15px 15px -15px; /* Overlap card padding */
+      text-align: center;
     }
     
-    .card h2 a {
+    .card-header a {
+      color: #fff; /* Keep link text white in the header */
       text-decoration: none;
-      color: inherit;
     }
     
-    .card .location {
+    /* Card content */
+    .location {
       font-size: 0.9em;
-      color: var(--text-color);
       opacity: 0.8;
       margin-bottom: 10px;
     }
     
     .card p {
-      margin: 0;
+      margin: 8px 0;
+      line-height: 1.5;
     }
+    
+    /* Divider style */
+    .divider {
+      border-top: 1px solid #ccc;
+      margin: 10px 0;
+    }
+    
+    /* Badges for location or other metadata */
+    .badge {
+      display: inline-block;
+      background-color: #6c757d;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.8em;
+      margin-right: 6px;
+    }
+    
+    .badge-residential {
+      background-color: #28a745; /* green for residential */
+    }
+    .badge-commercial {
+      background-color: #ff5733; /* orange/red for commercial */
+    }
+    /* ...add more badge classes if needed... */
     
     footer {
       text-align: center;
       margin-top: 40px;
       font-size: 0.8em;
       opacity: 0.8;
+      padding: 20px 0;
+      border-top: 1px solid #444; /* Subtle top border */
     }
   </style>
 </head>
@@ -135,6 +190,9 @@
   <header>
     <div class="branding">
       <h1>Directory of Real Estate Data Sites</h1>
+      <p class="tagline">
+        Explore a wide range of real estate data sources for research, analysis, and insights.
+      </p>
     </div>
   </header>
   
@@ -148,6 +206,10 @@
     </div>
   </main>
   
+  <footer>
+    &copy; 2025 Directory of Real Estate Data Sites
+  </footer>
+  
   <script>
     // Global resources array
     let resources = [];
@@ -156,42 +218,85 @@
     const resourceContainer = document.getElementById('resourceContainer');
     const searchInput = document.getElementById('searchInput');
     
+    // Optional: Helper function to return a badge element based on location text
+    function createLocationBadge(location) {
+      const badge = document.createElement('span');
+      badge.classList.add('badge');
+      
+      const lowerLoc = location.toLowerCase();
+      if (lowerLoc.includes('residential')) {
+        badge.classList.add('badge-residential');
+      } else if (lowerLoc.includes('commercial')) {
+        badge.classList.add('badge-commercial');
+      }
+      // else if (lowerLoc.includes('mixed')) {...} // Add more if needed
+      
+      badge.textContent = location;
+      return badge;
+    }
+    
     // Function to render resource cards
     function renderResources(filterText = '') {
       resourceContainer.innerHTML = '';
       
       const filteredResources = resources.filter(resource => {
-        const searchTarget = (resource.name + ' ' + resource.location + ' ' + resource.description).toLowerCase();
+        // Optionally include more fields in the search if needed
+        const searchTarget = (
+          resource.name + ' ' +
+          resource.location + ' ' +
+          resource.description
+        ).toLowerCase();
         return searchTarget.includes(filterText.toLowerCase());
       });
       
       filteredResources.forEach(resource => {
-        // Create card element
+        // Create card container
         const card = document.createElement('div');
         card.className = 'card';
         
-        // Resource Name as a clickable link (with the hidden URL)
-        const title = document.createElement('h2');
-        const link = document.createElement('a');
-        link.href = resource.url;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.textContent = resource.name;
-        title.appendChild(link);
+        // Create card header for the resource name
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'card-header';
         
-        // Location information
+        // Make the title clickable
+        const headerLink = document.createElement('a');
+        headerLink.href = resource.url;
+        headerLink.target = '_blank';
+        headerLink.rel = 'noopener noreferrer';
+        headerLink.textContent = resource.name;
+        headerDiv.appendChild(headerLink);
+        card.appendChild(headerDiv);
+        
+        // Location (with optional icon + badge)
         const locationDiv = document.createElement('div');
         locationDiv.className = 'location';
-        locationDiv.textContent = resource.location;
+        // Add an icon (Font Awesome) + a badge
+        // locationDiv.innerHTML = '<i class="fas fa-map-marker-alt"></i> ';
+        locationDiv.appendChild(createLocationBadge(resource.location));
+        card.appendChild(locationDiv);
         
         // Description
         const descriptionPara = document.createElement('p');
         descriptionPara.textContent = resource.description;
-        
-        // Append all elements to the card
-        card.appendChild(title);
-        card.appendChild(locationDiv);
         card.appendChild(descriptionPara);
+        
+        // Use Case
+        if (resource.useCase) {
+          const divider = document.createElement('div');
+          divider.className = 'divider';
+          card.appendChild(divider);
+          
+          const useCasePara = document.createElement('p');
+          useCasePara.textContent = `Use Case: ${resource.useCase}`;
+          card.appendChild(useCasePara);
+        }
+        
+        // Brokerage Type (only if not "N/A")
+        if (resource.brokerage && resource.brokerage !== 'N/A') {
+          const brokeragePara = document.createElement('p');
+          brokeragePara.textContent = `Brokerage Type: ${resource.brokerage}`;
+          card.appendChild(brokeragePara);
+        }
         
         // Append the card to the grid
         resourceContainer.appendChild(card);
@@ -203,13 +308,16 @@
       download: true,
       header: true,
       complete: function(results) {
-        // Map CSV data to our resource object format
+        // Map CSV data to our resource object format, including new properties
         resources = results.data.map(r => ({
           name: r['Name'],
           location: r['Data type'],
           url: r['Research URL'],
-          description: r['Description']
+          description: r['Description'],
+          useCase: r['Use Case'],
+          brokerage: r['Brokerage Type']
         }));
+        
         // Initial render
         renderResources();
       },
