@@ -38,7 +38,7 @@
     /* Global styles */
     body {
       margin: 0;
-      font-family: 'Merriweather', serif; /* Use Merriweather here */
+      font-family: 'Merriweather', serif;
       background-color: var(--background-color);
       color: var(--text-color);
       padding: 20px;
@@ -74,15 +74,34 @@
       max-width: 600px;
     }
     
-    /* Search bar styling */
-    .search-bar {
+    /* Sticky container for the search controls */
+    .sticky-search {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background-color: var(--background-color);
       width: 100%;
-      max-width: 500px;
-      margin: 0 auto 20px auto;
+      padding: 10px 0;
+      transition: all 0.3s ease;
     }
     
-    .search-bar input {
+    /* Shrink effect on scroll */
+    .sticky-search.shrink {
+      padding: 5px 0;
+    }
+    
+    /* Container for search and filter inputs side-by-side */
+    .search-controls {
       width: 100%;
+      max-width: 550px;
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+    }
+    
+    /* Give more space to the search input */
+    .search-controls input {
+      flex: 2;
       padding: 10px 15px;
       font-size: 1em;
       border: 1px solid var(--input-border);
@@ -92,7 +111,19 @@
       transition: border 0.3s, box-shadow 0.3s;
     }
     
-    .search-bar input:focus {
+    .search-controls select {
+      flex: 1;
+      padding: 10px 15px;
+      font-size: 1em;
+      border: 1px solid var(--input-border);
+      border-radius: 4px;
+      background-color: var(--card-background);
+      color: var(--text-color);
+      transition: border 0.3s, box-shadow 0.3s;
+    }
+    
+    .search-controls input:focus,
+    .search-controls select:focus {
       outline: none;
       border-color: var(--accent-color);
       box-shadow: 0 0 5px var(--accent-color);
@@ -102,8 +133,8 @@
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px; /* Increased gap for more breathing room */
-      padding: 0 10px; /* Optional padding around the grid */
+      gap: 30px;
+      padding: 0 10px;
     }
     
     /* Card design */
@@ -130,12 +161,12 @@
       border-radius: 6px 6px 0 0;
       font-size: 1.2em;
       font-weight: 700;
-      margin: -15px -15px 15px -15px; /* Overlap card padding */
+      margin: -15px -15px 15px -15px;
       text-align: center;
     }
     
     .card-header a {
-      color: #fff; /* Keep link text white in the header */
+      color: #fff;
       text-decoration: none;
     }
     
@@ -169,12 +200,11 @@
     }
     
     .badge-residential {
-      background-color: #28a745; /* green for residential */
+      background-color: #28a745;
     }
     .badge-commercial {
-      background-color: #ff5733; /* orange/red for commercial */
+      background-color: #ff5733;
     }
-    /* ...add more badge classes if needed... */
     
     footer {
       text-align: center;
@@ -182,7 +212,7 @@
       font-size: 0.8em;
       opacity: 0.8;
       padding: 20px 0;
-      border-top: 1px solid #444; /* Subtle top border */
+      border-top: 1px solid #444;
     }
   </style>
 </head>
@@ -196,8 +226,15 @@
     </div>
   </header>
   
-  <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="Search by name or description..." />
+  <!-- Sticky container for search and filter controls -->
+  <div class="sticky-search" id="stickySearch">
+    <div class="search-controls">
+      <input type="text" id="searchInput" placeholder="Search by name or description..." />
+      <select id="categoryFilter">
+        <option value="">All Categories</option>
+        <!-- Options will be dynamically populated -->
+      </select>
+    </div>
   </div>
   
   <main>
@@ -206,47 +243,49 @@
     </div>
   </main>
   
-  <footer>
+  <!-- <footer>
     &copy; 2025 Directory of Real Estate Data Sites
-  </footer>
+  </footer> -->
   
   <script>
     // Global resources array
     let resources = [];
     
-    // Reference to container and search input
+    // Reference to container and search/filter inputs
     const resourceContainer = document.getElementById('resourceContainer');
     const searchInput = document.getElementById('searchInput');
+    const categoryFilterSelect = document.getElementById('categoryFilter');
+    const stickySearch = document.getElementById('stickySearch');
     
-    // Optional: Helper function to return a badge element based on category text
-    function createcategoryBadge(category) {
+    // Helper function to create a badge based on category text
+    function createCategoryBadge(category) {
       const badge = document.createElement('span');
       badge.classList.add('badge');
       
-      const lowerLoc = category.toLowerCase();
-      if (lowerLoc.includes('residential')) {
+      const lowerCategory = category.toLowerCase();
+      if (lowerCategory.includes('residential')) {
         badge.classList.add('badge-residential');
-      } else if (lowerLoc.includes('commercial')) {
+      } else if (lowerCategory.includes('commercial')) {
         badge.classList.add('badge-commercial');
       }
-      // else if (lowerLoc.includes('mixed')) {...} // Add more if needed
       
       badge.textContent = category;
       return badge;
     }
     
-    // Function to render resource cards
-    function renderResources(filterText = '') {
+    // Function to render resource cards based on text and category filters
+    function renderResources(filterText = '', filterCategory = '') {
       resourceContainer.innerHTML = '';
       
       const filteredResources = resources.filter(resource => {
-        // Optionally include more fields in the search if needed
         const searchTarget = (
           resource.name + ' ' +
           resource.category + ' ' +
           resource.description
         ).toLowerCase();
-        return searchTarget.includes(filterText.toLowerCase());
+        const matchesSearch = searchTarget.includes(filterText.toLowerCase());
+        const matchesCategory = !filterCategory || resource.category.toLowerCase() === filterCategory.toLowerCase();
+        return matchesSearch && matchesCategory;
       });
       
       filteredResources.forEach(resource => {
@@ -257,8 +296,6 @@
         // Create card header for the resource name
         const headerDiv = document.createElement('div');
         headerDiv.className = 'card-header';
-        
-        // Make the title clickable
         const headerLink = document.createElement('a');
         headerLink.href = resource.url;
         headerLink.target = '_blank';
@@ -267,11 +304,10 @@
         headerDiv.appendChild(headerLink);
         card.appendChild(headerDiv);
         
-        // category (with optional icon + badge)
+        // Category (with badge)
         const categoryDiv = document.createElement('div');
         categoryDiv.className = 'category';
-        // Add an icon (Font Awesome) + a badge
-        categoryDiv.appendChild(createcategoryBadge(resource.category));
+        categoryDiv.appendChild(createCategoryBadge(resource.category));
         card.appendChild(categoryDiv);
         
         // Description
@@ -286,7 +322,7 @@
           card.appendChild(divider);
           
           const useCasePara = document.createElement('p');
-          useCasePara.textContent = `${resource.useCase}`;
+          useCasePara.textContent = resource.useCase;
           card.appendChild(useCasePara);
         }
         
@@ -302,12 +338,28 @@
       });
     }
     
-    // Load CSV file from the local directory using Papa Parse
+    // Populate the category filter options dynamically after CSV is loaded
+    function populateCategoryFilter() {
+      const categories = new Set();
+      resources.forEach(resource => {
+        if (resource.category) {
+          categories.add(resource.category.trim());
+        }
+      });
+      
+      categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categoryFilterSelect.appendChild(option);
+      });
+    }
+    
+    // Load CSV file using Papa Parse
     Papa.parse('trd-data-research-directory-for-webpage - trd_data_resource_directory.csv', {
       download: true,
       header: true,
       complete: function(results) {
-        // Map CSV data to our resource object format, including new properties
         resources = results.data.map(r => ({
           name: r['Name'],
           category: r['Data type'],
@@ -317,7 +369,7 @@
           brokerage: r['Brokerage Type']
         }));
         
-        // Initial render
+        populateCategoryFilter();
         renderResources();
       },
       error: function(error) {
@@ -325,9 +377,22 @@
       }
     });
     
-    // Filter resources as the user types
-    searchInput.addEventListener('input', (event) => {
-      renderResources(event.target.value);
+    // Update filtering when the user types or changes the category filter
+    searchInput.addEventListener('input', () => {
+      renderResources(searchInput.value, categoryFilterSelect.value);
+    });
+    
+    categoryFilterSelect.addEventListener('change', () => {
+      renderResources(searchInput.value, categoryFilterSelect.value);
+    });
+    
+    // Shrink the sticky search container on scroll
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        stickySearch.classList.add('shrink');
+      } else {
+        stickySearch.classList.remove('shrink');
+      }
     });
   </script>
 </body>
