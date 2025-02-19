@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Building Permits Visualization</title>
+    <!-- Bootstrap CSS for a clean, modern look -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <!-- jQuery UI CSS for autocomplete styling -->
+    <link
+      rel="stylesheet"
+      href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"
+    />
+    <!-- jQuery, jQuery UI, Plotly, and D3.js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <style>
+      body {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        background-color: #f5f5f5;
+        padding: 20px;
+      }
+      .container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      h2 {
+        margin-bottom: 25px;
+      }
+      #locationInput {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1.1em;
+        margin-bottom: 20px;
+      }
+      #metrics label {
+        margin-right: 20px;
+        font-weight: 500;
+      }
+      #chart {
+        width: 100%;
+        height: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Building Permits Visualization</h2>
+      <div id="controls">
+        <!-- Text input with autocomplete for location search (default set to Queens County, New York) -->
+        <input
+          type="text"
+          id="locationInput"
+          placeholder="Search location..."
+          value="Queens County, New York"
+        />
+        <!-- Checkbox controls for selecting metrics -->
+        <div id="metrics" class="mb-3">
+          <label>
+            <input type="checkbox" value="BLDGS_1_UNIT" checked /> 1 Unit
+          </label>
+          <label>
+            <input type="checkbox" value="BLDGS_2_UNITS" checked /> 2 Units
+          </label>
+          <label>
+            <input type="checkbox" value="BLDGS_3_4_UNITS" checked />
+            3-4 Units
+          </label>
+          <label>
+            <input type="checkbox" value="BLDGS_5_UNITS" checked /> 5+ Units
+          </label>
+          <label>
+            <input type="checkbox" value="TOTAL_BLDGS" checked />
+            Total Buildings
+          </label>
+        </div>
+      </div>
+      <!-- Div to hold the Plotly chart -->
+      <div id="chart"></div>
+    </div>
+
+    <script>
+      // Update this path to point to your CSV file
+      const csvPath = "2024_CB_BuildingPermit_data.csv";
+
+      // Global variables for data and unique locations
+      let globalData = [];
+      let uniqueLocations = [];
+
+      // Load CSV data using D3
+      d3.csv(csvPath)
+        .then(function (data) {
+          globalData = data;
+
+          // Extract unique locations (assuming 'COUNTY_STATE_NAME' represents location)
+          uniqueLocations = Array.from(
+            new Set(data.map((d) => d.COUNTY_STATE_NAME))
+          ).sort();
+
+          // Initialize jQuery UI autocomplete for the location input
+          $("#locationInput").autocomplete({
+            source: uniqueLocations,
+            select: function (event, ui) {
+              updateChart(ui.item.value);
+            },
+          });
+
+          // Update chart on input blur in case user types a location manually
+          $("#locationInput").on("blur", function () {
+            updateChart($(this).val());
+          });
+
+          // Update chart when metric checkboxes are toggled
+          $("#metrics input[type='checkbox']").on("change", function () {
+            updateChart($("#locationInput").val());
+          });
+
+          // Use "Queens County, New York" as the default location
+          updateChart("Queens County, New York");
+        })
+        .catch(function (error) {
+          console.error("Error loading CSV data:", error);
+        });
+
+      // Function to update the chart based on the selected location and metrics
+      function updateChart(selectedLocation) {
+        // Filter data by the selected location
+        let filteredData = globalData.filter(
+          (d) => d.COUNTY_STATE_NAME === selectedLocation
+        );
+
+        if (filteredData.length === 0) {
+          // If no data is found, clear the chart
+          Plotly.purge("chart");
+          return;
+        }
+
+        // Sort the filtered data by month (assuming 'MONTH' is numeric)
+        filteredData.sort((a, b) => +a.MONTH - +b.MONTH);
+
+        // Prepare x-axis data (using MONTH_NAME_YEAR)
+        const xData = filteredData.map((d) => d.MONTH_NAME_YEAR);
+
+        // Get the list of selected metrics from checkboxes
+        const selectedMetrics = $("#metrics input[type='checkbox']")
+          .filter(":checked")
+          .map(function () {
+            return this.value;
+          })
+          .get();
+
+        // Prepare a trace for each selected metric
+        const traces = selectedMetrics.map((metric) => ({
+          x: xData,
+          y: filteredData.map((d) => +d[metric]),
+          mode: "lines+markers",
+          type: "scatter",
+          name: metric,
+          line: { shape: "spline", width: 2 },
+          marker: { size: 6 },
+        }));
+
+        // Define the chart layout with a modern look
+        const layout = {
+          title: `<b>Permit Data for ${selectedLocation}</b>`,
+          titlefont: { size: 24 },
+          xaxis: { title: "Month", tickangle: -45 },
+          yaxis: { title: "Permit Numbers" },
+          margin: { t: 60 },
+          plot_bgcolor: "#f9f9f9",
+          paper_bgcolor: "#f5f5f5",
+          font: { color: "#333" },
+        };
+
+        // Render the chart with Plotly (responsive to window resizing)
+        Plotly.newPlot("chart", traces, layout, { responsive: true });
+      }
+    </script>
+  </body>
+</html>
