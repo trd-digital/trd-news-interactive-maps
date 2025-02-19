@@ -140,7 +140,7 @@
     }
     
     /* Card content */
-    .location {
+    .category {
       font-size: 0.9em;
       opacity: 0.8;
       margin-bottom: 10px;
@@ -157,7 +157,7 @@
       margin: 10px 0;
     }
     
-    /* Badges for location or other metadata */
+    /* Badges for category or other metadata */
     .badge {
       display: inline-block;
       background-color: #6c757d;
@@ -218,12 +218,12 @@
     const resourceContainer = document.getElementById('resourceContainer');
     const searchInput = document.getElementById('searchInput');
     
-    // Optional: Helper function to return a badge element based on location text
-    function createLocationBadge(location) {
+    // Optional: Helper function to return a badge element based on category text
+    function createcategoryBadge(category) {
       const badge = document.createElement('span');
       badge.classList.add('badge');
       
-      const lowerLoc = location.toLowerCase();
+      const lowerLoc = category.toLowerCase();
       if (lowerLoc.includes('residential')) {
         badge.classList.add('badge-residential');
       } else if (lowerLoc.includes('commercial')) {
@@ -231,7 +231,7 @@
       }
       // else if (lowerLoc.includes('mixed')) {...} // Add more if needed
       
-      badge.textContent = location;
+      badge.textContent = category;
       return badge;
     }
     
@@ -243,7 +243,7 @@
         // Optionally include more fields in the search if needed
         const searchTarget = (
           resource.name + ' ' +
-          resource.location + ' ' +
+          resource.category + ' ' +
           resource.description
         ).toLowerCase();
         return searchTarget.includes(filterText.toLowerCase());
@@ -267,13 +267,12 @@
         headerDiv.appendChild(headerLink);
         card.appendChild(headerDiv);
         
-        // Location (with optional icon + badge)
-        const locationDiv = document.createElement('div');
-        locationDiv.className = 'location';
+        // category (with optional icon + badge)
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'category';
         // Add an icon (Font Awesome) + a badge
-        // locationDiv.innerHTML = '<i class="fas fa-map-marker-alt"></i> ';
-        locationDiv.appendChild(createLocationBadge(resource.location));
-        card.appendChild(locationDiv);
+        categoryDiv.appendChild(createcategoryBadge(resource.category));
+        card.appendChild(categoryDiv);
         
         // Description
         const descriptionPara = document.createElement('p');
@@ -287,7 +286,7 @@
           card.appendChild(divider);
           
           const useCasePara = document.createElement('p');
-          useCasePara.textContent = `Use Case: ${resource.useCase}`;
+          useCasePara.textContent = `${resource.useCase}`;
           card.appendChild(useCasePara);
         }
         
@@ -311,7 +310,7 @@
         // Map CSV data to our resource object format, including new properties
         resources = results.data.map(r => ({
           name: r['Name'],
-          location: r['Data type'],
+          category: r['Data type'],
           url: r['Research URL'],
           description: r['Description'],
           useCase: r['Use Case'],
