@@ -711,6 +711,14 @@
           'Under Construction'
         ];
 
+        const resiConstructionMetrics = [
+          'Single-Family Home', 
+          'Two-Family Home',
+          'Three- and Four-Family Buildings',
+          'Five-or-More Family Buildings', 
+          'Total Family Buildings'
+        ];
+
         grouped.forEach(group => {
           const card = document.createElement('div');
           card.classList.add('group-card');
@@ -736,6 +744,10 @@
           let metricsToDisplay = residentialMetrics;
           if (group.sector && group.sector.toLowerCase() === 'office') {
             metricsToDisplay = commercialMetrics;
+          }
+
+          if (group.sector && group.sector.toLowerCase() === 'residential construction') {
+            metricsToDisplay = resiConstructionMetrics;
           }
 
           // Build metrics list
