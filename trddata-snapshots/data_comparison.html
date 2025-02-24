@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dynamic Data Comparison Dashboard</title>
+  <!-- Include Papa Parse to load the CSV -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <!-- Include Chart.js for rendering charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    label, select, input, button { margin: 5px; }
+    #selectedTitles li { margin: 3px 0; }
+    /* Simple table styling */
+    table { border-collapse: collapse; margin-top: 20px; width: 100%; }
+    table, th, td { border: 1px solid #ccc; }
+    th, td { padding: 8px; text-align: center; }
+    th { background-color: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <h1>Dynamic Data Comparison Dashboard</h1>
+  
+  <!-- Query Selection Section -->
+  <div>
+    <label for="sourceSelect">Source:</label>
+    <select id="sourceSelect">
+      <option value="">-- Select Source --</option>
+    </select>
+  </div>
+  <div>
+    <label for="sectorSelect">Sector:</label>
+    <select id="sectorSelect" disabled>
+      <option value="">-- Select Sector --</option>
+    </select>
+  </div>
+  
+  <!-- Title (Area) Auto-Complete Input -->
+  <div>
+    <label for="titleInput">Title (Area):</label>
+    <input type="text" id="titleInput" list="titleOptions" placeholder="Start typing..." disabled>
+    <datalist id="titleOptions"></datalist>
+    <button id="addTitleBtn" disabled>Add Title</button>
+  </div>
+  <div>
+    <strong>Selected Titles (max 5):</strong>
+    <ul id="selectedTitles"></ul>
+  </div>
+  
+  <!-- Toggle for Comparison Mode -->
+  <div>
+    <label for="comparisonMode">Comparison Mode:</label>
+    <select id="comparisonMode">
+      <option value="time">Over Time</option>
+      <option value="region">Across Regions</option>
+    </select>
+  </div>
+  
+  <!-- Chart and Data Table -->
+  <canvas id="comparisonChart" width="600" height="400"></canvas>
+  <div id="dataTable"></div>
+  
+  <script>
+    // Global variables
+    let csvData = [];
+    let selectedTitles = [];
+    let chartInstance = null;
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      // Load CSV file using Papa Parse
+      Papa.parse('TRD Data Snapshots - Snapshot2_0.csv', {
+        download: true,
+        header: true,
+        complete: function(results) {
+          csvData = results.data;
+          initializeSourceDropdown(csvData);
+        }
+      });
+      
+      // Set up event listeners
+      document.getElementById('sourceSelect').addEventListener('change', onSourceChange);
+      document.getElementById('sectorSelect').addEventListener('change', onSectorChange);
+      document.getElementById('addTitleBtn').addEventListener('click', addTitle);
+      document.getElementById('comparisonMode').addEventListener('change', updateChart);
+    });
+    
+    // Populate the Source dropdown
+    function initializeSourceDropdown(data) {
+      const sourceSelect = document.getElementById('sourceSelect');
+      const sources = Array.from(new Set(data.map(item => item['Source'])));
+      sources.forEach(source => {
+        const option = document.createElement('option');
+        option.value = source;
+        option.textContent = source;
+        sourceSelect.appendChild(option);
+      });
+    }
+    
+    // When the Source changes, update the Sector dropdown (filtered by Source)
+    function onSourceChange() {
+      const source = document.getElementById('sourceSelect').value;
+      const sectorSelect = document.getElementById('sectorSelect');
+      
+      // Clear previous options and reset title auto-complete
+      sectorSelect.innerHTML = '<option value="">-- Select Sector --</option>';
+      resetTitleInput();
+      
+      if (!source) {
+        sectorSelect.disabled = true;
+        return;
+      }
+      
+      // Filter data by source and get unique sectors
+      const filteredData = csvData.filter(item => item['Source'] === source);
+      const sectors = Array.from(new Set(filteredData.map(item => item['sector'])));
+      sectors.forEach(sector => {
+        const option = document.createElement('option');
+        option.value = sector;
+        option.textContent = sector;
+        sectorSelect.appendChild(option);
+      });
+      sectorSelect.disabled = false;
+    }
+    
+    // When Sector changes, update the title auto-complete options
+    function onSectorChange() {
+      updateTitleAutocomplete();
+    }
+    
+    // Update the title auto-complete (datalist) based on selected Source and Sector
+    function updateTitleAutocomplete() {
+      const source = document.getElementById('sourceSelect').value;
+      const sector = document.getElementById('sectorSelect').value;
+      const titleInput = document.getElementById('titleInput');
+      const addTitleBtn = document.getElementById('addTitleBtn');
+      const dataList = document.getElementById('titleOptions');
+      
+      // Clear current datalist and reset input
+      dataList.innerHTML = '';
+      resetTitleInput();
+      
+      if (source && sector) {
+        // Filter data by source and sector
+        const filteredData = csvData.filter(item => item['Source'] === source && item['sector'] === sector);
+        const titles = Array.from(new Set(filteredData.map(item => item['title'])));
+        titles.forEach(title => {
+          const option = document.createElement('option');
+          option.value = title;
+          dataList.appendChild(option);
+        });
+        // Enable title input if under the maximum selection limit
+        if (selectedTitles.length < 5) {
+          titleInput.disabled = false;
+          addTitleBtn.disabled = false;
+        }
+      } else {
+        titleInput.disabled = true;
+        addTitleBtn.disabled = true;
+      }
+    }
+    
+    // Reset title input field
+    function resetTitleInput() {
+      const titleInput = document.getElementById('titleInput');
+      titleInput.value = '';
+      titleInput.disabled = true;
+      document.getElementById('addTitleBtn').disabled = true;
+    }
+    
+    // Add a title to the selection list and update chart/table dynamically
+    function addTitle() {
+      const titleInput = document.getElementById('titleInput');
+      const title = titleInput.value.trim();
+      if (!title) return;
+      
+      // Enforce maximum of 5 selections
+      if (selectedTitles.length >= 5) {
+        alert("Maximum of 5 selections reached.");
+        return;
+      }
+      
+      // Prevent duplicate selections
+      if (selectedTitles.includes(title)) {
+        alert("Title already selected.");
+        return;
+      }
+      
+      selectedTitles.push(title);
+      updateSelectedTitlesDisplay();
+      updateTitleAutocomplete(); // disable input if 5 selections reached
+      updateChart();
+      
+      // Clear input field for new entries
+      titleInput.value = '';
+    }
+    
+    // Remove a title from the selection and update chart/table immediately
+    function removeTitle(index) {
+      selectedTitles.splice(index, 1);
+      updateSelectedTitlesDisplay();
+      updateTitleAutocomplete(); // re-enable input if below 5 selections
+      updateChart();
+    }
+    
+    // Update the displayed list of selected titles
+    function updateSelectedTitlesDisplay() {
+      const ul = document.getElementById('selectedTitles');
+      ul.innerHTML = '';
+      selectedTitles.forEach((title, index) => {
+        const li = document.createElement('li');
+        li.textContent = title + " ";
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = 'Remove';
+        removeBtn.addEventListener('click', () => removeTitle(index));
+        li.appendChild(removeBtn);
+        ul.appendChild(li);
+      });
+    }
+    
+    // Update the chart and table based on current selections and the comparison mode
+    function updateChart() {
+      const source = document.getElementById('sourceSelect').value;
+      const sector = document.getElementById('sectorSelect').value;
+      const mode = document.getElementById('comparisonMode').value;
+      
+      // If necessary selections are missing, clear the chart and table
+      if (!source || !sector || selectedTitles.length === 0) {
+        if (chartInstance) {
+          chartInstance.destroy();
+          chartInstance = null;
+        }
+        document.getElementById('dataTable').innerHTML = '';
+        return;
+      }
+      
+      // Filter data by the selected Source, Sector, and Titles
+      const filteredData = csvData.filter(item =>
+        item['Source'] === source &&
+        item['sector'] === sector &&
+        selectedTitles.includes(item['title'])
+      );
+      
+      // Group data by quarter (date_period)
+      const groupedData = {};
+      filteredData.forEach(item => {
+        const period = item['date_period'];
+        if (!groupedData[period]) {
+          groupedData[period] = [];
+        }
+        groupedData[period].push(item);
+      });
+      
+      // Define quarters (adjust as needed)
+      const quarters = ["Q4 2023", "Q1 2024", "Q2 2024", "Q3 2024", "Q4 2024"];
+      
+      // Build chart data based on the selected mode
+      if (mode === "time") {
+        // Time Mode: Line chart with quarters on x-axis and one dataset per selected title
+        const chartData = {
+          labels: quarters,
+          datasets: selectedTitles.map(title => {
+            const dataPoints = quarters.map(quarter => {
+              const record = (groupedData[quarter] || []).find(item => item['title'] === title);
+              return record ? parseFloat(record['value']) : null;
+            });
+            const color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+            return {
+              label: title,
+              data: dataPoints,
+              borderColor: color,
+              backgroundColor: color,
+              fill: false
+            };
+          })
+        };
+        renderChart('line', chartData);
+      } else if (mode === "region") {
+        // Region Mode: Bar chart with selected titles (regions) on x-axis and one dataset per quarter
+        const chartData = {
+          labels: selectedTitles,
+          datasets: quarters.map(quarter => {
+            const dataPoints = selectedTitles.map(title => {
+              const record = (groupedData[quarter] || []).find(item => item['title'] === title);
+              return record ? parseFloat(record['value']) : null;
+            });
+            const color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+            return {
+              label: quarter,
+              data: dataPoints,
+              backgroundColor: color,
+              borderColor: color,
+              borderWidth: 1
+            };
+          })
+        };
+        renderChart('bar', chartData);
+      }
+      
+      // Update the table with comparison arrows based on mode
+      updateTable(mode, quarters, groupedData);
+    }
+    
+    // Render the Chart.js chart given a type and data object
+    function renderChart(type, chartData) {
+      const ctx = document.getElementById('comparisonChart').getContext('2d');
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+      chartInstance = new Chart(ctx, {
+        type: type,
+        data: chartData,
+        options: {
+          responsive: true,
+          title: {
+            display: true,
+            text: 'Comparison'
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+    
+    // Update the dynamic table with comparison data and arrows
+    // In Time mode, rows are selected titles (regions) and columns are quarters.
+    // In Region mode, rows are quarters and columns are selected titles.
+    function updateTable(mode, quarters, groupedData) {
+      let tableHTML = '<table>';
+      if (mode === "time") {
+        // Table header row
+        tableHTML += '<thead><tr><th>Title</th>';
+        quarters.forEach(quarter => {
+          tableHTML += `<th>${quarter}</th>`;
+        });
+        tableHTML += '</tr></thead><tbody>';
+        
+        // Build table rows for each selected title
+        selectedTitles.forEach(title => {
+          tableHTML += `<tr><td>${title}</td>`;
+          quarters.forEach((quarter, idx) => {
+            const record = (groupedData[quarter] || []).find(item => item['title'] === title);
+            let cellContent = '';
+            if (record) {
+              const currentValue = parseFloat(record['value']);
+              cellContent = currentValue;
+              // For quarters beyond the first, compare with previous quarter (if available)
+              if (idx > 0) {
+                const prevQuarter = quarters[idx - 1];
+                const prevRecord = (groupedData[prevQuarter] || []).find(item => item['title'] === title);
+                if (prevRecord) {
+                  const prevValue = parseFloat(prevRecord['value']);
+                  if (currentValue > prevValue) cellContent += ' ↑';
+                  else if (currentValue < prevValue) cellContent += ' ↓';
+                  else cellContent += ' →';
+                }
+              }
+            } else {
+              cellContent = '-';
+            }
+            tableHTML += `<td>${cellContent}</td>`;
+          });
+          tableHTML += '</tr>';
+        });
+        tableHTML += '</tbody></table>';
+      } else if (mode === "region") {
+        // Table header row with regions as columns
+        tableHTML += '<thead><tr><th>Quarter</th>';
+        selectedTitles.forEach(title => {
+          tableHTML += `<th>${title}</th>`;
+        });
+        tableHTML += '</tr></thead><tbody>';
+        
+        // Build table rows for each quarter
+        quarters.forEach((quarter) => {
+          tableHTML += `<tr><td>${quarter}</td>`;
+          selectedTitles.forEach((title, idx) => {
+            const record = (groupedData[quarter] || []).find(item => item['title'] === title);
+            let cellContent = '';
+            if (record) {
+              const currentValue = parseFloat(record['value']);
+              cellContent = currentValue;
+              // Compare with the previous region in this quarter, if available
+              if (idx > 0) {
+                const prevTitle = selectedTitles[idx - 1];
+                const prevRecord = (groupedData[quarter] || []).find(item => item['title'] === prevTitle);
+                if (prevRecord) {
+                  const prevValue = parseFloat(prevRecord['value']);
+                  if (currentValue > prevValue) cellContent += ' ↑';
+                  else if (currentValue < prevValue) cellContent += ' ↓';
+                  else cellContent += ' →';
+                }
+              }
+            } else {
+              cellContent = '-';
+            }
+            tableHTML += `<td>${cellContent}</td>`;
+          });
+          tableHTML += '</tr>';
+        });
+        tableHTML += '</tbody></table>';
+      }
+      document.getElementById('dataTable').innerHTML = tableHTML;
+    }
+  </script>
+</body>
+</html>
