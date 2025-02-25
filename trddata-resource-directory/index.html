@@ -305,7 +305,7 @@
     }
     
     // Render resources based on text, source type, and category filters.
-    // Note: Order of parameters is: filterText, filterSourceType, filterCategory.
+    // Order of parameters: filterText, filterSourceType, filterCategory.
     function renderResources(filterText = '', filterSourceType = '', filterCategory = '') {
       resourceContainer.innerHTML = '';
       
@@ -320,6 +320,9 @@
         const matchesCategory = !filterCategory || resource.category.toLowerCase() === filterCategory.toLowerCase();
         return matchesSearch && matchesSourceType && matchesCategory;
       });
+      
+      // Alphabetize the filtered resources by name
+      filteredResources.sort((a, b) => a.name.localeCompare(b.name));
       
       filteredResources.forEach(resource => {
         // Create card container
@@ -379,19 +382,19 @@
     
     // Populate category filter options dynamically
     function populateCategoryFilter() {
-    const categoriesSet = new Set();
-    resources.forEach(resource => {
+      const categoriesSet = new Set();
+      resources.forEach(resource => {
         if (resource.category) {
-        categoriesSet.add(resource.category.trim());
+          categoriesSet.add(resource.category.trim());
         }
-    });
-    const categories = Array.from(categoriesSet).sort();
-    categories.forEach(category => {
+      });
+      const categories = Array.from(categoriesSet).sort();
+      categories.forEach(category => {
         const option = document.createElement('option');
         option.value = category;
         option.textContent = category;
         categoryFilterSelect.appendChild(option);
-    });
+      });
     }
     
     // Populate source type filter options dynamically
@@ -434,7 +437,6 @@
     });
     
     // Update filtering when the user types or changes dropdowns.
-    // Order of parameters: text, sourceType, category.
     searchInput.addEventListener('input', () => {
       renderResources(searchInput.value, sourceTypeFilterSelect.value, categoryFilterSelect.value);
     });
