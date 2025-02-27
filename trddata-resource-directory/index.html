@@ -212,7 +212,7 @@
       margin-right: 6px;
     }
     
-    /* Category badge variations (existing) */
+    /* Category badge variations */
     .badge-residential {
       background-color: #28a745;
     }
@@ -226,6 +226,17 @@
     }
     .badge-nongovernment {
       background-color: #16a085;
+    }
+    
+    /* Styling for card images */
+    .card .image-container {
+      margin-top: 15px;
+      text-align: center;
+    }
+    .card .image-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
     }
     
     footer {
@@ -255,7 +266,6 @@
   <div class="sticky-search" id="stickySearch">
     <div class="search-controls">
       <input type="text" id="searchInput" placeholder="Search by name or description..." />
-      <!-- Swapped: Source Type dropdown now comes before Category -->
       <select id="sourceTypeFilter">
         <option value="">All Source Types</option>
         <!-- Options will be populated dynamically -->
@@ -315,8 +325,7 @@
       return badge;
     }
     
-    // Render resources based on text, source type, and category filters.
-    // Order of parameters: filterText, filterSourceType, filterCategory.
+    // Render resources based on filters.
     function renderResources(filterText = '', filterSourceType = '', filterCategory = '') {
       resourceContainer.innerHTML = '';
       
@@ -351,13 +360,13 @@
         headerDiv.appendChild(headerLink);
         card.appendChild(headerDiv);
         
-        // Category badge (with label)
+        // Category badge
         const categoryDiv = document.createElement('div');
         categoryDiv.className = 'category';
         categoryDiv.appendChild(createCategoryBadge(resource.category));
         card.appendChild(categoryDiv);
         
-        // Source Type badge (new tagging system)
+        // Source Type badge
         const sourceTypeDiv = document.createElement('div');
         sourceTypeDiv.className = 'source-type';
         sourceTypeDiv.appendChild(createSourceTypeBadge(resource.sourceType));
@@ -386,12 +395,24 @@
           card.appendChild(brokeragePara);
         }
         
+        // Add the image at the bottom if available.
+        if (resource.image && resource.image.trim() !== '') {
+          const imageContainer = document.createElement('div');
+          imageContainer.className = 'image-container';
+          const img = document.createElement('img');
+          // Prepend the directory where images are stored.
+          img.src = 'Logos for Research Directory/' + resource.image;
+          img.alt = resource.name + ' image';
+          imageContainer.appendChild(img);
+          card.appendChild(imageContainer);
+        }
+        
         // Append card to grid
         resourceContainer.appendChild(card);
       });
     }
     
-    // Populate category filter options dynamically
+    // Populate category filter options dynamically.
     function populateCategoryFilter() {
       const categoriesSet = new Set();
       resources.forEach(resource => {
@@ -408,7 +429,7 @@
       });
     }
     
-    // Populate source type filter options dynamically
+    // Populate source type filter options dynamically.
     function populateSourceTypeFilter() {
       const sourceTypes = new Set();
       resources.forEach(resource => {
@@ -424,7 +445,8 @@
       });
     }
     
-    // Load CSV file using Papa Parse
+    // Load CSV file using Papa Parse.
+    // Ensure your CSV includes an "Image URL" column with just the image file name.
     Papa.parse('trd-data-research-directory-for-webpage - ComboSheet.csv', {
       download: true,
       header: true,
@@ -436,7 +458,8 @@
           description: r['Description'],
           useCase: r['Use Case'],
           brokerage: r['Brokerage Type'],
-          sourceType: r['Source Type']
+          sourceType: r['Source Type'],
+          image: r['Image URL'] // Field with image file name
         }));
         populateSourceTypeFilter();
         populateCategoryFilter();
@@ -447,7 +470,7 @@
       }
     });
     
-    // Update filtering when the user types or changes dropdowns.
+    // Update filtering on user input.
     searchInput.addEventListener('input', () => {
       renderResources(searchInput.value, sourceTypeFilterSelect.value, categoryFilterSelect.value);
     });
@@ -460,7 +483,7 @@
       renderResources(searchInput.value, sourceTypeFilterSelect.value, categoryFilterSelect.value);
     });
     
-    // Shrink the sticky search container on scroll
+    // Shrink the sticky search container on scroll.
     window.addEventListener('scroll', () => {
       if (window.scrollY > 50) {
         stickySearch.classList.add('shrink');
