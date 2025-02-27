@@ -12,18 +12,19 @@
         label: "Total Sq Ft", 
         format: (value) => Number(value).toLocaleString() 
       },
-      { 
-        field: "Annual Lease", 
-        label: "Total Annual Lease", 
-        format: (value) =>
-          Number(value).toLocaleString("en-US", { style: "currency", currency: "USD" })
-      },
-      { 
-        field: "Saved", 
-        label: "Total Saved", 
-        format: (value) =>
-          Number(value).toLocaleString("en-US", { style: "currency", currency: "USD" })
-      }
+    // In modalDisplayFields:
+    {
+      field: "Annual Lease",
+      label: "Total Annual Lease",
+      format: (value) =>
+        Number(value).toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    },
+    {
+      field: "Saved",
+      label: "Total Saved",
+      format: (value) =>
+        Number(value).toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    }
     ],
   };
 
@@ -82,11 +83,16 @@
       const formattedTotalAnnualLease = totalAnnualLease.toLocaleString("en-US", {
         style: "currency",
         currency: "USD",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
       });
       const formattedTotalSaved = totalSaved.toLocaleString("en-US", {
         style: "currency",
         currency: "USD",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
       });
+      
 
       // Update the totals box. Make sure an element with id 'totals-box' exists in your HTML.
       const totalsBox = document.getElementById("totals-box");
