@@ -20,7 +20,7 @@
     :root {
       --background-color: #ffffff;
       --text-color: #000000;
-      --accent-color: #007BFF; /* blue */
+      --accent-color: #007BFF;
       --card-background: #f9f9f9;
       --input-border: #ccc;
     }
@@ -65,7 +65,6 @@
       font-weight: 700;
     }
     
-    /* Tagline under the main heading */
     .tagline {
       font-size: 1em;
       opacity: 0.8;
@@ -74,7 +73,6 @@
       max-width: 600px;
     }
     
-    /* Introductory text styling */
     .intro {
       font-size: 1em;
       margin-top: 10px;
@@ -82,7 +80,6 @@
       max-width: 600px;
     }
     
-    /* Sticky container for search and filter controls */
     .sticky-search {
       position: sticky;
       top: 0;
@@ -93,12 +90,10 @@
       transition: all 0.3s ease;
     }
     
-    /* Shrink effect on scroll */
     .sticky-search.shrink {
       padding: 5px 0;
     }
     
-    /* Container for search and filter inputs side-by-side */
     .search-controls {
       width: 100%;
       max-width: 600px;
@@ -107,7 +102,6 @@
       gap: 10px;
     }
     
-    /* Search input gets more space than the dropdowns */
     .search-controls input {
       flex: 2;
       padding: 10px 15px;
@@ -137,7 +131,6 @@
       box-shadow: 0 0 5px var(--accent-color);
     }
     
-    /* Grid for resource cards */
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -145,7 +138,6 @@
       padding: 0 10px;
     }
     
-    /* Card design */
     .card {
       background-color: var(--card-background);
       border-radius: 8px;
@@ -161,7 +153,6 @@
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
     
-    /* Card header for title with gradient background */
     .card-header {
       background: linear-gradient(135deg, #0053a4, #007BFF);
       color: #fff;
@@ -178,16 +169,10 @@
       text-decoration: none;
     }
     
-    /* Card content */
-    .category {
+    .category, .source-type {
       font-size: 0.9em;
+      margin-bottom: 10px;
       opacity: 0.8;
-      margin-bottom: 10px;
-    }
-    
-    .source-type {
-      font-size: 0.9em;
-      margin-bottom: 10px;
     }
     
     .card p {
@@ -195,13 +180,11 @@
       line-height: 1.5;
     }
     
-    /* Divider style */
     .divider {
       border-top: 1px solid #ccc;
       margin: 10px 0;
     }
     
-    /* Badge styling for any tag */
     .badge {
       display: inline-block;
       background-color: #6c757d;
@@ -212,7 +195,6 @@
       margin-right: 6px;
     }
     
-    /* Category badge variations */
     .badge-residential {
       background-color: #28a745;
     }
@@ -220,7 +202,6 @@
       background-color: #ff5733;
     }
     
-    /* New source type badge styles */
     .badge-government {
       background-color: #2c3e50;
     }
@@ -228,12 +209,11 @@
       background-color: #16a085;
     }
     
-    /* Styling for card images */
-    .card .image-container {
+    .image-container {
       margin-top: 15px;
       text-align: center;
     }
-    .card .image-container img {
+    .image-container img {
       max-width: 100%;
       height: auto;
       border-radius: 4px;
@@ -262,25 +242,20 @@
     </div>
   </header>
   
-  <!-- Sticky container for search and filter controls -->
   <div class="sticky-search" id="stickySearch">
     <div class="search-controls">
       <input type="text" id="searchInput" placeholder="Search by name or description..." />
       <select id="sourceTypeFilter">
         <option value="">All Source Types</option>
-        <!-- Options will be populated dynamically -->
       </select>
       <select id="categoryFilter">
         <option value="">All Categories</option>
-        <!-- Options will be populated dynamically -->
       </select>
     </div>
   </div>
   
   <main>
-    <div class="card-grid" id="resourceContainer">
-      <!-- Resource cards will be inserted here -->
-    </div>
+    <div class="card-grid" id="resourceContainer"></div>
   </main>
   
   <footer>
@@ -288,31 +263,31 @@
   </footer>
   
   <script>
-    // Global resources array
     let resources = [];
     
-    // References to DOM elements
     const resourceContainer = document.getElementById('resourceContainer');
     const searchInput = document.getElementById('searchInput');
     const categoryFilterSelect = document.getElementById('categoryFilter');
     const sourceTypeFilterSelect = document.getElementById('sourceTypeFilter');
     const stickySearch = document.getElementById('stickySearch');
     
-    // Helper function to create a badge based on category text
+    // Build image path using the resource name directly.
+    function getImagePath(name) {
+      return 'Logos for Research Directory/' + name + '.png';
+    }
+    
     function createCategoryBadge(category) {
       const badge = document.createElement('span');
       badge.classList.add('badge');
-      const lowerCategory = category.toLowerCase();
-      if (lowerCategory.includes('residential')) {
+      if (category.toLowerCase().includes('residential')) {
         badge.classList.add('badge-residential');
-      } else if (lowerCategory.includes('commercial')) {
+      } else if (category.toLowerCase().includes('commercial')) {
         badge.classList.add('badge-commercial');
       }
       badge.textContent = category;
       return badge;
     }
     
-    // Helper function to create a badge for source type
     function createSourceTypeBadge(sourceType) {
       const badge = document.createElement('span');
       badge.classList.add('badge');
@@ -325,103 +300,88 @@
       return badge;
     }
     
-    // Render resources based on filters.
     function renderResources(filterText = '', filterSourceType = '', filterCategory = '') {
       resourceContainer.innerHTML = '';
       
       const filteredResources = resources.filter(resource => {
         const searchTarget = (
-          resource.name + ' ' +
-          resource.category + ' ' +
-          resource.description
+          resource["Name"] + ' ' +
+          resource["Data type"] + ' ' +
+          resource["Description"]
         ).toLowerCase();
-        const matchesSearch = searchTarget.includes(filterText.toLowerCase());
-        const matchesSourceType = !filterSourceType || resource.sourceType.toLowerCase() === filterSourceType.toLowerCase();
-        const matchesCategory = !filterCategory || resource.category.toLowerCase() === filterCategory.toLowerCase();
-        return matchesSearch && matchesSourceType && matchesCategory;
+        return searchTarget.includes(filterText.toLowerCase()) &&
+               (!filterSourceType || resource["Source Type"].toLowerCase() === filterSourceType.toLowerCase()) &&
+               (!filterCategory || resource["Data type"].toLowerCase() === filterCategory.toLowerCase());
       });
       
-      // Alphabetize the filtered resources by name
-      filteredResources.sort((a, b) => a.name.localeCompare(b.name));
+      // Sort alphabetically using the "Name" field.
+      filteredResources.sort((a, b) => a["Name"].localeCompare(b["Name"]));
       
       filteredResources.forEach(resource => {
-        // Create card container
         const card = document.createElement('div');
         card.className = 'card';
         
-        // Card header for resource name
         const headerDiv = document.createElement('div');
         headerDiv.className = 'card-header';
         const headerLink = document.createElement('a');
-        headerLink.href = resource.url;
+        headerLink.href = resource["Research URL"];
         headerLink.target = '_blank';
         headerLink.rel = 'noopener noreferrer';
-        headerLink.textContent = resource.name;
+        headerLink.textContent = resource["Name"];
         headerDiv.appendChild(headerLink);
         card.appendChild(headerDiv);
         
-        // Category badge
         const categoryDiv = document.createElement('div');
         categoryDiv.className = 'category';
-        categoryDiv.appendChild(createCategoryBadge(resource.category));
+        categoryDiv.appendChild(createCategoryBadge(resource["Data type"]));
         card.appendChild(categoryDiv);
         
-        // Source Type badge
         const sourceTypeDiv = document.createElement('div');
         sourceTypeDiv.className = 'source-type';
-        sourceTypeDiv.appendChild(createSourceTypeBadge(resource.sourceType));
+        sourceTypeDiv.appendChild(createSourceTypeBadge(resource["Source Type"]));
         card.appendChild(sourceTypeDiv);
         
-        // Description
         const descriptionPara = document.createElement('p');
-        descriptionPara.textContent = resource.description;
+        descriptionPara.textContent = resource["Description"];
         card.appendChild(descriptionPara);
         
-        // Use Case (if available)
-        if (resource.useCase) {
+        if (resource["Use Case"]) {
           const divider = document.createElement('div');
           divider.className = 'divider';
           card.appendChild(divider);
           
           const useCasePara = document.createElement('p');
-          useCasePara.textContent = resource.useCase;
+          useCasePara.textContent = resource["Use Case"];
           card.appendChild(useCasePara);
         }
         
-        // Brokerage Type (if not "N/A")
-        if (resource.brokerage && resource.brokerage !== 'N/A') {
+        if (resource["Brokerage type"] && resource["Brokerage type"] !== 'N/A') {
           const brokeragePara = document.createElement('p');
-          brokeragePara.textContent = `Brokerage Type: ${resource.brokerage}`;
+          brokeragePara.textContent = `Brokerage Type: ${resource["Brokerage type"]}`;
           card.appendChild(brokeragePara);
         }
         
-        // Add the image at the bottom if available.
-        if (resource.image && resource.image.trim() !== '') {
-          const imageContainer = document.createElement('div');
-          imageContainer.className = 'image-container';
-          const img = document.createElement('img');
-          // Prepend the directory where images are stored.
-          img.src = 'Logos for Research Directory/' + resource.image;
-          img.alt = resource.name + ' image';
-          imageContainer.appendChild(img);
-          card.appendChild(imageContainer);
-        }
+        const imageContainer = document.createElement('div');
+        imageContainer.className = 'image-container';
+        const img = document.createElement('img');
+        img.src = getImagePath(resource["Name"]);
+        img.alt = resource["Name"] + ' logo';
+        img.onerror = function() { this.style.display = 'none'; };
+        imageContainer.appendChild(img);
+        card.appendChild(imageContainer);
         
-        // Append card to grid
         resourceContainer.appendChild(card);
       });
     }
     
-    // Populate category filter options dynamically.
     function populateCategoryFilter() {
       const categoriesSet = new Set();
       resources.forEach(resource => {
-        if (resource.category) {
-          categoriesSet.add(resource.category.trim());
+        if (resource["Data type"]) {
+          categoriesSet.add(resource["Data type"].trim());
         }
       });
-      const categories = Array.from(categoriesSet).sort();
-      categories.forEach(category => {
+      Array.from(categoriesSet).sort().forEach(category => {
         const option = document.createElement('option');
         option.value = category;
         option.textContent = category;
@@ -429,15 +389,14 @@
       });
     }
     
-    // Populate source type filter options dynamically.
     function populateSourceTypeFilter() {
       const sourceTypes = new Set();
       resources.forEach(resource => {
-        if (resource.sourceType) {
-          sourceTypes.add(resource.sourceType.trim());
+        if (resource["Source Type"]) {
+          sourceTypes.add(resource["Source Type"].trim());
         }
       });
-      sourceTypes.forEach(sourceType => {
+      Array.from(sourceTypes).forEach(sourceType => {
         const option = document.createElement('option');
         option.value = sourceType;
         option.textContent = sourceType;
@@ -445,22 +404,11 @@
       });
     }
     
-    // Load CSV file using Papa Parse.
-    // Ensure your CSV includes an "Image URL" column with just the image file name.
     Papa.parse('trd-data-research-directory-for-webpage - ComboSheet.csv', {
       download: true,
       header: true,
       complete: function(results) {
-        resources = results.data.map(r => ({
-          name: r['Name'],
-          category: r['Data type'],
-          url: r['Research URL'],
-          description: r['Description'],
-          useCase: r['Use Case'],
-          brokerage: r['Brokerage Type'],
-          sourceType: r['Source Type'],
-          image: r['Image URL'] // Field with image file name
-        }));
+        resources = results.data;
         populateSourceTypeFilter();
         populateCategoryFilter();
         renderResources();
@@ -470,7 +418,6 @@
       }
     });
     
-    // Update filtering on user input.
     searchInput.addEventListener('input', () => {
       renderResources(searchInput.value, sourceTypeFilterSelect.value, categoryFilterSelect.value);
     });
@@ -483,7 +430,6 @@
       renderResources(searchInput.value, sourceTypeFilterSelect.value, categoryFilterSelect.value);
     });
     
-    // Shrink the sticky search container on scroll.
     window.addEventListener('scroll', () => {
       if (window.scrollY > 50) {
         stickySearch.classList.add('shrink');
