@@ -13,10 +13,11 @@ client = gspread.authorize(creds)
 
 # Open the spreadsheet by key and select the worksheet.
 sheet = client.open_by_key('1PcmZjexOybXbr3BL43K3oL_6bVAOcW96t8fIoqX3sI0')
-worksheet = sheet.worksheet('DOGE')
 
 today = datetime.today().strftime('%Y-%m-%d')
 yesterday = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
+
+worksheet = sheet.worksheet(f'{yesterday}_final')
 
 def run(playwright: Playwright) -> None:
     browser = playwright.chromium.launch(headless=False)

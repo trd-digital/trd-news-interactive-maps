@@ -218,6 +218,12 @@
       height: auto;
       border-radius: 4px;
     }
+    /* For PNG and SVG logos, always apply a white background */
+    .logo-bg {
+      background-color: #ffffff;
+      padding: 5px;
+      border-radius: 4px;
+    }
     
     footer {
       text-align: center;
@@ -244,7 +250,7 @@
   
   <div class="sticky-search" id="stickySearch">
     <div class="search-controls">
-      <input type="text" id="searchInput" placeholder="Search by name or description..." />
+      <input type="text" id="searchInput" placeholder="Search by anything..." />
       <select id="sourceTypeFilter">
         <option value="">All Source Types</option>
       </select>
@@ -271,9 +277,12 @@
     const sourceTypeFilterSelect = document.getElementById('sourceTypeFilter');
     const stickySearch = document.getElementById('stickySearch');
     
-    // Build image path using the resource name directly.
-    function getImagePath(name) {
-      return 'Logos for Research Directory/' + name + '.png';
+    // List of extensions to try in order.
+    const extensions = ['.png', '.webp', '.svg', '.jpg', '.jpeg','.avif'];
+    
+    // Build image path using the base name and a specific extension.
+    function getImagePathWithFallback(name, extIndex) {
+      return 'Logos for Research Directory/' + name + extensions[extIndex];
     }
     
     function createCategoryBadge(category) {
@@ -321,6 +330,7 @@
         const card = document.createElement('div');
         card.className = 'card';
         
+        // Card header with resource name link.
         const headerDiv = document.createElement('div');
         headerDiv.className = 'card-header';
         const headerLink = document.createElement('a');
@@ -331,20 +341,24 @@
         headerDiv.appendChild(headerLink);
         card.appendChild(headerDiv);
         
+        // Category badge.
         const categoryDiv = document.createElement('div');
         categoryDiv.className = 'category';
         categoryDiv.appendChild(createCategoryBadge(resource["Data type"]));
         card.appendChild(categoryDiv);
         
+        // Source type badge.
         const sourceTypeDiv = document.createElement('div');
         sourceTypeDiv.className = 'source-type';
         sourceTypeDiv.appendChild(createSourceTypeBadge(resource["Source Type"]));
         card.appendChild(sourceTypeDiv);
         
+        // Description.
         const descriptionPara = document.createElement('p');
         descriptionPara.textContent = resource["Description"];
         card.appendChild(descriptionPara);
         
+        // Use Case (if available).
         if (resource["Use Case"]) {
           const divider = document.createElement('div');
           divider.className = 'divider';
@@ -355,18 +369,43 @@
           card.appendChild(useCasePara);
         }
         
+        // Brokerage type (if available and not "N/A").
         if (resource["Brokerage type"] && resource["Brokerage type"] !== 'N/A') {
           const brokeragePara = document.createElement('p');
           brokeragePara.textContent = `Brokerage Type: ${resource["Brokerage type"]}`;
           card.appendChild(brokeragePara);
         }
         
+        // Create the image with fallback.
         const imageContainer = document.createElement('div');
         imageContainer.className = 'image-container';
         const img = document.createElement('img');
-        img.src = getImagePath(resource["Name"]);
+        // Store the base name and initial extension index.
+        img.dataset.baseName = resource["Name"];
+        img.dataset.extensionIndex = 0;
+        img.src = getImagePathWithFallback(resource["Name"], 0);
         img.alt = resource["Name"] + ' logo';
-        img.onerror = function() { this.style.display = 'none'; };
+        
+        // onerror: Try next extension if current one fails.
+        img.onerror = function() {
+          let currentIndex = parseInt(this.dataset.extensionIndex, 10);
+          if (currentIndex < extensions.length - 1) {
+            currentIndex++;
+            this.dataset.extensionIndex = currentIndex;
+            this.src = getImagePathWithFallback(this.dataset.baseName, currentIndex);
+          } else {
+            this.style.display = 'none';
+          }
+        };
+        
+        // onload: If the loaded image is a .png or .svg, add the logo background.
+        img.onload = function() {
+          const lowerSrc = this.src.toLowerCase();
+          if (lowerSrc.endsWith('.svg') || lowerSrc.endsWith('.png') || lowerSrc.endsWith('.webp')) {
+            this.classList.add('logo-bg');
+          }
+        };
+        
         imageContainer.appendChild(img);
         card.appendChild(imageContainer);
         
