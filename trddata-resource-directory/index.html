@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Directory of Real Estate Data Sites</title>
   
-  <!-- Google Fonts (Merriweather) -->
+  <!-- Google Fonts: Inter for a modern sans-serif look -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   
   <!-- Font Awesome (for icons) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -16,210 +16,178 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   
   <style>
-    /* Base colors for light mode */
     :root {
-      --background-color: #ffffff;
-      --text-color: #000000;
+      --primary-color: #333333;
+      --secondary-color: #ffffff;
       --accent-color: #007BFF;
-      --card-background: #f9f9f9;
-      --input-border: #ccc;
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
+      --card-shadow: rgba(0, 0, 0, 0.1);
+      --transition-duration: 0.3s;
     }
     
-    /* Dark mode adjustments */
+    /* Dark mode variables override */
     @media (prefers-color-scheme: dark) {
       :root {
-        --background-color: #121212;
-        --text-color: #ffffff;
-        --card-background: #1e1e1e;
-        --input-border: #444;
+        --primary-color: #dddddd;
+        --secondary-color: #1A1A1A;
+        --accent-color: #1E90FF;
+        --bg-color: #121212;
+        --card-bg: #1E1E1E;
+        --card-shadow: rgba(0, 0, 0, 0.5);
       }
     }
     
-    /* Global styles */
+    /* Global Styles */
     body {
       margin: 0;
-      font-family: 'Merriweather', serif;
-      background-color: var(--background-color);
-      color: var(--text-color);
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--primary-color);
       padding: 20px;
-      transition: background-color 0.3s, color 0.3s;
+      transition: background-color var(--transition-duration), color var(--transition-duration);
     }
     
     header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      text-align: center;
+      padding: 40px 20px;
+      background-color: var(--secondary-color);
       margin-bottom: 20px;
     }
     
-    .branding {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-    }
-    
-    h1 {
+    header h1 {
+      font-size: 2.5em;
       margin: 0;
-      font-size: 1.8em;
-      font-weight: 700;
     }
     
-    .tagline {
-      font-size: 1em;
-      opacity: 0.8;
-      margin-top: 5px;
-      text-align: center;
-      max-width: 600px;
+    header p {
+      margin: 10px 0 0;
+      font-size: 1.1em;
+      color: var(--accent-color);
     }
     
-    .intro {
-      font-size: 1em;
-      margin-top: 10px;
-      text-align: center;
-      max-width: 600px;
-    }
-    
+    /* Sticky Search Bar */
     .sticky-search {
       position: sticky;
       top: 0;
+      background-color: var(--secondary-color);
+      padding: 10px;
+      box-shadow: 0 2px 4px var(--card-shadow);
       z-index: 1000;
-      background-color: var(--background-color);
-      width: 100%;
-      padding: 10px 0;
-      transition: all 0.3s ease;
-    }
-    
-    .sticky-search.shrink {
-      padding: 5px 0;
+      margin-bottom: 20px;
     }
     
     .search-controls {
-      width: 100%;
-      max-width: 600px;
+      max-width: 800px;
       margin: 0 auto;
       display: flex;
       gap: 10px;
     }
     
-    .search-controls input {
-      flex: 2;
-      padding: 10px 15px;
-      font-size: 1em;
-      border: 1px solid var(--input-border);
-      border-radius: 4px;
-      background-color: var(--card-background);
-      color: var(--text-color);
-      transition: border 0.3s, box-shadow 0.3s;
-    }
-    
+    .search-controls input,
     .search-controls select {
       flex: 1;
-      padding: 10px 15px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
       font-size: 1em;
-      border: 1px solid var(--input-border);
-      border-radius: 4px;
-      background-color: var(--card-background);
-      color: var(--text-color);
-      transition: border 0.3s, box-shadow 0.3s;
+      transition: border-color var(--transition-duration);
+      background-color: var(--card-bg);
+      color: var(--primary-color);
     }
     
     .search-controls input:focus,
     .search-controls select:focus {
-      outline: none;
       border-color: var(--accent-color);
-      box-shadow: 0 0 5px var(--accent-color);
+      outline: none;
     }
     
+    /* Card Grid */
     .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, 250px);
-    justify-content: center;
-    gap: 30px;
-    padding: 0 10px;
-  }
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      padding: 0 20px;
+    }
     
+    /* Card Design */
     .card {
-      background-color: var(--card-background);
+      background-color: var(--card-bg);
       border-radius: 8px;
-      padding: 15px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      box-shadow: 0 2px 8px var(--card-shadow);
       transition: transform 0.2s, box-shadow 0.2s;
-      display: flex;
-      flex-direction: column;
     }
     
     .card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 16px var(--card-shadow);
     }
     
     .card-header {
-      background: linear-gradient(135deg, #0053a4, #007BFF);
+      background: var(--accent-color);
       color: #fff;
       padding: 10px;
-      border-radius: 6px 6px 0 0;
-      font-size: 1.2em;
-      font-weight: 700;
-      margin: -15px -15px 15px -15px;
+      border-radius: 5px 5px 0 0;
       text-align: center;
+      font-size: 1.2em;
+      margin: -20px -20px 20px -20px;
     }
     
     .card-header a {
-      color: #fff;
+      color: inherit;
       text-decoration: none;
     }
     
-    .category, .source-type {
-      font-size: 0.9em;
-      margin-bottom: 10px;
-      opacity: 0.8;
-    }
-    
-    .card p {
-      margin: 8px 0;
-      line-height: 1.5;
-    }
-    
-    .divider {
-      border-top: 1px solid #ccc;
-      margin: 10px 0;
-    }
-    
+    /* Badges */
     .badge {
       display: inline-block;
-      background-color: #6c757d;
-      color: #fff;
-      padding: 3px 8px;
+      padding: 4px 8px;
       border-radius: 12px;
       font-size: 0.8em;
-      margin-right: 6px;
+      margin-right: 5px;
+      background-color: #ddd;
+      color: #333;
     }
     
     .badge-residential {
       background-color: #28a745;
+      color: #fff;
     }
+    
     .badge-commercial {
       background-color: #ff5733;
+      color: #fff;
     }
     
     .badge-government {
       background-color: #2c3e50;
-    }
-    .badge-nongovernment {
-      background-color: #16a085;
+      color: #fff;
     }
     
+    .badge-nongovernment {
+      background-color: #16a085;
+      color: #fff;
+    }
+    
+    /* Image Container with Fixed Height and Responsive Sizing */
     .image-container {
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
       margin-top: 15px;
-      text-align: center;
     }
+    
     .image-container img {
+      max-height: 100%;
       max-width: 100%;
-      height: auto;
-      border-radius: 4px;
+      object-fit: contain;
     }
-    /* For PNG and SVG logos, always apply a white background */
+    
     .logo-bg {
       background-color: #ffffff;
       padding: 5px;
@@ -228,30 +196,24 @@
     
     footer {
       text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+      color: #777;
+      background-color: var(--secondary-color);
+      border-top: 1px solid #ddd;
       margin-top: 40px;
-      font-size: 0.8em;
-      opacity: 0.8;
-      padding: 20px 0;
-      border-top: 1px solid #444;
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="branding">
-      <h1>Directory of Real Estate Data Sites</h1>
-      <p class="tagline">
-        Explore a wide range of real estate data sources for research, analysis, and insights.
-      </p>
-      <p class="intro">
-        TRD Data’s one‑stop resource for real estate data. The list links directly to reports and analytics from other data providers, trade groups, brokerages and government sources. See anything missing? Email <a href="mailto:research@therealdeal.com">research@therealdeal.com</a>
-      </p>
-    </div>
+    <h1>Directory of Real Estate Data Sites</h1>
+    <p>Explore a curated list of real estate data sources</p>
   </header>
   
-  <div class="sticky-search" id="stickySearch">
+  <div class="sticky-search">
     <div class="search-controls">
-      <input type="text" id="searchInput" placeholder="Search by anything..." />
+      <input type="text" id="searchInput" placeholder="Search..." />
       <select id="sourceTypeFilter">
         <option value="">All Source Types</option>
       </select>
@@ -261,9 +223,9 @@
     </div>
   </div>
   
-  <main>
-    <div class="card-grid" id="resourceContainer"></div>
-  </main>
+  <div class="card-grid" id="resourceContainer">
+    <!-- Resource cards will be inserted here dynamically -->
+  </div>
   
   <footer>
     &copy; 2025 Directory of Real Estate Data Sites
@@ -271,17 +233,15 @@
   
   <script>
     let resources = [];
-    
     const resourceContainer = document.getElementById('resourceContainer');
     const searchInput = document.getElementById('searchInput');
     const categoryFilterSelect = document.getElementById('categoryFilter');
     const sourceTypeFilterSelect = document.getElementById('sourceTypeFilter');
-    const stickySearch = document.getElementById('stickySearch');
     
-    // List of extensions to try in order.
-    const extensions = ['.png', '.webp', '.svg', '.jpg', '.jpeg','.avif'];
+    // List of image extensions to try.
+    const extensions = ['.png', '.webp', '.svg', '.jpg', '.jpeg', '.avif'];
     
-    // Build image path using the base name and a specific extension.
+    // Build image path using the resource name and a specific extension.
     function getImagePathWithFallback(name, extIndex) {
       return 'Logos for Research Directory/' + name + extensions[extIndex];
     }
@@ -312,7 +272,6 @@
     
     function renderResources(filterText = '', filterSourceType = '', filterCategory = '') {
       resourceContainer.innerHTML = '';
-      
       const filteredResources = resources.filter(resource => {
         const searchTarget = (
           resource["Name"] + ' ' +
@@ -324,14 +283,13 @@
                (!filterCategory || resource["Data type"].toLowerCase() === filterCategory.toLowerCase());
       });
       
-      // Sort alphabetically using the "Name" field.
       filteredResources.sort((a, b) => a["Name"].localeCompare(b["Name"]));
       
       filteredResources.forEach(resource => {
         const card = document.createElement('div');
         card.className = 'card';
         
-        // Card header with resource name link.
+        // Header with resource name link.
         const headerDiv = document.createElement('div');
         headerDiv.className = 'card-header';
         const headerLink = document.createElement('a');
@@ -342,52 +300,44 @@
         headerDiv.appendChild(headerLink);
         card.appendChild(headerDiv);
         
-        // Category badge.
-        const categoryDiv = document.createElement('div');
-        categoryDiv.className = 'category';
-        categoryDiv.appendChild(createCategoryBadge(resource["Data type"]));
-        card.appendChild(categoryDiv);
-        
-        // Source type badge.
-        const sourceTypeDiv = document.createElement('div');
-        sourceTypeDiv.className = 'source-type';
-        sourceTypeDiv.appendChild(createSourceTypeBadge(resource["Source Type"]));
-        card.appendChild(sourceTypeDiv);
+        // Badges for category and source type.
+        const badgeContainer = document.createElement('div');
+        badgeContainer.style.marginBottom = "10px";
+        badgeContainer.appendChild(createCategoryBadge(resource["Data type"]));
+        badgeContainer.appendChild(createSourceTypeBadge(resource["Source Type"]));
+        card.appendChild(badgeContainer);
         
         // Description.
         const descriptionPara = document.createElement('p');
         descriptionPara.textContent = resource["Description"];
         card.appendChild(descriptionPara);
         
-        // Use Case (if available).
+        // Optional Use Case.
         if (resource["Use Case"]) {
           const divider = document.createElement('div');
-          divider.className = 'divider';
+          divider.style.borderTop = "1px solid #ddd";
+          divider.style.margin = "10px 0";
           card.appendChild(divider);
-          
           const useCasePara = document.createElement('p');
           useCasePara.textContent = resource["Use Case"];
           card.appendChild(useCasePara);
         }
         
-        // Brokerage type (if available and not "N/A").
+        // Optional Brokerage Type.
         if (resource["Brokerage type"] && resource["Brokerage type"] !== 'N/A') {
           const brokeragePara = document.createElement('p');
           brokeragePara.textContent = `Brokerage Type: ${resource["Brokerage type"]}`;
           card.appendChild(brokeragePara);
         }
         
-        // Create the image with fallback.
+        // Image with fallback logic.
         const imageContainer = document.createElement('div');
         imageContainer.className = 'image-container';
         const img = document.createElement('img');
-        // Store the base name and initial extension index.
         img.dataset.baseName = resource["Name"];
         img.dataset.extensionIndex = 0;
         img.src = getImagePathWithFallback(resource["Name"], 0);
         img.alt = resource["Name"] + ' logo';
-        
-        // onerror: Try next extension if current one fails.
         img.onerror = function() {
           let currentIndex = parseInt(this.dataset.extensionIndex, 10);
           if (currentIndex < extensions.length - 1) {
@@ -398,15 +348,12 @@
             this.style.display = 'none';
           }
         };
-        
-        // onload: If the loaded image is a .png or .svg, add the logo background.
         img.onload = function() {
           const lowerSrc = this.src.toLowerCase();
           if (lowerSrc.endsWith('.svg') || lowerSrc.endsWith('.png') || lowerSrc.endsWith('.webp')) {
             this.classList.add('logo-bg');
           }
         };
-        
         imageContainer.appendChild(img);
         card.appendChild(imageContainer);
         
@@ -468,14 +415,6 @@
     
     categoryFilterSelect.addEventListener('change', () => {
       renderResources(searchInput.value, sourceTypeFilterSelect.value, categoryFilterSelect.value);
-    });
-    
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 50) {
-        stickySearch.classList.add('shrink');
-      } else {
-        stickySearch.classList.remove('shrink');
-      }
     });
   </script>
 </body>
