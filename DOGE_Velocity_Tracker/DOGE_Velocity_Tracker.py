@@ -15,7 +15,7 @@ client = gspread.authorize(creds)
 sheet = client.open_by_key('1PcmZjexOybXbr3BL43K3oL_6bVAOcW96t8fIoqX3sI0')
 
 today = datetime.today().strftime('%Y-%m-%d')
-yesterday = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
+yesterday = (datetime.today() - timedelta(days=3)).strftime('%Y-%m-%d')
 
 worksheet = sheet.worksheet(f'{yesterday}_final')
 
@@ -28,20 +28,20 @@ def run(playwright: Playwright) -> None:
     page.goto("https://doge.gov/savings")
     time.sleep(5)
 
-    # Click the "see more" button (third occurrence).
-    page.locator("text=see more").nth(2).click()
+    # Click text=View All Leases
+    page.locator("text=View All Leases").click()
 
     # Parse tables from the page.
     dfs = pd.read_html(StringIO(page.content()))
-    df_value = dfs[1]
+    df_value = dfs[2]
     df_value.to_csv(f'{today}_value.csv', index=False)
 
-    # Click on Savings (fifth occurrence in the main content).
-    page.locator('[aria-label="Main content"] >> text=Savings').nth(4).click()
+    # Click span:has-text("Savings") >> nth=3
+    page.locator("span:has-text(\"Savings\")").nth(3).click()
     time.sleep(5)
 
     dfs = pd.read_html(StringIO(page.content()))
-    df_savings = dfs[1]
+    df_savings = dfs[2]
     df_savings.to_csv(f'{today}_savings.csv', index=False)
 
     # Merge the two dataframes side by side and remove duplicate columns.
