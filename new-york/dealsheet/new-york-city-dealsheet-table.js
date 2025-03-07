@@ -3,11 +3,20 @@
   const dataUrl = table.getAttribute("data-json-url");
 
   const displayColumns = [
-    { dataField: "LANDLORD SELLER BORROWER", name: "Sellers/Borrower" },
-    { dataField: "TENANT BUYER LENDER", name: "Buyers/Lender" },
+    {
+      dataField: "LANDLORD SELLER/BORROWER",
+      name: "Sellers/Borrower",
+      visible: true,
+    },
+    {
+      dataField: "TENANT BUYER/LENDER",
+      name: "Buyers/Lender",
+      visible: true,
+    },
     {
       dataField: "DEAL CLOSING DATE",
       name: "Deal Closing Date",
+      visible: true,
       sorterCallback: (a, b) => {
         if (isEmptyValue(a) || isEmptyValue(b)) {
           return 0;
@@ -15,18 +24,98 @@
         return new Date(a).getTime() - new Date(b).getTime();
       },
     },
-    { dataField: "ADDRESS", name: "Address" },
-    { dataField: "NEIGHBORHOOD", name: "Neighborhood" },
-    { dataField: "BOROUGH", name: "Borough" },
+    { dataField: "ADDRESS", name: "Address", visible: true },
+    { dataField: "NEIGHBORHOOD", name: "Neighborhood", visible: true },
+    { dataField: "BOROUGH", name: "Borough", visible: true },
     {
       dataField: "SQUARE FEET",
       name: "SqFt",
+      visible: true,
       sorterCallback: (a, b) => {
-        if (isEmptyValue(a) || isEmptyValue(b)) {
-          return 0;
+        if (!isEmptyValue(a) && !isEmptyValue(b)) {
+          return getNumberValue(a) > getNumberValue(b) ? 1 : -1;
         }
-        return getNumberValue(a) - getNumberValue(b);
       },
+    },
+    {
+      dataField: "SALE PRICE/LOAN AMOUNT",
+      name: "Sale/Loan Amount",
+      visible: true,
+      sorterCallback: (a, b) => {
+        if (!isEmptyValue(a) && !isEmptyValue(b)) {
+          return getNumberValue(a) > getNumberValue(b) ? 1 : -1;
+        }
+      },
+    },
+    {
+      dataField: "CLEAN RENT/PRICE PER SQUARE FOOT",
+      name: "Rent/Price per SqFt",
+      visible: false,
+    },
+    {
+      dataField: "YEARS OF LEASE",
+      name: "Years of Lease",
+      visible: false,
+    },
+    {
+      dataField: "LANDLORD BROKER",
+      name: "Landlord Broker",
+      visible: false,
+    },
+    {
+      dataField: "LANDLORD BROKERAGE",
+      name: "Landlord Brokerage",
+      visible: false,
+    },
+    {
+      dataField: "LANDLORD TYPE",
+      name: "Landlord Type",
+      visible: false,
+    },
+    {
+      dataField: "TENANT BROKER",
+      name: "Tenant Broker",
+      visible: false,
+    },
+    {
+      dataField: "TENANT BROKERAGE",
+      name: "Tenant Brokerage",
+      visible: false,
+    },
+    {
+      dataField: "TENANT TYPE",
+      name: "Tenant Type",
+      visible: false,
+    },
+    {
+      dataField: "TENANT BUSINESS TYPE",
+      name: "Tenant Business Type",
+      visible: false,
+    },
+    {
+      dataField: "SPECIAL CASES",
+      name: "Special Cases",
+      visible: false,
+    },
+    {
+      dataField: "GENERAL DS NOTES",
+      name: "General Notes",
+      visible: false,
+    },
+    {
+      dataField: "DATE ENTERED",
+      name: "Date Entered",
+      visible: false,
+    },
+    {
+      dataField: "DEAL TYPE",
+      name: "Deal Type",
+      visible: false,
+    },
+    {
+      dataField: "BBL",
+      name: "BBL",
+      visible: false,
     },
   ];
 
@@ -38,13 +127,19 @@
     "BBL",
     "NEIGHBORHOOD",
     "SQUARE FEET",
-    "LANDLORD SELLER BORROWER",
+    "LANDLORD SELLER/BORROWER",
     "LANDLORD BROKER",
     "LANDLORD BROKERAGE",
-    "TENANT BUYER LENDER",
+    "LANDLORD TYPE",
+    "TENANT BUYER/LENDER",
     "TENANT BROKER",
     "TENANT BROKERAGE",
+    "TENANT TYPE",
+    "TENANT BUSINESS TYPE",
+    "SPECIAL CASES",
+    "YEARS OF LEASE",
     "GENERAL DS NOTES",
+    "SALE PRICE/LOAN AMOUNT",
     "CLEAN RENT/PRICE PER SQUARE FOOT",
     "DATE ENTERED",
   ];
@@ -140,7 +235,7 @@
     pagination: true,
     paginationVAlign: "top",
     pageList: [10, 50, 100],
-    pageSize: 100,
+    pageSize: 10,
     classes: "table table-responsive",
     theadClasses: "header-style",
     detailView: true,
@@ -180,6 +275,7 @@
 
   const isEmptyValue = (value) => {
     if (!value) return true;
+    if (typeof value === "undefined") return true;
     if (value === "") return true;
     if (typeof value === "string") {
       if (value.trim() === "") return true;
@@ -210,11 +306,7 @@
       }).format(value);
     }
 
-    if (
-      field === "sale_price" ||
-      field === "loan_amount" ||
-      field === "previous_sale_price"
-    ) {
+    if (field === "sale_price_loan_amount") {
       try {
         const number =
           typeof value === "string"
@@ -262,12 +354,7 @@
   const getFieldName = (value) => {
     return value
       .toLowerCase()
-      .replace(/[ .-]/g, (char) => (char === "." ? "" : "_"));
-  };
-
-  const columnConfig = {
-    sortable: true,
-    formatter: formatterRowValue,
+      .replace(/[ .-/]/g, (char) => (char === "." ? "" : "_"));
   };
 
   const getData = async (url) => {
@@ -291,25 +378,24 @@
 
         return aIndex - bIndex;
       })
-      .map((item) => {
-        if (!displayFields.includes(item)) {
+      .map((columnName) => {
+        if (!displayFields.includes(columnName)) {
           return null;
         }
         const displayColumn = displayColumns.find(
-          (column) => column.dataField === item
+          (column) => column.dataField === columnName
         );
 
-        const sorter =
-          displayColumn && typeof displayColumn.sorterCallback === "function"
-            ? displayColumn.sorterCallback
-            : undefined;
-
         return {
-          ...columnConfig,
-          field: getFieldName(item),
-          title: (displayColumn && displayColumn.name) || item,
-          sorter,
-          visible: displayColumn ? true : false,
+          sortable: true,
+          formatter: formatterRowValue,
+          field: getFieldName(columnName),
+          title: (displayColumn && displayColumn.name) || columnName,
+          sorter:
+            displayColumn && typeof displayColumn.sorterCallback === "function"
+              ? displayColumn.sorterCallback
+              : undefined,
+          visible: displayColumn && displayColumn.visible ? true : false,
         };
       })
       .filter((column) => column);
