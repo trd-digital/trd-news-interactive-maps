@@ -24,12 +24,9 @@
         return new Date(a).getTime() - new Date(b).getTime();
       },
     },
-    { dataField: "ADDRESS", name: "Address", visible: true },
-    { dataField: "NEIGHBORHOOD", name: "Neighborhood", visible: true },
-    { dataField: "BOROUGH", name: "Borough", visible: true },
     {
-      dataField: "SQUARE FEET",
-      name: "SqFt",
+      dataField: "SALE PRICE/LOAN AMOUNT",
+      name: "Sale/Loan Amount",
       visible: true,
       sorterCallback: (a, b) => {
         if (!isEmptyValue(a) && !isEmptyValue(b)) {
@@ -37,9 +34,12 @@
         }
       },
     },
+    { dataField: "ADDRESS", name: "Address", visible: true },
+    { dataField: "NEIGHBORHOOD", name: "Neighborhood", visible: true },
+    { dataField: "BOROUGH", name: "Borough", visible: true },
     {
-      dataField: "SALE PRICE/LOAN AMOUNT",
-      name: "Sale/Loan Amount",
+      dataField: "SQUARE FEET",
+      name: "SqFt",
       visible: true,
       sorterCallback: (a, b) => {
         if (!isEmptyValue(a) && !isEmptyValue(b)) {
