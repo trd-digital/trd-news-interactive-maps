@@ -199,13 +199,13 @@
       (column) => getFieldName(column.dataField) === key
     );
 
-    return `<div class="row my-2 border-bottom">
-      <div class="text-capitalize col-4 col-md-3">
+    return `<div class="row my-2 pb-2 border-bottom">
+      <div class="text-capitalize col-4">
         <strong>
         ${getColumnName((displayColumn && displayColumn.name) || key)}:
         </strong>
       </div>
-      <div class="col-8 col-md-9">
+      <div class="col-8">
         ${formatter(value, row, i, key)}
       </div>
     </div>`;
@@ -335,7 +335,10 @@
       }).format(value);
     }
 
-    if (field === "sale_price_loan_amount") {
+    if (
+      field === "sale_price_loan_amount" ||
+      field === "clean_rent_price_per_square_foot"
+    ) {
       try {
         const number =
           typeof value === "string"
