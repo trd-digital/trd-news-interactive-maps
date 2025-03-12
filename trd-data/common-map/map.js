@@ -35,7 +35,24 @@ const userTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
   ? "dark"
   : "light";
 
+const tracking = {
+  eventCategory: "unknown-map",
+  trackEvent: (action, label) => {
+    if (window.dataLayer) {
+      window.dataLayer.push({
+        event: "event_tracking",
+        trd: {
+          category: tracking.eventCategory,
+          action: `map_${action}`,
+          label: label,
+        },
+      });
+    }
+  },
+};
+
 const trdTheme = {
+  prefer: "system",
   init: () => {
     document.querySelector("body").setAttribute("data-bs-theme", userTheme);
   },
@@ -57,8 +74,8 @@ const trdTheme = {
     const newTheme = siteTheme === "light" ? "dark" : "light";
     _mapObj.setStyle(`mapbox://styles/mapbox/${newTheme}-v10`);
     trdTheme.set(newTheme);
-    helpers.trackEvent("theme", newTheme);
-    _mapObj.load(mapData);
+    trdTheme.prefer = "user";
+    tracking.trackEvent("theme", newTheme);
   },
 };
 
@@ -114,16 +131,30 @@ const trdDataCommonMap = (options) => {
 
   const fn = {
     init: async () => {
+      tracking.eventCategory = settings.eventCategory;
       trdTheme.init();
       legend.init();
       filters.init();
       map.init();
       fn.checkForIframe();
+      fn.changeThemeOnSystemChange();
     },
 
     checkForIframe: () => {
       if (!helpers.isIframe()) return;
       document.querySelector("body").classList.add("iframe");
+    },
+
+    changeThemeOnSystemChange: () => {
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", (e) => {
+          if (trdTheme.prefer !== "system") return;
+          const newTheme = e.matches ? "dark" : "light";
+          trdTheme.set(newTheme);
+          tracking.trackEvent("theme", newTheme);
+          mapObj.setStyle(`mapbox://styles/mapbox/${newTheme}-v10`);
+        });
     },
   };
 
@@ -165,19 +196,6 @@ const trdDataCommonMap = (options) => {
         return "";
       }
       return value;
-    },
-
-    trackEvent: (action, label) => {
-      if (window.dataLayer) {
-        window.dataLayer.push({
-          event: "event_tracking",
-          trd: {
-            category: settings.eventCategory,
-            action: `map_${action}`,
-            label: label,
-          },
-        });
-      }
     },
   };
 
@@ -434,13 +452,13 @@ const trdDataCommonMap = (options) => {
 
       filterEl.classList.toggle("active");
       document.querySelector("button.map-filters").classList.toggle("active");
-      helpers.trackEvent("filters", isActive ? "close" : "open");
+      tracking.trackEvent("filters", isActive ? "close" : "open");
     },
 
     onClose: () => {
       if (!settings?.filterFields?.length) return;
       filters.close();
-      helpers.trackEvent("filters", "close");
+      tracking.trackEvent("filters", "close");
     },
 
     onSubmit: (e) => {
@@ -464,7 +482,7 @@ const trdDataCommonMap = (options) => {
           .classList.remove("applied");
       }
       filters.close();
-      helpers.trackEvent("filters", "submit");
+      tracking.trackEvent("filters", "submit");
     },
 
     onReset: () => {
@@ -476,7 +494,7 @@ const trdDataCommonMap = (options) => {
         features: filterData,
       });
       document.querySelector("button.map-filters").classList.remove("applied");
-      helpers.trackEvent("filters", "reset");
+      tracking.trackEvent("filters", "reset");
     },
 
     getFilterFeatures: (data) => {
@@ -652,7 +670,7 @@ const trdDataCommonMap = (options) => {
       mapObj.on("zoomend", (e) => {
         const newZoom = e.target.getZoom();
         const method = newZoom > map.currentZoom ? "zoom-in" : "zoom-out";
-        helpers.trackEvent("zoom", `${method} ${newZoom}`);
+        tracking.trackEvent("zoom", `${method} ${newZoom}`);
         map.currentZoom = newZoom;
       });
     },
@@ -832,7 +850,7 @@ const trdDataCommonMap = (options) => {
         modalContent.innerHTML = html;
         modalContent.scrollTop = 0;
         modal.style.display = "block";
-        helpers.trackEvent("detail_view", address.toLowerCase());
+        tracking.trackEvent("detail_view", address.toLowerCase());
       });
 
       const close = document.querySelector("#modal .btn-close");

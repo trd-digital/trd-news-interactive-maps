@@ -5,12 +5,12 @@
   const displayColumns = [
     {
       dataField: "LANDLORD SELLER/BORROWER",
-      name: "Sellers/Borrower",
+      name: "Party1",
       visible: true,
     },
     {
       dataField: "TENANT BUYER/LENDER",
-      name: "Buyers/Lender",
+      name: "Party2",
       visible: true,
     },
     {
@@ -176,17 +176,39 @@
     }
   };
 
+  const getColumnName = (name) => {
+    if (dataUrl.includes("buy")) {
+      return name.replace("Party1", "Seller").replace("Party2", "Buyer");
+    }
+    if (dataUrl.includes("financing")) {
+      return name.replace("Party1", "Borrower").replace("Party2", "Lender");
+    }
+    if (dataUrl.includes("leasing")) {
+      return name.replace("Party1", "Landlord").replace("Party2", "Tenant");
+    }
+    return name;
+  };
+
   const mapDetailRow = (key, row, i) => {
     const value = row[key];
     if (isEmptyValue(value)) {
       return "";
     }
-    return `<tr>
-      <td class="text-capitalize">
-      ${key.replace(/_/g, " ")}
-      </td>
-      <td>${formatter(value, row, i, key)}</td>
-    </tr>`;
+
+    const displayColumn = displayColumns.find(
+      (column) => getFieldName(column.dataField) === key
+    );
+
+    return `<div class="row my-2 border-bottom">
+      <div class="text-capitalize col-4 col-md-3">
+        <strong>
+        ${getColumnName((displayColumn && displayColumn.name) || key)}:
+        </strong>
+      </div>
+      <div class="col-8 col-md-9">
+        ${formatter(value, row, i, key)}
+      </div>
+    </div>`;
   };
 
   const detailFormatter = (index, row) => {
@@ -199,25 +221,18 @@
     return `
       <div class="container">
         <div class="row my-5">
-          <div class="col-12 col-md-6">
-            <table class="table table-sm">
-              <tbody>
-                ${displayRows
-                  .slice(0, Math.ceil(displayRows.length / 2))
-                  .map((key, i) => mapDetailRow(getFieldName(key), row, i))
-                  .join("")}
-              </tbody>
-            </table>
+          <div class="col-12 col-md-5">
+            ${displayRows
+              .slice(0, Math.ceil(displayRows.length / 2))
+              .map((key, i) => mapDetailRow(getFieldName(key), row, i))
+              .join("")}
           </div>
-          <div class="col-12 col-md-6">
-            <table class="table table-sm">
-              <tbody>
-                ${displayRows
-                  .slice(Math.ceil(displayRows.length / 2))
-                  .map((key, i) => mapDetailRow(getFieldName(key), row, i))
-                  .join("")}
-              </tbody>
-            </table>
+          <div class="col-0 col-md-1"></div>
+          <div class="col-12 col-md-5">
+            ${displayRows
+              .slice(Math.ceil(displayRows.length / 2))
+              .map((key, i) => mapDetailRow(getFieldName(key), row, i))
+              .join("")}
           </div>
         </div>
       </div>
@@ -269,9 +284,23 @@
     },
   };
 
-  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    document.body.setAttribute("data-bs-theme", "dark");
-  }
+  // Set the theme based on the user's preference
+  const setTheme = () => {
+    document.body.setAttribute(
+      "data-bs-theme",
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
+    );
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        document.body.setAttribute(
+          "data-bs-theme",
+          e.matches ? "dark" : "light"
+        );
+      });
+  };
 
   const isEmptyValue = (value) => {
     if (!value) return true;
@@ -367,10 +396,10 @@
       .sort((a, b) => {
         // sort it by displayColumns order
         const aIndex = displayColumns.findIndex(
-          (column) => column.dataField === a
+          (column) => getFieldName(column.dataField) === getFieldName(a)
         );
         const bIndex = displayColumns.findIndex(
-          (column) => column.dataField === b
+          (column) => getFieldName(column.dataField) === getFieldName(b)
         );
         if (aIndex === -1 && bIndex !== -1) return 1;
         if (aIndex !== -1 && bIndex === -1) return -1;
@@ -382,15 +411,18 @@
         if (!displayFields.includes(columnName)) {
           return null;
         }
+        const field = getFieldName(columnName);
         const displayColumn = displayColumns.find(
-          (column) => column.dataField === columnName
+          (column) => getFieldName(column.dataField) === field
         );
 
         return {
           sortable: true,
           formatter: formatterRowValue,
-          field: getFieldName(columnName),
-          title: (displayColumn && displayColumn.name) || columnName,
+          field: field,
+          title: getColumnName(
+            (displayColumn && displayColumn.name) || columnName
+          ),
           sorter:
             displayColumn && typeof displayColumn.sorterCallback === "function"
               ? displayColumn.sorterCallback
@@ -449,4 +481,6 @@
         console.error(error);
       });
   }
+
+  setTheme();
 })();
