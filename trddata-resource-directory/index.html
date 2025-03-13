@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Directory of Real Estate Data Sites</title>
   
-  <!-- Google Fonts: Inter for a modern sans-serif look -->
+  <!-- Merriweather for header -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Proxima Nova is assumed installed locally; otherwise, a fallback sans-serif is used -->
   
   <!-- Font Awesome (for icons) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -26,9 +28,15 @@
       --transition-duration: 0.3s;
       --logo-width: 60px;
       --logo-height: 60px;
+      /* Gray styling for both Type and Data Types */
+      --gray-text: #777777;
+      --gray-bg: #e0e0e0;
+      --gray-padding: 6px 12px;
+      --gray-border-radius: 4px;
+      --gray-margin-bottom: 4px;
     }
     
-    /* Dark mode variables override */
+    /* Dark mode overrides */
     @media (prefers-color-scheme: dark) {
       :root {
         --primary-color: #dddddd;
@@ -37,13 +45,15 @@
         --bg-color: #121212;
         --card-bg: #1E1E1E;
         --card-shadow: rgba(0, 0, 0, 0.5);
+        --gray-text: #bbbbbb;
+        --gray-bg: #2a2a2a;
       }
     }
     
-    /* Global Styles */
+    /* Body uses Proxima Nova; header uses Merriweather */
     body {
       margin: 0;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Proxima Nova', 'Helvetica Neue', Arial, sans-serif;
       background-color: var(--bg-color);
       color: var(--primary-color);
       padding: 20px;
@@ -51,9 +61,10 @@
     }
     
     header {
-      text-align: center;
+      font-family: 'Merriweather', serif;
+      text-align: left;
       padding: 40px 20px;
-      background-color: var(--secondary-color);
+      background-color: transparent;
       margin-bottom: 20px;
     }
     
@@ -68,39 +79,70 @@
       color: var(--accent-color);
     }
     
-    /* Sticky Search Bar */
+    /* Sticky Search Bar (no group drop shadow) */
     .sticky-search {
       position: sticky;
       top: 0;
       background-color: var(--secondary-color);
       padding: 10px;
-      box-shadow: 0 2px 4px var(--card-shadow);
+      box-shadow: none; /* group drop shadow removed */
       z-index: 1000;
       margin-bottom: 20px;
     }
     
+    /* Extend search controls full width */
     .search-controls {
-      max-width: 800px;
-      margin: 0 auto;
+      width: 75%;
       display: flex;
-      gap: 10px;
+      gap: 100px;
     }
     
-    .search-controls input,
-    .search-controls select {
-      flex: 1;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 1em;
-      transition: border-color var(--transition-duration);
-      background-color: var(--card-bg);
+    /* Input wrapper for magnifying glass icon */
+    .input-wrapper {
+      position: relative;
+      flex: 0 0 40%;  /* reduced width to 40% */
+    }
+    
+    .input-wrapper i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
       color: var(--primary-color);
     }
     
-    .search-controls input:focus,
+    .input-wrapper input {
+      width: 100%;
+      padding: 12px 12px 12px 40px; /* extra left padding for the icon */
+      border: none;
+      border-radius: 0;
+      font-size: 1em;
+      background-color: var(--card-bg);
+      color: var(--primary-color);
+      box-shadow: none;
+    }
+    
+    .input-wrapper input:focus {
+      outline: none;
+    }
+    
+    /* Styling for select dropdowns */
+    .search-controls select {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 0;
+      font-size: 1em;
+      background-color: var(--card-bg);
+      color: var(--primary-color);
+      box-shadow: none;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: none;
+    }
+    
     .search-controls select:focus {
-      border-color: var(--accent-color);
       outline: none;
     }
     
@@ -114,9 +156,12 @@
       box-shadow: 0 2px 8px var(--card-shadow);
     }
     
+    /* Column headers text changed to white (#fff) */
     .data-table thead {
       background-color: var(--accent-color);
-      color: var(--secondary-color);
+    }
+    .data-table thead th {
+      color: #fff !important;
     }
     
     .data-table th,
@@ -132,19 +177,18 @@
       letter-spacing: 0.05em;
     }
     
-    /* Remove hyperlink formatting while keeping functionality */
+    /* Remove link styling inside table */
     .data-table a {
       text-decoration: none;
       color: inherit;
     }
     
-    /* Company Column: Logo + clickable company name (with no link formatting) */
+    /* Company Column: Logo + company name */
     .company-cell {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-    
     .company-cell img.logo {
       width: var(--logo-width);
       height: var(--logo-height);
@@ -154,32 +198,25 @@
       border-radius: 4px;
     }
     
-    /* Toggle Arrow for Description */
-    .toggle-cell {
-      text-align: center;
-      cursor: pointer;
-      font-size: 1.2rem;
+    /* Single unified style for Type and Data Types */
+    .datatype-badge {
+      color: var(--gray-text);
+      background-color: var(--gray-bg);
+      padding: var(--gray-padding);
+      border-radius: var(--gray-border-radius);
+      display: inline-block;
+      margin-bottom: var(--gray-margin-bottom);
     }
     
-    /* Hide extra description row by default */
-    .description-row {
-      display: none;
-      background-color: var(--card-bg);
-    }
-    
-    .description-cell {
-      padding: 16px;
-      border-bottom: 1px solid #ddd;
-      font-size: 0.9rem;
-      color: var(--primary-color);
-    }
-    
-    /* Responsive: Table -> Card layout */
+    /* Responsive: table -> card layout */
     @media (max-width: 768px) {
       .data-table thead {
         display: none;
       }
-      .data-table, .data-table tbody, .data-table tr, .data-table td {
+      .data-table,
+      .data-table tbody,
+      .data-table tr,
+      .data-table td {
         display: block;
         width: 100%;
       }
@@ -208,10 +245,6 @@
       .data-table td:last-child {
         border-bottom: none;
       }
-      .description-cell {
-        border-top: 1px solid #444;
-        padding-top: 8px;
-      }
     }
     
     footer {
@@ -233,7 +266,10 @@
   
   <div class="sticky-search">
     <div class="search-controls">
-      <input type="text" id="searchInput" placeholder="Search..." />
+      <div class="input-wrapper">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search by Name or Location" />
+      </div>
       <select id="sourceTypeFilter">
         <option value="">All Source Types</option>
       </select>
@@ -251,7 +287,7 @@
           <th>Type</th>
           <th>Location</th>
           <th>Data Types</th>
-          <th style="width: 5%;">Details</th>
+          <th>Description</th>
         </tr>
       </thead>
       <tbody id="resultsContainer">
@@ -261,7 +297,7 @@
   </div>
   
   <footer>
-    All rights reserved © 2025 The Real Deal is a registered Trademark of Korangy Publishing Inc.
+    &copy; 2025 Directory of Real Estate Data Sites
   </footer>
   
   <script>
@@ -279,23 +315,25 @@
       return 'Logos for Research Directory/' + name + extensions[extIndex];
     }
     
-    // Create content for Data Types column as badges.
+    // Create a single badge for the Type field or multiple badges for the Data Types field.
+    function createBadge(text) {
+      const badge = document.createElement('span');
+      badge.classList.add('datatype-badge');
+      badge.textContent = text.trim();
+      return badge;
+    }
+    
     function createDataTypesContent(dataTypeStr) {
       const container = document.createElement('div');
       if (!dataTypeStr) return container;
       const types = dataTypeStr.split(',');
-      types.forEach(type => {
-        const badge = document.createElement('span');
-        badge.classList.add('badge');
-        badge.textContent = type.trim();
-        container.appendChild(badge);
-      });
+      types.forEach(type => container.appendChild(createBadge(type)));
       return container;
     }
     
-    // Render resources into table rows.
     function renderResources(filterText = '', filterSourceType = '', filterCategory = '') {
       resultsContainer.innerHTML = '';
+      
       const filteredResources = resources.filter(resource => {
         const searchTarget = (
           resource["Name"] + ' ' +
@@ -307,21 +345,23 @@
                (!filterCategory || resource["Data type"].toLowerCase() === filterCategory.toLowerCase());
       });
       
+      // Sort by Name
       filteredResources.sort((a, b) => a["Name"].localeCompare(b["Name"]));
       
       filteredResources.forEach(resource => {
-        // Create main data row.
         const row = document.createElement('tr');
         
-        // Company Column: logo and company name, wrapped in a hyperlink.
+        // COMPANY
         const companyCell = document.createElement('td');
         companyCell.setAttribute('data-label', 'Company');
         const companyLink = document.createElement('a');
         companyLink.href = resource["Research URL"];
         companyLink.target = '_blank';
         companyLink.rel = 'noopener noreferrer';
+        
         const companyDiv = document.createElement('div');
         companyDiv.className = 'company-cell';
+        
         const logoImg = document.createElement('img');
         logoImg.className = 'logo';
         logoImg.dataset.baseName = resource["Name"];
@@ -345,63 +385,41 @@
           }
         };
         companyDiv.appendChild(logoImg);
+        
         const nameSpan = document.createElement('span');
         nameSpan.textContent = resource["Name"];
         companyDiv.appendChild(nameSpan);
+        
         companyLink.appendChild(companyDiv);
         companyCell.appendChild(companyLink);
         row.appendChild(companyCell);
         
-        // Type Column.
+        // TYPE
         const typeCell = document.createElement('td');
         typeCell.setAttribute('data-label', 'Type');
-        typeCell.textContent = resource["Source Type"];
+        const typeBadge = createBadge(resource["Source Type"] || '');
+        typeCell.appendChild(typeBadge);
         row.appendChild(typeCell);
         
-        // Location Column.
+        // LOCATION
         const locationCell = document.createElement('td');
         locationCell.setAttribute('data-label', 'Location');
         locationCell.textContent = resource["Region"] || '';
         row.appendChild(locationCell);
         
-        // Data Types Column.
+        // DATA TYPES
         const dataTypesCell = document.createElement('td');
         dataTypesCell.setAttribute('data-label', 'Data Types');
         dataTypesCell.appendChild(createDataTypesContent(resource["Data type"]));
         row.appendChild(dataTypesCell);
         
-        // Toggle Column: an arrow that toggles extra details.
-        const toggleCell = document.createElement('td');
-        toggleCell.className = 'toggle-cell';
-        toggleCell.setAttribute('data-label', 'Details');
-        const arrowIcon = document.createElement('i');
-        arrowIcon.className = 'fas fa-chevron-down';
-        toggleCell.appendChild(arrowIcon);
-        toggleCell.addEventListener('click', function() {
-          const nextRow = row.nextElementSibling;
-          if (nextRow && nextRow.classList.contains('description-row')) {
-            if (nextRow.style.display === 'table-row') {
-              nextRow.style.display = 'none';
-              arrowIcon.className = 'fas fa-chevron-down';
-            } else {
-              nextRow.style.display = 'table-row';
-              arrowIcon.className = 'fas fa-chevron-up';
-            }
-          }
-        });
-        row.appendChild(toggleCell);
+        // DESCRIPTION
+        const descriptionCell = document.createElement('td');
+        descriptionCell.setAttribute('data-label', 'Description');
+        descriptionCell.textContent = resource["Description"];
+        row.appendChild(descriptionCell);
         
         resultsContainer.appendChild(row);
-        
-        // Extra row for Description.
-        const descRow = document.createElement('tr');
-        descRow.className = 'description-row';
-        const descCell = document.createElement('td');
-        descCell.className = 'description-cell';
-        descCell.setAttribute('colspan', '5');
-        descCell.textContent = resource["Description"];
-        descRow.appendChild(descCell);
-        resultsContainer.appendChild(descRow);
       });
     }
     
