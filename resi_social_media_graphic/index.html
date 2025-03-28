@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Housing Data Visualization with Filters</title>
+    <title>Housing Data Visualization with Filters & Safe Parsing</title>
     <!-- Include Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Include PapaParse for CSV parsing -->
@@ -18,6 +18,12 @@
       .filter-container {
         margin-bottom: 20px;
       }
+      .filter-container label {
+        margin-right: 10px;
+      }
+      .filter-container select {
+        margin-right: 20px;
+      }
     </style>
   </head>
   <body>
@@ -32,40 +38,55 @@
         <option value="Queens">Queens</option>
         <option value="Staten Island">Staten Island</option>
       </select>
+
+      <label for="metricFilter">Select Metric:</label>
+      <select id="metricFilter">
+        <option value="median_price">Median Price</option>
+        <option value="avg_price">Average Price</option>
+        <option value="deals"># of Deals</option>
+      </select>
     </div>
     <canvas id="housingChart"></canvas>
-    
+
     <script>
-      // Global variables to store all data and the chart instance.
+      // Global variables to store all data and the Chart.js chart instance.
       let allData = [];
       let housingChart;
 
-      // Function to update the chart based on the filter.
+      // Helper function that removes dollar signs and commas before parsing.
+      function parseNumber(value) {
+        if (!value) return null;
+        // Remove $ and commas, then trim the string.
+        const cleaned = String(value).replace(/[$,]/g, "").trim();
+        return cleaned === "" ? null : parseFloat(cleaned);
+      }
+
+      // Function to update the chart based on filters.
       function updateChart() {
         const boroughFilter = document.getElementById("boroughFilter").value;
-        // Filter data if a specific borough is selected.
+        const metric = document.getElementById("metricFilter").value;
+
+        // Filter data by borough if needed.
         const filteredData = boroughFilter === "All"
           ? allData
           : allData.filter(item => item.borough === boroughFilter);
-        
-        // Determine the unique quarters from the filtered data.
+
+        // Determine unique quarters from the filtered data.
         const quarters = [...new Set(filteredData.map(item => item.year_quarter))].sort();
-        
-        // If "All" is selected, display datasets for all boroughs;
-        // otherwise, only the selected borough.
+
+        // Determine which boroughs to display.
         const boroughs = boroughFilter === "All"
           ? [...new Set(allData.map(item => item.borough))]
           : [boroughFilter];
-        
-        // Build datasets for each borough.
+
+        // Build datasets based on the selected metric.
         const datasets = boroughs.map((borough, index) => {
           const boroughData = quarters.map(q => {
             const record = filteredData.find(item => item.borough === borough && item.year_quarter === q);
-            return record ? record.median_price : null;
+            return record ? record[metric] : null;
           });
-          // Define a base color for consistency.
+          // Define a base color for each borough dataset.
           const baseColor = `rgba(${50 + index * 40}, ${100 + index * 20}, ${150 + index * 10},`;
-          
           return {
             label: borough,
             data: boroughData,
@@ -74,10 +95,19 @@
             borderWidth: 1
           };
         });
-        
-        // Update the chart's data and re-render.
+
+        // Update the chart's data and adjust the y-axis label based on the metric.
         housingChart.data.labels = quarters;
         housingChart.data.datasets = datasets;
+        let yAxisLabel;
+        if (metric === "median_price") {
+          yAxisLabel = "Median Price ($)";
+        } else if (metric === "avg_price") {
+          yAxisLabel = "Average Price ($)";
+        } else {
+          yAxisLabel = "# of Deals";
+        }
+        housingChart.options.scales.y.title.text = yAxisLabel;
         housingChart.update();
       }
 
@@ -85,21 +115,23 @@
       Papa.parse("data.csv", {
         download: true,
         header: true,
-        dynamicTyping: true,
         complete: function(results) {
-          // Transform the raw CSV data.
-          // Here we remove the "$" and commas from price fields.
-          allData = results.data.map(row => ({
-            borough: row["borough"],
-            year_quarter: row["year_quarter"],
-            avg_price: parseFloat(String(row["avg_price"]).replace(/[^0-9.-]+/g, "")),
-            median_price: parseFloat(String(row["median_price"]).replace(/[^0-9.-]+/g, "")),
-            deals: row["# of Deals"]
-          }));
-          
-          // Determine initial chart labels and datasets (all boroughs).
+          // Filter out any empty rows and safely transform the data.
+          allData = results.data
+            .filter(row => row["borough"] && row["year_quarter"])
+            .map(row => ({
+              borough: String(row["borough"]).trim(),
+              year_quarter: String(row["year_quarter"]).trim(),
+              avg_price: parseNumber(row["avg_price"]),
+              median_price: parseNumber(row["median_price"]),
+              deals: parseNumber(row["# of Deals"])
+            }));
+
+          // Determine initial quarters and boroughs (all data).
           const quarters = [...new Set(allData.map(item => item.year_quarter))].sort();
           const boroughs = [...new Set(allData.map(item => item.borough))];
+
+          // Build initial datasets using the default metric (median_price).
           const datasets = boroughs.map((borough, index) => {
             const boroughData = quarters.map(q => {
               const record = allData.find(item => item.borough === borough && item.year_quarter === q);
@@ -114,8 +146,8 @@
               borderWidth: 1
             };
           });
-          
-          // Initialize the chart.
+
+          // Initialize the Chart.js chart.
           const ctx = document.getElementById("housingChart").getContext("2d");
           housingChart = new Chart(ctx, {
             type: "bar",
@@ -153,9 +185,10 @@
           });
         }
       });
-      
-      // Listen for changes on the borough filter.
+
+      // Add event listeners for filter changes.
       document.getElementById("boroughFilter").addEventListener("change", updateChart);
+      document.getElementById("metricFilter").addEventListener("change", updateChart);
     </script>
   </body>
 </html>
