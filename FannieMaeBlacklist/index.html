@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_f51ff9e10f7b31975f2dc353346732ba {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.css"/>
+</head>
+<body>    
+    
+<style>
+    .popup-content {
+        min-width: 300px;
+        font-size: 14px;
+        line-height: 1.4;
+        color: #333;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+    .leaflet-popup, .leaflet-popup-content-wrapper {
+        background-color: #f9f9f9;
+        border: 1px solid #bbb;
+        border-radius: 5px;
+        padding: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .leaflet-popup-tip {
+        background: #f9f9f9;
+    }
+</style>
+    
+    <h3 style="text-align:center; font-family:Arial, sans-serif; font-size:18px; color:#333; margin-top:10px;">
+        <b>Office Projects Map</b>
+    </h3>
+    
+     <div style="
+     position: fixed; 
+     bottom: 50px; left: 50px; width: 150px; 
+     background-color: white;
+     border:2px solid grey;
+     z-index:9999;
+     font-size:14px;
+     padding: 10px;
+     ">
+     <strong>Legend</strong><br>
+<i style="background:red;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>GOTTESMAN, BRIAN<br><i style="background:blue;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>DRILLMAN, BORUCH<br><i style="background:green;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>SILBER, MARK<br><i style="background:purple;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>ZARUM, ORON<br><i style="background:orange;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>HELFGOTT, DAVID<br></div>
+    
+            <div class="folium-map" id="map_f51ff9e10f7b31975f2dc353346732ba" ></div>
+        
+</body>
+<script>    
+    
+            var map_f51ff9e10f7b31975f2dc353346732ba = L.map(
+                "map_f51ff9e10f7b31975f2dc353346732ba",
+                {
+                    center: [41.8716082, -87.703566],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: false,
+                    scrollWheelZoom: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_a8e2568ac3b0cd52de290943bc42686d = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var tile_layer_b139918a3fb615c3549f4e1945774ef7 = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {"attribution": "Mapbox", "detectRetina": false, "maxNativeZoom": 20, "maxZoom": 20, "minZoom": 1, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            L.control.fullscreen(
+                {"forceSeparateButton": false, "position": "topleft", "title": "Full Screen", "titleCancel": "Exit Full Screen"}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var tile_layer_0917101c5ca502efbc6e6f0d15541b49 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+            var mini_map_42baa58cea008205a9b9469140836169 = new L.Control.MiniMap(
+                tile_layer_0917101c5ca502efbc6e6f0d15541b49,
+                {"autoToggleDisplay": false, "centerFixed": false, "collapsedHeight": 25, "collapsedWidth": 25, "height": 150, "minimized": false, "position": "bottomright", "toggleDisplay": true, "width": 150, "zoomAnimation": false, "zoomLevelOffset": -5}
+            );
+            map_f51ff9e10f7b31975f2dc353346732ba.addControl(mini_map_42baa58cea008205a9b9469140836169);
+        
+    
+            var marker_36ed172acd6d42db2a81144ad1a844c0 = L.marker(
+                [41.8716082, -87.703566],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_44e1afed8a569d99d673f2df60cc726c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_36ed172acd6d42db2a81144ad1a844c0.setIcon(icon_44e1afed8a569d99d673f2df60cc726c);
+        
+    
+        var popup_b0552715cfca4f6edd44e54f22f5bea6 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_bbfb7185302944f717f7caf398d7c87c = $(`<div id="html_bbfb7185302944f717f7caf398d7c87c" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> GOTTESMAN, BRIAN<br>         <strong>Address:</strong> 3101 W. Lexington, Chicago<br>         <strong>Units:</strong> 10 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $566K, Arbor, 2017<br>         <strong>Still Own Y/N?:</strong> Y<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $549K     </div>     </div>`)[0];
+                popup_b0552715cfca4f6edd44e54f22f5bea6.setContent(html_bbfb7185302944f717f7caf398d7c87c);
+            
+        
+
+        marker_36ed172acd6d42db2a81144ad1a844c0.bindPopup(popup_b0552715cfca4f6edd44e54f22f5bea6)
+        ;
+
+        
+    
+    
+            var marker_034a7c944b2f48f42653c3dfccad549f = L.marker(
+                [41.8821701, -87.73571319999999],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_3ba3cecf0ea5834db990689aafabd2f1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_034a7c944b2f48f42653c3dfccad549f.setIcon(icon_3ba3cecf0ea5834db990689aafabd2f1);
+        
+    
+        var popup_08a32af917dc0a6dd8723d935a5b8e07 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_3e640a55b78d196ad2bf154937603bc7 = $(`<div id="html_3e640a55b78d196ad2bf154937603bc7" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> GOTTESMAN, BRIAN<br>         <strong>Address:</strong> 4200 and 4400 W Washington Blvd, Chicago, IL<br>         <strong>Units:</strong> 43 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $3.5M, Arbor, 2018<br>         <strong>Still Own Y/N?:</strong> N, sold for $1.9M to WPD (plus $15M Fannie mortgage assumption, granted by Schulman)<br>         <strong>Date Purchased:</strong> 2018<br>         <strong>Last Price:</strong>  $2.7M     </div>     </div>`)[0];
+                popup_08a32af917dc0a6dd8723d935a5b8e07.setContent(html_3e640a55b78d196ad2bf154937603bc7);
+            
+        
+
+        marker_034a7c944b2f48f42653c3dfccad549f.bindPopup(popup_08a32af917dc0a6dd8723d935a5b8e07)
+        ;
+
+        
+    
+    
+            var marker_28ae45f177898b5591022d44ec01b797 = L.marker(
+                [41.8839692, -87.75253699999999],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_de97fe96810b89b71223563fb5d04e13 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_28ae45f177898b5591022d44ec01b797.setIcon(icon_de97fe96810b89b71223563fb5d04e13);
+        
+    
+        var popup_f0d2f55f02d22d6afb40a7b6122e105b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_181070b23417fe1a7929d64b23777873 = $(`<div id="html_181070b23417fe1a7929d64b23777873" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> GOTTESMAN, BRIAN<br>         <strong>Address:</strong> 169 N. LeClaire Ave., Chicago<br>         <strong>Units:</strong> 19 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $971K, Arbor, 2017<br>         <strong>Still Own Y/N?:</strong> Y<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $1.0M     </div>     </div>`)[0];
+                popup_f0d2f55f02d22d6afb40a7b6122e105b.setContent(html_181070b23417fe1a7929d64b23777873);
+            
+        
+
+        marker_28ae45f177898b5591022d44ec01b797.bindPopup(popup_f0d2f55f02d22d6afb40a7b6122e105b)
+        ;
+
+        
+    
+    
+            var marker_0b61474a18af5f1a285b9a4c2ba91267 = L.marker(
+                [41.8827376, -87.75408689999999],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_f7fb44600e4475d2e03f71babd80c6bf = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_0b61474a18af5f1a285b9a4c2ba91267.setIcon(icon_f7fb44600e4475d2e03f71babd80c6bf);
+        
+    
+        var popup_c3227e75e7c00000ff6d06a26ee57ce4 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1070351e8cc5c0b4ab068276664da408 = $(`<div id="html_1070351e8cc5c0b4ab068276664da408" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> GOTTESMAN, BRIAN<br>         <strong>Address:</strong> 130 N. Leamington Ave., Chicago<br>         <strong>Units:</strong> 21 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $1.6M, Arbor, 2017 (7-month gap between execution and recording)<br>         <strong>Still Own Y/N?:</strong> Y<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $1.2M (7-month gap between execution and recording)     </div>     </div>`)[0];
+                popup_c3227e75e7c00000ff6d06a26ee57ce4.setContent(html_1070351e8cc5c0b4ab068276664da408);
+            
+        
+
+        marker_0b61474a18af5f1a285b9a4c2ba91267.bindPopup(popup_c3227e75e7c00000ff6d06a26ee57ce4)
+        ;
+
+        
+    
+    
+            var marker_c4e1e85fc105a360f3e8b348a06f8bde = L.marker(
+                [41.7476272, -87.59687749999999],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_f06b3a838a48ab571a88592dc6d3870e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_c4e1e85fc105a360f3e8b348a06f8bde.setIcon(icon_f06b3a838a48ab571a88592dc6d3870e);
+        
+    
+        var popup_5509a59e1f19cc446a1801b6de03cfcc = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_2ecc463774f0c7e2a23b6b793b20d960 = $(`<div id="html_2ecc463774f0c7e2a23b6b793b20d960" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> GOTTESMAN, BRIAN<br>         <strong>Address:</strong> 1115-27 E. 81st St., Chicago<br>         <strong>Units:</strong> 39 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $2.0M, Arbor, 2017<br>         <strong>Still Own Y/N?:</strong> N, sold for $3M to WPD with $9M Fannie mortgage assumption for portfolio<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $2.1M     </div>     </div>`)[0];
+                popup_5509a59e1f19cc446a1801b6de03cfcc.setContent(html_2ecc463774f0c7e2a23b6b793b20d960);
+            
+        
+
+        marker_c4e1e85fc105a360f3e8b348a06f8bde.bindPopup(popup_5509a59e1f19cc446a1801b6de03cfcc)
+        ;
+
+        
+    
+    
+            var marker_3356d0591525ac8bf360893d6ee48144 = L.marker(
+                [41.8685687, -87.71063149999999],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_8e7abf94526edc4527da5b95d4256d87 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_3356d0591525ac8bf360893d6ee48144.setIcon(icon_8e7abf94526edc4527da5b95d4256d87);
+        
+    
+        var popup_80dc9a5e454e535b5e125711a1b318dd = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_3e89c1dcf3ca8cdcd1b45b4a7c75314e = $(`<div id="html_3e89c1dcf3ca8cdcd1b45b4a7c75314e" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> GOTTESMAN, BRIAN<br>         <strong>Address:</strong> 10-18 S. Homan Ave., Chicago<br>         <strong>Units:</strong> 17 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $903K, Arbor, 2017<br>         <strong>Still Own Y/N?:</strong> N, sold for $500 to Shaya Wurzberger, who took out $919K mortgage from A&S Capital<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $467K     </div>     </div>`)[0];
+                popup_80dc9a5e454e535b5e125711a1b318dd.setContent(html_3e89c1dcf3ca8cdcd1b45b4a7c75314e);
+            
+        
+
+        marker_3356d0591525ac8bf360893d6ee48144.bindPopup(popup_80dc9a5e454e535b5e125711a1b318dd)
+        ;
+
+        
+    
+    
+            var marker_43ed2c61cfa14e15a88486dea35b74c0 = L.marker(
+                [41.87706379999999, -87.7474608],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_f8f08a87658f69bc990704c721e655b3 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_43ed2c61cfa14e15a88486dea35b74c0.setIcon(icon_f8f08a87658f69bc990704c721e655b3);
+        
+    
+        var popup_dc3056765bb2b986fc0700b693cff994 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_6c106ddfa038626dbfb0b4017d1aba26 = $(`<div id="html_6c106ddfa038626dbfb0b4017d1aba26" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> GOTTESMAN, BRIAN<br>         <strong>Address:</strong> 4900 W. Jackson Blvd., Chicago<br>         <strong>Units:</strong> 28 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $1.57M, Arbor, 2017<br>         <strong>Still Own Y/N?:</strong> Y<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $1.59M     </div>     </div>`)[0];
+                popup_dc3056765bb2b986fc0700b693cff994.setContent(html_6c106ddfa038626dbfb0b4017d1aba26);
+            
+        
+
+        marker_43ed2c61cfa14e15a88486dea35b74c0.bindPopup(popup_dc3056765bb2b986fc0700b693cff994)
+        ;
+
+        
+    
+    
+            var marker_1bf61536592d02c048e15b4a5a9cff92 = L.marker(
+                [41.8850614, -87.7638061],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_50e7c3d323c2894e2d0339b5273e2c4f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_1bf61536592d02c048e15b4a5a9cff92.setIcon(icon_50e7c3d323c2894e2d0339b5273e2c4f);
+        
+    
+        var popup_b9fbb1e306a21a5239968fbf64965d1b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a99560280bac9d2bac15a08a379c2008 = $(`<div id="html_a99560280bac9d2bac15a08a379c2008" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> GOTTESMAN, BRIAN<br>         <strong>Address:</strong> 224-234 N. Pine Ave., Chicago<br>         <strong>Units:</strong> 34 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $2.9M, Arbor, 2017 (refinanced in 2021 w/ $14.7M portfolio loan to Schulman entities)<br>         <strong>Still Own Y/N?:</strong> N, sold for $2.9M in 2024 to WPD, with $14.7M mortgage assumption<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $1.9M     </div>     </div>`)[0];
+                popup_b9fbb1e306a21a5239968fbf64965d1b.setContent(html_a99560280bac9d2bac15a08a379c2008);
+            
+        
+
+        marker_1bf61536592d02c048e15b4a5a9cff92.bindPopup(popup_b9fbb1e306a21a5239968fbf64965d1b)
+        ;
+
+        
+    
+    
+            var marker_05f28ee3983d5f449bebf47568ea29f1 = L.marker(
+                [41.8820641, -87.7518687],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_73ad3b010a938ce1ffaac38e2dbe7218 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_05f28ee3983d5f449bebf47568ea29f1.setIcon(icon_73ad3b010a938ce1ffaac38e2dbe7218);
+        
+    
+        var popup_f9f39145541db92a6584ebfb4f1043f1 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_90c34ce82a9892e5a5cc6d833aba0f21 = $(`<div id="html_90c34ce82a9892e5a5cc6d833aba0f21" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> GOTTESMAN, BRIAN<br>         <strong>Address:</strong> 5032 W. Washington Blvd., Chicago<br>         <strong>Units:</strong> 44 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $2.8M, Arbor, 2017 (refinanced in 2021 w/ $14.7M portfolio loan to Schulman entities)<br>         <strong>Still Own Y/N?:</strong> N, sold for $3.2M to WPD with $14.7M mortgage assumption<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $2.4M     </div>     </div>`)[0];
+                popup_f9f39145541db92a6584ebfb4f1043f1.setContent(html_90c34ce82a9892e5a5cc6d833aba0f21);
+            
+        
+
+        marker_05f28ee3983d5f449bebf47568ea29f1.bindPopup(popup_f9f39145541db92a6584ebfb4f1043f1)
+        ;
+
+        
+    
+    
+            var marker_ea456cd371a073d72b17d39a612cc7f5 = L.marker(
+                [41.88259559999999, -87.76675329999999],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_802c1476511c001756d16ba74fcde811 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_ea456cd371a073d72b17d39a612cc7f5.setIcon(icon_802c1476511c001756d16ba74fcde811);
+        
+    
+        var popup_00a707aeb52991c5047c6a94519ff205 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_32371ffeb57017c0d50bd0fd86e28baf = $(`<div id="html_32371ffeb57017c0d50bd0fd86e28baf" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> GOTTESMAN, BRIAN<br>         <strong>Address:</strong> 110-114 N. Parkside Ave., Chicago<br>         <strong>Units:</strong> 64 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $3.3M, Arbor, 2017<br>         <strong>Still Own Y/N?:</strong> Y, but foreclosure<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $3.5M     </div>     </div>`)[0];
+                popup_00a707aeb52991c5047c6a94519ff205.setContent(html_32371ffeb57017c0d50bd0fd86e28baf);
+            
+        
+
+        marker_ea456cd371a073d72b17d39a612cc7f5.bindPopup(popup_00a707aeb52991c5047c6a94519ff205)
+        ;
+
+        
+    
+    
+            var marker_f18f7ad799c4f0c64bd31eaafcc10607 = L.marker(
+                [41.8805443, -87.7589115],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_3200505cabe6c2831f9b2efdfb63098f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_f18f7ad799c4f0c64bd31eaafcc10607.setIcon(icon_3200505cabe6c2831f9b2efdfb63098f);
+        
+    
+        var popup_15570132aa36651876319605caeb8a0c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_03ed4a2aed173c3da95921488e035e38 = $(`<div id="html_03ed4a2aed173c3da95921488e035e38" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> GOTTESMAN, BRIAN<br>         <strong>Address:</strong> 5334-5362 W. Madison St., Chicago<br>         <strong>Units:</strong> 48 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $3.5M, Arbor, 2017 (refinanced in 2021 w/ $14.7M portfolio loan to Schulman entities)<br>         <strong>Still Own Y/N?:</strong> N, sold for $3.7M to WPD<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $2.6M     </div>     </div>`)[0];
+                popup_15570132aa36651876319605caeb8a0c.setContent(html_03ed4a2aed173c3da95921488e035e38);
+            
+        
+
+        marker_f18f7ad799c4f0c64bd31eaafcc10607.bindPopup(popup_15570132aa36651876319605caeb8a0c)
+        ;
+
+        
+    
+    
+            var marker_733a228847492290c2588eb20e5e4c50 = L.marker(
+                [41.7987748, -87.61639009999999],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_f8852e5cd6ee88c95897816f7ed550ec = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_733a228847492290c2588eb20e5e4c50.setIcon(icon_f8852e5cd6ee88c95897816f7ed550ec);
+        
+    
+        var popup_1536bfb89e27d3fc86b4c62bbc4e4646 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_5ed8422a0913822a2658fc808a757e78 = $(`<div id="html_5ed8422a0913822a2658fc808a757e78" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> GOTTESMAN, BRIAN<br>         <strong>Address:</strong> 5248 S. Martin Luther King Dr., Chicago<br>         <strong>Units:</strong> over 150<br>         <strong>Last Mortgage Amt / Lender:</strong> $6.8M, Arbor, 2017<br>         <strong>Still Own Y/N?:</strong> Yes, but foreclosure: https://crs.cookcountyclerkil.gov/Document/Detail?dId=NDUwNDkxNjU1&hId=NDZlMjFiZGQ5MmY3YTg4Yzg0NjdjNTlhMjlkODk3NTA0MDkyZmUzZTY5YTIwMDViODZlNzlkYzE4ZWM1NzFlMA2<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $4.6M     </div>     </div>`)[0];
+                popup_1536bfb89e27d3fc86b4c62bbc4e4646.setContent(html_5ed8422a0913822a2658fc808a757e78);
+            
+        
+
+        marker_733a228847492290c2588eb20e5e4c50.bindPopup(popup_1536bfb89e27d3fc86b4c62bbc4e4646)
+        ;
+
+        
+    
+    
+            var marker_53ec0542594201eb91b5c537d5f1b099 = L.marker(
+                [41.759493, -87.5632902],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_1812db7ec22fabf46a91cb678a6110f1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_53ec0542594201eb91b5c537d5f1b099.setIcon(icon_1812db7ec22fabf46a91cb678a6110f1);
+        
+    
+        var popup_120cca502b000f9547d3e7541f09c361 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_5b1a6da9d79e23f68011dbd5ab200e07 = $(`<div id="html_5b1a6da9d79e23f68011dbd5ab200e07" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> GOTTESMAN, BRIAN<br>         <strong>Address:</strong> 7446 S. Kinsgston Ave., Chicago<br>         <strong>Units:</strong> 19 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $1.1M, Arbor, 2017 (refinanced for $9.1M as part of portfolio: https://crs.cookcountyclerkil.gov/Document/Detail?dId=NDMzNzQxMTg1&hId=YTM2NzI1NDMzYmM0ZWRkMjc5OTFlMWY2NWE4ZjFiNzcwYjk3MjM2ZWU4NWViNmU3MDU5YTA5MDA2YTE4YmMxNQ2)<br>         <strong>Still Own Y/N?:</strong> N, sold for $1.5M to WPD in 2024 with $9.1M mortgage assumption<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $1.0M     </div>     </div>`)[0];
+                popup_120cca502b000f9547d3e7541f09c361.setContent(html_5b1a6da9d79e23f68011dbd5ab200e07);
+            
+        
+
+        marker_53ec0542594201eb91b5c537d5f1b099.bindPopup(popup_120cca502b000f9547d3e7541f09c361)
+        ;
+
+        
+    
+    
+            var marker_100de581e9c9072deebca6a885be6d82 = L.marker(
+                [41.744843, -87.6009917],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_2dbb6231b224e47c18eeb3c07bd2b1b9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_100de581e9c9072deebca6a885be6d82.setIcon(icon_2dbb6231b224e47c18eeb3c07bd2b1b9);
+        
+    
+        var popup_e7ee7e92bc2813da6e5c99b7543a2375 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_b4ebfb2584e0681b05407de1e10a8eea = $(`<div id="html_b4ebfb2584e0681b05407de1e10a8eea" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> GOTTESMAN, BRIAN<br>         <strong>Address:</strong> 8239 S. Ingleside Ave., Chicago<br>         <strong>Units:</strong> 28 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $1.3M, Arbor,  2017 (refinanced for $9.1M as part of portfolio in 2021, see Row 18)<br>         <strong>Still Own Y/N?:</strong> N, sold for $2.1M to WPD in 2024 with $9.1M mortgage assumption<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $1.5M     </div>     </div>`)[0];
+                popup_e7ee7e92bc2813da6e5c99b7543a2375.setContent(html_b4ebfb2584e0681b05407de1e10a8eea);
+            
+        
+
+        marker_100de581e9c9072deebca6a885be6d82.bindPopup(popup_e7ee7e92bc2813da6e5c99b7543a2375)
+        ;
+
+        
+    
+    
+            var marker_9f86a6b92b95ead1dc5a0dde989add59 = L.marker(
+                [41.7463034, -87.55306639999999],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_3829a23fd95bd563df29d3c47569f3f4 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_9f86a6b92b95ead1dc5a0dde989add59.setIcon(icon_3829a23fd95bd563df29d3c47569f3f4);
+        
+    
+        var popup_a726f08d3e4d13c28858445f8f0a799c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_e7669f9b2caad9c8e290027c35f07928 = $(`<div id="html_e7669f9b2caad9c8e290027c35f07928" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> GOTTESMAN, BRIAN<br>         <strong>Address:</strong> 8200-8223 S. Exchange Ave., Chicago<br>         <strong>Units:</strong> 59 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $2.5M, Arbor, 2017 (refinanced for $9.1M as part of portfolio in 2021, see Row 18)<br>         <strong>Still Own Y/N?:</strong> N, sold for $2.5M to WPD in 2024 with $9.1M mortgage assumption<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $1.9M     </div>     </div>`)[0];
+                popup_a726f08d3e4d13c28858445f8f0a799c.setContent(html_e7669f9b2caad9c8e290027c35f07928);
+            
+        
+
+        marker_9f86a6b92b95ead1dc5a0dde989add59.bindPopup(popup_a726f08d3e4d13c28858445f8f0a799c)
+        ;
+
+        
+    
+    
+            var marker_deb579381874fbd5146f2d8253972d1c = L.marker(
+                [41.8621845, -87.7138827],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_f0670f731e3790e214e30a06fdc83ff7 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_deb579381874fbd5146f2d8253972d1c.setIcon(icon_f0670f731e3790e214e30a06fdc83ff7);
+        
+    
+        var popup_fffb222527e912cc3d9bfee13cdf3587 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_cc5d9b5bfaa1dcaf55bb73c577aa6fa2 = $(`<div id="html_cc5d9b5bfaa1dcaf55bb73c577aa6fa2" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> GOTTESMAN, BRIAN<br>         <strong>Address:</strong> 3523-3658 W. Douglas St., Chicago<br>         <strong>Units:</strong> approx 99 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $6.6M, Arbor<br>         <strong>Still Own Y/N?:</strong> Y<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $4.4M     </div>     </div>`)[0];
+                popup_fffb222527e912cc3d9bfee13cdf3587.setContent(html_cc5d9b5bfaa1dcaf55bb73c577aa6fa2);
+            
+        
+
+        marker_deb579381874fbd5146f2d8253972d1c.bindPopup(popup_fffb222527e912cc3d9bfee13cdf3587)
+        ;
+
+        
+    
+    
+            var marker_a321ce5f983edbe13c1030312b3a8423 = L.marker(
+                [41.9516675, -87.7767174],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_dd09c5952d28bea695be4b85c4851946 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_a321ce5f983edbe13c1030312b3a8423.setIcon(icon_dd09c5952d28bea695be4b85c4851946);
+        
+    
+        var popup_f7cdafa0edc5a2ea8db9b4eb300945a7 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_b31dd6b5a788b51125365c7782274cfe = $(`<div id="html_b31dd6b5a788b51125365c7782274cfe" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> DRILLMAN, BORUCH<br>         <strong>Address:</strong> 525 N. Austin Ave., Chicago, IL<br>         <strong>Units:</strong> 57 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $3.6M, Sabal Capital, 2018 (refinanced in 2020 w/ Berkadia for $5.1M, didn't include Race Ave. property; mortgage release of previous debt recorded months later)<br>         <strong>Still Own Y/N?:</strong> Unclear - beneficial ownership transferred for $692K in 2022; somehow got wrapped into Landmark Dividend ownership as per later mortgage?<br>         <strong>Date Purchased:</strong> 2018<br>         <strong>Last Price:</strong>  $4M     </div>     </div>`)[0];
+                popup_f7cdafa0edc5a2ea8db9b4eb300945a7.setContent(html_b31dd6b5a788b51125365c7782274cfe);
+            
+        
+
+        marker_a321ce5f983edbe13c1030312b3a8423.bindPopup(popup_f7cdafa0edc5a2ea8db9b4eb300945a7)
+        ;
+
+        
+    
+    
+            var marker_3d99b84dfd2c61aa781ea5e431c6eb62 = L.marker(
+                [41.7972451, -87.68130579999999],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_2046c74f384b0ce174ecdd4a88415092 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_3d99b84dfd2c61aa781ea5e431c6eb62.setIcon(icon_2046c74f384b0ce174ecdd4a88415092);
+        
+    
+        var popup_80eee0aa0bab57caa8714fbb6b7fd4be = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_2787a9d2ab597525da6e357c3da26bd8 = $(`<div id="html_2787a9d2ab597525da6e357c3da26bd8" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> DRILLMAN, BORUCH<br>         <strong>Address:</strong> 5301-5323 S. Western Ave., Chicago<br>         <strong>Units:</strong> 308k sf industrial<br>         <strong>Last Mortgage Amt / Lender:</strong> $15.7M, Castellan Real Estate, 2021<br>         <strong>Still Own Y/N?:</strong> N<br>         <strong>Date Purchased:</strong> 2021<br>         <strong>Last Price:</strong>  $3M     </div>     </div>`)[0];
+                popup_80eee0aa0bab57caa8714fbb6b7fd4be.setContent(html_2787a9d2ab597525da6e357c3da26bd8);
+            
+        
+
+        marker_3d99b84dfd2c61aa781ea5e431c6eb62.bindPopup(popup_80eee0aa0bab57caa8714fbb6b7fd4be)
+        ;
+
+        
+    
+    
+            var marker_f7010b475a2001938d34bb17d1610365 = L.marker(
+                [41.856571, -87.62278099999999],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_4b68167a00156cd28164c8d8f6eafe4b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_f7010b475a2001938d34bb17d1610365.setIcon(icon_4b68167a00156cd28164c8d8f6eafe4b);
+        
+    
+        var popup_63417a5563754e4ca27ebba8141663b1 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_9f43a15cfe696b43cee7d78adf54aa56 = $(`<div id="html_9f43a15cfe696b43cee7d78adf54aa56" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> DRILLMAN, BORUCH<br>         <strong>Address:</strong> 1842-1906 S. Indiana Ave., Chicago<br>         <strong>Units:</strong> parking lot in south loop?<br>         <strong>Last Mortgage Amt / Lender:</strong> Not financed<br>         <strong>Still Own Y/N?:</strong> Y<br>         <strong>Date Purchased:</strong> 2021<br>         <strong>Last Price:</strong>  $1.3M     </div>     </div>`)[0];
+                popup_63417a5563754e4ca27ebba8141663b1.setContent(html_9f43a15cfe696b43cee7d78adf54aa56);
+            
+        
+
+        marker_f7010b475a2001938d34bb17d1610365.bindPopup(popup_63417a5563754e4ca27ebba8141663b1)
+        ;
+
+        
+    
+    
+            var marker_3caaca0727b1a234a6d8ac05ce9cd563 = L.marker(
+                [41.8757777, -87.7106682],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_1ac0255ef49f7e07bb224695782f8e63 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_3caaca0727b1a234a6d8ac05ce9cd563.setIcon(icon_1ac0255ef49f7e07bb224695782f8e63);
+        
+    
+        var popup_90f85afe851f2b91dc425dafa7489572 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_158630671bea425e2038e1ae50c37731 = $(`<div id="html_158630671bea425e2038e1ae50c37731" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> SILBER, MARK<br>         <strong>Address:</strong> 351-357 S. Homan Ave., Chicago<br>         <strong>Units:</strong> 18 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $1.2M, Arbor, 2017 (refinanced for $969K in 2022 w/ A&S w/ Wurzberger leading entity, refinanced again for $1.4M in 2023 w/ Wurzberger)<br>         <strong>Still Own Y/N?:</strong> Wurzberger owns<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $988K     </div>     </div>`)[0];
+                popup_90f85afe851f2b91dc425dafa7489572.setContent(html_158630671bea425e2038e1ae50c37731);
+            
+        
+
+        marker_3caaca0727b1a234a6d8ac05ce9cd563.bindPopup(popup_90f85afe851f2b91dc425dafa7489572)
+        ;
+
+        
+    
+    
+            var marker_0d9d842685aea2b8667b1a59e6f9ead8 = L.marker(
+                [41.81042799999999, -87.6022114],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_d1fd5032ff9f9209fa099694f5c64acb = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_0d9d842685aea2b8667b1a59e6f9ead8.setIcon(icon_d1fd5032ff9f9209fa099694f5c64acb);
+        
+    
+        var popup_8bdedead11320b1f3db59231fffc7f34 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a5f0154e6bb26915225435f76115e9cf = $(`<div id="html_a5f0154e6bb26915225435f76115e9cf" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> ZARUM, ORON<br>         <strong>Address:</strong> 4624 S. Ellis Ave., Chicago<br>         <strong>Units:</strong> 105 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $11.1, JLL/Fannie, 2019<br>         <strong>Still Own Y/N?:</strong> N, foreclosure by Fannie<br>         <strong>Date Purchased:</strong> 2019<br>         <strong>Last Price:</strong>  $10.8M     </div>     </div>`)[0];
+                popup_8bdedead11320b1f3db59231fffc7f34.setContent(html_a5f0154e6bb26915225435f76115e9cf);
+            
+        
+
+        marker_0d9d842685aea2b8667b1a59e6f9ead8.bindPopup(popup_8bdedead11320b1f3db59231fffc7f34)
+        ;
+
+        
+    
+    
+            var marker_0ca7f6e05203025cffb2df202cf128e9 = L.marker(
+                [41.7649471, -88.3121468],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_8d944e62fbd595c091dba355cf2e8445 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_0ca7f6e05203025cffb2df202cf128e9.setIcon(icon_8d944e62fbd595c091dba355cf2e8445);
+        
+    
+        var popup_e1a35fc4d1bdf7e71d1cd9c5e9922b0b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_5c7765e600a6da61f926b9f0aece425c = $(`<div id="html_5c7765e600a6da61f926b9f0aece425c" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> HELFGOTT, DAVID<br>         <strong>Address:</strong> 430 N. River St., Aurora, IL<br>         <strong>Units:</strong> 96 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $4.9M, Dwight Capital, 2017 (Refinanced 2018, $5.6M, Suntrust Bk)<br>         <strong>Still Own Y/N?:</strong> Y<br>         <strong>Date Purchased:</strong> 2017<br>         <strong>Last Price:</strong>  $6.2M     </div>     </div>`)[0];
+                popup_e1a35fc4d1bdf7e71d1cd9c5e9922b0b.setContent(html_5c7765e600a6da61f926b9f0aece425c);
+            
+        
+
+        marker_0ca7f6e05203025cffb2df202cf128e9.bindPopup(popup_e1a35fc4d1bdf7e71d1cd9c5e9922b0b)
+        ;
+
+        
+    
+    
+            var marker_90e39c66b69c3a3452134412bff26572 = L.marker(
+                [42.36564449999999, -87.8315855],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_f4c98831fa6e65dda9af6d9455a316cf = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_90e39c66b69c3a3452134412bff26572.setIcon(icon_f4c98831fa6e65dda9af6d9455a316cf);
+        
+    
+        var popup_05f86c461e8582964893181a283ec201 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_246bbfd19d585720e9b03c3a8fd0e212 = $(`<div id="html_246bbfd19d585720e9b03c3a8fd0e212" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> HELFGOTT, DAVID<br>         <strong>Address:</strong> 200 Julian St., Waukegan, IL<br>         <strong>Units:</strong> 150 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $9.8M, JLL/Fannie, 2019<br>         <strong>Still Own Y/N?:</strong> Y<br>         <strong>Date Purchased:</strong> 2019<br>         <strong>Last Price:</strong>  $10M     </div>     </div>`)[0];
+                popup_05f86c461e8582964893181a283ec201.setContent(html_246bbfd19d585720e9b03c3a8fd0e212);
+            
+        
+
+        marker_90e39c66b69c3a3452134412bff26572.bindPopup(popup_05f86c461e8582964893181a283ec201)
+        ;
+
+        
+    
+    
+            var marker_2317521125f04d8bee4f27eaecf62f37 = L.marker(
+                [41.4786301, -87.7084064],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_42a235dfbed73d5299029cc25c1594f3 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_2317521125f04d8bee4f27eaecf62f37.setIcon(icon_42a235dfbed73d5299029cc25c1594f3);
+        
+    
+        var popup_a19fda9718f49f1908ba694deca78a57 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1c4412c4c58c8e74e2b6028e76bdf1eb = $(`<div id="html_1c4412c4c58c8e74e2b6028e76bdf1eb" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> HELFGOTT, DAVID<br>         <strong>Address:</strong> 100 Cedar Ridge Ln., Richton Park, IL<br>         <strong>Units:</strong> 150 units<br>         <strong>Last Mortgage Amt / Lender:</strong> $12.9M, Greystone, Fannie, 2019 (refinanced 2021 for $18.5M, Greystone)<br>         <strong>Still Own Y/N?:</strong> Y<br>         <strong>Date Purchased:</strong> 2019<br>         <strong>Last Price:</strong>  $16.2M (had sold a year before for $14M)     </div>     </div>`)[0];
+                popup_a19fda9718f49f1908ba694deca78a57.setContent(html_1c4412c4c58c8e74e2b6028e76bdf1eb);
+            
+        
+
+        marker_2317521125f04d8bee4f27eaecf62f37.bindPopup(popup_a19fda9718f49f1908ba694deca78a57)
+        ;
+
+        
+    
+    
+            var marker_c32628be4d126b5a832397a639d8e736 = L.marker(
+                [42.2376839, -89.02105399999999],
+                {}
+            ).addTo(map_f51ff9e10f7b31975f2dc353346732ba);
+        
+    
+            var icon_89cfc24c12d5c074caebdc3d7452e50f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_c32628be4d126b5a832397a639d8e736.setIcon(icon_89cfc24c12d5c074caebdc3d7452e50f);
+        
+    
+        var popup_71223e461a24e62884f730661c3194ac = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_e367f4db31b5e12277f2ae3b7d59b6d5 = $(`<div id="html_e367f4db31b5e12277f2ae3b7d59b6d5" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Manager:</strong> HELFGOTT, DAVID<br>         <strong>Address:</strong> 4949 Harrison Ave., Rockford, IL<br>         <strong>Units:</strong> 113k sf office<br>         <strong>Last Mortgage Amt / Lender:</strong> nan<br>         <strong>Still Own Y/N?:</strong> nan<br>         <strong>Date Purchased:</strong> 2021<br>         <strong>Last Price:</strong>  $11.3M     </div>     </div>`)[0];
+                popup_71223e461a24e62884f730661c3194ac.setContent(html_e367f4db31b5e12277f2ae3b7d59b6d5);
+            
+        
+
+        marker_c32628be4d126b5a832397a639d8e736.bindPopup(popup_71223e461a24e62884f730661c3194ac)
+        ;
+
+        
+    
+</script>
