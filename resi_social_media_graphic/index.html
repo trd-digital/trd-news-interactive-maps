@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Housing Data Visualization</title>
+    <title>Housing Data Visualization with Default Selections</title>
     <!-- Include Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Include PapaParse for CSV parsing -->
@@ -30,82 +30,137 @@
     <h1>Housing Data Trends</h1>
     <div class="filter-container">
       <label for="boroughFilter">Select Borough:</label>
-      <select id="boroughFilter">
-        <option value="All">All Boroughs</option>
-        <option value="Bronx">Bronx</option>
-        <option value="Brooklyn">Brooklyn</option>
-        <option value="Manhattan">Manhattan</option>
-        <option value="Queens">Queens</option>
-        <option value="Staten Island">Staten Island</option>
-      </select>
+      <select id="boroughFilter"></select>
+
+      <label for="neighborhoodFilter">Select Neighborhood:</label>
+      <select id="neighborhoodFilter"></select>
+
+      <label for="propertyFilter">Select Property Group:</label>
+      <select id="propertyFilter"></select>
 
       <label for="metricFilter">Select Metric:</label>
       <select id="metricFilter">
         <option value="median_price">Median Price</option>
         <option value="avg_price">Average Price</option>
         <option value="deals"># of Deals</option>
+        <option value="deal_volume">Deal Volume</option>
       </select>
     </div>
     <canvas id="housingChart"></canvas>
 
     <script>
-      // Global variables to store all data and the Chart.js chart instance.
+      // Global variables for the data and the chart.
       let allData = [];
       let housingChart;
 
-      // Helper function that removes dollar signs and commas before parsing.
+      // Helper function to clean a value (remove "$" and commas) and convert to number.
       function parseNumber(value) {
         if (!value) return null;
-        // Remove $ and commas, then trim the string.
         const cleaned = String(value).replace(/[$,]/g, "").trim();
         return cleaned === "" ? null : parseFloat(cleaned);
       }
 
-      // Function to update the chart based on filters.
+      // Populate the borough filter with unique borough values from allData.
+      function updateBoroughFilterOptions() {
+        const boroughSelect = document.getElementById("boroughFilter");
+        boroughSelect.innerHTML = "";
+        const uniqueBoroughs = [...new Set(allData.map(item => item.borough))].filter(b => b);
+        uniqueBoroughs.forEach(b => {
+          const option = document.createElement("option");
+          option.value = b;
+          option.textContent = b;
+          boroughSelect.appendChild(option);
+        });
+        if (uniqueBoroughs.length > 0) {
+          boroughSelect.value = uniqueBoroughs[0];
+        }
+      }
+
+      // Populate the property group filter with unique property group values from allData.
+      function updatePropertyFilterOptions() {
+        const propertySelect = document.getElementById("propertyFilter");
+        propertySelect.innerHTML = "";
+        const uniquePropertyGroups = [...new Set(allData.map(item => item.property_group))].filter(pg => pg);
+        uniquePropertyGroups.forEach(pg => {
+          const option = document.createElement("option");
+          option.value = pg;
+          option.textContent = pg;
+          propertySelect.appendChild(option);
+        });
+        if (uniquePropertyGroups.length > 0) {
+          propertySelect.value = uniquePropertyGroups[0];
+        }
+      }
+
+      // Populate the neighborhood filter with unique neighborhood values,
+      // based on the currently selected borough.
+      function updateNeighborhoodFilterOptions() {
+        const neighborhoodSelect = document.getElementById("neighborhoodFilter");
+        neighborhoodSelect.innerHTML = "";
+        const boroughFilter = document.getElementById("boroughFilter").value;
+        // Only consider neighborhoods in the selected borough.
+        const filteredData = allData.filter(item => item.borough === boroughFilter);
+        const uniqueNeighborhoods = [...new Set(filteredData.map(item => item.neighborhood_name))].filter(n => n);
+        uniqueNeighborhoods.forEach(n => {
+          const option = document.createElement("option");
+          option.value = n;
+          option.textContent = n;
+          neighborhoodSelect.appendChild(option);
+        });
+        if (uniqueNeighborhoods.length > 0) {
+          neighborhoodSelect.value = uniqueNeighborhoods[0];
+        }
+      }
+
+      // Update the chart based on the selected filters and metric.
       function updateChart() {
         const boroughFilter = document.getElementById("boroughFilter").value;
+        const neighborhoodFilter = document.getElementById("neighborhoodFilter").value;
+        const propertyFilter = document.getElementById("propertyFilter").value;
         const metric = document.getElementById("metricFilter").value;
 
-        // Filter data by borough if needed.
-        const filteredData = boroughFilter === "All"
-          ? allData
-          : allData.filter(item => item.borough === boroughFilter);
+        // Filter the data based on the selected values.
+        let filteredData = allData;
+        if (boroughFilter) {
+          filteredData = filteredData.filter(item => item.borough === boroughFilter);
+        }
+        if (neighborhoodFilter) {
+          filteredData = filteredData.filter(item => item.neighborhood_name === neighborhoodFilter);
+        }
+        if (propertyFilter) {
+          filteredData = filteredData.filter(item => item.property_group === propertyFilter);
+        }
 
-        // Determine unique quarters from the filtered data.
+        // Group the filtered data by year_quarter.
         const quarters = [...new Set(filteredData.map(item => item.year_quarter))].sort();
-
-        // Determine which boroughs to display.
-        const boroughs = boroughFilter === "All"
-          ? [...new Set(allData.map(item => item.borough))]
-          : [boroughFilter];
-
-        // Build datasets based on the selected metric.
-        const datasets = boroughs.map((borough, index) => {
-          const boroughData = quarters.map(q => {
-            const record = filteredData.find(item => item.borough === borough && item.year_quarter === q);
-            return record ? record[metric] : null;
-          });
-          // Define a base color for each borough dataset.
-          const baseColor = `rgba(${50 + index * 40}, ${100 + index * 20}, ${150 + index * 10},`;
-          return {
-            label: borough,
-            data: boroughData,
-            backgroundColor: `${baseColor} 0.5)`,
-            borderColor: `${baseColor} 1)`,
-            borderWidth: 1
-          };
+        // For each quarter, pick the first matching record. (Aggregation could be added here.)
+        const dataForQuarters = quarters.map(q => {
+          const record = filteredData.find(item => item.year_quarter === q);
+          return record ? record[metric] : null;
         });
 
-        // Update the chart's data and adjust the y-axis label based on the metric.
+        // Build a single dataset using the current filters.
+        const baseColor = `rgba(50, 100, 150,`;
+        const dataset = {
+          label: `${boroughFilter} - ${propertyFilter} - ${neighborhoodFilter}`,
+          data: dataForQuarters,
+          backgroundColor: `${baseColor} 0.5)`,
+          borderColor: `${baseColor} 1)`,
+          borderWidth: 1
+        };
+
+        // Update the chart with new labels and dataset.
         housingChart.data.labels = quarters;
-        housingChart.data.datasets = datasets;
+        housingChart.data.datasets = [dataset];
         let yAxisLabel;
         if (metric === "median_price") {
           yAxisLabel = "Median Price ($)";
         } else if (metric === "avg_price") {
           yAxisLabel = "Average Price ($)";
-        } else {
+        } else if (metric === "deals") {
           yAxisLabel = "# of Deals";
+        } else if (metric === "deal_volume") {
+          yAxisLabel = "Deal Volume";
         }
         housingChart.options.scales.y.title.text = yAxisLabel;
         housingChart.update();
@@ -116,36 +171,47 @@
         download: true,
         header: true,
         complete: function(results) {
-          // Filter out any empty rows and safely transform the data.
+          // Transform the raw CSV data.
           allData = results.data
             .filter(row => row["borough"] && row["year_quarter"])
             .map(row => ({
               borough: String(row["borough"]).trim(),
+              neighborhood_name: String(row["neighborhood_name"]).trim(),
+              property_group: String(row["property_group"]).trim(),
               year_quarter: String(row["year_quarter"]).trim(),
+              deal_volume: parseNumber(row["deal_volume"]),
               avg_price: parseNumber(row["avg_price"]),
               median_price: parseNumber(row["median_price"]),
               deals: parseNumber(row["# of Deals"])
             }));
+          
+          // Populate the dropdowns with unique values.
+          updateBoroughFilterOptions();
+          updatePropertyFilterOptions();
+          updateNeighborhoodFilterOptions();
 
-          // Determine initial quarters and boroughs (all data).
+          // Get unique quarters for initial chart creation.
           const quarters = [...new Set(allData.map(item => item.year_quarter))].sort();
-          const boroughs = [...new Set(allData.map(item => item.borough))];
-
-          // Build initial datasets using the default metric (median_price).
-          const datasets = boroughs.map((borough, index) => {
-            const boroughData = quarters.map(q => {
-              const record = allData.find(item => item.borough === borough && item.year_quarter === q);
-              return record ? record.median_price : null;
-            });
-            const baseColor = `rgba(${50 + index * 40}, ${100 + index * 20}, ${150 + index * 10},`;
-            return {
-              label: borough,
-              data: boroughData,
-              backgroundColor: `${baseColor} 0.5)`,
-              borderColor: `${baseColor} 1)`,
-              borderWidth: 1
-            };
+          // Create an initial dataset using the default metric ("median_price").
+          const baseColor = `rgba(50, 100, 150,`;
+          // We will build the dataset based on the default selections in the filters.
+          // (Since each filter now has only one selection, filtering yields a single dataset.)
+          const filteredData = allData.filter(item => 
+            item.borough === document.getElementById("boroughFilter").value &&
+            item.property_group === document.getElementById("propertyFilter").value &&
+            item.neighborhood_name === document.getElementById("neighborhoodFilter").value
+          );
+          const dataForQuarters = quarters.map(q => {
+            const record = filteredData.find(item => item.year_quarter === q);
+            return record ? record["median_price"] : null;
           });
+          const initialDataset = {
+            label: `${document.getElementById("boroughFilter").value} - ${document.getElementById("propertyFilter").value} - ${document.getElementById("neighborhoodFilter").value}`,
+            data: dataForQuarters,
+            backgroundColor: `${baseColor} 0.5)`,
+            borderColor: `${baseColor} 1)`,
+            borderWidth: 1
+          };
 
           // Initialize the Chart.js chart.
           const ctx = document.getElementById("housingChart").getContext("2d");
@@ -153,7 +219,7 @@
             type: "bar",
             data: {
               labels: quarters,
-              datasets: datasets
+              datasets: [initialDataset]
             },
             options: {
               responsive: true,
@@ -186,8 +252,14 @@
         }
       });
 
-      // Add event listeners for filter changes.
-      document.getElementById("boroughFilter").addEventListener("change", updateChart);
+      // When the borough selection changes, update the neighborhood options and chart.
+      document.getElementById("boroughFilter").addEventListener("change", () => {
+        updateNeighborhoodFilterOptions();
+        updateChart();
+      });
+      // Update the chart when property, neighborhood, or metric selections change.
+      document.getElementById("neighborhoodFilter").addEventListener("change", updateChart);
+      document.getElementById("propertyFilter").addEventListener("change", updateChart);
       document.getElementById("metricFilter").addEventListener("change", updateChart);
     </script>
   </body>
