@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_9f18eb36ea60afaed33493adc50262fe {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>    
+    
+<style>
+    .popup-content {
+        min-width: 300px;  /* Ensures the popup is at least 300px wide */
+        font-size: 14px;
+        line-height: 1.4;
+        color: #333;
+        white-space: normal;  /* Allow natural wrapping */
+        word-wrap: break-word;
+    }
+    .leaflet-popup, .leaflet-popup-content-wrapper {
+        background-color: #f9f9f9;
+        border: 1px solid #bbb;
+        border-radius: 5px;
+        padding: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .leaflet-popup-tip {
+        background: #f9f9f9;
+    }
+</style>
+
+    
+    <h3 style="text-align:center; font-family:Arial, sans-serif; font-size:18px; color:#333; margin-top:10px;">
+        <b>Foiled Office Projects</b>
+    </h3>
+    
+            <div class="folium-map" id="map_9f18eb36ea60afaed33493adc50262fe" ></div>
+        
+</body>
+<script>    
+    
+            var map_9f18eb36ea60afaed33493adc50262fe = L.map(
+                "map_9f18eb36ea60afaed33493adc50262fe",
+                {
+                    center: [25.766976993450072, -80.19107448540062],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: false,
+                    scrollWheelZoom: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_d4d23cc094f02ae75e44d93e8960c7d5 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_9f18eb36ea60afaed33493adc50262fe);
+        
+    
+            var tile_layer_f6bed22530ad2634a072e3e862bb3e56 = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {"attribution": "Mapbox", "detectRetina": false, "maxNativeZoom": 20, "maxZoom": 20, "minZoom": 1, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_9f18eb36ea60afaed33493adc50262fe);
+        
+    
+            L.control.fullscreen(
+                {"forceSeparateButton": false, "position": "topleft", "title": "Full Screen", "titleCancel": "Exit Full Screen"}
+            ).addTo(map_9f18eb36ea60afaed33493adc50262fe);
+        
+    
+            var tile_layer_d39ff618a89c7d631e073e6880971da8 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+            var mini_map_4bdda4075822b5b3e634d3198490a86e = new L.Control.MiniMap(
+                tile_layer_d39ff618a89c7d631e073e6880971da8,
+                {"autoToggleDisplay": false, "centerFixed": false, "collapsedHeight": 25, "collapsedWidth": 25, "height": 150, "minimized": false, "position": "bottomright", "toggleDisplay": true, "width": 150, "zoomAnimation": false, "zoomLevelOffset": -5}
+            );
+            map_9f18eb36ea60afaed33493adc50262fe.addControl(mini_map_4bdda4075822b5b3e634d3198490a86e);
+        
+    
+            var marker_cluster_33fa7b29c0c7f9181396a4893caaf368 = L.markerClusterGroup(
+                {}
+            );
+            map_9f18eb36ea60afaed33493adc50262fe.addLayer(marker_cluster_33fa7b29c0c7f9181396a4893caaf368);
+        
+    
+            var marker_3dcb4914dff569468d77ea7c6b11379e = L.marker(
+                [25.766976993450072, -80.19107448540062],
+                {}
+            ).addTo(map_9f18eb36ea60afaed33493adc50262fe);
+        
+    
+            var icon_04f072193568f96d8c9b4514516b84d2 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_3dcb4914dff569468d77ea7c6b11379e.setIcon(icon_04f072193568f96d8c9b4514516b84d2);
+        
+    
+        var popup_85d01274f9d7b9ba2b441ef1a276ea36 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_74a4c2d70d433c39fbcafe759e2735cd = $(`<div id="html_74a4c2d70d433c39fbcafe759e2735cd" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Project:</strong> Swire's One Brickell City Centre<br>         <p>Swire nixed the planned supertall at Brickell City Centre, citing less than expected preleasing activity.</p>     </div>     </div>`)[0];
+                popup_85d01274f9d7b9ba2b441ef1a276ea36.setContent(html_74a4c2d70d433c39fbcafe759e2735cd);
+            
+        
+
+        marker_3dcb4914dff569468d77ea7c6b11379e.bindPopup(popup_85d01274f9d7b9ba2b441ef1a276ea36)
+        ;
+
+        
+    
+    
+            var marker_b780d10883bb0c0141def958e927b391 = L.marker(
+                [25.812815434081426, -80.13546505236465],
+                {}
+            ).addTo(map_9f18eb36ea60afaed33493adc50262fe);
+        
+    
+            var icon_0beb00168c8ccb06cd32535ee39381a8 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_b780d10883bb0c0141def958e927b391.setIcon(icon_0beb00168c8ccb06cd32535ee39381a8);
+        
+    
+        var popup_7f7c5f7610256e2c606c0167ae7ff3fe = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_31168b19df6943fd2a3671135d7c8449 = $(`<div id="html_31168b19df6943fd2a3671135d7c8449" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Project:</strong> Gateway Group's Mid-Beach offices<br>         <p>Although the Giller family's Gateway Group had budgeted for the higher interest rates and other expenses, it decided to cancel its Mid-Beach project once the Trump administration imposed its tariff and deportation policies.</p>     </div>     </div>`)[0];
+                popup_7f7c5f7610256e2c606c0167ae7ff3fe.setContent(html_31168b19df6943fd2a3671135d7c8449);
+            
+        
+
+        marker_b780d10883bb0c0141def958e927b391.bindPopup(popup_7f7c5f7610256e2c606c0167ae7ff3fe)
+        ;
+
+        
+    
+    
+            var marker_f7a5adc776d8319b507a33db283bc3ae = L.marker(
+                [25.810942729970943, -80.18877996242412],
+                {}
+            ).addTo(map_9f18eb36ea60afaed33493adc50262fe);
+        
+    
+            var icon_d6ee843c5f1951254b53edfdc264c186 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_f7a5adc776d8319b507a33db283bc3ae.setIcon(icon_d6ee843c5f1951254b53edfdc264c186);
+        
+    
+        var popup_aecb7eadc1ee99c509f59c208aef31dc = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_dc1871bafc1e8075c5f3b34134618c32 = $(`<div id="html_dc1871bafc1e8075c5f3b34134618c32" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Project:</strong> One Thousand Group's Miami office tower<br>         <p>One Thousand Group scrapped its planned 47-story office tower on this site in favor of a mixed-use branded condo prokect, a much safer bet than offices in the current South Florida market.</p>     </div>     </div>`)[0];
+                popup_aecb7eadc1ee99c509f59c208aef31dc.setContent(html_dc1871bafc1e8075c5f3b34134618c32);
+            
+        
+
+        marker_f7a5adc776d8319b507a33db283bc3ae.bindPopup(popup_aecb7eadc1ee99c509f59c208aef31dc)
+        ;
+
+        
+    
+    
+            var marker_4020419cc9304f4bf84b740ba4252bcb = L.marker(
+                [25.784050013673063, -80.19193707462625],
+                {}
+            ).addTo(map_9f18eb36ea60afaed33493adc50262fe);
+        
+    
+            var icon_4c0310a6855c447a81e10cc9bb6d2e45 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_4020419cc9304f4bf84b740ba4252bcb.setIcon(icon_4c0310a6855c447a81e10cc9bb6d2e45);
+        
+    
+        var popup_fd5dd5d725607727cece830ba1c2fd2e = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_3e3dc7ed7d85dc0cea64c358fb8997a0 = $(`<div id="html_3e3dc7ed7d85dc0cea64c358fb8997a0" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Project:</strong> Abbhi Capital's Miami Worldcenter project<br>         <p>Abbhi Capital has paused its planned project at Miami Worldcenter, which includes a 33-story office tower.</p>     </div>     </div>`)[0];
+                popup_fd5dd5d725607727cece830ba1c2fd2e.setContent(html_3e3dc7ed7d85dc0cea64c358fb8997a0);
+            
+        
+
+        marker_4020419cc9304f4bf84b740ba4252bcb.bindPopup(popup_fd5dd5d725607727cece830ba1c2fd2e)
+        ;
+
+        
+    
+    
+            var marker_adc7120085513c3c9b728c75d3ebd4b1 = L.marker(
+                [25.80021640678677, -80.20201206242903],
+                {}
+            ).addTo(map_9f18eb36ea60afaed33493adc50262fe);
+        
+    
+            var icon_95ef5f20ffe2ae2e15e21e4c493eef34 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_adc7120085513c3c9b728c75d3ebd4b1.setIcon(icon_95ef5f20ffe2ae2e15e21e4c493eef34);
+        
+    
+        var popup_4739e753350325d726d6e423a55b692b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_ac6026548d9eaeb7a2ab1e704f337756 = $(`<div id="html_ac6026548d9eaeb7a2ab1e704f337756" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Project:</strong> Goldman's Core Wynwood<br>         <p>Pioneer Wynwood developer Goldman Properties has paused plans for the eight-story Core office building in favor of focusing on a smaller office project in Wynwood,  citing higher demand for smaller suites.</p>     </div>     </div>`)[0];
+                popup_4739e753350325d726d6e423a55b692b.setContent(html_ac6026548d9eaeb7a2ab1e704f337756);
+            
+        
+
+        marker_adc7120085513c3c9b728c75d3ebd4b1.bindPopup(popup_4739e753350325d726d6e423a55b692b)
+        ;
+
+        
+    
+    
+            var marker_5dfc2c52706f73d627a785f149e33393 = L.marker(
+                [25.787845541218935, -80.130021293328],
+                {}
+            ).addTo(map_9f18eb36ea60afaed33493adc50262fe);
+        
+    
+            var icon_64cad7fe782f662aa8459f55667b8e4f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_5dfc2c52706f73d627a785f149e33393.setIcon(icon_64cad7fe782f662aa8459f55667b8e4f);
+        
+    
+        var popup_fe9e396dcaae61e0a0ce5077a7756cb0 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_41def952c9ddd7f0ae9795e99c5472c1 = $(`<div id="html_41def952c9ddd7f0ae9795e99c5472c1" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Project:</strong> Bancroft Hotel Miami Beach conversion<br>         <p>Pebb Capital, Maxwelle Real Estate Group and Russell Galbut revealed plans to convert the closed Bancorft Hotel in Miami Beach to offices in 2021. The project is on hold, as the team evaluates other development options, Pebb said in a statement.</p>     </div>     </div>`)[0];
+                popup_fe9e396dcaae61e0a0ce5077a7756cb0.setContent(html_41def952c9ddd7f0ae9795e99c5472c1);
+            
+        
+
+        marker_5dfc2c52706f73d627a785f149e33393.bindPopup(popup_fe9e396dcaae61e0a0ce5077a7756cb0)
+        ;
+
+        
+    
+    
+            var marker_ff18c51193cf2009ccb7fe9971fcb8a2 = L.marker(
+                [25.76495838457009, -80.19140600727955],
+                {}
+            ).addTo(map_9f18eb36ea60afaed33493adc50262fe);
+        
+    
+            var icon_010e55c999e452ba5bab416e39495e00 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_ff18c51193cf2009ccb7fe9971fcb8a2.setIcon(icon_010e55c999e452ba5bab416e39495e00);
+        
+    
+        var popup_3e1845aa22a6f5205e83544439f1807d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a6794906150ab28f610e8577c8b7ab84 = $(`<div id="html_a6794906150ab28f610e8577c8b7ab84" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Project:</strong> 848 Brickell<br>         <p>The Ardid family's Key International jumped on the Brickell office boom with plans for a 51-story office tower in 2023. The developer hasn't officially canceled or paused the project but has said that 30 percent to 40 percent of the space has to be preleased before Key International starts looking for contruction financing. So far, no deals have been announced.</p>     </div>     </div>`)[0];
+                popup_3e1845aa22a6f5205e83544439f1807d.setContent(html_a6794906150ab28f610e8577c8b7ab84);
+            
+        
+
+        marker_ff18c51193cf2009ccb7fe9971fcb8a2.bindPopup(popup_3e1845aa22a6f5205e83544439f1807d)
+        ;
+
+        
+    
+</script>

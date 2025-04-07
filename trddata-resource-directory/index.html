@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Directory of Real Estate Data Sites</title>
   
-  <!-- Google Fonts: Inter for a modern sans-serif look -->
+  <!-- Merriweather for header -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Proxima Nova is assumed installed locally; otherwise, a fallback sans-serif is used -->
   
   <!-- Font Awesome (for icons) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -24,9 +26,17 @@
       --card-bg: #ffffff;
       --card-shadow: rgba(0, 0, 0, 0.1);
       --transition-duration: 0.3s;
+      --logo-width: 60px;
+      --logo-height: 60px;
+      /* Gray styling for both Type and Data Types */
+      --gray-text: #777777;
+      --gray-bg: #e0e0e0;
+      --gray-padding: 6px 12px;
+      --gray-border-radius: 4px;
+      --gray-margin-bottom: 4px;
     }
     
-    /* Dark mode variables override */
+    /* Dark mode overrides */
     @media (prefers-color-scheme: dark) {
       :root {
         --primary-color: #dddddd;
@@ -35,13 +45,15 @@
         --bg-color: #121212;
         --card-bg: #1E1E1E;
         --card-shadow: rgba(0, 0, 0, 0.5);
+        --gray-text: #bbbbbb;
+        --gray-bg: #2a2a2a;
       }
     }
     
-    /* Global Styles */
+    /* Body uses Proxima Nova; header uses Merriweather */
     body {
       margin: 0;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Proxima Nova', 'Helvetica Neue', Arial, sans-serif;
       background-color: var(--bg-color);
       color: var(--primary-color);
       padding: 20px;
@@ -49,9 +61,10 @@
     }
     
     header {
-      text-align: center;
+      font-family: 'Merriweather', serif;
+      text-align: left;
       padding: 40px 20px;
-      background-color: var(--secondary-color);
+      background-color: transparent;
       margin-bottom: 20px;
     }
     
@@ -66,132 +79,172 @@
       color: var(--accent-color);
     }
     
-    /* Sticky Search Bar */
+    /* Sticky Search Bar (no group drop shadow) */
     .sticky-search {
       position: sticky;
       top: 0;
       background-color: var(--secondary-color);
       padding: 10px;
-      box-shadow: 0 2px 4px var(--card-shadow);
+      box-shadow: none; /* group drop shadow removed */
       z-index: 1000;
       margin-bottom: 20px;
     }
     
+    /* Extend search controls full width */
     .search-controls {
-      max-width: 800px;
-      margin: 0 auto;
+      width: 75%;
       display: flex;
-      gap: 10px;
+      gap: 100px;
     }
     
-    .search-controls input,
-    .search-controls select {
-      flex: 1;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 1em;
-      transition: border-color var(--transition-duration);
-      background-color: var(--card-bg);
+    /* Input wrapper for magnifying glass icon */
+    .input-wrapper {
+      position: relative;
+      flex: 0 0 40%;  /* reduced width to 40% */
+    }
+    
+    .input-wrapper i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
       color: var(--primary-color);
     }
     
-    .search-controls input:focus,
-    .search-controls select:focus {
-      border-color: var(--accent-color);
+    .input-wrapper input {
+      width: 100%;
+      padding: 12px 12px 12px 40px; /* extra left padding for the icon */
+      border: none;
+      border-radius: 0;
+      font-size: 1em;
+      background-color: var(--card-bg);
+      color: var(--primary-color);
+      box-shadow: none;
+    }
+    
+    .input-wrapper input:focus {
       outline: none;
     }
     
-    /* Card Grid */
-    .card-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 30px;
-      padding: 0 20px;
-    }
-    
-    /* Card Design */
-    .card {
+    /* Styling for select dropdowns */
+    .search-controls select {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 0;
+      font-size: 1em;
       background-color: var(--card-bg);
-      border-radius: 8px;
-      padding: 20px;
+      color: var(--primary-color);
+      box-shadow: none;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: none;
+    }
+    
+    .search-controls select:focus {
+      outline: none;
+    }
+    
+    /* Table Layout */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--card-bg);
+      border-radius: 6px;
+      overflow: hidden;
       box-shadow: 0 2px 8px var(--card-shadow);
-      transition: transform 0.2s, box-shadow 0.2s;
     }
     
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 16px var(--card-shadow);
+    /* Column headers text changed to white (#fff) */
+    .data-table thead {
+      background-color: var(--accent-color);
+    }
+    .data-table thead th {
+      color: #fff !important;
     }
     
-    .card-header {
-      background: var(--accent-color);
-      color: #fff;
-      padding: 10px;
-      border-radius: 5px 5px 0 0;
-      text-align: center;
-      font-size: 1.2em;
-      margin: -20px -20px 20px -20px;
+    .data-table th,
+    .data-table td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
     }
     
-    .card-header a {
-      color: inherit;
+    .data-table th {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    /* Remove link styling inside table */
+    .data-table a {
       text-decoration: none;
+      color: inherit;
     }
     
-    /* Badges */
-    .badge {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 0.8em;
-      margin-right: 5px;
-      background-color: #ddd;
-      color: #333;
-    }
-    
-    .badge-residential {
-      background-color: #28a745;
-      color: #fff;
-    }
-    
-    .badge-commercial {
-      background-color: #ff5733;
-      color: #fff;
-    }
-    
-    .badge-government {
-      background-color: #2c3e50;
-      color: #fff;
-    }
-    
-    .badge-nongovernment {
-      background-color: #16a085;
-      color: #fff;
-    }
-    
-    /* Image Container with Fixed Height and Responsive Sizing */
-    .image-container {
-      height: 180px;
+    /* Company Column: Logo + company name */
+    .company-cell {
       display: flex;
       align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      margin-top: 15px;
+      gap: 10px;
     }
-    
-    .image-container img {
-      max-height: 100%;
-      max-width: 100%;
+    .company-cell img.logo {
+      width: var(--logo-width);
+      height: var(--logo-height);
       object-fit: contain;
+      background-color: #ffffff;
+      padding: 4px;
+      border-radius: 4px;
     }
     
-    .logo-bg {
-      background-color: #ffffff;
-      padding: 5px;
-      border-radius: 4px;
+    /* Single unified style for Type and Data Types */
+    .datatype-badge {
+      color: var(--gray-text);
+      background-color: var(--gray-bg);
+      padding: var(--gray-padding);
+      border-radius: var(--gray-border-radius);
+      display: inline-block;
+      margin-bottom: var(--gray-margin-bottom);
+    }
+    
+    /* Responsive: table -> card layout */
+    @media (max-width: 768px) {
+      .data-table thead {
+        display: none;
+      }
+      .data-table,
+      .data-table tbody,
+      .data-table tr,
+      .data-table td {
+        display: block;
+        width: 100%;
+      }
+      .data-table tr {
+        margin-bottom: 1rem;
+        border: 1px solid #444;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      .data-table td {
+        padding: 12px;
+        border: none;
+        border-bottom: 1px solid #444;
+        position: relative;
+        padding-left: 50%;
+      }
+      .data-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        color: var(--accent-color);
+      }
+      .data-table td:last-child {
+        border-bottom: none;
+      }
     }
     
     footer {
@@ -208,12 +261,15 @@
 <body>
   <header>
     <h1>Directory of Real Estate Data Sites</h1>
-    <p>Explore a curated list of real estate data sources. See anything missing? Email research@therealdeal.com</p>
+    <p>Explore a curated list of real estate data sources. See anything missing? Email <a href="mailto:research@therealdeal.com" style="color: var(--accent-color); text-decoration: none;">research@therealdeal.com</a></p>
   </header>
   
   <div class="sticky-search">
     <div class="search-controls">
-      <input type="text" id="searchInput" placeholder="Search..." />
+      <div class="input-wrapper">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search by Name or Location" />
+      </div>
       <select id="sourceTypeFilter">
         <option value="">All Source Types</option>
       </select>
@@ -223,8 +279,21 @@
     </div>
   </div>
   
-  <div class="card-grid" id="resourceContainer">
-    <!-- Resource cards will be inserted here dynamically -->
+  <div class="container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Type</th>
+          <th>Location</th>
+          <th>Data Types</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody id="resultsContainer">
+        <!-- Table rows generated by JS -->
+      </tbody>
+    </table>
   </div>
   
   <footer>
@@ -233,7 +302,7 @@
   
   <script>
     let resources = [];
-    const resourceContainer = document.getElementById('resourceContainer');
+    const resultsContainer = document.getElementById('resultsContainer');
     const searchInput = document.getElementById('searchInput');
     const categoryFilterSelect = document.getElementById('categoryFilter');
     const sourceTypeFilterSelect = document.getElementById('sourceTypeFilter');
@@ -246,32 +315,25 @@
       return 'Logos for Research Directory/' + name + extensions[extIndex];
     }
     
-    function createCategoryBadge(category) {
+    // Create a single badge for the Type field or multiple badges for the Data Types field.
+    function createBadge(text) {
       const badge = document.createElement('span');
-      badge.classList.add('badge');
-      if (category.toLowerCase().includes('residential')) {
-        badge.classList.add('badge-residential');
-      } else if (category.toLowerCase().includes('commercial')) {
-        badge.classList.add('badge-commercial');
-      }
-      badge.textContent = category;
+      badge.classList.add('datatype-badge');
+      badge.textContent = text.trim();
       return badge;
     }
     
-    function createSourceTypeBadge(sourceType) {
-      const badge = document.createElement('span');
-      badge.classList.add('badge');
-      if (sourceType.toLowerCase() === 'government') {
-        badge.classList.add('badge-government');
-      } else if (sourceType.toLowerCase() === 'non-government') {
-        badge.classList.add('badge-nongovernment');
-      }
-      badge.textContent = sourceType;
-      return badge;
+    function createDataTypesContent(dataTypeStr) {
+      const container = document.createElement('div');
+      if (!dataTypeStr) return container;
+      const types = dataTypeStr.split(',');
+      types.forEach(type => container.appendChild(createBadge(type)));
+      return container;
     }
     
     function renderResources(filterText = '', filterSourceType = '', filterCategory = '') {
-      resourceContainer.innerHTML = '';
+      resultsContainer.innerHTML = '';
+      
       const filteredResources = resources.filter(resource => {
         const searchTarget = (
           resource["Name"] + ' ' +
@@ -283,62 +345,30 @@
                (!filterCategory || resource["Data type"].toLowerCase() === filterCategory.toLowerCase());
       });
       
+      // Sort by Name
       filteredResources.sort((a, b) => a["Name"].localeCompare(b["Name"]));
       
       filteredResources.forEach(resource => {
-        const card = document.createElement('div');
-        card.className = 'card';
+        const row = document.createElement('tr');
         
-        // Header with resource name link.
-        const headerDiv = document.createElement('div');
-        headerDiv.className = 'card-header';
-        const headerLink = document.createElement('a');
-        headerLink.href = resource["Research URL"];
-        headerLink.target = '_blank';
-        headerLink.rel = 'noopener noreferrer';
-        headerLink.textContent = resource["Name"];
-        headerDiv.appendChild(headerLink);
-        card.appendChild(headerDiv);
+        // COMPANY
+        const companyCell = document.createElement('td');
+        companyCell.setAttribute('data-label', 'Company');
+        const companyLink = document.createElement('a');
+        companyLink.href = resource["Research URL"];
+        companyLink.target = '_blank';
+        companyLink.rel = 'noopener noreferrer';
         
-        // Badges for category and source type.
-        const badgeContainer = document.createElement('div');
-        badgeContainer.style.marginBottom = "10px";
-        badgeContainer.appendChild(createCategoryBadge(resource["Data type"]));
-        badgeContainer.appendChild(createSourceTypeBadge(resource["Source Type"]));
-        card.appendChild(badgeContainer);
+        const companyDiv = document.createElement('div');
+        companyDiv.className = 'company-cell';
         
-        // Description.
-        const descriptionPara = document.createElement('p');
-        descriptionPara.textContent = resource["Description"];
-        card.appendChild(descriptionPara);
-        
-        // Optional Use Case.
-        if (resource["Use Case"]) {
-          const divider = document.createElement('div');
-          divider.style.borderTop = "1px solid #ddd";
-          divider.style.margin = "10px 0";
-          card.appendChild(divider);
-          const useCasePara = document.createElement('p');
-          useCasePara.textContent = resource["Use Case"];
-          card.appendChild(useCasePara);
-        }
-        
-        // Optional Brokerage Type.
-        if (resource["Brokerage type"] && resource["Brokerage type"] !== 'N/A') {
-          const brokeragePara = document.createElement('p');
-          brokeragePara.textContent = `Brokerage Type: ${resource["Brokerage type"]}`;
-          card.appendChild(brokeragePara);
-        }
-        
-        // Image with fallback logic.
-        const imageContainer = document.createElement('div');
-        imageContainer.className = 'image-container';
-        const img = document.createElement('img');
-        img.dataset.baseName = resource["Name"];
-        img.dataset.extensionIndex = 0;
-        img.src = getImagePathWithFallback(resource["Name"], 0);
-        img.alt = resource["Name"] + ' logo';
-        img.onerror = function() {
+        const logoImg = document.createElement('img');
+        logoImg.className = 'logo';
+        logoImg.dataset.baseName = resource["Name"];
+        logoImg.dataset.extensionIndex = 0;
+        logoImg.src = getImagePathWithFallback(resource["Name"], 0);
+        logoImg.alt = resource["Name"] + ' logo';
+        logoImg.onerror = function() {
           let currentIndex = parseInt(this.dataset.extensionIndex, 10);
           if (currentIndex < extensions.length - 1) {
             currentIndex++;
@@ -348,16 +378,48 @@
             this.style.display = 'none';
           }
         };
-        img.onload = function() {
+        logoImg.onload = function() {
           const lowerSrc = this.src.toLowerCase();
           if (lowerSrc.endsWith('.svg') || lowerSrc.endsWith('.png') || lowerSrc.endsWith('.webp')) {
             this.classList.add('logo-bg');
           }
         };
-        imageContainer.appendChild(img);
-        card.appendChild(imageContainer);
+        companyDiv.appendChild(logoImg);
         
-        resourceContainer.appendChild(card);
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = resource["Name"];
+        companyDiv.appendChild(nameSpan);
+        
+        companyLink.appendChild(companyDiv);
+        companyCell.appendChild(companyLink);
+        row.appendChild(companyCell);
+        
+        // TYPE
+        const typeCell = document.createElement('td');
+        typeCell.setAttribute('data-label', 'Type');
+        const typeBadge = createBadge(resource["Source Type"] || '');
+        typeCell.appendChild(typeBadge);
+        row.appendChild(typeCell);
+        
+        // LOCATION
+        const locationCell = document.createElement('td');
+        locationCell.setAttribute('data-label', 'Location');
+        locationCell.textContent = resource["Region"] || '';
+        row.appendChild(locationCell);
+        
+        // DATA TYPES
+        const dataTypesCell = document.createElement('td');
+        dataTypesCell.setAttribute('data-label', 'Data Types');
+        dataTypesCell.appendChild(createDataTypesContent(resource["Data type"]));
+        row.appendChild(dataTypesCell);
+        
+        // DESCRIPTION
+        const descriptionCell = document.createElement('td');
+        descriptionCell.setAttribute('data-label', 'Description');
+        descriptionCell.textContent = resource["Description"];
+        row.appendChild(descriptionCell);
+        
+        resultsContainer.appendChild(row);
       });
     }
     
@@ -365,7 +427,9 @@
       const categoriesSet = new Set();
       resources.forEach(resource => {
         if (resource["Data type"]) {
-          categoriesSet.add(resource["Data type"].trim());
+          resource["Data type"].split(',').forEach(type => {
+            categoriesSet.add(type.trim());
+          });
         }
       });
       Array.from(categoriesSet).sort().forEach(category => {
@@ -383,7 +447,7 @@
           sourceTypes.add(resource["Source Type"].trim());
         }
       });
-      Array.from(sourceTypes).forEach(sourceType => {
+      Array.from(sourceTypes).sort().forEach(sourceType => {
         const option = document.createElement('option');
         option.value = sourceType;
         option.textContent = sourceType;

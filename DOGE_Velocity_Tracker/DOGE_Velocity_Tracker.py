@@ -15,7 +15,7 @@ client = gspread.authorize(creds)
 sheet = client.open_by_key('1PcmZjexOybXbr3BL43K3oL_6bVAOcW96t8fIoqX3sI0')
 
 today = datetime.today().strftime('%Y-%m-%d')
-yesterday = (datetime.today() - timedelta(days=2)).strftime('%Y-%m-%d')
+yesterday = (datetime.today() - timedelta(days=13)).strftime('%Y-%m-%d')
 
 worksheet = sheet.worksheet(f'{yesterday}_final')
 
