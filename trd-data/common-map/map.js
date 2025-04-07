@@ -55,6 +55,17 @@ const trdTheme = {
   prefer: "system",
   init: () => {
     document.querySelector("body").setAttribute("data-bs-theme", userTheme);
+    window.addEventListener("message", (e) => {
+      if (e.data && e.data.theme) {
+        const theme = e.data.theme === "dark" ? "dark" : "light";
+        trdTheme.set(theme);
+        trdTheme.prefer = "user";
+        tracking.trackEvent("theme", theme);
+        if (window.map) {
+          window.map.setStyle(`mapbox://styles/mapbox/${theme}-v10`);
+        }
+      }
+    });
   },
 
   get: () => {
@@ -103,6 +114,10 @@ const trdDataCommonMap = (options) => {
     eventCategory: "unknown-map",
     paintCircleColorType: "step",
     sourceId: "dataPoints",
+    defaultColors: {
+      dark: "white",
+      light: "black",
+    },
   };
 
   const settings = Object.assign({}, defaults, options);
@@ -697,7 +712,14 @@ const trdDataCommonMap = (options) => {
                 settings.paintCircleColorType
               )
                 ? paintCircleColorTypes[settings.paintCircleColorType]()
-                : helpers.pickThemeColor("black", "white"),
+                : helpers.pickThemeColor(
+                    settings.defaultColors.light
+                      ? settings.defaultColors.light
+                      : "black",
+                    settings.defaultColors.dark
+                      ? settings.defaultColors.dark
+                      : "white"
+                  ),
             ...(settings.mapLayerPaint ? settings.mapLayerPaint : {}),
           },
         });

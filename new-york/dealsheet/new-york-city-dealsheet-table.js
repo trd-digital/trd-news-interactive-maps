@@ -1,6 +1,8 @@
 (function () {
   const table = document.querySelector("#table");
-  const dataUrl = table.getAttribute("data-json-url");
+  const dataUrl =
+    "https://teststatic.therealdeal.com/interactive-maps/nyc_dealsheet.geojson";
+  const dealType = table.getAttribute("data-deal-type");
 
   const displayColumns = [
     {
@@ -168,7 +170,9 @@
       window.dataLayer.push({
         event: "event_tracking",
         trd: {
-          category: "new-york-dealsheet-table",
+          category: `new-york-dealsheet-${dealType
+            .toLowerCase()
+            .replace(/\s/g, "_")}-table`,
           action: `table_${action}`,
           label: label,
         },
@@ -177,13 +181,13 @@
   };
 
   const getColumnName = (name) => {
-    if (dataUrl.includes("buy")) {
+    if (dealType.includes("Buy")) {
       return name.replace("Party1", "Seller").replace("Party2", "Buyer");
     }
-    if (dataUrl.includes("financing")) {
+    if (dealType.includes("Financing")) {
       return name.replace("Party1", "Borrower").replace("Party2", "Lender");
     }
-    if (dataUrl.includes("leasing")) {
+    if (dealType.includes("Leasing")) {
       return name.replace("Party1", "Landlord").replace("Party2", "Tenant");
     }
     return name;
@@ -395,6 +399,14 @@
   };
 
   const mapDataToTable = (data) => {
+    if (!data || data.length === 0) {
+      console.error("No data found");
+      return {
+        columns: [],
+        rows: [],
+      };
+    }
+
     const columns = Object.keys(data[0])
       .sort((a, b) => {
         // sort it by displayColumns order
@@ -452,18 +464,22 @@
   };
 
   const filterData = (data) => {
-    if (!dataUrl.includes("master")) {
-      return data;
-    }
     const params = new URLSearchParams(window.location.search);
-    const dealType = params.get("deal_type");
-    if (!dealType) {
+    const dealTypeVal = params.get("deal_type") || dealType;
+    if (!dealTypeVal) {
       return data;
     }
-    const filterData = data.filter((item) => {
-      return item["DEAL TYPE"] === dealType;
-    });
-    console.log(filterData);
+
+    const filterData = data.features
+      .filter((item) => {
+        return item.properties["Deal Type"] === dealTypeVal;
+      })
+      .map((item) => {
+        return {
+          ...item.properties,
+        };
+      });
+
     return filterData;
   };
 
