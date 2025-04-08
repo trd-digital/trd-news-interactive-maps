@@ -47,6 +47,15 @@ const tracking = {
   },
 };
 
+const trdTheme = TrdTheme({
+  updateCallback: (theme) => {
+    tracking.trackEvent("theme", theme);
+    if (window.map) {
+      window.map.setStyle(`mapbox://styles/mapbox/${theme}-v10`);
+    }
+  },
+});
+
 const trdDataCommonMap = (options) => {
   const defaults = {
     filePath: "",
@@ -104,7 +113,7 @@ const trdDataCommonMap = (options) => {
   const fn = {
     init: async () => {
       tracking.eventCategory = settings.eventCategory;
-      trdTheme.init(fn.themeCallback);
+      trdTheme.init();
       legend.init();
       filters.init();
       map.init();
@@ -114,13 +123,6 @@ const trdDataCommonMap = (options) => {
     checkForIframe: () => {
       if (!helpers.isIframe()) return;
       document.querySelector("body").classList.add("iframe");
-    },
-
-    themeCallback: (theme) => {
-      tracking.trackEvent("theme", theme);
-      if (window.map) {
-        window.map.setStyle(`mapbox://styles/mapbox/${theme}-v10`);
-      }
     },
   };
 
@@ -579,7 +581,7 @@ const trdDataCommonMap = (options) => {
         new MapboxGLButtonControl({
           className: "map-theme",
           title: "Theme",
-          eventHandler: () => trdTheme.onToggle(fn.themeCallback),
+          eventHandler: () => trdTheme.onToggle(),
         }),
         "top-right"
       );

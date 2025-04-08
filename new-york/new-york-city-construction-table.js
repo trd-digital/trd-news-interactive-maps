@@ -355,6 +355,7 @@
     });
   };
 
+  const trdTheme = TrdTheme();
   trdTheme.init((theme) => trackEvent("theme", theme));
 
   getData(dataUrl)

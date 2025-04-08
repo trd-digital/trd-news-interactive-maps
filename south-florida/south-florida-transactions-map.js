@@ -1,4 +1,5 @@
 (() => {
+  const trdTheme = TrdTheme();
   const legendKeys = [
     {
       title: "",

@@ -21,6 +21,8 @@ const excludeValue = [
   "-",
 ];
 
+const trdTheme = TrdTheme();
+
 const trdList = () => {
   const list = document.querySelector("#luxury-sales-list");
 

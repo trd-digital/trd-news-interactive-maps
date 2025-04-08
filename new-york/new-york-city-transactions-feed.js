@@ -13,6 +13,7 @@ const excludeValue = [
   "unknown",
   "nan",
 ];
+const trdTheme = TrdTheme();
 
 const trdList = () => {
   const list = document.querySelector("#sales-list");
