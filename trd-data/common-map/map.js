@@ -31,10 +31,6 @@ class MapboxGLButtonControl {
   }
 }
 
-const userTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-  ? "dark"
-  : "light";
-
 const tracking = {
   eventCategory: "unknown-map",
   trackEvent: (action, label) => {
@@ -48,45 +44,6 @@ const tracking = {
         },
       });
     }
-  },
-};
-
-const trdTheme = {
-  prefer: "system",
-  init: () => {
-    document.querySelector("body").setAttribute("data-bs-theme", userTheme);
-    window.addEventListener("message", (e) => {
-      if (e.data && e.data.theme) {
-        const theme = e.data.theme === "dark" ? "dark" : "light";
-        trdTheme.set(theme);
-        trdTheme.prefer = "user";
-        tracking.trackEvent("theme", theme);
-        if (window.map) {
-          window.map.setStyle(`mapbox://styles/mapbox/${theme}-v10`);
-        }
-      }
-    });
-  },
-
-  get: () => {
-    return document.querySelector("body").getAttribute("data-bs-theme");
-  },
-
-  isDark: () => trdTheme.get() === "dark",
-
-  set: (theme) => {
-    document.querySelector("body").setAttribute("data-bs-theme", theme);
-  },
-
-  onToggle: (_mapObj) => {
-    const siteTheme = document
-      .querySelector("body")
-      .getAttribute("data-bs-theme");
-    const newTheme = siteTheme === "light" ? "dark" : "light";
-    _mapObj.setStyle(`mapbox://styles/mapbox/${newTheme}-v10`);
-    trdTheme.set(newTheme);
-    trdTheme.prefer = "user";
-    tracking.trackEvent("theme", newTheme);
   },
 };
 
@@ -130,7 +87,7 @@ const trdDataCommonMap = (options) => {
 
   const mapConfig = {
     container: settings.mapElementId, // container ID
-    style: `mapbox://styles/mapbox/${userTheme}-v10`, // style URL
+    style: `mapbox://styles/mapbox/${trdTheme.getUserTheme()}-v10`, // style URL
     center: {
       lat: settings.mapCenterLat,
       lng: settings.mapCenterLng,
@@ -147,12 +104,11 @@ const trdDataCommonMap = (options) => {
   const fn = {
     init: async () => {
       tracking.eventCategory = settings.eventCategory;
-      trdTheme.init();
+      trdTheme.init(fn.themeCallback);
       legend.init();
       filters.init();
       map.init();
       fn.checkForIframe();
-      fn.changeThemeOnSystemChange();
     },
 
     checkForIframe: () => {
@@ -160,16 +116,11 @@ const trdDataCommonMap = (options) => {
       document.querySelector("body").classList.add("iframe");
     },
 
-    changeThemeOnSystemChange: () => {
-      window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .addEventListener("change", (e) => {
-          if (trdTheme.prefer !== "system") return;
-          const newTheme = e.matches ? "dark" : "light";
-          trdTheme.set(newTheme);
-          tracking.trackEvent("theme", newTheme);
-          mapObj.setStyle(`mapbox://styles/mapbox/${newTheme}-v10`);
-        });
+    themeCallback: (theme) => {
+      tracking.trackEvent("theme", theme);
+      if (window.map) {
+        window.map.setStyle(`mapbox://styles/mapbox/${theme}-v10`);
+      }
     },
   };
 
@@ -628,7 +579,7 @@ const trdDataCommonMap = (options) => {
         new MapboxGLButtonControl({
           className: "map-theme",
           title: "Theme",
-          eventHandler: () => trdTheme.onToggle(mapObj),
+          eventHandler: () => trdTheme.onToggle(fn.themeCallback),
         }),
         "top-right"
       );

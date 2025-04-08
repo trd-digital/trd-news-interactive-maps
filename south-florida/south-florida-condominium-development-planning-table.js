@@ -181,10 +181,6 @@
     },
   };
 
-  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    document.body.setAttribute("data-bs-theme", "dark");
-  }
-
   const isEmptyValue = (value) => {
     if (!value) return true;
     if (value === "") return true;
@@ -316,6 +312,8 @@
       data: data.rows,
     });
   };
+
+  trdTheme.init((theme) => trackEvent("theme", theme));
 
   getData(dataUrl)
     .then(mapDataToTable)

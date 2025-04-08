@@ -139,6 +139,9 @@
           here.
         </p>
       </header>
+      <button type="button" class="btn btn-primary" id="theme-toggle">
+        Toggle Theme
+      </button>
       <section class="map">
         <iframe
           src="new-york-city-transactions-map.html"
@@ -166,6 +169,32 @@
       if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
         document.body.setAttribute("data-bs-theme", "dark");
       }
+
+      window.addEventListener("message", function (event) {
+        if (event.data.getTheme) {
+          console.log(
+            "got getTheme message from child",
+            document.body.getAttribute("data-bs-theme")
+          );
+          event.source.postMessage({
+            theme: document.body.getAttribute("data-bs-theme"),
+          });
+        }
+      });
+
+      document
+        .getElementById("theme-toggle")
+        .addEventListener("click", function () {
+          const currentTheme = document.body.getAttribute("data-bs-theme");
+          const newTheme = currentTheme === "dark" ? "light" : "dark";
+          document.body.setAttribute("data-bs-theme", newTheme);
+          document.querySelectorAll("iframe").forEach((iframe) => {
+            iframe.contentWindow.postMessage({ setTheme: newTheme }, "*");
+          });
+          const themeToggleButton = document.getElementById("theme-toggle");
+          themeToggleButton.innerText =
+            newTheme === "dark" ? "Light Mode" : "Dark Mode";
+        });
     </script>
   </body>
 </html>

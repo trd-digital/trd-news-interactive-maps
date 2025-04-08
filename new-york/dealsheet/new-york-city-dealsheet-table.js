@@ -288,24 +288,6 @@
     },
   };
 
-  // Set the theme based on the user's preference
-  const setTheme = () => {
-    document.body.setAttribute(
-      "data-bs-theme",
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light"
-    );
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", (e) => {
-        document.body.setAttribute(
-          "data-bs-theme",
-          e.matches ? "dark" : "light"
-        );
-      });
-  };
-
   const isEmptyValue = (value) => {
     if (!value) return true;
     if (typeof value === "undefined") return true;
@@ -491,6 +473,8 @@
     });
   };
 
+  trdTheme.init((theme) => trackEvent("theme", theme));
+
   if (dataUrl) {
     getData(dataUrl)
       .then(filterData)
@@ -500,6 +484,4 @@
         console.error(error);
       });
   }
-
-  setTheme();
 })();

@@ -30,9 +30,9 @@ const trdList = () => {
 
   const fn = {
     init: () => {
-      helpers.setUserPersistedTheme();
       fn.setupTooltip();
       fn.addEventListeners();
+      trdTheme.init();
 
       fn.getData(dataUrl)
         .then(fn.renderListItems)
@@ -112,12 +112,6 @@ const trdList = () => {
   };
 
   const helpers = {
-    setUserPersistedTheme: () => {
-      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        document.body.setAttribute("data-bs-theme", "dark");
-      }
-    },
-
     getGamTrackUrl: (url) => {
       if (!window.frameElement || !url || url === "") return url;
 
