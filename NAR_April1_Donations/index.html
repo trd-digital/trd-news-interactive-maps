@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Grouped Bubble Chart by Race and Outcome</title>
+  <title>Grouped Bubble Chart with Names by Race and Outcome</title>
   <!-- Load D3.js from CDN -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
@@ -31,7 +31,7 @@
   </style>
 </head>
 <body>
-  <h2>Grouped Bubble Chart by Race and Outcome</h2>
+  <h2>Grouped Bubble Chart by Race and Outcome with Names</h2>
   <!-- SVG container -->
   <svg width="960" height="600"></svg>
   <!-- Tooltip -->
@@ -66,7 +66,6 @@
     ];
 
     // Preprocess: assign a simplified race category.
-    // This example extracts keywords; you can adjust the logic as needed.
     data.forEach(d => {
       if (d.race.includes("Mayor")) d.category = "Mayor";
       else if (d.race.includes("Council")) d.category = "Council";
@@ -86,76 +85,109 @@
                   .attr("height", height);
     const tooltip = d3.select(".tooltip");
 
-    // Create a scale for bubble radii (using sqrt scale so that area scales with donations)
+    // Create a scale for bubble radii (using a square-root scale so that area ∝ donations)
     const radiusScale = d3.scaleSqrt()
                           .domain(d3.extent(data, d => d.donations))
                           .range([10, 50]);
 
-    // Color scale: winners in green, losers in red
+    // Color scale: winners in green (#4CAF50) and losers in red (#F44336)
     const colorScale = d3.scaleOrdinal()
                          .domain([true, false])
                          .range(["#4CAF50", "#F44336"]);
 
-    // Create circles for each candidate with an initial random position.
-    const circles = svg.selectAll("circle")
-        .data(data)
-        .enter()
-        .append("circle")
-        .attr("class", "bubble")
-        .attr("r", d => radiusScale(d.donations))
-        .attr("fill", d => colorScale(d.won))
-        .attr("cx", Math.random() * width)
-        .attr("cy", Math.random() * height)
-        .on("mouseover", (event, d) => {
-          tooltip.transition().duration(200)
-                 .style("opacity", 0.9);
-          tooltip.html(`<strong>${d.candidate}</strong><br/>
-                        Donations: $${d.donations.toLocaleString()}<br/>
-                        Race: ${d.race}<br/>
-                        Outcome: ${d.won ? "Won" : "Lost"}`)
-                 .style("left", (event.pageX + 10) + "px")
-                 .style("top", (event.pageY - 28) + "px");
-        })
-        .on("mouseout", () => {
-          tooltip.transition().duration(500)
-                 .style("opacity", 0);
-        });
-
-    // Define functions to compute target positions based on race and outcome.
-    // For horizontal grouping, assign an x-coordinate for each race category.
+    // Define target positions based on race (x-axis) and win/loss (y-axis)
     function getX(d) {
       const index = raceTypes.indexOf(d.category);
       const columnWidth = width / raceTypes.length;
-      // Place the target in the middle of the corresponding column.
       return columnWidth / 2 + index * columnWidth;
     }
-    // For vertical grouping, winners are assigned to one row and losers to another.
     function getY(d) {
+      // Winners in the top row and losers in the bottom row:
       return d.won ? height / 3 : 2 * height / 3;
     }
 
-    // Create a force simulation that moves bubbles toward their target positions.
+    // Create a force simulation with forces based on the above target positions.
     const simulation = d3.forceSimulation(data)
                           .force("x", d3.forceX(d => getX(d)).strength(0.1))
                           .force("y", d3.forceY(d => getY(d)).strength(0.1))
-                          // A collision force prevents overlapping bubbles.
                           .force("collide", d3.forceCollide(d => radiusScale(d.donations) + 2))
                           .on("tick", ticked);
 
-    // Update circle positions on each simulation tick.
+    // Instead of appending circles and text separately, we append a group (<g>)
+    // for each candidate so that the circle and its text move together.
+    const nodes = svg.selectAll("g.node")
+                     .data(data)
+                     .enter()
+                     .append("g")
+                     .attr("class", "node")
+                     // Optionally, you can enable dragging for interactive repositioning:
+                     .call(d3.drag()
+                        .on("start", (event, d) => {
+                          if (!event.active) simulation.alphaTarget(0.3).restart();
+                          d.fx = d.x;
+                          d.fy = d.y;
+                        })
+                        .on("drag", (event, d) => {
+                          d.fx = event.x;
+                          d.fy = event.y;
+                        })
+                        .on("end", (event, d) => {
+                          if (!event.active) simulation.alphaTarget(0);
+                          d.fx = null;
+                          d.fy = null;
+                        }));
+
+    // Append circles to each group
+    nodes.append("circle")
+         .attr("class", "bubble")
+         .attr("r", d => radiusScale(d.donations))
+         .attr("fill", d => colorScale(d.won))
+         .on("mouseover", (event, d) => {
+           tooltip.transition().duration(200).style("opacity", 0.9);
+           tooltip.html(`<strong>${d.candidate}</strong><br/>
+                         Donations: $${d.donations.toLocaleString()}<br/>
+                         Race: ${d.race}<br/>
+                         Outcome: ${d.won ? "Won" : "Lost"}`)
+                  .style("left", (event.pageX + 10) + "px")
+                  .style("top", (event.pageY - 28) + "px");
+         })
+         .on("mouseout", () => {
+           tooltip.transition().duration(500).style("opacity", 0);
+         });
+
+    // Append text labels (first and last name on separate lines)
+    nodes.append("text")
+         .attr("text-anchor", "middle")
+         .style("fill", "#fff")
+         .style("pointer-events", "none")
+         .each(function(d) {
+           // Split candidate name into first and last name parts.
+           // (For candidates with more than two parts, adjust logic as needed.)
+           const names = d.candidate.split(" ");
+           d3.select(this).append("tspan")
+             .attr("x", 0)
+             .attr("dy", "-0.2em")
+             .text(names[0]);
+           d3.select(this).append("tspan")
+             .attr("x", 0)
+             .attr("dy", "1.2em")
+             .text(names[1] || ""); // Fallback if the name has only one part
+         })
+         .style("font-size", d => Math.min(2 * radiusScale(d.donations) / d.candidate.length, 14) + "px");
+
+    // Update positions of groups on each tick of the simulation
     function ticked() {
-      circles.attr("cx", d => d.x)
-             .attr("cy", d => d.y);
+      nodes.attr("transform", d => `translate(${d.x},${d.y})`);
     }
 
-    // Optionally, you can add headers for each race category.
+    // Optionally, add headers (labels) for each race category at the top of each column.
     svg.selectAll(".raceLabel")
        .data(raceTypes)
        .enter()
        .append("text")
        .attr("class", "raceLabel")
        .attr("x", (d, i) => (width / raceTypes.length) * (i + 0.5))
-       .attr("y", 20)
+       .attr("y", 30)
        .attr("text-anchor", "middle")
        .text(d => d);
   </script>
