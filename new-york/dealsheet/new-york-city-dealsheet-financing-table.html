@@ -107,7 +107,7 @@
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <main>
-      <table id="table" data-deal-type="Financing"></table>
+      <table id="table"></table>
     </main>
 
     <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
@@ -115,6 +115,149 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/bootstrap-table.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/extensions/sticky-header/bootstrap-table-sticky-header.min.js"></script>
-    <script src="new-york-city-dealsheet-table.js"></script>
+    <script src="https://static.therealdeal.com/library/theme.js?v=1"></script>
+    <script src="../../trd-data/common-table/table.js"></script>
+    <script type="text/javascript">
+      const displayColumns = [
+        {
+          dataField: "LANDLORD SELLER/BORROWER",
+          name: "Borrower",
+          visible: true,
+        },
+        {
+          dataField: "TENANT BUYER/LENDER",
+          name: "Lender",
+          visible: true,
+        },
+        {
+          dataField: "DEAL CLOSING DATE",
+          name: "Deal Closing Date",
+          visible: true,
+          sorter: (a, b) => {
+            if (
+              TrdFormatters.isEmptyValue(a) ||
+              TrdFormatters.isEmptyValue(b)
+            ) {
+              return 0;
+            }
+            return new Date(a).getTime() - new Date(b).getTime();
+          },
+        },
+        {
+          dataField: "SALE PRICE/LOAN AMOUNT",
+          name: "Sale/Loan Amount",
+          visible: true,
+          sorter: (a, b) => {
+            if (
+              !TrdFormatters.isEmptyValue(a) &&
+              !TrdFormatters.isEmptyValue(b)
+            ) {
+              return TrdFormatters.getNumberValue(a) >
+                TrdFormatters.getNumberValue(b)
+                ? 1
+                : -1;
+            }
+          },
+        },
+        { dataField: "ADDRESS", name: "Address", visible: true },
+        { dataField: "NEIGHBORHOOD", name: "Neighborhood", visible: true },
+        { dataField: "BOROUGH", name: "Borough", visible: true },
+        {
+          dataField: "SQUARE FEET",
+          name: "SqFt",
+          visible: true,
+          sorter: (a, b) => {
+            if (
+              !TrdFormatters.isEmptyValue(a) &&
+              !TrdFormatters.isEmptyValue(b)
+            ) {
+              return TrdFormatters.getNumberValue(a) >
+                TrdFormatters.getNumberValue(b)
+                ? 1
+                : -1;
+            }
+          },
+        },
+        {
+          dataField: "CLEAN RENT/PRICE PER SQUARE FOOT",
+          name: "Rent/Price per SqFt",
+        },
+        {
+          dataField: "YEARS OF LEASE",
+          name: "Years of Lease",
+        },
+        {
+          dataField: "LANDLORD BROKER",
+          name: "Landlord Broker",
+        },
+        {
+          dataField: "LANDLORD BROKERAGE",
+          name: "Landlord Brokerage",
+        },
+        {
+          dataField: "LANDLORD TYPE",
+          name: "Landlord Type",
+        },
+        {
+          dataField: "TENANT BROKER",
+          name: "Tenant Broker",
+        },
+        {
+          dataField: "TENANT BROKERAGE",
+          name: "Tenant Brokerage",
+        },
+        {
+          dataField: "TENANT TYPE",
+          name: "Tenant Type",
+        },
+        {
+          dataField: "TENANT BUSINESS TYPE",
+          name: "Tenant Business Type",
+        },
+        {
+          dataField: "SPECIAL CASES",
+          name: "Special Cases",
+        },
+        {
+          dataField: "GENERAL DS NOTES",
+          name: "General Notes",
+        },
+        {
+          dataField: "DATE ENTERED",
+          name: "Date Entered",
+        },
+        {
+          dataField: "DEAL TYPE",
+          name: "Deal Type",
+        },
+        {
+          dataField: "BBL",
+          name: "BBL",
+        },
+      ];
+
+      const fetchDataFilterCallback = (data) => {
+        return data.features
+          .filter((item) => {
+            return item.properties["Deal Type"] === "Financing";
+          })
+          .map((item) => {
+            return {
+              ...item.properties,
+            };
+          });
+      };
+
+      const table = TrdDataCommonTable({
+        filePath:
+          "https://teststatic.therealdeal.com/interactive-maps/nyc_dealsheet.geojson",
+        eventCategory: "new-york-dealsheet-financing-table",
+        displayColumns,
+        fetchDataFilterCallback,
+        tableConfig: {
+          sortName: TrdFormatters.getFieldName("DEAL CLOSING DATE"),
+        },
+      });
+    </script>
   </body>
 </html>
