@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <!-- Ensure good scaling on mobile devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NAR April 1 Donations</title>
+  <title>NAR April 1 Donations by Region</title>
   <!-- Load D3.js from CDN -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
@@ -35,114 +35,92 @@
     .bubble:hover {
       stroke-width: 3px;
     }
-    .raceLabel {
+    .regionLabel {
       font-weight: bold;
     }
     .legend text {
       font-size: 16px;
     }
-    /* Media query: hide the graphic on devices with a screen width of 768px or less */
-    @media screen and (max-width: 768px) {
-      svg,
-      .tooltip,
-      h2,
-      .legend,
-      .raceLabel {
-        display: none;
-      }
-      /* Optionally, you can display a message indicating the graphic is not available */
-      body::after {
-        content: "The interactive graphic is not available on mobile devices.";
-        display: block;
-        text-align: center;
-        font-size: 18px;
-        padding: 20px;
-      }
-    }
   </style>
 </head>
 <body>
-  <h2>NAR April 1 Donations</h2>
+  <h2>Grouped Bubble Chart by Region</h2>
   <!-- Use viewBox and preserveAspectRatio for responsiveness -->
   <svg width="960" height="600" viewBox="0 0 960 600" preserveAspectRatio="xMidYMid meet"></svg>
   <div class="tooltip"></div>
   
   <script>
-    // New candidate data with the updated values.
+    // Updated dataset with Region (and County) properties.
     const data = [
-      { candidate: "Brian Brubaker", donations: 13387.80, won: true, race: "Mayor of Round Lake" },
-      { candidate: "Chris Brown", donations: 12140.28, won: true, race: "Mayor of Morris" },
-      { candidate: "Chris Curtis", donations: 10388.64, won: true, race: "Mayor of Kankakee" },
-      { candidate: "Clare Kelly", donations: 17233.85, won: true, race: "Evanston City Council (1st Ward)" },
-      { candidate: "Colin Gilbert", donations: 31766.64, won: false, race: "Arlington Heights Village Trustee (at-large)" },
-      { candidate: "Damon Zdunich", donations: 25810.50, won: false, race: "Joliet City Council (at-large)" },
-      { candidate: "Dan Brady", donations: 41782.12, won: true, race: "Mayor of Bloomington" },
-      { candidate: "David Goins", donations: 14391.95, won: true, race: "Mayor of Alton" },
-      { candidate: "Elizabeth Davies", donations: 22061.45, won: true, race: "Mayor of Grayslake" },
-      { candidate: "Elizabeth Hellrung", donations: 8502.55, won: true, race: "Troy Alderman (1st Ward)" },
-      { candidate: "Greg Klemstein", donations: 5315.90, won: false, race: "Johnsburg Village Trustee (at-large)" },
-      { candidate: "Jennifer Bruzan Taylor", donations: 16319.02, won: false, race: "Naperville City Council" },
-      { candidate: "John Pritchard", donations: 10400.85, won: false, race: "Mayor of Galesburg" },
-      { candidate: "Kathleen Lorenz", donations: 27591.96, won: false, race: "Mayor of Normal" },
-      { candidate: "LaTonya Jones", donations: 11948.85, won: false, race: "Hazel Crest Village Trustee (at-large)" },
-      { candidate: "Madelyn Staack", donations: 17887.29, won: false, race: "Avon Township Trustee (at-large)" },
-      { candidate: "Mike Adrieansen", donations: 2655.30, won: true, race: "Mayor of Manhattan" },
-      { candidate: "Parielle Davis", donations: 19152.58, won: true, race: "Evanston City Council (7th Ward)" },
-      { candidate: "Quin O'Brien", donations: 44324.92, won: false, race: "Mayor of Gurnee" },
-      { candidate: "Richard McLaughlin", donations: 3998.85, won: true, race: "Mayor of Island Lake" },
-      { candidate: "Rick Lauschke", donations: 11264.32, won: true, race: "Godfrey Village Trustee (at-large)" },
-      { candidate: "Robert Seminary", donations: 6121.50, won: true, race: "Mayor of Round Lake Park" },
-      { candidate: "Tom Suffredin", donations: 19359.87, won: true, race: "Evanston City Council (6th Ward)" }
+      { candidate: "Brian Brubaker", donations: 13387.80, won: true, race: "Mayor of Round Lake", County: "Lake", Region: "Collar counties" },
+      { candidate: "Chris Brown", donations: 12140.28, won: true, race: "Mayor of Morris", County: "Grundy", Region: "Collar counties" },
+      { candidate: "Chris Curtis", donations: 10388.64, won: true, race: "Mayor of Kankakee", County: "Kankakee", Region: "Collar counties" },
+      { candidate: "Clare Kelly", donations: 17233.85, won: true, race: "Evanston City Council (1st Ward)", County: "Cook", Region: "Suburban" },
+      { candidate: "Colin Gilbert", donations: 31766.64, won: false, race: "Arlington Heights Village Trustee (at-large)", County: "Cook", Region: "Suburban" },
+      { candidate: "Damon Zdunich", donations: 25810.50, won: false, race: "Joliet City Council (at-large)", County: "Will", Region: "Collar counties" },
+      { candidate: "Dan Brady", donations: 41782.12, won: true, race: "Mayor of Bloomington", County: "McLean", Region: "North Central" },
+      { candidate: "David Goins", donations: 14391.95, won: true, race: "Mayor of Alton", County: "Madison", Region: "Southwest Central" },
+      { candidate: "Elizabeth Davies", donations: 22061.45, won: true, race: "Mayor of Grayslake", County: "Lake", Region: "Collar counties" },
+      { candidate: "Elizabeth Hellrung", donations: 8502.55, won: true, race: "Troy Alderman (1st Ward)", County: "Madison", Region: "Southwest Central" },
+      { candidate: "Greg Klemstein", donations: 5315.90, won: false, race: "Johnsburg Village Trustee (at-large)", County: "McHenry", Region: "Collar counties" },
+      { candidate: "Jennifer Bruzan Taylor", donations: 16319.02, won: false, race: "Naperville City Council", County: "DuPage/Will", Region: "Collar counties" },
+      { candidate: "John Pritchard", donations: 10400.85, won: false, race: "Mayor of Galesburg", County: "Knox", Region: "West Central" },
+      { candidate: "Kathleen Lorenz", donations: 27591.96, won: false, race: "Mayor of Normal", County: "McLean", Region: "North Central" },
+      { candidate: "LaTonya Jones", donations: 11948.85, won: false, race: "Hazel Crest Village Trustee (at-large)", County: "Cook", Region: "Suburban" },
+      { candidate: "Madelyn Staack", donations: 17887.29, won: false, race: "Avon Township Trustee (at-large)", County: "Lake", Region: "Collar counties" },
+      { candidate: "Mike Adrieansen", donations: 2655.30, won: true, race: "Mayor of Manhattan", County: "Will", Region: "Collar counties" },
+      { candidate: "Parielle Davis", donations: 19152.58, won: true, race: "Evanston City Council (7th Ward)", County: "Cook", Region: "Suburban" },
+      { candidate: "Quin O'Brien", donations: 44324.92, won: false, race: "Mayor of Gurnee", County: "Lake", Region: "Collar counties" },
+      { candidate: "Richard McLaughlin", donations: 3998.85, won: true, race: "Mayor of Island Lake", County: "Lake/McHenry", Region: "Collar counties" },
+      { candidate: "Rick Lauschke", donations: 11264.32, won: true, race: "Godfrey Village Trustee (at-large)", County: "Madison", Region: "Southwest Central" },
+      { candidate: "Robert Seminary", donations: 6121.50, won: true, race: "Mayor of Round Lake Park", County: "Lake", Region: "Collar counties" },
+      { candidate: "Tom Suffredin", donations: 19359.87, won: true, race: "Evanston City Council (6th Ward)", County: "Cook", Region: "Suburban" }
     ];
 
-    // Preprocess: assign a simplified race category.
-    data.forEach(d => {
-      if (d.race.includes("Mayor")) d.category = "Mayor";
-      else if (d.race.includes("Council")) d.category = "Council";
-      else if (d.race.includes("Trustee")) d.category = "Trustee";
-      else if (d.race.includes("Alderman")) d.category = "Alderman";
-      else d.category = d.race;
-    });
-    
-    // Get unique race categories.
-    const raceTypes = [...new Set(data.map(d => d.category))];
-    
+    // Instead of computing a simplified "category" from the race string, we simply use the Region property.
+    const regionTypes = [...new Set(data.map(d => d.Region))];
+
     const width = 960, height = 600;
     const svg = d3.select("svg");
     const tooltip = d3.select(".tooltip");
-    
-    // Create a scale for bubble radii (using a square-root scale so area is proportional to donations).
+
+    // Create a scale for bubble radii.
     const radiusScale = d3.scaleSqrt()
                           .domain(d3.extent(data, d => d.donations))
                           .range([10, 50]);
-    
+
     // Define a color scale: winners in green, losers in red.
     const colorScale = d3.scaleOrdinal()
                          .domain([true, false])
                          .range(["#4CAF50", "#F44336"]);
-    
-    // Determine target positions based on race (x-axis) and win/loss outcome (y-axis).
+
+    // Grouping by region:
+    // Here we arrange the bubbles in vertical columns, one per region.
+    // The x-coordinate is based on the region index; all bubbles are centered vertically.
     function getX(d) {
-      const index = raceTypes.indexOf(d.category);
-      const columnWidth = width / raceTypes.length;
+      const index = regionTypes.indexOf(d.Region);
+      const columnWidth = width / regionTypes.length;
       return columnWidth / 2 + index * columnWidth;
     }
     function getY(d) {
-      return d.won ? height / 3 : 2 * height / 3;
+      return height / 2;
     }
-    
+
     // Set up a force simulation.
     const simulation = d3.forceSimulation(data)
                          .force("x", d3.forceX(d => getX(d)).strength(0.1))
                          .force("y", d3.forceY(d => getY(d)).strength(0.1))
                          .force("collide", d3.forceCollide(d => radiusScale(d.donations) + 2))
                          .on("tick", ticked);
-    
+
+    // (Optional) If you were using clipPaths in your previous version, you could reinsert them here.
+    // For simplicity, this version omits them since we're displaying only a single short label.
+
     // Compute a threshold for label display.
     // In this example, if a bubble's radius is less than or equal to Damon Zdunich's, we suppress its label.
-    const tom = data.find(d => d.candidate === "Damon Zdunich");
-    const labelThreshold = tom ? radiusScale(tom.donations) : 30;
-    
+    const exampleCandidate = data.find(d => d.candidate === "Damon Zdunich");
+    const labelThreshold = exampleCandidate ? radiusScale(exampleCandidate.donations) : 30;
+
     // Create a group (<g>) for each candidate.
     const nodes = svg.selectAll("g.node")
                      .data(data)
@@ -164,7 +142,7 @@
                           d.fx = null;
                           d.fy = null;
                         }));
-    
+
     // Append the circle for each candidate.
     nodes.append("circle")
          .attr("class", "bubble")
@@ -185,8 +163,8 @@
            d3.select(this).attr("stroke-width", 1);
            tooltip.transition().duration(500).style("opacity", 0);
          });
-    
-    // Append text labels for candidate names only if the bubble's radius is larger than our threshold.
+
+    // Append text labels for candidate last names only if the bubble's radius is larger than our threshold.
     nodes.filter(d => radiusScale(d.donations) > labelThreshold)
          .append("text")
          .attr("text-anchor", "middle")
@@ -202,19 +180,18 @@
              .style("font-size", "18px");
          })
          .style("fill", "#fff");
-    
-    // Update positions for each node on every tick of the simulation.
+
     function ticked() {
       nodes.attr("transform", d => `translate(${d.x},${d.y})`);
     }
-    
-    // Add headers at the top for each race category.
-    svg.selectAll(".raceLabel")
-       .data(raceTypes)
+
+    // Add headers for each region at the top.
+    svg.selectAll(".regionLabel")
+       .data(regionTypes)
        .enter()
        .append("text")
-       .attr("class", "raceLabel")
-       .attr("x", (d, i) => (width / raceTypes.length) * (i + 0.5))
+       .attr("class", "regionLabel")
+       .attr("x", (d, i) => (width / regionTypes.length) * (i + 0.5))
        .attr("y", 30)
        .attr("text-anchor", "middle")
        .text(d => d)
@@ -225,7 +202,6 @@
                       .attr("class", "legend")
                       .attr("transform", "translate(20," + (height - 60) + ")");
     
-    // Legend for winners.
     legend.append("rect")
           .attr("x", 0)
           .attr("y", 0)
@@ -237,7 +213,6 @@
           .attr("y", 12)
           .text("Won");
     
-    // Legend for losers.
     legend.append("rect")
           .attr("x", 80)
           .attr("y", 0)
@@ -249,11 +224,10 @@
           .attr("y", 12)
           .text("Lost");
     
-    // Add the overall donations summary text.
     legend.append("text")
           .attr("x", 0)
           .attr("y", 35)
-          .text("Sum of donations across all races: $393,806.99");
+          .text("Sum of donations across all regions: $393,806.99");
   </script>
 </body>
 </html>
