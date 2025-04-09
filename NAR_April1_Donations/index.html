@@ -2,12 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Grouped Bubble Chart with Names by Race and Outcome</title>
+  <!-- Ensure good scaling on mobile devices -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NAR April 1 Donations</title>
   <!-- Load D3.js from CDN -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
     body {
       font-family: sans-serif;
+    }
+    svg {
+      max-width: 100%;
+      height: auto;
     }
     .tooltip {
       position: absolute;
@@ -20,47 +26,53 @@
       opacity: 0;
       transition: opacity 0.2s ease-in-out;
     }
+    /* Set a thin black stroke by default. On hover, the stroke-width increases. */
     .bubble {
       cursor: pointer;
-      stroke: #fff;
+      stroke: black;
       stroke-width: 1px;
+    }
+    .bubble:hover {
+      stroke-width: 3px;
     }
     .raceLabel {
       font-weight: bold;
     }
+    .legend text {
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
-  <h2>Grouped Bubble Chart by Race and Outcome with Names</h2>
-  <!-- SVG container -->
-  <svg width="960" height="600"></svg>
-  <!-- Tooltip -->
+  <h2>Grouped Bubble Chart with Clipped Last Names, Hover Effects, and Responsive Design</h2>
+  <!-- Use viewBox and preserveAspectRatio for responsiveness -->
+  <svg width="960" height="600" viewBox="0 0 960 600" preserveAspectRatio="xMidYMid meet"></svg>
   <div class="tooltip"></div>
-
+  
   <script>
-    // Candidate data with donations in dollars, win/loss status, and race name.
+    // New candidate data with the updated values.
     const data = [
       { candidate: "Brian Brubaker", donations: 13387.80, won: true, race: "Mayor of Round Lake" },
       { candidate: "Chris Brown", donations: 12140.28, won: true, race: "Mayor of Morris" },
       { candidate: "Chris Curtis", donations: 10388.64, won: true, race: "Mayor of Kankakee" },
       { candidate: "Clare Kelly", donations: 17233.85, won: true, race: "Evanston City Council (1st Ward)" },
-      { candidate: "Colin Gilbert", donations: 31766.64, won: false, race: "Arlington Heights Trustee" },
-      { candidate: "Damon Zdunich", donations: 25810.50, won: false, race: "Joliet Trustee" },
-      { candidate: "Dan Brady", donations: 41782.12, won: true, race: "Bloomington Mayor" },
-      { candidate: "David Goins", donations: 14391.95, won: true, race: "Alton Mayor" },
-      { candidate: "Elizabeth Davies", donations: 22061.45, won: true, race: "Grayslake Mayor" },
-      { candidate: "Elizabeth Hellrung", donations: 8502.55, won: true, race: "Troy Alderman (Ward 1)" },
-      { candidate: "Greg Klemstein", donations: 5315.90, won: false, race: "Johnsburg Village Trustee" },
+      { candidate: "Colin Gilbert", donations: 31766.64, won: false, race: "Arlington Heights Village Trustee (at-large)" },
+      { candidate: "Damon Zdunich", donations: 25810.50, won: false, race: "Joliet City Council (at-large)" },
+      { candidate: "Dan Brady", donations: 41782.12, won: true, race: "Mayor of Bloomington" },
+      { candidate: "David Goins", donations: 14391.95, won: true, race: "Mayor of Alton" },
+      { candidate: "Elizabeth Davies", donations: 22061.45, won: true, race: "Mayor of Grayslake" },
+      { candidate: "Elizabeth Hellrung", donations: 8502.55, won: true, race: "Troy Alderman (1st Ward)" },
+      { candidate: "Greg Klemstein", donations: 5315.90, won: false, race: "Johnsburg Village Trustee (at-large)" },
       { candidate: "Jennifer Bruzan Taylor", donations: 16319.02, won: false, race: "Naperville City Council" },
-      { candidate: "John Pritchard", donations: 10400.85, won: false, race: "Galesburg Mayor" },
-      { candidate: "Kathleen Lorenz", donations: 27591.96, won: false, race: "Normal Mayor" },
-      { candidate: "LaTonya Jones", donations: 11948.85, won: false, race: "Hazel Crest Village Trustee" },
-      { candidate: "Madelyn Staack", donations: 17887.29, won: false, race: "Avon Township Trustee" },
+      { candidate: "John Pritchard", donations: 10400.85, won: false, race: "Mayor of Galesburg" },
+      { candidate: "Kathleen Lorenz", donations: 27591.96, won: false, race: "Mayor of Normal" },
+      { candidate: "LaTonya Jones", donations: 11948.85, won: false, race: "Hazel Crest Village Trustee (at-large)" },
+      { candidate: "Madelyn Staack", donations: 17887.29, won: false, race: "Avon Township Trustee (at-large)" },
       { candidate: "Mike Adrieansen", donations: 2655.30, won: true, race: "Mayor of Manhattan" },
       { candidate: "Parielle Davis", donations: 19152.58, won: true, race: "Evanston City Council (7th Ward)" },
       { candidate: "Quin O'Brien", donations: 44324.92, won: false, race: "Mayor of Gurnee" },
       { candidate: "Richard McLaughlin", donations: 3998.85, won: true, race: "Mayor of Island Lake" },
-      { candidate: "Rick Lauschke", donations: 11264.32, won: true, race: "Godfrey Village Trustee" },
+      { candidate: "Rick Lauschke", donations: 11264.32, won: true, race: "Godfrey Village Trustee (at-large)" },
       { candidate: "Robert Seminary", donations: 6121.50, won: true, race: "Mayor of Round Lake Park" },
       { candidate: "Tom Suffredin", donations: 19359.87, won: true, race: "Evanston City Council (6th Ward)" }
     ];
@@ -73,54 +85,63 @@
       else if (d.race.includes("Alderman")) d.category = "Alderman";
       else d.category = d.race;
     });
-
-    // Get unique categories (races)
+    
+    // Get unique race categories.
     const raceTypes = [...new Set(data.map(d => d.category))];
-
-    // Set up SVG dimensions
-    const width = 960,
-          height = 600;
-    const svg = d3.select("svg")
-                  .attr("width", width)
-                  .attr("height", height);
+    
+    const width = 960, height = 600;
+    const svg = d3.select("svg");
     const tooltip = d3.select(".tooltip");
-
-    // Create a scale for bubble radii (using a square-root scale so that area ∝ donations)
+    
+    // Create a scale for bubble radii (using a square-root scale so area is proportional to donations).
     const radiusScale = d3.scaleSqrt()
                           .domain(d3.extent(data, d => d.donations))
                           .range([10, 50]);
-
-    // Color scale: winners in green (#4CAF50) and losers in red (#F44336)
+    
+    // Define a color scale: winners in green, losers in red.
     const colorScale = d3.scaleOrdinal()
                          .domain([true, false])
                          .range(["#4CAF50", "#F44336"]);
-
-    // Define target positions based on race (x-axis) and win/loss (y-axis)
+    
+    // Determine target positions based on race (x-axis) and win/loss outcome (y-axis).
     function getX(d) {
       const index = raceTypes.indexOf(d.category);
       const columnWidth = width / raceTypes.length;
       return columnWidth / 2 + index * columnWidth;
     }
     function getY(d) {
-      // Winners in the top row and losers in the bottom row:
       return d.won ? height / 3 : 2 * height / 3;
     }
-
-    // Create a force simulation with forces based on the above target positions.
+    
+    // Set up a force simulation.
     const simulation = d3.forceSimulation(data)
-                          .force("x", d3.forceX(d => getX(d)).strength(0.1))
-                          .force("y", d3.forceY(d => getY(d)).strength(0.1))
-                          .force("collide", d3.forceCollide(d => radiusScale(d.donations) + 2))
-                          .on("tick", ticked);
-
-    // Instead of appending circles and text separately, we append a group (<g>)
-    // for each candidate so that the circle and its text move together.
+                         .force("x", d3.forceX(d => getX(d)).strength(0.1))
+                         .force("y", d3.forceY(d => getY(d)).strength(0.1))
+                         .force("collide", d3.forceCollide(d => radiusScale(d.donations) + 2))
+                         .on("tick", ticked);
+    
+    // Append a <defs> element and create unique clipPaths for each candidate so that text is limited to the bubble.
+    // const defs = svg.append("defs");
+    // data.forEach((d, i) => {
+    //   defs.append("clipPath")
+    //       .attr("id", "clip-" + i)
+    //       .append("circle")
+    //       .attr("r", radiusScale(d.donations) * 0.85)  // Slightly smaller than the bubble.
+    //       .attr("cx", 0)
+    //       .attr("cy", 0);
+    // });
+    
+    // Compute a threshold for label display.
+    // In this example, if a bubble's radius is less than or equal to Tom Suffredin's, we suppress its label.
+    const tom = data.find(d => d.candidate === "Damon Zdunich");
+    const labelThreshold = tom ? radiusScale(tom.donations) : 30;
+    
+    // Create a group (<g>) for each candidate.
     const nodes = svg.selectAll("g.node")
                      .data(data)
                      .enter()
                      .append("g")
                      .attr("class", "node")
-                     // Optionally, you can enable dragging for interactive repositioning:
                      .call(d3.drag()
                         .on("start", (event, d) => {
                           if (!event.active) simulation.alphaTarget(0.3).restart();
@@ -136,13 +157,15 @@
                           d.fx = null;
                           d.fy = null;
                         }));
-
-    // Append circles to each group
+    
+    // Append the circle for each candidate.
     nodes.append("circle")
          .attr("class", "bubble")
          .attr("r", d => radiusScale(d.donations))
          .attr("fill", d => colorScale(d.won))
-         .on("mouseover", (event, d) => {
+         .on("mouseover", function(event, d) {
+           // Increase stroke width on hover.
+           d3.select(this).attr("stroke-width", 3);
            tooltip.transition().duration(200).style("opacity", 0.9);
            tooltip.html(`<strong>${d.candidate}</strong><br/>
                          Donations: $${d.donations.toLocaleString()}<br/>
@@ -151,36 +174,35 @@
                   .style("left", (event.pageX + 10) + "px")
                   .style("top", (event.pageY - 28) + "px");
          })
-         .on("mouseout", () => {
+         .on("mouseout", function(event, d) {
+           d3.select(this).attr("stroke-width", 1);
            tooltip.transition().duration(500).style("opacity", 0);
          });
-
-    // Append text labels (first and last name on separate lines)
-    nodes.append("text")
+    
+    // Append text labels for candidate names only if the bubble's radius is larger than our threshold.
+    nodes.filter(d => radiusScale(d.donations) > labelThreshold)
+         .append("text")
          .attr("text-anchor", "middle")
-         .style("fill", "#fff")
+         .attr("clip-path", (d, i) => "url(#clip-" + i + ")")
          .style("pointer-events", "none")
          .each(function(d) {
-           // Split candidate name into first and last name parts.
-           // (For candidates with more than two parts, adjust logic as needed.)
            const names = d.candidate.split(" ");
-           d3.select(this).append("tspan")
+           const lastName = names[names.length - 1];
+           d3.select(this)
+             .append("tspan")
              .attr("x", 0)
-             .attr("dy", "-0.2em")
-             .text(names[0]);
-           d3.select(this).append("tspan")
-             .attr("x", 0)
-             .attr("dy", "1.2em")
-             .text(names[1] || ""); // Fallback if the name has only one part
+             .attr("dy", "0.35em")
+             .text(lastName)
+             .style("font-size", "18px");
          })
-         .style("font-size", d => Math.min(2 * radiusScale(d.donations) / d.candidate.length, 14) + "px");
-
-    // Update positions of groups on each tick of the simulation
+         .style("fill", "#fff");
+    
+    // Update positions for each node on every tick of the simulation.
     function ticked() {
       nodes.attr("transform", d => `translate(${d.x},${d.y})`);
     }
-
-    // Optionally, add headers (labels) for each race category at the top of each column.
+    
+    // Add headers at the top for each race category.
     svg.selectAll(".raceLabel")
        .data(raceTypes)
        .enter()
@@ -189,7 +211,43 @@
        .attr("x", (d, i) => (width / raceTypes.length) * (i + 0.5))
        .attr("y", 30)
        .attr("text-anchor", "middle")
-       .text(d => d);
+       .text(d => d)
+       .style("font-size", "16px");
+    
+    // Add a legend at the bottom-left.
+    const legend = svg.append("g")
+                      .attr("class", "legend")
+                      .attr("transform", "translate(20," + (height - 60) + ")");
+    
+    // Legend for winners.
+    legend.append("rect")
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("width", 15)
+          .attr("height", 15)
+          .attr("fill", "#4CAF50");
+    legend.append("text")
+          .attr("x", 20)
+          .attr("y", 12)
+          .text("Won");
+    
+    // Legend for losers.
+    legend.append("rect")
+          .attr("x", 80)
+          .attr("y", 0)
+          .attr("width", 15)
+          .attr("height", 15)
+          .attr("fill", "#F44336");
+    legend.append("text")
+          .attr("x", 100)
+          .attr("y", 12)
+          .text("Lost");
+    
+    // Add the overall donations summary text.
+    legend.append("text")
+          .attr("x", 0)
+          .attr("y", 35)
+          .text("Sum of donations across all races: $393,806.99");
   </script>
 </body>
 </html>
