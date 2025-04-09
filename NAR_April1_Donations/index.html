@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Ensure good scaling on mobile devices -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NAR April 1 Donations by Region</title>
+  <!-- Load D3.js from CDN -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+    .tooltip {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      pointer-events: none;
+      font-size: 12px;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+    /* Set a thin black stroke by default. On hover, the stroke-width increases. */
+    .bubble {
+      cursor: pointer;
+      stroke: black;
+      stroke-width: 1px;
+    }
+    .bubble:hover {
+      stroke-width: 3px;
+    }
+    .regionLabel {
+      font-weight: bold;
+    }
+    .legend text {
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Grouped Bubble Chart by Region</h2>
+  <!-- Use viewBox and preserveAspectRatio for responsiveness -->
+  <svg width="960" height="600" viewBox="0 0 960 600" preserveAspectRatio="xMidYMid meet"></svg>
+  <div class="tooltip"></div>
+  
+  <script>
+    // Updated dataset with Region (and County) properties.
+    const data = [
+      { candidate: "Brian Brubaker", donations: 13387.80, won: true, race: "Mayor of Round Lake", County: "Lake", Region: "Collar counties" },
+      { candidate: "Chris Brown", donations: 12140.28, won: true, race: "Mayor of Morris", County: "Grundy", Region: "Collar counties" },
+      { candidate: "Chris Curtis", donations: 10388.64, won: true, race: "Mayor of Kankakee", County: "Kankakee", Region: "Collar counties" },
+      { candidate: "Clare Kelly", donations: 17233.85, won: true, race: "Evanston City Council (1st Ward)", County: "Cook", Region: "Suburban" },
+      { candidate: "Colin Gilbert", donations: 31766.64, won: false, race: "Arlington Heights Village Trustee (at-large)", County: "Cook", Region: "Suburban" },
+      { candidate: "Damon Zdunich", donations: 25810.50, won: false, race: "Joliet City Council (at-large)", County: "Will", Region: "Collar counties" },
+      { candidate: "Dan Brady", donations: 41782.12, won: true, race: "Mayor of Bloomington", County: "McLean", Region: "North Central" },
+      { candidate: "David Goins", donations: 14391.95, won: true, race: "Mayor of Alton", County: "Madison", Region: "Southwest Central" },
+      { candidate: "Elizabeth Davies", donations: 22061.45, won: true, race: "Mayor of Grayslake", County: "Lake", Region: "Collar counties" },
+      { candidate: "Elizabeth Hellrung", donations: 8502.55, won: true, race: "Troy Alderman (1st Ward)", County: "Madison", Region: "Southwest Central" },
+      { candidate: "Greg Klemstein", donations: 5315.90, won: false, race: "Johnsburg Village Trustee (at-large)", County: "McHenry", Region: "Collar counties" },
+      { candidate: "Jennifer Bruzan Taylor", donations: 16319.02, won: false, race: "Naperville City Council", County: "DuPage/Will", Region: "Collar counties" },
+      { candidate: "John Pritchard", donations: 10400.85, won: false, race: "Mayor of Galesburg", County: "Knox", Region: "West Central" },
+      { candidate: "Kathleen Lorenz", donations: 27591.96, won: false, race: "Mayor of Normal", County: "McLean", Region: "North Central" },
+      { candidate: "LaTonya Jones", donations: 11948.85, won: false, race: "Hazel Crest Village Trustee (at-large)", County: "Cook", Region: "Suburban" },
+      { candidate: "Madelyn Staack", donations: 17887.29, won: false, race: "Avon Township Trustee (at-large)", County: "Lake", Region: "Collar counties" },
+      { candidate: "Mike Adrieansen", donations: 2655.30, won: true, race: "Mayor of Manhattan", County: "Will", Region: "Collar counties" },
+      { candidate: "Parielle Davis", donations: 19152.58, won: true, race: "Evanston City Council (7th Ward)", County: "Cook", Region: "Suburban" },
+      { candidate: "Quin O'Brien", donations: 44324.92, won: false, race: "Mayor of Gurnee", County: "Lake", Region: "Collar counties" },
+      { candidate: "Richard McLaughlin", donations: 3998.85, won: true, race: "Mayor of Island Lake", County: "Lake/McHenry", Region: "Collar counties" },
+      { candidate: "Rick Lauschke", donations: 11264.32, won: true, race: "Godfrey Village Trustee (at-large)", County: "Madison", Region: "Southwest Central" },
+      { candidate: "Robert Seminary", donations: 6121.50, won: true, race: "Mayor of Round Lake Park", County: "Lake", Region: "Collar counties" },
+      { candidate: "Tom Suffredin", donations: 19359.87, won: true, race: "Evanston City Council (6th Ward)", County: "Cook", Region: "Suburban" }
+    ];
+
+    // Instead of computing a simplified "category" from the race string, we simply use the Region property.
+    const regionTypes = [...new Set(data.map(d => d.Region))];
+
+    const width = 960, height = 600;
+    const svg = d3.select("svg");
+    const tooltip = d3.select(".tooltip");
+
+    // Create a scale for bubble radii.
+    const radiusScale = d3.scaleSqrt()
+                          .domain(d3.extent(data, d => d.donations))
+                          .range([10, 50]);
+
+    // Define a color scale: winners in green, losers in red.
+    const colorScale = d3.scaleOrdinal()
+                         .domain([true, false])
+                         .range(["#4CAF50", "#F44336"]);
+
+    // Grouping by region:
+    // Here we arrange the bubbles in vertical columns, one per region.
+    // The x-coordinate is based on the region index; all bubbles are centered vertically.
+    function getX(d) {
+      const index = regionTypes.indexOf(d.Region);
+      const columnWidth = width / regionTypes.length;
+      return columnWidth / 2 + index * columnWidth;
+    }
+    function getY(d) {
+      return height / 2;
+    }
+
+    // Set up a force simulation.
+    const simulation = d3.forceSimulation(data)
+                         .force("x", d3.forceX(d => getX(d)).strength(0.1))
+                         .force("y", d3.forceY(d => getY(d)).strength(0.1))
+                         .force("collide", d3.forceCollide(d => radiusScale(d.donations) + 2))
+                         .on("tick", ticked);
+
+    // (Optional) If you were using clipPaths in your previous version, you could reinsert them here.
+    // For simplicity, this version omits them since we're displaying only a single short label.
+
+    // Compute a threshold for label display.
+    // In this example, if a bubble's radius is less than or equal to Damon Zdunich's, we suppress its label.
+    const exampleCandidate = data.find(d => d.candidate === "Damon Zdunich");
+    const labelThreshold = exampleCandidate ? radiusScale(exampleCandidate.donations) : 30;
+
+    // Create a group (<g>) for each candidate.
+    const nodes = svg.selectAll("g.node")
+                     .data(data)
+                     .enter()
+                     .append("g")
+                     .attr("class", "node")
+                     .call(d3.drag()
+                        .on("start", (event, d) => {
+                          if (!event.active) simulation.alphaTarget(0.3).restart();
+                          d.fx = d.x;
+                          d.fy = d.y;
+                        })
+                        .on("drag", (event, d) => {
+                          d.fx = event.x;
+                          d.fy = event.y;
+                        })
+                        .on("end", (event, d) => {
+                          if (!event.active) simulation.alphaTarget(0);
+                          d.fx = null;
+                          d.fy = null;
+                        }));
+
+    // Append the circle for each candidate.
+    nodes.append("circle")
+         .attr("class", "bubble")
+         .attr("r", d => radiusScale(d.donations))
+         .attr("fill", d => colorScale(d.won))
+         .on("mouseover", function(event, d) {
+           // Increase stroke width on hover.
+           d3.select(this).attr("stroke-width", 3);
+           tooltip.transition().duration(200).style("opacity", 0.9);
+           tooltip.html(`<strong>${d.candidate}</strong><br/>
+                         Donations: $${d.donations.toLocaleString()}<br/>
+                         Race: ${d.race}<br/>
+                         Outcome: ${d.won ? "Won" : "Lost"}`)
+                  .style("left", (event.pageX + 10) + "px")
+                  .style("top", (event.pageY - 28) + "px");
+         })
+         .on("mouseout", function(event, d) {
+           d3.select(this).attr("stroke-width", 1);
+           tooltip.transition().duration(500).style("opacity", 0);
+         });
+
+    // Append text labels for candidate last names only if the bubble's radius is larger than our threshold.
+    nodes.filter(d => radiusScale(d.donations) > labelThreshold)
+         .append("text")
+         .attr("text-anchor", "middle")
+         .style("pointer-events", "none")
+         .each(function(d) {
+           const names = d.candidate.split(" ");
+           const lastName = names[names.length - 1];
+           d3.select(this)
+             .append("tspan")
+             .attr("x", 0)
+             .attr("dy", "0.35em")
+             .text(lastName)
+             .style("font-size", "18px");
+         })
+         .style("fill", "#fff");
+
+    function ticked() {
+      nodes.attr("transform", d => `translate(${d.x},${d.y})`);
+    }
+
+    // Add headers for each region at the top.
+    svg.selectAll(".regionLabel")
+       .data(regionTypes)
+       .enter()
+       .append("text")
+       .attr("class", "regionLabel")
+       .attr("x", (d, i) => (width / regionTypes.length) * (i + 0.5))
+       .attr("y", 30)
+       .attr("text-anchor", "middle")
+       .text(d => d)
+       .style("font-size", "16px");
+    
+    // Add a legend at the bottom-left.
+    const legend = svg.append("g")
+                      .attr("class", "legend")
+                      .attr("transform", "translate(20," + (height - 60) + ")");
+    
+    legend.append("rect")
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("width", 15)
+          .attr("height", 15)
+          .attr("fill", "#4CAF50");
+    legend.append("text")
+          .attr("x", 20)
+          .attr("y", 12)
+          .text("Won");
+    
+    legend.append("rect")
+          .attr("x", 80)
+          .attr("y", 0)
+          .attr("width", 15)
+          .attr("height", 15)
+          .attr("fill", "#F44336");
+    legend.append("text")
+          .attr("x", 100)
+          .attr("y", 12)
+          .text("Lost");
+    
+    legend.append("text")
+          .attr("x", 0)
+          .attr("y", 35)
+          .text("Sum of donations across all regions: $393,806.99");
+  </script>
+</body>
+</html>
