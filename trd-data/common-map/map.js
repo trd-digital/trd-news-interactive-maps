@@ -581,7 +581,7 @@ const trdDataCommonMap = (options) => {
         new MapboxGLButtonControl({
           className: "map-theme",
           title: "Theme",
-          eventHandler: () => trdTheme.onToggle(),
+          eventHandler: () => trdTheme.toggle(),
         }),
         "top-right"
       );

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://therealdeal.com/favicon.ico"
+    />
+
+    <!-- Primary Meta Tags -->
+    <title>Dallas Texas Sales Table - The Real Deal</title>
+    <meta name="title" content="Dallas Texas Sales Table - The Real Deal" />
+    <meta
+      name="description"
+      content="Latest Dallas Texas sales in table view."
+    />
+    <link
+      rel="canonical"
+      href="https://therealdeal.com/data/miami/2024/priciest-south-florida-sales/"
+    />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://therealdeal.com/data/miami/2024/priciest-south-florida-sales/"
+    />
+    <meta property="og:title" content="Dallas Texas Sales - The Real Deal" />
+    <meta property="og:description" content="Latest Dallas Texas Sales" />
+    <meta
+      property="og:image"
+      content="https://static.therealdeal.com/wp-content/uploads/2019/10/trd-logo-16x9.jpg"
+    />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta
+      property="twitter:url"
+      content="https://therealdeal.com/data/miami/2024/priciest-south-florida-sales/"
+    />
+    <meta
+      property="twitter:title"
+      content="Dallas Texas Sales - The Real Deal"
+    />
+    <meta property="twitter:description" content="Latest Dallas Texas Sales" />
+    <meta
+      property="twitter:image"
+      content="https://static.therealdeal.com/wp-content/uploads/2019/10/trd-logo-16x9.jpg"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/bootstrap-table.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/extensions/sticky-header/bootstrap-table-sticky-header.css"
+    />
+    <link rel="stylesheet" href="../trd-data/common-table/table.css" />
+
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-K694XL6");
+    </script>
+    <!-- End Google Tag Manager -->
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-K694XL6"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <main>
+      <table id="table"></table>
+    </main>
+
+    <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/bootstrap-table.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/extensions/sticky-header/bootstrap-table-sticky-header.min.js"></script>
+    <script src="https://static.therealdeal.com/library/theme.js?v=1"></script>
+    <script src="../trd-data/common-table/table.js"></script>
+    <script type="text/javascript">
+      const displayColumns = [
+        { dataField: "Doc Type", name: "Doc Type", visible: true },
+        { dataField: "Doc Number", name: "Doc Number", visible: true },
+        {
+          dataField: "Recorded Date",
+          name: "Recorded Date",
+          visible: true,
+          sorter: (a, b) => {
+            if (
+              TrdFormatters.isEmptyValue(a) ||
+              TrdFormatters.isEmptyValue(b)
+            ) {
+              return 0;
+            }
+            return new Date(a).getTime() - new Date(b).getTime();
+          },
+        },
+        { dataField: "Grantor", name: "Grantor", visible: true },
+        { dataField: "Grantee", name: "Grantee", visible: true },
+        {
+          dataField: "Property Address",
+          name: "Property Address",
+          visible: true,
+        },
+        { dataField: "Town", name: "Town", visible: true },
+        {
+          dataField: "Legal Description",
+          name: "Legal Description",
+        },
+        {
+          dataField: "Record Link",
+          name: "Record Link",
+          visible: true,
+          formatter: (value) => {
+            return `<a href="${value}" target="_blank" rel="noopener noreferrer">View Record</a>`;
+          },
+        },
+        { dataField: "SubdivisionName", name: "SubdivisionName" },
+        { dataField: "Lot", name: "Lot" },
+        { dataField: "Block", name: "Block" },
+        { dataField: "Township", name: "Township" },
+        { dataField: "Reference", name: "Reference" },
+        { dataField: "Account Number", name: "Account Number" },
+        { dataField: "Appraisal Year", name: "Appraisal Year" },
+        { dataField: "Division CD", name: "Division CD" },
+        { dataField: "Owner Name1", name: "Owner Name1" },
+        { dataField: "Owner Name2", name: "Owner Name2" },
+        {
+          dataField: "Owner Address Line1",
+          name: "Owner Address Line1",
+        },
+        {
+          dataField: "Owner Address Line2",
+          name: "Owner Address Line2",
+        },
+        {
+          dataField: "Owner Address Line3",
+          name: "Owner Address Line3",
+        },
+        {
+          dataField: "Owner Address Line4",
+          name: "Owner Address Line4",
+        },
+        { dataField: "Owner City", name: "Owner City" },
+        { dataField: "Owner State", name: "Owner State" },
+        { dataField: "Owner ZipCode", name: "Owner ZipCode" },
+        { dataField: "Owner Country", name: "Owner Country" },
+        { dataField: "Property City", name: "Property City" },
+        {
+          dataField: "Property ZipCode",
+          name: "Property ZipCode",
+        },
+        { dataField: "NBND CD", name: "NBND CD" },
+        { dataField: "Legal1", name: "Legal1" },
+        { dataField: "Legal2", name: "Legal2" },
+        { dataField: "Legal3", name: "Legal3" },
+        { dataField: "Deed TXFR Date", name: "Deed TXFR Date" },
+        { dataField: "GIS Parcel ID", name: "GIS Parcel ID" },
+      ];
+
+      const fetchDataFilterCallback = (data) => {
+        return data.features.map((item) => {
+          return {
+            ...item.properties,
+          };
+        });
+      };
+
+      TrdDataCommonTable({
+        filePath:
+          "https://static.therealdeal.com/interactive-maps/dallas-transactions-map.geojson",
+        eventCategory: "texas-dallas-transactions-table",
+        displayColumns,
+        fetchDataFilterCallback,
+        tableConfig: {
+          sortName: TrdFormatters.getFieldName("Recorded Date"),
+        },
+      });
+    </script>
+  </body>
+</html>
