@@ -41,6 +41,24 @@
     .legend text {
       font-size: 16px;
     }
+    /* Media query: hide the graphic on devices with a screen width of 768px or less */
+    @media screen and (max-width: 768px) {
+      svg,
+      .tooltip,
+      h2,
+      .legend,
+      .raceLabel {
+        display: none;
+      }
+      /* Optionally, you can display a message indicating the graphic is not available */
+      body::after {
+        content: "The interactive graphic is not available on mobile devices.";
+        display: block;
+        text-align: center;
+        font-size: 18px;
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -120,19 +138,8 @@
                          .force("collide", d3.forceCollide(d => radiusScale(d.donations) + 2))
                          .on("tick", ticked);
     
-    // Append a <defs> element and create unique clipPaths for each candidate so that text is limited to the bubble.
-    // const defs = svg.append("defs");
-    // data.forEach((d, i) => {
-    //   defs.append("clipPath")
-    //       .attr("id", "clip-" + i)
-    //       .append("circle")
-    //       .attr("r", radiusScale(d.donations) * 0.85)  // Slightly smaller than the bubble.
-    //       .attr("cx", 0)
-    //       .attr("cy", 0);
-    // });
-    
     // Compute a threshold for label display.
-    // In this example, if a bubble's radius is less than or equal to Tom Suffredin's, we suppress its label.
+    // In this example, if a bubble's radius is less than or equal to Damon Zdunich's, we suppress its label.
     const tom = data.find(d => d.candidate === "Damon Zdunich");
     const labelThreshold = tom ? radiusScale(tom.donations) : 30;
     
@@ -183,7 +190,6 @@
     nodes.filter(d => radiusScale(d.donations) > labelThreshold)
          .append("text")
          .attr("text-anchor", "middle")
-         .attr("clip-path", (d, i) => "url(#clip-" + i + ")")
          .style("pointer-events", "none")
          .each(function(d) {
            const names = d.candidate.split(" ");
