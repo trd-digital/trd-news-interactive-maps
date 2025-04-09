@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Campaign Donations Bubble Chart</title>
+  <!-- Load D3.js via CDN -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    .tooltip {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      pointer-events: none;
+      font-size: 12px;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+    .bubble {
+      cursor: pointer;
+      stroke: #fff;
+      stroke-width: 1px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Campaign Donations Bubble Chart</h2>
+  <!-- The SVG container for our bubble chart -->
+  <svg width="960" height="600"></svg>
+  <!-- Hidden tooltip element -->
+  <div class="tooltip"></div>
+  
+  <script>
+    // Candidate data: donation amounts are in dollars
+    const data = [
+      { candidate: "Brian Brubaker", donations: 13387.80, won: true, race: "Mayor of Round Lake" },
+      { candidate: "Chris Brown", donations: 12140.28, won: true, race: "Mayor of Morris" },
+      { candidate: "Chris Curtis", donations: 10388.64, won: true, race: "Mayor of Kankakee" },
+      { candidate: "Clare Kelly", donations: 17233.85, won: true, race: "Evanston City Council (1st Ward)" },
+      { candidate: "Colin Gilbert", donations: 31766.64, won: false, race: "Arlington Heights Trustee" },
+      { candidate: "Damon Zdunich", donations: 25810.50, won: false, race: "Joliet Trustee" },
+      { candidate: "Dan Brady", donations: 41782.12, won: true, race: "Bloomington Mayor" },
+      { candidate: "David Goins", donations: 14391.95, won: true, race: "Alton Mayor" },
+      { candidate: "Elizabeth Davies", donations: 22061.45, won: true, race: "Grayslake Mayor" },
+      { candidate: "Elizabeth Hellrung", donations: 8502.55, won: true, race: "Troy Alderman (Ward 1)" },
+      { candidate: "Greg Klemstein", donations: 5315.90, won: false, race: "Johnsburg Village Trustee" },
+      { candidate: "Jennifer Bruzan Taylor", donations: 16319.02, won: false, race: "Naperville City Council" },
+      { candidate: "John Pritchard", donations: 10400.85, won: false, race: "Galesburg Mayor" },
+      { candidate: "Kathleen Lorenz", donations: 27591.96, won: false, race: "Normal Mayor" },
+      { candidate: "LaTonya Jones", donations: 11948.85, won: false, race: "Hazel Crest Village Trustee" },
+      { candidate: "Madelyn Staack", donations: 17887.29, won: false, race: "Avon Township Trustee" },
+      { candidate: "Mike Adrieansen", donations: 2655.30, won: true, race: "Mayor of Manhattan" },
+      { candidate: "Parielle Davis", donations: 19152.58, won: true, race: "Evanston City Council (7th Ward)" },
+      { candidate: "Quin O'Brien", donations: 44324.92, won: false, race: "Mayor of Gurnee" },
+      { candidate: "Richard McLaughlin", donations: 3998.85, won: true, race: "Mayor of Island Lake" },
+      { candidate: "Rick Lauschke", donations: 11264.32, won: true, race: "Godfrey Village Trustee" },
+      { candidate: "Robert Seminary", donations: 6121.50, won: true, race: "Mayor of Round Lake Park" },
+      { candidate: "Tom Suffredin", donations: 19359.87, won: true, race: "Evanston City Council (6th Ward)" }
+    ];
+
+    // Define the dimensions for our SVG container
+    const width = 960;
+    const height = 600;
+
+    // Select the SVG element
+    const svg = d3.select("svg")
+                  .attr("width", width)
+                  .attr("height", height);
+
+    // Define the tooltip
+    const tooltip = d3.select(".tooltip");
+
+    // Create a hierarchical structure from our flat data.
+    // The sum method tells D3 to use the donations value as the size reference.
+    const root = d3.hierarchy({ children: data })
+                   .sum(d => d.donations);
+
+    // Use the pack layout to compute positions for each bubble
+    const packLayout = d3.pack()
+                         .size([width, height])
+                         .padding(5);
+
+    // Get the array of leaf nodes
+    const nodes = packLayout(root).leaves();
+
+    // Define a color scale:
+    // Winners are green (#4CAF50) and losers are red (#F44336)
+    const colorScale = d3.scaleOrdinal()
+                         .domain([true, false])
+                         .range(["#4CAF50", "#F44336"]);
+
+    // Create the bubbles (circles) and bind the data
+    svg.selectAll("circle")
+       .data(nodes)
+       .enter()
+       .append("circle")
+       .attr("class", "bubble")
+       .attr("cx", d => d.x)
+       .attr("cy", d => d.y)
+       .attr("r", d => d.r)
+       .attr("fill", d => colorScale(d.data.won))
+       .on("mouseover", (event, d) => {
+          tooltip.transition().duration(200).style("opacity", 0.9);
+          tooltip.html(`<strong>${d.data.candidate}</strong><br/>
+                        Donations: $${d.data.donations.toLocaleString()}<br/>
+                        Race: ${d.data.race}<br/>
+                        Outcome: ${d.data.won ? "Won" : "Lost"}`)
+                 .style("left", (event.pageX + 10) + "px")
+                 .style("top", (event.pageY - 28) + "px");
+       })
+       .on("mouseout", () => {
+          tooltip.transition().duration(500).style("opacity", 0);
+       });
+
+    // Optionally, add text labels to each bubble (e.g., using the first name)
+    svg.selectAll("text")
+       .data(nodes)
+       .enter()
+       .append("text")
+       .attr("x", d => d.x)
+       .attr("y", d => d.y)
+       .attr("dy", "0.3em")
+       .attr("text-anchor", "middle")
+       .text(d => d.data.candidate.split(" ")[0])
+       .style("font-size", d => Math.min(2 * d.r / d.data.candidate.length, 14) + "px")
+       .style("fill", "#fff");
+  </script>
+</body>
+</html>
