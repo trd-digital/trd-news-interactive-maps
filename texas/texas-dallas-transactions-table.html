@@ -171,12 +171,21 @@
         },
         { dataField: "Owner City", name: "Owner City" },
         { dataField: "Owner State", name: "Owner State" },
-        { dataField: "Owner ZipCode", name: "Owner ZipCode" },
+        {
+          dataField: "Owner ZipCode",
+          name: "Owner ZipCode",
+          formatter: (value) => {
+            return value.slice(0, 5);
+          },
+        },
         { dataField: "Owner Country", name: "Owner Country" },
         { dataField: "Property City", name: "Property City" },
         {
           dataField: "Property ZipCode",
           name: "Property ZipCode",
+          formatter: (value) => {
+            return value.slice(0, 5);
+          },
         },
         { dataField: "NBND CD", name: "NBND CD" },
         { dataField: "Legal1", name: "Legal1" },
