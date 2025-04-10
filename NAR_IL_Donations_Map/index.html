@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_d6a80a90397492be3061b4fedce10e87 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>    
+    
+<style>
+    .popup-content {
+        min-width: 250px;
+        font-size: 14px;
+        line-height: 1.4;
+        color: #333;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+    .leaflet-popup, .leaflet-popup-content-wrapper {
+        background-color: #f9f9f9;
+        border: 1px solid #bbb;
+        border-radius: 5px;
+        padding: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .leaflet-popup-tip {
+        background: #f9f9f9;
+    }
+</style>
+    
+    <h3 style="text-align:center; font-family:Arial, sans-serif; font-size:18px; color:#333; margin-top:10px;">
+        <b>NAR's Illinois Political Donations</b>
+    </h3>
+    
+     <div style="
+     position: fixed; 
+     bottom: 50px; left: 50px; width: 180px; 
+     background-color: white;
+     border:2px solid grey;
+     z-index:9999;
+     font-size:14px;
+     padding: 10px;
+     ">
+     <strong>Legend (Region)</strong><br>
+<i style="background:red;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>Collar counties<br><i style="background:blue;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>Suburban<br><i style="background:green;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>North Central<br><i style="background:purple;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>Southwest Central<br><i style="background:orange;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>West Central<br></div>
+    
+            <div class="folium-map" id="map_d6a80a90397492be3061b4fedce10e87" ></div>
+        
+</body>
+<script>    
+    
+            var map_d6a80a90397492be3061b4fedce10e87 = L.map(
+                "map_d6a80a90397492be3061b4fedce10e87",
+                {
+                    center: [40.4768909, -88.9920118],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 7,
+                    zoomControl: true,
+                    preferCanvas: false,
+                    scrollWheelZoom: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_91fa04b5f186e726f57d77cc19000000 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_d6a80a90397492be3061b4fedce10e87);
+        
+    
+            var tile_layer_11eb3391c4e1725c1b2de856ff57d3cf = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {"attribution": "Mapbox", "detectRetina": false, "maxNativeZoom": 20, "maxZoom": 20, "minZoom": 1, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_d6a80a90397492be3061b4fedce10e87);
+        
+    
+            L.control.fullscreen(
+                {"forceSeparateButton": false, "position": "topleft", "title": "Full Screen", "titleCancel": "Exit Full Screen"}
+            ).addTo(map_d6a80a90397492be3061b4fedce10e87);
+        
+    
+            var tile_layer_041569250959c36626a93049b92add3d = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+            var mini_map_1573fb85a44a9f91fc01b4398c51cf69 = new L.Control.MiniMap(
+                tile_layer_041569250959c36626a93049b92add3d,
+                {"autoToggleDisplay": false, "centerFixed": false, "collapsedHeight": 25, "collapsedWidth": 25, "height": 150, "minimized": false, "position": "bottomright", "toggleDisplay": true, "width": 150, "zoomAnimation": false, "zoomLevelOffset": -5}
+            );
+            map_d6a80a90397492be3061b4fedce10e87.addControl(mini_map_1573fb85a44a9f91fc01b4398c51cf69);
+        
+    
+            var marker_cluster_ccabc26f6f69a8c7c724d26f740dded8 = L.markerClusterGroup(
+                {}
+            );
+            map_d6a80a90397492be3061b4fedce10e87.addLayer(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var marker_153ec5d1979e77899f25618eade359d3 = L.marker(
+                [42.353355, -88.0934145],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_4a4d85edb947cb3d53f05ed520f4cb29 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_153ec5d1979e77899f25618eade359d3.setIcon(icon_4a4d85edb947cb3d53f05ed520f4cb29);
+        
+    
+        var popup_fe3dc56f855f4758ea7334652f3fd2ca = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4e643800bb732905a89b3928827c8921 = $(`<div id="html_4e643800bb732905a89b3928827c8921" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Brian Brubaker<br>         <strong>Donations:</strong> $13,387.80<br>         <strong>Outcome:</strong> Win<br>         <strong>Race:</strong> Mayor of Round Lake<br>         <strong>County:</strong> Lake<br>         <strong>Region:</strong> Collar counties     </div>     </div>`)[0];
+                popup_fe3dc56f855f4758ea7334652f3fd2ca.setContent(html_4e643800bb732905a89b3928827c8921);
+            
+        
+
+        marker_153ec5d1979e77899f25618eade359d3.bindPopup(popup_fe3dc56f855f4758ea7334652f3fd2ca)
+        ;
+
+        
+    
+    
+            var marker_c59f767edfecfe97a80d3cc52aff720a = L.marker(
+                [41.357254, -88.4211785],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_cafc18206bd026bf81a8eadc3789cb95 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_c59f767edfecfe97a80d3cc52aff720a.setIcon(icon_cafc18206bd026bf81a8eadc3789cb95);
+        
+    
+        var popup_1677d6eb76e062ee8a90eb0d258f1ce3 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_b76481dded683c4d44d6f0f01e6701ee = $(`<div id="html_b76481dded683c4d44d6f0f01e6701ee" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Chris Brown<br>         <strong>Donations:</strong> $12,140.28<br>         <strong>Outcome:</strong> Win<br>         <strong>Race:</strong> Mayor of Morris <br>         <strong>County:</strong> Grundy<br>         <strong>Region:</strong> Collar counties     </div>     </div>`)[0];
+                popup_1677d6eb76e062ee8a90eb0d258f1ce3.setContent(html_b76481dded683c4d44d6f0f01e6701ee);
+            
+        
+
+        marker_c59f767edfecfe97a80d3cc52aff720a.bindPopup(popup_1677d6eb76e062ee8a90eb0d258f1ce3)
+        ;
+
+        
+    
+    
+            var marker_926d58e0e977061baea012d4f8417665 = L.marker(
+                [41.1200325, -87.8611531],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_75b355872794425a908dc0ef33a980bf = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_926d58e0e977061baea012d4f8417665.setIcon(icon_75b355872794425a908dc0ef33a980bf);
+        
+    
+        var popup_dc8399f8dfd4ac50ee02b61e423c5f53 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_2ef26471ef9a142684c166fc26d8df19 = $(`<div id="html_2ef26471ef9a142684c166fc26d8df19" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Chris Curtis<br>         <strong>Donations:</strong> $10,388.64<br>         <strong>Outcome:</strong> Win<br>         <strong>Race:</strong> Mayor of Kankakee<br>         <strong>County:</strong> Kankakee<br>         <strong>Region:</strong> Collar counties     </div>     </div>`)[0];
+                popup_dc8399f8dfd4ac50ee02b61e423c5f53.setContent(html_2ef26471ef9a142684c166fc26d8df19);
+            
+        
+
+        marker_926d58e0e977061baea012d4f8417665.bindPopup(popup_dc8399f8dfd4ac50ee02b61e423c5f53)
+        ;
+
+        
+    
+    
+            var marker_45274f97577d7fadf0dd9a69dc9b0498 = L.marker(
+                [42.0568276, -87.6872172],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_c36804a7353e62ea864eab9290b59efe = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_45274f97577d7fadf0dd9a69dc9b0498.setIcon(icon_c36804a7353e62ea864eab9290b59efe);
+        
+    
+        var popup_d3ddcf71850c9da5fadf40768beba508 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_6824e8b9cf131435469765ca0644a4a5 = $(`<div id="html_6824e8b9cf131435469765ca0644a4a5" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Clare Kelly<br>         <strong>Donations:</strong> $17,233.85<br>         <strong>Outcome:</strong> Win<br>         <strong>Race:</strong> Evanston City Council (1st Ward) <br>         <strong>County:</strong> Cook<br>         <strong>Region:</strong> Suburban     </div>     </div>`)[0];
+                popup_d3ddcf71850c9da5fadf40768beba508.setContent(html_6824e8b9cf131435469765ca0644a4a5);
+            
+        
+
+        marker_45274f97577d7fadf0dd9a69dc9b0498.bindPopup(popup_d3ddcf71850c9da5fadf40768beba508)
+        ;
+
+        
+    
+    
+            var marker_9aa47caef539f68dd5190d420f52d7bf = L.marker(
+                [42.0883603, -87.98062650000001],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_015cffe5970c2aaa278778fd70d301b4 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_9aa47caef539f68dd5190d420f52d7bf.setIcon(icon_015cffe5970c2aaa278778fd70d301b4);
+        
+    
+        var popup_a04d1f713da4d104daec96ab664da61e = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_fb8d7c60d88b14a7fcfab0b12c335de4 = $(`<div id="html_fb8d7c60d88b14a7fcfab0b12c335de4" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Colin Gilbert<br>         <strong>Donations:</strong> $31,766.64<br>         <strong>Outcome:</strong> Lose<br>         <strong>Race:</strong> Arlington Heights Village Trustee (at-large) <br>         <strong>County:</strong> Cook<br>         <strong>Region:</strong> Suburban     </div>     </div>`)[0];
+                popup_a04d1f713da4d104daec96ab664da61e.setContent(html_fb8d7c60d88b14a7fcfab0b12c335de4);
+            
+        
+
+        marker_9aa47caef539f68dd5190d420f52d7bf.bindPopup(popup_a04d1f713da4d104daec96ab664da61e)
+        ;
+
+        
+    
+    
+            var marker_92f75aaf059e54daa035e9cee64bd3a0 = L.marker(
+                [41.5244335, -88.0854555],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_b1c6c9d7763b6c08e22076aa6b3a239a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_92f75aaf059e54daa035e9cee64bd3a0.setIcon(icon_b1c6c9d7763b6c08e22076aa6b3a239a);
+        
+    
+        var popup_339af71d310f42ffb4ab38d839255888 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_0492e2d32afa7101689503717302bf6e = $(`<div id="html_0492e2d32afa7101689503717302bf6e" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Damon Zdunich<br>         <strong>Donations:</strong> $25,810.50<br>         <strong>Outcome:</strong> Lose<br>         <strong>Race:</strong> Joliet City Council (at-large) <br>         <strong>County:</strong> Will<br>         <strong>Region:</strong> Collar counties     </div>     </div>`)[0];
+                popup_339af71d310f42ffb4ab38d839255888.setContent(html_0492e2d32afa7101689503717302bf6e);
+            
+        
+
+        marker_92f75aaf059e54daa035e9cee64bd3a0.bindPopup(popup_339af71d310f42ffb4ab38d839255888)
+        ;
+
+        
+    
+    
+            var marker_56d7574bf354477c3180849fa22856d6 = L.marker(
+                [40.4768909, -88.9920118],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_becbc26e788e9ce1df6ae7c1f391509a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_56d7574bf354477c3180849fa22856d6.setIcon(icon_becbc26e788e9ce1df6ae7c1f391509a);
+        
+    
+        var popup_f8c4b1bae76325bf854f326edf0c988a = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_d7709962a6f8b087d674dc79bda18ece = $(`<div id="html_d7709962a6f8b087d674dc79bda18ece" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Dan Brady<br>         <strong>Donations:</strong> $41,782.12<br>         <strong>Outcome:</strong> Win<br>         <strong>Race:</strong> Mayor of Bloomington<br>         <strong>County:</strong> McLean<br>         <strong>Region:</strong> North Central     </div>     </div>`)[0];
+                popup_f8c4b1bae76325bf854f326edf0c988a.setContent(html_d7709962a6f8b087d674dc79bda18ece);
+            
+        
+
+        marker_56d7574bf354477c3180849fa22856d6.bindPopup(popup_f8c4b1bae76325bf854f326edf0c988a)
+        ;
+
+        
+    
+    
+            var marker_0519bc9ef5976a6c1e557f9ff3d637af = L.marker(
+                [38.6818797, -90.1521665],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_211582bf8675f0d1fef819e84b996248 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_0519bc9ef5976a6c1e557f9ff3d637af.setIcon(icon_211582bf8675f0d1fef819e84b996248);
+        
+    
+        var popup_acd5ccb717420cbaedb74873ae3e9b9d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_fce0153d5eb36785a93311a90a2580c7 = $(`<div id="html_fce0153d5eb36785a93311a90a2580c7" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> David Goins<br>         <strong>Donations:</strong> $14,391.95<br>         <strong>Outcome:</strong> Win<br>         <strong>Race:</strong> Mayor of Alton<br>         <strong>County:</strong> Madison<br>         <strong>Region:</strong> Southwest Central     </div>     </div>`)[0];
+                popup_acd5ccb717420cbaedb74873ae3e9b9d.setContent(html_fce0153d5eb36785a93311a90a2580c7);
+            
+        
+
+        marker_0519bc9ef5976a6c1e557f9ff3d637af.bindPopup(popup_acd5ccb717420cbaedb74873ae3e9b9d)
+        ;
+
+        
+    
+    
+            var marker_135ffaf4dba6cbe8e8431e7719f8cdab = L.marker(
+                [42.34446639999999, -88.04174599999999],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_c3bb7023ba7f6513b4f4f9a7c88013e0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_135ffaf4dba6cbe8e8431e7719f8cdab.setIcon(icon_c3bb7023ba7f6513b4f4f9a7c88013e0);
+        
+    
+        var popup_43fdd5fcd6d2d144204ef7e42a87e7e5 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_c3322c456c0a23393b20e1659ea7661d = $(`<div id="html_c3322c456c0a23393b20e1659ea7661d" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Elizabeth Davies<br>         <strong>Donations:</strong> $22,061.45<br>         <strong>Outcome:</strong> Win<br>         <strong>Race:</strong> Mayor of Grayslake <br>         <strong>County:</strong> Lake<br>         <strong>Region:</strong> Collar counties     </div>     </div>`)[0];
+                popup_43fdd5fcd6d2d144204ef7e42a87e7e5.setContent(html_c3322c456c0a23393b20e1659ea7661d);
+            
+        
+
+        marker_135ffaf4dba6cbe8e8431e7719f8cdab.bindPopup(popup_43fdd5fcd6d2d144204ef7e42a87e7e5)
+        ;
+
+        
+    
+    
+            var marker_1234968455f99312cc9cac0997828822 = L.marker(
+                [38.7292147, -89.8831541],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_052b5f35e2dbe60adac42790547be0fd = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_1234968455f99312cc9cac0997828822.setIcon(icon_052b5f35e2dbe60adac42790547be0fd);
+        
+    
+        var popup_624bcd2e20dfecb1fa988a6d20f6f592 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_10c40430e9d71be11ee2a40502f9717f = $(`<div id="html_10c40430e9d71be11ee2a40502f9717f" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Elizabeth Hellrung<br>         <strong>Donations:</strong> $8,502.55<br>         <strong>Outcome:</strong> Win<br>         <strong>Race:</strong> Troy Alderman (1st Ward) <br>         <strong>County:</strong> Madison<br>         <strong>Region:</strong> Southwest Central     </div>     </div>`)[0];
+                popup_624bcd2e20dfecb1fa988a6d20f6f592.setContent(html_10c40430e9d71be11ee2a40502f9717f);
+            
+        
+
+        marker_1234968455f99312cc9cac0997828822.bindPopup(popup_624bcd2e20dfecb1fa988a6d20f6f592)
+        ;
+
+        
+    
+    
+            var marker_cc627897626d286177f953e2c0f29527 = L.marker(
+                [42.3800209, -88.2420315],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_2d08775bd88688987a994f63a57b362a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_cc627897626d286177f953e2c0f29527.setIcon(icon_2d08775bd88688987a994f63a57b362a);
+        
+    
+        var popup_8d4bc78f1d6a122cbb6fe29442d6cec2 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_db613cd3072d9610e358a3bbad36041f = $(`<div id="html_db613cd3072d9610e358a3bbad36041f" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Greg Klemstein<br>         <strong>Donations:</strong> $5,315.90<br>         <strong>Outcome:</strong> Lose<br>         <strong>Race:</strong> Johnsburg Village Trustee (at-large) <br>         <strong>County:</strong> McHenry <br>         <strong>Region:</strong> Collar counties     </div>     </div>`)[0];
+                popup_8d4bc78f1d6a122cbb6fe29442d6cec2.setContent(html_db613cd3072d9610e358a3bbad36041f);
+            
+        
+
+        marker_cc627897626d286177f953e2c0f29527.bindPopup(popup_8d4bc78f1d6a122cbb6fe29442d6cec2)
+        ;
+
+        
+    
+    
+            var marker_362f7e5c99c1939ec81525fe7e55656c = L.marker(
+                [41.7508391, -88.1535352],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_cadaf1b52bf62b13e1b5a823b1fb45cd = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_362f7e5c99c1939ec81525fe7e55656c.setIcon(icon_cadaf1b52bf62b13e1b5a823b1fb45cd);
+        
+    
+        var popup_a2c42b38e44ecb2834ba0011b638030b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_2368203110dc6644ea31a96c722625b8 = $(`<div id="html_2368203110dc6644ea31a96c722625b8" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Jennifer Bruzan Taylor<br>         <strong>Donations:</strong> $16,319.02<br>         <strong>Outcome:</strong> Lose<br>         <strong>Race:</strong> Naperville City Council<br>         <strong>County:</strong> DuPage/Will<br>         <strong>Region:</strong> Collar counties     </div>     </div>`)[0];
+                popup_a2c42b38e44ecb2834ba0011b638030b.setContent(html_2368203110dc6644ea31a96c722625b8);
+            
+        
+
+        marker_362f7e5c99c1939ec81525fe7e55656c.bindPopup(popup_a2c42b38e44ecb2834ba0011b638030b)
+        ;
+
+        
+    
+    
+            var marker_a4f532583f770555507c7a720d6896ab = L.marker(
+                [40.94781580000001, -90.3712395],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_3b5dab50756831f3c4a6d8b896719e66 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_a4f532583f770555507c7a720d6896ab.setIcon(icon_3b5dab50756831f3c4a6d8b896719e66);
+        
+    
+        var popup_f06c1cbeacfb75690bfed19ecb9f6428 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_10ea2244bf7fe5e8e43a2f7790e24a56 = $(`<div id="html_10ea2244bf7fe5e8e43a2f7790e24a56" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> John Pritchard<br>         <strong>Donations:</strong> $10,400.85<br>         <strong>Outcome:</strong> Lose<br>         <strong>Race:</strong> Mayor of Galesburg <br>         <strong>County:</strong> Knox<br>         <strong>Region:</strong> West Central     </div>     </div>`)[0];
+                popup_f06c1cbeacfb75690bfed19ecb9f6428.setContent(html_10ea2244bf7fe5e8e43a2f7790e24a56);
+            
+        
+
+        marker_a4f532583f770555507c7a720d6896ab.bindPopup(popup_f06c1cbeacfb75690bfed19ecb9f6428)
+        ;
+
+        
+    
+    
+            var marker_b84266d4e9904c9ded4484f3d227c856 = L.marker(
+                [40.5142026, -88.9906312],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_b888d798d93bc031a56c8a950ba204ee = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_b84266d4e9904c9ded4484f3d227c856.setIcon(icon_b888d798d93bc031a56c8a950ba204ee);
+        
+    
+        var popup_6d2232832d9fa5aa5e465068016fb1e1 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_9482610113dff33f449bb84b9e9904ba = $(`<div id="html_9482610113dff33f449bb84b9e9904ba" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Kathleen Lorenz<br>         <strong>Donations:</strong> $27,591.96<br>         <strong>Outcome:</strong> Lose <br>         <strong>Race:</strong> Mayor of Normal<br>         <strong>County:</strong> McLean<br>         <strong>Region:</strong> North Central     </div>     </div>`)[0];
+                popup_6d2232832d9fa5aa5e465068016fb1e1.setContent(html_9482610113dff33f449bb84b9e9904ba);
+            
+        
+
+        marker_b84266d4e9904c9ded4484f3d227c856.bindPopup(popup_6d2232832d9fa5aa5e465068016fb1e1)
+        ;
+
+        
+    
+    
+            var marker_ec1821df2a62ca9f9b0e73b8d88c4faf = L.marker(
+                [41.571701, -87.6944915],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_c2bb5f2534ea083b98dd4e9b457813c3 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_ec1821df2a62ca9f9b0e73b8d88c4faf.setIcon(icon_c2bb5f2534ea083b98dd4e9b457813c3);
+        
+    
+        var popup_efd9faeba2e1310ccd87f709d6a07f03 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_62097b4bb6b3ce4d21d697a8c170291a = $(`<div id="html_62097b4bb6b3ce4d21d697a8c170291a" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> LaTonya Jones<br>         <strong>Donations:</strong> $11,948.85<br>         <strong>Outcome:</strong> Lose<br>         <strong>Race:</strong> Hazel Crest Village Trustee (at-large) <br>         <strong>County:</strong> Cook<br>         <strong>Region:</strong> Suburban     </div>     </div>`)[0];
+                popup_efd9faeba2e1310ccd87f709d6a07f03.setContent(html_62097b4bb6b3ce4d21d697a8c170291a);
+            
+        
+
+        marker_ec1821df2a62ca9f9b0e73b8d88c4faf.bindPopup(popup_efd9faeba2e1310ccd87f709d6a07f03)
+        ;
+
+        
+    
+    
+            var marker_9136db0a9fa571c663a2b6de9ca1e3d2 = L.marker(
+                [42.3579855, -88.0705319],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_5ddbb5d7af57abd8621d1f5be9818db2 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_9136db0a9fa571c663a2b6de9ca1e3d2.setIcon(icon_5ddbb5d7af57abd8621d1f5be9818db2);
+        
+    
+        var popup_2aeb82225767914456ce025a32c67922 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_30dbd7ed136771ad1a486a7f62d1d173 = $(`<div id="html_30dbd7ed136771ad1a486a7f62d1d173" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Madelyn Staack<br>         <strong>Donations:</strong> $17,887.29<br>         <strong>Outcome:</strong> Lose<br>         <strong>Race:</strong> Avon Township Trustee (at-large)<br>         <strong>County:</strong> Lake<br>         <strong>Region:</strong> Collar counties     </div>     </div>`)[0];
+                popup_2aeb82225767914456ce025a32c67922.setContent(html_30dbd7ed136771ad1a486a7f62d1d173);
+            
+        
+
+        marker_9136db0a9fa571c663a2b6de9ca1e3d2.bindPopup(popup_2aeb82225767914456ce025a32c67922)
+        ;
+
+        
+    
+    
+            var marker_9a3958a1a5dedac7ca75312b5c9bbbd2 = L.marker(
+                [41.4225316, -87.98588629999999],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_33e422bbaf1999543dde20c736685a82 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_9a3958a1a5dedac7ca75312b5c9bbbd2.setIcon(icon_33e422bbaf1999543dde20c736685a82);
+        
+    
+        var popup_189153356d50e87f495b50a898775a74 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_c1b9181e814207c8176951fafc9195be = $(`<div id="html_c1b9181e814207c8176951fafc9195be" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Mike Adrieansen<br>         <strong>Donations:</strong> $2,655.30<br>         <strong>Outcome:</strong> Win<br>         <strong>Race:</strong> Mayor of Manhattan <br>         <strong>County:</strong> Will<br>         <strong>Region:</strong> Collar counties     </div>     </div>`)[0];
+                popup_189153356d50e87f495b50a898775a74.setContent(html_c1b9181e814207c8176951fafc9195be);
+            
+        
+
+        marker_9a3958a1a5dedac7ca75312b5c9bbbd2.bindPopup(popup_189153356d50e87f495b50a898775a74)
+        ;
+
+        
+    
+    
+            var marker_7635d7f7123f4e362ddd2619a42e0522 = L.marker(
+                [42.0568276, -87.6872172],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_838b414798d7a5d2faa5207ab610f439 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_7635d7f7123f4e362ddd2619a42e0522.setIcon(icon_838b414798d7a5d2faa5207ab610f439);
+        
+    
+        var popup_1a776c51f0386cda92cace049575c32f = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1ff1de75edcfb1f13e2817b7fff18d9c = $(`<div id="html_1ff1de75edcfb1f13e2817b7fff18d9c" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Parielle Davis<br>         <strong>Donations:</strong> $19,152.58<br>         <strong>Outcome:</strong> Win<br>         <strong>Race:</strong> Evanston City Council (7th Ward) <br>         <strong>County:</strong> Cook<br>         <strong>Region:</strong> Suburban     </div>     </div>`)[0];
+                popup_1a776c51f0386cda92cace049575c32f.setContent(html_1ff1de75edcfb1f13e2817b7fff18d9c);
+            
+        
+
+        marker_7635d7f7123f4e362ddd2619a42e0522.bindPopup(popup_1a776c51f0386cda92cace049575c32f)
+        ;
+
+        
+    
+    
+            var marker_ebc4d2096a396925d6a34fb1fa57f47d = L.marker(
+                [42.3702996, -87.90201859999999],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_a00c6f525e8719185cd607c708704e61 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_ebc4d2096a396925d6a34fb1fa57f47d.setIcon(icon_a00c6f525e8719185cd607c708704e61);
+        
+    
+        var popup_148bc7286de30bcf515a05da2de96c2f = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4345198c8a4ff8b367507b528a7094cb = $(`<div id="html_4345198c8a4ff8b367507b528a7094cb" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Quin O'Brien<br>         <strong>Donations:</strong> $44,324.92<br>         <strong>Outcome:</strong> Lose<br>         <strong>Race:</strong> Mayor of Gurnee<br>         <strong>County:</strong> Lake<br>         <strong>Region:</strong> Collar counties     </div>     </div>`)[0];
+                popup_148bc7286de30bcf515a05da2de96c2f.setContent(html_4345198c8a4ff8b367507b528a7094cb);
+            
+        
+
+        marker_ebc4d2096a396925d6a34fb1fa57f47d.bindPopup(popup_148bc7286de30bcf515a05da2de96c2f)
+        ;
+
+        
+    
+    
+            var marker_8a8f0fcc2f556d41310a3a034b35fd80 = L.marker(
+                [42.2761341, -88.19202720000001],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_87f74d9202b92023f4535f8e7a37108f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_8a8f0fcc2f556d41310a3a034b35fd80.setIcon(icon_87f74d9202b92023f4535f8e7a37108f);
+        
+    
+        var popup_0d97c4fcbf6c742b5dafee80a2b1959b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_ee57f894c68d93c3ffe748b2b862755e = $(`<div id="html_ee57f894c68d93c3ffe748b2b862755e" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Richard McLaughlin<br>         <strong>Donations:</strong> $3,998.85<br>         <strong>Outcome:</strong> Win<br>         <strong>Race:</strong> Mayor of Island Lake<br>         <strong>County:</strong> Lake/McHenry<br>         <strong>Region:</strong> Collar counties     </div>     </div>`)[0];
+                popup_0d97c4fcbf6c742b5dafee80a2b1959b.setContent(html_ee57f894c68d93c3ffe748b2b862755e);
+            
+        
+
+        marker_8a8f0fcc2f556d41310a3a034b35fd80.bindPopup(popup_0d97c4fcbf6c742b5dafee80a2b1959b)
+        ;
+
+        
+    
+    
+            var marker_5b608eeccfef2853bea3787377e98f6a = L.marker(
+                [38.9687219, -90.1934335],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_8bd938a0d02184e0975240842ecb36fa = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_5b608eeccfef2853bea3787377e98f6a.setIcon(icon_8bd938a0d02184e0975240842ecb36fa);
+        
+    
+        var popup_da52bf9efa8bd8221524b19e3dc0937a = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_2cfbd4c41309e6a1f62eb0d7067c9e8e = $(`<div id="html_2cfbd4c41309e6a1f62eb0d7067c9e8e" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Rick Lauschke<br>         <strong>Donations:</strong> $11,264.32<br>         <strong>Outcome:</strong> Win<br>         <strong>Race:</strong> Godfrey Village Trustee (at-large)<br>         <strong>County:</strong> Madison<br>         <strong>Region:</strong> Southwest Central     </div>     </div>`)[0];
+                popup_da52bf9efa8bd8221524b19e3dc0937a.setContent(html_2cfbd4c41309e6a1f62eb0d7067c9e8e);
+            
+        
+
+        marker_5b608eeccfef2853bea3787377e98f6a.bindPopup(popup_da52bf9efa8bd8221524b19e3dc0937a)
+        ;
+
+        
+    
+    
+            var marker_38e5f0cc8d771764a76f6b23678dc4ee = L.marker(
+                [42.3569661, -88.0767474],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_9a31dba36c96b6f6a113563f7882fdde = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_38e5f0cc8d771764a76f6b23678dc4ee.setIcon(icon_9a31dba36c96b6f6a113563f7882fdde);
+        
+    
+        var popup_94e9ec013893b2d1282b7d433a83d5ed = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_91cd8419c36cdfed429454f34aab404f = $(`<div id="html_91cd8419c36cdfed429454f34aab404f" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Robert Seminary<br>         <strong>Donations:</strong> $6,121.50<br>         <strong>Outcome:</strong> Win<br>         <strong>Race:</strong> Mayor of Round Lake Park<br>         <strong>County:</strong> Lake <br>         <strong>Region:</strong> Collar counties     </div>     </div>`)[0];
+                popup_94e9ec013893b2d1282b7d433a83d5ed.setContent(html_91cd8419c36cdfed429454f34aab404f);
+            
+        
+
+        marker_38e5f0cc8d771764a76f6b23678dc4ee.bindPopup(popup_94e9ec013893b2d1282b7d433a83d5ed)
+        ;
+
+        
+    
+    
+            var marker_d8caf0106dc225bcebef8bd0905a8cfc = L.marker(
+                [42.0568276, -87.6872172],
+                {}
+            ).addTo(marker_cluster_ccabc26f6f69a8c7c724d26f740dded8);
+        
+    
+            var icon_220370f59d4785a9150309a1c9ac0e83 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_d8caf0106dc225bcebef8bd0905a8cfc.setIcon(icon_220370f59d4785a9150309a1c9ac0e83);
+        
+    
+        var popup_432a092e8d7c0a65099aff56eff01444 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_459b4df2526c581cfff6ca7972e39a0b = $(`<div id="html_459b4df2526c581cfff6ca7972e39a0b" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Candidate:</strong> Tom Suffredin<br>         <strong>Donations:</strong> $19,359.87<br>         <strong>Outcome:</strong> Win<br>         <strong>Race:</strong> Evanston City Council (6th Ward) <br>         <strong>County:</strong> Cook<br>         <strong>Region:</strong> Suburban     </div>     </div>`)[0];
+                popup_432a092e8d7c0a65099aff56eff01444.setContent(html_459b4df2526c581cfff6ca7972e39a0b);
+            
+        
+
+        marker_d8caf0106dc225bcebef8bd0905a8cfc.bindPopup(popup_432a092e8d7c0a65099aff56eff01444)
+        ;
+
+        
+    
+</script>
