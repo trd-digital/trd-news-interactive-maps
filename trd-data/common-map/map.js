@@ -84,9 +84,17 @@ const trdDataCommonMap = (options) => {
       dark: "white",
       light: "black",
     },
+    loadingEnabled: false,
   };
 
   const settings = Object.assign({}, defaults, options);
+
+  const loading = settings.loadingEnabled
+    ? TrdLoading({
+        init: true,
+        active: true,
+      })
+    : undefined;
 
   mapboxgl.accessToken =
     "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
@@ -609,25 +617,27 @@ const trdDataCommonMap = (options) => {
 
     eventListeners: () => {
       mapObj.on("load", () => {
-        if (!settings?.filePath) return;
+        if (!settings?.filePath) {
+          return;
+        }
+        if (settings.loadingEnabled) {
+          loading.show();
+        }
 
         fetch(settings.filePath)
           .then((response) => {
             return response.json();
           })
           .then((data) => {
-            if (settings.fetchDataFilterCallback) {
-              mapData = {
-                ...data,
-                features: data.features.filter(
-                  settings.fetchDataFilterCallback
-                ),
-              };
-            } else {
-              mapData = data;
-            }
-
+            mapData = settings.fetchDataFilterCallback
+              ? settings.fetchDataFilterCallback(data)
+              : data;
             map.load(mapData);
+          })
+          .finally(() => {
+            if (settings.loadingEnabled) {
+              loading.hide();
+            }
           });
       });
 

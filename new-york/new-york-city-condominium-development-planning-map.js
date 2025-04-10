@@ -269,6 +269,7 @@
     filterFields,
     mapLayerFieldKey: "Instrument Status",
     paintCircleColorType: "case",
+    loadingEnabled: true,
     mapLayerPaint: {
       "circle-radius": {
         base: 1.75,

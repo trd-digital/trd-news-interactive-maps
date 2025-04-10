@@ -224,7 +224,12 @@
   ];
 
   const fetchDataFilterCallback = (data) => {
-    return parseInt(data.properties["Sale Price"]) >= minimumSalePrice;
+    return {
+      ...data,
+      features: data.features.filter((feature) => {
+        return parseInt(feature.properties["Sale Price"]) > minimumSalePrice;
+      }),
+    };
   };
 
   window.map = trdDataCommonMap({
@@ -245,6 +250,7 @@
     modalDisplayFields,
     filterFields,
     fetchDataFilterCallback,
+    loadingEnabled: true,
     mapLayerPaint: {
       "circle-radius": {
         base: 1.75,

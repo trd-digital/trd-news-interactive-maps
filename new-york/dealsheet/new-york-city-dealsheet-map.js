@@ -170,7 +170,12 @@
   ];
 
   const fetchDataFilterCallback = (data) => {
-    return data.properties["Deal Type"] === dealType;
+    return {
+      ...data,
+      features: data.features.filter((feature) => {
+        return feature.properties["Deal Type"] === dealType;
+      }),
+    };
   };
 
   const getDefaultColors = (dealType) => {
@@ -220,6 +225,7 @@
     mapLayerFieldKey: "Deal Type",
     defaultColors: getDefaultColors(dealType),
     paintCircleColorType: "",
+    loadingEnabled: true,
     mapLayerPaint: {
       "circle-radius": {
         base: 1.75,

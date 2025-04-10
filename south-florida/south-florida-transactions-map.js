@@ -245,10 +245,15 @@
   ];
 
   const fetchDataFilterCallback = (data) => {
-    return (
-      data.properties["physical_address_lat"] !== 0 &&
-      data.properties["physical_address_lng"] !== 0
-    );
+    return {
+      ...data,
+      features: data.features.filter((feature) => {
+        return (
+          feature.properties["physical_address_lat"] !== 0 &&
+          feature.properties["physical_address_lng"] !== 0
+        );
+      }),
+    };
   };
 
   window.map = trdDataCommonMap({
@@ -269,6 +274,7 @@
     modalDisplayFields,
     filterFields,
     fetchDataFilterCallback,
+    loadingEnabled: true,
     mapLayerFilter: ["==", ["get", "Doc Type"], "DEED"],
     mapLayerPaint: {
       "circle-radius": {

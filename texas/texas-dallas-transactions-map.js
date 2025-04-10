@@ -121,6 +121,7 @@
       dark: "#1E88E5",
     },
     paintCircleColorType: "",
+    loadingEnabled: true,
     mapLayerPaint: {
       "circle-radius": {
         base: 1.75,

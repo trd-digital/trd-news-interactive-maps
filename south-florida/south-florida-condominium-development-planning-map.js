@@ -191,11 +191,16 @@
 
   const list = [];
 
-  fetchDataFilterCallback = (item) => {
-    if (!list.includes(item.properties["County"])) {
-      list.push(item.properties["County"]);
-    }
-    return true;
+  fetchDataFilterCallback = (data) => {
+    return {
+      ...data,
+      features: data.features.filter((item) => {
+        if (!list.includes(item.properties["County"])) {
+          list.push(item.properties["County"]);
+        }
+        return true;
+      }),
+    };
   };
 
   window.list = list;
@@ -220,6 +225,7 @@
     filterFields,
     mapLayerFieldKey: "Primary Status",
     paintCircleColorType: "case",
+    loadingEnabled: true,
     mapLayerPaint: {
       "circle-radius": 6,
     },

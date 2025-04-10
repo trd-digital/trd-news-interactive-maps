@@ -195,7 +195,12 @@
   ];
 
   const fetchDataFilterCallback = (data) => {
-    return parseInt(data.properties["Sale Price"]) > minimumSalePrice;
+    return {
+      ...data,
+      features: data.features.filter((feature) => {
+        return parseInt(feature.properties["Sale Price"]) > minimumSalePrice;
+      }),
+    };
   };
 
   window.map = trdDataCommonMap({
@@ -206,9 +211,9 @@
     filterElementId: "map-filters",
     legendElementId: "legend",
     resultElementId: "result",
-    mapCenterLat: 41.88458437713242,
-    mapCenterLng: -87.64766953501464,
-    zoom: 8,
+    mapCenterLat: 41.880659,
+    mapCenterLng: -87.917987,
+    zoom: 10,
     minZoom: 9,
     legendKeys,
     dataPointKeys: legendKeys[0].options,
@@ -216,6 +221,7 @@
     modalDisplayFields,
     filterFields,
     fetchDataFilterCallback,
+    loadingEnabled: true,
     mapLayerPaint: {
       "circle-radius": {
         base: 1.75,
