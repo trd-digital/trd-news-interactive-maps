@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Content Filter Example with More Dummy Data</title>
+  <!-- Include React, ReactDOM, and Babel from CDNs -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+    }
+    .post {
+      margin-bottom: 2rem;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    // Arrays of professions and cities to use for dummy post generation.
+    const professions = ["lawyer", "commercial-broker", "investor", "residential-broker", "developer", "appraiser"];
+    const cities = ["nyc", "miami", "la", "chicago", "dallas", "san-francisco"];
+
+    // Generate 20 dummy posts with a simple pattern.
+    const postsData = Array.from({ length: 20 }, (_, i) => {
+      const profession = professions[i % professions.length];
+      const city = cities[i % cities.length];
+      return {
+        id: i + 1,
+        profession,
+        city,
+        title: `Dummy Post #${i + 1}: ${profession} in ${city.toUpperCase()}`,
+        content:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, urna eu tincidunt consectetur, nisi nunc aliquam eros, a gravida metus nisi in neque.',
+      };
+    });
+
+    function App() {
+      // State for selected profession and city
+      const [selectedProfession, setSelectedProfession] = useState('');
+      const [selectedCity, setSelectedCity] = useState('');
+
+      // Memoize filtered posts based on selection
+      const filteredPosts = useMemo(() => {
+        return postsData.filter((post) => {
+          const matchesProfession = selectedProfession
+            ? post.profession === selectedProfession
+            : true;
+          const matchesCity = selectedCity ? post.city === selectedCity : true;
+          return matchesProfession && matchesCity;
+        });
+      }, [selectedProfession, selectedCity]);
+
+      return (
+        <div style={{ padding: '2rem' }}>
+          <h1>Content Filter Example with More Dummy Data</h1>
+          <p>
+            I am a{' '}
+            <select
+              value={selectedProfession}
+              onChange={(e) => setSelectedProfession(e.target.value)}
+            >
+              <option value="">Select Profession</option>
+              <option value="residential-broker">Residential Broker</option>
+              <option value="commercial-broker">Commercial Broker</option>
+              <option value="lawyer">Lawyer</option>
+              <option value="appraiser">Appraiser</option>
+              <option value="developer">Developer</option>
+              <option value="investor">Investor</option>
+            </select>{' '}
+            in{' '}
+            <select
+              value={selectedCity}
+              onChange={(e) => setSelectedCity(e.target.value)}
+            >
+              <option value="">Select City</option>
+              <option value="nyc">NYC</option>
+              <option value="miami">Miami</option>
+              <option value="la">LA</option>
+              <option value="chicago">Chicago</option>
+              <option value="dallas">Dallas</option>
+              <option value="san-francisco">San Francisco</option>
+            </select>
+          </p>
+
+          <div>
+            {filteredPosts.length > 0 ? (
+              filteredPosts.map((post) => (
+                <div key={post.id} className="post">
+                  <h2>{post.title}</h2>
+                  <p>{post.content}</p>
+                </div>
+              ))
+            ) : (
+              <p>No posts match the selected criteria.</p>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // Render the App component into the root div
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>

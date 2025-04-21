@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_73652ddda1ae46e663c2078a544a7a9e {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.css"/>
+</head>
+<body>    
+    
+<style>
+    .popup-content {
+        min-width: 300px;
+        font-size: 14px;
+        line-height: 1.4;
+        color: #333;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+    .leaflet-popup, .leaflet-popup-content-wrapper {
+        background-color: #f9f9f9;
+        border: 1px solid #bbb;
+        border-radius: 5px;
+        padding: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .leaflet-popup-tip {
+        background: #f9f9f9;
+    }
+</style>
+    
+    <h3 style="text-align:center; font-family:Arial, sans-serif; font-size:18px; color:#333; margin-top:10px;">
+        <b>South and West Side Distress</b>
+    </h3>
+    
+     <div style="
+     position: fixed; 
+     bottom: 50px; left: 50px; width: 150px; 
+     background-color: white;
+     border:2px solid grey;
+     z-index:9999;
+     font-size:14px;
+     padding: 10px;
+     ">
+     <strong>Legend</strong><br>
+<i style="background:red;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>Yissocher "Izzy" Rotenberg<br><i style="background:blue;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>Naftalie Berger<br></div>
+    
+            <div class="folium-map" id="map_73652ddda1ae46e663c2078a544a7a9e" ></div>
+        
+</body>
+<script>    
+    
+            var map_73652ddda1ae46e663c2078a544a7a9e = L.map(
+                "map_73652ddda1ae46e663c2078a544a7a9e",
+                {
+                    center: [41.7508902, -87.6017011],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: false,
+                    scrollWheelZoom: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_b87aa4e02faa7f9d6ff9335765f2b7ed = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var tile_layer_973a1bf651d0cafabdc2538da937727d = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {"attribution": "Mapbox", "detectRetina": false, "maxNativeZoom": 20, "maxZoom": 20, "minZoom": 1, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            L.control.fullscreen(
+                {"forceSeparateButton": false, "position": "topleft", "title": "Full Screen", "titleCancel": "Exit Full Screen"}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var tile_layer_51556ce097f4c31bb830049b73b8becb = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+            var mini_map_8eb6ec66a215aa9f1017c90af3cadc85 = new L.Control.MiniMap(
+                tile_layer_51556ce097f4c31bb830049b73b8becb,
+                {"autoToggleDisplay": false, "centerFixed": false, "collapsedHeight": 25, "collapsedWidth": 25, "height": 150, "minimized": false, "position": "bottomright", "toggleDisplay": true, "width": 150, "zoomAnimation": false, "zoomLevelOffset": -5}
+            );
+            map_73652ddda1ae46e663c2078a544a7a9e.addControl(mini_map_8eb6ec66a215aa9f1017c90af3cadc85);
+        
+    
+            var marker_31cb448deb24b9e51d27d4cea8d300d2 = L.marker(
+                [41.7508902, -87.6017011],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_79a36b312ce53593e93cd4d52860cb9f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_31cb448deb24b9e51d27d4cea8d300d2.setIcon(icon_79a36b312ce53593e93cd4d52860cb9f);
+        
+    
+        var popup_bb6b25dcd5eec16eff4fcc7e6d4ee05b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_f68d2bd95cd725839e00d23b8c96b416 = $(`<div id="html_f68d2bd95cd725839e00d23b8c96b416" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 7908 S Ingleside LLC<br>         <strong>Units:</strong> 34<br>         <strong>Purchase Amount:</strong> $3.8M<br>         <strong>Purchase Date:</strong> June 2023<br>         <strong>Mortgage Amount:</strong> $2.5M<br>         <strong>Lender:</strong> Roc Capital<br>         <strong>Still Own?:</strong> No, sold at foreclosure auction in Jan. 2025<br>         <strong>In Foreclosure?:</strong> Yes, seized by lender<br>         <strong>Other Lawsuits?:</strong> Yes, for building code violations<br>     </div>     </div>`)[0];
+                popup_bb6b25dcd5eec16eff4fcc7e6d4ee05b.setContent(html_f68d2bd95cd725839e00d23b8c96b416);
+            
+        
+
+        marker_31cb448deb24b9e51d27d4cea8d300d2.bindPopup(popup_bb6b25dcd5eec16eff4fcc7e6d4ee05b)
+        ;
+
+        
+    
+    
+            var marker_4e2e59794c0f7fbd728ed6e2e41d5bec = L.marker(
+                [41.6931182, -87.66971280000001],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_ffad4de84403345eb926d58c56fea921 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_4e2e59794c0f7fbd728ed6e2e41d5bec.setIcon(icon_ffad4de84403345eb926d58c56fea921);
+        
+    
+        var popup_019b3a6ef3f263a058793ce23a7594cd = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_317a50648248e6fa65a8f771cd7b45ad = $(`<div id="html_317a50648248e6fa65a8f771cd7b45ad" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 1901 W. Pryor LLC<br>         <strong>Units:</strong> 34<br>         <strong>Purchase Amount:</strong> $2.8M<br>         <strong>Purchase Date:</strong> Jan. 2023<br>         <strong>Mortgage Amount:</strong> $3.6M<br>         <strong>Lender:</strong> Roc Capital<br>         <strong>Still Own?:</strong> Yes, but in foreclosure<br>         <strong>In Foreclosure?:</strong> Yes, in court<br>         <strong>Other Lawsuits?:</strong> None detected<br>     </div>     </div>`)[0];
+                popup_019b3a6ef3f263a058793ce23a7594cd.setContent(html_317a50648248e6fa65a8f771cd7b45ad);
+            
+        
+
+        marker_4e2e59794c0f7fbd728ed6e2e41d5bec.bindPopup(popup_019b3a6ef3f263a058793ce23a7594cd)
+        ;
+
+        
+    
+    
+            var marker_ffc37b2215a4442b87ac00be0f29dc82 = L.marker(
+                [41.7433544, -87.65554139999999],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_4b7f74da5490f5868c3bf54fe0cd82a9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_ffc37b2215a4442b87ac00be0f29dc82.setIcon(icon_4b7f74da5490f5868c3bf54fe0cd82a9);
+        
+    
+        var popup_4a5b78213d2c67162e75e115e552ba99 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_f9887c7d968f9dd5437e609a01ee404b = $(`<div id="html_f9887c7d968f9dd5437e609a01ee404b" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 1248 W. 83rd St. LLC<br>         <strong>Units:</strong> 12<br>         <strong>Purchase Amount:</strong> $1.8M<br>         <strong>Purchase Date:</strong> Nov. 2023<br>         <strong>Mortgage Amount:</strong> $1.3M<br>         <strong>Lender:</strong> Salman Capital Funding<br>         <strong>Still Own?:</strong> No, sold at foreclosure auction in Dec. 2024<br>         <strong>In Foreclosure?:</strong> Yes, seized by lender<br>         <strong>Other Lawsuits?:</strong> Receiver's lien for $18K on property<br>     </div>     </div>`)[0];
+                popup_4a5b78213d2c67162e75e115e552ba99.setContent(html_f9887c7d968f9dd5437e609a01ee404b);
+            
+        
+
+        marker_ffc37b2215a4442b87ac00be0f29dc82.bindPopup(popup_4a5b78213d2c67162e75e115e552ba99)
+        ;
+
+        
+    
+    
+            var marker_7f2c9244f62a96a27237ff059720f4e5 = L.marker(
+                [41.7491742, -87.6128329],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_c81388a5e48304b5ce3447f5688f2bff = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_7f2c9244f62a96a27237ff059720f4e5.setIcon(icon_c81388a5e48304b5ce3447f5688f2bff);
+        
+    
+        var popup_9b42a3a4f75fb17286e610cbb0607e4d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_61208f6bfcb9b0ef0e54487b6c1cdadc = $(`<div id="html_61208f6bfcb9b0ef0e54487b6c1cdadc" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 447 E 80 LLC<br>         <strong>Units:</strong> 14<br>         <strong>Purchase Amount:</strong> $1.7M<br>         <strong>Purchase Date:</strong> April 2023<br>         <strong>Mortgage Amount:</strong> $1.3M<br>         <strong>Lender:</strong> Asset Based Lending<br>         <strong>Still Own?:</strong> Yes, but in foreclosure<br>         <strong>In Foreclosure?:</strong> Yes, in court<br>         <strong>Other Lawsuits?:</strong> None detected<br>     </div>     </div>`)[0];
+                popup_9b42a3a4f75fb17286e610cbb0607e4d.setContent(html_61208f6bfcb9b0ef0e54487b6c1cdadc);
+            
+        
+
+        marker_7f2c9244f62a96a27237ff059720f4e5.bindPopup(popup_9b42a3a4f75fb17286e610cbb0607e4d)
+        ;
+
+        
+    
+    
+            var marker_90953b425fedbda8a42f4ae0fad41b8b = L.marker(
+                [41.8773291, -87.7614545],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_37f518325c428546d254a84e690e70dc = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_90953b425fedbda8a42f4ae0fad41b8b.setIcon(icon_37f518325c428546d254a84e690e70dc);
+        
+    
+        var popup_417aa3dc0db9a1435823dcc667ec5fda = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_709434b18d8b291797c8e52bd56eb1a6 = $(`<div id="html_709434b18d8b291797c8e52bd56eb1a6" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 5449 W Quincy Street LLC<br>         <strong>Units:</strong> 11<br>         <strong>Purchase Amount:</strong> $1.6M<br>         <strong>Purchase Date:</strong> Jan. 2023<br>         <strong>Mortgage Amount:</strong> $1.1M<br>         <strong>Lender:</strong> Asset Based Lending<br>         <strong>Still Own?:</strong> Yes, but in foreclosure<br>         <strong>In Foreclosure?:</strong> Yes, in court<br>         <strong>Other Lawsuits?:</strong> None detected<br>     </div>     </div>`)[0];
+                popup_417aa3dc0db9a1435823dcc667ec5fda.setContent(html_709434b18d8b291797c8e52bd56eb1a6);
+            
+        
+
+        marker_90953b425fedbda8a42f4ae0fad41b8b.bindPopup(popup_417aa3dc0db9a1435823dcc667ec5fda)
+        ;
+
+        
+    
+    
+            var marker_6ed0d5059976f896612a1a012cd27aba = L.marker(
+                [41.755655, -87.5517718],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_931debb28b34209c471f969c3dc64506 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_6ed0d5059976f896612a1a012cd27aba.setIcon(icon_931debb28b34209c471f969c3dc64506);
+        
+    
+        var popup_0636ac7aa2c1914850eb3fea14bfbe5b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_64ae2b6b2a903241d62db3342d4ef630 = $(`<div id="html_64ae2b6b2a903241d62db3342d4ef630" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 7763 SSD Realty LLC<br>         <strong>Units:</strong> 22<br>         <strong>Purchase Amount:</strong> $2.7M<br>         <strong>Purchase Date:</strong> May 2023<br>         <strong>Mortgage Amount:</strong> $1.8M<br>         <strong>Lender:</strong> Asset Based Lending<br>         <strong>Still Own?:</strong> Yes, but in foreclosure<br>         <strong>In Foreclosure?:</strong> Yes, in court<br>         <strong>Other Lawsuits?:</strong> None detected<br>     </div>     </div>`)[0];
+                popup_0636ac7aa2c1914850eb3fea14bfbe5b.setContent(html_64ae2b6b2a903241d62db3342d4ef630);
+            
+        
+
+        marker_6ed0d5059976f896612a1a012cd27aba.bindPopup(popup_0636ac7aa2c1914850eb3fea14bfbe5b)
+        ;
+
+        
+    
+    
+            var marker_e15888c871008cde13861f7f765c8d07 = L.marker(
+                [41.9023584, -87.7670419],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_b9a9e2555a5013469436d60f549a5bac = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_e15888c871008cde13861f7f765c8d07.setIcon(icon_b9a9e2555a5013469436d60f549a5bac);
+        
+    
+        var popup_81ce49f4ad07a8cabde48ce140e58a3d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_9ba35fe076b52a6b20e933e4d1f5fd2d = $(`<div id="html_9ba35fe076b52a6b20e933e4d1f5fd2d" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 5636 W Division St LLC<br>         <strong>Units:</strong> 33<br>         <strong>Purchase Amount:</strong> $3.6M<br>         <strong>Purchase Date:</strong> June 2023<br>         <strong>Mortgage Amount:</strong> $2.6M<br>         <strong>Lender:</strong> Asset Based Lending<br>         <strong>Still Own?:</strong> Yes, but in foreclosure<br>         <strong>In Foreclosure?:</strong> Yes, in court<br>         <strong>Other Lawsuits?:</strong> None detected<br>     </div>     </div>`)[0];
+                popup_81ce49f4ad07a8cabde48ce140e58a3d.setContent(html_9ba35fe076b52a6b20e933e4d1f5fd2d);
+            
+        
+
+        marker_e15888c871008cde13861f7f765c8d07.bindPopup(popup_81ce49f4ad07a8cabde48ce140e58a3d)
+        ;
+
+        
+    
+    
+            var marker_08e4303199352f045d00199edbe5daf4 = L.marker(
+                [41.8960434, -87.7694717],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_e02f47ca7350c2c6d7b162fa8a21d01a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_08e4303199352f045d00199edbe5daf4.setIcon(icon_e02f47ca7350c2c6d7b162fa8a21d01a);
+        
+    
+        var popup_8ba8e1cd89d188b891539570524606e9 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_f9b1832f60e9394adcd6c67661922f0f = $(`<div id="html_f9b1832f60e9394adcd6c67661922f0f" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 840 N Massasoit Ave LLC<br>         <strong>Units:</strong> 13<br>         <strong>Purchase Amount:</strong> $783K<br>         <strong>Purchase Date:</strong> Jan. 2023<br>         <strong>Mortgage Amount:</strong> $1.2M<br>         <strong>Lender:</strong> Anchor Loans<br>         <strong>Still Own?:</strong> Yes, but in foreclosure<br>         <strong>In Foreclosure?:</strong> Yes, in court<br>         <strong>Other Lawsuits?:</strong> None detected<br>     </div>     </div>`)[0];
+                popup_8ba8e1cd89d188b891539570524606e9.setContent(html_f9b1832f60e9394adcd6c67661922f0f);
+            
+        
+
+        marker_08e4303199352f045d00199edbe5daf4.bindPopup(popup_8ba8e1cd89d188b891539570524606e9)
+        ;
+
+        
+    
+    
+            var marker_0ccf14891a296324196fc737e98ce3cb = L.marker(
+                [41.756002, -87.5596317],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_ada4f6588827bd5c513d14cde640d472 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_0ccf14891a296324196fc737e98ce3cb.setIcon(icon_ada4f6588827bd5c513d14cde640d472);
+        
+    
+        var popup_7a48fb157e81283d6e9b5baaae058e06 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_7b00f1a743cb63845ff25c7c724676c9 = $(`<div id="html_7b00f1a743cb63845ff25c7c724676c9" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 7641 S Saginaw Ave LLC<br>         <strong>Units:</strong> 11<br>         <strong>Purchase Amount:</strong> $737K<br>         <strong>Purchase Date:</strong> July 2022<br>         <strong>Mortgage Amount:</strong> $757K<br>         <strong>Lender:</strong> Sharestates Investments<br>         <strong>Still Own?:</strong> No, sold after foreclosure lawsuit was filed, to Eliazer Tauber for $2M<br>         <strong>In Foreclosure?:</strong> nan<br>         <strong>Other Lawsuits?:</strong> None detected<br>     </div>     </div>`)[0];
+                popup_7a48fb157e81283d6e9b5baaae058e06.setContent(html_7b00f1a743cb63845ff25c7c724676c9);
+            
+        
+
+        marker_0ccf14891a296324196fc737e98ce3cb.bindPopup(popup_7a48fb157e81283d6e9b5baaae058e06)
+        ;
+
+        
+    
+    
+            var marker_0277cb44682a21b2d516eed73e9d51bb = L.marker(
+                [41.877235, -87.76195489999999],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_b615eba3633555018326461a89a724cd = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_0277cb44682a21b2d516eed73e9d51bb.setIcon(icon_b615eba3633555018326461a89a724cd);
+        
+    
+        var popup_40eacb20bde9bf598c4dbe9ae91bf50c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_d1572a69ff256ac9b42c97c5836f4555 = $(`<div id="html_d1572a69ff256ac9b42c97c5836f4555" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 5501 W Quincy LLC<br>         <strong>Units:</strong> 9<br>         <strong>Purchase Amount:</strong> $543K<br>         <strong>Purchase Date:</strong> Jan. 2023<br>         <strong>Mortgage Amount:</strong> $878K<br>         <strong>Lender:</strong> Realty Capital Finance<br>         <strong>Still Own?:</strong> Yes, but in foreclosure<br>         <strong>In Foreclosure?:</strong> Yes, in court<br>         <strong>Other Lawsuits?:</strong> Receiver's lien for $22K on property<br>     </div>     </div>`)[0];
+                popup_40eacb20bde9bf598c4dbe9ae91bf50c.setContent(html_d1572a69ff256ac9b42c97c5836f4555);
+            
+        
+
+        marker_0277cb44682a21b2d516eed73e9d51bb.bindPopup(popup_40eacb20bde9bf598c4dbe9ae91bf50c)
+        ;
+
+        
+    
+    
+            var marker_351f643cd9301673854805d4122a985c = L.marker(
+                [41.75373769999999, -87.5653981],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_5be659cd0c7e99051194bee556b4d093 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_351f643cd9301673854805d4122a985c.setIcon(icon_5be659cd0c7e99051194bee556b4d093);
+        
+    
+        var popup_3f98f6fabf1fd3496d0754bb88bd3a9f = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_140260ed684e11f2af1683b987381694 = $(`<div id="html_140260ed684e11f2af1683b987381694" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 7756 S Phillips, LLC<br>         <strong>Units:</strong> 13<br>         <strong>Purchase Amount:</strong> $890K<br>         <strong>Purchase Date:</strong> April 2023<br>         <strong>Mortgage Amount:</strong> $719K<br>         <strong>Lender:</strong> Roc Capital<br>         <strong>Still Own?:</strong> Yes, but in foreclosure<br>         <strong>In Foreclosure?:</strong> Yes, in court<br>         <strong>Other Lawsuits?:</strong> Receiver's lien for $17K on property<br>     </div>     </div>`)[0];
+                popup_3f98f6fabf1fd3496d0754bb88bd3a9f.setContent(html_140260ed684e11f2af1683b987381694);
+            
+        
+
+        marker_351f643cd9301673854805d4122a985c.bindPopup(popup_3f98f6fabf1fd3496d0754bb88bd3a9f)
+        ;
+
+        
+    
+    
+            var marker_1b85c6d524935506ea0c43921591b1f2 = L.marker(
+                [41.873781, -87.6985565],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_b3f4802e376bb6a644d2392529d6f48e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_1b85c6d524935506ea0c43921591b1f2.setIcon(icon_b3f4802e376bb6a644d2392529d6f48e);
+        
+    
+        var popup_d7d4743cdfc8209ce659da120265d1b5 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1d2e73cc528cd3cd4b3eb085e3f28036 = $(`<div id="html_1d2e73cc528cd3cd4b3eb085e3f28036" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 6537 S. Francisco LLC<br>         <strong>Units:</strong> 10<br>         <strong>Purchase Amount:</strong> $1.3M<br>         <strong>Purchase Date:</strong> Oct. 2023<br>         <strong>Mortgage Amount:</strong> $900K<br>         <strong>Lender:</strong> Realty Capital Finance<br>         <strong>Still Own?:</strong> Yes, but in foreclosure<br>         <strong>In Foreclosure?:</strong> Yes, in court<br>         <strong>Other Lawsuits?:</strong> Receiver's lien for $24K on property<br>     </div>     </div>`)[0];
+                popup_d7d4743cdfc8209ce659da120265d1b5.setContent(html_1d2e73cc528cd3cd4b3eb085e3f28036);
+            
+        
+
+        marker_1b85c6d524935506ea0c43921591b1f2.bindPopup(popup_d7d4743cdfc8209ce659da120265d1b5)
+        ;
+
+        
+    
+    
+            var marker_421feb7a86e71ac4553126f324c8a777 = L.marker(
+                [41.7867204, -87.6925275],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_384a5bddddbbf362a743ceaa42540304 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_421feb7a86e71ac4553126f324c8a777.setIcon(icon_384a5bddddbbf362a743ceaa42540304);
+        
+    
+        var popup_1ec02bbc44727fb01e722ba02ba8bd5d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_f4138da60a0738215283c7bed47bedc5 = $(`<div id="html_f4138da60a0738215283c7bed47bedc5" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 2732 W 59 LLC<br>         <strong>Units:</strong> 11<br>         <strong>Purchase Amount:</strong> $1.7M<br>         <strong>Purchase Date:</strong> Oct. 2023<br>         <strong>Mortgage Amount:</strong> $1.1M<br>         <strong>Lender:</strong> Realty Capital Finance<br>         <strong>Still Own?:</strong> Yes, but in foreclosure<br>         <strong>In Foreclosure?:</strong> Yes, in court<br>         <strong>Other Lawsuits?:</strong> Yes, for building code violations<br>     </div>     </div>`)[0];
+                popup_1ec02bbc44727fb01e722ba02ba8bd5d.setContent(html_f4138da60a0738215283c7bed47bedc5);
+            
+        
+
+        marker_421feb7a86e71ac4553126f324c8a777.bindPopup(popup_1ec02bbc44727fb01e722ba02ba8bd5d)
+        ;
+
+        
+    
+    
+            var marker_7f780262a593501e83cc3e5a3c88379c = L.marker(
+                [41.7733052, -87.7019828],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_762793d83ea77888ea016382c9ba7661 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_7f780262a593501e83cc3e5a3c88379c.setIcon(icon_762793d83ea77888ea016382c9ba7661);
+        
+    
+        var popup_7d046949631ee87a1230f36e7e9f432d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_88fdf4584ddb049c4ace8e256a30e143 = $(`<div id="html_88fdf4584ddb049c4ace8e256a30e143" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 6602 S Troy LLC<br>         <strong>Units:</strong> 6<br>         <strong>Purchase Amount:</strong> $1.1M<br>         <strong>Purchase Date:</strong> Oct. 2023<br>         <strong>Mortgage Amount:</strong> $756K<br>         <strong>Lender:</strong> Salman Capital Funding<br>         <strong>Still Own?:</strong> Yes, but in foreclosure<br>         <strong>In Foreclosure?:</strong> Yes, in court<br>         <strong>Other Lawsuits?:</strong> Yes, for building code violations<br>     </div>     </div>`)[0];
+                popup_7d046949631ee87a1230f36e7e9f432d.setContent(html_88fdf4584ddb049c4ace8e256a30e143);
+            
+        
+
+        marker_7f780262a593501e83cc3e5a3c88379c.bindPopup(popup_7d046949631ee87a1230f36e7e9f432d)
+        ;
+
+        
+    
+    
+            var marker_d3a5585df31175898fabc946f6ac6e85 = L.marker(
+                [41.75385199999999, -87.5629744],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_d2c6dfec54f7eb4698630987b3e31ba8 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_d3a5585df31175898fabc946f6ac6e85.setIcon(icon_d2c6dfec54f7eb4698630987b3e31ba8);
+        
+    
+        var popup_dc3082c6a750952fe7f280fadce25d3c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_678cf724e4f791364cf8d23878feaa59 = $(`<div id="html_678cf724e4f791364cf8d23878feaa59" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 7748 S Kingston LLC<br>         <strong>Units:</strong> 34<br>         <strong>Purchase Amount:</strong> $3.7M<br>         <strong>Purchase Date:</strong> Aug. 2023<br>         <strong>Mortgage Amount:</strong> $2.9M<br>         <strong>Lender:</strong> Arion Fund<br>         <strong>Still Own?:</strong> Yes<br>         <strong>In Foreclosure?:</strong> No<br>         <strong>Other Lawsuits?:</strong> Yes, for building code violations<br>     </div>     </div>`)[0];
+                popup_dc3082c6a750952fe7f280fadce25d3c.setContent(html_678cf724e4f791364cf8d23878feaa59);
+            
+        
+
+        marker_d3a5585df31175898fabc946f6ac6e85.bindPopup(popup_dc3082c6a750952fe7f280fadce25d3c)
+        ;
+
+        
+    
+    
+            var marker_39d2def776b000e73c7d6fc9ea313dc9 = L.marker(
+                [41.8776892, -87.75547979999999],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_a86e2834d78e9359f6f44b15c0a63259 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_39d2def776b000e73c7d6fc9ea313dc9.setIcon(icon_a86e2834d78e9359f6f44b15c0a63259);
+        
+    
+        var popup_b58967727fb029892e1ee3da51634878 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_b91b7dc0f282f792f2a442f4085fb041 = $(`<div id="html_b91b7dc0f282f792f2a442f4085fb041" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 5200 W Quincy Realty LLC<br>         <strong>Units:</strong> 49<br>         <strong>Purchase Amount:</strong> $6.6M<br>         <strong>Purchase Date:</strong> Jan. 2023<br>         <strong>Mortgage Amount:</strong> $4.9M<br>         <strong>Lender:</strong> Lima One Capital<br>         <strong>Still Own?:</strong> Yes, but in foreclosure<br>         <strong>In Foreclosure?:</strong> Yes, in court<br>         <strong>Other Lawsuits?:</strong> None detected<br>     </div>     </div>`)[0];
+                popup_b58967727fb029892e1ee3da51634878.setContent(html_b91b7dc0f282f792f2a442f4085fb041);
+            
+        
+
+        marker_39d2def776b000e73c7d6fc9ea313dc9.bindPopup(popup_b58967727fb029892e1ee3da51634878)
+        ;
+
+        
+    
+    
+            var marker_c13230fc5eaa5d5598f915cedcc86f8b = L.marker(
+                [41.753856, -87.55637089999999],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_5dddbcbfa563135dab771d46002cd1c8 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_c13230fc5eaa5d5598f915cedcc86f8b.setIcon(icon_5dddbcbfa563135dab771d46002cd1c8);
+        
+    
+        var popup_f0066de3ea85870bb601f059724d3278 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_3528e87c528cdb9259119cf8e17e8907 = $(`<div id="html_3528e87c528cdb9259119cf8e17e8907" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 2814 E 78th LLC<br>         <strong>Units:</strong> 6<br>         <strong>Purchase Amount:</strong> $265K<br>         <strong>Purchase Date:</strong> July 2022<br>         <strong>Mortgage Amount:</strong> $294K<br>         <strong>Lender:</strong> Sharestates Investments<br>         <strong>Still Own?:</strong> No, sold after foreclosure lawsuit was filed, to Eliazer Tauber for $1.1M<br>         <strong>In Foreclosure?:</strong> nan<br>         <strong>Other Lawsuits?:</strong> None detected<br>     </div>     </div>`)[0];
+                popup_f0066de3ea85870bb601f059724d3278.setContent(html_3528e87c528cdb9259119cf8e17e8907);
+            
+        
+
+        marker_c13230fc5eaa5d5598f915cedcc86f8b.bindPopup(popup_f0066de3ea85870bb601f059724d3278)
+        ;
+
+        
+    
+    
+            var marker_00e2cd9e99b1ece201cab0a487928741 = L.marker(
+                [41.7280684, -87.6049226],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_01eb20345a90d3464f234f89d906761c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_00e2cd9e99b1ece201cab0a487928741.setIcon(icon_01eb20345a90d3464f234f89d906761c);
+        
+    
+        var popup_074c7ceb869607d0f5027c24f4452642 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_6e8f1ab09db45591c05695ca3f47bbe4 = $(`<div id="html_6e8f1ab09db45591c05695ca3f47bbe4" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 9140 S Cottage Grove Ave LLC<br>         <strong>Units:</strong> 30<br>         <strong>Purchase Amount:</strong> $2.4M<br>         <strong>Purchase Date:</strong> April 2022<br>         <strong>Mortgage Amount:</strong> $4.2M (Financed portfolio that also included 8151 S. Drexel Ave. and 6357 S. Mozart St.)<br>         <strong>Lender:</strong> Arbor<br>         <strong>Still Own?:</strong> Yes<br>         <strong>In Foreclosure?:</strong> No<br>         <strong>Other Lawsuits?:</strong> Yes, for building code violations<br>     </div>     </div>`)[0];
+                popup_074c7ceb869607d0f5027c24f4452642.setContent(html_6e8f1ab09db45591c05695ca3f47bbe4);
+            
+        
+
+        marker_00e2cd9e99b1ece201cab0a487928741.bindPopup(popup_074c7ceb869607d0f5027c24f4452642)
+        ;
+
+        
+    
+    
+            var marker_1bac60e9fde654a2034169d822dee89c = L.marker(
+                [41.7487827, -87.660162],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_f2a0017b94e469c61cc5afea5c0ebdf5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_1bac60e9fde654a2034169d822dee89c.setIcon(icon_f2a0017b94e469c61cc5afea5c0ebdf5);
+        
+    
+        var popup_4ef1f55cd0f218986e6ab4bbf803d90f = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a5dd5644b1685b8589ba66bc768f44aa = $(`<div id="html_a5dd5644b1685b8589ba66bc768f44aa" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> Jaxe Realty LLC<br>         <strong>Units:</strong> Unknown<br>         <strong>Purchase Amount:</strong> $650K<br>         <strong>Purchase Date:</strong> June 2022<br>         <strong>Mortgage Amount:</strong> nan<br>         <strong>Lender:</strong> nan<br>         <strong>Still Own?:</strong> No, sold Dec. 2022 for $1.3M to Yosef Steinmetz-controlled LLC that lists property owned by Eli Sieger as address<br>         <strong>In Foreclosure?:</strong> No<br>         <strong>Other Lawsuits?:</strong> None detected<br>     </div>     </div>`)[0];
+                popup_4ef1f55cd0f218986e6ab4bbf803d90f.setContent(html_a5dd5644b1685b8589ba66bc768f44aa);
+            
+        
+
+        marker_1bac60e9fde654a2034169d822dee89c.bindPopup(popup_4ef1f55cd0f218986e6ab4bbf803d90f)
+        ;
+
+        
+    
+    
+            var marker_61670df268f558d7e3c1f3d52e15e015 = L.marker(
+                [41.7302997, -87.6540158],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_85f4f35e95531cbb48a6a85a9e9228ef = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_61670df268f558d7e3c1f3d52e15e015.setIcon(icon_85f4f35e95531cbb48a6a85a9e9228ef);
+        
+    
+        var popup_32af73475c3e638a23fa5c5cef3e3b05 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_d37da34732502584db45b241391464ed = $(`<div id="html_d37da34732502584db45b241391464ed" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 9001 S. Elizabeth LLC<br>         <strong>Units:</strong> 8<br>         <strong>Purchase Amount:</strong> $493K<br>         <strong>Purchase Date:</strong> Sept. 2022<br>         <strong>Mortgage Amount:</strong> $1.2M (Financed portfolio that also included 10155 S. Eberhart Ave.)<br>         <strong>Lender:</strong> Roc Capital<br>         <strong>Still Own?:</strong> No, sold Aug. 2024 for $1.4M to Eliazer Tauber<br>         <strong>In Foreclosure?:</strong> No<br>         <strong>Other Lawsuits?:</strong> None detected<br>     </div>     </div>`)[0];
+                popup_32af73475c3e638a23fa5c5cef3e3b05.setContent(html_d37da34732502584db45b241391464ed);
+            
+        
+
+        marker_61670df268f558d7e3c1f3d52e15e015.bindPopup(popup_32af73475c3e638a23fa5c5cef3e3b05)
+        ;
+
+        
+    
+    
+            var marker_3ae2014b69d22e6588b8757b0499fd93 = L.marker(
+                [41.7093627, -87.6110485],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_05fc1e9ee151bdecece4e25420b76e31 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_3ae2014b69d22e6588b8757b0499fd93.setIcon(icon_05fc1e9ee151bdecece4e25420b76e31);
+        
+    
+        var popup_a5ed0316c9290e205301f02bdace4d04 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_3ac18625c8674b1912b895c08b473c75 = $(`<div id="html_3ac18625c8674b1912b895c08b473c75" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Yissocher "Izzy" Rotenberg<br>         <strong>LLC Name:</strong> 10155 S Eberhart Ave LLC<br>         <strong>Units:</strong> 15<br>         <strong>Purchase Amount:</strong> $888K<br>         <strong>Purchase Date:</strong> Sept. 2022<br>         <strong>Mortgage Amount:</strong> $1.2M (Financed portfolio that also included 10155 S. Eberhart Ave.)<br>         <strong>Lender:</strong> Roc Capital<br>         <strong>Still Own?:</strong> No. sold Aug. 2024 for $2M to Eliazer Tauber<br>         <strong>In Foreclosure?:</strong> No<br>         <strong>Other Lawsuits?:</strong> None detected<br>     </div>     </div>`)[0];
+                popup_a5ed0316c9290e205301f02bdace4d04.setContent(html_3ac18625c8674b1912b895c08b473c75);
+            
+        
+
+        marker_3ae2014b69d22e6588b8757b0499fd93.bindPopup(popup_a5ed0316c9290e205301f02bdace4d04)
+        ;
+
+        
+    
+    
+            var marker_3cff7f9e30addbfae6d3010cdd06abf4 = L.marker(
+                [41.794219, -87.66068899999999],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_60141a2c26f535617c0356e343e7bd94 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_3cff7f9e30addbfae6d3010cdd06abf4.setIcon(icon_60141a2c26f535617c0356e343e7bd94);
+        
+    
+        var popup_67d9e29220ba12d3fe4f7c8f1c0375a2 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_0c1509ba6e08466c5d991cdd627ca9a6 = $(`<div id="html_0c1509ba6e08466c5d991cdd627ca9a6" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Naftalie Berger<br>         <strong>LLC Name:</strong> Halber Garfield LLC<br>         <strong>Units:</strong> 18<br>         <strong>Purchase Amount:</strong> $900K<br>         <strong>Purchase Date:</strong> March 2023<br>         <strong>Mortgage Amount:</strong> $823K<br>         <strong>Lender:</strong> A&S Capital<br>         <strong>Still Own?:</strong> Yes, refinanced for $704K in Aug. 2023, with Liberty Bank for Savings<br>         <strong>In Foreclosure?:</strong> No<br>         <strong>Other Lawsuits?:</strong> None detected<br>     </div>     </div>`)[0];
+                popup_67d9e29220ba12d3fe4f7c8f1c0375a2.setContent(html_0c1509ba6e08466c5d991cdd627ca9a6);
+            
+        
+
+        marker_3cff7f9e30addbfae6d3010cdd06abf4.bindPopup(popup_67d9e29220ba12d3fe4f7c8f1c0375a2)
+        ;
+
+        
+    
+    
+            var marker_e27240eb3d36172cae6953f8db007a81 = L.marker(
+                [41.9026097, -87.75848239999999],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_42785cfb027d18c4b0f55960a4862040 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_e27240eb3d36172cae6953f8db007a81.setIcon(icon_42785cfb027d18c4b0f55960a4862040);
+        
+    
+        var popup_908a0339609cea68f1fe258e3db9787c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1ec9c8b6ed5eda338d27c778513dfd86 = $(`<div id="html_1ec9c8b6ed5eda338d27c778513dfd86" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Naftalie Berger<br>         <strong>LLC Name:</strong> 5300 W. Division LLC<br>         <strong>Units:</strong> 24<br>         <strong>Purchase Amount:</strong> $1.1M<br>         <strong>Purchase Date:</strong> July 2022<br>         <strong>Mortgage Amount:</strong> $840K (Signed by Myer Kahan)<br>         <strong>Lender:</strong> A&S Capital<br>         <strong>Still Own?:</strong> Yes, refinanced for $1.1M in March 2023, with A&S Capital<br>         <strong>In Foreclosure?:</strong> nan<br>         <strong>Other Lawsuits?:</strong> None detected<br>     </div>     </div>`)[0];
+                popup_908a0339609cea68f1fe258e3db9787c.setContent(html_1ec9c8b6ed5eda338d27c778513dfd86);
+            
+        
+
+        marker_e27240eb3d36172cae6953f8db007a81.bindPopup(popup_908a0339609cea68f1fe258e3db9787c)
+        ;
+
+        
+    
+    
+            var marker_617d2879b804637d297ec3681b344ee8 = L.marker(
+                [41.7936769, -87.65100679999999],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_a5ef9bf123e4c4d88876d4d510d4bace = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_617d2879b804637d297ec3681b344ee8.setIcon(icon_a5ef9bf123e4c4d88876d4d510d4bace);
+        
+    
+        var popup_906c3efabd429622bdef9d5efbbd70ae = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_55f23b942a5fd5145c8b4f48a71e131d = $(`<div id="html_55f23b942a5fd5145c8b4f48a71e131d" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Naftalie Berger<br>         <strong>LLC Name:</strong> Halber Garfield LLC<br>         <strong>Units:</strong> 13<br>         <strong>Purchase Amount:</strong> $900K<br>         <strong>Purchase Date:</strong> March 2023<br>         <strong>Mortgage Amount:</strong> $1.1M<br>         <strong>Lender:</strong> Liberty Bank for Savings<br>         <strong>Still Own?:</strong> Yes<br>         <strong>In Foreclosure?:</strong> No<br>         <strong>Other Lawsuits?:</strong> None detected<br>     </div>     </div>`)[0];
+                popup_906c3efabd429622bdef9d5efbbd70ae.setContent(html_55f23b942a5fd5145c8b4f48a71e131d);
+            
+        
+
+        marker_617d2879b804637d297ec3681b344ee8.bindPopup(popup_906c3efabd429622bdef9d5efbbd70ae)
+        ;
+
+        
+    
+    
+            var marker_27385e0c868704c8a78747146a083b6e = L.marker(
+                [41.7718382, -87.6823184],
+                {}
+            ).addTo(map_73652ddda1ae46e663c2078a544a7a9e);
+        
+    
+            var icon_496d5bea11b4a9c8ad936b0f03ace5d5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_27385e0c868704c8a78747146a083b6e.setIcon(icon_496d5bea11b4a9c8ad936b0f03ace5d5);
+        
+    
+        var popup_010773035d660dced0877a24bc62138c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_dccbe9ec4bee33e76e9850e670b2f518 = $(`<div id="html_dccbe9ec4bee33e76e9850e670b2f518" style="width: 100.0%; height: 100.0%;">     <div class="popup-content">         <strong>Owner:</strong> Naftalie Berger<br>         <strong>LLC Name:</strong> 6701 S Claremont LLC (Claremont Apartments LLC/Naftalie Berger)<br>         <strong>Units:</strong> 55<br>         <strong>Purchase Amount:</strong> $4.9M<br>         <strong>Purchase Date:</strong> April 2023<br>         <strong>Mortgage Amount:</strong> $3M<br>         <strong>Lender:</strong> Lima One Capital<br>         <strong>Still Own?:</strong> Yes<br>         <strong>In Foreclosure?:</strong> No<br>         <strong>Other Lawsuits?:</strong> No, building code violations case dismissed in 2024<br>     </div>     </div>`)[0];
+                popup_010773035d660dced0877a24bc62138c.setContent(html_dccbe9ec4bee33e76e9850e670b2f518);
+            
+        
+
+        marker_27385e0c868704c8a78747146a083b6e.bindPopup(popup_010773035d660dced0877a24bc62138c)
+        ;
+
+        
+    
+</script>
