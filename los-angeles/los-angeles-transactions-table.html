@@ -117,7 +117,7 @@
         { dataField: "Address", name: "Address", visible: true },
         { dataField: "First Owner", name: "First owner", visible: true },
         { dataField: "first owner tr", name: "First owner tr", visible: false },
-        { dataField: "Use Definition", name: "Use definition", visible: true },
+        { dataField: "Use Definition", name: "Property Type", visible: true },
         {
           dataField: "Transfer Date",
           name: "Transfer date",
@@ -126,7 +126,17 @@
             return TrdFormatters.formatDate(value);
           },
         },
-        { dataField: "DTTT Amount", name: "Amount", visible: true },
+        {
+          dataField: "DTTT Amount",
+          name: "Amount",
+          visible: true,
+          formatter: (value) => {
+            return TrdFormatters.formatPrice(value);
+          },
+        },
+        { dataField: "BDL1 SQ FT", name: "BDL1 SqFt", visible: false },
+        { dataField: "BDL1 SQ FT ", name: "BDL1 SqFt ", visible: false },
+        { dataField: " BDL1 SQ FT", name: " BDL1 SqFt", visible: false },
         { dataField: " BDL1 SQ FT ", name: " BDL1 SqFt ", visible: true },
         // {
         //   dataField: "Administrative Region",
