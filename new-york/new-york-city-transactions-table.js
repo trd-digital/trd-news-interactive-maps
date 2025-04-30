@@ -5,8 +5,8 @@
   const table = document.querySelector("#luxury-sales-table");
 
   const displayColumns = [
-    { dataField: "Sellers", name: "Sellers" },
-    { dataField: "Buyers", name: "Buyers" },
+    { dataField: "Physical Address", name: "Physical Address" },
+    { dataField: "Sale Price", name: "Sale Price" },
     {
       dataField: "Record Date",
       name: "Record Date",
@@ -17,9 +17,9 @@
         return new Date(a).getTime() - new Date(b).getTime();
       },
     },
-    { dataField: "Sale Price", name: "Sale Price" },
-    { dataField: "Physical Address", name: "Physical Address" },
     { dataField: "Use Code Description", name: "Use Code Description" },
+    { dataField: "Sellers", name: "Sellers" },
+    { dataField: "Buyers", name: "Buyers" },
     { dataField: "Property Sq. Ft", name: "Sq. Ft" },
   ];
 
@@ -137,9 +137,9 @@
     sortOrder: "desc",
     sortEmptylast: true,
     pagination: true,
-    paginationVAlign: "top",
+    paginationVAlign: "bottom",
     pageList: [10, 50, 100],
-    pageSize: 100,
+    pageSize: 10,
     classes: "table table-responsive",
     theadClasses: "header-style",
     detailView: true,
