@@ -520,7 +520,7 @@ const trdDataCommonMap = (options) => {
         ((maxInput.value - filterField.minValue) /
           (filterField.maxValue - filterField.minValue)) *
           100 -
-        5
+        7
       }%`;
       maxSlider.onmousedown = (e) => {
         e.preventDefault();
@@ -544,7 +544,7 @@ const trdDataCommonMap = (options) => {
           }
 
           maxInput.value = value;
-          maxSlider.style.left = `${percentage * 100 - 5}%`;
+          maxSlider.style.left = `${percentage * 100 - 7}%`;
           progress.style.right = `${(1 - percentage) * 100}%`;
           updateLabel();
           maxInput.dispatchEvent(new Event("input"));
