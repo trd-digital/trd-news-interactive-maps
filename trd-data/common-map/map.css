@@ -175,7 +175,13 @@ body {
   --bs-tooltip-bg: var(--bs-body-bg);
   --bs-tooltip-color: var(--bs-body-color);
 }
-.popup-title {
+.mapboxgl-popup-content {
+  padding: 0;
+}
+.popup-tooltip-body {
+  padding: 16px;
+}
+.popup-tooltip-title {
   font-size: 16px;
   font-family: "Merriweather", serif;
   font-weight: 700;
@@ -185,8 +191,17 @@ body {
   background-color: var(--bs-tooltip-bg);
   color: var(--bs-tooltip-color);
 }
+.mapboxgl-popup-anchor-top .mapboxgl-popup-tip {
+  border-bottom-color: var(--bs-tooltip-bg);
+}
+.mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
+  border-left-color: var(--bs-tooltip-bg);
+}
 .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
   border-top-color: var(--bs-tooltip-bg);
+}
+.mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
+  border-right-color: var(--bs-tooltip-bg);
 }
 
 .mapboxgl-popup p {
@@ -199,6 +214,10 @@ body {
   word-wrap: break-word;
   flex: 0 1 60%;
   text-align: right;
+}
+
+.mapboxgl-popup p.tooltip-block {
+  display: block;
 }
 
 /* Filters */
@@ -269,7 +288,7 @@ body {
 
 .map-filters-body {
   overflow-y: auto;
-  max-height: 320px;
+  max-height: 400px;
 }
 
 .map-filters-header {
@@ -288,7 +307,7 @@ body {
 .map-filters-body {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 }
 .map-filters-footer {
   display: flex;
@@ -310,6 +329,7 @@ body {
   font-weight: 700;
   font-size: 16px;
   line-height: 1.5;
+  margin-bottom: 0;
 }
 
 .filter-field-body .radio-group {
@@ -338,6 +358,46 @@ body {
 }
 .radio-group .filter-option-container:last-child {
   border-radius: 0 4px 4px 0;
+}
+.range-slider-label {
+  text-align: center;
+  margin-bottom: 8px;
+}
+.range-slider {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.range-slider .range-slider-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #4285f4;
+  border-radius: 4px;
+}
+.range-slider .range-slider-min,
+.range-slider .range-slider-max {
+  position: absolute;
+  top: -10px;
+  font-size: 12px;
+  color: #757575;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+}
+.range-slider .range-slider-min {
+  left: 0;
+}
+.range-slider .range-slider-max {
+  right: 0;
 }
 
 .filter-field-body .checkbox-group {

@@ -181,6 +181,10 @@ const trdDataCommonMap = (options) => {
         return type(value);
       }
 
+      if (typeof type === "string" && TrdFormatters[type]) {
+        return TrdFormatters[type](value);
+      }
+
       if (typeof type === "string" && formatters[type]) {
         return formatters[type](value);
       }
@@ -195,15 +199,6 @@ const trdDataCommonMap = (options) => {
     formatNumber: (value) => {
       return new Intl.NumberFormat("en-US", {
         style: "decimal",
-      }).format(value);
-    },
-
-    formatPrice: (value) => {
-      return new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-        minimumFractionDigits: 0, // No decimal places
-        maximumFractionDigits: 0, // No decimal places
       }).format(value);
     },
 
@@ -305,7 +300,7 @@ const trdDataCommonMap = (options) => {
     init: () => {
       if (!settings?.filterFields?.length || !settings?.filterElementId) return;
 
-      filters.createFilter();
+      filters.createFilters();
       filters.eventListeners();
     },
 
@@ -348,7 +343,7 @@ const trdDataCommonMap = (options) => {
       return document.getElementById(settings.filterElementId);
     },
 
-    createFilter: () => {
+    createFilters: () => {
       const filterEl = filters.getElement();
       const filterBodyEl = filterEl.querySelector(".map-filters-body");
 
@@ -384,35 +379,211 @@ const trdDataCommonMap = (options) => {
       const field = document.createElement("div");
       field.classList.add(filterField.fieldLayoutClass);
 
-      filterField.options.forEach((option) => {
-        const forId = `${filterField.name}_${option.value}`;
-        const fieldWrapper = document.createElement("div");
-        fieldWrapper.classList.add("filter-option-container");
+      if (filterField.fieldType === "select") {
+        const select = document.createElement("select");
+        select.id = filterField.name;
+        select.name = filterField.name;
+        select.classList.add("form-select");
 
-        const input = document.createElement("input");
-        input.id = forId;
-        input.type = filterField.fieldType;
-        input.name = filterField.name;
-        input.value = option.value;
-        if (option.value === filterField.defaultValue) {
-          input.checked = true;
-          input.setAttribute("checked", "checked");
-        }
+        filterField.options.forEach((option) => {
+          const opt = document.createElement("option");
+          opt.value = option.value;
+          opt.innerText = option.label;
 
-        fieldWrapper.appendChild(input);
+          if (option.value === filterField.defaultValue) {
+            opt.selected = true;
+            opt.setAttribute("selected", "selected");
+          }
 
-        const label = document.createElement("label");
-        label.classList.add("filter-option");
-        label.setAttribute("for", forId);
-        label.innerHTML += option.label;
+          select.appendChild(opt);
+        });
 
-        fieldWrapper.appendChild(label);
+        field.appendChild(select);
+      } else if (filterField.fieldType === "multi-range") {
+        filters.fieldRange(field, filterField);
+      } else {
+        filterField.options.forEach((option) => {
+          const forId = `${filterField.name}_${option.value}`;
+          const fieldWrapper = document.createElement("div");
+          fieldWrapper.classList.add("filter-option-container");
 
-        field.appendChild(fieldWrapper);
-      });
+          const input = document.createElement("input");
+          input.id = forId;
+          input.type = filterField.fieldType;
+          input.name = filterField.name;
+          input.value = option.value;
+          if (option.value === filterField.defaultValue) {
+            input.checked = true;
+            input.setAttribute("checked", "checked");
+          }
+
+          fieldWrapper.appendChild(input);
+
+          const label = document.createElement("label");
+          label.classList.add("filter-option");
+          label.setAttribute("for", forId);
+          label.innerHTML += option.label;
+
+          fieldWrapper.appendChild(label);
+
+          field.appendChild(fieldWrapper);
+        });
+      }
 
       wrapper.appendChild(field);
       parent.appendChild(wrapper);
+    },
+
+    fieldRange: (field, filterField) => {
+      const minInput = document.createElement("input");
+      minInput.type = "number";
+      minInput.name = `${filterField.name}`;
+      minInput.id = `${filterField.name}-min`;
+      minInput.value = filterField.defaultValue[0] || filterField.minValue;
+      minInput.placeholder = `Min ${filterField.name}`;
+      minInput.setAttribute("min", filterField.minValue);
+      minInput.setAttribute("max", filterField.maxValue);
+      minInput.classList.add("d-none");
+
+      const maxInput = document.createElement("input");
+      maxInput.type = "number";
+      maxInput.name = `${filterField.name}`;
+      maxInput.id = `${filterField.name}-max`;
+      maxInput.value = filterField.defaultValue[1] || filterField.maxValue;
+      maxInput.placeholder = `Max ${filterField.name}`;
+      maxInput.setAttribute("min", filterField.minValue);
+      maxInput.setAttribute("max", filterField.maxValue);
+      maxInput.classList.add("d-none");
+
+      const label = document.createElement("div");
+      label.classList.add("range-slider-label");
+
+      const progress = document.createElement("div");
+      progress.classList.add("range-slider-progress");
+      progress.style.left = `${
+        ((minInput.value - filterField.minValue) /
+          (filterField.maxValue - filterField.minValue)) *
+        100
+      }%`;
+      progress.style.right = `${
+        ((filterField.maxValue - maxInput.value) /
+          (filterField.maxValue - filterField.minValue)) *
+        100
+      }%`;
+
+      const minSlider = document.createElement("div");
+      minSlider.classList.add("range-slider-min");
+      minSlider.style.left = `${
+        ((minInput.value - filterField.minValue) /
+          (filterField.maxValue - filterField.minValue)) *
+        100
+      }%`;
+      minSlider.onmousedown = (e) => {
+        e.preventDefault();
+        const mouseMoveHandler = (e) => {
+          const rect = field.getBoundingClientRect();
+          const offsetX = e.clientX - rect.left;
+
+          const maxValue = maxInput.value || filterField.maxValue;
+          const percentage = Math.min(Math.max(offsetX / rect.width, 0), 1);
+          let minValue =
+            filterField.allowZero && percentage == 0 ? 0 : filterField.minValue;
+          const value = Math.round(
+            percentage * (filterField.maxValue - minValue) + minValue
+          );
+
+          // don't allow to move the min slider beyond the max slider.
+          const valueOffset = Math.round(
+            (percentage + 0.2) * (filterField.maxValue - minValue) + minValue
+          );
+          if (valueOffset > maxValue) {
+            return;
+          }
+
+          minInput.value = value;
+          minSlider.style.left = `${percentage * 100}%`;
+          progress.style.left = `${percentage * 100}%`;
+          updateLabel();
+          minInput.dispatchEvent(new Event("input"));
+        };
+        const mouseUpHandler = () => {
+          document.removeEventListener("mousemove", mouseMoveHandler);
+          document.removeEventListener("mouseup", mouseUpHandler);
+        };
+        document.addEventListener("mousemove", mouseMoveHandler);
+        document.addEventListener("mouseup", mouseUpHandler);
+      };
+
+      const maxSlider = document.createElement("div");
+      maxSlider.classList.add("range-slider-max");
+      maxSlider.style.left = `${
+        ((maxInput.value - filterField.minValue) /
+          (filterField.maxValue - filterField.minValue)) *
+          100 -
+        5
+      }%`;
+      maxSlider.onmousedown = (e) => {
+        e.preventDefault();
+        const mouseMoveHandler = (e) => {
+          const rect = field.getBoundingClientRect();
+          const offsetX = e.clientX - rect.left;
+          const minValue = minInput.value || filterField.minValue;
+          const percentage = Math.min(Math.max(offsetX / rect.width, 0), 1);
+          const value = Math.round(
+            percentage * (filterField.maxValue - filterField.minValue) +
+              filterField.minValue
+          );
+
+          // don't allow to move the min slider beyond the max slider.
+          const valueOffset = Math.round(
+            (percentage - 0.2) * (filterField.maxValue - filterField.minValue) +
+              filterField.minValue
+          );
+          if (valueOffset < minValue) {
+            return;
+          }
+
+          maxInput.value = value;
+          maxSlider.style.left = `${percentage * 100 - 5}%`;
+          progress.style.right = `${(1 - percentage) * 100}%`;
+          updateLabel();
+          maxInput.dispatchEvent(new Event("input"));
+        };
+
+        const mouseUpHandler = () => {
+          document.removeEventListener("mousemove", mouseMoveHandler);
+          document.removeEventListener("mouseup", mouseUpHandler);
+        };
+        document.addEventListener("mousemove", mouseMoveHandler);
+        document.addEventListener("mouseup", mouseUpHandler);
+      };
+
+      const updateLabel = () => {
+        const minValue = minInput.value || filterField.minValue;
+        const maxValue = maxInput.value || filterField.maxValue;
+        if (filterField.format && TrdFormatters[filterField.format]) {
+          label.innerHTML = `<span>${TrdFormatters[filterField.format](
+            minValue
+          )}</span> - <span>${TrdFormatters[filterField.format](
+            maxValue
+          )}</span>`;
+        } else {
+          label.innerHTML = `<span>${minValue}</span> - <span>${maxValue}</span>`;
+        }
+      };
+
+      updateLabel();
+
+      const slider = document.createElement("div");
+      slider.classList.add("range-slider");
+      slider.appendChild(progress);
+      slider.appendChild(minSlider);
+      slider.appendChild(maxSlider);
+
+      field.appendChild(label);
+      field.appendChild(slider);
+      field.appendChild(minInput);
+      field.appendChild(maxInput);
     },
 
     close: () => {
@@ -707,6 +878,14 @@ const trdDataCommonMap = (options) => {
       mapObj.on("mouseenter", id, (e) => {
         const coordinates = e.features[0].geometry.coordinates.slice();
 
+        const image =
+          settings.tooltipDisplayFields.image &&
+          settings.tooltipDisplayFields.image.field
+            ? e.features[0].properties[
+                settings.tooltipDisplayFields.image.field
+              ]
+            : undefined;
+
         const address =
           e.features[0].properties[settings.tooltipDisplayFields.title.field] ||
           `Unknown ${settings.tooltipDisplayFields.title.label}`;
@@ -727,8 +906,10 @@ const trdDataCommonMap = (options) => {
             value = "";
           }
 
+          const contentClass = item.className ? item.className : "";
+
           if (value) {
-            content += `<p><span>${
+            content += `<p class="${contentClass}"><span>${
               item.label
             }:</span> <span>${formatters.format(
               value,
@@ -739,8 +920,15 @@ const trdDataCommonMap = (options) => {
 
         const html = `
                 <div class="popup-tooltip">
-                    <h4 class="popup-title">${address}</h4>
-                    ${content}
+                  ${
+                    image
+                      ? `<div class="popup-tooltip-image"><img src="${image}" alt="" /></div>`
+                      : ""
+                  }
+                  <div class="popup-tooltip-body">
+                      <h4 class="popup-tooltip-title">${address}</h4>
+                      ${content}
+                  </div>
                 </div>
             `;
 

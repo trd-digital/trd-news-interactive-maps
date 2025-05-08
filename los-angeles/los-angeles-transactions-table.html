@@ -115,87 +115,63 @@
           visible: true,
         },
         { dataField: "Address", name: "Address", visible: true },
-        { dataField: "First Owner", name: "First owner", visible: true },
-        { dataField: "first owner tr", name: "First owner tr", visible: false },
-        { dataField: "Use Definition", name: "Property Type", visible: true },
+        { dataField: "Owner", name: "Owner", visible: true },
+        { dataField: "Property Use", name: "Property use", visible: true },
         {
-          dataField: "Transfer Date",
+          dataField: "Clean Date",
           name: "Transfer date",
           visible: true,
-          formatter: (value) => {
-            return TrdFormatters.formatDate(value);
+          formatter: (value) => TrdFormatters.formatDate(value),
+          sorter: (a, b) => {
+            if (a === b) {
+              return 0;
+            }
+            if (a === undefined || a === "" || a === null) {
+              return 1;
+            }
+            if (b === undefined || b === "" || b === null) {
+              return -1;
+            }
+            return new Date(a).getTime() - new Date(b).getTime();
           },
         },
         {
-          dataField: "DTTT Amount",
-          name: "Amount",
+          dataField: "Price",
+          name: "Price",
           visible: true,
           formatter: (value) => {
             return TrdFormatters.formatPrice(value);
           },
         },
-        { dataField: "BDL1 SQ FT", name: "BDL1 SqFt", visible: false },
-        { dataField: "BDL1 SQ FT ", name: "BDL1 SqFt ", visible: false },
-        { dataField: " BDL1 SQ FT", name: " BDL1 SqFt", visible: false },
-        { dataField: " BDL1 SQ FT ", name: " BDL1 SqFt ", visible: true },
-        // {
-        //   dataField: "Administrative Region",
-        //   name: "Administrative Region",
-        //   visible: true,
-        // },
-        // { dataField: "Cluster Code", name: "Cluster Code", visible: true },
-        // { dataField: "Key", name: "Key", visible: true },
-        // { dataField: "House Number", name: "House Number", visible: true },
-        // { dataField: "Direction", name: "Direction", visible: true },
-        // { dataField: "Street Name", name: "Street Name", visible: true },
-        // { dataField: "Use Code", name: "Use Code", visible: true },
-        // { dataField: "Reorders", name: "Reorders", visible: true },
-        // { dataField: "Zone", name: "Zone", visible: true },
-        // { dataField: "Transferee", name: "Transferee", visible: true },
-        // { dataField: "Doc Type", name: "Doc Type", visible: true },
-        // { dataField: "DTT Type", name: "DTT Type", visible: true },
-        // { dataField: "Asss Rec", name: "Asss Rec", visible: true },
-        // { dataField: "Year Built", name: "Year Built", visible: true },
-        // { dataField: "Effective Year", name: "Effective Year", visible: true },
-        // { dataField: "Bathrooms", name: "Bathrooms", visible: true },
-        // { dataField: "Bedrooms", name: "Bedrooms", visible: true },
-        // { dataField: "Design TY", name: "Design TY", visible: true },
-        // { dataField: "Last Sale1 Ver", name: "Last Sale1 Ver", visible: true },
-        // {
-        //   dataField: "Last 1 Sale Date",
-        //   name: "Last 1 Sale Date",
-        //   visible: true,
-        // },
-        // {
-        //   dataField: "Clean 1 Sale Date",
-        //   name: "Clean 1 Sale Date",
-        //   visible: true,
-        // },
-        // { dataField: "Last 1 Amount", name: "Last 1 Amount", visible: true },
-        // { dataField: "2 Verification", name: "2 Verification", visible: true },
-        // { dataField: "2 Dat", name: "2 Dat", visible: true },
-        // { dataField: "2 Amoun", name: "2 Amoun", visible: true },
-        // { dataField: "3 Verif", name: "3 Verif", visible: true },
-        // { dataField: "3 Sal Da", name: "3 Sal Da", visible: true },
-        // { dataField: "3 Sal Amou", name: "3 Sal Amou", visible: true },
+        {
+          dataField: "Build Year",
+          name: "Year built",
+          visible: true,
+          formatter: (value) => {
+            if (TrdFormatters.isEmptyValue(value)) {
+              return "";
+            }
+            return value;
+          },
+        },
+        { dataField: "SqFt", name: "SqFt", visible: true },
       ];
 
-      const formatAddress = (row) => {
-        if (
-          TrdFormatters.isEmptyValue(row["House Number"]) ||
-          TrdFormatters.isEmptyValue(row["Street Name"])
-        ) {
-          return "";
-        }
-        return `${row["House Number"]} ${row["Direction"]} ${row["Street Name"]}`;
-      };
-
       const fetchDataFilterCallback = (data) => {
-        return data.features.map((item) => {
-          return {
-            ...item.properties,
-            Address: formatAddress(item.properties),
-          };
+        return new Promise((resolve) => {
+          let filteredData = data.features
+            .map((item) => {
+              return {
+                ...item.properties,
+              };
+            })
+            .filter((item) => {
+              return (
+                new Date(item["Clean Date"]).getTime() >=
+                new Date().setMonth(new Date().getMonth() - 18)
+              );
+            });
+          resolve(filteredData);
         });
       };
 
@@ -206,7 +182,8 @@
         displayColumns,
         fetchDataFilterCallback,
         tableConfig: {
-          sortName: TrdFormatters.getFieldName("Transfer Date"),
+          sortName: TrdFormatters.getFieldName("Clean Date"),
+          sortResetPage: true,
         },
       });
     </script>

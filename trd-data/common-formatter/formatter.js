@@ -81,6 +81,37 @@ const TrdFormatters = {
     }
   },
 
+  formatCurrency: (value) => {
+    if (TrdFormatters.isEmptyValue(value)) {
+      return '<span class="text-muted">N/A</span>';
+    }
+    if (typeof value === "string") {
+      value = value.replace(/[$,]/g, "");
+    }
+    if (isNaN(value)) {
+      return value;
+    }
+
+    value = parseFloat(value);
+
+    try {
+      let maximumFractionDigits = 0;
+      if (value > 1_000_000_000) {
+        maximumFractionDigits = 2; // Two decimals for a billion or more.
+      } else if (value >= 1_000_000) {
+        maximumFractionDigits = 1; // One decimal for a million or more.
+      }
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        notation: "compact",
+        maximumFractionDigits,
+      }).format(value);
+    } catch (e) {
+      return value;
+    }
+  },
+
   formatDate: (value) => {
     if (TrdFormatters.isEmptyValue(value)) {
       return '<span class="text-muted">N/A</span>';
@@ -89,6 +120,7 @@ const TrdFormatters = {
     try {
       return new Date(value).toLocaleDateString();
     } catch (e) {
+      console.error("Error formatting date:", e);
       return value;
     }
   },
