@@ -195,7 +195,8 @@
   };
 
   window.map = trdDataCommonMap({
-    filePath: "/data/los-angeles-transactions-map.geojson",
+    filePath:
+      "https://static.therealdeal.com/interactive-maps/los-angeles-transactions-map.geojson",
     eventCategory: "los-angeles-transactions-map",
     mapElementId: "map",
     filterElementId: "map-filters",
