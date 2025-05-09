@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_dd57e7b8e50c6ab3a1443aca107b2e7d {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.css"/>
+</head>
+<body>    
+    
+            <div class="folium-map" id="map_dd57e7b8e50c6ab3a1443aca107b2e7d" ></div>
+        
+    
+  <div style="
+     position: fixed;
+     bottom: 30px; left: 30px;
+     width: 140px; background: white;
+     border:1px solid #888; z-index:9999;
+     font-size:13px; padding: 8px;">
+    <b>Status legend</b><br>
+    
+      <i style="background:red;width:12px;height:12px;
+                display:inline-block;margin-right:6px;"></i>
+      Resale<br>
+    
+      <i style="background:blue;width:12px;height:12px;
+                display:inline-block;margin-right:6px;"></i>
+      Sponsor - Boutique<br>
+    
+      <i style="background:green;width:12px;height:12px;
+                display:inline-block;margin-right:6px;"></i>
+      Sponsor - tower<br>
+    
+  </div>
+</body>
+<script>    
+    
+            var map_dd57e7b8e50c6ab3a1443aca107b2e7d = L.map(
+                "map_dd57e7b8e50c6ab3a1443aca107b2e7d",
+                {
+                    center: [40.732963899999994, -74.00915455555555],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 13,
+                    zoomControl: true,
+                    preferCanvas: false,
+                    scrollWheelZoom: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_fb198d370c982d8fcb86c1a9944fbe22 = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {"attribution": "Mapbox", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_dd57e7b8e50c6ab3a1443aca107b2e7d);
+        
+    
+            var circle_marker_2bc216c5352d5c1758c601b62bbae9b1 = L.circleMarker(
+                [40.721937, -74.011426],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_dd57e7b8e50c6ab3a1443aca107b2e7d);
+        
+    
+        var popup_1a096ae578dc60e52f41ef6c88c8c033 = L.popup({"maxWidth": 250});
+
+        
+            
+                var html_7410641b0ed0dcc7cb9c9a05aba50b57 = $(`<div id="html_7410641b0ed0dcc7cb9c9a05aba50b57" style="width: 100.0%; height: 100.0%;"><div style="min-width:220px;font-size:13px;"><strong>Address:</strong> 250 West Street<br><strong>Status:</strong> Resale<br><strong>Notable:</strong> \$60 million four-unit spread<br></div></div>`)[0];
+                popup_1a096ae578dc60e52f41ef6c88c8c033.setContent(html_7410641b0ed0dcc7cb9c9a05aba50b57);
+            
+        
+
+        circle_marker_2bc216c5352d5c1758c601b62bbae9b1.bindPopup(popup_1a096ae578dc60e52f41ef6c88c8c033)
+        ;
+
+        
+    
+    
+            var circle_marker_fa16805cce17b7b7d958a7f42f8e298f = L.circleMarker(
+                [40.7338782, -74.0090651],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_dd57e7b8e50c6ab3a1443aca107b2e7d);
+        
+    
+        var popup_31b2beb97acf7fa435b4bbc571849c6b = L.popup({"maxWidth": 250});
+
+        
+            
+                var html_084fcd223b914ac54ff93c911d13a862 = $(`<div id="html_084fcd223b914ac54ff93c911d13a862" style="width: 100.0%; height: 100.0%;"><div style="min-width:220px;font-size:13px;"><strong>Address:</strong> 150 Charles <br><strong>Status:</strong> Resale<br><strong>Notable:</strong> Unit 9A sold for \$60 million (\$10,300 ppsqf)<br><strong>Sponsor ppsqf:</strong> $3,576<br><strong>Resale ppsqf:</strong> $5,213<br><strong>Price change:</strong> 45.78%<br></div></div>`)[0];
+                popup_31b2beb97acf7fa435b4bbc571849c6b.setContent(html_084fcd223b914ac54ff93c911d13a862);
+            
+        
+
+        circle_marker_fa16805cce17b7b7d958a7f42f8e298f.bindPopup(popup_31b2beb97acf7fa435b4bbc571849c6b)
+        ;
+
+        
+    
+    
+            var circle_marker_661cdb3785dbf0ab1b71157b748b40c1 = L.circleMarker(
+                [40.7230694, -74.0112398],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_dd57e7b8e50c6ab3a1443aca107b2e7d);
+        
+    
+        var popup_9cffda8c37b8d18bad71686f41fa7ee9 = L.popup({"maxWidth": 250});
+
+        
+            
+                var html_c9f305165729573a7c1864fce011c628 = $(`<div id="html_c9f305165729573a7c1864fce011c628" style="width: 100.0%; height: 100.0%;"><div style="min-width:220px;font-size:13px;"><strong>Address:</strong> 70 Vestry Street<br><strong>Status:</strong> Resale<br><strong>Sponsor ppsqf:</strong> $3,808<br><strong>Resale ppsqf:</strong> $4,655<br><strong>Price change:</strong> 22.24%<br></div></div>`)[0];
+                popup_9cffda8c37b8d18bad71686f41fa7ee9.setContent(html_c9f305165729573a7c1864fce011c628);
+            
+        
+
+        circle_marker_661cdb3785dbf0ab1b71157b748b40c1.bindPopup(popup_9cffda8c37b8d18bad71686f41fa7ee9)
+        ;
+
+        
+    
+    
+            var circle_marker_004b2fef5cec617b0e444d5c33088d16 = L.circleMarker(
+                [40.7228646, -74.0094944],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_dd57e7b8e50c6ab3a1443aca107b2e7d);
+        
+    
+        var popup_2e35a05702ffd70322fd99a8e496b8dc = L.popup({"maxWidth": 250});
+
+        
+            
+                var html_ee462151202e5f3e6bc1755ea545f385 = $(`<div id="html_ee462151202e5f3e6bc1755ea545f385" style="width: 100.0%; height: 100.0%;"><div style="min-width:220px;font-size:13px;"><strong>Address:</strong> 443 Greenwich Street<br><strong>Status:</strong> Resale<br><strong>Sponsor ppsqf:</strong> $3,389<br><strong>Resale ppsqf:</strong> $4,505<br><strong>Price change:</strong> 32.93%<br></div></div>`)[0];
+                popup_2e35a05702ffd70322fd99a8e496b8dc.setContent(html_ee462151202e5f3e6bc1755ea545f385);
+            
+        
+
+        circle_marker_004b2fef5cec617b0e444d5c33088d16.bindPopup(popup_2e35a05702ffd70322fd99a8e496b8dc)
+        ;
+
+        
+    
+    
+            var circle_marker_eb403242539b25fba054268725006819 = L.circleMarker(
+                [40.7380115, -74.00939559999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_dd57e7b8e50c6ab3a1443aca107b2e7d);
+        
+    
+        var popup_e2a7719468523608e698a4bf35c5b7ec = L.popup({"maxWidth": 250});
+
+        
+            
+                var html_156bb3aab21c9f276981ce6032780cbf = $(`<div id="html_156bb3aab21c9f276981ce6032780cbf" style="width: 100.0%; height: 100.0%;"><div style="min-width:220px;font-size:13px;"><strong>Address:</strong> 140 Jane Street<br><strong>Status:</strong> Sponsor - Boutique<br><strong>Notable:</strong> \$87.5 million PH listed (\$9,180 ppsqf)<br><strong>Sponsor ppsqf:</strong> $5,470<br></div></div>`)[0];
+                popup_e2a7719468523608e698a4bf35c5b7ec.setContent(html_156bb3aab21c9f276981ce6032780cbf);
+            
+        
+
+        circle_marker_eb403242539b25fba054268725006819.bindPopup(popup_e2a7719468523608e698a4bf35c5b7ec)
+        ;
+
+        
+    
+    
+            var circle_marker_a8e4c19bad0c60e944956f871ff0403b = L.circleMarker(
+                [40.7351519, -74.00727090000001],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_dd57e7b8e50c6ab3a1443aca107b2e7d);
+        
+    
+        var popup_72b2920d2b16ac68345d0ad7e5808520 = L.popup({"maxWidth": 250});
+
+        
+            
+                var html_270ff7af5d27bc5fd40c001128d4e809 = $(`<div id="html_270ff7af5d27bc5fd40c001128d4e809" style="width: 100.0%; height: 100.0%;"><div style="min-width:220px;font-size:13px;"><strong>Address:</strong> 125 Perry Street <br><strong>Status:</strong> Sponsor - Boutique<br><strong>Notable:</strong> \$57.5 million PH in contract (\$8,088 ppsqf)<br><strong>Sponsor ppsqf:</strong> $6,066<br></div></div>`)[0];
+                popup_72b2920d2b16ac68345d0ad7e5808520.setContent(html_270ff7af5d27bc5fd40c001128d4e809);
+            
+        
+
+        circle_marker_a8e4c19bad0c60e944956f871ff0403b.bindPopup(popup_72b2920d2b16ac68345d0ad7e5808520)
+        ;
+
+        
+    
+    
+            var circle_marker_db785b7291cbc2c9bac221164f3839e7 = L.circleMarker(
+                [40.7449319, -74.00728509999999],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_dd57e7b8e50c6ab3a1443aca107b2e7d);
+        
+    
+        var popup_0b341af67d892d578a5218ba05d91024 = L.popup({"maxWidth": 250});
+
+        
+            
+                var html_c82e2d685b7fc173e607e09f160ec6a6 = $(`<div id="html_c82e2d685b7fc173e607e09f160ec6a6" style="width: 100.0%; height: 100.0%;"><div style="min-width:220px;font-size:13px;"><strong>Address:</strong> 500 West 18th Street<br><strong>Status:</strong> Sponsor - tower<br><strong>Notable:</strong> \$47 million PH sold (\$6,780 ppsqf)<br><strong>Sponsor ppsqf:</strong> $3,348<br></div></div>`)[0];
+                popup_0b341af67d892d578a5218ba05d91024.setContent(html_c82e2d685b7fc173e607e09f160ec6a6);
+            
+        
+
+        circle_marker_db785b7291cbc2c9bac221164f3839e7.bindPopup(popup_0b341af67d892d578a5218ba05d91024)
+        ;
+
+        
+    
+    
+            var circle_marker_85f58cd6e3b4b46e199b64df53345c7e = L.circleMarker(
+                [40.729338, -74.0099475],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_dd57e7b8e50c6ab3a1443aca107b2e7d);
+        
+    
+        var popup_a0b00dc3b33e373b53b2510ac74e668c = L.popup({"maxWidth": 250});
+
+        
+            
+                var html_d4aee837ac5d845aaa974c4bca92f973 = $(`<div id="html_d4aee837ac5d845aaa974c4bca92f973" style="width: 100.0%; height: 100.0%;"><div style="min-width:220px;font-size:13px;"><strong>Address:</strong> 80 Clarkson Street<br><strong>Status:</strong> Sponsor - tower<br><strong>Notable:</strong> \$63 million listing (\$9,083 ppsqf)<br><strong>Sponsor ppsqf:</strong> $5,809<br></div></div>`)[0];
+                popup_a0b00dc3b33e373b53b2510ac74e668c.setContent(html_d4aee837ac5d845aaa974c4bca92f973);
+            
+        
+
+        circle_marker_85f58cd6e3b4b46e199b64df53345c7e.bindPopup(popup_a0b00dc3b33e373b53b2510ac74e668c)
+        ;
+
+        
+    
+    
+            var circle_marker_d9015311ce852428298bf7e738392d2f = L.circleMarker(
+                [40.7474926, -74.0072666],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_dd57e7b8e50c6ab3a1443aca107b2e7d);
+        
+    
+        var popup_f3026d206df0bfc829f47baf8345079a = L.popup({"maxWidth": 250});
+
+        
+            
+                var html_7294e74c5c5b669f6c2523497ee180a8 = $(`<div id="html_7294e74c5c5b669f6c2523497ee180a8" style="width: 100.0%; height: 100.0%;"><div style="min-width:220px;font-size:13px;"><strong>Address:</strong> 551 West 21st Street<br><strong>Status:</strong> Resale<br><strong>Notable:</strong> \$75 million listing (\$11,718 ppsqf)<br></div></div>`)[0];
+                popup_f3026d206df0bfc829f47baf8345079a.setContent(html_7294e74c5c5b669f6c2523497ee180a8);
+            
+        
+
+        circle_marker_d9015311ce852428298bf7e738392d2f.bindPopup(popup_f3026d206df0bfc829f47baf8345079a)
+        ;
+
+        
+    
+    
+            L.control.fullscreen(
+                {"forceSeparateButton": false, "position": "topleft", "title": "Full Screen", "titleCancel": "Exit Full Screen"}
+            ).addTo(map_dd57e7b8e50c6ab3a1443aca107b2e7d);
+        
+    
+            var tile_layer_2a0c9c98df3057c639f52713eb0c8a73 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+            var mini_map_fe1ba579b3e8a1163401fdb236342295 = new L.Control.MiniMap(
+                tile_layer_2a0c9c98df3057c639f52713eb0c8a73,
+                {"autoToggleDisplay": false, "centerFixed": false, "collapsedHeight": 25, "collapsedWidth": 25, "height": 150, "minimized": false, "position": "bottomright", "toggleDisplay": true, "width": 150, "zoomAnimation": false, "zoomLevelOffset": -5}
+            );
+            map_dd57e7b8e50c6ab3a1443aca107b2e7d.addControl(mini_map_fe1ba579b3e8a1163401fdb236342295);
+        
+</script>
