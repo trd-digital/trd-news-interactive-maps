@@ -1,7 +1,7 @@
 (() => {
   const tooltipDisplayFields = {
     image: {
-      field: "image",
+      field: "image_links",
     },
     title: {
       field: "Title",
@@ -68,7 +68,7 @@
 
   window.map = trdDataCommonMap({
     filePath:
-      "https://static.therealdeal.com/interactive-maps/celebrity_sales.geojson",
+      "https://static.therealdeal.com/interactive-maps/national-celebrity-houses-map.geojson",
     eventCategory: "national-celebrity-map",
     mapElementId: "map",
     filterElementId: "map-filters",

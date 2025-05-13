@@ -878,13 +878,18 @@ const trdDataCommonMap = (options) => {
       mapObj.on("mouseenter", id, (e) => {
         const coordinates = e.features[0].geometry.coordinates.slice();
 
-        const image =
+        let image;
+        if (
           settings.tooltipDisplayFields.image &&
           settings.tooltipDisplayFields.image.field
-            ? e.features[0].properties[
-                settings.tooltipDisplayFields.image.field
-              ]
-            : undefined;
+        ) {
+          const image_url =
+            e.features[0].properties[settings.tooltipDisplayFields.image.field];
+
+          if (image_url && image_url.startsWith("http")) {
+            image = image_url;
+          }
+        }
 
         const address =
           e.features[0].properties[settings.tooltipDisplayFields.title.field] ||
@@ -922,7 +927,7 @@ const trdDataCommonMap = (options) => {
                 <div class="popup-tooltip">
                   ${
                     image
-                      ? `<div class="popup-tooltip-image"><img src="${image}" alt="" /></div>`
+                      ? `<div class="popup-tooltip-image"><img src="${image}" alt="" width="100%" height="auto" /></div>`
                       : ""
                   }
                   <div class="popup-tooltip-body">
