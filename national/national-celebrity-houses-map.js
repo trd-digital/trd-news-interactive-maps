@@ -82,11 +82,15 @@
     modalDisplayFields,
     filterFields,
     defaultColors: {
-      light: "#D84315",
+      light: "#FF5722",
       dark: "#D84315",
+      pointTextColorLight: "#ffffff",
+      pointTextColorDark: "#ffffff",
     },
     paintCircleColorType: "",
     loadingEnabled: true,
+    mapCluster: true,
+    mapClusterMaxZoom: 9,
     mapLayerPaint: {
       "circle-radius": {
         base: 2,
