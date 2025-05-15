@@ -79,12 +79,17 @@ const trdDataCommonMap = (options) => {
     mapLayerPaint: undefined, // object
     eventCategory: "unknown-map",
     paintCircleColorType: "step",
-    sourceId: "dataPoints",
+    sourceId: "data",
     defaultColors: {
-      dark: "white",
       light: "black",
+      dark: "white",
+      pointTextColorLight: "white",
+      pointTextColorDark: "black",
     },
     loadingEnabled: false,
+    mapCluster: false,
+    mapClusterMaxZoom: 12, // Max zoom to cluster points on
+    mapClusterRadius: 50, // Radius of each cluster when clustering points (defaults to 50)
   };
 
   const settings = Object.assign({}, defaults, options);
@@ -825,49 +830,100 @@ const trdDataCommonMap = (options) => {
     },
 
     loadSalesDataOnMap: (id, data) => {
+      const circleColor =
+        settings.paintCircleColorType &&
+        Object.keys(paintCircleColorTypes).includes(
+          settings.paintCircleColorType
+        )
+          ? paintCircleColorTypes[settings.paintCircleColorType]()
+          : helpers.pickThemeColor(
+              settings.defaultColors.light
+                ? settings.defaultColors.light
+                : "black",
+              settings.defaultColors.dark
+                ? settings.defaultColors.dark
+                : "white"
+            );
+
+      let filters = settings.mapLayerFilter ? settings.mapLayerFilter : [];
+      filters = settings.cluster
+        ? ["!", ["has", "point_count"], ...filters]
+        : filters;
+
       if (!mapObj.getSource(id)) {
         mapObj.addSource(id, {
           type: "geojson",
           data: data,
+          cluster: settings.mapCluster,
+          clusterMaxZoom: settings.mapClusterMaxZoom,
+          clusterRadius: settings.mapClusterRadius,
         });
       }
 
-      if (!mapObj.getLayer(id)) {
+      if (!mapObj.getLayer(`${id}-points`)) {
         mapObj.addLayer({
-          type: "circle",
-          id: id,
+          id: `${id}-points`,
           source: id,
-          filters: settings.mapLayerFilter ? settings.mapLayerFilter : [],
+          type: "circle",
+          filters: filters,
           paint: {
             "circle-pitch-alignment": "map",
-            "circle-color":
-              settings.paintCircleColorType &&
-              Object.keys(paintCircleColorTypes).includes(
-                settings.paintCircleColorType
-              )
-                ? paintCircleColorTypes[settings.paintCircleColorType]()
-                : helpers.pickThemeColor(
-                    settings.defaultColors.light
-                      ? settings.defaultColors.light
-                      : "black",
-                    settings.defaultColors.dark
-                      ? settings.defaultColors.dark
-                      : "white"
-                  ),
+            "circle-color": circleColor,
             ...(settings.mapLayerPaint ? settings.mapLayerPaint : {}),
           },
         });
       }
+
+      if (settings.mapCluster) {
+        // add cluster layer
+        if (!mapObj.getLayer(`${id}-clusters`)) {
+          mapObj.addLayer({
+            id: `${id}-clusters`,
+            source: id,
+            type: "circle",
+            filter: ["has", "point_count"],
+            paint: {
+              "circle-color": circleColor,
+              "circle-radius": [
+                "step",
+                ["get", "point_count"],
+                20, // circle radius
+                50, // stop value
+                30,
+                75,
+                40,
+                100,
+                50,
+              ],
+            },
+          });
+        }
+
+        // add cluster count layer
+        if (!mapObj.getLayer(`${id}-cluster-count`)) {
+          mapObj.addLayer({
+            id: `${id}-cluster-count`,
+            source: id,
+            type: "symbol",
+            filter: ["has", "point_count"],
+            layout: {
+              "text-field": ["get", "point_count_abbreviated"],
+              "text-size": 16,
+              "text-color": helpers.pickThemeColor(
+                settings.defaultColors.pointTextColorLight
+                  ? settings.defaultColors.pointTextColorLight
+                  : "white",
+                settings.defaultColors.pointTextColorDark
+                  ? settings.defaultColors.pointTextColorDark
+                  : "black"
+              ),
+            },
+          });
+        }
+      }
     },
 
     tooltip: (id) => {
-      mapObj.on("mouseenter", id, (e) => {
-        mapObj.getCanvas().style.cursor = "pointer";
-      });
-      mapObj.on("mouseleave", id, (e) => {
-        mapObj.getCanvas().style.cursor = "";
-      });
-
       if (!settings?.tooltipDisplayFields) return;
 
       const popup = new mapboxgl.Popup({
@@ -875,75 +931,116 @@ const trdDataCommonMap = (options) => {
         closeOnClick: false,
       });
 
-      mapObj.on("mouseenter", id, (e) => {
-        const coordinates = e.features[0].geometry.coordinates.slice();
-
-        const image =
-          settings.tooltipDisplayFields.image &&
-          settings.tooltipDisplayFields.image.field
-            ? e.features[0].properties[
-                settings.tooltipDisplayFields.image.field
-              ]
-            : undefined;
-
-        const address =
-          e.features[0].properties[settings.tooltipDisplayFields.title.field] ||
-          `Unknown ${settings.tooltipDisplayFields.title.label}`;
-
-        const tooltipDisplayFieldsContent =
-          settings.tooltipDisplayFields.content;
-
-        let content = "";
-
-        tooltipDisplayFieldsContent.forEach((item) => {
-          let value = helpers.cleanValue(e.features[0].properties[item.field]);
-
-          if (
-            item.filter &&
-            typeof item.filter === "function" &&
-            !item.filter(value)
-          ) {
-            value = "";
-          }
-
-          const contentClass = item.className ? item.className : "";
-
-          if (value) {
-            content += `<p class="${contentClass}"><span>${
-              item.label
-            }:</span> <span>${formatters.format(
-              value,
-              item.format
-            )}</span></p>`;
-          }
+      if (settings.mapCluster) {
+        mapObj.on("mouseleave", `${id}-clusters`, (e) => {
+          mapObj.getCanvas().style.cursor = "";
         });
+        mapObj.on("mouseenter", `${id}-clusters`, (e) => {
+          mapObj.getCanvas().style.cursor = "pointer";
+        });
+        mapObj.on("click", `${id}-clusters`, (e) => {
+          const features = mapObj.queryRenderedFeatures(e.point, {
+            layers: [`${id}-clusters`],
+          });
+          if (!features.length) return;
 
-        const html = `
-                <div class="popup-tooltip">
-                  ${
-                    image
-                      ? `<div class="popup-tooltip-image"><img src="${image}" alt="" /></div>`
-                      : ""
-                  }
-                  <div class="popup-tooltip-body">
-                      <h4 class="popup-tooltip-title">${address}</h4>
-                      ${content}
-                  </div>
-                </div>
-            `;
+          const clusterId = features[0].properties.cluster_id;
+          mapObj
+            .getSource(id)
+            .getClusterExpansionZoom(clusterId, (err, zoom) => {
+              if (err) return;
 
-        popup.setLngLat(coordinates).setHTML(html).addTo(mapObj);
-      });
+              mapObj.easeTo({
+                center: features[0].geometry.coordinates,
+                zoom: zoom,
+              });
+            });
+        });
+      }
 
-      mapObj.on("mouseleave", id, (e) => {
+      mapObj.on("mouseleave", `${id}-points`, (e) => {
+        mapObj.getCanvas().style.cursor = "";
         popup.remove();
       });
+
+      mapObj.on("mouseenter", `${id}-points`, (e) => {
+        mapObj.getCanvas().style.cursor = "pointer";
+
+        const cluster = e.features[0].properties.cluster;
+        if (cluster) {
+          return;
+        }
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const html = map.getTooltipHtml(e.features[0]);
+        popup.setLngLat(coordinates).setHTML(html).addTo(mapObj);
+      });
+    },
+
+    getTooltipHtml: (feature) => {
+      let image;
+      if (
+        settings.tooltipDisplayFields.image &&
+        settings.tooltipDisplayFields.image.field
+      ) {
+        const image_url =
+          feature.properties[settings.tooltipDisplayFields.image.field];
+
+        if (image_url && image_url.startsWith("http")) {
+          image = image_url;
+        }
+      }
+
+      const address =
+        feature.properties[settings.tooltipDisplayFields.title.field] ||
+        `Unknown ${settings.tooltipDisplayFields.title.label}`;
+
+      const tooltipDisplayFieldsContent = settings.tooltipDisplayFields.content;
+
+      let content = "";
+
+      tooltipDisplayFieldsContent.forEach((item) => {
+        let value = helpers.cleanValue(feature.properties[item.field]);
+
+        if (
+          item.filter &&
+          typeof item.filter === "function" &&
+          !item.filter(value)
+        ) {
+          value = "";
+        }
+
+        const contentClass = item.className ? item.className : "";
+
+        if (value) {
+          content += `<p class="${contentClass}"><span>${
+            item.label
+          }:</span> <span>${formatters.format(value, item.format)}</span></p>`;
+        }
+      });
+
+      return `
+        <div class="popup-tooltip">
+          ${
+            image
+              ? `<div class="popup-tooltip-image"><img src="${image}" alt="" width="100%" height="auto" /></div>`
+              : ""
+          }
+          <div class="popup-tooltip-body">
+              <h4 class="popup-tooltip-title">${address}</h4>
+              ${content}
+          </div>
+        </div>
+      `;
     },
 
     modal: (id) => {
       if (!settings?.modalDisplayFields) return;
 
-      mapObj.on("click", id, (e) => {
+      mapObj.on("click", `${id}-points`, (e) => {
+        if (e.features[0].properties.cluster) {
+          return;
+        }
+
         const modal = document.querySelector("#modal");
         const modalTitle = document.querySelector("#modal .modal-title");
         const modalContent = document.querySelector("#modal .modal-body");
