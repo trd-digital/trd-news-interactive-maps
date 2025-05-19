@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://therealdeal.com/favicon.ico"
+    />
+    <title>Market snapshot</title>
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin="true"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap"
+    />
+    <link
+    rel="stylesheet"
+    href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css"
+  />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-K694XL6");
+    </script>
+    <!-- End Google Tag Manager -->
+     <style>
+      [data-bs-theme="dark"] {
+        --bs-body-bg: #212121;
+      }
+      .widget-cards {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 20px 0;
+        gap: 20px;
+      }
+      .widget-card {
+        width: 100%;
+        max-width: 350px;
+        border-radius: 8px;
+        border: 1px solid var(--bs-border-color);
+        padding: 10px;
+      }
+      .widget-card-title {
+        font-size: 18px;
+        margin-bottom: 10px;
+        font-family: 'Proxima Nova', sans-serif;
+      }
+      .widget-card-value {
+        font-size: 32px;
+        font-family: "Merriweather", serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+        font-weight: 900;
+        color: #4285F4;
+      }
+     </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript
+    ><iframe
+      src="https://www.googletagmanager.com/ns.html?id=GTM-K694XL6"
+      height="0"
+      width="0"
+      style="display: none; visibility: hidden"
+    ></iframe
+  ></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+    <main id="snapshot" class="container"></main>
+
+    <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://static.therealdeal.com/library/theme.js?v=1"></script>
+    <script>
+      const trdTheme = TrdTheme();
+      const widgetCards = () => {
+        const defaults = {
+          rootElement: document.getElementById("snapshot"),
+          dataUrl: "TRD Data Snapshots - Snapshot2_0.csv",
+          current_region: "New York, NY metro area",
+          current_sector: "Residential",
+          current_date_period: "Q1 2025",
+          display_title_order: [
+            "Median Sale Price",
+            "Median Price Per Sq. Ft.",
+            "Number of Sales",
+            "Median Days on Market",
+            "Listing Inventory",
+            "Months of Supply",
+          ],
+        }
+
+        const fn = {
+          init: () => {
+            trdTheme.init();
+            fn.getData()
+          },
+
+          getData: () => {
+            Papa.parse(
+              defaults.dataUrl,
+              {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: (results) => {
+                  const filteredData = results.data.filter(
+                    (item) =>
+                      item["region"] === defaults.current_region &&
+                      item["sector"] === defaults.current_sector &&
+                      item["date_period"] === defaults.current_date_period
+                  ).sort((a, b) => {
+                    const indexA = defaults.display_title_order.indexOf(a["display_title"]);
+                    const indexB = defaults.display_title_order.indexOf(b["display_title"]);
+                    return indexA - indexB;
+                  });
+
+                  fn.renderCards(filteredData)
+                },
+                error: (error) => {
+                  console.error("Error parsing CSV:", error)
+                }
+            }
+            )
+          },
+
+          renderCards: (data) => {
+            if(!data || data.length === 0) {
+              console.error("No data found for the specified filters.")
+              return;
+            }
+            
+            const root = defaults.rootElement;
+            const container = document.createElement("div");
+            container.classList.add("widget-cards");
+            data.forEach((item) => {
+              const card = document.createElement("div");
+              card.className = "widget-card";
+              card.innerHTML = `
+                <h5 class="widget-card-title">${item["display_title"]}</h5>
+                <div class="widget-card-value">${item['value']}</div>
+              `;
+              container.appendChild(card);
+            });
+            root.appendChild(container);
+
+            const footer = document.createElement("div");
+            footer.className = "d-flex mt-3 justify-content-between";
+            footer.innerHTML = `
+              <div class="text-muted">Last updated: ${data[0]['last_updated']}</div>
+              <div class="text-muted">${data[0]["date_period"]}</div>
+            `;
+            root.appendChild(footer);
+          },
+        };
+
+        fn.init();
+      };
+
+
+      widgetCards();
+    </script>
+</html>
