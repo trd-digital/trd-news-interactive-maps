@@ -1,0 +1,2854 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_a24b00809cea1d491a79109d4a794bd6 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.css"/>
+</head>
+<body>    
+    
+<style>
+    .popup-content {
+        min-width: 300px;
+        font-size: 14px;
+        line-height: 1.4;
+        color: #333;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+    .leaflet-popup, .leaflet-popup-content-wrapper {
+        background-color: #f9f9f9;
+        border: 1px solid #bbb;
+        border-radius: 5px;
+        padding: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .leaflet-popup-tip {
+        background: #f9f9f9;
+    }
+</style>
+    
+    <h3 style="text-align:center; font-family:Arial, sans-serif; font-size:18px; color:#333; margin-top:10px;">
+        <b>CA/Klu Homes</b>
+    </h3>
+    
+     <div style="
+     position: fixed; 
+     bottom: 50px; left: 50px; width: 150px; 
+     background-color: white;
+     border:2px solid grey;
+     z-index:9999;
+     font-size:14px;
+     padding: 10px;
+     ">
+     <strong>Legend</strong><br>
+<i style="background:red;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>CA Homes LLC<br><i style="background:blue;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>Klu Homes LLC<br><i style="background:green;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>CA Homes & Properties LLC<br><i style="background:purple;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>CA Homes<br><i style="background:orange;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>CA Homes, LLC<br><i style="background:darkred;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>Construction & Technology Solution Inc (Managed by Chris Urban and Tomasz Szumny)<br><i style="background:lightred;width:12px;height:12px;display:inline-block;margin-right:5px;"></i>Klu Homes, LLC<br></div>
+    
+            <div class="folium-map" id="map_a24b00809cea1d491a79109d4a794bd6" ></div>
+        
+</body>
+<script>    
+    
+            var map_a24b00809cea1d491a79109d4a794bd6 = L.map(
+                "map_a24b00809cea1d491a79109d4a794bd6",
+                {
+                    center: [41.7422092, -87.5811845],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: false,
+                    scrollWheelZoom: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_a2ca18013c6bc27d017dffa19695a60c = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var tile_layer_ce1d56a67e935dbe0b09903a9105894d = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {"attribution": "Mapbox", "detectRetina": false, "maxNativeZoom": 20, "maxZoom": 20, "minZoom": 1, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            L.control.fullscreen(
+                {"forceSeparateButton": false, "position": "topleft", "title": "Full Screen", "titleCancel": "Exit Full Screen"}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var tile_layer_46c7e46781fa0cf98c41bddb13a984a6 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+            var mini_map_d7818fabac2d0c2b7eb911ef760259cf = new L.Control.MiniMap(
+                tile_layer_46c7e46781fa0cf98c41bddb13a984a6,
+                {"autoToggleDisplay": false, "centerFixed": false, "collapsedHeight": 25, "collapsedWidth": 25, "height": 150, "minimized": false, "position": "bottomright", "toggleDisplay": true, "width": 150, "zoomAnimation": false, "zoomLevelOffset": -5}
+            );
+            map_a24b00809cea1d491a79109d4a794bd6.addControl(mini_map_d7818fabac2d0c2b7eb911ef760259cf);
+        
+    
+            var marker_06c24df5a25f2b52208af16fac97b9bf = L.marker(
+                [41.7422092, -87.5811845],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_c30440431c80a0c5830a9d80456640ae = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_06c24df5a25f2b52208af16fac97b9bf.setIcon(icon_c30440431c80a0c5830a9d80456640ae);
+        
+    
+        var popup_e7412f4c1262aab2abe1919be7b13449 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_e6555e3ad0e62ef5ef6f54a683afa5fc = $(`<div id="html_e6555e3ad0e62ef5ef6f54a683afa5fc" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1743 East 84th Street Chicago, IL 60617</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $110,000.00<br> <strong>Purchase Date:</strong> Feb. 2024<br> <strong>Mortgage Amount:</strong> $210,000<br> <strong>Lender:</strong> Best Funding Solutions<br> <strong>Still Own?:</strong> Yes<br> <strong>In Foreclosure?:</strong> No<br> <strong>Other Notes:</strong> City suing for municipal code violations<br> </div></div>`)[0];
+                popup_e7412f4c1262aab2abe1919be7b13449.setContent(html_e6555e3ad0e62ef5ef6f54a683afa5fc);
+            
+        
+
+        marker_06c24df5a25f2b52208af16fac97b9bf.bindPopup(popup_e7412f4c1262aab2abe1919be7b13449)
+        ;
+
+        
+    
+    
+            var marker_bb0b6f4da61a413988ba111eb148ad5c = L.marker(
+                [41.7078294, -87.63951569999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_0127bd69e4ef13ed2b5392737a4d2f41 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_bb0b6f4da61a413988ba111eb148ad5c.setIcon(icon_0127bd69e4ef13ed2b5392737a4d2f41);
+        
+    
+        var popup_7c66c5ed4f4043dc63ea5fdc50587068 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_d8fa40fa2c0c05e2d553b9d60775b31f = $(`<div id="html_d8fa40fa2c0c05e2d553b9d60775b31f" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>10230 South Lowe Avenue Chicago, IL 60628</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $50,000.00<br> <strong>Purchase Date:</strong> Sep. 2023<br> <strong>Mortgage Amount:</strong> $129,000<br> <strong>Lender:</strong> Best Funding Solutions<br> <strong>Still Own?:</strong> Yes<br> <strong>In Foreclosure?:</strong> No<br> <strong>Other Notes:</strong> City suing for municipal code violations<br> </div></div>`)[0];
+                popup_7c66c5ed4f4043dc63ea5fdc50587068.setContent(html_d8fa40fa2c0c05e2d553b9d60775b31f);
+            
+        
+
+        marker_bb0b6f4da61a413988ba111eb148ad5c.bindPopup(popup_7c66c5ed4f4043dc63ea5fdc50587068)
+        ;
+
+        
+    
+    
+            var marker_4b9be782e90ba7ec5607e2cd3ed5a04b = L.marker(
+                [41.7171584, -87.6421767],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_20dcc1afd7bafddfac98fb92c8223819 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_4b9be782e90ba7ec5607e2cd3ed5a04b.setIcon(icon_20dcc1afd7bafddfac98fb92c8223819);
+        
+    
+        var popup_09b78507254e1ba38e76d9b63d231a20 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_bc1e74dca64de6d453aab74d62c322a8 = $(`<div id="html_bc1e74dca64de6d453aab74d62c322a8" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9720 South Emerald Avenue Chicago, IL 60628</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $128,500.00<br> <strong>Purchase Date:</strong> Apr. 2022<br> <strong>Mortgage Amount:</strong> $154,000<br> <strong>Lender:</strong> SP Asset Holdings (Refinanced with Renovo Financial for $165,000 in Oct. 2022; refinanced again with Daniel Ruszkiewicz and Malgorzata Makswiej for $80,000 cross-collateralized with 1950 219th Place in Sauk Village in March 2023; and refinanced again with Best Funding Solutions for $90,000 cross-collateralized with 1115 West 115th Street in Chicago in Jan. 2025)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_09b78507254e1ba38e76d9b63d231a20.setContent(html_bc1e74dca64de6d453aab74d62c322a8);
+            
+        
+
+        marker_4b9be782e90ba7ec5607e2cd3ed5a04b.bindPopup(popup_09b78507254e1ba38e76d9b63d231a20)
+        ;
+
+        
+    
+    
+            var marker_7a45a4fa701478a7ccd0b9577be061c6 = L.marker(
+                [41.6685965, -87.63829299999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_e08308b855b8c6260d842f4cdbd44a62 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_7a45a4fa701478a7ccd0b9577be061c6.setIcon(icon_e08308b855b8c6260d842f4cdbd44a62);
+        
+    
+        var popup_028dcac89fe2c68857866a69eb6c2002 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_86cd9844e9f827a1ca2519415da60d2b = $(`<div id="html_86cd9844e9f827a1ca2519415da60d2b" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>12400 South Lowe Avenue Chicago, IL 60628</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $123,000.00<br> <strong>Purchase Date:</strong> Apr. 2021<br> <strong>Mortgage Amount:</strong> $153,000<br> <strong>Lender:</strong> Midland Trust Company as Custodian for a third party (Refinanced with Renovo Financial for $115,000 in Oct. 2021; refinanced again with Samuel Lagunas for $100,000 cross-collateralized two other properties in April 2022)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_028dcac89fe2c68857866a69eb6c2002.setContent(html_86cd9844e9f827a1ca2519415da60d2b);
+            
+        
+
+        marker_7a45a4fa701478a7ccd0b9577be061c6.bindPopup(popup_028dcac89fe2c68857866a69eb6c2002)
+        ;
+
+        
+    
+    
+            var marker_303c03ae3c7377c1dcf877657719b8b1 = L.marker(
+                [41.5471072, -87.6043134],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_1cd14e7ffd0b61e8edfd441040ae93f4 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_303c03ae3c7377c1dcf877657719b8b1.setIcon(icon_1cd14e7ffd0b61e8edfd441040ae93f4);
+        
+    
+        var popup_2de0fe2c221ffb65db81b94ada6298ff = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_e95ba1ee0fb271161b886c9ae77031ba = $(`<div id="html_e95ba1ee0fb271161b886c9ae77031ba" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>304 East Birch Drive Glenwood, IL 60425</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $92,000.00<br> <strong>Purchase Date:</strong> Feb. 2021<br> <strong>Mortgage Amount:</strong> CA Homes in Dec. 2020 assumed an existing $130,000 mortgage originally provided by Pinnacle Real Estate Investments Group; refinanced with Renovo Financial for $265,500 in April 2021, cross-collateralized with 12312 South May Street in Calumet Park; refinanced again for $100,000 with United Gap Funding in Sep. 2024<br> <strong>Lender:</strong> Renovo Financial<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_2de0fe2c221ffb65db81b94ada6298ff.setContent(html_e95ba1ee0fb271161b886c9ae77031ba);
+            
+        
+
+        marker_303c03ae3c7377c1dcf877657719b8b1.bindPopup(popup_2de0fe2c221ffb65db81b94ada6298ff)
+        ;
+
+        
+    
+    
+            var marker_486591b3973de04bd383fe7f73b59e10 = L.marker(
+                [41.6698124, -87.6504611],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_43e13056964c2b304bd761249a08e215 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_486591b3973de04bd383fe7f73b59e10.setIcon(icon_43e13056964c2b304bd761249a08e215);
+        
+    
+        var popup_367fc1fb6fbb69b5955efa8378fde139 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_6fa7c98a4ac2ffadb43888b3b292c8e0 = $(`<div id="html_6fa7c98a4ac2ffadb43888b3b292c8e0" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>12312 South May Street Calumet Park, IL 60827</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $70,000.00<br> <strong>Purchase Date:</strong> Nov. 2020<br> <strong>Mortgage Amount:</strong> $265,500<br> <strong>Lender:</strong> Renovo Financial, cross-collateralized with 304 East Birch Drive, Glenwood, IL<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_367fc1fb6fbb69b5955efa8378fde139.setContent(html_6fa7c98a4ac2ffadb43888b3b292c8e0);
+            
+        
+
+        marker_486591b3973de04bd383fe7f73b59e10.bindPopup(popup_367fc1fb6fbb69b5955efa8378fde139)
+        ;
+
+        
+    
+    
+            var marker_bdceeecc3b73a8380492c029c638ce25 = L.marker(
+                [41.5800759, -87.70404409999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_7ae81477190f2f1ed97ec6975e5f997e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_bdceeecc3b73a8380492c029c638ce25.setIcon(icon_7ae81477190f2f1ed97ec6975e5f997e);
+        
+    
+        var popup_be97a181a5baeb498626d77c3dea0293 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_74681150f16c05f98e04d4777a37b94b = $(`<div id="html_74681150f16c05f98e04d4777a37b94b" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>17004 Locust Drive Hazelcrest, IL 60429</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $70,000.00<br> <strong>Purchase Date:</strong> Nov. 2020<br> <strong>Mortgage Amount:</strong> $120,000<br> <strong>Lender:</strong> Midland Trust Company as Custodian for a third party (Refinanced with Renovo Financial for $246,000, cross-collateralized with 12739 South Sangamon Street in Chicago, in May 2021; refinanced again with Daniel Ruszkiewicz and Malgorzata Makswiej for $100,000 cross-collateralized with two other properties in March 2022)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_be97a181a5baeb498626d77c3dea0293.setContent(html_74681150f16c05f98e04d4777a37b94b);
+            
+        
+
+        marker_bdceeecc3b73a8380492c029c638ce25.bindPopup(popup_be97a181a5baeb498626d77c3dea0293)
+        ;
+
+        
+    
+    
+            var marker_78df28b3ed29f037725fdaf5e05e1aac = L.marker(
+                [41.6619641, -87.6447759],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_e142741db479290f9fe750c489a286e7 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_78df28b3ed29f037725fdaf5e05e1aac.setIcon(icon_e142741db479290f9fe750c489a286e7);
+        
+    
+        var popup_f0e9df26a4aa85cc94b18de6bdd0c577 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_778b018fb245582a1487aea6dc62c6ff = $(`<div id="html_778b018fb245582a1487aea6dc62c6ff" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>12739 South Sangamon Street Chicago, IL 60643</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $59,000.00<br> <strong>Purchase Date:</strong> Oct. 2020<br> <strong>Mortgage Amount:</strong> $107,000<br> <strong>Lender:</strong> Mary Desloover (Refinanced with Renovo Financial for $246,000 cross-collateralized with 17004 Locust Drive in Hazelcrest, IL in May 2021; refinanced again with Daniel Ruszkiewicz and Malgorzata Makswiej for $100,000 cross-collateralized with two other properties in March 2022)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_f0e9df26a4aa85cc94b18de6bdd0c577.setContent(html_778b018fb245582a1487aea6dc62c6ff);
+            
+        
+
+        marker_78df28b3ed29f037725fdaf5e05e1aac.bindPopup(popup_f0e9df26a4aa85cc94b18de6bdd0c577)
+        ;
+
+        
+    
+    
+            var marker_80f448e086aed1d437fafe9ad006d4e1 = L.marker(
+                [41.7273181, -87.63879570000002],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_ca9ecc1f51e8f1ff39ed134eb8b01495 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_80f448e086aed1d437fafe9ad006d4e1.setIcon(icon_ca9ecc1f51e8f1ff39ed134eb8b01495);
+        
+    
+        var popup_9a9077e706242b01a0f9398eb70a80d3 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_8226dc80d8d4e520a3ab84da651ad76f = $(`<div id="html_8226dc80d8d4e520a3ab84da651ad76f" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9150 South Wallace Street Chicago, IL 60620</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $126,000.00<br> <strong>Purchase Date:</strong> Oct. 2023<br> <strong>Mortgage Amount:</strong> $195,000<br> <strong>Lender:</strong> Best Funding Solutions (Refinanced with Renovo Financial for $222,000 in June 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> <strong>Other Notes:</strong> Mary Desloover provided a $1.2M second lien mortgage loan cross-collateralized with three other properties in Oct. 2024<br> </div></div>`)[0];
+                popup_9a9077e706242b01a0f9398eb70a80d3.setContent(html_8226dc80d8d4e520a3ab84da651ad76f);
+            
+        
+
+        marker_80f448e086aed1d437fafe9ad006d4e1.bindPopup(popup_9a9077e706242b01a0f9398eb70a80d3)
+        ;
+
+        
+    
+    
+            var marker_e85f2d08f43b1b68e406c8e44fc0973e = L.marker(
+                [41.74139359999999, -87.5804074],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_2e28f0103281dc5a8a7d1be08cb3cee5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_e85f2d08f43b1b68e406c8e44fc0973e.setIcon(icon_2e28f0103281dc5a8a7d1be08cb3cee5);
+        
+    
+        var popup_b7a49d79a2eb09605b2ac335ca0af343 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_2e5b480a06d8bfacb3c668216d1de88b = $(`<div id="html_2e5b480a06d8bfacb3c668216d1de88b" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>8435 South Cregier Avenue Chicago, IL 60617</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $113,000.00<br> <strong>Purchase Date:</strong> Feb. 2024<br> <strong>Mortgage Amount:</strong> $181,000<br> <strong>Lender:</strong> Best Funding Solutions (Refinanced with Renovo Financial for $216,000 in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> <strong>Other Notes:</strong> Mary Desloover has recorded a memorandum claiming a $1.2M second lien mortgage should have been recorded against a portfolio of seven South Side properties including this one, but wasn't due to misindexing by Cook County.<br> </div></div>`)[0];
+                popup_b7a49d79a2eb09605b2ac335ca0af343.setContent(html_2e5b480a06d8bfacb3c668216d1de88b);
+            
+        
+
+        marker_e85f2d08f43b1b68e406c8e44fc0973e.bindPopup(popup_b7a49d79a2eb09605b2ac335ca0af343)
+        ;
+
+        
+    
+    
+            var marker_940e4808f6bb16313ef0e10298b8edda = L.marker(
+                [41.6247244, -87.6017286],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_9629b8b5dcdd48864214ae3e14172d11 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_940e4808f6bb16313ef0e10298b8edda.setIcon(icon_9629b8b5dcdd48864214ae3e14172d11);
+        
+    
+        var popup_d326330e7a58d42db36ab14fa30ad0fc = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_5891f99585381b1576e143c3199601c6 = $(`<div id="html_5891f99585381b1576e143c3199601c6" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>14838 Champlain Avenue Dolton, IL 60419</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $30,000.00<br> <strong>Purchase Date:</strong> Nov. 2019<br> <strong>Mortgage Amount:</strong> $77,300<br> <strong>Lender:</strong> Renovo Financial (Refinanced with Renovo in Sep. 2020 for $505,000 cross-collateralized with four other properties; refinanced again with Olmos Private Equity Inc. for $80,000 in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_d326330e7a58d42db36ab14fa30ad0fc.setContent(html_5891f99585381b1576e143c3199601c6);
+            
+        
+
+        marker_940e4808f6bb16313ef0e10298b8edda.bindPopup(popup_d326330e7a58d42db36ab14fa30ad0fc)
+        ;
+
+        
+    
+    
+            var marker_29d6ebcf89f2670fa7d04cf07b85282b = L.marker(
+                [41.7195951, -87.594444],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_31ddbdf0ae4b35c3a18b83c83dea29d0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_29d6ebcf89f2670fa7d04cf07b85282b.setIcon(icon_31ddbdf0ae4b35c3a18b83c83dea29d0);
+        
+    
+        var popup_7601c6ffe64cb5a796850089942c458d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_464e92ff90e754a962d59670d3bacdcc = $(`<div id="html_464e92ff90e754a962d59670d3bacdcc" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9625 South Woodlawn Avenue Chicago, IL 60628</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $52,000.00<br> <strong>Purchase Date:</strong> Dec. 2019<br> <strong>Mortgage Amount:</strong> $125,000<br> <strong>Lender:</strong> Midland Trust Company as custodian for third party (Refinanced with Renovo Financial for $505,000 cross-collateralized with four other properties in Sept. 2020; refinanced again with individual lender for $100,000 in July 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_7601c6ffe64cb5a796850089942c458d.setContent(html_464e92ff90e754a962d59670d3bacdcc);
+            
+        
+
+        marker_29d6ebcf89f2670fa7d04cf07b85282b.bindPopup(popup_7601c6ffe64cb5a796850089942c458d)
+        ;
+
+        
+    
+    
+            var marker_ca3c3fd735d514eeb09196fa1182be5f = L.marker(
+                [41.5713037, -87.5500435],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_189140921df34207edb944b4d562aa12 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_ca3c3fd735d514eeb09196fa1182be5f.setIcon(icon_189140921df34207edb944b4d562aa12);
+        
+    
+        var popup_6516512dc7c1f171f667b7810e669716 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_34d7175cfb595a35253ff98a4f4e18be = $(`<div id="html_34d7175cfb595a35253ff98a4f4e18be" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>17819 Commercial Avenue Lansing, IL 60438</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $87,000.00<br> <strong>Purchase Date:</strong> Feb. 2020<br> <strong>Mortgage Amount:</strong> $124,000<br> <strong>Lender:</strong> Midland Trust Company as custodian for third party (Refinanced with Renovo Financial for $324,000 cross-collateralized with 17331 Community Street in Lansing, IL in Sep. 2020; refinanced again with United Gap Funding for $400,000 cross-collateralized with four other properties in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_6516512dc7c1f171f667b7810e669716.setContent(html_34d7175cfb595a35253ff98a4f4e18be);
+            
+        
+
+        marker_ca3c3fd735d514eeb09196fa1182be5f.bindPopup(popup_6516512dc7c1f171f667b7810e669716)
+        ;
+
+        
+    
+    
+            var marker_bf217b99fa1dc9ad8dd359f09451f5a9 = L.marker(
+                [41.5799948, -87.5355304],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_0ad84ae05184d80bccabd8646dae080a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_bf217b99fa1dc9ad8dd359f09451f5a9.setIcon(icon_0ad84ae05184d80bccabd8646dae080a);
+        
+    
+        var popup_85d21046270adbf9ad8b3b92d882c729 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_8b9f938622b2769be4f1ec8b1e1586e1 = $(`<div id="html_8b9f938622b2769be4f1ec8b1e1586e1" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>17331 Community Street, Lansing, IL 60438</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $56,000.00<br> <strong>Purchase Date:</strong> Dec. 2019<br> <strong>Mortgage Amount:</strong> $89,100<br> <strong>Lender:</strong> Renovo Financial (Refinanced with Renovo for $324,000 in Sep. 2020 cross-collateralized with 17819 Commercial Avenue in Lansing; refinanced again with United Gap Funding for $400,000 cross-collateralized with four other properties in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_85d21046270adbf9ad8b3b92d882c729.setContent(html_8b9f938622b2769be4f1ec8b1e1586e1);
+            
+        
+
+        marker_bf217b99fa1dc9ad8dd359f09451f5a9.bindPopup(popup_85d21046270adbf9ad8b3b92d882c729)
+        ;
+
+        
+    
+    
+            var marker_db171d9840bdbc29eabe110d16a70ac3 = L.marker(
+                [41.7114763, -87.6136047],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_25f0f29d51a51b1e6b18db9a961a3401 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_db171d9840bdbc29eabe110d16a70ac3.setIcon(icon_25f0f29d51a51b1e6b18db9a961a3401);
+        
+    
+        var popup_21249dfb8b1c54e966db71232e3528b8 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_3cd012b6ac8f71e6841398c0df06f0c5 = $(`<div id="html_3cd012b6ac8f71e6841398c0df06f0c5" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>10043 South King Drive Chicago, IL 60628</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $124,000.00<br> <strong>Purchase Date:</strong> Jan. 2024<br> <strong>Mortgage Amount:</strong> $186,000<br> <strong>Lender:</strong> Olmos Private Equity Inc. (Refinanced with Renovo Financial for $205,500 in July 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_21249dfb8b1c54e966db71232e3528b8.setContent(html_3cd012b6ac8f71e6841398c0df06f0c5);
+            
+        
+
+        marker_db171d9840bdbc29eabe110d16a70ac3.bindPopup(popup_21249dfb8b1c54e966db71232e3528b8)
+        ;
+
+        
+    
+    
+            var marker_321fda7383c659511bd33457d9bb9ebd = L.marker(
+                [41.71260119999999, -87.6451151],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_bf2f612b1ba2edc357f523b3a7ef3250 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_321fda7383c659511bd33457d9bb9ebd.setIcon(icon_bf2f612b1ba2edc357f523b3a7ef3250);
+        
+    
+        var popup_bf52b8b2261a74dbc4ec29ec7f2b850b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_24cd5c1580f66f363e25c774b542a375 = $(`<div id="html_24cd5c1580f66f363e25c774b542a375" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9953 South Peoria Street Chicago, IL 60643</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $103,000.00<br> <strong>Purchase Date:</strong> Oct. 2023<br> <strong>Mortgage Amount:</strong> $169,000<br> <strong>Lender:</strong> Only FHG Inc. (Refinanced with Renovo Financial for $222,750 in May 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> <strong>Other Notes:</strong> Mary Desloover provided a $1.2M second lien mortgage loan cross-collateralized with six other properties in Oct. 2024<br> </div></div>`)[0];
+                popup_bf52b8b2261a74dbc4ec29ec7f2b850b.setContent(html_24cd5c1580f66f363e25c774b542a375);
+            
+        
+
+        marker_321fda7383c659511bd33457d9bb9ebd.bindPopup(popup_bf52b8b2261a74dbc4ec29ec7f2b850b)
+        ;
+
+        
+    
+    
+            var marker_419cfb165f38a19bc146c86163db9421 = L.marker(
+                [41.47010299999999, -87.6917647],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_d5ce9dfbc48b44a0456dd043efb12290 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_419cfb165f38a19bc146c86163db9421.setIcon(icon_d5ce9dfbc48b44a0456dd043efb12290);
+        
+    
+        var popup_1c8cdeecd830e6848e02039c1ec6f7da = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_cce3591c9f14fd03cbbaeef45a0a1811 = $(`<div id="html_cce3591c9f14fd03cbbaeef45a0a1811" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>149 Nashua Street Park Forest, IL 60466</h3> <strong>Owner:</strong> CA Homes<br> <strong>Purchase Price:</strong> Unclear, sold by Cook County Land Bank Authority and Cook County<br> <strong>Purchase Date:</strong> Feb. 2019<br> <strong>Mortgage Amount:</strong> $50,400<br> <strong>Lender:</strong> Renovo Financial (Refinanced with Renovo for $199,500 in April 2021; refinanced again with Daniel Ruszkiewicz and Malgorzata Makswiej for $50,000 cross-collateralized with 225 East Rose Street in Glenwood in Dec. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_1c8cdeecd830e6848e02039c1ec6f7da.setContent(html_cce3591c9f14fd03cbbaeef45a0a1811);
+            
+        
+
+        marker_419cfb165f38a19bc146c86163db9421.bindPopup(popup_1c8cdeecd830e6848e02039c1ec6f7da)
+        ;
+
+        
+    
+    
+            var marker_6ffec68267dcfdb44901a9fc6059e6b8 = L.marker(
+                [41.5959473, -87.661649],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_51ec5fcbeaf86802e33e67184e8a0396 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_6ffec68267dcfdb44901a9fc6059e6b8.setIcon(icon_51ec5fcbeaf86802e33e67184e8a0396);
+        
+    
+        var popup_06e8ddde75fc51de4ab2857dc60e8ae3 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_8e2c9641abd3de29625290811e4931f6 = $(`<div id="html_8e2c9641abd3de29625290811e4931f6" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>16145 Honore Avenue Markham, IL 60428</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $70,500.00<br> <strong>Purchase Date:</strong> Feb. 2023<br> <strong>Mortgage Amount:</strong> $138,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $158,250 in Dec. 2023; refinanced again with Olmos Private Equity Inc. for $100,000 cross-collateralized with 12837 South Union Avenue in Chicago in July 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_06e8ddde75fc51de4ab2857dc60e8ae3.setContent(html_8e2c9641abd3de29625290811e4931f6);
+            
+        
+
+        marker_6ffec68267dcfdb44901a9fc6059e6b8.bindPopup(popup_06e8ddde75fc51de4ab2857dc60e8ae3)
+        ;
+
+        
+    
+    
+            var marker_407fbef5f492abc88041def750f048f0 = L.marker(
+                [41.6713465, -87.6529479],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_dece9416544e193f73b4e25efa835030 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_407fbef5f492abc88041def750f048f0.setIcon(icon_dece9416544e193f73b4e25efa835030);
+        
+    
+        var popup_c6e5ca7b7d9fb5f9e7c07af14815ad12 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_d0c3591f57dc9e5b8b4eafb4c89c2fe7 = $(`<div id="html_d0c3591f57dc9e5b8b4eafb4c89c2fe7" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>12226 South Elizabeth Street Chicago, IL 60643</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $52,000.00<br> <strong>Purchase Date:</strong> Apr. 2022<br> <strong>Mortgage Amount:</strong> $134,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $178,500 in Dec. 2022; refinanced again with Tomasz Szumny for $50,000 in Sept. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_c6e5ca7b7d9fb5f9e7c07af14815ad12.setContent(html_d0c3591f57dc9e5b8b4eafb4c89c2fe7);
+            
+        
+
+        marker_407fbef5f492abc88041def750f048f0.bindPopup(popup_c6e5ca7b7d9fb5f9e7c07af14815ad12)
+        ;
+
+        
+    
+    
+            var marker_12b25775b7affdb11dbea6d75e505d77 = L.marker(
+                [41.59401870000001, -87.7028079],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_821961e0c7a1b6866a7723e3b1536259 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_12b25775b7affdb11dbea6d75e505d77.setIcon(icon_821961e0c7a1b6866a7723e3b1536259);
+        
+    
+        var popup_fa4ed5bae4c89159cee24b62faa26ada = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_725d0ce276db6b25f5cbb806824c3525 = $(`<div id="html_725d0ce276db6b25f5cbb806824c3525" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>16243 Clifton Park Avenue Markham, IL 60428</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $92,000.00<br> <strong>Purchase Date:</strong> Jul. 2022<br> <strong>Mortgage Amount:</strong> $135,000<br> <strong>Lender:</strong> Midland Trust Company as custodian for third party (Refinanced with Renovo Financial for $131,250 in Dec. 2022; refinanced again with Misener Wealth Builder for $100,000 cross-collateralized with two other properties in Sept. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_fa4ed5bae4c89159cee24b62faa26ada.setContent(html_725d0ce276db6b25f5cbb806824c3525);
+            
+        
+
+        marker_12b25775b7affdb11dbea6d75e505d77.bindPopup(popup_fa4ed5bae4c89159cee24b62faa26ada)
+        ;
+
+        
+    
+    
+            var marker_fb1247a492562a2bd3e5b7759934a90a = L.marker(
+                [41.5346202, -87.6430366],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_a6503780460c7989f37ef55a065ef844 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_fb1247a492562a2bd3e5b7759934a90a.setIcon(icon_a6503780460c7989f37ef55a065ef844);
+        
+    
+        var popup_69db373ae6fba58fb813d353773d2d01 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4128e346cf0e4adb6b9ddc69020eff54 = $(`<div id="html_4128e346cf0e4adb6b9ddc69020eff54" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>90 Peyton Drive, Chicago Heights, IL 60411</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $115,500.00<br> <strong>Purchase Date:</strong> Feb. 2023<br> <strong>Mortgage Amount:</strong> $178,000<br> <strong>Lender:</strong> SP Asset Holdings (Refinanced with Renovo Financial for $318,750 cross-collateralized with 3005 Commercial Drive in South Chicago Heights in Feb. 2024; refinanced again with Olmos Private Equity Inc. for $120,000 cross-collateralized with 1214 West 96th Street in Chicago in April 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_69db373ae6fba58fb813d353773d2d01.setContent(html_4128e346cf0e4adb6b9ddc69020eff54);
+            
+        
+
+        marker_fb1247a492562a2bd3e5b7759934a90a.bindPopup(popup_69db373ae6fba58fb813d353773d2d01)
+        ;
+
+        
+    
+    
+            var marker_0767c274c1c41d6aab53a8a655b7c7a6 = L.marker(
+                [41.4840476, -87.6366776],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_46c49e49755114b061e5f8228ff16c18 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_0767c274c1c41d6aab53a8a655b7c7a6.setIcon(icon_46c49e49755114b061e5f8228ff16c18);
+        
+    
+        var popup_81e8cbfa6f7d8dcd2040b4f9e9295aef = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_5102230338b80dcfff7289914e6326de = $(`<div id="html_5102230338b80dcfff7289914e6326de" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>3005 Commercial Avenue South Chicago Heights, IL 60411</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $30,000.00<br> <strong>Purchase Date:</strong> Sep. 2023<br> <strong>Mortgage Amount:</strong> $99,000<br> <strong>Lender:</strong> Best Funding Solutions (Refinanced with Renovo Financial for $318,750 cross-collateralized with 90 Peyton Drive in Chicago Heights in Feb. 2024; refinanced again with Olmos Private Equity Inc. for $155,000 cross-collateralized with two other properties in July 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_81e8cbfa6f7d8dcd2040b4f9e9295aef.setContent(html_5102230338b80dcfff7289914e6326de);
+            
+        
+
+        marker_0767c274c1c41d6aab53a8a655b7c7a6.bindPopup(popup_81e8cbfa6f7d8dcd2040b4f9e9295aef)
+        ;
+
+        
+    
+    
+            var marker_9f6a50de647654d7438b30ed4f2aef55 = L.marker(
+                [41.6667156, -87.62205089999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_13302157e365330c1a197fc344b2e396 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_9f6a50de647654d7438b30ed4f2aef55.setIcon(icon_13302157e365330c1a197fc344b2e396);
+        
+    
+        var popup_a9ccf0b309d57c43bb3f008dcadcc2fb = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_9edd52b03eba5d308d7063476f027e4b = $(`<div id="html_9edd52b03eba5d308d7063476f027e4b" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>12511 South State Street Chicago, IL 60628 </h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $86,000.00<br> <strong>Purchase Date:</strong> Apr. 2023<br> <strong>Mortgage Amount:</strong> $148,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $160,500 in Nov. 2023; refinanced again with Olmos Private Equity Inc. for $190,000 cross-collateralized with three other properties in July 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_a9ccf0b309d57c43bb3f008dcadcc2fb.setContent(html_9edd52b03eba5d308d7063476f027e4b);
+            
+        
+
+        marker_9f6a50de647654d7438b30ed4f2aef55.bindPopup(popup_a9ccf0b309d57c43bb3f008dcadcc2fb)
+        ;
+
+        
+    
+    
+            var marker_11a9bec2551210b4496f34eb4368f27e = L.marker(
+                [41.5483056, -87.60809689999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_b3faa559ef95d134ecf594bff62ccf1f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_11a9bec2551210b4496f34eb4368f27e.setIcon(icon_b3faa559ef95d134ecf594bff62ccf1f);
+        
+    
+        var popup_3f6f636e828f7326fce7e8b2de02f06b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_35ad2f1ad7c2560eeeec7a3a505f4a32 = $(`<div id="html_35ad2f1ad7c2560eeeec7a3a505f4a32" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>110 North Oak Lane Glenwood, IL 60425</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $82,000.00<br> <strong>Purchase Date:</strong> Aug. 2020<br> <strong>Mortgage Amount:</strong> $84,000<br> <strong>Lender:</strong> Renovo Financial (Refinanced with Renovo for $96,000 in Dec. 2020; refinanced again with United Gap Funding for $400,000 cross-collateralized with three other properties in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_3f6f636e828f7326fce7e8b2de02f06b.setContent(html_35ad2f1ad7c2560eeeec7a3a505f4a32);
+            
+        
+
+        marker_11a9bec2551210b4496f34eb4368f27e.bindPopup(popup_3f6f636e828f7326fce7e8b2de02f06b)
+        ;
+
+        
+    
+    
+            var marker_0f1d6d488db86dac9ebfffd6f52c0754 = L.marker(
+                [41.71911009999999, -87.5962024],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_9580078ecb8c7f00e3d3a07ce4951211 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_0f1d6d488db86dac9ebfffd6f52c0754.setIcon(icon_9580078ecb8c7f00e3d3a07ce4951211);
+        
+    
+        var popup_1d14ac073f49227eee1a4a51af34a40a = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_d635016efda91bad86cc670cbe2fba85 = $(`<div id="html_d635016efda91bad86cc670cbe2fba85" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9640 South University Avenue Chicago, IL 60628</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $85,000.00<br> <strong>Purchase Date:</strong> Oct. 2023<br> <strong>Mortgage Amount:</strong> $161,000<br> <strong>Lender:</strong> SP Asset Holdings and Best Funding Solutions (Refinanced with Renovo Financial for $400,000 cross-collateralized with 9035 South Oglesby Avenue in Chicago in March 2024) <br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_1d14ac073f49227eee1a4a51af34a40a.setContent(html_d635016efda91bad86cc670cbe2fba85);
+            
+        
+
+        marker_0f1d6d488db86dac9ebfffd6f52c0754.bindPopup(popup_1d14ac073f49227eee1a4a51af34a40a)
+        ;
+
+        
+    
+    
+            var marker_4e5d4be55a6c014945d809408ffea765 = L.marker(
+                [41.7306754, -87.5667447],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_42eb6337ed1a99394d6e178e6f28d4d0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_4e5d4be55a6c014945d809408ffea765.setIcon(icon_42eb6337ed1a99394d6e178e6f28d4d0);
+        
+    
+        var popup_5519c81fc767d8f3afe1de129a930a30 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a738a3b681cf1ddf0dcf6bdf8d6ce86e = $(`<div id="html_a738a3b681cf1ddf0dcf6bdf8d6ce86e" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9035 South Oglesby Avenue Chicago, IL 60617</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $117,000.00<br> <strong>Purchase Date:</strong> Jun. 2023<br> <strong>Mortgage Amount:</strong> $182,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $400,000 cross-collateralized with 9640 South University Avenue in Chicago in March 2024; refinanced again with John Styrzula for $150,000 cross-collateralized with 9207 South Ellis Avenue in Chicago)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_5519c81fc767d8f3afe1de129a930a30.setContent(html_a738a3b681cf1ddf0dcf6bdf8d6ce86e);
+            
+        
+
+        marker_4e5d4be55a6c014945d809408ffea765.bindPopup(popup_5519c81fc767d8f3afe1de129a930a30)
+        ;
+
+        
+    
+    
+            var marker_b39b730e8baecd21133af070562a0e60 = L.marker(
+                [41.7374947, -87.59407379999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_26e8031fa016569ef4febe5fb3f502a0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_b39b730e8baecd21133af070562a0e60.setIcon(icon_26e8031fa016569ef4febe5fb3f502a0);
+        
+    
+        var popup_09882077ba47d1af93f75d065c58f765 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_2a46f30e8f03e20c527f402e0074a91d = $(`<div id="html_2a46f30e8f03e20c527f402e0074a91d" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>8658 South University Avenue Chicago, IL 60619</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $64,000.00<br> <strong>Purchase Date:</strong> Nov. 2022<br> <strong>Mortgage Amount:</strong> $175,000<br> <strong>Lender:</strong> Christopher Pollock (Refinanced with Renovo Financial for $318,000 cross-collateralized with 477 West 126th Street in May 2024; refinanced again with Kamil Nowakowski for $100,000 cross-collateralized with 8658 South University Avenue in Chicago in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_09882077ba47d1af93f75d065c58f765.setContent(html_2a46f30e8f03e20c527f402e0074a91d);
+            
+        
+
+        marker_b39b730e8baecd21133af070562a0e60.bindPopup(popup_09882077ba47d1af93f75d065c58f765)
+        ;
+
+        
+    
+    
+            var marker_d959a016cefd84efbcdf9e2136a03614 = L.marker(
+                [41.6735097, -87.63606519999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_62417ed1fdcf8f8943ff69b4ff4ed4a4 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_d959a016cefd84efbcdf9e2136a03614.setIcon(icon_62417ed1fdcf8f8943ff69b4ff4ed4a4);
+        
+    
+        var popup_3948a434da6ca1c0f1fb1d718f76a08e = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_33ff6ddbcb4f4b5eb840ef0d70495937 = $(`<div id="html_33ff6ddbcb4f4b5eb840ef0d70495937" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>12120 South Parnell Avenue Chicago, IL 60628</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $57,000.00<br> <strong>Purchase Date:</strong> Mar. 2023<br> <strong>Mortgage Amount:</strong> $136,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $151,500 in Nov. 2023; refinanced again with Patrick Rusin and Patricia Rybanska for $40,000 in June 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_3948a434da6ca1c0f1fb1d718f76a08e.setContent(html_33ff6ddbcb4f4b5eb840ef0d70495937);
+            
+        
+
+        marker_d959a016cefd84efbcdf9e2136a03614.bindPopup(popup_3948a434da6ca1c0f1fb1d718f76a08e)
+        ;
+
+        
+    
+    
+            var marker_37af1bf1b39751a9db5445b0fea01d39 = L.marker(
+                [41.5072289, -87.65344759999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_974163b23c35f8e8b42b74e8dd3ab78e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_37af1bf1b39751a9db5445b0fea01d39.setIcon(icon_974163b23c35f8e8b42b74e8dd3ab78e);
+        
+    
+        var popup_bdb67f4e2ca3b54b49483a1ed1f23e0e = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a1da623a7c634cea1d79c4cd05430081 = $(`<div id="html_a1da623a7c634cea1d79c4cd05430081" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1317 Franklin Avenue Chicago Heights, IL 60411</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $75,000.00<br> <strong>Purchase Date:</strong> Dec. 2022<br> <strong>Mortgage Amount:</strong> $135,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $162,750 in June 2023; refinanced again with Daniel Ruszkiewicz and Malgorzata Makswiej for $100,000 cross-collateralized with 8907 South Parnell Avenue in Chicago)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_bdb67f4e2ca3b54b49483a1ed1f23e0e.setContent(html_a1da623a7c634cea1d79c4cd05430081);
+            
+        
+
+        marker_37af1bf1b39751a9db5445b0fea01d39.bindPopup(popup_bdb67f4e2ca3b54b49483a1ed1f23e0e)
+        ;
+
+        
+    
+    
+            var marker_1195c95ffac08fac4fc2bc8c771cfee5 = L.marker(
+                [41.497291, -87.7111581],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_f33aca010e6947ebd4295fb23eb277e9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_1195c95ffac08fac4fc2bc8c771cfee5.setIcon(icon_f33aca010e6947ebd4295fb23eb277e9);
+        
+    
+        var popup_5fbc5144f5a0abb776bf1304cc47405e = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_383702f21d07adca58019245b3b2dc17 = $(`<div id="html_383702f21d07adca58019245b3b2dc17" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>3865 216th Street Matteson, IL 60443</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $60,000.00<br> <strong>Purchase Date:</strong> Nov. 2020<br> <strong>Mortgage Amount:</strong> $105,000<br> <strong>Lender:</strong> Mary Desloover (Refinanced with Renovo Financial for $126,000 in Oct. 2021; refinanced again with United Gap Funding for $400,000 cross-collateralized with three other properties in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_5fbc5144f5a0abb776bf1304cc47405e.setContent(html_383702f21d07adca58019245b3b2dc17);
+            
+        
+
+        marker_1195c95ffac08fac4fc2bc8c771cfee5.bindPopup(popup_5fbc5144f5a0abb776bf1304cc47405e)
+        ;
+
+        
+    
+    
+            var marker_587d314642826a8568c7e588a32d5dc7 = L.marker(
+                [41.4931907, -87.5649411],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_cc48950b285736a6419444e190cb9dd6 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_587d314642826a8568c7e588a32d5dc7.setIcon(icon_cc48950b285736a6419444e190cb9dd6);
+        
+    
+        var popup_7f793c10e547de60c941d5bcd95a5960 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_6154ed4ea35a2d3e503164e54f690e03 = $(`<div id="html_6154ed4ea35a2d3e503164e54f690e03" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2112 217th Place Sauk Village, IL 60411</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $88,500.00<br> <strong>Purchase Date:</strong> May. 2022<br> <strong>Mortgage Amount:</strong> $128,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $141,750 in Feb. 2023; refinanced again with Agoo Inc. for $100,000 cross-collatearlized with 5 Arrowhead Court in Park Forest in Dec. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_7f793c10e547de60c941d5bcd95a5960.setContent(html_6154ed4ea35a2d3e503164e54f690e03);
+            
+        
+
+        marker_587d314642826a8568c7e588a32d5dc7.bindPopup(popup_7f793c10e547de60c941d5bcd95a5960)
+        ;
+
+        
+    
+    
+            var marker_b07c3a3239663649db023fcf33b2d7df = L.marker(
+                [41.7322664, -87.63716],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_06b60b0471bd39a3fc5649eeca0d9487 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_b07c3a3239663649db023fcf33b2d7df.setIcon(icon_06b60b0471bd39a3fc5649eeca0d9487);
+        
+    
+        var popup_7f08b769570b4323b086f8d6fa52604b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_82343c72bb083266e91d77a1c5e2c46a = $(`<div id="html_82343c72bb083266e91d77a1c5e2c46a" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>8907 South Parnell Avenue Chicago, IL 60620</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $95,000.00<br> <strong>Purchase Date:</strong> Dec. 2022<br> <strong>Mortgage Amount:</strong> $165,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $188,250; refinanced again with Daniel Ruszkiewicz and Malgorzata Makswiej for $100,000 cross-collateralized with 1317 Franklin Avenue in Chicago Heights in Sep. 2023)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_7f08b769570b4323b086f8d6fa52604b.setContent(html_82343c72bb083266e91d77a1c5e2c46a);
+            
+        
+
+        marker_b07c3a3239663649db023fcf33b2d7df.bindPopup(popup_7f08b769570b4323b086f8d6fa52604b)
+        ;
+
+        
+    
+    
+            var marker_92d2e0850a132f0e9af4f9e7b90e9038 = L.marker(
+                [41.5687705, -87.5366705],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_929c94526a1d3efe1483b069db3ffce6 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_92d2e0850a132f0e9af4f9e7b90e9038.setIcon(icon_929c94526a1d3efe1483b069db3ffce6);
+        
+    
+        var popup_6fb7d8bc92adccce11639eda027cc37d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_03f6235e32b81c3119ec106e677b937f = $(`<div id="html_03f6235e32b81c3119ec106e677b937f" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>17945 Roy Street Lansing, IL 60438</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> Unclear (Purchased from HUD)<br> <strong>Purchase Date:</strong> Feb. 2022<br> <strong>Mortgage Amount:</strong> $115,900<br> <strong>Lender:</strong> Renovo Financial<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_6fb7d8bc92adccce11639eda027cc37d.setContent(html_03f6235e32b81c3119ec106e677b937f);
+            
+        
+
+        marker_92d2e0850a132f0e9af4f9e7b90e9038.bindPopup(popup_6fb7d8bc92adccce11639eda027cc37d)
+        ;
+
+        
+    
+    
+            var marker_dd2b6071463c7c8a783450119099ab71 = L.marker(
+                [41.5164072, -87.7136105],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_8c41c9d32a32e63620b138745df442ee = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_dd2b6071463c7c8a783450119099ab71.setIcon(icon_8c41c9d32a32e63620b138745df442ee);
+        
+    
+        var popup_c3890f0e2cf1bcf0cdc9a37146d1b3f5 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4caf289e36ef82a61fc02b6e34b17ec7 = $(`<div id="html_4caf289e36ef82a61fc02b6e34b17ec7" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>20520 Crawford Avenue Matteson, IL 60443</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $82,500.00<br> <strong>Purchase Date:</strong> Jun. 2021<br> <strong>Mortgage Amount:</strong> $130,000<br> <strong>Lender:</strong> Renovo Financial (Refinanced with Renovo for $183,750 in Oct. 2023; refinanced again with United Gap Funding for $400,000 cross-collateralized with four other properties)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_c3890f0e2cf1bcf0cdc9a37146d1b3f5.setContent(html_4caf289e36ef82a61fc02b6e34b17ec7);
+            
+        
+
+        marker_dd2b6071463c7c8a783450119099ab71.bindPopup(popup_c3890f0e2cf1bcf0cdc9a37146d1b3f5)
+        ;
+
+        
+    
+    
+            var marker_54075b64c4a515b7b42f437f7ff24403 = L.marker(
+                [41.7194015, -87.6548682],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_098bb16419824321ae8d3d2826d75af0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_54075b64c4a515b7b42f437f7ff24403.setIcon(icon_098bb16419824321ae8d3d2826d75af0);
+        
+    
+        var popup_a9b1b9e868c8ec837504db0a232038b3 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_3412f4a2134f0b6d749dd996325c7d45 = $(`<div id="html_3412f4a2134f0b6d749dd996325c7d45" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1248 West 96th Street Chicago, IL 60643</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $83,000.00<br> <strong>Purchase Date:</strong> Sep. 2019<br> <strong>Mortgage Amount:</strong> $140,000<br> <strong>Lender:</strong> Mary Desloover (Refinanced with Renovo Financial for $139,500 in Feb. 2020; refinanced again with Renovo for $310,500 cross-collateralized with 12128 South Bishop Street in Chicago in April 2021)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_a9b1b9e868c8ec837504db0a232038b3.setContent(html_3412f4a2134f0b6d749dd996325c7d45);
+            
+        
+
+        marker_54075b64c4a515b7b42f437f7ff24403.bindPopup(popup_a9b1b9e868c8ec837504db0a232038b3)
+        ;
+
+        
+    
+    
+            var marker_d8783407fe2e8943ba3ad7f6dc60ad29 = L.marker(
+                [41.6730752, -87.6578701],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_463f8eaa9a45adf21022fc1f2ac03e4a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_d8783407fe2e8943ba3ad7f6dc60ad29.setIcon(icon_463f8eaa9a45adf21022fc1f2ac03e4a);
+        
+    
+        var popup_fad1a0a3652d90dfb88c297a35228dcd = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_93352f36bf74142823ad9bba7919c3b9 = $(`<div id="html_93352f36bf74142823ad9bba7919c3b9" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>12128 South Bishop Street Chicago, IL 60643</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $45,000.00<br> <strong>Purchase Date:</strong> Aug. 2019<br> <strong>Mortgage Amount:</strong> $85,000<br> <strong>Lender:</strong> Mary Desloover (Refinanced with Renovo Financial for $101,500 in Nov. 2019; refinanced again with Renovo for $310,000 cross-collatearlized with 20520 Crawford Avenue in Matteson in April 2021)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> <strong>Other Notes:</strong> Mary Desloover provided a $1.2M second lien mortgage loan cross-collateralized with six other properties in Oct. 2024<br> </div></div>`)[0];
+                popup_fad1a0a3652d90dfb88c297a35228dcd.setContent(html_93352f36bf74142823ad9bba7919c3b9);
+            
+        
+
+        marker_d8783407fe2e8943ba3ad7f6dc60ad29.bindPopup(popup_fad1a0a3652d90dfb88c297a35228dcd)
+        ;
+
+        
+    
+    
+            var marker_f983352e00afc7a346d3516b18ad1112 = L.marker(
+                [41.4893331, -87.56808749999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_f5a748bbe604b3a0c42606bd51e938ed = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_f983352e00afc7a346d3516b18ad1112.setIcon(icon_f5a748bbe604b3a0c42606bd51e938ed);
+        
+    
+        var popup_a7e041414acdfa493ae68ceb94baf8d2 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_0d09baf88aade30f93c4d576b8437f34 = $(`<div id="html_0d09baf88aade30f93c4d576b8437f34" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1950 219th Place Sauk Village, IL 60411</h3> <strong>Owner:</strong> CA Homes, LLC<br> <strong>Purchase Price:</strong> $30,000.00<br> <strong>Purchase Date:</strong> Feb. 2023<br> <strong>Mortgage Amount:</strong> $103,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $131,250 in Oct. 2023; refinanced again with Daniel Ruszkiewicz and Malgorzata Makswiej for $80,000 cross-collateralized with 9720 South Emerald Avenue in Chicago in March 2023)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_a7e041414acdfa493ae68ceb94baf8d2.setContent(html_0d09baf88aade30f93c4d576b8437f34);
+            
+        
+
+        marker_f983352e00afc7a346d3516b18ad1112.bindPopup(popup_a7e041414acdfa493ae68ceb94baf8d2)
+        ;
+
+        
+    
+    
+            var marker_9c5a2e3b11126efbff1dc071c60d9d7c = L.marker(
+                [41.7287221, -87.5606287],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_b149588b7b66542bee898964c7cc5f76 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_9c5a2e3b11126efbff1dc071c60d9d7c.setIcon(icon_b149588b7b66542bee898964c7cc5f76);
+        
+    
+        var popup_12a098e6492544d76ba4aeed75015f67 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_39aa4ed66e2b6fd44d71cd6c2d4a2be0 = $(`<div id="html_39aa4ed66e2b6fd44d71cd6c2d4a2be0" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9141 South Colfax Avenue Chicago, IL 60617</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $90,000.00<br> <strong>Purchase Date:</strong> Jun. 2023<br> <strong>Mortgage Amount:</strong> $167,000<br> <strong>Lender:</strong> SP Asset Holdings and Shirley Pollock (Refinanced with Renovo Financial for $219,750 in Nov. 2023; refinanced again with Olmos Private Equity Inc. for $178,000 cross-collateralized with two other properties in June 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_12a098e6492544d76ba4aeed75015f67.setContent(html_39aa4ed66e2b6fd44d71cd6c2d4a2be0);
+            
+        
+
+        marker_9c5a2e3b11126efbff1dc071c60d9d7c.bindPopup(popup_12a098e6492544d76ba4aeed75015f67)
+        ;
+
+        
+    
+    
+            var marker_6339e954ec831129f51e24b193fc1893 = L.marker(
+                [41.6712439, -87.635407],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_8372c23b66e1379e0136f6fb90b80d16 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_6339e954ec831129f51e24b193fc1893.setIcon(icon_8372c23b66e1379e0136f6fb90b80d16);
+        
+    
+        var popup_8fa370b156aa2cf0779009625ddd398d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_e4732efdf7569131592ba22d492d40c8 = $(`<div id="html_e4732efdf7569131592ba22d492d40c8" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>12239 South Parnell Avenue Chicago, IL 60628</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $62,000.00<br> <strong>Purchase Date:</strong> Jan. 2023<br> <strong>Mortgage Amount:</strong> $151,000<br> <strong>Lender:</strong> Midland Trust Company as custodian for third party (Refinanced with Renovo Financial for $177,750 in Oct. 2023; refinanced again with Olmos Private Equity Inc. for $190,000 cross-collateralized with three other properties in July 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_8fa370b156aa2cf0779009625ddd398d.setContent(html_e4732efdf7569131592ba22d492d40c8);
+            
+        
+
+        marker_6339e954ec831129f51e24b193fc1893.bindPopup(popup_8fa370b156aa2cf0779009625ddd398d)
+        ;
+
+        
+    
+    
+            var marker_ec35c88ceed5631ca95f5ac9ad13edf6 = L.marker(
+                [41.7286289, -87.5882073],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_25ffe48b2710909944806d2141ef8f30 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_ec35c88ceed5631ca95f5ac9ad13edf6.setIcon(icon_25ffe48b2710909944806d2141ef8f30);
+        
+    
+        var popup_4a38af99949e497bdbaf723b11b1783b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_53f23da9c351b1d8dca00a746d542685 = $(`<div id="html_53f23da9c351b1d8dca00a746d542685" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9132 South Blackstone Avenue Chicago, IL 60619 </h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $98,000.00<br> <strong>Purchase Date:</strong> Jun. 2023<br> <strong>Mortgage Amount:</strong> $175,000<br> <strong>Lender:</strong> Edmund Olmos (Refinanced with Renovo Financial for $203,500 in June 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_4a38af99949e497bdbaf723b11b1783b.setContent(html_53f23da9c351b1d8dca00a746d542685);
+            
+        
+
+        marker_ec35c88ceed5631ca95f5ac9ad13edf6.bindPopup(popup_4a38af99949e497bdbaf723b11b1783b)
+        ;
+
+        
+    
+    
+            var marker_bc540a62fbbb0597229efb7aef1918ab = L.marker(
+                [41.6602939, -87.63863719999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_47c46fd34241cded86acf516da08d4b9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_bc540a62fbbb0597229efb7aef1918ab.setIcon(icon_47c46fd34241cded86acf516da08d4b9);
+        
+    
+        var popup_d6adb530acfde732bb7dbb8f92339223 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_9d534d804475a3847e7e697d0b44a478 = $(`<div id="html_9d534d804475a3847e7e697d0b44a478" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>12837 South Union Avenue Chicago, IL 60628</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $106,500.00<br> <strong>Purchase Date:</strong> Jun. 2021<br> <strong>Mortgage Amount:</strong> $150,000<br> <strong>Lender:</strong> Midland Trust Company as custodiun for Mary Desloover (Refinanced with Renovo Financial for $159,000 in Dec. 2021; refinanced again with Olmos Private Equity Inc. for $100,000 cross-collateralized with 16145 Honore Avenue in Markham in July 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_d6adb530acfde732bb7dbb8f92339223.setContent(html_9d534d804475a3847e7e697d0b44a478);
+            
+        
+
+        marker_bc540a62fbbb0597229efb7aef1918ab.bindPopup(popup_d6adb530acfde732bb7dbb8f92339223)
+        ;
+
+        
+    
+    
+            var marker_48d52f380816856d24e6110e1b341ce9 = L.marker(
+                [41.56889779999999, -87.54516699999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_9300b5127442707f385ab5cfcc972fac = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_48d52f380816856d24e6110e1b341ce9.setIcon(icon_9300b5127442707f385ab5cfcc972fac);
+        
+    
+        var popup_de8efcb137c0ec0817aae456a699455d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_533ab51a70f8042a6590ce765b109a4e = $(`<div id="html_533ab51a70f8042a6590ce765b109a4e" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>17943 Ridgewood Avenue Lansing, IL 60438</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $85,000.00<br> <strong>Purchase Date:</strong> Jun. 2021<br> <strong>Mortgage Amount:</strong> $125,000<br> <strong>Lender:</strong> Mary Desloover (Refinanced with Renovo Financial for $384,750 cross-collateralized with 14634 Kenwood Avenue in Dolton in Feb. 2022; refinanced again with United Gap Funding for $400,000 cross-collateralized with 2814 Lexington Drive in Hazel Crest in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_de8efcb137c0ec0817aae456a699455d.setContent(html_533ab51a70f8042a6590ce765b109a4e);
+            
+        
+
+        marker_48d52f380816856d24e6110e1b341ce9.bindPopup(popup_de8efcb137c0ec0817aae456a699455d)
+        ;
+
+        
+    
+    
+            var marker_6477aa39e6fc48e90e29be2eef1f1f17 = L.marker(
+                [41.6286113, -87.5847886],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_9b3a0624291f9354c2ce9cbe8ece30e7 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_6477aa39e6fc48e90e29be2eef1f1f17.setIcon(icon_9b3a0624291f9354c2ce9cbe8ece30e7);
+        
+    
+        var popup_d8781597719d3fe56ab5b39c99937751 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_090b4fe0bd80d820da654c7a577782df = $(`<div id="html_090b4fe0bd80d820da654c7a577782df" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>14634 Kenwood Avenue Dolton, IL 60419</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $59,500.00<br> <strong>Purchase Date:</strong> Jul. 2021<br> <strong>Mortgage Amount:</strong> $100,000<br> <strong>Lender:</strong> Genali LLC (Refinanced with Renovo Financial for $384,750 cross-collateralized with 17943 Ridgewood Avenue in Lansing in Feb. 2022)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_d8781597719d3fe56ab5b39c99937751.setContent(html_090b4fe0bd80d820da654c7a577782df);
+            
+        
+
+        marker_6477aa39e6fc48e90e29be2eef1f1f17.bindPopup(popup_d8781597719d3fe56ab5b39c99937751)
+        ;
+
+        
+    
+    
+            var marker_4d88d5609aa58f46c7f0ed740e3f8760 = L.marker(
+                [41.694902, -87.6349188],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_cef0c82af734bd892bfde64966c66724 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_4d88d5609aa58f46c7f0ed740e3f8760.setIcon(icon_cef0c82af734bd892bfde64966c66724);
+        
+    
+        var popup_7a84f9339b5a2f497d580b57a880b4c1 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_61f9cc98f62b89305991f05b1cae6f88 = $(`<div id="html_61f9cc98f62b89305991f05b1cae6f88" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>10939 South Normal Avenue Chicago, IL 60628 </h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $82,000.00<br> <strong>Purchase Date:</strong> Jun. 2020<br> <strong>Mortgage Amount:</strong> $150,000<br> <strong>Lender:</strong> Mary Desloover (Refinanced with Renovo Financial for $176,250 in Jan. 2021; refinanced again with Tomasz Szumny for $75,000 in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_7a84f9339b5a2f497d580b57a880b4c1.setContent(html_61f9cc98f62b89305991f05b1cae6f88);
+            
+        
+
+        marker_4d88d5609aa58f46c7f0ed740e3f8760.bindPopup(popup_7a84f9339b5a2f497d580b57a880b4c1)
+        ;
+
+        
+    
+    
+            var marker_3870ee9bb0e7ee1ca3ca4c1a08863801 = L.marker(
+                [41.4941047, -87.6625452],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_f13edfadaf832d5178cfec6c78304c54 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_3870ee9bb0e7ee1ca3ca4c1a08863801.setIcon(icon_f13edfadaf832d5178cfec6c78304c54);
+        
+    
+        var popup_2b949ce33e4de4d0a8e8b19972c7552e = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_5ae74642cd0f6b67f2a2c3962ba6b075 = $(`<div id="html_5ae74642cd0f6b67f2a2c3962ba6b075" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>252 Allegheny Street Park Forest, IL 60466</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $27,000.00<br> <strong>Purchase Date:</strong> Oct. 2022<br> <strong>Mortgage Amount:</strong> $100,000<br> <strong>Lender:</strong> SP Asset Holdings (Refinanced with Renovo Financial for $122,250 in June 2023; refinanced again with United Gap Funding for $400,000 cross-collatearlized with four other properties in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_2b949ce33e4de4d0a8e8b19972c7552e.setContent(html_5ae74642cd0f6b67f2a2c3962ba6b075);
+            
+        
+
+        marker_3870ee9bb0e7ee1ca3ca4c1a08863801.bindPopup(popup_2b949ce33e4de4d0a8e8b19972c7552e)
+        ;
+
+        
+    
+    
+            var marker_419eff2661ca5b8571fc3d27112dc1ba = L.marker(
+                [41.7425422, -87.6514128],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_295ec2b2cf7ae66387af9e66b710a550 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_419eff2661ca5b8571fc3d27112dc1ba.setIcon(icon_295ec2b2cf7ae66387af9e66b710a550);
+        
+    
+        var popup_9e30ee7c533807d5d6fe78842dda0a3b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a88e4b99f3129c5226051c3fe466d626 = $(`<div id="html_a88e4b99f3129c5226051c3fe466d626" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>8322 South Aberdeen Street Chicago, IL 60620</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $125,000.00<br> <strong>Purchase Date:</strong> Jun. 2023<br> <strong>Mortgage Amount:</strong> $210,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $221,250 in Dec. 2023; refinanced again with Olmos Private Equity for $190,000 cross-collateralized with three other properties)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_9e30ee7c533807d5d6fe78842dda0a3b.setContent(html_a88e4b99f3129c5226051c3fe466d626);
+            
+        
+
+        marker_419eff2661ca5b8571fc3d27112dc1ba.bindPopup(popup_9e30ee7c533807d5d6fe78842dda0a3b)
+        ;
+
+        
+    
+    
+            var marker_01deff4236117e3ddca3ebb5205d2400 = L.marker(
+                [41.5677983, -87.5463832],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_025949759dea0c7592b3eebcd2429db5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_01deff4236117e3ddca3ebb5205d2400.setIcon(icon_025949759dea0c7592b3eebcd2429db5);
+        
+    
+        var popup_065c948e71759afdb6f84a2451e17949 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_13fdee65ce6b24799a830f5304df60a4 = $(`<div id="html_13fdee65ce6b24799a830f5304df60a4" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>18017 Oakwood Avenue Lansing, IL 60438</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $65,000.00<br> <strong>Purchase Date:</strong> May. 2019<br> <strong>Mortgage Amount:</strong> $106,500<br> <strong>Lender:</strong> Renovo Financial (Refinanced with Renovo for $119,000 in Feb. 2020; refinanced again with Daniel Ruszkiewicz and Malgorzata Makswiej for $100,000 cross-collateralized with two other properties in March 2022)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_065c948e71759afdb6f84a2451e17949.setContent(html_13fdee65ce6b24799a830f5304df60a4);
+            
+        
+
+        marker_01deff4236117e3ddca3ebb5205d2400.bindPopup(popup_065c948e71759afdb6f84a2451e17949)
+        ;
+
+        
+    
+    
+            var marker_238ede4370e6053c948427b28982d361 = L.marker(
+                [41.7395276, -87.6142715],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_1ce496cf1a91bdbcf68bd82b4f51ac8d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_238ede4370e6053c948427b28982d361.setIcon(icon_1ce496cf1a91bdbcf68bd82b4f51ac8d);
+        
+    
+        var popup_1ebd082a6d21f330f9bafb419bed600f = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_212c3e5d65eca84cb147ec227d21ee20 = $(`<div id="html_212c3e5d65eca84cb147ec227d21ee20" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>8519 South King Drive Chicago, IL 60619 </h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $51,000.00<br> <strong>Purchase Date:</strong> Feb. 2023<br> <strong>Mortgage Amount:</strong> $213,000<br> <strong>Lender:</strong> VC New Concept LLC (Refinanced with Renovo Financial for $444,000 cross-collateralized with 9005 South Union Avenue in Chicago in April 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> <strong>Other Notes:</strong> Mary Desloover provided a $1.2M second lien mortgage loan cross-collateralized with six other properties in Oct. 2024<br> </div></div>`)[0];
+                popup_1ebd082a6d21f330f9bafb419bed600f.setContent(html_212c3e5d65eca84cb147ec227d21ee20);
+            
+        
+
+        marker_238ede4370e6053c948427b28982d361.bindPopup(popup_1ebd082a6d21f330f9bafb419bed600f)
+        ;
+
+        
+    
+    
+            var marker_aa4ac1be6ae60a0152fee5bee9c4d3f2 = L.marker(
+                [41.7305558, -87.6407425],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_01b3fc618abf7a2684eccde41371c691 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_aa4ac1be6ae60a0152fee5bee9c4d3f2.setIcon(icon_01b3fc618abf7a2684eccde41371c691);
+        
+    
+        var popup_903357e7948e1b76a2e76e2b7ade9a82 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_bf65ef476c4a4fb0dfecc8d1208ba221 = $(`<div id="html_bf65ef476c4a4fb0dfecc8d1208ba221" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9005 South Union Avenue Chicago, IL 60620</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $132,500.00<br> <strong>Purchase Date:</strong> Jul. 2023<br> <strong>Mortgage Amount:</strong> $196,000<br> <strong>Lender:</strong> Genali LLC (Refinanced with Renovo Financial for $444,000 cross-collateralized with 8519 South King Drive in Chicago in April 2024)<br> <strong>Still Own?:</strong> No, sold for $270,000 to Robin China Spencer and Preyshaun Paris Glasper in March 2025<br> <strong>In Foreclosure?:</strong> No<br> <strong>Other Notes:</strong> Mary Desloover provided a $1.2M second lien mortgage loan cross-collateralized with six other properties in Oct. 2024<br> </div></div>`)[0];
+                popup_903357e7948e1b76a2e76e2b7ade9a82.setContent(html_bf65ef476c4a4fb0dfecc8d1208ba221);
+            
+        
+
+        marker_aa4ac1be6ae60a0152fee5bee9c4d3f2.bindPopup(popup_903357e7948e1b76a2e76e2b7ade9a82)
+        ;
+
+        
+    
+    
+            var marker_724d2ad620defe9afc1678368ef8f8a7 = L.marker(
+                [41.75447519999999, -87.60379909999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_3728043eb65ad378c27bc0489468f405 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_724d2ad620defe9afc1678368ef8f8a7.setIcon(icon_3728043eb65ad378c27bc0489468f405);
+        
+    
+        var popup_9b755b2305ab631fd73f767ddbc2a03d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a779aa3a58be63c0500e1437bd150d1a = $(`<div id="html_a779aa3a58be63c0500e1437bd150d1a" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>7715 South Maryland Avenue Chicago, IL 60619</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $65,000.00<br> <strong>Purchase Date:</strong> Aug. 2023<br> <strong>Mortgage Amount:</strong> $130,000<br> <strong>Lender:</strong> Best Funding Solutions and SP Asset Holdings (Refinanced with Renovo Financial for $105,750 in Dec. 2023; refinanced again with Olmos Private Equity for $190,000 cross-collateralized with three other properties)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_9b755b2305ab631fd73f767ddbc2a03d.setContent(html_a779aa3a58be63c0500e1437bd150d1a);
+            
+        
+
+        marker_724d2ad620defe9afc1678368ef8f8a7.bindPopup(popup_9b755b2305ab631fd73f767ddbc2a03d)
+        ;
+
+        
+    
+    
+            var marker_8f73f25e3c40696fe1403065aa8e44bc = L.marker(
+                [41.7498081, -87.6327826],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_ad09c42d98f1fe88c29f47b441f0ec35 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_8f73f25e3c40696fe1403065aa8e44bc.setIcon(icon_ad09c42d98f1fe88c29f47b441f0ec35);
+        
+    
+        var popup_b197b627ceb5c31e46defbd53b4ef507 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_56ead81dc4f0dff18028267c13d7f2c1 = $(`<div id="html_56ead81dc4f0dff18028267c13d7f2c1" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>7933 South Harvard Avenue Chicago, IL 60620</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $98,000.00<br> <strong>Purchase Date:</strong> May. 2023<br> <strong>Mortgage Amount:</strong> $156,000<br> <strong>Lender:</strong> Happy Investment Holdings and Shirley Pollock (Refinanced with Renovo Financial for $217,500 in Nov. 2023; refinanced again with Olmos Private Equity Inc. for $178,000 cross-collateralized with two other properties)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_b197b627ceb5c31e46defbd53b4ef507.setContent(html_56ead81dc4f0dff18028267c13d7f2c1);
+            
+        
+
+        marker_8f73f25e3c40696fe1403065aa8e44bc.bindPopup(popup_b197b627ceb5c31e46defbd53b4ef507)
+        ;
+
+        
+    
+    
+            var marker_fcf6664a54fc7b96522918ce7330bdb6 = L.marker(
+                [41.4741333, -87.6761643],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_db2380139b54f68bcdd3587a290f37c9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_fcf6664a54fc7b96522918ce7330bdb6.setIcon(icon_db2380139b54f68bcdd3587a290f37c9);
+        
+    
+        var popup_b5b7745066aa59cc98e0106e8437e94a = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_2892a76e4340086cfda686f8adccd166 = $(`<div id="html_2892a76e4340086cfda686f8adccd166" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>16 Sauk Trail Park Forest, IL 60466</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $47,500.00<br> <strong>Purchase Date:</strong> Aug. 2021<br> <strong>Mortgage Amount:</strong> $80,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $228,000 cross-collateralized with 5 Arrowhead Court in Park Forest in Feb. 2022)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_b5b7745066aa59cc98e0106e8437e94a.setContent(html_2892a76e4340086cfda686f8adccd166);
+            
+        
+
+        marker_fcf6664a54fc7b96522918ce7330bdb6.bindPopup(popup_b5b7745066aa59cc98e0106e8437e94a)
+        ;
+
+        
+    
+    
+            var marker_671cce69d9bb43e21859147db7d37b01 = L.marker(
+                [41.4919169, -87.6573605],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_76d21ad2df56a4c36605f5db75ac37d4 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_671cce69d9bb43e21859147db7d37b01.setIcon(icon_76d21ad2df56a4c36605f5db75ac37d4);
+        
+    
+        var popup_397f2778db7df0043a7ee8fee3e4aa3f = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_67446e1b7ad7f92fe72610610626cca8 = $(`<div id="html_67446e1b7ad7f92fe72610610626cca8" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>5 Arrowhead Court Park Forest, IL 60466</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $35,000.00<br> <strong>Purchase Date:</strong> Aug. 2021<br> <strong>Mortgage Amount:</strong> $118,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $228,000 cross-collateralized with 16 Sauk Trail in Park Forest in Feb. 2022; refinanced again with AGOO Inc. for $100,000 cross-collateralized with 2112 217th Place in Sauk Village in Dec. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_397f2778db7df0043a7ee8fee3e4aa3f.setContent(html_67446e1b7ad7f92fe72610610626cca8);
+            
+        
+
+        marker_671cce69d9bb43e21859147db7d37b01.bindPopup(popup_397f2778db7df0043a7ee8fee3e4aa3f)
+        ;
+
+        
+    
+    
+            var marker_5c4c3d2ad9ce364fc22602e3f824fd89 = L.marker(
+                [41.7183132, -87.65554089999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_f4d3f0e7f486c8f6106e7fd2241e6ee4 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_5c4c3d2ad9ce364fc22602e3f824fd89.setIcon(icon_f4d3f0e7f486c8f6106e7fd2241e6ee4);
+        
+    
+        var popup_bb303793cf6304562d03d4338f43b853 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_0e5e5d6048857394319706973b2a9640 = $(`<div id="html_0e5e5d6048857394319706973b2a9640" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1300 West 97th Street Chicago, IL 60643</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $150,000.00<br> <strong>Purchase Date:</strong> Oct. 2023<br> <strong>Mortgage Amount:</strong> $205,000<br> <strong>Lender:</strong> Midland Trust Company as custodian for third party (Refinanced with Renovo Financial for $225,000 in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> <strong>Other Notes:</strong> Mary Desloover provided a $1.2M second lien mortgage loan cross-collateralized with six other properties in Oct. 2024<br> </div></div>`)[0];
+                popup_bb303793cf6304562d03d4338f43b853.setContent(html_0e5e5d6048857394319706973b2a9640);
+            
+        
+
+        marker_5c4c3d2ad9ce364fc22602e3f824fd89.bindPopup(popup_bb303793cf6304562d03d4338f43b853)
+        ;
+
+        
+    
+    
+            var marker_3dcecb48c6c6d85ff89e767385baa391 = L.marker(
+                [41.7268455, -87.60340649999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_bb47995225c6807eaf90ec9ecb3e6513 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_3dcecb48c6c6d85ff89e767385baa391.setIcon(icon_bb47995225c6807eaf90ec9ecb3e6513);
+        
+    
+        var popup_e4962a9851040eedc08c66b0f0e9dade = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1e2db9aaa57e1fabbf36376b09376f28 = $(`<div id="html_1e2db9aaa57e1fabbf36376b09376f28" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9220 South Dauphin Avenue Chicago, IL 60619</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $90,000.00<br> <strong>Purchase Date:</strong> Dec. 2023<br> <strong>Mortgage Amount:</strong> $177,000<br> <strong>Lender:</strong> SP Asset Holdings and Happy Investment Holdings (Refinanced with Renovo Financial for $238,000 in June 2024; refinaned again with Janusz Gorz for $150,000 cross-collateralized with 12328 South Peoria Street in Calumet Park in Aug. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_e4962a9851040eedc08c66b0f0e9dade.setContent(html_1e2db9aaa57e1fabbf36376b09376f28);
+            
+        
+
+        marker_3dcecb48c6c6d85ff89e767385baa391.bindPopup(popup_e4962a9851040eedc08c66b0f0e9dade)
+        ;
+
+        
+    
+    
+            var marker_497a5a1b4ef8a7b251b6c6d9202f87c8 = L.marker(
+                [41.7187868, -87.6307164],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_51a331b27cee7bf8e15b0ba8fed0e671 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_497a5a1b4ef8a7b251b6c6d9202f87c8.setIcon(icon_51a331b27cee7bf8e15b0ba8fed0e671);
+        
+    
+        var popup_e10004d67c9a300adddf85f25ae9c48f = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_09ae147ce0637b272624d9d83d008401 = $(`<div id="html_09ae147ce0637b272624d9d83d008401" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9633 South Princeton Avenue Chicago, IL 60628</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $121,500.00<br> <strong>Purchase Date:</strong> Apr. 2023<br> <strong>Mortgage Amount:</strong> $187,000<br> <strong>Lender:</strong> Midland Trust Company as custodian for third party (Refinanced with Renovo Financial for $203,250 in Nov. 2023; refinanced again with Olmos Private Equity for $50,000 in June 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_e10004d67c9a300adddf85f25ae9c48f.setContent(html_09ae147ce0637b272624d9d83d008401);
+            
+        
+
+        marker_497a5a1b4ef8a7b251b6c6d9202f87c8.bindPopup(popup_e10004d67c9a300adddf85f25ae9c48f)
+        ;
+
+        
+    
+    
+            var marker_cf411dc149107bac06b1e157a2973d74 = L.marker(
+                [41.5615391, -87.5520045],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_c65fc6ae73b2fa3d81238daa2f86b015 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_cf411dc149107bac06b1e157a2973d74.setIcon(icon_c65fc6ae73b2fa3d81238daa2f86b015);
+        
+    
+        var popup_0c23926a318709768d0ae7ed0a2e848c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_c2c9ea72f1b90353bae881b87a25357e = $(`<div id="html_c2c9ea72f1b90353bae881b87a25357e" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>18318 Exchange Avenue Unit 2F Lansing, IL 60438</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $40,000.00<br> <strong>Purchase Date:</strong> Apr. 2021<br> <strong>Mortgage Amount:</strong> $58,000<br> <strong>Lender:</strong> Christopher Pollock (Refinanced with Renovo Financial for $60,000 in Dec. 2021; refinanced again with Signature Roofing and Construction for $30,000 in Aug. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_0c23926a318709768d0ae7ed0a2e848c.setContent(html_c2c9ea72f1b90353bae881b87a25357e);
+            
+        
+
+        marker_cf411dc149107bac06b1e157a2973d74.bindPopup(popup_0c23926a318709768d0ae7ed0a2e848c)
+        ;
+
+        
+    
+    
+            var marker_0b388d997931a0e7d9ee06340bba99fa = L.marker(
+                [41.7374947, -87.59407379999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_73a94430152128947bb83c7fdbbe0d60 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_0b388d997931a0e7d9ee06340bba99fa.setIcon(icon_73a94430152128947bb83c7fdbbe0d60);
+        
+    
+        var popup_0480a9ccfcb0b84a4319c71aaf3e98b4 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_726b3e30e5a7d6dd9283a6b3e98f5408 = $(`<div id="html_726b3e30e5a7d6dd9283a6b3e98f5408" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>8658 South University Avenue Chicago, IL 60619</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $62,000.00<br> <strong>Purchase Date:</strong> Mar. 2023<br> <strong>Mortgage Amount:</strong> $131,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $160,500 in Sep. 2023; refinanced again with Kamil Nowakowski for $100,000 cross-collateralized with 1328 West 98th Street in Chicago in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_0480a9ccfcb0b84a4319c71aaf3e98b4.setContent(html_726b3e30e5a7d6dd9283a6b3e98f5408);
+            
+        
+
+        marker_0b388d997931a0e7d9ee06340bba99fa.bindPopup(popup_0480a9ccfcb0b84a4319c71aaf3e98b4)
+        ;
+
+        
+    
+    
+            var marker_7b19fb0a8b84fa61a150d3f7eb306ace = L.marker(
+                [41.5755136, -87.5355415],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_ba3b848e10b5cc4ac960b5fd72582d3c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_7b19fb0a8b84fa61a150d3f7eb306ace.setIcon(icon_ba3b848e10b5cc4ac960b5fd72582d3c);
+        
+    
+        var popup_02aed2cc7dd7bc5cabf29268496f1693 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1af0322677a93cc308a4818ab934ca10 = $(`<div id="html_1af0322677a93cc308a4818ab934ca10" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>17603 Community Street Lansing, IL 60438</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $128,000.00<br> <strong>Purchase Date:</strong> Nov. 2021<br> <strong>Mortgage Amount:</strong> $173,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $306,900 cross-collatearlized with 14722 Wabash Avenue in Dolton in April 2022; refinanced again with Shirley Pollock for $25,907 in Nov. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_02aed2cc7dd7bc5cabf29268496f1693.setContent(html_1af0322677a93cc308a4818ab934ca10);
+            
+        
+
+        marker_7b19fb0a8b84fa61a150d3f7eb306ace.bindPopup(popup_02aed2cc7dd7bc5cabf29268496f1693)
+        ;
+
+        
+    
+    
+            var marker_88ee9c4dbf4bcdba69d64f58536eda82 = L.marker(
+                [41.6272406, -87.62109099999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_eef692f7d2c2ea96efc0774284cdb153 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_88ee9c4dbf4bcdba69d64f58536eda82.setIcon(icon_eef692f7d2c2ea96efc0774284cdb153);
+        
+    
+        var popup_ed524b9843d4d6fa3471295adb1cb979 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_7f98e7c4f57fd7fbb425af8e75b280b2 = $(`<div id="html_7f98e7c4f57fd7fbb425af8e75b280b2" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>14722 Wabash Avenue Dolton, IL 60419</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $104,500.00<br> <strong>Purchase Date:</strong> Dec. 2021<br> <strong>Mortgage Amount:</strong> $135,000<br> <strong>Lender:</strong> Midland Trust Company as custodiun for Mary Desloover (Refinanced with Renovo Financial for $306,900 cross-collateralized with 17603 Community Street in Lansing in April 2022; refinanced again with United Gap Funding for $100,000 cross-collateralized with 40 North Sycamore Lane in Glenwood in Sep. 2024)<br> <strong>Still Own?:</strong> No, sold to United Gap Funding Sep. 2024, and is facing foreclosure of Renovo mortgage.<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_ed524b9843d4d6fa3471295adb1cb979.setContent(html_7f98e7c4f57fd7fbb425af8e75b280b2);
+            
+        
+
+        marker_88ee9c4dbf4bcdba69d64f58536eda82.bindPopup(popup_ed524b9843d4d6fa3471295adb1cb979)
+        ;
+
+        
+    
+    
+            var marker_524890c1481c8f83fa259bb78e6b911e = L.marker(
+                [41.7278051, -87.63520489999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_15318b22a9ec28a456f5bb833f313469 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_524890c1481c8f83fa259bb78e6b911e.setIcon(icon_15318b22a9ec28a456f5bb833f313469);
+        
+    
+        var popup_5b7c95d55e6971039e91514dbfde6eba = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4c835afb88c08a6e11d4fd065c566fd9 = $(`<div id="html_4c835afb88c08a6e11d4fd065c566fd9" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9136 South Eggleston Avenue Chicago, IL 60620</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $125,500.00<br> <strong>Purchase Date:</strong> Sep. 2022<br> <strong>Mortgage Amount:</strong> $189,000<br> <strong>Lender:</strong> Shirley Pollock and SP Asset Holdings (Refinanced with Renovo Financial for $203,250 in April 2023; refinanced again with Samuel Lagunas for $120,000 cross-collateralized with 16317 South Ashland Avenue in Markham in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_5b7c95d55e6971039e91514dbfde6eba.setContent(html_4c835afb88c08a6e11d4fd065c566fd9);
+            
+        
+
+        marker_524890c1481c8f83fa259bb78e6b911e.bindPopup(popup_5b7c95d55e6971039e91514dbfde6eba)
+        ;
+
+        
+    
+    
+            var marker_4313047e7f3a27359c9f56eff78e924d = L.marker(
+                [41.5847136, -87.67060099999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_b4052175127dde44b9322ddcfa9aeeaa = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_4313047e7f3a27359c9f56eff78e924d.setIcon(icon_b4052175127dde44b9322ddcfa9aeeaa);
+        
+    
+        var popup_d4ea02d9b18163bb0808e8144d886c77 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_552c6e182ab47eaa90d65768a920b1c5 = $(`<div id="html_552c6e182ab47eaa90d65768a920b1c5" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>16780 Head Avenue Hazel Crest, IL 60429</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $55,000.00<br> <strong>Purchase Date:</strong> Nov. 2021<br> <strong>Mortgage Amount:</strong> $100,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $120,000 in Nov. 2022)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_d4ea02d9b18163bb0808e8144d886c77.setContent(html_552c6e182ab47eaa90d65768a920b1c5);
+            
+        
+
+        marker_4313047e7f3a27359c9f56eff78e924d.bindPopup(popup_d4ea02d9b18163bb0808e8144d886c77)
+        ;
+
+        
+    
+    
+            var marker_5c6e95bb7c4e166d3274f4b554b12cf1 = L.marker(
+                [41.5927554, -87.6592589],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_09400630b5e2fad0a779cbf576d44a61 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_5c6e95bb7c4e166d3274f4b554b12cf1.setIcon(icon_09400630b5e2fad0a779cbf576d44a61);
+        
+    
+        var popup_46ec2894243841b04b1ececc07c0c6a7 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1a67b811091b047e49f18957ce2a95a6 = $(`<div id="html_1a67b811091b047e49f18957ce2a95a6" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>16329 Hermitage Avenue Markham, IL 60428</h3> <strong>Owner:</strong> CA Homes, LLC<br> <strong>Purchase Price:</strong> $55,000.00<br> <strong>Purchase Date:</strong> Apr. 2021<br> <strong>Mortgage Amount:</strong> $100,000<br> <strong>Lender:</strong> Christopher Pollock (Refinanced with Renovo Financial for $107,250 in Dec. 2021; refinanced again with United Gap Funding for $400,000 cross-collateralized with four other properties in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_46ec2894243841b04b1ececc07c0c6a7.setContent(html_1a67b811091b047e49f18957ce2a95a6);
+            
+        
+
+        marker_5c6e95bb7c4e166d3274f4b554b12cf1.bindPopup(popup_46ec2894243841b04b1ececc07c0c6a7)
+        ;
+
+        
+    
+    
+            var marker_6c6e50869f5a6f6b0e617816f82c8e83 = L.marker(
+                [41.7273298, -87.5995097],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_3007d7f71a41d35ed13ce59c13693cb6 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_6c6e50869f5a6f6b0e617816f82c8e83.setIcon(icon_3007d7f71a41d35ed13ce59c13693cb6);
+        
+    
+        var popup_3033f1b12cab4312e863bf761b2ea20b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_d45bf9c96a32f0c98f6e13cd02fafe6b = $(`<div id="html_d45bf9c96a32f0c98f6e13cd02fafe6b" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9207 South Ellis Avenue Chicago, IL 60619</h3> <strong>Owner:</strong> CA Homes, LLC<br> <strong>Purchase Price:</strong> $72,000.00<br> <strong>Purchase Date:</strong> Oct. 2023<br> <strong>Mortgage Amount:</strong> $160,000<br> <strong>Lender:</strong> SP Asset Holdings (Refinanced with Renovo Financial for $234,750 in May 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_3033f1b12cab4312e863bf761b2ea20b.setContent(html_d45bf9c96a32f0c98f6e13cd02fafe6b);
+            
+        
+
+        marker_6c6e50869f5a6f6b0e617816f82c8e83.bindPopup(popup_3033f1b12cab4312e863bf761b2ea20b)
+        ;
+
+        
+    
+    
+            var marker_cd7711855aff03fa2e2575a5ebea3cdb = L.marker(
+                [41.7488566, -87.5671055],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_9da41501092b46e5b5f91f09014aaafa = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_cd7711855aff03fa2e2575a5ebea3cdb.setIcon(icon_9da41501092b46e5b5f91f09014aaafa);
+        
+    
+        var popup_18a4b7500ad451018bbfb7aba7489353 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_53cc0456b84ac868fb84a11ef032c1f7 = $(`<div id="html_53cc0456b84ac868fb84a11ef032c1f7" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>8035 South Oglesby Avenue Chicago, IL 60617</h3> <strong>Owner:</strong> CA Homes, LLC<br> <strong>Purchase Price:</strong> $115,000.00<br> <strong>Purchase Date:</strong> Aug. 2023<br> <strong>Mortgage Amount:</strong> $195,000<br> <strong>Lender:</strong> Olmos Private Equity Inc. (Refinanced with Renovo Financial for $234,000 in Dec. 2023; refinanced again with Piotr Szumieluk for $50,000 in Aug. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_18a4b7500ad451018bbfb7aba7489353.setContent(html_53cc0456b84ac868fb84a11ef032c1f7);
+            
+        
+
+        marker_cd7711855aff03fa2e2575a5ebea3cdb.bindPopup(popup_18a4b7500ad451018bbfb7aba7489353)
+        ;
+
+        
+    
+    
+            var marker_fb0df8be6427fd749b94a639238b1720 = L.marker(
+                [41.5480697, -87.6030351],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_b4a29e43bba563217bdd6cf61aabaa3f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_fb0df8be6427fd749b94a639238b1720.setIcon(icon_b4a29e43bba563217bdd6cf61aabaa3f);
+        
+    
+        var popup_5faccfed02c2238a3e45e609cb503c8c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_626812adbfec3fe4f1a3661e3b942650 = $(`<div id="html_626812adbfec3fe4f1a3661e3b942650" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>40 North Sycamore Lane Glenwood, IL 60425</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $115,000.00<br> <strong>Purchase Date:</strong> Jun. 2022<br> <strong>Mortgage Amount:</strong> $175,000<br> <strong>Lender:</strong> Mary Desloover (Refinanced with Renovo Financial for $174,000 in Dec. 2022; refinanced again with United Gap Funding for $100,000 cross-collateralied with 14722 Wabash Avenue in Dolton)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_5faccfed02c2238a3e45e609cb503c8c.setContent(html_626812adbfec3fe4f1a3661e3b942650);
+            
+        
+
+        marker_fb0df8be6427fd749b94a639238b1720.bindPopup(popup_5faccfed02c2238a3e45e609cb503c8c)
+        ;
+
+        
+    
+    
+            var marker_831a25f3cc17adcfc23161fbe8aa708d = L.marker(
+                [41.6694154, -87.6443152],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_51c44a6d86b3b16458a2db31f01abf06 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_831a25f3cc17adcfc23161fbe8aa708d.setIcon(icon_51c44a6d86b3b16458a2db31f01abf06);
+        
+    
+        var popup_7560ddf2b5abe31b1dd3b1037d6c3484 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_cb1bc95fc102f3b651782e381236ed5e = $(`<div id="html_cb1bc95fc102f3b651782e381236ed5e" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>12328 South Peoria Street Calumet Park, IL 60827</h3> <strong>Owner:</strong> CA Homes, LLC<br> <strong>Purchase Price:</strong> $50,000.00<br> <strong>Purchase Date:</strong> Aug. 2020<br> <strong>Mortgage Amount:</strong> $89,000<br> <strong>Lender:</strong> Renovo Financial (Refinanced with Renovo for $123,750 in Dec. 2020; refinanced again with Malgorzata Makswiej for $50,000 in Jan. 2024; refinaned again with Janusz Gorz for $150,000 cross-collatearlized with 12328 South Peoria Street in Calumet Park in Aug. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_7560ddf2b5abe31b1dd3b1037d6c3484.setContent(html_cb1bc95fc102f3b651782e381236ed5e);
+            
+        
+
+        marker_831a25f3cc17adcfc23161fbe8aa708d.bindPopup(popup_7560ddf2b5abe31b1dd3b1037d6c3484)
+        ;
+
+        
+    
+    
+            var marker_1062a4e7c6785ae6e96dccceec82ed95 = L.marker(
+                [41.7157536, -87.5967462],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_807879376245a9507382638603256b0c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_1062a4e7c6785ae6e96dccceec82ed95.setIcon(icon_807879376245a9507382638603256b0c);
+        
+    
+        var popup_9f54d5341f88b0145168eb61790433fd = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_f293bf102115e6bdadc14b1434c33d3c = $(`<div id="html_f293bf102115e6bdadc14b1434c33d3c" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9831 South Greenwood Avenue Chicago, IL 60628</h3> <strong>Owner:</strong> CA Homes, LLC<br> <strong>Purchase Price:</strong> $101,000.00<br> <strong>Purchase Date:</strong> Jul. 2020<br> <strong>Mortgage Amount:</strong> $128,100<br> <strong>Lender:</strong> Renovo Financial (Refinanced with Renovo for $159,750 in Jan. 2021)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> <strong>Other Notes:</strong> Mary Desloover provided a $1.2M second lien mortgage loan cross-collateralized with three other properties in Oct. 2024<br> </div></div>`)[0];
+                popup_9f54d5341f88b0145168eb61790433fd.setContent(html_f293bf102115e6bdadc14b1434c33d3c);
+            
+        
+
+        marker_1062a4e7c6785ae6e96dccceec82ed95.bindPopup(popup_9f54d5341f88b0145168eb61790433fd)
+        ;
+
+        
+    
+    
+            var marker_a16ef58e4afb04ccb7cdc0a4b2370c75 = L.marker(
+                [41.5728649, -87.6863295],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_87c653b2bb602c2bb9239d5d45fbcd64 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_a16ef58e4afb04ccb7cdc0a4b2370c75.setIcon(icon_87c653b2bb602c2bb9239d5d45fbcd64);
+        
+    
+        var popup_7ec5e5164e142c205af3ce0393a5876e = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_203f802b8adaa7a6dd271e3696e761b0 = $(`<div id="html_203f802b8adaa7a6dd271e3696e761b0" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2814 Lexington Drive Hazel Crest, IL 60429</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $87,000.00<br> <strong>Purchase Date:</strong> Jan. 2022<br> <strong>Mortgage Amount:</strong> $130,000<br> <strong>Lender:</strong> Midland Trust Company as custodian for a third party (Refinanced with Renovo Financial for $139,500 in Feb. 2023; refinanced again with United Gap Funding for $400,000 cross-collateralized with 17943 Ridgewood Avenue in Lansing in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_7ec5e5164e142c205af3ce0393a5876e.setContent(html_203f802b8adaa7a6dd271e3696e761b0);
+            
+        
+
+        marker_a16ef58e4afb04ccb7cdc0a4b2370c75.bindPopup(popup_7ec5e5164e142c205af3ce0393a5876e)
+        ;
+
+        
+    
+    
+            var marker_0e138308c1d50cd33ed2fa3b5a7633dc = L.marker(
+                [41.7216479, -87.5944772],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_bcd8a860019341109b9c197545ad918c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_0e138308c1d50cd33ed2fa3b5a7633dc.setIcon(icon_bcd8a860019341109b9c197545ad918c);
+        
+    
+        var popup_174684918f81335dfcce181a4a19b320 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_5bc7994181ea16cb824b9e2e660e9916 = $(`<div id="html_5bc7994181ea16cb824b9e2e660e9916" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9515 South Woodlawn Chicago, IL 60628</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $95,000.00<br> <strong>Purchase Date:</strong> Feb. 2022<br> <strong>Mortgage Amount:</strong> $160,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $174,000 in Nov. 2022; refinanced again with Mariusz Wojtowicz for $30,000 in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_174684918f81335dfcce181a4a19b320.setContent(html_5bc7994181ea16cb824b9e2e660e9916);
+            
+        
+
+        marker_0e138308c1d50cd33ed2fa3b5a7633dc.bindPopup(popup_174684918f81335dfcce181a4a19b320)
+        ;
+
+        
+    
+    
+            var marker_6af3ee674c7cce13837826cd223f9a12 = L.marker(
+                [41.5930993, -87.65561559999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_6f10b6dc47ac6d3e52b29a2dc19bd928 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_6af3ee674c7cce13837826cd223f9a12.setIcon(icon_6f10b6dc47ac6d3e52b29a2dc19bd928);
+        
+    
+        var popup_86f198136fe87e371a09acccf3d577ca = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_6eaf351271c51860b593ea0dbebdaf51 = $(`<div id="html_6eaf351271c51860b593ea0dbebdaf51" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>16317 Ashland Avenue Markham, IL 60428</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $65,000.00<br> <strong>Purchase Date:</strong> Aug. 2022<br> <strong>Mortgage Amount:</strong> $135,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $157,500 in April 2023; refinanced again with Samuel Lagunas for $120,000 cross-collateralized with 9136 South Eggleston Avenue in Chicago)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_86f198136fe87e371a09acccf3d577ca.setContent(html_6eaf351271c51860b593ea0dbebdaf51);
+            
+        
+
+        marker_6af3ee674c7cce13837826cd223f9a12.bindPopup(popup_86f198136fe87e371a09acccf3d577ca)
+        ;
+
+        
+    
+    
+            var marker_39dac95368ff5c0dff079d98e32e599d = L.marker(
+                [41.6938688, -87.65042539999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_897c90f95d55f3243308a7b9d674753e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_39dac95368ff5c0dff079d98e32e599d.setIcon(icon_897c90f95d55f3243308a7b9d674753e);
+        
+    
+        var popup_50c6eafb24b3518bf8473d554c637db6 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_40bb8fe37805d2df892521d43b91d692 = $(`<div id="html_40bb8fe37805d2df892521d43b91d692" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1115 West 110th Street Chicago, IL 60643</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $90,000.00<br> <strong>Purchase Date:</strong> Feb. 2022<br> <strong>Mortgage Amount:</strong> $135,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $168,750 in Sep. 2022; refinanced again with Best Funding Solutions for $89,820 cross-collateralized with 9720 South Emerald Avenue in Chicago in Jan. 2025)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> <strong>Other Notes:</strong> Mary Desloover provided a $1.2M second lien mortgage loan cross-collateralized with six other properties in Oct. 2024<br> </div></div>`)[0];
+                popup_50c6eafb24b3518bf8473d554c637db6.setContent(html_40bb8fe37805d2df892521d43b91d692);
+            
+        
+
+        marker_39dac95368ff5c0dff079d98e32e599d.bindPopup(popup_50c6eafb24b3518bf8473d554c637db6)
+        ;
+
+        
+    
+    
+            var marker_bab2b00e5b03a55182f0a80f83a7188a = L.marker(
+                [41.6144729, -87.7067117],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_cd72dbd69a35ccbeef0d7ca3147d4059 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_bab2b00e5b03a55182f0a80f83a7188a.setIcon(icon_cd72dbd69a35ccbeef0d7ca3147d4059);
+        
+    
+        var popup_dcb8263d743f228969f95a92b090fbc1 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_50ecd52b5545e274f64df54fc7345993 = $(`<div id="html_50ecd52b5545e274f64df54fc7345993" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>15303 Birch Road Markham, IL 60428</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $95,000.00<br> <strong>Purchase Date:</strong> Aug. 2022<br> <strong>Mortgage Amount:</strong> $135,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo Financial for $319,500 cross collateralized with 3817 216th Place in Matteson in in March 2023; refinanced again with Mariusz Wojtowicz for $50,000 in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_dcb8263d743f228969f95a92b090fbc1.setContent(html_50ecd52b5545e274f64df54fc7345993);
+            
+        
+
+        marker_bab2b00e5b03a55182f0a80f83a7188a.bindPopup(popup_dcb8263d743f228969f95a92b090fbc1)
+        ;
+
+        
+    
+    
+            var marker_0b9a47668f68bd9da09de227870dbe96 = L.marker(
+                [41.4964063, -87.70910169999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_7943f12630acd07d7a084cb4a07401ec = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_0b9a47668f68bd9da09de227870dbe96.setIcon(icon_7943f12630acd07d7a084cb4a07401ec);
+        
+    
+        var popup_ff686fd15f7f1d8782ef3c8c3b1c0596 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_9441a7c61c1b37d7a1e4bf26200a2a33 = $(`<div id="html_9441a7c61c1b37d7a1e4bf26200a2a33" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>3817 216th Place Matteson, IL 60443</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $75,000.00<br> <strong>Purchase Date:</strong> Jul. 2022<br> <strong>Mortgage Amount:</strong> $185,000<br> <strong>Lender:</strong> Shirley Pollock and SP Asset Holdings (Refinanced with Renovo Financial for $319,500 cross-collateralized with 15303 Birch Road in Markham in March 2023; refinanced again with Misener Wealth Building for $100,000 cross-collatearalized with two other properties in Sept. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_ff686fd15f7f1d8782ef3c8c3b1c0596.setContent(html_9441a7c61c1b37d7a1e4bf26200a2a33);
+            
+        
+
+        marker_0b9a47668f68bd9da09de227870dbe96.bindPopup(popup_ff686fd15f7f1d8782ef3c8c3b1c0596)
+        ;
+
+        
+    
+    
+            var marker_31128809b1e726afc1a1e12e523c5860 = L.marker(
+                [41.7277541, -87.6430402],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_42209e2cb5534063bf645fa4abf71d5e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_31128809b1e726afc1a1e12e523c5860.setIcon(icon_42209e2cb5534063bf645fa4abf71d5e);
+        
+    
+        var popup_8ceea03c7e44eacbcce05aa7fc7ac0e1 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_0ac9cbaba4f63dd432c868b1cc5aa77d = $(`<div id="html_0ac9cbaba4f63dd432c868b1cc5aa77d" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9133 South Halsted Street Chicago, IL 60620</h3> <strong>Owner:</strong> CA Homes, LLC<br> <strong>Purchase Price:</strong> $75,000.00<br> <strong>Purchase Date:</strong> Apr. 2023<br> <strong>Mortgage Amount:</strong> $144,000<br> <strong>Lender:</strong> Edmund Olmos (Refinanced with Renovo Financial for $$189,750 in Nov. 2023; refinanced again with United Gap Funding for $400,00 cross-collatearlized with four other properties in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_8ceea03c7e44eacbcce05aa7fc7ac0e1.setContent(html_0ac9cbaba4f63dd432c868b1cc5aa77d);
+            
+        
+
+        marker_31128809b1e726afc1a1e12e523c5860.bindPopup(popup_8ceea03c7e44eacbcce05aa7fc7ac0e1)
+        ;
+
+        
+    
+    
+            var marker_4cdc76ce04fc9c6767044c17858e19b1 = L.marker(
+                [41.5941143, -87.65801669999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_7aa132d7b92953a7a90ca20b75483b00 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_4cdc76ce04fc9c6767044c17858e19b1.setIcon(icon_7aa132d7b92953a7a90ca20b75483b00);
+        
+    
+        var popup_79b9e17ddea18fed8e6229f08bd249a3 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_bb4a23084accd02b9cd5e3302ca74204 = $(`<div id="html_bb4a23084accd02b9cd5e3302ca74204" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>16247 Paulina Street Markham, IL 60428</h3> <strong>Owner:</strong> CA Homes, LLC<br> <strong>Purchase Price:</strong> $55,000.00<br> <strong>Purchase Date:</strong> Dec. 2020<br> <strong>Mortgage Amount:</strong> $108,000<br> <strong>Lender:</strong> Midland Trust Company as custodian for a third party (Refinanced with Renovo financial for $115,000 in Oct. 2021; refinanced again with United Gap Funding for $400,000 cross-collateralized with four other properties in Sep. 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_79b9e17ddea18fed8e6229f08bd249a3.setContent(html_bb4a23084accd02b9cd5e3302ca74204);
+            
+        
+
+        marker_4cdc76ce04fc9c6767044c17858e19b1.bindPopup(popup_79b9e17ddea18fed8e6229f08bd249a3)
+        ;
+
+        
+    
+    
+            var marker_a3bdb5b5fbf0687c318b0007fd33e393 = L.marker(
+                [41.6660853, -87.65643969999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_4f29add35c59c05bc8d8f30d4c0c5bc2 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_a3bdb5b5fbf0687c318b0007fd33e393.setIcon(icon_4f29add35c59c05bc8d8f30d4c0c5bc2);
+        
+    
+        var popup_50284fd7fa9b16eb73214d8037eb1629 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_e4f7356b2f16262dd9061936d0082964 = $(`<div id="html_e4f7356b2f16262dd9061936d0082964" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>12512 South Loomis Street Calumet Park, IL 60827</h3> <strong>Owner:</strong> CA Homes, LLC<br> <strong>Purchase Price:</strong> $71,000.00<br> <strong>Purchase Date:</strong> Dec. 2021<br> <strong>Mortgage Amount:</strong> $94,500<br> <strong>Lender:</strong> Renovo Financial (Refinanced with Renovo for $224,360 cross collatearlized with 1803 182nd Street in Lansing in April 2022<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_50284fd7fa9b16eb73214d8037eb1629.setContent(html_e4f7356b2f16262dd9061936d0082964);
+            
+        
+
+        marker_a3bdb5b5fbf0687c318b0007fd33e393.bindPopup(popup_50284fd7fa9b16eb73214d8037eb1629)
+        ;
+
+        
+    
+    
+            var marker_eef8b0231844076897d164a7dcc96d0c = L.marker(
+                [41.7193948, -87.6534969],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_3e95692fccd50706cac4bd37c86c0ade = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_eef8b0231844076897d164a7dcc96d0c.setIcon(icon_3e95692fccd50706cac4bd37c86c0ade);
+        
+    
+        var popup_65ebb607e99a077de0dca160703ee9d9 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_53661add9dc9cab35819ac267cba8077 = $(`<div id="html_53661add9dc9cab35819ac267cba8077" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1212-1214 West 96th Street Chicago, IL 60643</h3> <strong>Owner:</strong> CA Homes, LLC<br> <strong>Purchase Price:</strong> $119,000.00<br> <strong>Purchase Date:</strong> Jul. 2023<br> <strong>Mortgage Amount:</strong> $224,000<br> <strong>Lender:</strong> Olmos Capital LLC (Refinanced with Renovo Financial for $376,416 cross-collateralized with 16211 Justine Street in Markham in Feb. 2024; refinanced again with Olmos Private Equity Inc. for $120,000 cross-collateralized with 90 Peyton Drive in Chicago Heights in April 2024)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_65ebb607e99a077de0dca160703ee9d9.setContent(html_53661add9dc9cab35819ac267cba8077);
+            
+        
+
+        marker_eef8b0231844076897d164a7dcc96d0c.bindPopup(popup_65ebb607e99a077de0dca160703ee9d9)
+        ;
+
+        
+    
+    
+            var marker_3a5f28ae14383bedb82a007fab530aa3 = L.marker(
+                [41.4377087, -87.6769087],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_f9d7946ccd82ad4b06296ebc2d0e246d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_3a5f28ae14383bedb82a007fab530aa3.setIcon(icon_f9d7946ccd82ad4b06296ebc2d0e246d);
+        
+    
+        var popup_edc5d494a8a01afe542346a6cadebbfe = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_8266b36b321426183b3d98ef1e540660 = $(`<div id="html_8266b36b321426183b3d98ef1e540660" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>920 Union Dr., University Park, IL 60484</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $77,700.00<br> <strong>Purchase Date:</strong> Feb. 2021<br> <strong>Mortgage Amount:</strong> $126,000<br> <strong>Lender:</strong> Mary Desloover (Refinanced with Renovo Financial in March 2022)<br> <strong>Still Own?:</strong> No, sold May 2024 for $228,000 to Jonathan Howard<br> <strong>In Foreclosure?:</strong> No<br> </div></div>`)[0];
+                popup_edc5d494a8a01afe542346a6cadebbfe.setContent(html_8266b36b321426183b3d98ef1e540660);
+            
+        
+
+        marker_3a5f28ae14383bedb82a007fab530aa3.bindPopup(popup_edc5d494a8a01afe542346a6cadebbfe)
+        ;
+
+        
+    
+    
+            var marker_2f3512257440919e4d24dfcc222bf48b = L.marker(
+                [41.4666586, -87.6339553],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_a7676370c510146d677506ea6943507d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_2f3512257440919e4d24dfcc222bf48b.setIcon(icon_a7676370c510146d677506ea6943507d);
+        
+    
+        var popup_83332fd0ba749ce42c0028e0316294f6 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_342c3edd3a9b1b5052b4476d57b7db8b = $(`<div id="html_342c3edd3a9b1b5052b4476d57b7db8b" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>28 35th Place, Steger, IL, 60475</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $75,000.00<br> <strong>Purchase Date:</strong> May 2021<br> <strong>Mortgage Amount:</strong> $115,000<br> <strong>Lender:</strong> Christopher T. Pollock (Refinanced with Renovo Financial for $244,500 in Jan. 2025)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_83332fd0ba749ce42c0028e0316294f6.setContent(html_342c3edd3a9b1b5052b4476d57b7db8b);
+            
+        
+
+        marker_2f3512257440919e4d24dfcc222bf48b.bindPopup(popup_83332fd0ba749ce42c0028e0316294f6)
+        ;
+
+        
+    
+    
+            var marker_3c73b261ed12cb7e921e85090484d2f6 = L.marker(
+                [41.4642033, -87.6497095],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_eb47ab7638667d3992b686656000bec0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_3c73b261ed12cb7e921e85090484d2f6.setIcon(icon_eb47ab7638667d3992b686656000bec0);
+        
+    
+        var popup_9acaebc46ad88d2d39f40f025cbf997a = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_c089eea757b19687e71f8894201376fc = $(`<div id="html_c089eea757b19687e71f8894201376fc" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>3533 Ashland Avenue, Steger, IL 60475</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $81,300.00<br> <strong>Purchase Date:</strong> Aug. 2021<br> <strong>Mortgage Amount:</strong> $94,500<br> <strong>Lender:</strong> Renovo Financial (Refinanced with Renovo Financial for $113,250 in 2022; refinanced again with Samuel Lagunas for $100,000 cross-collateralized with two other properties in April 2022)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_9acaebc46ad88d2d39f40f025cbf997a.setContent(html_c089eea757b19687e71f8894201376fc);
+            
+        
+
+        marker_3c73b261ed12cb7e921e85090484d2f6.bindPopup(popup_9acaebc46ad88d2d39f40f025cbf997a)
+        ;
+
+        
+    
+    
+            var marker_55c6dd43ecc0a8561e77b19ba84fc078 = L.marker(
+                [41.46577509999999, -87.6967827],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_0b29b19879577a23998ddcabcd681ea9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_55c6dd43ecc0a8561e77b19ba84fc078.setIcon(icon_0b29b19879577a23998ddcabcd681ea9);
+        
+    
+        var popup_52fa9b6421e422fddddd5129f453a91c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_fd131d60f31c8a87041a92eb791f2b86 = $(`<div id="html_fd131d60f31c8a87041a92eb791f2b86" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>219 Towanda Street, Park Forest, IL 60466</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $65,000.00<br> <strong>Purchase Date:</strong> Nov. 2021<br> <strong>Mortgage Amount:</strong> $103,000<br> <strong>Lender:</strong> Renovo Financial (Refinanced with Renovo in 2022 for $114,000; refinanced again with Samuel Lagunas for $100,000 cross-collateralized with two other properties in April 2022)<br> <strong>Still Own?:</strong> No, sold Sept. 2023 for $160,000 to Kimberly Coleman<br> <strong>In Foreclosure?:</strong> No<br> </div></div>`)[0];
+                popup_52fa9b6421e422fddddd5129f453a91c.setContent(html_fd131d60f31c8a87041a92eb791f2b86);
+            
+        
+
+        marker_55c6dd43ecc0a8561e77b19ba84fc078.bindPopup(popup_52fa9b6421e422fddddd5129f453a91c)
+        ;
+
+        
+    
+    
+            var marker_3c982b73b49ae393ec0bc3535d8badef = L.marker(
+                [41.4691883, -87.62090409999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_4641deb1267976dd3d5f536e94a46e79 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_3c982b73b49ae393ec0bc3535d8badef.setIcon(icon_4641deb1267976dd3d5f536e94a46e79);
+        
+    
+        var popup_0feb36ceea61beb09974fda14aa27f6a = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a9e2a7b561cfac62ec015f6a0301c34c = $(`<div id="html_a9e2a7b561cfac62ec015f6a0301c34c" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>205 Hereford Avenue, Steger Avenue, IL 60475</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $85,400.00<br> <strong>Purchase Date:</strong> Nov. 2021<br> <strong>Mortgage Amount:</strong> $120,000<br> <strong>Lender:</strong> Shirley Pollock (Refinanced with Renovo in July 2022 for $384,750)<br> <strong>Still Own?:</strong> Yes, but in foreclosure<br> <strong>In Foreclosure?:</strong> Yes<br> </div></div>`)[0];
+                popup_0feb36ceea61beb09974fda14aa27f6a.setContent(html_a9e2a7b561cfac62ec015f6a0301c34c);
+            
+        
+
+        marker_3c982b73b49ae393ec0bc3535d8badef.bindPopup(popup_0feb36ceea61beb09974fda14aa27f6a)
+        ;
+
+        
+    
+    
+            var marker_e4cb2778a6ac1e6ac93108f54b009468 = L.marker(
+                [41.4615794, -87.6396326],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_3b33441e61aa437741044695327339bd = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_e4cb2778a6ac1e6ac93108f54b009468.setIcon(icon_3b33441e61aa437741044695327339bd);
+        
+    
+        var popup_f25aadce9e0056058246282eaa897983 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_d1796f3fe9df0319b1bda72cfe54159f = $(`<div id="html_d1796f3fe9df0319b1bda72cfe54159f" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>3761 Green Street, Steger, IL 60475</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $60,000.00<br> <strong>Purchase Date:</strong> Apr. 2022<br> <strong>Mortgage Amount:</strong> $116,000<br> <strong>Lender:</strong> Shirley Pollock<br> <strong>Still Own?:</strong> No, sold March 2023 for $158,000 to Zachary Andersen<br> <strong>In Foreclosure?:</strong> No<br> </div></div>`)[0];
+                popup_f25aadce9e0056058246282eaa897983.setContent(html_d1796f3fe9df0319b1bda72cfe54159f);
+            
+        
+
+        marker_e4cb2778a6ac1e6ac93108f54b009468.bindPopup(popup_f25aadce9e0056058246282eaa897983)
+        ;
+
+        
+    
+    
+            var marker_3d10e35f89dddec87163019abb920e76 = L.marker(
+                [41.6050772, -87.7105981],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_4e2af2da62d18940d169ff66e62f3eb1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_3d10e35f89dddec87163019abb920e76.setIcon(icon_4e2af2da62d18940d169ff66e62f3eb1);
+        
+    
+        var popup_b9704886cc89bc17c08fd4acc4b0c6b6 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_da6afc718ef207039d4063da3afdd85e = $(`<div id="html_da6afc718ef207039d4063da3afdd85e" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>15615 Ridgeway Avenue Markham, IL 60428</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $42,500.00<br> <strong>Purchase Date:</strong> Oct. 2021<br> <strong>Mortgage Amount:</strong> $140,000<br> <strong>Lender:</strong> Shirley Pollock<br> <strong>Still Own?:</strong> No, sold April 2024 for $230,000 to Elida Becerra<br> <strong>In Foreclosure?:</strong> No<br> </div></div>`)[0];
+                popup_b9704886cc89bc17c08fd4acc4b0c6b6.setContent(html_da6afc718ef207039d4063da3afdd85e);
+            
+        
+
+        marker_3d10e35f89dddec87163019abb920e76.bindPopup(popup_b9704886cc89bc17c08fd4acc4b0c6b6)
+        ;
+
+        
+    
+    
+            var marker_d24f27fcc917336bb38b05f33040dbfa = L.marker(
+                [41.5770392, -87.65063769999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_d80e9f10acf56566be7c094b54c654b0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_d24f27fcc917336bb38b05f33040dbfa.setIcon(icon_d80e9f10acf56566be7c094b54c654b0);
+        
+    
+        var popup_07269698bedc0ce1974fed804e0be3e2 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_0e6182c113a6e6c2865daa619f3df732 = $(`<div id="html_0e6182c113a6e6c2865daa619f3df732" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>17201 Loomis Avenue East Hazel Crest, IL 60429</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $62,000.00<br> <strong>Purchase Date:</strong> Feb. 2020<br> <strong>Mortgage Amount:</strong> $106,800<br> <strong>Lender:</strong> Renovo Financial (Refinanced with Renovo for $505,325 cross-collateralized with four other properties in Sep. 2020; refinanced again with ANR Construction and Development for $50,000 in March 2022)<br> <strong>Still Own?:</strong> No, sold May 2023 for $250,000 to Brianna Tanniehill<br> <strong>In Foreclosure?:</strong> No<br> </div></div>`)[0];
+                popup_07269698bedc0ce1974fed804e0be3e2.setContent(html_0e6182c113a6e6c2865daa619f3df732);
+            
+        
+
+        marker_d24f27fcc917336bb38b05f33040dbfa.bindPopup(popup_07269698bedc0ce1974fed804e0be3e2)
+        ;
+
+        
+    
+    
+            var marker_3f8a9bce7c0d1200a7f0b8cf6baf9c83 = L.marker(
+                [41.544898, -87.605857],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_d7ad0c69a500fba377277de77974937e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_3f8a9bce7c0d1200a7f0b8cf6baf9c83.setIcon(icon_d7ad0c69a500fba377277de77974937e);
+        
+    
+        var popup_7169d5348f8e21e113035dacb4812d68 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_3a009154048351b7d38ea50f1bcc72d4 = $(`<div id="html_3a009154048351b7d38ea50f1bcc72d4" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>225 East Rose Street Glenwood, IL 60425</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $58,500.00<br> <strong>Purchase Date:</strong> Feb. 2019<br> <strong>Mortgage Amount:</strong> $163,275<br> <strong>Lender:</strong> Renovo Financial (Refinanced with Renovo for $199,500 cross-collateralized with 149 Nashua Street in Park Forest in April 2021)<br> <strong>Still Own?:</strong> No, sold June 2023 for $224,500 to Josette and Deandre Butler<br> <strong>In Foreclosure?:</strong> No<br> <strong>Other Notes:</strong> Seller was Mary Desloover to CA Homes<br> </div></div>`)[0];
+                popup_7169d5348f8e21e113035dacb4812d68.setContent(html_3a009154048351b7d38ea50f1bcc72d4);
+            
+        
+
+        marker_3f8a9bce7c0d1200a7f0b8cf6baf9c83.bindPopup(popup_7169d5348f8e21e113035dacb4812d68)
+        ;
+
+        
+    
+    
+            var marker_40ffaefa40c8ee16cceb50982312ce8a = L.marker(
+                [41.4719186, -87.7344552],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_083e39b56649661304741347730f7d0a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "darkred", "prefix": "glyphicon"}
+            );
+            marker_40ffaefa40c8ee16cceb50982312ce8a.setIcon(icon_083e39b56649661304741347730f7d0a);
+        
+    
+        var popup_b306cc9d2ede6dfa03dbabfb4b38304c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_338a3445657fb474d694e77b9fed757b = $(`<div id="html_338a3445657fb474d694e77b9fed757b" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>22956 Bruce Drive Richton Park, IL 60471</h3> <strong>Owner:</strong> Construction & Technology Solution Inc (Managed by Chris Urban and Tomasz Szumny)<br> <strong>Purchase Price:</strong> $160,000.00<br> <strong>Purchase Date:</strong> Feb. 2022<br> <strong>Mortgage Amount:</strong> $210,000<br> <strong>Lender:</strong> Renovo Financial<br> <strong>Still Own?:</strong> No, sold March 2023 for $277,500 to Elizabeth Martinez<br> <strong>In Foreclosure?:</strong> No<br> </div></div>`)[0];
+                popup_b306cc9d2ede6dfa03dbabfb4b38304c.setContent(html_338a3445657fb474d694e77b9fed757b);
+            
+        
+
+        marker_40ffaefa40c8ee16cceb50982312ce8a.bindPopup(popup_b306cc9d2ede6dfa03dbabfb4b38304c)
+        ;
+
+        
+    
+    
+            var marker_69264d5a3c0a4f49a1ada95f35069e87 = L.marker(
+                [41.58024090000001, -87.70008829999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_981f7b8af816c6fcf1b342667a2ff549 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_69264d5a3c0a4f49a1ada95f35069e87.setIcon(icon_981f7b8af816c6fcf1b342667a2ff549);
+        
+    
+        var popup_76fa9d58cbdc695f81a16c00f1841087 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_cc40abeef2ada8c06efe85dc4efaef31 = $(`<div id="html_cc40abeef2ada8c06efe85dc4efaef31" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>17012 Elm Drive Hazel Crest, IL 60429 </h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $116,000.00<br> <strong>Purchase Date:</strong> Mar. 2022<br> <strong>Mortgage Amount:</strong> $161,000<br> <strong>Lender:</strong> Shirley Pollock<br> <strong>Still Own?:</strong> No, sold Feb. 2023 for $239,000 to Leonard Moody and Keesha Williams-Jackson<br> <strong>In Foreclosure?:</strong> Yes, against the buyers from Klu Homes<br> </div></div>`)[0];
+                popup_76fa9d58cbdc695f81a16c00f1841087.setContent(html_cc40abeef2ada8c06efe85dc4efaef31);
+            
+        
+
+        marker_69264d5a3c0a4f49a1ada95f35069e87.bindPopup(popup_76fa9d58cbdc695f81a16c00f1841087)
+        ;
+
+        
+    
+    
+            var marker_c91a9d4e08c3272f0163f65a2e4c9363 = L.marker(
+                [41.5769978, -87.6862554],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_2f19d993dfa4730216624aae25a3f0dd = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_c91a9d4e08c3272f0163f65a2e4c9363.setIcon(icon_2f19d993dfa4730216624aae25a3f0dd);
+        
+    
+        var popup_acd4273eb518ca7c961edf6c3b9ecf92 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_94dd1d18682f73686e444f69d8c3e972 = $(`<div id="html_94dd1d18682f73686e444f69d8c3e972" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2815 172nd Street Hazel Crest, IL 60429 </h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $120,500.00<br> <strong>Purchase Date:</strong> Feb. 2022<br> <strong>Mortgage Amount:</strong> $168,000<br> <strong>Lender:</strong> Genali LLC<br> <strong>Still Own?:</strong> No, sold Feb. 2023 for $230,000 to Dominique Watkins<br> <strong>In Foreclosure?:</strong> No<br> </div></div>`)[0];
+                popup_acd4273eb518ca7c961edf6c3b9ecf92.setContent(html_94dd1d18682f73686e444f69d8c3e972);
+            
+        
+
+        marker_c91a9d4e08c3272f0163f65a2e4c9363.bindPopup(popup_acd4273eb518ca7c961edf6c3b9ecf92)
+        ;
+
+        
+    
+    
+            var marker_3de0dbfa0663bcfa6a821bd63b6990b0 = L.marker(
+                [41.5923645, -87.6573901],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_65de827e6a03618ae3775f46a159c521 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_3de0dbfa0663bcfa6a821bd63b6990b0.setIcon(icon_65de827e6a03618ae3775f46a159c521);
+        
+    
+        var popup_db2b3acd3239b0fb5ec24a830b24526d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_b55aa40fb6e165e0bf7afa68acbd175d = $(`<div id="html_b55aa40fb6e165e0bf7afa68acbd175d" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>16342 Marshfield Avenue Markham, IL 60428</h3> <strong>Owner:</strong> Klu Homes LLC<br> <strong>Purchase Price:</strong> $100,000.00<br> <strong>Purchase Date:</strong> Jan. 2022<br> <strong>Mortgage Amount:</strong> $150,000<br> <strong>Lender:</strong> Shirley Pollock<br> <strong>Still Own?:</strong> No, sold Oct. 2022 for $194,500 to Yvonne Jenkins<br> <strong>In Foreclosure?:</strong> No<br> </div></div>`)[0];
+                popup_db2b3acd3239b0fb5ec24a830b24526d.setContent(html_b55aa40fb6e165e0bf7afa68acbd175d);
+            
+        
+
+        marker_3de0dbfa0663bcfa6a821bd63b6990b0.bindPopup(popup_db2b3acd3239b0fb5ec24a830b24526d)
+        ;
+
+        
+    
+    
+            var marker_2165d83093578ae51a38c2295e4be377 = L.marker(
+                [41.7552386, -87.68448959999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_b6dfdbda943e3acca3ae950ba17d9a79 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_2165d83093578ae51a38c2295e4be377.setIcon(icon_b6dfdbda943e3acca3ae950ba17d9a79);
+        
+    
+        var popup_3664c0bef56f08a22df0904b007ec9a8 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_943e95a8f8fa5879b6e1d698259310ab = $(`<div id="html_943e95a8f8fa5879b6e1d698259310ab" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>7600 South Artesian Avenue Chicago, IL 60652</h3> <strong>Owner:</strong> CA Homes & Properties LLC<br> <strong>Purchase Price:</strong> $134,500.00<br> <strong>Purchase Date:</strong> Mar. 2022<br> <strong>Mortgage Amount:</strong> $235,000<br> <strong>Lender:</strong> VC New Concept LLC<br> <strong>Still Own?:</strong> No, sold Oct. 2022 for $315,000 to Terri Conway<br> <strong>In Foreclosure?:</strong> No<br> </div></div>`)[0];
+                popup_3664c0bef56f08a22df0904b007ec9a8.setContent(html_943e95a8f8fa5879b6e1d698259310ab);
+            
+        
+
+        marker_2165d83093578ae51a38c2295e4be377.bindPopup(popup_3664c0bef56f08a22df0904b007ec9a8)
+        ;
+
+        
+    
+    
+            var marker_9950e909bb4b6f8652c9021bb11e12b7 = L.marker(
+                [41.6663545, -87.6211239],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_038b9fd9dce9fc9db6035b8f1d92cd00 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_9950e909bb4b6f8652c9021bb11e12b7.setIcon(icon_038b9fd9dce9fc9db6035b8f1d92cd00);
+        
+    
+        var popup_972a91b0f577509fe088e928f6c47687 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1d58af4d44ce7713f8381284ab859e55 = $(`<div id="html_1d58af4d44ce7713f8381284ab859e55" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>14640 South Wabash Avenue Chicago, IL 60419</h3> <strong>Owner:</strong> CA Homes LLC<br> <strong>Purchase Price:</strong> $37,000<br> <strong>Purchase Date:</strong> Mar. 2020<br> <strong>Mortgage Amount:</strong> $82,200<br> <strong>Lender:</strong> Renovo Financial<br> <strong>Still Own?:</strong> No, sold July 2022 for $149,000 to Kashari Astoria Dryer Pierce<br> <strong>In Foreclosure?:</strong> No<br> </div></div>`)[0];
+                popup_972a91b0f577509fe088e928f6c47687.setContent(html_1d58af4d44ce7713f8381284ab859e55);
+            
+        
+
+        marker_9950e909bb4b6f8652c9021bb11e12b7.bindPopup(popup_972a91b0f577509fe088e928f6c47687)
+        ;
+
+        
+    
+    
+            var marker_b50f5133cefe9d27d14673523a507cc4 = L.marker(
+                [41.7281383, -87.62738660000001],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_46ffacabab7e2c91a24b68459ba1761b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "lightred", "prefix": "glyphicon"}
+            );
+            marker_b50f5133cefe9d27d14673523a507cc4.setIcon(icon_46ffacabab7e2c91a24b68459ba1761b);
+        
+    
+        var popup_ee46714c38dec79674cc22117c27d5a0 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_0deba8d4860fb5316994e56409a979a2 = $(`<div id="html_0deba8d4860fb5316994e56409a979a2" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9127 South LaSalle Street Chicago, IL</h3> <strong>Owner:</strong> Klu Homes, LLC<br> <strong>Purchase Price:</strong> $105,000.00<br> <strong>Purchase Date:</strong> Apr. 2024<br> <strong>Mortgage Amount:</strong> $169,000<br> <strong>Lender:</strong> Midland Trust Company as custodian for third party (Refinanced with Happy Ventures LLC for $20,000 in Jan. 2025)<br> <strong>Still Own?:</strong> Yes<br> <strong>In Foreclosure?:</strong> No<br> </div></div>`)[0];
+                popup_ee46714c38dec79674cc22117c27d5a0.setContent(html_0deba8d4860fb5316994e56409a979a2);
+            
+        
+
+        marker_b50f5133cefe9d27d14673523a507cc4.bindPopup(popup_ee46714c38dec79674cc22117c27d5a0)
+        ;
+
+        
+    
+    
+            var marker_e4bc95e05ee45d08b7243b8c22111598 = L.marker(
+                [41.7292463, -87.5889366],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_71384306b451001bfe1e902529c8845f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "lightred", "prefix": "glyphicon"}
+            );
+            marker_e4bc95e05ee45d08b7243b8c22111598.setIcon(icon_71384306b451001bfe1e902529c8845f);
+        
+    
+        var popup_154294d3f90fa8cb0bb3af0e8097c4cb = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_fe8a6b5eee7053a78e4e238f6678311d = $(`<div id="html_fe8a6b5eee7053a78e4e238f6678311d" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9107 South Dante Avenue Chicago, IL</h3> <strong>Owner:</strong> Klu Homes, LLC<br> <strong>Purchase Price:</strong> $110,000.00<br> <strong>Purchase Date:</strong> Apr. 2024<br> <strong>Mortgage Amount:</strong> $177,000<br> <strong>Lender:</strong> Genali LLC (Refinanced with Happy Ventures LLC for $35,000 in Jan. 2025)<br> <strong>Still Own?:</strong> No, sold March 2025 for $235,000 to Isaac Walters<br> <strong>In Foreclosure?:</strong> No<br> </div></div>`)[0];
+                popup_154294d3f90fa8cb0bb3af0e8097c4cb.setContent(html_fe8a6b5eee7053a78e4e238f6678311d);
+            
+        
+
+        marker_e4bc95e05ee45d08b7243b8c22111598.bindPopup(popup_154294d3f90fa8cb0bb3af0e8097c4cb)
+        ;
+
+        
+    
+    
+            var marker_382ccbf8cf8b4b5d23f9e46f0cdab618 = L.marker(
+                [41.733293, -87.6439043],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_6245513d663b29c596ca83d01d8f0965 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "lightred", "prefix": "glyphicon"}
+            );
+            marker_382ccbf8cf8b4b5d23f9e46f0cdab618.setIcon(icon_6245513d663b29c596ca83d01d8f0965);
+        
+    
+        var popup_522e58293ab068f34b0766885ee0c756 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_f250e0527b98c3d7e2712aa659c0ba0a = $(`<div id="html_f250e0527b98c3d7e2712aa659c0ba0a" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>8832 South Halsted Street, Chicago IL</h3> <strong>Owner:</strong> Klu Homes, LLC<br> <strong>Purchase Price:</strong> $60,000.00<br> <strong>Purchase Date:</strong> Jan. 2024<br> <strong>Mortgage Amount:</strong> $140,000<br> <strong>Lender:</strong> Mary Desloover<br> <strong>Still Own?:</strong> No, sold Nov. 2024 for $80,000 to Homes by MB LLC<br> <strong>In Foreclosure?:</strong> No<br> </div></div>`)[0];
+                popup_522e58293ab068f34b0766885ee0c756.setContent(html_f250e0527b98c3d7e2712aa659c0ba0a);
+            
+        
+
+        marker_382ccbf8cf8b4b5d23f9e46f0cdab618.bindPopup(popup_522e58293ab068f34b0766885ee0c756)
+        ;
+
+        
+    
+    
+            var marker_afb59672b92f4a47a0c43b75599d7eca = L.marker(
+                [41.7137231, -87.5689781],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_11da9194e13c6bde19e396d47d8be07d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "lightred", "prefix": "glyphicon"}
+            );
+            marker_afb59672b92f4a47a0c43b75599d7eca.setIcon(icon_11da9194e13c6bde19e396d47d8be07d);
+        
+    
+        var popup_dfd448e441665423dceb9af12ebd6e77 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_c860bc79c668c8dcc24b9ab6606837a7 = $(`<div id="html_c860bc79c668c8dcc24b9ab6606837a7" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2242 East 100th Street, Chicago, IL</h3> <strong>Owner:</strong> Klu Homes, LLC<br> <strong>Purchase Price:</strong> $75,000.00<br> <strong>Purchase Date:</strong> Jan. 2023<br> <strong>Mortgage Amount:</strong> $131,000<br> <strong>Lender:</strong> SP Asset Holdings (Refinanced with Renovo Financial for $138,750 in April 2024)<br> <strong>Still Own?:</strong> No, sold Dec. 2024 for $184,500 to Rashad Franklin<br> <strong>In Foreclosure?:</strong> No<br> </div></div>`)[0];
+                popup_dfd448e441665423dceb9af12ebd6e77.setContent(html_c860bc79c668c8dcc24b9ab6606837a7);
+            
+        
+
+        marker_afb59672b92f4a47a0c43b75599d7eca.bindPopup(popup_dfd448e441665423dceb9af12ebd6e77)
+        ;
+
+        
+    
+    
+            var marker_76df652075a4f8ae9b6de8d45243c6af = L.marker(
+                [41.7200675, -87.57881549999999],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_c8c60ad988fe40b5cdade5925b932625 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "lightred", "prefix": "glyphicon"}
+            );
+            marker_76df652075a4f8ae9b6de8d45243c6af.setIcon(icon_c8c60ad988fe40b5cdade5925b932625);
+        
+    
+        var popup_85c5111e3da32664f30c7d7fbac7deed = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_969d2fb2cd66dbe1cbe82d3b90133a36 = $(`<div id="html_969d2fb2cd66dbe1cbe82d3b90133a36" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>9614 South Van Vlissingen Road, Chicago IL</h3> <strong>Owner:</strong> Klu Homes, LLC<br> <strong>Purchase Price:</strong> $90,000.00<br> <strong>Purchase Date:</strong> Nov. 2023<br> <strong>Mortgage Amount:</strong> $134,000<br> <strong>Lender:</strong> Equity Trust Company as custodian for third party (Refinanced with Renovo Financial for $134,250 in May 2024)<br> <strong>Still Own?:</strong> No, sold Sep. 2024 for $179,500 to Khalid Love<br> <strong>In Foreclosure?:</strong> No<br> </div></div>`)[0];
+                popup_85c5111e3da32664f30c7d7fbac7deed.setContent(html_969d2fb2cd66dbe1cbe82d3b90133a36);
+            
+        
+
+        marker_76df652075a4f8ae9b6de8d45243c6af.bindPopup(popup_85c5111e3da32664f30c7d7fbac7deed)
+        ;
+
+        
+    
+    
+            var marker_22f2ec08aa822a6b758aa6c2ad96f170 = L.marker(
+                [41.6268603, -87.6229527],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_c68185cb06ce5f9fce8e3a52157bc618 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "lightred", "prefix": "glyphicon"}
+            );
+            marker_22f2ec08aa822a6b758aa6c2ad96f170.setIcon(icon_c68185cb06ce5f9fce8e3a52157bc618);
+        
+    
+        var popup_6c5695d9d4c914fde8f5e7727be8299d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_6d59909958d23413245c58319a97038c = $(`<div id="html_6d59909958d23413245c58319a97038c" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>14733 Dearborn Street, Dolton, IL</h3> <strong>Owner:</strong> Klu Homes, LLC<br> <strong>Purchase Price:</strong> $74,000.00<br> <strong>Purchase Date:</strong> Oct. 2023<br> <strong>Mortgage Amount:</strong> $125,000<br> <strong>Lender:</strong> Elixir Enterprises (Refinanced with Renovo Financial for $157,500 in Aug. 2024)<br> <strong>Still Own?:</strong> No, sold Oct. 2024 for $195,000 to Charles Dockery<br> <strong>In Foreclosure?:</strong> No<br> </div></div>`)[0];
+                popup_6c5695d9d4c914fde8f5e7727be8299d.setContent(html_6d59909958d23413245c58319a97038c);
+            
+        
+
+        marker_22f2ec08aa822a6b758aa6c2ad96f170.bindPopup(popup_6c5695d9d4c914fde8f5e7727be8299d)
+        ;
+
+        
+    
+    
+            var marker_3ac0a136e247af334f73ebc2283ed115 = L.marker(
+                [41.7301135, -87.5652173],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_534ebc9770e37dfbeb7bc787b53f16c6 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_3ac0a136e247af334f73ebc2283ed115.setIcon(icon_534ebc9770e37dfbeb7bc787b53f16c6);
+        
+    
+        var popup_be9c1f7a530e63ba698850447a1d45a8 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_9834cac2ce8a188a2b9708da9ed893c6 = $(`<div id="html_9834cac2ce8a188a2b9708da9ed893c6" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2412 East 91st Street, Chicago, IL</h3> <strong>Owner:</strong> CA Homes, LLC<br> <strong>Purchase Price:</strong> $103,000.00<br> <strong>Purchase Date:</strong> Oct. 2023<br> <strong>Mortgage Amount:</strong> $159,000<br> <strong>Lender:</strong> Midland Trust Company as custodian for third party (Refinanced with Roc Capital for $210,000 in June 2024)<br> <strong>Still Own?:</strong> Yes<br> <strong>In Foreclosure?:</strong> No<br> <strong>Other Notes:</strong> Mary Desloover provided a $1.2M second lien mortgage loan cross-collateralized with three other properties in Oct. 2024<br> </div></div>`)[0];
+                popup_be9c1f7a530e63ba698850447a1d45a8.setContent(html_9834cac2ce8a188a2b9708da9ed893c6);
+            
+        
+
+        marker_3ac0a136e247af334f73ebc2283ed115.bindPopup(popup_be9c1f7a530e63ba698850447a1d45a8)
+        ;
+
+        
+    
+    
+            var marker_cd4ec8b559efa27cc0fc6110f5b97069 = L.marker(
+                [41.68413330000001, -87.6497313],
+                {}
+            ).addTo(map_a24b00809cea1d491a79109d4a794bd6);
+        
+    
+            var icon_ca76611fb5d4cd6781dec508acc240ad = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_cd4ec8b559efa27cc0fc6110f5b97069.setIcon(icon_ca76611fb5d4cd6781dec508acc240ad);
+        
+    
+        var popup_4466b38a75365e1e005484adb55404bd = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a6a730af471bb82a69d9c14071e0badf = $(`<div id="html_a6a730af471bb82a69d9c14071e0badf" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>11526 South Aberdeen, Chicago, IL</h3> <strong>Owner:</strong> CA Homes, LLC<br> <strong>Purchase Price:</strong> $80,000.00<br> <strong>Purchase Date:</strong> Sep. 2023<br> <strong>Mortgage Amount:</strong> $145,000<br> <strong>Lender:</strong> Agoo Inc. (Refinanced with Renovo Financial for $198,000 in June 2024)<br> <strong>Still Own?:</strong> No, sold Oct. 2024 for $249,500 to Rachael Woodson<br> <strong>In Foreclosure?:</strong> nan<br> <strong>Other Notes:</strong> Mary Desloover provided a $1.2M second lien mortgage loan cross-collateralized with three other properties in Oct. 2024<br> </div></div>`)[0];
+                popup_4466b38a75365e1e005484adb55404bd.setContent(html_a6a730af471bb82a69d9c14071e0badf);
+            
+        
+
+        marker_cd4ec8b559efa27cc0fc6110f5b97069.bindPopup(popup_4466b38a75365e1e005484adb55404bd)
+        ;
+
+        
+    
+</script>
