@@ -51,16 +51,28 @@
       [data-bs-theme="dark"] {
         --bs-body-bg: #212121;
       }
+      #snapshot{
+        margin: 0 auto;
+      }
       .widget-cards {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding: 20px 0;
+        display: grid;
+        grid-template-columns: 1fr;
+        padding: 0 20px;
         gap: 20px;
+      }
+      @media (min-width: 490px) {
+        .widget-cards {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (min-width: 750px) {
+        .widget-cards {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        
       }
       .widget-card {
         width: 100%;
-        max-width: 350px;
         border-radius: 8px;
         border: 1px solid var(--bs-border-color);
         padding: 10px;
@@ -92,7 +104,7 @@
   ></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
-    <main id="snapshot" class="container"></main>
+    <main id="snapshot"></main>
 
     <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -104,9 +116,10 @@
         const defaults = {
           rootElement: document.getElementById("snapshot"),
           dataUrl: "TRD Data Snapshots - Snapshot2_0.csv",
-          current_region: "New York, NY metro area",
-          current_sector: "Residential",
+          region: "New York, NY metro area",
+          sector: "Residential",
           current_date_period: "Q1 2025",
+          previous_date_period: "Q4 2024",
           display_title_order: [
             "Median Sale Price",
             "Median Price Per Sq. Ft.",
@@ -120,6 +133,7 @@
         const fn = {
           init: () => {
             trdTheme.init();
+            fn.updateParentWithHeight();
             fn.getData()
           },
 
@@ -131,10 +145,10 @@
                 header: true,
                 skipEmptyLines: true,
                 complete: (results) => {
-                  const filteredData = results.data.filter(
+                  const currentPeriodData = results.data.filter(
                     (item) =>
-                      item["region"] === defaults.current_region &&
-                      item["sector"] === defaults.current_sector &&
+                      item["region"] === defaults.region &&
+                      item["sector"] === defaults.sector &&
                       item["date_period"] === defaults.current_date_period
                   ).sort((a, b) => {
                     const indexA = defaults.display_title_order.indexOf(a["display_title"]);
@@ -142,7 +156,18 @@
                     return indexA - indexB;
                   });
 
-                  fn.renderCards(filteredData)
+                  const previousPeriodData = results.data.filter(
+                    (item) =>
+                      item["region"] === defaults.region &&
+                      item["sector"] === defaults.sector &&
+                      item["date_period"] === defaults.previous_date_period
+                  ).sort((a, b) => {
+                    const indexA = defaults.display_title_order.indexOf(a["display_title"]);
+                    const indexB = defaults.display_title_order.indexOf(b["display_title"]);
+                    return indexA - indexB;
+                  });
+
+                  fn.renderCards(currentPeriodData, previousPeriodData);
                 },
                 error: (error) => {
                   console.error("Error parsing CSV:", error)
@@ -151,8 +176,8 @@
             )
           },
 
-          renderCards: (data) => {
-            if(!data || data.length === 0) {
+          renderCards: (currentData, previousData) => {
+            if(!currentData || currentData.length === 0) {
               console.error("No data found for the specified filters.")
               return;
             }
@@ -160,24 +185,60 @@
             const root = defaults.rootElement;
             const container = document.createElement("div");
             container.classList.add("widget-cards");
-            data.forEach((item) => {
+            currentData.forEach((item) => {
               const card = document.createElement("div");
               card.className = "widget-card";
               card.innerHTML = `
                 <h5 class="widget-card-title">${item["display_title"]}</h5>
                 <div class="widget-card-value">${item['value']}</div>
+                ${fn.renderCompare(item, previousData.filter(i => i["display_title"] === item["display_title"]))}
               `;
               container.appendChild(card);
             });
             root.appendChild(container);
 
             const footer = document.createElement("div");
-            footer.className = "d-flex mt-3 justify-content-between";
+            footer.className = "d-flex mt-3 justify-content-between mx-4";
             footer.innerHTML = `
-              <div class="text-muted">Last updated: ${data[0]['last_updated']}</div>
-              <div class="text-muted">${data[0]["date_period"]}</div>
+              <div class="text-muted">Last updated: ${currentData[0]['last_updated']}</div>
+              <div class="text-muted">${currentData[0]["date_period"]}</div>
             `;
             root.appendChild(footer);
+          },
+
+          renderCompare: (currentData, previousData) => {
+            if(!previousData || previousData.length === 0) {
+              return '';
+            }
+            const currentValue = parseFloat(currentData['value'].replace(/[$,]/g, ""));
+            const previousValue = parseFloat(previousData[0]['value'].replace(/[$,]/g, ""));
+            const change = ((currentValue - previousValue) / previousValue) * 100;
+            const changeText = change > 0 ? `+${change.toFixed(2)}%` : `${change.toFixed(2)}%`;
+            const changeClass = change > 0 ? "text-success" : "text-danger";
+            return `
+              <div class="d-flex justify-content-between mt-2">
+                <div class="${changeClass}">${changeText} <span class="text-muted">vs last quarter</span></div>
+              </div>
+              `;
+          },
+        
+          updateParentWithHeight: () => {
+            const origin = window.location.origin === 'https://trd-digital.github.io' ? 'https://therealdeal.com' : 'http://localhost:3010';
+
+            window.addEventListener("resize", () => {
+              const height = defaults.rootElement.offsetHeight;
+              window.parent.postMessage({ "updateHeight": height + 10, src: window.location.href }, origin);
+            });
+            window.addEventListener("load", () => {
+              const height = defaults.rootElement.offsetHeight;
+              window.parent.postMessage({ "updateHeight": height + 10, src: window.location.href }, origin);
+            });
+            window.addEventListener("message", (event) => {
+              if (event.data.type === "updateHeight") {
+                const height = defaults.rootElement.offsetHeight;
+                window.parent.postMessage({ "updateHeight": height + 10, src: window.location.href }, origin);
+              }
+            });
           },
         };
 

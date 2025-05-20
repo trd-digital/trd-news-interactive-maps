@@ -1,34 +1,14 @@
 const dataUrl =
-  "https://static.therealdeal.com/interactive-maps/new-york-city-transactions-map.geojson";
-
-const excludeValue = [
-  "null",
-  "undefined",
-  "n/a",
-  "na",
-  "none",
-  "not available",
-  "not applicable",
-  "no",
-  "0",
-  "false",
-  "unknown",
-  "data not found",
-  "nan",
-  "address not available",
-  "address unavailable",
-  "address not found",
-  "-",
-];
+  "https://static.therealdeal.com/interactive-maps/new-york-city-dob-now-job-filings-map.geojson";
 
 const trdTheme = TrdTheme();
 
 const trdList = () => {
   const list = document.querySelector("#list");
+
   const queryParams = new URLSearchParams(window.location.search);
-  const view = queryParams.get("view");
-  const uniqueBuilding = queryParams.get("uniqueBuilding");
-  const maxLimit = 30;
+
+  const maxLimit = 10;
   let listLimit = queryParams.get("limit");
   if (!listLimit || isNaN(listLimit)) {
     listLimit = maxLimit;
@@ -39,63 +19,15 @@ const trdList = () => {
     }
   }
 
-  let scroller;
-
   const fn = {
     init: () => {
-      fn.setupTooltip();
-      fn.addEventListeners();
       trdTheme.init();
-      fn.updateView();
+      fn.addEventListeners();
       fn.addLoadingListItems();
       fn.getData(dataUrl)
         .then(fn.renderListItems)
         .catch(console.error)
-        .finally(() => {
-          if (view === "dashboard") {
-            fn.updateParentWithHeight();
-          }
-        });
-    },
-
-    updateView: () => {
-      if (view === "dashboard") {
-        document.querySelector(".card").classList.remove("card");
-        document.querySelector(".card-body").classList.add("d-none");
-        list.classList.add("list-view-numbers");
-        fn.updateParentWithHeight();
-      }
-    },
-
-    setupTooltip: () => {
-      const tooltipTriggerList = document.querySelectorAll(
-        '[data-bs-toggle="tooltip"]'
-      );
-      [...tooltipTriggerList].map(
-        (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
-      );
-    },
-
-    addEventListeners: () => {
-      list.addEventListener("click", () => {
-        const url = helpers.getGamTrackUrl(
-          "https://therealdeal.com/data/new-york/2024/nyc-transactions/?utm_source=embed&utm_medium=widget"
-        );
-        window.open(url, "_blank");
-      });
-      window.addEventListener("load", helpers.addGamTrackUrls);
-      window.addEventListener("blur", helpers.autoScrollListStart);
-      window.addEventListener("load", helpers.autoScrollListStart);
-      list.addEventListener("mouseleave", helpers.autoScrollListStart);
-      list.addEventListener("mouseenter", helpers.autoScrollListStop);
-      list.addEventListener("touchstart", helpers.autoScrollListStop);
-      window.addEventListener("resize", fn.updateParentWithHeight);
-      window.addEventListener("load", fn.updateParentWithHeight);
-      window.addEventListener("message", (event) => {
-        if (event.data.type === "updateHeight") {
-          fn.updateParentWithHeight();
-        }
-      });
+        .finally(fn.updateParentWithHeight);
     },
 
     getData: async (url) => {
@@ -108,12 +40,14 @@ const trdList = () => {
         return `
           <li class="list-group-item d-flex justify-content-between align-items-start">
             <div class="me-2" style="width: 100%;">
+              <div class="loading-placeholder" style="width: 70%; height: 20px;"></div>
               <div class="loading-placeholder" style="width: 100%; height: 20px;"></div>
               <div class="loading-placeholder" style="width: 80%; height: 15px;"></div>
             </div>
             <div>
               <div class="loading-placeholder" style="width: 100px; height: 20px;"></div>
-              <div class="loading-placeholder" style="width: 80px; height: 15px;"></div>
+              <div class="loading-placeholder" style="width: 85px; height: 20px;"></div>
+              <div class="loading-placeholder" style="width: 70px; height: 15px;"></div>
             </div>
           </li>
         `;
@@ -122,59 +56,14 @@ const trdList = () => {
       list.innerHTML = items;
     },
 
-    renderListItems: (data) => {
-      const items = data.features
-        .filter(helpers.filterListEmptyData)
-        .filter(helpers.removeDuplicateBuilding)
-        .filter(helpers.filterToLast30Days)
-        .sort(helpers.sortListBySalePrice)
-        .slice(0, listLimit)
-        .map((feature) => {
-          const properties = feature.properties;
-          const address = properties["Physical Address"];
-          const price = helpers.formatCurrency(properties["Sale Price"], true);
-          const date = helpers.formatDate(properties["Record Date"]);
-          const borough = helpers.formatBorough(properties["County"]);
-
-          const place = [];
-          if (!helpers.isEmptyValue(properties["Neighborhood"])) {
-            place.push(properties["Neighborhood"]);
-          }
-
-          if (!helpers.isEmptyValue(borough)) {
-            place.push(borough);
-          }
-
-          return `
-            <li class="list-group-item d-flex justify-content-between align-items-start">
-              <div class="me-2">
-                <div>${address}</div>
-                <div class="text-muted">${place.join(", ")}</div>
-              </div>
-              <div>
-                <div class="text-success price">${price}</div>
-                <div class="text-muted date">${date}</div>
-              </div>
-            </li>
-          `;
-        })
-        .join("");
-
-      list.innerHTML = items;
-    },
-
-    autoScrollList: () => {
-      const listHeight = list.scrollHeight;
-      scroller = setInterval(() => {
-        if (list.scrollTop + list.clientHeight >= listHeight) {
-          list.scrollTop = 0;
-        } else {
-          list.scrollBy({
-            top: 1,
-            behavior: "smooth",
-          });
+    addEventListeners: () => {
+      window.addEventListener("resize", fn.updateParentWithHeight);
+      window.addEventListener("load", fn.updateParentWithHeight);
+      window.addEventListener("message", (event) => {
+        if (event.data.type === "updateHeight") {
+          fn.updateParentWithHeight();
         }
-      }, 10);
+      });
     },
 
     updateParentWithHeight: () => {
@@ -188,6 +77,56 @@ const trdList = () => {
         { updateHeight: height + 10, src: window.location.href },
         origin
       );
+    },
+
+    renderListItems: (data) => {
+      const items = data.features
+        .filter(helpers.filterListEmptyData)
+        .filter(helpers.filterToLast30Days)
+        .sort(helpers.sortListByStatusDate)
+        .slice(0, listLimit)
+        .map((feature) => {
+          const properties = feature.properties;
+          const price = helpers.formatCurrency(
+            properties["Estimated Job Cost"],
+            true
+          );
+          const sqft = TrdFormatters.formatNumber(
+            properties["Total Construction Floor Area"],
+            true
+          );
+          const date = helpers.formatDate(properties["Instrument Status Date"]);
+          const borough = helpers.formatBorough(properties["Borough"]);
+
+          const place = [];
+          if (!helpers.isEmptyValue(properties["Neighborhood"])) {
+            place.push(properties["Neighborhood"]);
+          }
+
+          if (!helpers.isEmptyValue(borough)) {
+            place.push(borough);
+          }
+
+          return `
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="me-2">
+                <div class="text-muted text-small">${
+                  properties["Instrument Type"]
+                } | ${properties["Instrument Status"]}</div>
+                <div>${properties["Property Address"]}</div>
+                <div class="text-muted">${place.join(", ")}</div>
+              </div>
+              <div>
+                <div class="text-success price">${price}</div>
+                <div class="text-success sqft">${sqft} SqFt</div>
+                <div class="text-muted date">${date}</div>
+              </div>
+            </li>
+          `;
+        })
+        .join("");
+
+      list.innerHTML = items;
     },
   };
 
@@ -221,49 +160,24 @@ const trdList = () => {
       });
     },
 
-    autoScrollListStart: () => {
-      clearInterval(scroller);
-      fn.autoScrollList();
-    },
-
-    autoScrollListStop: () => {
-      clearInterval(scroller);
-    },
-
     filterListEmptyData: (data) => {
       const properties = data.properties;
-      const address = properties["Physical Address"];
-      const price = properties["Sale Price"];
-      const date = properties["Record Date"];
+      const address = properties["Property Address"];
 
-      return (
-        !helpers.isEmptyValue(price) &&
-        !helpers.isEmptyValue(date) &&
-        !helpers.isEmptyValue(address)
-      );
+      return !helpers.isEmptyValue(address);
     },
 
     filterToLast30Days: (data) => {
-      const date = Date.parse(data.properties["Record Date"]);
+      const date = Date.parse(data.properties["Instrument Status Date"]);
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
       return date > thirtyDaysAgo;
     },
 
-    removeDuplicateBuilding: (data, index, self) => {
-      if (!uniqueBuilding) return true;
-      const properties = data.properties;
-      const buildingBBL = properties["Building BBL"];
-      const isDuplicate = self.findIndex(
-        (item) => item.properties["Building BBL"] === buildingBBL
-      );
-      return index === isDuplicate;
-    },
-
-    sortListBySalePrice: (a, b) => {
-      const priceA = a.properties["Sale Price"];
-      const priceB = b.properties["Sale Price"];
+    sortListByStatusDate: (a, b) => {
+      const priceA = a.properties["Instrument Status Date"];
+      const priceB = b.properties["Instrument Status Date"];
       return priceB - priceA;
     },
 
@@ -332,13 +246,25 @@ const trdList = () => {
       }
     },
 
-    formatBorough: (borough) => {
-      if (borough === "Bronx County") return "BX";
-      if (borough === "Kings County") return "BK";
-      if (borough === "New York County") return "MN";
-      if (borough === "Queens County") return "QN";
-      if (borough === "Richmond County") return "SI";
-      return "";
+    formatBorough: (value) => {
+      const borough = value.toLowerCase().replace("county", "").trim();
+      switch (borough) {
+        case "bronx":
+          return "BX";
+        case "kings":
+        case "brooklyn":
+          return "BK";
+        case 'new york"':
+        case "manhattan":
+          return "MN";
+        case "queens":
+          return "QN";
+        case "richmond":
+        case "staten island":
+          return "SI";
+        default:
+          return "";
+      }
     },
   };
 
