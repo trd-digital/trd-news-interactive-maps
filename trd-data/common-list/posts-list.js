@@ -46,8 +46,8 @@ const trdPostList = (options) => {
               <a href="${helpers.getGamTrackUrl(
                 post.link
               )}" class="text-decoration-none text-reset">
-                <div class="me-2 text-uppercase">${sector}</div>
-                <div class="me-2 fw-bold">${title}</div>
+                <div class="me-2 text-uppercase label">${sector}</div>
+                <div class="me-2 title">${title}</div>
               </a>
             </li>
           `;

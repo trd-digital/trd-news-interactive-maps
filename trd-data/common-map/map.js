@@ -84,7 +84,7 @@ const trdDataCommonMap = (options) => {
       light: "black",
       dark: "white",
       pointTextColorLight: "white",
-      pointTextColorDark: "black",
+      pointTextColorDark: "white",
     },
     loadingEnabled: false,
     mapCluster: false,
@@ -909,13 +909,15 @@ const trdDataCommonMap = (options) => {
             layout: {
               "text-field": ["get", "point_count_abbreviated"],
               "text-size": 16,
+            },
+            paint: {
               "text-color": helpers.pickThemeColor(
                 settings.defaultColors.pointTextColorLight
                   ? settings.defaultColors.pointTextColorLight
-                  : "white",
+                  : "black",
                 settings.defaultColors.pointTextColorDark
                   ? settings.defaultColors.pointTextColorDark
-                  : "black"
+                  : "white"
               ),
             },
           });
