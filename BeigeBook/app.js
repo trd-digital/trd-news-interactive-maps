@@ -4,13 +4,13 @@
   //    – content array must match your GeoJSON “summary” property
   const modalDisplayFields = {
     title: {
-      field: "metro",
+      field: "Metro",
       label: "Market",
     },
     content: [
       {
         field: "summary",
-        label: "Overview",
+        label: "Overview Draft Doc",
         // no special formatting needed, it’s already valid HTML
       },
     ],
