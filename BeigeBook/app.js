@@ -8,25 +8,10 @@
       label: "Market",
     },
     content: [
-{
-  field: "records",
-  label: "Overview",
-  // parse the Python-dict string and grab its `summary` value
-  format: (val) => {
-    try {
-      // turn "{'metro':'New York','summary':'<p>…</p>'}" into valid JSON
-      const obj = JSON.parse(
-        val
-          .replace(/(['"])?([a-zA-Z0-9_ ]+)(['"])?:/g, '"$2":') // quote keys
-          .replace(/'/g, '"')                                  // single→double quotes
-      );
-      return obj.summary;
-    } catch (e) {
-      console.warn("couldn't parse records:", e, val);
-      return "<em>Unable to show summary</em>";
-    }
-  }
-},
+      {
+        field: "summary",
+        label: "Overview",
+      },
       {
         field: "Last Updated",
         label: "Last Updated",
