@@ -3,10 +3,10 @@
   //    – title.field must match your GeoJSON “metro” property
   //    – content array must match your GeoJSON “summary” property
   const modalDisplayFields = {
-    title: {
-      field: "Metro",
-      label: "Market",
-    },
+    // title: {
+    //   field: "Metro",
+    //   label: "Market",
+    // },
     content: [
       {
         field: "summary",
