@@ -1,59 +1,51 @@
 (() => {
+  // 1️⃣ Tell the modal which feature‐properties to show:
+  //    – title.field must match your GeoJSON “metro” property
+  //    – content array must match your GeoJSON “summary” property
   const modalDisplayFields = {
     title: {
-      field: "City",
-      label: "City",
+      field: "Metro",
+      label: "Market",
     },
     content: [
-      { field: "User Generated Real Estate Summary", label: "Summary" },
-      { field: "AI Residential Summary", label: "Residential Summary" },
       {
-        field: "AI Resi Link",
-        label: "",
-        format: (value) => `<a href="${value}" target="_blank">Source</a>`,
+        field: "summary",
+        label: "Overview",
       },
       {
-        field: "separator",
-        label: "",
-        format: () => `<hr>`,
-      },
-      { field: "AI Commercial Summary", label: "Commercial Summary" },
+        field: "Last Updated",
+        label: "Last Updated",
+      },      
       {
-        field: "AI Commercial Link",
-        label: "",
-        format: (value) => `<a href="${value}" target="_blank">Source</a>`,
+        field: "Last Updated By",
+        label: "By",
       },
     ],
   };
-  
-  // Function to detect if the user is on a mobile device
-  const isMobileDevice = () => {
-    return /Mobi|Android|iPhone/i.test(navigator.userAgent);
-  };
 
-  // Set default map center coordinates
-  let mapCenterLat = 39.8283; // Default latitude (center of the US)
-  let mapCenterLng = -98.5795; // Default longitude (center of the US)
-
-  // Adjust map center for mobile devices
-  if (isMobileDevice()) {
-    mapCenterLat = 40.7128; // New York City latitude
-    mapCenterLng = -74.0060; // New York City longitude
-  }
-
+  // 2️⃣ Initialize your map, pointing at your GeoJSON file:
   window.map = trdDataCommonMap({
+    // path to the file you just generated
+    filePath: "market_overviews.geojson",
+
+    // leave these alone unless you want filters/legends/results
     fetchDataFilterCallback: undefined,
-    eventCategory: "beige-book",
-    filePath: "data.geojson",
+    eventCategory: "market-overviews",
     mapElementId: "map",
     filterElementId: undefined,
     legendElementId: undefined,
     resultElementId: undefined,
-    mapCenterLat: mapCenterLat,
-    mapCenterLng: mapCenterLng,
+
+    // center & zoom
+    mapCenterLat: 39.8283,
+    mapCenterLng: -98.5795,
     zoom: 4,
     minZoom: 3,
+
+    // swap in your modalDisplayFields
     modalDisplayFields,
+
+    // optional: tweak the circle style
     mapLayerPaint: {
       "circle-color": "#007cbf",
       "circle-radius": 8,
@@ -62,15 +54,3 @@
     },
   });
 })();
-
-function renderModalContent(contentArray, properties) {
-  return contentArray.map(item => {
-    if (item.field === "separator") {
-      return item.format();
-    } else {
-      const label = item.label ? `<strong>${item.label}:</strong> ` : "";
-      const value = properties[item.field] || "";
-      return `<p>${label}${item.format ? item.format(value) : value}</p>`;
-    }
-  }).join('');
-}
