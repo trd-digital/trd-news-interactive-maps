@@ -9,8 +9,17 @@
     },
     content: [
       {
-        field: "summary",
-        label: "Overview Draft Doc",
+        field: "Overview Draft Doc",
+        label: "Overview",
+        // no special formatting needed, it’s already valid HTML
+      },
+            {
+        field: "Last Updated",
+        label: "Last Updated",
+        // no special formatting needed, it’s already valid HTML
+      },      {
+        field: "Last Updated By",
+        label: "By:",
         // no special formatting needed, it’s already valid HTML
       },
     ],
