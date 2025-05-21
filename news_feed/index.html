@@ -2,61 +2,206 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Real-Estate News Feed</title>
-  <!-- Bootstrap CSS -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Real-Estate News Ticker</title>
+
+  <!-- Merriweather font -->
   <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/css/bootstrap.min.css"
+    href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap"
     rel="stylesheet"
   />
+
   <style>
-    body { background: #f8f9fa; }
-    .card { border: none; }
+    /* -------------------------------
+       1) Color Variables & Themes
+       ------------------------------- */
+    :root {
+      --primary-color:    #000000;
+      --secondary-color:  #FFFFFF;
+      --accent-color:     #1E90FF;
+      --text-color:       #000000;
+      --background-color: #F7F7F7;
+      --border-color:     #CCCCCC;
+      --hover-shadow:     rgba(0,0,0,0.1);
+      --transition-speed: 0.8s;   /* collapse animation */
+      --display-time:     4s;     /* pause between slides */
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --primary-color:    #FFFFFF;
+        --secondary-color:  #1A1A1A;
+        --accent-color:     #1E90FF;
+        --text-color:       #FFFFFF;
+        --background-color: #212121;
+        --border-color:     #333333;
+        --hover-shadow:     rgba(255,255,255,0.2);
+      }
+    }
+
+    /* -------------------------------
+       2) Global & Layout
+       ------------------------------- */
+    body {
+      margin: 0;
+      padding: 20px;
+      background: var(--background-color);
+      color: var(--text-color);
+      font-family: 'Merriweather', serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+      font-size: 1.75rem;
+    }
+    #ticker {
+      width: 100%;
+      max-width: 600px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--secondary-color);
+      box-shadow: 0 2px 4px var(--hover-shadow);
+      overflow: hidden;
+    }
+    #loading,
+    #error {
+      text-align: center;
+      font-size: 1rem;
+      margin: 1rem 0;
+    }
+    .spinner {
+      border: 3px solid var(--secondary-color);
+      border-top: 3px solid var(--accent-color);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* -------------------------------
+       3) Ticker List & Items
+       ------------------------------- */
+    #ticker-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .ticker-item {
+      background: var(--secondary-color);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.75rem 1rem;
+      box-shadow: 0 2px 4px var(--hover-shadow);
+      overflow: hidden;
+      transition:
+        opacity var(--transition-speed) ease,
+        height  var(--transition-speed) ease,
+        margin  var(--transition-speed) ease,
+        padding var(--transition-speed) ease,
+        border  var(--transition-speed) ease;
+    }
+    .ticker-item:last-child {
+      border-bottom: none;
+    }
+    .ticker-item a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+    .ticker-item a:hover {
+      text-decoration: underline;
+    }
+    .ticker-item .meta {
+      display: block;
+      margin-top: 0.25rem;
+      font-size: 0.85rem;
+      color: var(--text-color);
+    }
+    .ticker-item.hide {
+      opacity: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
   </style>
 </head>
 <body>
-  <div class="container py-4">
-    <h1 class="mb-4">Latest Real-Estate Stories</h1>
-    <div id="news-container" class="row row-cols-1 row-cols-md-2 g-4">
-      <!-- cards will be injected here -->
+  <h1>Real-Estate News Ticker</h1>
+
+  <div id="ticker">
+    <div id="loading">
+      <span class="spinner"></span>Loading…
+    </div>
+    <div id="ticker-list"></div>
+    <div id="error" style="display:none; color: tomato;">
+      Failed to load articles.
     </div>
   </div>
 
   <script>
-    async function loadArticles() {
+    document.addEventListener('DOMContentLoaded', initTicker);
+
+    async function initTicker() {
+      const listEl  = document.getElementById('ticker-list');
+      const loading = document.getElementById('loading');
+      const errorEl = document.getElementById('error');
+      let articles;
+
+      // 1) Fetch JSON
       try {
         const res = await fetch('articles.json');
-        const data = await res.json();
-        const container = document.getElementById('news-container');
-
-        data.forEach(a => {
-          const col = document.createElement('div');
-          col.className = 'col';
-
-          col.innerHTML = `
-            <div class="card h-100 shadow-sm bg-white rounded-3">
-              <div class="card-body">
-                <h5 class="card-title">
-                  <a href="${a.url}" target="_blank" class="text-decoration-none">
-                    ${a.title}
-                  </a>
-                </h5>
-                <p class="card-text text-muted mb-0">
-                  ${a.source} • ${new Date(a.date).toLocaleDateString(undefined,{
-                    year:'numeric', month:'short', day:'numeric'
-                  })}
-                </p>
-              </div>
-            </div>
-          `;
-          container.appendChild(col);
-        });
+        if (!res.ok) throw new Error(res.statusText);
+        articles = await res.json();
       } catch (err) {
-        console.error('Error loading articles:', err);
+        loading.style.display = 'none';
+        errorEl.style.display = 'block';
+        return console.error(err);
       }
-    }
 
-    document.addEventListener('DOMContentLoaded', loadArticles);
+      // 2) Populate all items
+      loading.remove();
+      articles.forEach(a => {
+        const div = document.createElement('div');
+        div.className = 'ticker-item';
+        div.innerHTML = `
+          <a href="${a.url}" target="_blank" rel="noopener">${a.title}</a>
+          <span class="meta">${a.source} • ${
+            new Date(a.date).toLocaleDateString(undefined,{
+              year:'numeric', month:'short', day:'numeric'
+            })
+          }</span>
+        `;
+        listEl.appendChild(div);
+      });
+
+      // 3) Slide-up loop: hide top, then reorder
+      const rootStyles = getComputedStyle(document.documentElement);
+      const displayTime      = parseFloat(rootStyles.getPropertyValue('--display-time')) * 1000;
+      const transitionTime   = parseFloat(rootStyles.getPropertyValue('--transition-speed')) * 1000;
+
+      function rotate() {
+        const first = listEl.firstElementChild;
+        // collapse & fade out
+        first.classList.add('hide');
+        // after collapse, move to bottom & reset
+        setTimeout(() => {
+          first.classList.remove('hide');
+          listEl.appendChild(first);
+          // schedule next rotation
+          setTimeout(rotate, displayTime);
+        }, transitionTime);
+      }
+
+      // start after initial pause
+      setTimeout(rotate, displayTime);
+    }
   </script>
 </body>
 </html>
