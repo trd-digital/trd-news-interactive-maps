@@ -28,6 +28,7 @@ const trdList = () => {
   const queryParams = new URLSearchParams(window.location.search);
   const view = queryParams.get("view");
   const uniqueBuilding = queryParams.get("uniqueBuilding");
+  const updateHeight = queryParams.get("updateHeight");
   const maxLimit = 30;
   let listLimit = queryParams.get("limit");
   if (!listLimit || isNaN(listLimit)) {
@@ -178,6 +179,8 @@ const trdList = () => {
     },
 
     updateParentWithHeight: () => {
+      if (!updateHeight) return;
+
       const origin =
         window.location.origin === "https://trd-digital.github.io"
           ? "https://therealdeal.com"

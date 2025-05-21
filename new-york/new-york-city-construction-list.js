@@ -7,6 +7,7 @@ const trdList = () => {
   const list = document.querySelector("#list");
 
   const queryParams = new URLSearchParams(window.location.search);
+  const updateHeight = queryParams.get("updateHeight");
 
   const maxLimit = 10;
   let listLimit = queryParams.get("limit");
@@ -67,6 +68,7 @@ const trdList = () => {
     },
 
     updateParentWithHeight: () => {
+      if (!updateHeight) return;
       const origin =
         window.location.origin === "https://trd-digital.github.io"
           ? "https://therealdeal.com"

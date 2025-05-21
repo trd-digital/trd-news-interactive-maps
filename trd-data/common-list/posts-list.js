@@ -14,12 +14,30 @@ const trdPostList = (options) => {
     ...options,
   };
 
+  const queryParams = new URLSearchParams(window.location.search);
+  const market = queryParams.get("market");
+  const limit = queryParams.get("limit");
+
   const fn = {
     init: () => {
       trdTheme.init();
-      fn.getData(settings.dataUrl)
-        .then(fn.renderListItems)
-        .catch(console.error);
+      fn.getData(fn.getDataUrl()).then(fn.renderListItems).catch(console.error);
+    },
+
+    getDataUrl: () => {
+      const url = new URL(settings.dataUrl);
+      const params = new URLSearchParams(url.search);
+      if (market) {
+        params.set("market", helpers.getMarketId(market));
+      }
+      const perPage = limit ? parseInt(limit) : 10;
+      if (perPage > 20) {
+        params.set("per_page", 20);
+      } else {
+        params.set("per_page", perPage);
+      }
+      url.search = params.toString();
+      return url.toString();
     },
 
     getData: async (url) => {
@@ -43,9 +61,7 @@ const trdPostList = (options) => {
 
           return `
             <li class="list-group-item">
-              <a href="${helpers.getGamTrackUrl(
-                post.link
-              )}" class="text-decoration-none text-reset">
+              <a href="${post.link}" class="text-decoration-none text-reset" target="_parent">
                 <div class="me-2 text-uppercase label">${sector}</div>
                 <div class="me-2 title">${title}</div>
               </a>
@@ -59,26 +75,11 @@ const trdPostList = (options) => {
   };
 
   const helpers = {
-    getGamTrackUrl: (url) => {
-      if (!window.frameElement || !url || url === "") return url;
-
-      const clickUrlUnescaped = window.frameElement.getAttribute(
-        "data-click-url-unesc"
-      );
-      if (
-        !clickUrlUnescaped ||
-        !clickUrlUnescaped.startsWith("http://") ||
-        !clickUrlUnescaped.startsWith("https://")
-      ) {
-        return url;
-      }
-
-      const newUrl = new URL(clickUrlUnescaped);
-      if (newUrl.searchParams.has("adurl")) {
-        newUrl.searchParams.delete("adurl");
-      }
-      newUrl.searchParams.append("adurl", url);
-      return newUrl.toString();
+    getMarketId: (market) => {
+      const marketIdMap = {
+        "new-york": 9572,
+      };
+      return marketIdMap[market] || null;
     },
   };
 
