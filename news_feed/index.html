@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Real-Estate News Feed</title>
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <style>
+    body { background: #f8f9fa; }
+    .card { border: none; }
+  </style>
+</head>
+<body>
+  <div class="container py-4">
+    <h1 class="mb-4">Latest Real-Estate Stories</h1>
+    <div id="news-container" class="row row-cols-1 row-cols-md-2 g-4">
+      <!-- cards will be injected here -->
+    </div>
+  </div>
+
+  <script>
+    async function loadArticles() {
+      try {
+        const res = await fetch('articles.json');
+        const data = await res.json();
+        const container = document.getElementById('news-container');
+
+        data.forEach(a => {
+          const col = document.createElement('div');
+          col.className = 'col';
+
+          col.innerHTML = `
+            <div class="card h-100 shadow-sm bg-white rounded-3">
+              <div class="card-body">
+                <h5 class="card-title">
+                  <a href="${a.url}" target="_blank" class="text-decoration-none">
+                    ${a.title}
+                  </a>
+                </h5>
+                <p class="card-text text-muted mb-0">
+                  ${a.source} • ${new Date(a.date).toLocaleDateString(undefined,{
+                    year:'numeric', month:'short', day:'numeric'
+                  })}
+                </p>
+              </div>
+            </div>
+          `;
+          container.appendChild(col);
+        });
+      } catch (err) {
+        console.error('Error loading articles:', err);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadArticles);
+  </script>
+</body>
+</html>
