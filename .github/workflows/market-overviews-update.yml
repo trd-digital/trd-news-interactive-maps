@@ -1,0 +1,43 @@
+name: Market Overviews Update
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-market-overviews:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+        # @see https://github.com/marketplace/actions/setup-python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ./BeigeBook/requirements.txt
+
+      - name: Run jupyter notebook
+        env:
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+        run: |
+          echo "${{ secrets.AUTO_SCRAPER_SERVICE_FILE}}" > ./BeigeBook/autoscraper-380600-0d0c84856d6b.json
+          jupyter execute ./BeigeBook/MarketOverviewGeoJsonGenerator.ipynb
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+          git add ./BeigeBook/market_overview.geojson
+          git commit -m "Update market overview data" || echo "No changes to commit"
+          git push origin HEAD:main
+
+      - name: Clean up
+        run: |
+          rm ./BeigeBook/autoscraper-380600-0d0c84856d6b.json
+          rm ./BeigeBook/market_overview.geojson
