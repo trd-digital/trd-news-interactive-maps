@@ -26,7 +26,9 @@ jobs:
         env:
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
         run: |
-          echo "${{ secrets.AUTO_SCRAPER_SERVICE_FILE}}" > ./BeigeBook/autoscraper-380600-0d0c84856d6b.json
+          # Decode the base64 encoded credentials and save to a file
+          # @see
+          echo "${{ secrets.AUTO_SCRAPER_CREDENTIALS_BASE64 }}" | base64 --decode > ./BeigeBook/autoscraper-380600-0d0c84856d6b.json
           jupyter execute ./BeigeBook/MarketOverviewGeoJsonGenerator.ipynb
 
       - name: Commit and push changes
