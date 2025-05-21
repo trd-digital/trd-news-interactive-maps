@@ -90,6 +90,48 @@
         font-weight: 900;
         color: #4285F4;
       }
+
+      .loading-placeholder {
+        background-color: var(--bs-body-bg);
+        overflow: hidden;
+        position: relative;
+        border-radius: 4px;
+      }
+      .loading-placeholder + .loading-placeholder{
+        margin-top: 10px;
+      }
+      .loading-placeholder::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(
+          to right,
+          transparent 0%,
+          #e3e3e3 50%,
+          transparent 60%
+        );
+        animation: shimmer 1.5s infinite linear;
+      }
+      [data-bs-theme="dark"] .loading-placeholder::before {
+        background-image: linear-gradient(
+          to right,
+          transparent 0%,
+          #2d2d2d 50%,
+          transparent 60%
+        );
+      }
+
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
      </style>
 </head>
 <body>
@@ -134,7 +176,8 @@
           init: () => {
             trdTheme.init();
             fn.updateParentWithHeight();
-            fn.getData()
+            fn.addLoadingCards();
+            fn.getData();
           },
 
           getData: () => {
@@ -176,6 +219,25 @@
             )
           },
 
+          addLoadingCards: () => {
+            const cards = Array.from({ length: 6 }, (_, i) => {
+              return `
+                <div class="widget-card">
+                  <div class="loading-placeholder" style="width: 90%; height: 24px;"></div>
+                  <div class="loading-placeholder" style="width: 100px; height: 40px;"></div>
+                  <div class="loading-placeholder" style="width: 50%; height: 15px;"></div>
+                </div>
+              `;
+            }).join("");
+            
+            const container = document.createElement("div");
+            container.classList.add("widget-cards");
+            container.innerHTML = cards;
+
+            defaults.rootElement.innerHTML = '';
+            defaults.rootElement.appendChild(container);
+          },
+
           renderCards: (currentData, previousData) => {
             if(!currentData || currentData.length === 0) {
               console.error("No data found for the specified filters.")
@@ -195,6 +257,7 @@
               `;
               container.appendChild(card);
             });
+            root.innerHTML = ""; // Clear previous content
             root.appendChild(container);
 
             const footer = document.createElement("div");
