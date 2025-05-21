@@ -8,267 +8,156 @@
   <!-- Merriweather for header -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-  
-  <!-- Proxima Nova is assumed installed locally; otherwise, a fallback sans-serif is used -->
-  
   <!-- Font Awesome (for icons) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  
-  <!-- Papa Parse CDN -->
+  <!-- PapaParse -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   
   <style>
     :root {
-      --primary-color: #333333;
-      --secondary-color: #ffffff;
+      --primary-color: #333;
+      --secondary-color: #fff;
       --accent-color: #007BFF;
       --bg-color: #f8f9fa;
-      --card-bg: #ffffff;
-      --card-shadow: rgba(0, 0, 0, 0.1);
+      --card-bg: #fff;
+      --card-shadow: rgba(0,0,0,0.1);
       --transition-duration: 0.3s;
-      --logo-width: 60px;
-      --logo-height: 60px;
-      /* Gray styling for both Type and Data Types */
-      --gray-text: #777777;
+      --logo-size: 60px;
+      --gray-text: #777;
       --gray-bg: #e0e0e0;
       --gray-padding: 6px 12px;
-      --gray-border-radius: 4px;
-      --gray-margin-bottom: 4px;
+      --gray-radius: 4px;
     }
-    
-    /* Dark mode overrides */
     @media (prefers-color-scheme: dark) {
       :root {
-        --primary-color: #dddddd;
+        --primary-color: #ddd;
         --secondary-color: #1A1A1A;
         --accent-color: #1E90FF;
         --bg-color: #121212;
         --card-bg: #1E1E1E;
-        --card-shadow: rgba(0, 0, 0, 0.5);
-        --gray-text: #bbbbbb;
+        --card-shadow: rgba(0,0,0,0.5);
+        --gray-text: #bbb;
         --gray-bg: #2a2a2a;
       }
     }
-    
-    /* Body uses Proxima Nova; header uses Merriweather */
     body {
-      margin: 0;
-      font-family: 'Proxima Nova', 'Helvetica Neue', Arial, sans-serif;
-      background-color: var(--bg-color);
+      margin: 0; padding: 20px;
+      font-family: 'Proxima Nova', Arial, sans-serif;
+      background: var(--bg-color);
       color: var(--primary-color);
-      padding: 20px;
-      transition: background-color var(--transition-duration), color var(--transition-duration);
+      transition: background var(--transition-duration), color var(--transition-duration);
     }
-    
     header {
       font-family: 'Merriweather', serif;
-      text-align: left;
-      padding: 40px 20px;
-      background-color: transparent;
-      margin-bottom: 20px;
+      padding: 40px 20px; margin-bottom: 20px;
     }
+    header h1 { margin: 0; font-size: 2.5em; }
+    header p { margin-top: .5em; color: var(--accent-color); }
     
-    header h1 {
-      font-size: 2.5em;
-      margin: 0;
-    }
-    
-    header p {
-      margin: 10px 0 0;
-      font-size: 1.1em;
-      color: var(--accent-color);
-    }
-    
-    /* Sticky Search Bar (no group drop shadow) */
     .sticky-search {
-      position: sticky;
-      top: 0;
-      background-color: var(--secondary-color);
-      padding: 10px;
-      box-shadow: none; /* group drop shadow removed */
-      z-index: 1000;
-      margin-bottom: 20px;
+      position: sticky; top: 0; background: var(--secondary-color);
+      padding: 10px; z-index: 100; margin-bottom: 20px;
     }
-    
-    /* Extend search controls full width */
     .search-controls {
-      width: 75%;
-      display: flex;
-      gap: 100px;
+      display: flex; gap: 1em; width: 75%;
     }
-    
-    /* Input wrapper for magnifying glass icon */
-    .input-wrapper {
-      position: relative;
-      flex: 0 0 40%;  /* reduced width to 40% */
-    }
-    
+    .input-wrapper { position: relative; flex: 0 0 40%; }
     .input-wrapper i {
-      position: absolute;
-      left: 12px;
-      top: 50%;
+      position: absolute; left: 12px; top: 50%;
       transform: translateY(-50%);
       color: var(--primary-color);
     }
-    
     .input-wrapper input {
-      width: 100%;
-      padding: 12px 12px 12px 40px; /* extra left padding for the icon */
-      border: none;
-      border-radius: 0;
-      font-size: 1em;
-      background-color: var(--card-bg);
-      color: var(--primary-color);
-      box-shadow: none;
+      width: 100%; padding: 12px 12px 12px 40px;
+      border: none; background: var(--card-bg); color: var(--primary-color);
     }
-    
-    .input-wrapper input:focus {
-      outline: none;
-    }
-    
-    /* Styling for select dropdowns */
     .search-controls select {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      border-radius: 0;
-      font-size: 1em;
-      background-color: var(--card-bg);
-      color: var(--primary-color);
-      box-shadow: none;
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      background-image: none;
+      flex: 1; padding: 12px; border: none;
+      background: var(--card-bg); color: var(--primary-color);
     }
-    
-    .search-controls select:focus {
-      outline: none;
-    }
-    
-    /* Table Layout */
+
     .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: var(--card-bg);
-      border-radius: 6px;
-      overflow: hidden;
+      width: 100%; border-collapse: collapse;
+      background: var(--card-bg); border-radius: 6px; overflow: hidden;
       box-shadow: 0 2px 8px var(--card-shadow);
     }
-    
-    /* Column headers text changed to white (#fff) */
-    .data-table thead {
-      background-color: var(--accent-color);
-    }
+    .data-table thead { background: var(--accent-color); }
     .data-table thead th {
-      color: #fff !important;
+      color: #fff; padding: 16px; text-align: left;
     }
-    
-    .data-table th,
-    .data-table td {
-      padding: 16px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
+    .data-table th, .data-table td {
+      padding: 16px; border-bottom: 1px solid #ddd; text-align: left;
     }
-    
-    .data-table th {
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    
-    /* Remove link styling inside table */
-    .data-table a {
-      text-decoration: none;
-      color: inherit;
-    }
-    
-    /* Company Column: Logo + company name */
+
     .company-cell {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      display: flex; align-items: center; gap: 10px;
     }
-    .company-cell img.logo {
-      width: var(--logo-width);
-      height: var(--logo-height);
+    .company-cell img {
+      width: var(--logo-size); height: var(--logo-size);
       object-fit: contain;
-      background-color: #ffffff;
-      padding: 4px;
-      border-radius: 4px;
     }
-    
-    /* Single unified style for Type and Data Types */
+    .logo-bg {
+      background: var(--card-bg); padding: 4px; border-radius: 4px;
+    }
+
     .datatype-badge {
-      color: var(--gray-text);
-      background-color: var(--gray-bg);
-      padding: var(--gray-padding);
-      border-radius: var(--gray-border-radius);
       display: inline-block;
-      margin-bottom: var(--gray-margin-bottom);
+      color: var(--gray-text);
+      background: var(--gray-bg);
+      padding: var(--gray-padding);
+      border-radius: var(--gray-radius);
+      margin-bottom: 4px;
     }
-    
-    /* Responsive: table -> card layout */
+
     @media (max-width: 768px) {
-      .data-table thead {
-        display: none;
-      }
-      .data-table,
-      .data-table tbody,
-      .data-table tr,
-      .data-table td {
-        display: block;
-        width: 100%;
+      .data-table thead { display: none; }
+      .data-table, .data-table tbody, .data-table tr, .data-table td {
+        display: block; width: 100%;
       }
       .data-table tr {
-        margin-bottom: 1rem;
-        border: 1px solid #444;
-        border-radius: 6px;
-        overflow: hidden;
+        margin-bottom: 1em; border: 1px solid #444;
+        border-radius: 6px; overflow: hidden;
       }
       .data-table td {
-        padding: 12px;
-        border: none;
-        border-bottom: 1px solid #444;
-        position: relative;
-        padding-left: 50%;
+        position: relative; padding-left: 50%;
+        border: none; border-bottom: 1px solid #444;
       }
       .data-table td::before {
         content: attr(data-label);
-        position: absolute;
-        left: 12px;
-        font-weight: bold;
-        text-transform: uppercase;
-        font-size: 0.8rem;
+        position: absolute; top: 50%; left: 12px;
+        transform: translateY(-50%);
+        font-weight: bold; text-transform: uppercase; font-size: .8em;
         color: var(--accent-color);
       }
-      .data-table td:last-child {
-        border-bottom: none;
-      }
+      .data-table td:last-child { border-bottom: none; }
     }
-    
+
     footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 0.9em;
-      color: #777;
-      background-color: var(--secondary-color);
-      border-top: 1px solid #ddd;
-      margin-top: 40px;
+      padding: 20px; text-align: center; font-size: .9em;
+      background: var(--secondary-color); border-top: 1px solid #ddd;
     }
   </style>
 </head>
 <body>
   <header>
     <h1>Directory of Real Estate Data Sites</h1>
-    <p>Explore a curated list of real estate data sources. See anything missing? Email <a href="mailto:research@therealdeal.com" style="color: var(--accent-color); text-decoration: none;">research@therealdeal.com</a></p>
+    <p>
+      Explore a curated list of real estate data sources.
+      Have suggestions? 
+      <a href="mailto:research@therealdeal.com"
+         style="color: var(--accent-color); text-decoration: none;">
+        Email us!
+      </a>
+    </p>
   </header>
-  
-  <div class="sticky-search">
+
+  <div class="sticky-search" role="search">
     <div class="search-controls">
       <div class="input-wrapper">
         <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="Search by Name or Location" />
+        <input id="searchInput" type="text"
+               placeholder="Search by Name or Location"
+               aria-label="Search by Name or Location">
       </div>
       <select id="sourceTypeFilter">
         <option value="">All Source Types</option>
@@ -278,208 +167,196 @@
       </select>
     </div>
   </div>
-  
-  <div class="container">
-    <table class="data-table">
+
+  <main>
+    <table class="data-table" aria-describedby="resultsContainer">
       <thead>
         <tr>
-          <th>Company</th>
-          <th>Type</th>
-          <th>Location</th>
-          <th>Data Types</th>
-          <th>Description</th>
+          <th scope="col">Company</th>
+          <th scope="col">Type</th>
+          <th scope="col">Location</th>
+          <th scope="col">Data Types</th>
+          <th scope="col">Description</th>
         </tr>
       </thead>
       <tbody id="resultsContainer">
-        <!-- Table rows generated by JS -->
+        <!-- Rows injected by JS -->
       </tbody>
     </table>
-  </div>
-  
-  <footer>
-    &copy; 2025 Directory of Real Estate Data Sites
-  </footer>
-  
+  </main>
+
+  <footer>&copy; 2025 Directory of Real Estate Data Sites</footer>
+
   <script>
-    let resources = [];
-    const resultsContainer = document.getElementById('resultsContainer');
-    const searchInput = document.getElementById('searchInput');
-    const categoryFilterSelect = document.getElementById('categoryFilter');
-    const sourceTypeFilterSelect = document.getElementById('sourceTypeFilter');
-    
-    // List of image extensions to try.
-    const extensions = ['.png', '.webp', '.svg', '.jpg', '.jpeg', '.avif'];
-    
-    // Build image path using the resource name and a specific extension.
-    function getImagePathWithFallback(name, extIndex) {
-      return 'Logos for Research Directory/' + name + extensions[extIndex];
-    }
-    
-    // Create a single badge for the Type field or multiple badges for the Data Types field.
-    function createBadge(text) {
-      const badge = document.createElement('span');
-      badge.classList.add('datatype-badge');
-      badge.textContent = text.trim();
-      return badge;
-    }
-    
-    function createDataTypesContent(dataTypeStr) {
-      const container = document.createElement('div');
-      if (!dataTypeStr) return container;
-      const types = dataTypeStr.split(',');
-      types.forEach(type => container.appendChild(createBadge(type)));
-      return container;
-    }
-    
-    function renderResources(filterText = '', filterSourceType = '', filterCategory = '') {
-      resultsContainer.innerHTML = '';
-      
-      const filteredResources = resources.filter(resource => {
-        const searchTarget = (
-          resource["Name"] + ' ' +
-          resource["Data type"] + ' ' +
-          resource["Description"]
-        ).toLowerCase();
-        return searchTarget.includes(filterText.toLowerCase()) &&
-               (!filterSourceType || resource["Source Type"].toLowerCase() === filterSourceType.toLowerCase()) &&
-               (!filterCategory || resource["Data type"].toLowerCase() === filterCategory.toLowerCase());
+    let logoManifest = {};
+
+    // First, load the build-time manifest of available logos
+    fetch('logos.json')
+      .then(res => res.json())
+      .then(json => {
+        logoManifest = json;
+        initDirectory();
+      })
+      .catch(err => {
+        console.error('Failed to load logos.json:', err);
+        initDirectory();
       });
-      
-      // Sort by Name
-      filteredResources.sort((a, b) => a["Name"].localeCompare(b["Name"]));
-      
-      filteredResources.forEach(resource => {
-        const row = document.createElement('tr');
-        
-        // COMPANY
-        const companyCell = document.createElement('td');
-        companyCell.setAttribute('data-label', 'Company');
-        const companyLink = document.createElement('a');
-        companyLink.href = resource["Research URL"];
-        companyLink.target = '_blank';
-        companyLink.rel = 'noopener noreferrer';
-        
-        const companyDiv = document.createElement('div');
-        companyDiv.className = 'company-cell';
-        
-        const logoImg = document.createElement('img');
-        logoImg.className = 'logo';
-        logoImg.dataset.baseName = resource["Name"];
-        logoImg.dataset.extensionIndex = 0;
-        logoImg.src = getImagePathWithFallback(resource["Name"], 0);
-        logoImg.alt = resource["Name"] + ' logo';
-        logoImg.onerror = function() {
-          let currentIndex = parseInt(this.dataset.extensionIndex, 10);
-          if (currentIndex < extensions.length - 1) {
-            currentIndex++;
-            this.dataset.extensionIndex = currentIndex;
-            this.src = getImagePathWithFallback(this.dataset.baseName, currentIndex);
-          } else {
-            this.style.display = 'none';
-          }
-        };
-        logoImg.onload = function() {
-          const lowerSrc = this.src.toLowerCase();
-          if (lowerSrc.endsWith('.svg') || lowerSrc.endsWith('.png') || lowerSrc.endsWith('.webp')) {
-            this.classList.add('logo-bg');
-          }
-        };
-        companyDiv.appendChild(logoImg);
-        
-        const nameSpan = document.createElement('span');
-        nameSpan.textContent = resource["Name"];
-        companyDiv.appendChild(nameSpan);
-        
-        companyLink.appendChild(companyDiv);
-        companyCell.appendChild(companyLink);
-        row.appendChild(companyCell);
-        
-        // TYPE
-        const typeCell = document.createElement('td');
-        typeCell.setAttribute('data-label', 'Type');
-        const typeBadge = createBadge(resource["Source Type"] || '');
-        typeCell.appendChild(typeBadge);
-        row.appendChild(typeCell);
-        
-        // LOCATION
-        const locationCell = document.createElement('td');
-        locationCell.setAttribute('data-label', 'Location');
-        locationCell.textContent = resource["Region"] || '';
-        row.appendChild(locationCell);
-        
-        // DATA TYPES
-        const dataTypesCell = document.createElement('td');
-        dataTypesCell.setAttribute('data-label', 'Data Types');
-        dataTypesCell.appendChild(createDataTypesContent(resource["Data type"]));
-        row.appendChild(dataTypesCell);
-        
-        // DESCRIPTION
-        const descriptionCell = document.createElement('td');
-        descriptionCell.setAttribute('data-label', 'Description');
-        descriptionCell.textContent = resource["Description"];
-        row.appendChild(descriptionCell);
-        
-        resultsContainer.appendChild(row);
-      });
-    }
-    
-    function populateCategoryFilter() {
-      const categoriesSet = new Set();
-      resources.forEach(resource => {
-        if (resource["Data type"]) {
-          resource["Data type"].split(',').forEach(type => {
-            categoriesSet.add(type.trim());
-          });
+
+    function initDirectory() {
+      const resources = [];
+      const tbody      = document.getElementById('resultsContainer');
+      const searchIn   = document.getElementById('searchInput');
+      const srcFilter  = document.getElementById('sourceTypeFilter');
+      const catFilter  = document.getElementById('categoryFilter');
+
+      function attachLogo(img, name) {
+        const exts = logoManifest[name];
+        if (!exts) {
+          img.style.display = 'none';
+          return;
         }
-      });
-      Array.from(categoriesSet).sort().forEach(category => {
-        const option = document.createElement('option');
-        option.value = category;
-        option.textContent = category;
-        categoryFilterSelect.appendChild(option);
-      });
-    }
-    
-    function populateSourceTypeFilter() {
-      const sourceTypes = new Set();
-      resources.forEach(resource => {
-        if (resource["Source Type"]) {
-          sourceTypes.add(resource["Source Type"].trim());
-        }
-      });
-      Array.from(sourceTypes).sort().forEach(sourceType => {
-        const option = document.createElement('option');
-        option.value = sourceType;
-        option.textContent = sourceType;
-        sourceTypeFilterSelect.appendChild(option);
-      });
-    }
-    
-    Papa.parse('trd-data-research-directory-for-webpage - ComboSheet.csv', {
-      download: true,
-      header: true,
-      complete: function(results) {
-        resources = results.data;
-        populateSourceTypeFilter();
-        populateCategoryFilter();
-        renderResources();
-      },
-      error: function(error) {
-        console.error("Error parsing CSV:", error);
+        const order = ['svg','png','webp','jpg','jpeg','avif'];
+        const ext   = order.find(e => exts.includes(e));
+        img.src     = `Logos for Research Directory/${encodeURIComponent(name)}.${ext}`;
+        img.classList.add('logo-bg');
       }
-    });
-    
-    searchInput.addEventListener('input', () => {
-      renderResources(searchInput.value, sourceTypeFilterSelect.value, categoryFilterSelect.value);
-    });
-    
-    sourceTypeFilterSelect.addEventListener('change', () => {
-      renderResources(searchInput.value, sourceTypeFilterSelect.value, categoryFilterSelect.value);
-    });
-    
-    categoryFilterSelect.addEventListener('change', () => {
-      renderResources(searchInput.value, sourceTypeFilterSelect.value, categoryFilterSelect.value);
-    });
+
+      function createBadge(text) {
+        const span = document.createElement('span');
+        span.className = 'datatype-badge';
+        span.textContent = text.trim();
+        return span;
+      }
+
+      function createDataTypes(str) {
+        const container = document.createElement('div');
+        if (!str) return container;
+        str.split(',').forEach(t => container.appendChild(createBadge(t)));
+        return container;
+      }
+
+      function render(filter = '', type = '', cat = '') {
+        tbody.innerHTML = '';
+        const filtered = resources.filter(r => {
+          const txt = (r.Name + r['Data type'] + r.Description).toLowerCase();
+          return txt.includes(filter.toLowerCase())
+            && (!type || r['Source Type'] === type)
+            && (!cat  || r['Data type'].split(',').map(x => x.trim()).includes(cat));
+        });
+
+        if (filtered.length === 0) {
+          const row = document.createElement('tr');
+          const cell = document.createElement('td');
+          cell.colSpan = 5;
+          cell.style.textAlign = 'center';
+          cell.textContent = 'No results found';
+          row.appendChild(cell);
+          tbody.appendChild(row);
+          return;
+        }
+
+        filtered.sort((a,b) => a.Name.localeCompare(b.Name))
+          .forEach(r => {
+            const tr = document.createElement('tr');
+
+            // Company
+            const td1 = document.createElement('td');
+            td1.setAttribute('data-label','Company');
+            const link = document.createElement('a');
+            link.href   = r['Research URL'];
+            link.target = '_blank';
+            link.rel    = 'noopener';
+            const div = document.createElement('div');
+            div.className = 'company-cell';
+            const img = document.createElement('img');
+            img.alt = `${r.Name} logo`;
+            attachLogo(img, r.Name);
+            div.appendChild(img);
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = r.Name;
+            div.appendChild(nameSpan);
+            link.appendChild(div);
+            td1.appendChild(link);
+            tr.appendChild(td1);
+
+            // Type
+            const td2 = document.createElement('td');
+            td2.setAttribute('data-label','Type');
+            td2.appendChild(createBadge(r['Source Type'] || ''));
+            tr.appendChild(td2);
+
+            // Location
+            const td3 = document.createElement('td');
+            td3.setAttribute('data-label','Location');
+            td3.textContent = r.Region || '';
+            tr.appendChild(td3);
+
+            // Data Types
+            const td4 = document.createElement('td');
+            td4.setAttribute('data-label','Data Types');
+            td4.appendChild(createDataTypes(r['Data type']));
+            tr.appendChild(td4);
+
+            // Description
+            const td5 = document.createElement('td');
+            td5.setAttribute('data-label','Description');
+            td5.textContent = r.Description;
+            tr.appendChild(td5);
+
+            tbody.appendChild(tr);
+          });
+      }
+
+      function populateFilters() {
+        const types = new Set(), cats = new Set();
+        resources.forEach(r => {
+          if (r['Source Type']) types.add(r['Source Type']);
+          if (r['Data type']) r['Data type'].split(',').forEach(c => cats.add(c.trim()));
+        });
+        Array.from(types).sort().forEach(t => {
+          const o = document.createElement('option');
+          o.value = o.textContent = t;
+          srcFilter.appendChild(o);
+        });
+        Array.from(cats).sort().forEach(c => {
+          const o = document.createElement('option');
+          o.value = o.textContent = c;
+          catFilter.appendChild(o);
+        });
+      }
+
+      Papa.parse('trd-data-research-directory-for-webpage - ComboSheet.csv', {
+        download: true,
+        header:   true,
+        complete: ({ data }) => {
+          resources.push(...data);
+          populateFilters();
+          render();
+        },
+        error: err => {
+          console.error('CSV load failed:', err);
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">Failed to load data.</td></tr>';
+        }
+      });
+
+      const debounce = (fn, ms = 200) => {
+        let timer;
+        return (...args) => {
+          clearTimeout(timer);
+          timer = setTimeout(() => fn(...args), ms);
+        };
+      };
+
+      searchIn.addEventListener('input', debounce(() =>
+        render(searchIn.value, srcFilter.value, catFilter.value)
+      ));
+      srcFilter.addEventListener('change', () =>
+        render(searchIn.value, srcFilter.value, catFilter.value)
+      );
+      catFilter.addEventListener('change', () =>
+        render(searchIn.value, srcFilter.value, catFilter.value)
+      );
+    }
   </script>
 </body>
 </html>
