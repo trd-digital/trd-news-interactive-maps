@@ -64,7 +64,7 @@
     },
     mapLayerFieldKey: "Project Name",
     paintCircleColorType: "",
-    loadingEnabled: true,
+    loadingEnabled: false,
     mapLayerPaint: {
       "circle-radius": {
         base: 1.75,
