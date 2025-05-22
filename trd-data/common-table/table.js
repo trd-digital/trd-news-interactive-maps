@@ -223,7 +223,7 @@ const TrdDataCommonTable = (options) => {
         sortOrder: "desc",
         sortEmptylast: true,
         pagination: true,
-        paginationVAlign: "top",
+        paginationVAlign: "both",
         pageList: [10, 50, 100],
         pageSize: 10,
         classes: "table table-responsive",
