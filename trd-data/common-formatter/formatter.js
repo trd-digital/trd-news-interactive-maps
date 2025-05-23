@@ -155,3 +155,22 @@ const TrdFormatters = {
     return value;
   },
 };
+
+const TrdSorters = {
+  sortDate: (a, b) => {
+    if (a === b) {
+      return 0;
+    }
+    if (a === undefined || a === "" || a === null) {
+      return 1;
+    }
+    if (b === undefined || b === "" || b === null) {
+      return -1;
+    }
+    return new Date(a).getTime() - new Date(b).getTime();
+  },
+
+  sortNumber: (a, b) => {
+    return a - b;
+  },
+};

@@ -59,6 +59,8 @@ const trdTheme = TrdTheme({
 const trdDataCommonMap = (options) => {
   const defaults = {
     filePath: "",
+    filePaths: [],
+    fileAddKeyValues: {},
     mapElementId: "map",
     filterElementId: "map-filters",
     legendElementId: "legend",
@@ -93,6 +95,10 @@ const trdDataCommonMap = (options) => {
   };
 
   const settings = Object.assign({}, defaults, options);
+
+  if (settings.filePath && !settings.filePaths.includes(settings.filePath)) {
+    settings.filePaths.push(settings.filePath);
+  }
 
   const loading = settings.loadingEnabled
     ? TrdLoading({
@@ -793,21 +799,46 @@ const trdDataCommonMap = (options) => {
 
     eventListeners: () => {
       mapObj.on("load", () => {
-        if (!settings?.filePath) {
+        if (!settings?.filePaths?.length) {
           return;
         }
         if (settings.loadingEnabled) {
           loading.show();
         }
 
-        fetch(settings.filePath)
-          .then((response) => {
-            return response.json();
-          })
-          .then((data) => {
+        Promise.all(
+          settings.filePaths.map((filePath) =>
+            fetch(filePath).then((response) => response.json())
+          )
+        )
+          .then((allData) => {
+            // Merge all features into a single FeatureCollection
+            const merged = allData.reduce(
+              (acc, data, cIndex) => {
+                if (data && data.features && Array.isArray(data.features)) {
+                  if (
+                    settings.fileAddKeyValues &&
+                    settings.fileAddKeyValues[cIndex]
+                  ) {
+                    data.features = data.features.map((feature) => {
+                      return {
+                        ...feature,
+                        properties: {
+                          ...feature.properties,
+                          ...settings.fileAddKeyValues[cIndex],
+                        },
+                      };
+                    });
+                  }
+                  acc.features = acc.features.concat(data.features);
+                }
+                return acc;
+              },
+              { type: "FeatureCollection", features: [] }
+            );
             mapData = settings.fetchDataFilterCallback
-              ? settings.fetchDataFilterCallback(data)
-              : data;
+              ? settings.fetchDataFilterCallback(merged)
+              : merged;
             map.load(mapData);
           })
           .finally(() => {

@@ -6,56 +6,14 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Los Angeles under construction map - The Real Deal</title>
     <link
       rel="icon"
       type="image/x-icon"
       href="https://therealdeal.com/favicon.ico"
     />
-
-    <!-- Primary Meta Tags -->
-    <title>Los Angeles properties under construction map - The Real Deal</title>
-    <meta
-      name="title"
-      content="Los Angeles properties under construction map - The Real Deal"
-    />
-    <meta
-      name="description"
-      content="Latest Los Angeles properties under construction in map view."
-    />
     <link rel="canonical" href="https://therealdeal.com/data/" />
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://therealdeal.com/data/" />
-    <meta
-      property="og:title"
-      content="Los Angeles properties under construction map - The Real Deal"
-    />
-    <meta
-      property="og:description"
-      content="Latest Los Angeles properties under construction in map view"
-    />
-    <meta
-      property="og:image"
-      content="https://static.therealdeal.com/wp-content/uploads/2019/10/trd-logo-16x9.jpg"
-    />
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://therealdeal.com/data/" />
-    <meta
-      property="twitter:title"
-      content="Los Angeles properties under construction map - The Real Deal"
-    />
-    <meta
-      property="twitter:description"
-      content="Latest Los Angeles properties under construction in map view"
-    />
-    <meta
-      property="twitter:image"
-      content="https://static.therealdeal.com/wp-content/uploads/2019/10/trd-logo-16x9.jpg"
-    />
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       rel="preconnect"
@@ -135,6 +93,129 @@
     <script src="../trd-data/common-formatter/formatter.js"></script>
     <script src="../trd-data/common-loading/loading.js"></script>
     <script src="../trd-data/common-map/map.js"></script>
-    <script src="los-angeles-properties-under-construction-map.js"></script>
+    <script>
+      const legendKeys = [
+        {
+          title: "Construction status",
+          options: [
+            {
+              text: "Under construction",
+              value: "Under construction",
+              default: false,
+              color: {
+                light: "#43A047",
+                dark: "#4CAF50",
+              },
+            },
+            {
+              text: "Proposed construction",
+              value: "Proposed construction",
+              default: false,
+              color: {
+                light: "#FFB74D",
+                dark: "#FFB74D",
+              },
+            },
+            {
+              value: "other",
+              text: "Other",
+              default: true,
+              color: {
+                light: "#000000",
+                dark: "#ffffff",
+              },
+            },
+          ],
+        },
+      ];
+      const tooltipDisplayFields = {
+        title: {
+          field: "Project Name",
+          label: "Project name",
+        },
+        content: [
+          {
+            field: "Full Address",
+            label: "Address",
+          },
+          { field: "Developer", label: "Developer" },
+          { field: "Construction status", label: "Construction status" },
+        ],
+      };
+
+      const modalDisplayFields = {
+        title: {
+          field: "Project Name",
+          label: "Project name",
+        },
+        content: [
+          {
+            field: "Full Address",
+            label: "Address",
+          },
+          { field: "Res Units", label: "Res. units" },
+          { field: "Hotels Room", label: "Hotel rooms" },
+          {
+            field: "Office Sq. Ft.",
+            label: "Office SqFt",
+            format: "formatNumber",
+          },
+          {
+            field: "Retail Sq. Ft.",
+            label: "Retail SqFt",
+            format: "formatNumber",
+          },
+          { field: "Estimated Completion", label: "Estimated completion" },
+          { field: "Developer", label: "Developer" },
+          { field: "Construction status", label: "Construction status" },
+        ],
+      };
+
+      window.map = trdDataCommonMap({
+        filePaths: [
+          "https://static.therealdeal.com/interactive-maps/los_angeles_properties_under_construction.geojson",
+          "https://static.therealdeal.com/interactive-maps/los_angeles_properties_proposed_construction.geojson",
+        ],
+        fileAddKeyValues: [
+          {
+            "Construction status": "Under construction",
+          },
+          {
+            "Construction status": "Proposed construction",
+          },
+        ],
+        eventCategory: "los-angeles-properties-under-construction-map",
+        mapElementId: "map",
+        filterElementId: "map-filters",
+        legendElementId: "legend",
+        resultElementId: "result",
+        mapCenterLat: 34.0521482,
+        mapCenterLng: -118.2396273,
+        legendKeys,
+        dataPointKeys: legendKeys[0].options,
+        zoom: 12,
+        minZoom: 8,
+        tooltipDisplayFields,
+        modalDisplayFields,
+        defaultColors: {
+          light: "#FF7043",
+          dark: "#FF8A65",
+        },
+        mapLayerFieldKey: "Construction status",
+        paintCircleColorType: "case",
+        loadingEnabled: false,
+        mapLayerPaint: {
+          "circle-radius": {
+            base: 1.75,
+            stops: [
+              [8, 4],
+              [12, 6],
+              [15, 8],
+              [20, 16],
+            ],
+          },
+        },
+      });
+    </script>
   </body>
 </html>
