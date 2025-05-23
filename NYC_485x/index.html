@@ -1,0 +1,2582 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_39ffe8fadb1dbaad084cff7dc5927615 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.css"/>
+</head>
+<body>    
+    
+<style>
+  .popup-content { min-width:300px; font-size:14px; color:#333; }
+  .leaflet-popup-content-wrapper { background:#f9f9f9; border:1px solid #bbb; }
+  .leaflet-popup-tip { background:#f9f9f9; }
+</style>
+    
+<h3 style="text-align:center;
+           font-family:Arial,sans-serif;
+           font-size:18px;
+           color:#333;
+           margin-top:10px;">
+  <b>Projects seeking 485x</b>
+</h3>
+    
+            <div class="folium-map" id="map_39ffe8fadb1dbaad084cff7dc5927615" ></div>
+        
+</body>
+<script>    
+    
+            var map_39ffe8fadb1dbaad084cff7dc5927615 = L.map(
+                "map_39ffe8fadb1dbaad084cff7dc5927615",
+                {
+                    center: [40.691596, -73.98659669999999],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 11,
+                    zoomControl: true,
+                    preferCanvas: false,
+                    scrollWheelZoom: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_de88a957890e7f3c69d4e5eff38940be = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+            var tile_layer_9f1c57d932b8b232c20e516bf9486a97 = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {"attribution": "Mapbox", "detectRetina": false, "maxNativeZoom": 20, "maxZoom": 20, "minZoom": 1, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+            L.control.fullscreen(
+                {"forceSeparateButton": false, "position": "topleft", "title": "Full Screen", "titleCancel": "Exit Full Screen"}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+            var tile_layer_032d0ce2666bded503e4ebfd8c9db683 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+            var mini_map_16983566107e335a6483dd8355ea20c6 = new L.Control.MiniMap(
+                tile_layer_032d0ce2666bded503e4ebfd8c9db683,
+                {"autoToggleDisplay": false, "centerFixed": false, "collapsedHeight": 25, "collapsedWidth": 25, "height": 150, "minimized": false, "position": "bottomright", "toggleDisplay": true, "width": 150, "zoomAnimation": false, "zoomLevelOffset": -5}
+            );
+            map_39ffe8fadb1dbaad084cff7dc5927615.addControl(mini_map_16983566107e335a6483dd8355ea20c6);
+        
+    
+            var circle_marker_6764c15e7cd800032581c44d5c92dd57 = L.circleMarker(
+                [40.691596, -73.98659669999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_938a682bf23ddc641341db825ca5511d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4a88abfbe8cca999ea3991e2b7d45f45 = $(`<div id="html_4a88abfbe8cca999ea3991e2b7d45f45" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>150 LAWRENCE STREET</h3> <strong># of Units:</strong> 99<br> <strong># of Affordable Units:</strong> 20<br> </div></div>`)[0];
+                popup_938a682bf23ddc641341db825ca5511d.setContent(html_4a88abfbe8cca999ea3991e2b7d45f45);
+            
+        
+
+        circle_marker_6764c15e7cd800032581c44d5c92dd57.bindPopup(popup_938a682bf23ddc641341db825ca5511d)
+        ;
+
+        
+    
+    
+            var circle_marker_0ffea8a9d9c4863ecf0a51a54f46794d = L.circleMarker(
+                [40.8783629, -73.8638905],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_b3684ccee455e570049cec5a3c7ec450 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_d6a2a013b989fac6177ed7086fa1e233 = $(`<div id="html_d6a2a013b989fac6177ed7086fa1e233" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>3556 HOLLAND AVENUE</h3> <strong># of Units:</strong> 99<br> <strong># of Affordable Units:</strong> 20<br> </div></div>`)[0];
+                popup_b3684ccee455e570049cec5a3c7ec450.setContent(html_d6a2a013b989fac6177ed7086fa1e233);
+            
+        
+
+        circle_marker_0ffea8a9d9c4863ecf0a51a54f46794d.bindPopup(popup_b3684ccee455e570049cec5a3c7ec450)
+        ;
+
+        
+    
+    
+            var circle_marker_3d6f5d5a12ed58d0a05928b5f1437dd5 = L.circleMarker(
+                [40.6850087, -73.974942],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_25d2cbb3a4c445e0d129b28bef9afde1 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_050137e9269d3d2a83a93c3d79c0dbee = $(`<div id="html_050137e9269d3d2a83a93c3d79c0dbee" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>151 SOUTH ELLIOT PL</h3> <strong># of Units:</strong> 99<br> <strong># of Affordable Units:</strong> 20<br> </div></div>`)[0];
+                popup_25d2cbb3a4c445e0d129b28bef9afde1.setContent(html_050137e9269d3d2a83a93c3d79c0dbee);
+            
+        
+
+        circle_marker_3d6f5d5a12ed58d0a05928b5f1437dd5.bindPopup(popup_25d2cbb3a4c445e0d129b28bef9afde1)
+        ;
+
+        
+    
+    
+            var circle_marker_47db0b0c33194c94dfa61e4e8280cb7c = L.circleMarker(
+                [40.681268, -73.9831001],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_90bbfa4a5a12d6c42bdb88632fd2a23c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_24e74d64ce13f639735a88f14462b275 = $(`<div id="html_24e74d64ce13f639735a88f14462b275" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>556 BALTIC STREET</h3> <strong># of Units:</strong> 92<br> <strong># of Affordable Units:</strong> 23<br> </div></div>`)[0];
+                popup_90bbfa4a5a12d6c42bdb88632fd2a23c.setContent(html_24e74d64ce13f639735a88f14462b275);
+            
+        
+
+        circle_marker_47db0b0c33194c94dfa61e4e8280cb7c.bindPopup(popup_90bbfa4a5a12d6c42bdb88632fd2a23c)
+        ;
+
+        
+    
+    
+            var circle_marker_687b609dbe7be595879317c0d1734357 = L.circleMarker(
+                [40.8716302, -73.8867526],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_eaf3780c9de9408098a258bfb031a57d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_be91b79a10e3d1cdf32bed343881135a = $(`<div id="html_be91b79a10e3d1cdf32bed343881135a" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>225 BEDFORD PARK BOULEVARD</h3> <strong># of Units:</strong> 73<br> <strong># of Affordable Units:</strong> 15<br> </div></div>`)[0];
+                popup_eaf3780c9de9408098a258bfb031a57d.setContent(html_be91b79a10e3d1cdf32bed343881135a);
+            
+        
+
+        circle_marker_687b609dbe7be595879317c0d1734357.bindPopup(popup_eaf3780c9de9408098a258bfb031a57d)
+        ;
+
+        
+    
+    
+            var circle_marker_2a180ee2f5fe7258e57364659c61e360 = L.circleMarker(
+                [40.7626457, -73.9961842],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_beb9196c6b38250d633fc1bbfe9440ec = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_0d5c92817c385eb6286f5cdda21988e9 = $(`<div id="html_0d5c92817c385eb6286f5cdda21988e9" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>555 WEST 45TH STREET, NEW YORK, NY 10036</h3> <strong># of Units:</strong> 58<br> <strong># of Affordable Units:</strong> 12<br> </div></div>`)[0];
+                popup_beb9196c6b38250d633fc1bbfe9440ec.setContent(html_0d5c92817c385eb6286f5cdda21988e9);
+            
+        
+
+        circle_marker_2a180ee2f5fe7258e57364659c61e360.bindPopup(popup_beb9196c6b38250d633fc1bbfe9440ec)
+        ;
+
+        
+    
+    
+            var circle_marker_704dfefdd0ac7c107c56affda8f3678f = L.circleMarker(
+                [40.8534082, -73.9004143],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_d2b9b01e44ec82d6199f583db5e04531 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_b07c8925ab735c5045ee5d6c722ca2e5 = $(`<div id="html_b07c8925ab735c5045ee5d6c722ca2e5" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2104 RYER AVENUE</h3> <strong># of Units:</strong> 56<br> <strong># of Affordable Units:</strong> 12<br> </div></div>`)[0];
+                popup_d2b9b01e44ec82d6199f583db5e04531.setContent(html_b07c8925ab735c5045ee5d6c722ca2e5);
+            
+        
+
+        circle_marker_704dfefdd0ac7c107c56affda8f3678f.bindPopup(popup_d2b9b01e44ec82d6199f583db5e04531)
+        ;
+
+        
+    
+    
+            var circle_marker_264a9b9b33a2401ab7181a5250bbefa6 = L.circleMarker(
+                [40.8520654, -73.8296383],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_f4641ebff3f642006d35ba4003e1c62b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_f16b5f03eb9ef45b449e7a871986469e = $(`<div id="html_f16b5f03eb9ef45b449e7a871986469e" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>3217 WESTCHESTER AVENUE</h3> <strong># of Units:</strong> 55<br> <strong># of Affordable Units:</strong> 11<br> </div></div>`)[0];
+                popup_f4641ebff3f642006d35ba4003e1c62b.setContent(html_f16b5f03eb9ef45b449e7a871986469e);
+            
+        
+
+        circle_marker_264a9b9b33a2401ab7181a5250bbefa6.bindPopup(popup_f4641ebff3f642006d35ba4003e1c62b)
+        ;
+
+        
+    
+    
+            var circle_marker_1d0608fc1a45be27a9df03fee1d0c792 = L.circleMarker(
+                [40.8495982, -73.90863139999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_3e3933babfe84379e79d20653d787bd7 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_6fdebc8975cf7385d03c259597c9f716 = $(`<div id="html_6fdebc8975cf7385d03c259597c9f716" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>66 EAST 177 STREET</h3> <strong># of Units:</strong> 55<br> <strong># of Affordable Units:</strong> 11<br> </div></div>`)[0];
+                popup_3e3933babfe84379e79d20653d787bd7.setContent(html_6fdebc8975cf7385d03c259597c9f716);
+            
+        
+
+        circle_marker_1d0608fc1a45be27a9df03fee1d0c792.bindPopup(popup_3e3933babfe84379e79d20653d787bd7)
+        ;
+
+        
+    
+    
+            var circle_marker_9aec0ab2bc102f2c44533337bfd0713e = L.circleMarker(
+                [40.7192574, -73.9935168],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_e9b07f548424c4ef497df3d48fb39404 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_32f9972630ac9dc109d6c7d2b833ea14 = $(`<div id="html_32f9972630ac9dc109d6c7d2b833ea14" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>125 CHRYSTIE STREET</h3> <strong># of Units:</strong> 55<br> <strong># of Affordable Units:</strong> 11<br> </div></div>`)[0];
+                popup_e9b07f548424c4ef497df3d48fb39404.setContent(html_32f9972630ac9dc109d6c7d2b833ea14);
+            
+        
+
+        circle_marker_9aec0ab2bc102f2c44533337bfd0713e.bindPopup(popup_e9b07f548424c4ef497df3d48fb39404)
+        ;
+
+        
+    
+    
+            var circle_marker_30067494f820d7afd92d05d0b1b7ba1e = L.circleMarker(
+                [40.7669859, -73.93049730000001],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_f103d1a587a61356207cb3a6c8bcf07e = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_3804eeff854e720131535d016a60ebf5 = $(`<div id="html_3804eeff854e720131535d016a60ebf5" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>31-16 21 STREET</h3> <strong># of Units:</strong> 52<br> <strong># of Affordable Units:</strong> 0<br> </div></div>`)[0];
+                popup_f103d1a587a61356207cb3a6c8bcf07e.setContent(html_3804eeff854e720131535d016a60ebf5);
+            
+        
+
+        circle_marker_30067494f820d7afd92d05d0b1b7ba1e.bindPopup(popup_f103d1a587a61356207cb3a6c8bcf07e)
+        ;
+
+        
+    
+    
+            var circle_marker_5d259c7d76d851c5e7d4172e4e11b287 = L.circleMarker(
+                [40.8140632, -73.90607159999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_d854ac0d87bbd893145dbd473c374389 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_8a7920cf1f3a21a802f658e256855e09 = $(`<div id="html_8a7920cf1f3a21a802f658e256855e09" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>599 TINTON AVE, BRONX NY</h3> <strong># of Units:</strong> 51<br> <strong># of Affordable Units:</strong> 11<br> </div></div>`)[0];
+                popup_d854ac0d87bbd893145dbd473c374389.setContent(html_8a7920cf1f3a21a802f658e256855e09);
+            
+        
+
+        circle_marker_5d259c7d76d851c5e7d4172e4e11b287.bindPopup(popup_d854ac0d87bbd893145dbd473c374389)
+        ;
+
+        
+    
+    
+            var circle_marker_d96337d23a99e956aa6b614ba21f5e7c = L.circleMarker(
+                [40.8457553, -73.8905461],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_b4f12c9c806049a7d32c7208627a2f35 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_304e95f376745d495baee3ae28a7f91d = $(`<div id="html_304e95f376745d495baee3ae28a7f91d" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1970 CROTONA AVENUE</h3> <strong># of Units:</strong> 50<br> <strong># of Affordable Units:</strong> 10<br> </div></div>`)[0];
+                popup_b4f12c9c806049a7d32c7208627a2f35.setContent(html_304e95f376745d495baee3ae28a7f91d);
+            
+        
+
+        circle_marker_d96337d23a99e956aa6b614ba21f5e7c.bindPopup(popup_b4f12c9c806049a7d32c7208627a2f35)
+        ;
+
+        
+    
+    
+            var circle_marker_3cff3fcb23cb0bfd8a75adcfa382aee8 = L.circleMarker(
+                [40.8732027, -73.88558789999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_38234e024722da3a07aef25edf43bc11 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4b999552d1848d9a34a5e3c985c39e74 = $(`<div id="html_4b999552d1848d9a34a5e3c985c39e74" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>233 EAST 202 STREET</h3> <strong># of Units:</strong> 44<br> <strong># of Affordable Units:</strong> 9<br> </div></div>`)[0];
+                popup_38234e024722da3a07aef25edf43bc11.setContent(html_4b999552d1848d9a34a5e3c985c39e74);
+            
+        
+
+        circle_marker_3cff3fcb23cb0bfd8a75adcfa382aee8.bindPopup(popup_38234e024722da3a07aef25edf43bc11)
+        ;
+
+        
+    
+    
+            var circle_marker_ab17b1cc6bb47e846e9ce2e06e3e5639 = L.circleMarker(
+                [40.8662393, -73.8597456],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_f240e8ae17c96486f442d9ee0efddb71 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_51544ebf3e1061b33003f01ff01780ff = $(`<div id="html_51544ebf3e1061b33003f01ff01780ff" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2721 COLDEN AVE., BRONX NY 10469</h3> <strong># of Units:</strong> 43<br> <strong># of Affordable Units:</strong> 13<br> </div></div>`)[0];
+                popup_f240e8ae17c96486f442d9ee0efddb71.setContent(html_51544ebf3e1061b33003f01ff01780ff);
+            
+        
+
+        circle_marker_ab17b1cc6bb47e846e9ce2e06e3e5639.bindPopup(popup_f240e8ae17c96486f442d9ee0efddb71)
+        ;
+
+        
+    
+    
+            var circle_marker_d44fd0c5c392fa1c9ede245d725a927b = L.circleMarker(
+                [40.882806, -73.8940715],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_186ed17769032d030eb880384a9ed94f = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_55d65b02e5d23ee0b3ac1b2dca7cef9b = $(`<div id="html_55d65b02e5d23ee0b3ac1b2dca7cef9b" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>3870 SEDGWICK AVENUE</h3> <strong># of Units:</strong> 42<br> <strong># of Affordable Units:</strong> 9<br> </div></div>`)[0];
+                popup_186ed17769032d030eb880384a9ed94f.setContent(html_55d65b02e5d23ee0b3ac1b2dca7cef9b);
+            
+        
+
+        circle_marker_d44fd0c5c392fa1c9ede245d725a927b.bindPopup(popup_186ed17769032d030eb880384a9ed94f)
+        ;
+
+        
+    
+    
+            var circle_marker_8cccca48f837ed3f323dad97eb9b8cb3 = L.circleMarker(
+                [40.8196933, -73.86327299999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_e83bdaf19c6cdd232a95e7b9e9338c3f = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_112f906384e89927cdfbe2c02e9de68f = $(`<div id="html_112f906384e89927cdfbe2c02e9de68f" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>714 BEACH AVENUE</h3> <strong># of Units:</strong> 41<br> <strong># of Affordable Units:</strong> 9<br> </div></div>`)[0];
+                popup_e83bdaf19c6cdd232a95e7b9e9338c3f.setContent(html_112f906384e89927cdfbe2c02e9de68f);
+            
+        
+
+        circle_marker_8cccca48f837ed3f323dad97eb9b8cb3.bindPopup(popup_e83bdaf19c6cdd232a95e7b9e9338c3f)
+        ;
+
+        
+    
+    
+            var circle_marker_40cfcef64fcbb0b156c0a96da12498ae = L.circleMarker(
+                [40.8670655, -73.9078662],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_f21c79234b4ff67d25076a42cd07d1f0 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a60b79c2c9eb326891ddcc5c404899ab = $(`<div id="html_a60b79c2c9eb326891ddcc5c404899ab" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2519 SEDGWICK AVENUE</h3> <strong># of Units:</strong> 40<br> <strong># of Affordable Units:</strong> 8<br> </div></div>`)[0];
+                popup_f21c79234b4ff67d25076a42cd07d1f0.setContent(html_a60b79c2c9eb326891ddcc5c404899ab);
+            
+        
+
+        circle_marker_40cfcef64fcbb0b156c0a96da12498ae.bindPopup(popup_f21c79234b4ff67d25076a42cd07d1f0)
+        ;
+
+        
+    
+    
+            var circle_marker_2ed24a0d2a302c9c3f6ac031b91da3b4 = L.circleMarker(
+                [40.8280337, -73.9048555],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_1d830bbbd6426e95466884b75a03264c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_17278c1da67e25e3bb3b2ad788fd590e = $(`<div id="html_17278c1da67e25e3bb3b2ad788fd590e" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1119 BOSTON ROAD</h3> <strong># of Units:</strong> 40<br> <strong># of Affordable Units:</strong> 8<br> </div></div>`)[0];
+                popup_1d830bbbd6426e95466884b75a03264c.setContent(html_17278c1da67e25e3bb3b2ad788fd590e);
+            
+        
+
+        circle_marker_2ed24a0d2a302c9c3f6ac031b91da3b4.bindPopup(popup_1d830bbbd6426e95466884b75a03264c)
+        ;
+
+        
+    
+    
+            var circle_marker_c94f29fc6e4cc5fa51f6ca164c751434 = L.circleMarker(
+                [40.8393881, -73.8633901],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_9ea612f9108ff2eabc7b9e1a7bb48387 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_7280cf09f474998fe7aac144a9bf510c = $(`<div id="html_7280cf09f474998fe7aac144a9bf510c" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1550 WHITE PLAINS ROAD</h3> <strong># of Units:</strong> 39<br> <strong># of Affordable Units:</strong> 8<br> </div></div>`)[0];
+                popup_9ea612f9108ff2eabc7b9e1a7bb48387.setContent(html_7280cf09f474998fe7aac144a9bf510c);
+            
+        
+
+        circle_marker_c94f29fc6e4cc5fa51f6ca164c751434.bindPopup(popup_9ea612f9108ff2eabc7b9e1a7bb48387)
+        ;
+
+        
+    
+    
+            var circle_marker_a31f1f39d60186e504d3f94801de262d = L.circleMarker(
+                [40.7609559, -73.9302764],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_f7dbf07f0af428a0d731d4d3a7cbc008 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_0b3b525e4599945238c5c0789c37fe15 = $(`<div id="html_0b3b525e4599945238c5c0789c37fe15" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>43-05 CRESCENT STREET AKA 25-08 34 AVENUE</h3> <strong># of Units:</strong> 39<br> <strong># of Affordable Units:</strong> 0<br> </div></div>`)[0];
+                popup_f7dbf07f0af428a0d731d4d3a7cbc008.setContent(html_0b3b525e4599945238c5c0789c37fe15);
+            
+        
+
+        circle_marker_a31f1f39d60186e504d3f94801de262d.bindPopup(popup_f7dbf07f0af428a0d731d4d3a7cbc008)
+        ;
+
+        
+    
+    
+            var circle_marker_b18265b4fa8494ff36b66135e9f2a574 = L.circleMarker(
+                [40.8693052, -73.86462560000001],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_3d7a00f58dae4ed05ec1eed086bbe587 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_e689d6598df8d4531d49fa7fca59f200 = $(`<div id="html_e689d6598df8d4531d49fa7fca59f200" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2951 WALLACE AVENUE</h3> <strong># of Units:</strong> 36<br> <strong># of Affordable Units:</strong> 8<br> </div></div>`)[0];
+                popup_3d7a00f58dae4ed05ec1eed086bbe587.setContent(html_e689d6598df8d4531d49fa7fca59f200);
+            
+        
+
+        circle_marker_b18265b4fa8494ff36b66135e9f2a574.bindPopup(popup_3d7a00f58dae4ed05ec1eed086bbe587)
+        ;
+
+        
+    
+    
+            var circle_marker_986947877c3bb3449ec1503e8c2db736 = L.circleMarker(
+                [40.8515399, -73.8831817],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_490e83a9764ee3ea8ce5e5df02c8c418 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_6b7e5c1f7e923f23e98331bcb25b8ae9 = $(`<div id="html_6b7e5c1f7e923f23e98331bcb25b8ae9" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>773 EAST 183 STREET</h3> <strong># of Units:</strong> 34<br> <strong># of Affordable Units:</strong> 7<br> </div></div>`)[0];
+                popup_490e83a9764ee3ea8ce5e5df02c8c418.setContent(html_6b7e5c1f7e923f23e98331bcb25b8ae9);
+            
+        
+
+        circle_marker_986947877c3bb3449ec1503e8c2db736.bindPopup(popup_490e83a9764ee3ea8ce5e5df02c8c418)
+        ;
+
+        
+    
+    
+            var circle_marker_252a3b8821078a702652e353b978fc1f = L.circleMarker(
+                [40.655397, -73.954633],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_9732ab240c32274cc68f73c970ee86f6 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_ca88f2012a9c084d1911050cac85fa48 = $(`<div id="html_ca88f2012a9c084d1911050cac85fa48" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>155 CLARKSON AVENUE</h3> <strong># of Units:</strong> 34<br> <strong># of Affordable Units:</strong> 7<br> </div></div>`)[0];
+                popup_9732ab240c32274cc68f73c970ee86f6.setContent(html_ca88f2012a9c084d1911050cac85fa48);
+            
+        
+
+        circle_marker_252a3b8821078a702652e353b978fc1f.bindPopup(popup_9732ab240c32274cc68f73c970ee86f6)
+        ;
+
+        
+    
+    
+            var circle_marker_8186eb77016a7312a0f684b3c48b4e66 = L.circleMarker(
+                [40.743756, -73.912266],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_c444061d265e1454156659744c3c842a = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4151898d8fa5e6bcf752dfe4561ac229 = $(`<div id="html_4151898d8fa5e6bcf752dfe4561ac229" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>43-09 52 STREET</h3> <strong># of Units:</strong> 33<br> <strong># of Affordable Units:</strong> 11<br> </div></div>`)[0];
+                popup_c444061d265e1454156659744c3c842a.setContent(html_4151898d8fa5e6bcf752dfe4561ac229);
+            
+        
+
+        circle_marker_8186eb77016a7312a0f684b3c48b4e66.bindPopup(popup_c444061d265e1454156659744c3c842a)
+        ;
+
+        
+    
+    
+            var circle_marker_5db0e917c4b5d1d0c902a8fe292647c8 = L.circleMarker(
+                [40.7666751, -73.9235065],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_b93b92f70cca0407c1da817aa9ef061a = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_99fb115d90a18bda86bec15e94e55d4e = $(`<div id="html_99fb115d90a18bda86bec15e94e55d4e" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>30-33 29 STREET</h3> <strong># of Units:</strong> 33<br> <strong># of Affordable Units:</strong> 7<br> </div></div>`)[0];
+                popup_b93b92f70cca0407c1da817aa9ef061a.setContent(html_99fb115d90a18bda86bec15e94e55d4e);
+            
+        
+
+        circle_marker_5db0e917c4b5d1d0c902a8fe292647c8.bindPopup(popup_b93b92f70cca0407c1da817aa9ef061a)
+        ;
+
+        
+    
+    
+            var circle_marker_48670811ccd27279f318d858808cfb94 = L.circleMarker(
+                [40.8508321, -73.8890657],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_b350668db70a28a14b074e71438de7c4 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_81fdb4b0cf35370725ab6f0e777cbd00 = $(`<div id="html_81fdb4b0cf35370725ab6f0e777cbd00" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2164 HUGHES AVENUE</h3> <strong># of Units:</strong> 32<br> <strong># of Affordable Units:</strong> 7<br> </div></div>`)[0];
+                popup_b350668db70a28a14b074e71438de7c4.setContent(html_81fdb4b0cf35370725ab6f0e777cbd00);
+            
+        
+
+        circle_marker_48670811ccd27279f318d858808cfb94.bindPopup(popup_b350668db70a28a14b074e71438de7c4)
+        ;
+
+        
+    
+    
+            var circle_marker_3531a88eb4c923ae2436de475f29cc7b = L.circleMarker(
+                [40.7406143, -73.87986529999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_1f18cc67aa13d4aa1f310457966ec895 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_0a94d17ce28e69b41e4d557b65e286d6 = $(`<div id="html_0a94d17ce28e69b41e4d557b65e286d6" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>83-12 BROADWAY</h3> <strong># of Units:</strong> 31<br> <strong># of Affordable Units:</strong> 7<br> </div></div>`)[0];
+                popup_1f18cc67aa13d4aa1f310457966ec895.setContent(html_0a94d17ce28e69b41e4d557b65e286d6);
+            
+        
+
+        circle_marker_3531a88eb4c923ae2436de475f29cc7b.bindPopup(popup_1f18cc67aa13d4aa1f310457966ec895)
+        ;
+
+        
+    
+    
+            var circle_marker_16e28bccf4d43b25c93c0745f1e02da2 = L.circleMarker(
+                [40.6975711, -73.9584394],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_41cc95246b0167ac419c0935130ce988 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1859927eed2207777c649cebd75af3e5 = $(`<div id="html_1859927eed2207777c649cebd75af3e5" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>51 FRANKLIN AVENUE, BROOKLYN, NY 11205</h3> <strong># of Units:</strong> 30<br> <strong># of Affordable Units:</strong> 0<br> </div></div>`)[0];
+                popup_41cc95246b0167ac419c0935130ce988.setContent(html_1859927eed2207777c649cebd75af3e5);
+            
+        
+
+        circle_marker_16e28bccf4d43b25c93c0745f1e02da2.bindPopup(popup_41cc95246b0167ac419c0935130ce988)
+        ;
+
+        
+    
+    
+            var circle_marker_70f6685df8efde17935e1aad80b3887c = L.circleMarker(
+                [40.8335855, -73.8896941],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_49347be0892b69ecbd53bf43aec70fb8 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a43700c44563ea94ea4df0442bff4ba7 = $(`<div id="html_a43700c44563ea94ea4df0442bff4ba7" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1506 SOUTHERN BOULEVARD</h3> <strong># of Units:</strong> 29<br> <strong># of Affordable Units:</strong> 6<br> </div></div>`)[0];
+                popup_49347be0892b69ecbd53bf43aec70fb8.setContent(html_a43700c44563ea94ea4df0442bff4ba7);
+            
+        
+
+        circle_marker_70f6685df8efde17935e1aad80b3887c.bindPopup(popup_49347be0892b69ecbd53bf43aec70fb8)
+        ;
+
+        
+    
+    
+            var circle_marker_7b8f95bc1ca0cf0a26fefa4a521faa4c = L.circleMarker(
+                [40.7648725, -73.9267136],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_533520120266e6f8da57564d58afa765 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_302876e9783997997192971135d10edd = $(`<div id="html_302876e9783997997192971135d10edd" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>31-27 CRESCENT STREET</h3> <strong># of Units:</strong> 28<br> <strong># of Affordable Units:</strong> 0<br> </div></div>`)[0];
+                popup_533520120266e6f8da57564d58afa765.setContent(html_302876e9783997997192971135d10edd);
+            
+        
+
+        circle_marker_7b8f95bc1ca0cf0a26fefa4a521faa4c.bindPopup(popup_533520120266e6f8da57564d58afa765)
+        ;
+
+        
+    
+    
+            var circle_marker_52e9f9d5bdf6a0cf308b3207b3c9cc83 = L.circleMarker(
+                [40.8515035, -73.88521759999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_166a809122bb4d9b8a0905375fed39f9 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_09d9c1eb45eff51e674ce29b5f8960e7 = $(`<div id="html_09d9c1eb45eff51e674ce29b5f8960e7" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2259 CROTONA AVE</h3> <strong># of Units:</strong> 28<br> <strong># of Affordable Units:</strong> 6<br> </div></div>`)[0];
+                popup_166a809122bb4d9b8a0905375fed39f9.setContent(html_09d9c1eb45eff51e674ce29b5f8960e7);
+            
+        
+
+        circle_marker_52e9f9d5bdf6a0cf308b3207b3c9cc83.bindPopup(popup_166a809122bb4d9b8a0905375fed39f9)
+        ;
+
+        
+    
+    
+            var circle_marker_58a7c6f4ff6f97ddd1fda26c6b332209 = L.circleMarker(
+                [40.77010120000001, -73.9228595],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_07e4021acdc3cb067aee3c74e2bc7d88 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1cd594595be1a86b743cf2fa008b6740 = $(`<div id="html_1cd594595be1a86b743cf2fa008b6740" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>25-23 NEWTOWN AVENUE</h3> <strong># of Units:</strong> 27<br> <strong># of Affordable Units:</strong> 0<br> </div></div>`)[0];
+                popup_07e4021acdc3cb067aee3c74e2bc7d88.setContent(html_1cd594595be1a86b743cf2fa008b6740);
+            
+        
+
+        circle_marker_58a7c6f4ff6f97ddd1fda26c6b332209.bindPopup(popup_07e4021acdc3cb067aee3c74e2bc7d88)
+        ;
+
+        
+    
+    
+            var circle_marker_cae551fa87b5fa239df690822e6118e2 = L.circleMarker(
+                [40.860634, -73.9083819],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_b4e91956b3553ecc4434cc0124bab3e5 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_fc9409df3d05b7aa74bbc8552cf75e4f = $(`<div id="html_fc9409df3d05b7aa74bbc8552cf75e4f" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2267 ANDREWS AVENUE NORTH</h3> <strong># of Units:</strong> 25<br> <strong># of Affordable Units:</strong> 5<br> </div></div>`)[0];
+                popup_b4e91956b3553ecc4434cc0124bab3e5.setContent(html_fc9409df3d05b7aa74bbc8552cf75e4f);
+            
+        
+
+        circle_marker_cae551fa87b5fa239df690822e6118e2.bindPopup(popup_b4e91956b3553ecc4434cc0124bab3e5)
+        ;
+
+        
+    
+    
+            var circle_marker_59dbc2828e725a4f98a6b60099913463 = L.circleMarker(
+                [40.8586263, -73.90729139999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_1614e6b9534c383346922263f772671c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_e257662615b03478423994d2b2c3d263 = $(`<div id="html_e257662615b03478423994d2b2c3d263" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2216 AQUEDUCT AVENUE, BRONX, NY 10453</h3> <strong># of Units:</strong> 25<br> <strong># of Affordable Units:</strong> 5<br> </div></div>`)[0];
+                popup_1614e6b9534c383346922263f772671c.setContent(html_e257662615b03478423994d2b2c3d263);
+            
+        
+
+        circle_marker_59dbc2828e725a4f98a6b60099913463.bindPopup(popup_1614e6b9534c383346922263f772671c)
+        ;
+
+        
+    
+    
+            var circle_marker_c060c525476b5b23e9fd634e1cfcfa74 = L.circleMarker(
+                [40.8605133, -73.9051088],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_6158be0c5c04ac493a2a1250101e3e38 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_2e3e0eaeee79fb9d12fe80a46d7e377a = $(`<div id="html_2e3e0eaeee79fb9d12fe80a46d7e377a" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2311 GRAND AVENUE</h3> <strong># of Units:</strong> 25<br> <strong># of Affordable Units:</strong> 5<br> </div></div>`)[0];
+                popup_6158be0c5c04ac493a2a1250101e3e38.setContent(html_2e3e0eaeee79fb9d12fe80a46d7e377a);
+            
+        
+
+        circle_marker_c060c525476b5b23e9fd634e1cfcfa74.bindPopup(popup_6158be0c5c04ac493a2a1250101e3e38)
+        ;
+
+        
+    
+    
+            var circle_marker_dd71e24da2383400dfda06aa9152b87e = L.circleMarker(
+                [40.8602974, -73.9080666],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_c3b502a09846ba1eec478409a5441351 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_374b3a4237213aeab299c6a40c23e96c = $(`<div id="html_374b3a4237213aeab299c6a40c23e96c" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2260 ANDREWS AVENUE NORTH</h3> <strong># of Units:</strong> 25<br> <strong># of Affordable Units:</strong> 5<br> </div></div>`)[0];
+                popup_c3b502a09846ba1eec478409a5441351.setContent(html_374b3a4237213aeab299c6a40c23e96c);
+            
+        
+
+        circle_marker_dd71e24da2383400dfda06aa9152b87e.bindPopup(popup_c3b502a09846ba1eec478409a5441351)
+        ;
+
+        
+    
+    
+            var circle_marker_de123f85b522fed5bbe4bfaf748e9a34 = L.circleMarker(
+                [40.8439886, -73.8284403],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_4839ee2fa74d527223056dc88cd3b7fb = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_15b791a4c318bbb875de83a48a531111 = $(`<div id="html_15b791a4c318bbb875de83a48a531111" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1571 JARVIS AVENUE</h3> <strong># of Units:</strong> 24<br> <strong># of Affordable Units:</strong> 5<br> </div></div>`)[0];
+                popup_4839ee2fa74d527223056dc88cd3b7fb.setContent(html_15b791a4c318bbb875de83a48a531111);
+            
+        
+
+        circle_marker_de123f85b522fed5bbe4bfaf748e9a34.bindPopup(popup_4839ee2fa74d527223056dc88cd3b7fb)
+        ;
+
+        
+    
+    
+            var circle_marker_21ea073d60d1617f73ec184c159dbd61 = L.circleMarker(
+                [40.7561191, -73.8729263],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_e9bcfa7c0817d63a21e2c6fea4222101 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_5ea9a6bbc2932eb872d3faba43075872 = $(`<div id="html_5ea9a6bbc2932eb872d3faba43075872" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>33-25 JUNCTION BLVD, FLUSHING, NY 11372</h3> <strong># of Units:</strong> 24<br> <strong># of Affordable Units:</strong> 5<br> </div></div>`)[0];
+                popup_e9bcfa7c0817d63a21e2c6fea4222101.setContent(html_5ea9a6bbc2932eb872d3faba43075872);
+            
+        
+
+        circle_marker_21ea073d60d1617f73ec184c159dbd61.bindPopup(popup_e9bcfa7c0817d63a21e2c6fea4222101)
+        ;
+
+        
+    
+    
+            var circle_marker_7ec7aeaac60957480dcf704663aeb539 = L.circleMarker(
+                [40.7757243, -73.9332221],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_f8879463115967f1c889bd550d86862a = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_0aec265922b4dc1e149fb365fe71abe1 = $(`<div id="html_0aec265922b4dc1e149fb365fe71abe1" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>26-18 4TH STREET</h3> <strong># of Units:</strong> 22<br> <strong># of Affordable Units:</strong> 5<br> </div></div>`)[0];
+                popup_f8879463115967f1c889bd550d86862a.setContent(html_0aec265922b4dc1e149fb365fe71abe1);
+            
+        
+
+        circle_marker_7ec7aeaac60957480dcf704663aeb539.bindPopup(popup_f8879463115967f1c889bd550d86862a)
+        ;
+
+        
+    
+    
+            var circle_marker_68d3411d54342130fcdecfb38217a6b4 = L.circleMarker(
+                [40.8813947, -73.8631718],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_d562c28eb57ca1ae0a24786629046a76 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4e3a7124d7f66cb88131c9fb3baa4e99 = $(`<div id="html_4e3a7124d7f66cb88131c9fb3baa4e99" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>715 EAST 216 STREET</h3> <strong># of Units:</strong> 22<br> <strong># of Affordable Units:</strong> 5<br> </div></div>`)[0];
+                popup_d562c28eb57ca1ae0a24786629046a76.setContent(html_4e3a7124d7f66cb88131c9fb3baa4e99);
+            
+        
+
+        circle_marker_68d3411d54342130fcdecfb38217a6b4.bindPopup(popup_d562c28eb57ca1ae0a24786629046a76)
+        ;
+
+        
+    
+    
+            var circle_marker_e4f08375c36817b99d9e4d67ad4a9403 = L.circleMarker(
+                [40.8439308, -73.9074418],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_3df504f6103b7dd8fbe45333177c6939 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_57177ee1de7d664d11fe921d87ebcf60 = $(`<div id="html_57177ee1de7d664d11fe921d87ebcf60" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1682 WEEKS AVENUE</h3> <strong># of Units:</strong> 21<br> <strong># of Affordable Units:</strong> 5<br> </div></div>`)[0];
+                popup_3df504f6103b7dd8fbe45333177c6939.setContent(html_57177ee1de7d664d11fe921d87ebcf60);
+            
+        
+
+        circle_marker_e4f08375c36817b99d9e4d67ad4a9403.bindPopup(popup_3df504f6103b7dd8fbe45333177c6939)
+        ;
+
+        
+    
+    
+            var circle_marker_c055fcd7fac8ab5d5895137dce696adb = L.circleMarker(
+                [40.8694955, -73.8438476],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_f5504f811571eee2236702fcef7178e9 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_64a87b4f165c34da318cccc25be95a1a = $(`<div id="html_64a87b4f165c34da318cccc25be95a1a" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1435 EAST GUNHILL ROAD</h3> <strong># of Units:</strong> 20<br> <strong># of Affordable Units:</strong> 4<br> </div></div>`)[0];
+                popup_f5504f811571eee2236702fcef7178e9.setContent(html_64a87b4f165c34da318cccc25be95a1a);
+            
+        
+
+        circle_marker_c055fcd7fac8ab5d5895137dce696adb.bindPopup(popup_f5504f811571eee2236702fcef7178e9)
+        ;
+
+        
+    
+    
+            var circle_marker_9c77605b70e2e4a8fb7d7ad55c96ecbd = L.circleMarker(
+                [40.7139404, -73.7774609],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_d4a175e7e6109b65b05e36a751618a06 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_238d38a7ee2183080c95939bafd63e68 = $(`<div id="html_238d38a7ee2183080c95939bafd63e68" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>184-12 HILLSIDE AVENUE</h3> <strong># of Units:</strong> 20<br> <strong># of Affordable Units:</strong> 4<br> </div></div>`)[0];
+                popup_d4a175e7e6109b65b05e36a751618a06.setContent(html_238d38a7ee2183080c95939bafd63e68);
+            
+        
+
+        circle_marker_9c77605b70e2e4a8fb7d7ad55c96ecbd.bindPopup(popup_d4a175e7e6109b65b05e36a751618a06)
+        ;
+
+        
+    
+    
+            var circle_marker_56a971592818919216954a573c7d955b = L.circleMarker(
+                [40.660381, -73.9396258],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_cdf72785546538adea2fe8d96edb6d4e = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_5259352ecde85b2771813a64c84fd259 = $(`<div id="html_5259352ecde85b2771813a64c84fd259" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>585 ALBANY AVENUE</h3> <strong># of Units:</strong> 19<br> <strong># of Affordable Units:</strong> 0<br> </div></div>`)[0];
+                popup_cdf72785546538adea2fe8d96edb6d4e.setContent(html_5259352ecde85b2771813a64c84fd259);
+            
+        
+
+        circle_marker_56a971592818919216954a573c7d955b.bindPopup(popup_cdf72785546538adea2fe8d96edb6d4e)
+        ;
+
+        
+    
+    
+            var circle_marker_d78bd90f4caba1117ef4e00b8a1d763d = L.circleMarker(
+                [40.6339491, -73.94524009999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_4dc2d4258a64cbd0a76932a7c937e12d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_161e94dfbe09a7307841f95e065fbf4b = $(`<div id="html_161e94dfbe09a7307841f95e065fbf4b" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>3216 GLENWOOD ROAD</h3> <strong># of Units:</strong> 19<br> <strong># of Affordable Units:</strong> 4<br> </div></div>`)[0];
+                popup_4dc2d4258a64cbd0a76932a7c937e12d.setContent(html_161e94dfbe09a7307841f95e065fbf4b);
+            
+        
+
+        circle_marker_d78bd90f4caba1117ef4e00b8a1d763d.bindPopup(popup_4dc2d4258a64cbd0a76932a7c937e12d)
+        ;
+
+        
+    
+    
+            var circle_marker_b9a356b86865832e043020d0aacd6e64 = L.circleMarker(
+                [40.84639749999999, -73.89055619999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_a5bc80f774429ffa16eda1f11286cd79 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_73703feb6141a334787905b6ca03999a = $(`<div id="html_73703feb6141a334787905b6ca03999a" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1981 CROTONA AVE, BRONX, NY 10457</h3> <strong># of Units:</strong> 19<br> <strong># of Affordable Units:</strong> 4<br> </div></div>`)[0];
+                popup_a5bc80f774429ffa16eda1f11286cd79.setContent(html_73703feb6141a334787905b6ca03999a);
+            
+        
+
+        circle_marker_b9a356b86865832e043020d0aacd6e64.bindPopup(popup_a5bc80f774429ffa16eda1f11286cd79)
+        ;
+
+        
+    
+    
+            var circle_marker_e7dd1bb9a37aba5f1c11f2251ca0c2c7 = L.circleMarker(
+                [40.8850788, -73.86559419999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_2c3845edfb291ce40232eac02f98fb92 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_89413bcf4785503aa444d9a1f5576597 = $(`<div id="html_89413bcf4785503aa444d9a1f5576597" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>3815 CARPENTER AVENUE</h3> <strong># of Units:</strong> 18<br> <strong># of Affordable Units:</strong> 4<br> </div></div>`)[0];
+                popup_2c3845edfb291ce40232eac02f98fb92.setContent(html_89413bcf4785503aa444d9a1f5576597);
+            
+        
+
+        circle_marker_e7dd1bb9a37aba5f1c11f2251ca0c2c7.bindPopup(popup_2c3845edfb291ce40232eac02f98fb92)
+        ;
+
+        
+    
+    
+            var circle_marker_ad214117d9e5803cc3d111dc8d8490df = L.circleMarker(
+                [40.751987, -73.8704291],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_b3e527643c887ffe3dba2a10f4082e72 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_3aab2f9d2477a6c4ac70d556075fa069 = $(`<div id="html_3aab2f9d2477a6c4ac70d556075fa069" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>96-11 37 AVENUE, CORONA, NY 11368</h3> <strong># of Units:</strong> 17<br> <strong># of Affordable Units:</strong> 4<br> </div></div>`)[0];
+                popup_b3e527643c887ffe3dba2a10f4082e72.setContent(html_3aab2f9d2477a6c4ac70d556075fa069);
+            
+        
+
+        circle_marker_ad214117d9e5803cc3d111dc8d8490df.bindPopup(popup_b3e527643c887ffe3dba2a10f4082e72)
+        ;
+
+        
+    
+    
+            var circle_marker_423ee1e864b74c44f598b820249262fc = L.circleMarker(
+                [40.8482591, -73.86000539999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_9f56b67182e42456d5ca296babfc2454 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_10df6accdd99a5343b7738b8c7083a9f = $(`<div id="html_10df6accdd99a5343b7738b8c7083a9f" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1852 BRONXDALE AVENUE</h3> <strong># of Units:</strong> 17<br> <strong># of Affordable Units:</strong> 4<br> </div></div>`)[0];
+                popup_9f56b67182e42456d5ca296babfc2454.setContent(html_10df6accdd99a5343b7738b8c7083a9f);
+            
+        
+
+        circle_marker_423ee1e864b74c44f598b820249262fc.bindPopup(popup_9f56b67182e42456d5ca296babfc2454)
+        ;
+
+        
+    
+    
+            var circle_marker_4df99b8c7fc99329ba5fc779669c06ce = L.circleMarker(
+                [40.6664485, -73.9028333],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_c88af3f89e54ec0c2ad777def4bb5d6a = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_d1ce2ba5838be17e54d83334b79b0795 = $(`<div id="html_d1ce2ba5838be17e54d83334b79b0795" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>434 BLAKE AVENUE</h3> <strong># of Units:</strong> 17<br> <strong># of Affordable Units:</strong> 4<br> </div></div>`)[0];
+                popup_c88af3f89e54ec0c2ad777def4bb5d6a.setContent(html_d1ce2ba5838be17e54d83334b79b0795);
+            
+        
+
+        circle_marker_4df99b8c7fc99329ba5fc779669c06ce.bindPopup(popup_c88af3f89e54ec0c2ad777def4bb5d6a)
+        ;
+
+        
+    
+    
+            var circle_marker_a90c603099d7df24923a2265281f8299 = L.circleMarker(
+                [40.8201943, -73.8643505],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_6544c5a8a16ca64763d454e54a8c0e1b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_746d57400c247a921ac947bd8fff8108 = $(`<div id="html_746d57400c247a921ac947bd8fff8108" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>722 SAINT LAWRENCE AVENUE</h3> <strong># of Units:</strong> 16<br> <strong># of Affordable Units:</strong> 4<br> </div></div>`)[0];
+                popup_6544c5a8a16ca64763d454e54a8c0e1b.setContent(html_746d57400c247a921ac947bd8fff8108);
+            
+        
+
+        circle_marker_a90c603099d7df24923a2265281f8299.bindPopup(popup_6544c5a8a16ca64763d454e54a8c0e1b)
+        ;
+
+        
+    
+    
+            var circle_marker_3c781e0efb1eaa5e176c69f6f7384966 = L.circleMarker(
+                [40.8705035, -73.859225],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_b1b944773162ec2b74ce7f2f835b7493 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_49cda3194769aa5b62724b1c16166618 = $(`<div id="html_49cda3194769aa5b62724b1c16166618" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>3030 COLDEN AVENUE</h3> <strong># of Units:</strong> 15<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_b1b944773162ec2b74ce7f2f835b7493.setContent(html_49cda3194769aa5b62724b1c16166618);
+            
+        
+
+        circle_marker_3c781e0efb1eaa5e176c69f6f7384966.bindPopup(popup_b1b944773162ec2b74ce7f2f835b7493)
+        ;
+
+        
+    
+    
+            var circle_marker_1fede4bb7dfe19448dee4f04925ea308 = L.circleMarker(
+                [40.8141048, -73.9433555],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_6106f6bc367cc140eb3d26b92872033c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_514e9951d7d1240a7769413c793f400f = $(`<div id="html_514e9951d7d1240a7769413c793f400f" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>132 WEST 134 STREET, NEW YORK, NY 10030</h3> <strong># of Units:</strong> 15<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_6106f6bc367cc140eb3d26b92872033c.setContent(html_514e9951d7d1240a7769413c793f400f);
+            
+        
+
+        circle_marker_1fede4bb7dfe19448dee4f04925ea308.bindPopup(popup_6106f6bc367cc140eb3d26b92872033c)
+        ;
+
+        
+    
+    
+            var circle_marker_3b6b0306665b1110d386d8e967b57947 = L.circleMarker(
+                [40.6614035, -73.94529589999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_6ced757d66bfa0229cd034d02f0f4cc2 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_509ec160f6ee5408066102ddd3755a7f = $(`<div id="html_509ec160f6ee5408066102ddd3755a7f" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>537 BROOKLYN AVENUE</h3> <strong># of Units:</strong> 15<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_6ced757d66bfa0229cd034d02f0f4cc2.setContent(html_509ec160f6ee5408066102ddd3755a7f);
+            
+        
+
+        circle_marker_3b6b0306665b1110d386d8e967b57947.bindPopup(popup_6ced757d66bfa0229cd034d02f0f4cc2)
+        ;
+
+        
+    
+    
+            var circle_marker_4b00b16bb230c14afa9cb170999f639b = L.circleMarker(
+                [40.88532439999999, -73.8653951],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_68c68e94600824585460237ebe548e0f = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1f2a3b598e9ca14c1b0e26ea80370120 = $(`<div id="html_1f2a3b598e9ca14c1b0e26ea80370120" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>3825 CARPENTER AVENUE</h3> <strong># of Units:</strong> 14<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_68c68e94600824585460237ebe548e0f.setContent(html_1f2a3b598e9ca14c1b0e26ea80370120);
+            
+        
+
+        circle_marker_4b00b16bb230c14afa9cb170999f639b.bindPopup(popup_68c68e94600824585460237ebe548e0f)
+        ;
+
+        
+    
+    
+            var circle_marker_eeda3e4eea9e02963b2595c2f72253ae = L.circleMarker(
+                [40.8744011, -73.8662679],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_6a4fccef56367bde97076dd5a870c305 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_87f172f56677d457d0b43d77141232f0 = $(`<div id="html_87f172f56677d457d0b43d77141232f0" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>717 BARTHOLDI STREET</h3> <strong># of Units:</strong> 14<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_6a4fccef56367bde97076dd5a870c305.setContent(html_87f172f56677d457d0b43d77141232f0);
+            
+        
+
+        circle_marker_eeda3e4eea9e02963b2595c2f72253ae.bindPopup(popup_6a4fccef56367bde97076dd5a870c305)
+        ;
+
+        
+    
+    
+            var circle_marker_ab13764aef2aa42481079a966f392759 = L.circleMarker(
+                [40.7668251, -73.8791861],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_b360f112d19904e32ff85a83c1afff01 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_2cfd53d86605ff6aa95528442ed8b0fa = $(`<div id="html_2cfd53d86605ff6aa95528442ed8b0fa" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>23-38 91 STREET</h3> <strong># of Units:</strong> 14<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_b360f112d19904e32ff85a83c1afff01.setContent(html_2cfd53d86605ff6aa95528442ed8b0fa);
+            
+        
+
+        circle_marker_ab13764aef2aa42481079a966f392759.bindPopup(popup_b360f112d19904e32ff85a83c1afff01)
+        ;
+
+        
+    
+    
+            var circle_marker_1f492d267cf783df56a4185cae3f3c88 = L.circleMarker(
+                [40.8583575, -73.9067015],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_068cf757d9ac6132c165cf697528911c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_bd3f310960a495ad4d26d4ed4acedfd8 = $(`<div id="html_bd3f310960a495ad4d26d4ed4acedfd8" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>60 BUCHANAN PLACE</h3> <strong># of Units:</strong> 14<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_068cf757d9ac6132c165cf697528911c.setContent(html_bd3f310960a495ad4d26d4ed4acedfd8);
+            
+        
+
+        circle_marker_1f492d267cf783df56a4185cae3f3c88.bindPopup(popup_068cf757d9ac6132c165cf697528911c)
+        ;
+
+        
+    
+    
+            var circle_marker_f7440664be4eaf727539d10904eceeb8 = L.circleMarker(
+                [40.707937, -73.7985726],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_e6125a18b41581d9ae0515883be9d234 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_55511ced40f49207d1b67440e9c38976 = $(`<div id="html_55511ced40f49207d1b67440e9c38976" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>88-29 163 STREET</h3> <strong># of Units:</strong> 14<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_e6125a18b41581d9ae0515883be9d234.setContent(html_55511ced40f49207d1b67440e9c38976);
+            
+        
+
+        circle_marker_f7440664be4eaf727539d10904eceeb8.bindPopup(popup_e6125a18b41581d9ae0515883be9d234)
+        ;
+
+        
+    
+    
+            var circle_marker_88b72067c1ed3e36768e1184267b1a14 = L.circleMarker(
+                [40.8402124, -73.88842749999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_d7f2a83727ccfb3134dde038bc811e6a = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_e5b2bdcd67330ce40b2c7d0a23f63bb8 = $(`<div id="html_e5b2bdcd67330ce40b2c7d0a23f63bb8" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>869 EAST 175 STREET</h3> <strong># of Units:</strong> 13<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_d7f2a83727ccfb3134dde038bc811e6a.setContent(html_e5b2bdcd67330ce40b2c7d0a23f63bb8);
+            
+        
+
+        circle_marker_88b72067c1ed3e36768e1184267b1a14.bindPopup(popup_d7f2a83727ccfb3134dde038bc811e6a)
+        ;
+
+        
+    
+    
+            var circle_marker_bdc44e3a85f44e34e04474436a5a9e59 = L.circleMarker(
+                [40.6663012, -73.91750739999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_8ed25c7f17e0e88e03ce37c6d93b9647 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_c17761aba9802feae4c9d2f402233535 = $(`<div id="html_c17761aba9802feae4c9d2f402233535" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>109 LEGION STREET</h3> <strong># of Units:</strong> 13<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_8ed25c7f17e0e88e03ce37c6d93b9647.setContent(html_c17761aba9802feae4c9d2f402233535);
+            
+        
+
+        circle_marker_bdc44e3a85f44e34e04474436a5a9e59.bindPopup(popup_8ed25c7f17e0e88e03ce37c6d93b9647)
+        ;
+
+        
+    
+    
+            var circle_marker_95b4b0a1f32e000ff2b337d4d459988b = L.circleMarker(
+                [40.8471773, -73.89266289999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_c9e3aa056338038e441156c450382b6b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_0655a5bb88d934f2693da3acc14fe9a4 = $(`<div id="html_0655a5bb88d934f2693da3acc14fe9a4" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1992 ARTHUR AVENUE</h3> <strong># of Units:</strong> 13<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_c9e3aa056338038e441156c450382b6b.setContent(html_0655a5bb88d934f2693da3acc14fe9a4);
+            
+        
+
+        circle_marker_95b4b0a1f32e000ff2b337d4d459988b.bindPopup(popup_c9e3aa056338038e441156c450382b6b)
+        ;
+
+        
+    
+    
+            var circle_marker_0d8d5a39117ce46e2c1efb8d87b95a5e = L.circleMarker(
+                [40.8569919, -73.9073228],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_48bc0325f164689479fff09892773f00 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_d2e573ff1a6c29ee1f99cf8c16a8e603 = $(`<div id="html_d2e573ff1a6c29ee1f99cf8c16a8e603" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>54 CLINTON PLACE</h3> <strong># of Units:</strong> 11<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_48bc0325f164689479fff09892773f00.setContent(html_d2e573ff1a6c29ee1f99cf8c16a8e603);
+            
+        
+
+        circle_marker_0d8d5a39117ce46e2c1efb8d87b95a5e.bindPopup(popup_48bc0325f164689479fff09892773f00)
+        ;
+
+        
+    
+    
+            var circle_marker_82635cacbdf4a387bb50871a2654cc6a = L.circleMarker(
+                [40.8495133, -73.86505640000001],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_6f9ff730cd44332a757adceb4972381f = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_9bd869035fd1595d35f2c5dc10ac9c0d = $(`<div id="html_9bd869035fd1595d35f2c5dc10ac9c0d" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1953 WALLACE AVENUE</h3> <strong># of Units:</strong> 11<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_6f9ff730cd44332a757adceb4972381f.setContent(html_9bd869035fd1595d35f2c5dc10ac9c0d);
+            
+        
+
+        circle_marker_82635cacbdf4a387bb50871a2654cc6a.bindPopup(popup_6f9ff730cd44332a757adceb4972381f)
+        ;
+
+        
+    
+    
+            var circle_marker_bf1957046f15891d47b76b12f1744c01 = L.circleMarker(
+                [40.834331, -73.9257614],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_7ff836fd901933ec8175af55fd23e797 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_69be4eba27f8bddaf6ea201e57a6bbeb = $(`<div id="html_69be4eba27f8bddaf6ea201e57a6bbeb" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1081 ANDERSON AVENUE</h3> <strong># of Units:</strong> 11<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_7ff836fd901933ec8175af55fd23e797.setContent(html_69be4eba27f8bddaf6ea201e57a6bbeb);
+            
+        
+
+        circle_marker_bf1957046f15891d47b76b12f1744c01.bindPopup(popup_7ff836fd901933ec8175af55fd23e797)
+        ;
+
+        
+    
+    
+            var circle_marker_38d0b3d251caa39323b0f90c2121eda7 = L.circleMarker(
+                [40.8280203, -73.8964883],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_fc06885b39a044a0b88c283145065d7c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_d0a0f8d18df878a5ccc5ea68bd18af87 = $(`<div id="html_d0a0f8d18df878a5ccc5ea68bd18af87" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>874 HOME STREET</h3> <strong># of Units:</strong> 11<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_fc06885b39a044a0b88c283145065d7c.setContent(html_d0a0f8d18df878a5ccc5ea68bd18af87);
+            
+        
+
+        circle_marker_38d0b3d251caa39323b0f90c2121eda7.bindPopup(popup_fc06885b39a044a0b88c283145065d7c)
+        ;
+
+        
+    
+    
+            var circle_marker_32bc12c2646cc580bd757183585cd143 = L.circleMarker(
+                [40.881545, -73.8327769],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_ecc57bd787394cf833a676fbea4cffb8 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_b764af67634c147c98520b1b1e717067 = $(`<div id="html_b764af67634c147c98520b1b1e717067" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2135 REEDS MILL LANE</h3> <strong># of Units:</strong> 11<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_ecc57bd787394cf833a676fbea4cffb8.setContent(html_b764af67634c147c98520b1b1e717067);
+            
+        
+
+        circle_marker_32bc12c2646cc580bd757183585cd143.bindPopup(popup_ecc57bd787394cf833a676fbea4cffb8)
+        ;
+
+        
+    
+    
+            var circle_marker_088c98866ace293855d87a86c33543d2 = L.circleMarker(
+                [40.75560790000001, -73.9360312],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_1b0d55bdd2cf1ed00c2d2d056934f443 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_b19e356b6699c5f45de37e7d356f764f = $(`<div id="html_b19e356b6699c5f45de37e7d356f764f" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>38-16 CRESCENT STREET</h3> <strong># of Units:</strong> 11<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_1b0d55bdd2cf1ed00c2d2d056934f443.setContent(html_b19e356b6699c5f45de37e7d356f764f);
+            
+        
+
+        circle_marker_088c98866ace293855d87a86c33543d2.bindPopup(popup_1b0d55bdd2cf1ed00c2d2d056934f443)
+        ;
+
+        
+    
+    
+            var circle_marker_6b0cacdb2b20f874fbf9291f7b063264 = L.circleMarker(
+                [40.68296309999999, -73.90401949999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_d269a63de039f507f227147771238cd3 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_dc1758f73039715b76a738f6e2b3e91a = $(`<div id="html_dc1758f73039715b76a738f6e2b3e91a" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>91 DE SALES PL</h3> <strong># of Units:</strong> 10<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_d269a63de039f507f227147771238cd3.setContent(html_dc1758f73039715b76a738f6e2b3e91a);
+            
+        
+
+        circle_marker_6b0cacdb2b20f874fbf9291f7b063264.bindPopup(popup_d269a63de039f507f227147771238cd3)
+        ;
+
+        
+    
+    
+            var circle_marker_d29051ba33dc958b55baac14f9e9bdd1 = L.circleMarker(
+                [40.69196, -73.915894],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_f4d4dc87c67e03e85f050e13b1046b19 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4ebbdaa06df217ede08ec55dad77f6e9 = $(`<div id="html_4ebbdaa06df217ede08ec55dad77f6e9" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1116 MADISON STREET, BROOKLYN, NY 11221</h3> <strong># of Units:</strong> 10<br> <strong># of Affordable Units:</strong> 5<br> </div></div>`)[0];
+                popup_f4d4dc87c67e03e85f050e13b1046b19.setContent(html_4ebbdaa06df217ede08ec55dad77f6e9);
+            
+        
+
+        circle_marker_d29051ba33dc958b55baac14f9e9bdd1.bindPopup(popup_f4d4dc87c67e03e85f050e13b1046b19)
+        ;
+
+        
+    
+    
+            var circle_marker_49c500f77b38686d398ee707c551472b = L.circleMarker(
+                [40.7611456, -73.8302028],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_85ebcc37849ea9b467e220a5832c9110 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_d4fe7fcde692e0dcb89bda4c1c54c485 = $(`<div id="html_d4fe7fcde692e0dcb89bda4c1c54c485" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>136-15 38 AVENUE</h3> <strong># of Units:</strong> 10<br> <strong># of Affordable Units:</strong> 5<br> </div></div>`)[0];
+                popup_85ebcc37849ea9b467e220a5832c9110.setContent(html_d4fe7fcde692e0dcb89bda4c1c54c485);
+            
+        
+
+        circle_marker_49c500f77b38686d398ee707c551472b.bindPopup(popup_85ebcc37849ea9b467e220a5832c9110)
+        ;
+
+        
+    
+    
+            var circle_marker_317d7bf5af52a4e888d38624fc4876de = L.circleMarker(
+                [40.7467698, -73.8798873],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_1c7a1876651b1eae251625513b99e059 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_525c777725c126061df5fdd63c8b50be = $(`<div id="html_525c777725c126061df5fdd63c8b50be" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>86-05 BRITTON AVENUE</h3> <strong># of Units:</strong> 10<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_1c7a1876651b1eae251625513b99e059.setContent(html_525c777725c126061df5fdd63c8b50be);
+            
+        
+
+        circle_marker_317d7bf5af52a4e888d38624fc4876de.bindPopup(popup_1c7a1876651b1eae251625513b99e059)
+        ;
+
+        
+    
+    
+            var circle_marker_b8c28a8e760f69a97a1bcf29c60b26fd = L.circleMarker(
+                [40.6691527, -73.9065299],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_8446ba57bc89e85f9d63a32b093efbc2 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_fe019f0ecb2533ca5c193ecfa36f8992 = $(`<div id="html_fe019f0ecb2533ca5c193ecfa36f8992" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>91 BELMONT AVENUE, BROOKLYN NY</h3> <strong># of Units:</strong> 10<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_8446ba57bc89e85f9d63a32b093efbc2.setContent(html_fe019f0ecb2533ca5c193ecfa36f8992);
+            
+        
+
+        circle_marker_b8c28a8e760f69a97a1bcf29c60b26fd.bindPopup(popup_8446ba57bc89e85f9d63a32b093efbc2)
+        ;
+
+        
+    
+    
+            var circle_marker_8aea3a1c2fb7b43810fd36c31b0fe558 = L.circleMarker(
+                [40.7206204, -73.9440528],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_9017f6e4f3b1df1cb21195310ecf1e8b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a364786d3a0b43aacdac4447313e95db = $(`<div id="html_a364786d3a0b43aacdac4447313e95db" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>511 MEEKER AVENUE, BROOKLYN NY, 11222</h3> <strong># of Units:</strong> 10<br> <strong># of Affordable Units:</strong> 5<br> </div></div>`)[0];
+                popup_9017f6e4f3b1df1cb21195310ecf1e8b.setContent(html_a364786d3a0b43aacdac4447313e95db);
+            
+        
+
+        circle_marker_8aea3a1c2fb7b43810fd36c31b0fe558.bindPopup(popup_9017f6e4f3b1df1cb21195310ecf1e8b)
+        ;
+
+        
+    
+    
+            var circle_marker_cfa19ebd85bc9b1047fe9cbd101a9e0d = L.circleMarker(
+                [40.6433396, -73.9505516],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_00f71e8cdf115130b1835063b484e6c3 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_6afceb7fa3b9fa8edd147040acc80515 = $(`<div id="html_6afceb7fa3b9fa8edd147040acc80515" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>271 EAST 28TH STREET, BROOKLYN, NY 11226</h3> <strong># of Units:</strong> 10<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_00f71e8cdf115130b1835063b484e6c3.setContent(html_6afceb7fa3b9fa8edd147040acc80515);
+            
+        
+
+        circle_marker_cfa19ebd85bc9b1047fe9cbd101a9e0d.bindPopup(popup_00f71e8cdf115130b1835063b484e6c3)
+        ;
+
+        
+    
+    
+            var circle_marker_89f60ebfe60b580d06801d29bea8e061 = L.circleMarker(
+                [40.7355536, -73.8815604],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_7f6c551b6ed2d0cb437f4a8cc4089e12 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_c11799f9d9f79f681cd87c32de9905ce = $(`<div id="html_c11799f9d9f79f681cd87c32de9905ce" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>85-15 GRAND AVENUE</h3> <strong># of Units:</strong> 10<br> <strong># of Affordable Units:</strong> 5<br> </div></div>`)[0];
+                popup_7f6c551b6ed2d0cb437f4a8cc4089e12.setContent(html_c11799f9d9f79f681cd87c32de9905ce);
+            
+        
+
+        circle_marker_89f60ebfe60b580d06801d29bea8e061.bindPopup(popup_7f6c551b6ed2d0cb437f4a8cc4089e12)
+        ;
+
+        
+    
+    
+            var circle_marker_8330d11d6f975e4468e771a2f48bb2e5 = L.circleMarker(
+                [40.7464192, -73.8974193],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_84ca59f37b43171eea983cd739c7577a = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_881f0116c9dc481f4cfb62b48590107a = $(`<div id="html_881f0116c9dc481f4cfb62b48590107a" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>67-17 ROOSEVELT AVENUE</h3> <strong># of Units:</strong> 10<br> <strong># of Affordable Units:</strong> 0<br> </div></div>`)[0];
+                popup_84ca59f37b43171eea983cd739c7577a.setContent(html_881f0116c9dc481f4cfb62b48590107a);
+            
+        
+
+        circle_marker_8330d11d6f975e4468e771a2f48bb2e5.bindPopup(popup_84ca59f37b43171eea983cd739c7577a)
+        ;
+
+        
+    
+    
+            var circle_marker_53289533bcd02bf0265810af221e1f1f = L.circleMarker(
+                [40.8457576, -73.905985],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_8283cb8568461538b83eab6c4a4e7037 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_ba7721898918bda65bbe35a5ca596049 = $(`<div id="html_ba7721898918bda65bbe35a5ca596049" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1761 TOPPING AVENUE</h3> <strong># of Units:</strong> 10<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_8283cb8568461538b83eab6c4a4e7037.setContent(html_ba7721898918bda65bbe35a5ca596049);
+            
+        
+
+        circle_marker_53289533bcd02bf0265810af221e1f1f.bindPopup(popup_8283cb8568461538b83eab6c4a4e7037)
+        ;
+
+        
+    
+    
+            var circle_marker_dfb1fdade547fadce4c68f20f2bb9074 = L.circleMarker(
+                [40.6535259, -73.9525151],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_7d709c0e4981a154afee92fc8a2432ab = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_c01ac50ae01c10dec44cd11666f0531d = $(`<div id="html_c01ac50ae01c10dec44cd11666f0531d" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>729 ROGERS AVENUE</h3> <strong># of Units:</strong> 10<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_7d709c0e4981a154afee92fc8a2432ab.setContent(html_c01ac50ae01c10dec44cd11666f0531d);
+            
+        
+
+        circle_marker_dfb1fdade547fadce4c68f20f2bb9074.bindPopup(popup_7d709c0e4981a154afee92fc8a2432ab)
+        ;
+
+        
+    
+    
+            var circle_marker_9a96cc2a7776a2ad7804b0f46391d708 = L.circleMarker(
+                [40.6726064, -73.93846409999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_bb7fff533f28e5c2ad7b98534de20651 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a719f95453523722ff75b3fe8b36f214 = $(`<div id="html_a719f95453523722ff75b3fe8b36f214" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1180 PARK PLACE</h3> <strong># of Units:</strong> 9<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_bb7fff533f28e5c2ad7b98534de20651.setContent(html_a719f95453523722ff75b3fe8b36f214);
+            
+        
+
+        circle_marker_9a96cc2a7776a2ad7804b0f46391d708.bindPopup(popup_bb7fff533f28e5c2ad7b98534de20651)
+        ;
+
+        
+    
+    
+            var circle_marker_e846f9f4cbc0aaba5543b20af53ca8e9 = L.circleMarker(
+                [40.8705361, -73.879418],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_0315e81b53219fb8eeb3b03205b75ff5 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_bdb44667c27e5bd5de712452d32d792c = $(`<div id="html_bdb44667c27e5bd5de712452d32d792c" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>3044 DECATUR AVENUE, BRONX NY 10467</h3> <strong># of Units:</strong> 9<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_0315e81b53219fb8eeb3b03205b75ff5.setContent(html_bdb44667c27e5bd5de712452d32d792c);
+            
+        
+
+        circle_marker_e846f9f4cbc0aaba5543b20af53ca8e9.bindPopup(popup_0315e81b53219fb8eeb3b03205b75ff5)
+        ;
+
+        
+    
+    
+            var circle_marker_765342c4d339860af33dec04944de3df = L.circleMarker(
+                [40.87060049999999, -73.87938079999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_2ba0a0453a8eaa03b2b0796ee48f2921 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_12eaedea24bdf2ccf91c462096efeb91 = $(`<div id="html_12eaedea24bdf2ccf91c462096efeb91" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>3046 DECATUR AVENUE, BRONX NY 10467</h3> <strong># of Units:</strong> 9<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_2ba0a0453a8eaa03b2b0796ee48f2921.setContent(html_12eaedea24bdf2ccf91c462096efeb91);
+            
+        
+
+        circle_marker_765342c4d339860af33dec04944de3df.bindPopup(popup_2ba0a0453a8eaa03b2b0796ee48f2921)
+        ;
+
+        
+    
+    
+            var circle_marker_c1cffa78f823dfa32425c93f200c2fdc = L.circleMarker(
+                [40.6006967, -73.988214],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_488c5918c67c640d814ea6dddaea24e2 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_379398e1c0177237eec58770d4fcd435 = $(`<div id="html_379398e1c0177237eec58770d4fcd435" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2379 84 STREET</h3> <strong># of Units:</strong> 9<br> <strong># of Affordable Units:</strong> 0<br> </div></div>`)[0];
+                popup_488c5918c67c640d814ea6dddaea24e2.setContent(html_379398e1c0177237eec58770d4fcd435);
+            
+        
+
+        circle_marker_c1cffa78f823dfa32425c93f200c2fdc.bindPopup(popup_488c5918c67c640d814ea6dddaea24e2)
+        ;
+
+        
+    
+    
+            var circle_marker_ae630b846b03801ee9ed9b2db3b88166 = L.circleMarker(
+                [40.8733337, -73.9004671],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_c4f08cae6ce2cb46d7995bae2bb3c545 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4e63b5a594bce5ec93cf41d9bc7fb02b = $(`<div id="html_4e63b5a594bce5ec93cf41d9bc7fb02b" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>2854 WEBB AVENUE, BRONX, NY 10468</h3> <strong># of Units:</strong> 9<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_c4f08cae6ce2cb46d7995bae2bb3c545.setContent(html_4e63b5a594bce5ec93cf41d9bc7fb02b);
+            
+        
+
+        circle_marker_ae630b846b03801ee9ed9b2db3b88166.bindPopup(popup_c4f08cae6ce2cb46d7995bae2bb3c545)
+        ;
+
+        
+    
+    
+            var circle_marker_ee5011af79786770a61642e0110a9335 = L.circleMarker(
+                [40.6369197, -73.9426174],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_075b9990fefefcf47c4c893b9c1da173 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_224b8c58dc40a7721fc154e624657b5f = $(`<div id="html_224b8c58dc40a7721fc154e624657b5f" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1484 BROOKLYN AVENUE</h3> <strong># of Units:</strong> 9<br> <strong># of Affordable Units:</strong> 5<br> </div></div>`)[0];
+                popup_075b9990fefefcf47c4c893b9c1da173.setContent(html_224b8c58dc40a7721fc154e624657b5f);
+            
+        
+
+        circle_marker_ee5011af79786770a61642e0110a9335.bindPopup(popup_075b9990fefefcf47c4c893b9c1da173)
+        ;
+
+        
+    
+    
+            var circle_marker_3cdf1b41df78d68dde9917aeba2cfad5 = L.circleMarker(
+                [40.636972, -73.9424688],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_42108365aa6dce023e55f82f3e00a3f5 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_ce4daae359bfee6763de6d09b5c56bf1 = $(`<div id="html_ce4daae359bfee6763de6d09b5c56bf1" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1482 BROOKLYN AVENUE</h3> <strong># of Units:</strong> 9<br> <strong># of Affordable Units:</strong> 5<br> </div></div>`)[0];
+                popup_42108365aa6dce023e55f82f3e00a3f5.setContent(html_ce4daae359bfee6763de6d09b5c56bf1);
+            
+        
+
+        circle_marker_3cdf1b41df78d68dde9917aeba2cfad5.bindPopup(popup_42108365aa6dce023e55f82f3e00a3f5)
+        ;
+
+        
+    
+    
+            var circle_marker_6ac3d212a7c5f9d50c6422dcca1671a0 = L.circleMarker(
+                [40.689376, -73.9090801],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_f2c7e0e0aa401f0430b53ae4e734855b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_95cd1d1375d18c243667a920598ed36a = $(`<div id="html_95cd1d1375d18c243667a920598ed36a" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>162 COVERT STREET</h3> <strong># of Units:</strong> 8<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_f2c7e0e0aa401f0430b53ae4e734855b.setContent(html_95cd1d1375d18c243667a920598ed36a);
+            
+        
+
+        circle_marker_6ac3d212a7c5f9d50c6422dcca1671a0.bindPopup(popup_f2c7e0e0aa401f0430b53ae4e734855b)
+        ;
+
+        
+    
+    
+            var circle_marker_2e1ace7a619b7d8ad6f7c8bfcb6cedf3 = L.circleMarker(
+                [40.7070981, -73.7975056],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_2e59c53bff40c5584ce15f78546bcfe0 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_b206118a46c50fdaeffe3c62fec46ece = $(`<div id="html_b206118a46c50fdaeffe3c62fec46ece" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>163-18 89 AVENUE</h3> <strong># of Units:</strong> 8<br> <strong># of Affordable Units:</strong> 4<br> </div></div>`)[0];
+                popup_2e59c53bff40c5584ce15f78546bcfe0.setContent(html_b206118a46c50fdaeffe3c62fec46ece);
+            
+        
+
+        circle_marker_2e1ace7a619b7d8ad6f7c8bfcb6cedf3.bindPopup(popup_2e59c53bff40c5584ce15f78546bcfe0)
+        ;
+
+        
+    
+    
+            var circle_marker_69f706882a8669fe032a6887c3268517 = L.circleMarker(
+                [40.8638392, -73.8904809],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_885974707306dbb7d7c699eaeb225770 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_e416a19d2a20918218842453558f65f2 = $(`<div id="html_e416a19d2a20918218842453558f65f2" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>361 A EAST 194 STREET</h3> <strong># of Units:</strong> 8<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_885974707306dbb7d7c699eaeb225770.setContent(html_e416a19d2a20918218842453558f65f2);
+            
+        
+
+        circle_marker_69f706882a8669fe032a6887c3268517.bindPopup(popup_885974707306dbb7d7c699eaeb225770)
+        ;
+
+        
+    
+    
+            var circle_marker_e685af5503a3a21edd238dee83847fe8 = L.circleMarker(
+                [40.8638392, -73.8904809],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_0799097196c88e186e29bbcf758f9323 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_558567e42821256c19c547a652d304cf = $(`<div id="html_558567e42821256c19c547a652d304cf" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>361 B EAST 194 STREET</h3> <strong># of Units:</strong> 8<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_0799097196c88e186e29bbcf758f9323.setContent(html_558567e42821256c19c547a652d304cf);
+            
+        
+
+        circle_marker_e685af5503a3a21edd238dee83847fe8.bindPopup(popup_0799097196c88e186e29bbcf758f9323)
+        ;
+
+        
+    
+    
+            var circle_marker_8eb6f4cd2752dfb462b9a34a209b25bc = L.circleMarker(
+                [40.6911206, -73.9305459],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_92454d7ad218d6e948ba96e191b0a501 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_49909ddb92888ee8de2c19a218bb4c60 = $(`<div id="html_49909ddb92888ee8de2c19a218bb4c60" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>81A MALCOLM X BOULEVARD</h3> <strong># of Units:</strong> 8<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_92454d7ad218d6e948ba96e191b0a501.setContent(html_49909ddb92888ee8de2c19a218bb4c60);
+            
+        
+
+        circle_marker_8eb6f4cd2752dfb462b9a34a209b25bc.bindPopup(popup_92454d7ad218d6e948ba96e191b0a501)
+        ;
+
+        
+    
+    
+            var circle_marker_ee82c8fa300621aad0ba4b0e1e7e91e7 = L.circleMarker(
+                [40.6996632, -73.9269478],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_dcd7750eda2286b250c6957388a96b53 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_581f55f8a6d38105389b38937c9df997 = $(`<div id="html_581f55f8a6d38105389b38937c9df997" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1052 WILLOUGHBY AVENUE</h3> <strong># of Units:</strong> 8<br> <strong># of Affordable Units:</strong> 4<br> </div></div>`)[0];
+                popup_dcd7750eda2286b250c6957388a96b53.setContent(html_581f55f8a6d38105389b38937c9df997);
+            
+        
+
+        circle_marker_ee82c8fa300621aad0ba4b0e1e7e91e7.bindPopup(popup_dcd7750eda2286b250c6957388a96b53)
+        ;
+
+        
+    
+    
+            var circle_marker_adbba8eeaa484fb691c7589f491f1229 = L.circleMarker(
+                [40.6848597, -73.9272596],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_b724781d4ba81a38b93f21d41029fbc4 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_66417bd11855f2d73cd20f074f667c80 = $(`<div id="html_66417bd11855f2d73cd20f074f667c80" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>702 HANCOCK STREET</h3> <strong># of Units:</strong> 8<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_b724781d4ba81a38b93f21d41029fbc4.setContent(html_66417bd11855f2d73cd20f074f667c80);
+            
+        
+
+        circle_marker_adbba8eeaa484fb691c7589f491f1229.bindPopup(popup_b724781d4ba81a38b93f21d41029fbc4)
+        ;
+
+        
+    
+    
+            var circle_marker_c99851509f1ba49642d7c886172a6771 = L.circleMarker(
+                [40.7743317, -73.92462689999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_ca6f7b7dbc1abea8092bbfb57664591b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_26bdeafc1042bace8827b84120c9ea28 = $(`<div id="html_26bdeafc1042bace8827b84120c9ea28" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>25-14 21ST STREET, ASTORIA, NY 11102</h3> <strong># of Units:</strong> 8<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_ca6f7b7dbc1abea8092bbfb57664591b.setContent(html_26bdeafc1042bace8827b84120c9ea28);
+            
+        
+
+        circle_marker_c99851509f1ba49642d7c886172a6771.bindPopup(popup_ca6f7b7dbc1abea8092bbfb57664591b)
+        ;
+
+        
+    
+    
+            var circle_marker_c8ca18e4a59ce779ef40bef04de02e66 = L.circleMarker(
+                [40.6937627, -73.9727525],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_42d1541504aa58c1d79a0a2616cb69cf = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_d1218a409418e96dd9135e6f23ef0ee5 = $(`<div id="html_d1218a409418e96dd9135e6f23ef0ee5" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>133 CARLTON AVENUE</h3> <strong># of Units:</strong> 8<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_42d1541504aa58c1d79a0a2616cb69cf.setContent(html_d1218a409418e96dd9135e6f23ef0ee5);
+            
+        
+
+        circle_marker_c8ca18e4a59ce779ef40bef04de02e66.bindPopup(popup_42d1541504aa58c1d79a0a2616cb69cf)
+        ;
+
+        
+    
+    
+            var circle_marker_39d50fe80ebe3ba65db7a964bed1f5ef = L.circleMarker(
+                [40.6358366, -73.9443252],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_47791f360171f18da01d9ea832ab9af8 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_89e597f46250bd9bb0c0534c907654b1 = $(`<div id="html_89e597f46250bd9bb0c0534c907654b1" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>836 EAST 34TH STREET</h3> <strong># of Units:</strong> 8<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_47791f360171f18da01d9ea832ab9af8.setContent(html_89e597f46250bd9bb0c0534c907654b1);
+            
+        
+
+        circle_marker_39d50fe80ebe3ba65db7a964bed1f5ef.bindPopup(popup_47791f360171f18da01d9ea832ab9af8)
+        ;
+
+        
+    
+    
+            var circle_marker_c7e6563d918a3958848f0eb720e1f795 = L.circleMarker(
+                [40.7029202, -73.91971149999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_e3e63700120708fdf25d5d6e529af539 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_f00bb53977cd0d51cbd38a7d9e419033 = $(`<div id="html_f00bb53977cd0d51cbd38a7d9e419033" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>299 STOCKHOLM STREET</h3> <strong># of Units:</strong> 8<br> <strong># of Affordable Units:</strong> 0<br> </div></div>`)[0];
+                popup_e3e63700120708fdf25d5d6e529af539.setContent(html_f00bb53977cd0d51cbd38a7d9e419033);
+            
+        
+
+        circle_marker_c7e6563d918a3958848f0eb720e1f795.bindPopup(popup_e3e63700120708fdf25d5d6e529af539)
+        ;
+
+        
+    
+    
+            var circle_marker_23ef7e216b168d246d030a88ac895509 = L.circleMarker(
+                [40.6881418, -73.9090578],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_9cea58f0cfbc357cd890af8c2f442eca = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_397fd4253a510a27815e80cb73d1f884 = $(`<div id="html_397fd4253a510a27815e80cb73d1f884" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>138 SCHAEFER STREET</h3> <strong># of Units:</strong> 8<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_9cea58f0cfbc357cd890af8c2f442eca.setContent(html_397fd4253a510a27815e80cb73d1f884);
+            
+        
+
+        circle_marker_23ef7e216b168d246d030a88ac895509.bindPopup(popup_9cea58f0cfbc357cd890af8c2f442eca)
+        ;
+
+        
+    
+    
+            var circle_marker_1fcb3a53b6d3e11c3557efc09619ec55 = L.circleMarker(
+                [40.6797778, -73.8906301],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_c81ab68944720d9a51d6f18fc0fd2d9e = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4109be3a00b7339554300a5185030e24 = $(`<div id="html_4109be3a00b7339554300a5185030e24" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>114 ARLINGTON AVENUE</h3> <strong># of Units:</strong> 8<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_c81ab68944720d9a51d6f18fc0fd2d9e.setContent(html_4109be3a00b7339554300a5185030e24);
+            
+        
+
+        circle_marker_1fcb3a53b6d3e11c3557efc09619ec55.bindPopup(popup_c81ab68944720d9a51d6f18fc0fd2d9e)
+        ;
+
+        
+    
+    
+            var circle_marker_5eff1abbd734317a77f68f2bb9034504 = L.circleMarker(
+                [40.7033537, -73.8156577],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_9835e5c3065766504190620af9ea0f93 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_23dd1f46c4076e2fb269ff3686c28008 = $(`<div id="html_23dd1f46c4076e2fb269ff3686c28008" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>88-29 138 STREET</h3> <strong># of Units:</strong> 8<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_9835e5c3065766504190620af9ea0f93.setContent(html_23dd1f46c4076e2fb269ff3686c28008);
+            
+        
+
+        circle_marker_5eff1abbd734317a77f68f2bb9034504.bindPopup(popup_9835e5c3065766504190620af9ea0f93)
+        ;
+
+        
+    
+    
+            var circle_marker_cb5c55ebac27241ee926a50ebb14a42f = L.circleMarker(
+                [40.8796392, -73.9086513],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_ef64f8696d321f967fedccdada0ef6a7 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4815d837b0ce6f748a86c74abe6b5cab = $(`<div id="html_4815d837b0ce6f748a86c74abe6b5cab" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>3021 CORLEAR AVENUE</h3> <strong># of Units:</strong> 8<br> <strong># of Affordable Units:</strong> 4<br> </div></div>`)[0];
+                popup_ef64f8696d321f967fedccdada0ef6a7.setContent(html_4815d837b0ce6f748a86c74abe6b5cab);
+            
+        
+
+        circle_marker_cb5c55ebac27241ee926a50ebb14a42f.bindPopup(popup_ef64f8696d321f967fedccdada0ef6a7)
+        ;
+
+        
+    
+    
+            var circle_marker_82645cf775efe7641251393d5fd55c83 = L.circleMarker(
+                [40.8339209, -73.930072],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_ba9fdb9116502acf38266fad9e353dca = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_6b748700dac8a541474e9dfb6001dba8 = $(`<div id="html_6b748700dac8a541474e9dfb6001dba8" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>1023 SUMMIT AVENUE</h3> <strong># of Units:</strong> 7<br> <strong># of Affordable Units:</strong> 4<br> </div></div>`)[0];
+                popup_ba9fdb9116502acf38266fad9e353dca.setContent(html_6b748700dac8a541474e9dfb6001dba8);
+            
+        
+
+        circle_marker_82645cf775efe7641251393d5fd55c83.bindPopup(popup_ba9fdb9116502acf38266fad9e353dca)
+        ;
+
+        
+    
+    
+            var circle_marker_0c6432987f6e3e737d30da45d9994f7f = L.circleMarker(
+                [40.676118, -73.8894291],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_e51edfd1233849f597aa306179846429 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_f769cb3a1306014ffda790aa6c024714 = $(`<div id="html_f769cb3a1306014ffda790aa6c024714" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>204 SCHENCK AVENUE</h3> <strong># of Units:</strong> 7<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_e51edfd1233849f597aa306179846429.setContent(html_f769cb3a1306014ffda790aa6c024714);
+            
+        
+
+        circle_marker_0c6432987f6e3e737d30da45d9994f7f.bindPopup(popup_e51edfd1233849f597aa306179846429)
+        ;
+
+        
+    
+    
+            var circle_marker_28b379ba916e33b1fd4470cc9f53fc9e = L.circleMarker(
+                [40.6932649, -73.943456],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_d5d07862b3d3ce3da662c251aa45eece = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_878ccabb88ee0500fd9c2d37a9b5b79f = $(`<div id="html_878ccabb88ee0500fd9c2d37a9b5b79f" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>197 PULASKI STREET</h3> <strong># of Units:</strong> 7<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_d5d07862b3d3ce3da662c251aa45eece.setContent(html_878ccabb88ee0500fd9c2d37a9b5b79f);
+            
+        
+
+        circle_marker_28b379ba916e33b1fd4470cc9f53fc9e.bindPopup(popup_d5d07862b3d3ce3da662c251aa45eece)
+        ;
+
+        
+    
+    
+            var circle_marker_c6064d5342f15a33f2f5ac2ad945a20a = L.circleMarker(
+                [40.748435, -73.85730269999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_29411b34602c0381fdd59e037ec29dc0 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_bc37215dafb4c0338d12f67997acf0c5 = $(`<div id="html_bc37215dafb4c0338d12f67997acf0c5" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>43-09 108 STREET, CORONA, NY 11368</h3> <strong># of Units:</strong> 7<br> <strong># of Affordable Units:</strong> 4<br> </div></div>`)[0];
+                popup_29411b34602c0381fdd59e037ec29dc0.setContent(html_bc37215dafb4c0338d12f67997acf0c5);
+            
+        
+
+        circle_marker_c6064d5342f15a33f2f5ac2ad945a20a.bindPopup(popup_29411b34602c0381fdd59e037ec29dc0)
+        ;
+
+        
+    
+    
+            var circle_marker_c074b619f0d61866aa3386c1e9f9bc3b = L.circleMarker(
+                [40.6839613, -73.9902851],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_1f7298a7c359a4170fbfb6b674cd08f2 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_0a10ebc9396e986320e19717815d7e6e = $(`<div id="html_0a10ebc9396e986320e19717815d7e6e" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>376 BALTIC STREET, BROOKLYN NY 11201</h3> <strong># of Units:</strong> 7<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_1f7298a7c359a4170fbfb6b674cd08f2.setContent(html_0a10ebc9396e986320e19717815d7e6e);
+            
+        
+
+        circle_marker_c074b619f0d61866aa3386c1e9f9bc3b.bindPopup(popup_1f7298a7c359a4170fbfb6b674cd08f2)
+        ;
+
+        
+    
+    
+            var circle_marker_3235706069965fdb2a4ff1097e4af9c4 = L.circleMarker(
+                [40.6440269, -73.9505633],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_361384621f78be69ac0611aef30cc907 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_43df1b229f941081843b1bd5b7c3dfe0 = $(`<div id="html_43df1b229f941081843b1bd5b7c3dfe0" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>239 EAST 28 STREET</h3> <strong># of Units:</strong> 6<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_361384621f78be69ac0611aef30cc907.setContent(html_43df1b229f941081843b1bd5b7c3dfe0);
+            
+        
+
+        circle_marker_3235706069965fdb2a4ff1097e4af9c4.bindPopup(popup_361384621f78be69ac0611aef30cc907)
+        ;
+
+        
+    
+    
+            var circle_marker_95bcce99b56288d64a7fb58b13a431bd = L.circleMarker(
+                [40.7627405, -73.794572],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_8be95347c67f8a9423a9dbfac4d39024 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_6c4a4c78643a0083d66772877333659f = $(`<div id="html_6c4a4c78643a0083d66772877333659f" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>171-18 CROCHERON AVENUE</h3> <strong># of Units:</strong> 6<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_8be95347c67f8a9423a9dbfac4d39024.setContent(html_6c4a4c78643a0083d66772877333659f);
+            
+        
+
+        circle_marker_95bcce99b56288d64a7fb58b13a431bd.bindPopup(popup_8be95347c67f8a9423a9dbfac4d39024)
+        ;
+
+        
+    
+    
+            var circle_marker_0215466e7df64b0195c2638d1579e56e = L.circleMarker(
+                [40.7018968, -73.9472074],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_f63ccc1894cd91d7379b0e5ec16c72ad = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_07f1832e5a34cedbff2c1235f92a2b26 = $(`<div id="html_07f1832e5a34cedbff2c1235f92a2b26" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>91 GERRY STREET, BROOKLYN, NY 11206</h3> <strong># of Units:</strong> 6<br> <strong># of Affordable Units:</strong> 0<br> </div></div>`)[0];
+                popup_f63ccc1894cd91d7379b0e5ec16c72ad.setContent(html_07f1832e5a34cedbff2c1235f92a2b26);
+            
+        
+
+        circle_marker_0215466e7df64b0195c2638d1579e56e.bindPopup(popup_f63ccc1894cd91d7379b0e5ec16c72ad)
+        ;
+
+        
+    
+    
+            var circle_marker_9c77abb1b662eac2fe290f8f63c77b7b = L.circleMarker(
+                [40.7007156, -73.9466838],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_6bb7e7bb109c69a97f83f0831389e384 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_5da3dbb4606185523fad64454cb21143 = $(`<div id="html_5da3dbb4606185523fad64454cb21143" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>30 BARTLETT STREET BROOKLYN, NY 11206</h3> <strong># of Units:</strong> 6<br> <strong># of Affordable Units:</strong> 0<br> </div></div>`)[0];
+                popup_6bb7e7bb109c69a97f83f0831389e384.setContent(html_5da3dbb4606185523fad64454cb21143);
+            
+        
+
+        circle_marker_9c77abb1b662eac2fe290f8f63c77b7b.bindPopup(popup_6bb7e7bb109c69a97f83f0831389e384)
+        ;
+
+        
+    
+    
+            var circle_marker_d6e5f553ffaf61d6a2767a571eae83cb = L.circleMarker(
+                [40.67078679999999, -73.86722080000001],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_e2b60389ce368f554c26f0a53569a5fc = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1ba6fc13cfd607d8a5e3a43216da73a5 = $(`<div id="html_1ba6fc13cfd607d8a5e3a43216da73a5" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>728 AUTUMN AVENUE</h3> <strong># of Units:</strong> 6<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_e2b60389ce368f554c26f0a53569a5fc.setContent(html_1ba6fc13cfd607d8a5e3a43216da73a5);
+            
+        
+
+        circle_marker_d6e5f553ffaf61d6a2767a571eae83cb.bindPopup(popup_e2b60389ce368f554c26f0a53569a5fc)
+        ;
+
+        
+    
+    
+            var circle_marker_4961f5c6b9d7d7decb86301d3309ae7b = L.circleMarker(
+                [40.6570154, -73.8976024],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_2b5bdced01523b8a434dc7e3c19be9d6 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_f6fbcbda20d4210e041e3214acb22f9d = $(`<div id="html_f6fbcbda20d4210e041e3214acb22f9d" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>719 SNEDIKER AVENUE</h3> <strong># of Units:</strong> 6<br> <strong># of Affordable Units:</strong> 3<br> </div></div>`)[0];
+                popup_2b5bdced01523b8a434dc7e3c19be9d6.setContent(html_f6fbcbda20d4210e041e3214acb22f9d);
+            
+        
+
+        circle_marker_4961f5c6b9d7d7decb86301d3309ae7b.bindPopup(popup_2b5bdced01523b8a434dc7e3c19be9d6)
+        ;
+
+        
+    
+    
+            var circle_marker_981a3cb72cffa6ebbe7b8f268d089b3f = L.circleMarker(
+                [40.65698, -73.8975784],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_debf9e28792d13f8460bda7e37bb803a = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_ea071b99692dc2f9eef18fbfcc9ab09f = $(`<div id="html_ea071b99692dc2f9eef18fbfcc9ab09f" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>721 SNEDIKER AVENUE</h3> <strong># of Units:</strong> 6<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_debf9e28792d13f8460bda7e37bb803a.setContent(html_ea071b99692dc2f9eef18fbfcc9ab09f);
+            
+        
+
+        circle_marker_981a3cb72cffa6ebbe7b8f268d089b3f.bindPopup(popup_debf9e28792d13f8460bda7e37bb803a)
+        ;
+
+        
+    
+    
+            var circle_marker_5ab667162aa4c7a65e37d5ebf56315c1 = L.circleMarker(
+                [40.75363309999999, -73.9350142],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_740d22f395515ac1d9497ea0942ad851 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_476314068bdb0640f71643c754968f95 = $(`<div id="html_476314068bdb0640f71643c754968f95" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>28-10 39 AVENUE</h3> <strong># of Units:</strong> 6<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_740d22f395515ac1d9497ea0942ad851.setContent(html_476314068bdb0640f71643c754968f95);
+            
+        
+
+        circle_marker_5ab667162aa4c7a65e37d5ebf56315c1.bindPopup(popup_740d22f395515ac1d9497ea0942ad851)
+        ;
+
+        
+    
+    
+            var circle_marker_7f40641a3644516f591509c08eaa7a5f = L.circleMarker(
+                [40.6951297, -73.9730581],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_8b8333d60c05935b214dddaf35720764 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_8143570b70ee880736a0568cfa9950a5 = $(`<div id="html_8143570b70ee880736a0568cfa9950a5" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>87 CARLTON AVENUE</h3> <strong># of Units:</strong> 6<br> <strong># of Affordable Units:</strong> 2<br> </div></div>`)[0];
+                popup_8b8333d60c05935b214dddaf35720764.setContent(html_8143570b70ee880736a0568cfa9950a5);
+            
+        
+
+        circle_marker_7f40641a3644516f591509c08eaa7a5f.bindPopup(popup_8b8333d60c05935b214dddaf35720764)
+        ;
+
+        
+    
+    
+            var circle_marker_702f6125535e193ecb9a9d4e72095a03 = L.circleMarker(
+                [40.6981112, -73.9578125],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_963b61c51aa55faa2a73bd3886564966 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_7fef4a9781bbb2906ab83f7fa7b44f13 = $(`<div id="html_7fef4a9781bbb2906ab83f7fa7b44f13" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>22 SKILLMAN STREET, BROOKLYN, NY 11205</h3> <strong># of Units:</strong> 6<br> <strong># of Affordable Units:</strong> 0<br> </div></div>`)[0];
+                popup_963b61c51aa55faa2a73bd3886564966.setContent(html_7fef4a9781bbb2906ab83f7fa7b44f13);
+            
+        
+
+        circle_marker_702f6125535e193ecb9a9d4e72095a03.bindPopup(popup_963b61c51aa55faa2a73bd3886564966)
+        ;
+
+        
+    
+    
+            var circle_marker_ebfb86217c688080acdefdc078715b8c = L.circleMarker(
+                [40.6985297, -73.9058464],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_39ffe8fadb1dbaad084cff7dc5927615);
+        
+    
+        var popup_dfa501993440268c5952e8504ee0c419 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_ef0ce7c1f33764caba5c6e5e31f3e920 = $(`<div id="html_ef0ce7c1f33764caba5c6e5e31f3e920" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>16-49 HANCOCK ST</h3> <strong># of Units:</strong> 3<br> <strong># of Affordable Units:</strong> 0<br> </div></div>`)[0];
+                popup_dfa501993440268c5952e8504ee0c419.setContent(html_ef0ce7c1f33764caba5c6e5e31f3e920);
+            
+        
+
+        circle_marker_ebfb86217c688080acdefdc078715b8c.bindPopup(popup_dfa501993440268c5952e8504ee0c419)
+        ;
+
+        
+    
+</script>
