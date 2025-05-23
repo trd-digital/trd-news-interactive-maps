@@ -1107,15 +1107,15 @@ const trdDataCommonMap = (options) => {
           }
 
           if (value) {
-            html += `<p class="detail-item">`;
+            html += `<div class="detail-item">`;
             if (item.label) {
-              html += `<span class="detail-label">${item.label}:</span>`;
+              html += `<div class="detail-label">${item.label}:</div>`;
             }
-            html += `<span class="detail-value">${formatters.format(
+            html += `<div class="detail-value">${formatters.format(
               value,
               item.format
-            )}</span>`;
-            html += `</p>`;
+            )}</div>`;
+            html += `</div>`;
           }
         });
 
