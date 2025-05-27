@@ -284,7 +284,12 @@ const trdDataCommonMap = (options) => {
         li.innerHTML = `<strong>${item.title}</strong>`;
         parent.appendChild(li);
 
-        item.options.forEach((item) => {
+        const options =
+          settings.paintCircleColorType === "case"
+            ? item.options.filter((opt) => !opt.default)
+            : item.options;
+
+        options.forEach((item) => {
           const li = document.createElement("li");
           const color = helpers.pickThemeColor(
             item.color.light,
