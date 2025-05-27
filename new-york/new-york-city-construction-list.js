@@ -133,7 +133,9 @@ const trdList = () => {
       const viewMore = document.createElement("div");
       viewMore.className = "text-center";
       viewMore.innerHTML = `
-        <a href="https://therealdeal.com/data/new-york/2024/nyc-transactions/?utm_source=embed&utm_medium=widget" class="btn btn-primary mb-3" target="_parent">View more</a>
+        <a href="https://therealdeal.com/data/new-york/2024/nyc-transactions/?utm_source=embed&utm_medium=widget" class="btn btn-primary" target="_parent">
+          <div class="me-2 text-uppercase label">View More</div>
+        </a>
         `;
       list.parentNode.appendChild(viewMore);
     },
