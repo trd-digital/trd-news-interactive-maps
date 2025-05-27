@@ -7,6 +7,7 @@ const trdPostList = (options) => {
   const defaults = {
     dataUrl: undefined,
     rootElement: undefined,
+    viewMoreUrl: undefined,
   };
 
   const settings = {
@@ -46,7 +47,7 @@ const trdPostList = (options) => {
     },
 
     renderListItems: (data) => {
-      const items = data
+      let items = data
         .map((post) => {
           const title = post.title.rendered;
           const sectorIndex = post.class_list.findIndex((item) =>
@@ -69,6 +70,16 @@ const trdPostList = (options) => {
           `;
         })
         .join("");
+
+      if (settings.viewMoreUrl) {
+        items += `
+            <li class="list-group-item text-center">
+              <a href="${settings.viewMoreUrl}" class="btn btn-primary" target="_parent">
+                <div class="me-2 text-uppercase label">View More</div>
+              </a>
+            </li>
+          `;
+      }
 
       settings.rootElement.innerHTML = items;
     },
