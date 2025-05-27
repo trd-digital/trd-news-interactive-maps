@@ -286,23 +286,16 @@
           },
         
           updateParentWithHeight: () => {
-            const origin = window.location.origin === 'https://trd-digital.github.io' ? 'https://therealdeal.com' : 'http://localhost:3010';
-
-            window.addEventListener("resize", () => {
-              const height = defaults.rootElement.offsetHeight;
-              window.parent.postMessage({ "updateHeight": height + 10, src: window.location.href }, origin);
-            });
-            window.addEventListener("load", () => {
-              const height = defaults.rootElement.offsetHeight;
-              window.parent.postMessage({ "updateHeight": height + 10, src: window.location.href }, origin);
-            });
-            window.addEventListener("message", (event) => {
-              if (event.data.type === "updateHeight") {
-                const height = defaults.rootElement.offsetHeight;
-                window.parent.postMessage({ "updateHeight": height + 10, src: window.location.href }, origin);
-              }
-            });
+            window.addEventListener("resize", fn.updateHeight);
+            window.addEventListener("load", fn.updateHeight);
+            window.addEventListener("message", fn.updateHeight);
           },
+
+          updateHeight() {
+            const height = defaults.rootElement.offsetHeight;
+            const origin = window.location.origin === 'https://trd-digital.github.io' ? 'https://therealdeal.com' : 'http://localhost:3010';
+            window.parent.postMessage({ "updateHeight": height + 10, src: window.location.href }, origin);
+          }
         };
 
         fn.init();
