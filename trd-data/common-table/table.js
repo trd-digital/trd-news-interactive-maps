@@ -17,6 +17,8 @@ const tracking = {
 const TrdDataCommonTable = (options) => {
   const defaultOptions = {
     filePath: "",
+    filePaths: [],
+    fileAddKeyValues: [],
     tableElementId: "table",
     displayColumns: [],
     eventCategory: "unknown-table",
@@ -123,8 +125,9 @@ const TrdDataCommonTable = (options) => {
         });
     },
 
-    getData: async () => {
-      return fetch(settings.filePath)
+    // Support fetching and merging data from multiple files
+    fetchFile: (filePath) => {
+      return fetch(filePath)
         .then((response) => {
           if (!response.ok) {
             throw new Error(
@@ -138,6 +141,46 @@ const TrdDataCommonTable = (options) => {
             return settings.fetchDataFilterCallback(data);
           }
           return data;
+        });
+    },
+
+    getData: async () => {
+      // Use filePaths if provided, otherwise fallback to filePath
+      const filePaths = settings.filePaths.length
+        ? settings.filePaths
+        : settings.filePath
+        ? [settings.filePath]
+        : [];
+
+      if (!filePaths.length) {
+        console.error("No file paths provided for data fetching.");
+        return [];
+      }
+
+      return Promise.all(filePaths.map(fn.fetchFile))
+        .then((results) => {
+          // Merge all features into a single FeatureCollection
+          const merged = results.reduce((acc, data, cIndex) => {
+            if (!data) {
+              return acc;
+            }
+
+            if (
+              settings.fileAddKeyValues &&
+              settings.fileAddKeyValues[cIndex]
+            ) {
+              data = data.map((row) => {
+                return {
+                  ...row,
+                  ...settings.fileAddKeyValues[cIndex],
+                };
+              });
+            }
+            acc.push(...data);
+            return acc;
+          }, []);
+
+          return merged;
         })
         .catch((error) => {
           console.error("Error fetching data:", error);

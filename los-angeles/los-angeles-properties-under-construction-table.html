@@ -118,12 +118,18 @@
     <script src="../trd-data/common-table/table.js"></script>
     <script type="text/javascript">
       const displayColumns = [
+        { dataField: "Full Address", name: "Address", visible: true },
+        {
+          dataField: "Construction status",
+          name: "Construction Status",
+          visible: true,
+        },
         {
           dataField: "Project Name",
           name: "Project Name",
           visible: true,
         },
-        { dataField: "Full Address", name: "Address", visible: true },
+        { dataField: "Developer", name: "Developer", visible: true },
         { dataField: "Res Units", name: "Res Units", visible: true },
         { dataField: "Hotels Rooms", name: "Hotel Rooms", visible: true },
         { dataField: "Office Sq. Ft.", name: "Office SqFt", visible: true },
@@ -133,7 +139,6 @@
           name: "Estimated Completion",
           visible: true,
         },
-        { dataField: "Developer", name: "Developer", visible: true },
       ];
 
       const fetchDataFilterCallback = (data) => {
@@ -148,8 +153,18 @@
       };
 
       TrdDataCommonTable({
-        filePath:
+        filePaths: [
           "https://static.therealdeal.com/interactive-maps/los_angeles_properties_under_construction.geojson",
+          "https://static.therealdeal.com/interactive-maps/los_angeles_properties_proposed_construction.geojson",
+        ],
+        fileAddKeyValues: [
+          {
+            "Construction status": "Under construction",
+          },
+          {
+            "Construction status": "Proposed construction",
+          },
+        ],
         eventCategory: "los-angeles-properties-under-construction-table",
         displayColumns,
         fetchDataFilterCallback,
