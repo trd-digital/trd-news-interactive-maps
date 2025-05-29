@@ -17,8 +17,8 @@
           value: "Application Accepted",
           default: false,
           color: {
-            light: "#FF7043",
-            dark: "#FF8A65",
+            light: "#35cd7d",
+            dark: "#35cd7d",
           },
         },
         {
@@ -26,8 +26,8 @@
           value: "Application Effective",
           default: false,
           color: {
-            light: "#F4511E",
-            dark: "#F4511E",
+            light: "#3467cd",
+            dark: "#3467cd",
           },
         },
         {

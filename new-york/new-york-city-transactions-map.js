@@ -8,8 +8,8 @@
         {
           value: 750_000,
           color: {
-            light: "#90CAF9",
-            dark: "#90CAF9",
+            light: "#DEED97",
+            dark: "#DEED97",
           },
           text: "< $750K",
           default: false,
@@ -17,8 +17,8 @@
         {
           value: 1_000_000,
           color: {
-            light: "#42A5F5",
-            dark: "#42A5F5",
+            light: "#FAE096",
+            dark: "#FAE096",
           },
           text: "$750K - $1M",
           default: false,
@@ -26,8 +26,8 @@
         {
           value: 3_000_000,
           color: {
-            light: "#1E88E5",
-            dark: "#1E88E5",
+            light: "#F3AF6F",
+            dark: "#F3AF6F",
           },
           text: "$1M - $3M",
           default: false,
@@ -35,8 +35,8 @@
         {
           value: 4_000_000,
           color: {
-            light: "#1565C0",
-            dark: "#1565C0",
+            light: "#E4734F",
+            dark: "#E4734F",
           },
           text: "$3M - $4M",
           default: false,
@@ -44,8 +44,8 @@
         {
           value: 300_000_000,
           color: {
-            light: "#0D47A1",
-            dark: "#0D47A1",
+            light: "#C74032",
+            dark: "#C74032",
           },
           text: "> $5M",
           default: true,
