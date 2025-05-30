@@ -747,7 +747,11 @@ const trdDataCommonMap = (options) => {
 
   const map = {
     currentZoom: mapConfig.zoom,
+    dataLoaded: false,
+    mapboxLoaded: false,
     init: () => {
+      map.getData();
+      map.load();
       mapObj = new mapboxgl.Map(mapConfig);
       map.addControls();
       map.eventListeners();
@@ -791,71 +795,77 @@ const trdDataCommonMap = (options) => {
       }
     },
 
-    load: (data) => {
-      if (!data) return;
+    load: () => {
+      const timer = setInterval(() => {
+        if (map.dataLoaded && map.mapboxLoaded) {
+          clearInterval(timer);
+          map.loadSalesDataOnMap(settings.sourceId, {
+            ...mapData,
+            features: filters.getFilterFeatures(mapData),
+          });
+          map.tooltip(settings.sourceId);
+          map.modal(settings.sourceId);
+        }
+      }, 100);
+    },
 
-      map.loadSalesDataOnMap(settings.sourceId, {
-        ...data,
-        features: filters.getFilterFeatures(data),
-      });
-      map.tooltip(settings.sourceId);
-      map.modal(settings.sourceId);
+    getData: () => {
+      if (!settings?.filePaths?.length) {
+        map.dataLoaded = true;
+        return;
+      }
+      if (settings.loadingEnabled) {
+        loading.show();
+      }
+
+      Promise.all(
+        settings.filePaths.map((filePath) =>
+          fetch(filePath).then((response) => response.json())
+        )
+      )
+        .then((allData) => {
+          // Merge all features into a single FeatureCollection
+          const merged = allData.reduce(
+            (acc, data, cIndex) => {
+              if (data && data.features && Array.isArray(data.features)) {
+                if (
+                  settings.fileAddKeyValues &&
+                  settings.fileAddKeyValues[cIndex]
+                ) {
+                  data.features = data.features.map((feature) => {
+                    return {
+                      ...feature,
+                      properties: {
+                        ...feature.properties,
+                        ...settings.fileAddKeyValues[cIndex],
+                      },
+                    };
+                  });
+                }
+                acc.features = acc.features.concat(data.features);
+              }
+              return acc;
+            },
+            { type: "FeatureCollection", features: [] }
+          );
+          mapData = settings.fetchDataFilterCallback
+            ? settings.fetchDataFilterCallback(merged)
+            : merged;
+        })
+        .finally(() => {
+          map.dataLoaded = true;
+          if (settings.loadingEnabled) {
+            loading.hide();
+          }
+        });
     },
 
     eventListeners: () => {
       mapObj.on("load", () => {
-        if (!settings?.filePaths?.length) {
-          return;
-        }
-        if (settings.loadingEnabled) {
-          loading.show();
-        }
-
-        Promise.all(
-          settings.filePaths.map((filePath) =>
-            fetch(filePath).then((response) => response.json())
-          )
-        )
-          .then((allData) => {
-            // Merge all features into a single FeatureCollection
-            const merged = allData.reduce(
-              (acc, data, cIndex) => {
-                if (data && data.features && Array.isArray(data.features)) {
-                  if (
-                    settings.fileAddKeyValues &&
-                    settings.fileAddKeyValues[cIndex]
-                  ) {
-                    data.features = data.features.map((feature) => {
-                      return {
-                        ...feature,
-                        properties: {
-                          ...feature.properties,
-                          ...settings.fileAddKeyValues[cIndex],
-                        },
-                      };
-                    });
-                  }
-                  acc.features = acc.features.concat(data.features);
-                }
-                return acc;
-              },
-              { type: "FeatureCollection", features: [] }
-            );
-            mapData = settings.fetchDataFilterCallback
-              ? settings.fetchDataFilterCallback(merged)
-              : merged;
-            map.load(mapData);
-          })
-          .finally(() => {
-            if (settings.loadingEnabled) {
-              loading.hide();
-            }
-          });
+        map.mapboxLoaded = true;
       });
 
-      mapObj.on("style.load", () => {
-        if (mapData) map.load(mapData);
-      });
+      mapObj.on("style.load", map.load);
 
       mapObj.on("zoomend", (e) => {
         const newZoom = e.target.getZoom();
