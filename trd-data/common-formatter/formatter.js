@@ -112,6 +112,10 @@ const TrdFormatters = {
     }
   },
 
+  formatInteger: (value) => {
+    return parseInt(value, 10);
+  },
+
   formatDate: (value) => {
     if (TrdFormatters.isEmptyValue(value)) {
       return '<span class="text-muted">N/A</span>';
@@ -140,9 +144,9 @@ const TrdFormatters = {
       return '<span class="text-muted">N/A</span>';
     }
     if (value.includes("http")) {
-      return `<a href="${value}" target="_blank" rel="noopener noreferrer">${
-        text || value
-      }</a>`;
+      return `<a href="${value}" target="${
+        window.self !== window.top ? "_parent" : "_blank"
+      }" rel="noopener noreferrer">${text || value}</a>`;
     }
     return value;
   },

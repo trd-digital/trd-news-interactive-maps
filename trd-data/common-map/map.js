@@ -154,36 +154,7 @@ const trdDataCommonMap = (options) => {
       return trdTheme.isDark() ? darkColor : lightColor;
     },
 
-    cleanValue: (value) => {
-      if (typeof value !== "string") {
-        return value;
-      }
-
-      if (value === "" || value === null || value === undefined) {
-        return "";
-      }
-
-      const excludeValue = [
-        "null",
-        "undefined",
-        "n/a",
-        "na",
-        "none",
-        "not available",
-        "not applicable",
-        "no",
-        "0",
-        "false",
-        "unknown",
-        "data not found",
-        "nan",
-      ];
-
-      if (excludeValue.includes(value.toLowerCase())) {
-        return "";
-      }
-      return value;
-    },
+    cleanValue: (value) => (TrdFormatters.isEmptyValue(value) ? "" : value),
   };
 
   const formatters = {
@@ -196,33 +167,7 @@ const trdDataCommonMap = (options) => {
         return TrdFormatters[type](value);
       }
 
-      if (typeof type === "string" && formatters[type]) {
-        return formatters[type](value);
-      }
-
       return value;
-    },
-
-    formatInteger: (value) => {
-      return parseInt(value, 10);
-    },
-
-    formatNumber: (value) => {
-      return new Intl.NumberFormat("en-US", {
-        style: "decimal",
-      }).format(value);
-    },
-
-    formatDate: (value) => {
-      return new Intl.DateTimeFormat("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }).format(new Date(value));
-    },
-
-    formatUrl: (value) => {
-      return `<a href="${value}" target="_blank" rel="noopener noreferrer">${value}</a>`;
     },
   };
 

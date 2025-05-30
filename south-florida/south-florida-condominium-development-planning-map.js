@@ -111,7 +111,7 @@
       {
         field: "Property Website",
         label: "Property Website",
-        format: "formatUrl",
+        format: "formatLink",
       },
     ],
   };
