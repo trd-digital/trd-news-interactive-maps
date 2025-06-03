@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Taxable Values Dashboard</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    #controls {
+      margin-bottom: 20px;
+    }
+
+    #cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      font-size: 1.1em;
+    }
+
+    .card p {
+      margin: 5px 0;
+      font-size: 1em;
+    }
+
+    label {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    select {
+      padding: 5px;
+      font-size: 1em;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="controls">
+    <label for="authoritySelect">Select Taxing Authority:</label>
+    <select id="authoritySelect"></select>
+  </div>
+
+  <div id="cards"></div>
+
+  <!-- 1) Include PapaParse from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+  <script>
+    //
+    // 2) When the page loads, fetch and parse the CSV, then populate the dropdown and cards
+    //
+    document.addEventListener("DOMContentLoaded", () => {
+      // Path to your CSV file (must be in the same folder as this HTML).
+      const csvFile = "taxable_values_for_graphic.csv";
+
+      Papa.parse(csvFile, {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function (results) {
+          const rawData = results.data;
+          // Normalize each row into a JavaScript object with appropriate numeric types
+          const data = rawData.map((row) => {
+            // Helper to turn "1,234,567" → 1234567 (Number)
+            const parseNum = (str) =>
+              Number(str.replace(/,/g, "").trim());
+
+            // Helper to turn "9.8%" → 9.8 (Number)
+            const parsePct = (str) =>
+              Number(str.replace(/%/g, "").trim());
+
+            return {
+              authority: row["TAXING AUTHORITY"],
+              value2024: parseNum(row["2024 PRELIMINARY TAXABLE VALUE"]),
+              value2025BeforeNew: parseNum(
+                row["2025 ESTIMATED TAXABLE VALUE BEFORE NEW CONSTRUCTION"]
+              ),
+              pctChangePre: parsePct(row["PERCENT CHANGE"]),
+              newConstruction: parseNum(row["NEW CONSTRUCTION"]),
+              value2025June: parseNum(row["2025 JUNE 1ST ESTIMATE"]),
+              pctChangeJune: parsePct(row["PERCENT CHANGE FROM 2024"]),
+              netChange: parseNum(row["NET VALUE CHANGE"]),
+            };
+          });
+
+          // Populate dropdown
+          const selectEl = document.getElementById("authoritySelect");
+          data.forEach((d) => {
+            const opt = document.createElement("option");
+            opt.value = d.authority;
+            opt.textContent = d.authority;
+            selectEl.appendChild(opt);
+          });
+
+          // When selection changes, update the cards
+          selectEl.addEventListener("change", () => {
+            updateCards(selectEl.value, data);
+          });
+
+          // Initialize with the first authority in the list
+          if (data.length > 0) {
+            updateCards(data[0].authority, data);
+          }
+        },
+        error: function (err) {
+          console.error("Error loading CSV:", err);
+        },
+      });
+    });
+
+    //
+    // 3) Build / refresh the set of cards for the chosen authority
+    //
+    function updateCards(selectedAuthority, data) {
+      const item = data.find((d) => d.authority === selectedAuthority);
+      if (!item) return;
+
+      const cardsContainer = document.getElementById("cards");
+      cardsContainer.innerHTML = ""; // clear previous cards
+
+      // Define which fields to show, with labels
+      const fields = [
+        { label: "2024 Preliminary Value", key: "value2024" },
+        { label: "2025 Before New Construction", key: "value2025BeforeNew" },
+        { label: "Percent Change (Pre)", key: "pctChangePre", isPercent: true },
+        { label: "New Construction", key: "newConstruction" },
+        { label: "2025 June 1 Estimate", key: "value2025June" },
+        { label: "Percent Change (June)", key: "pctChangeJune", isPercent: true },
+        { label: "Net Change", key: "netChange" },
+      ];
+
+      // Helper to format large numbers with commas
+      function formatNumber(num) {
+        return num.toLocaleString("en-US");
+      }
+
+      fields.forEach((f) => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const title = document.createElement("h3");
+        title.textContent = f.label;
+
+        const valueEl = document.createElement("p");
+        let rawVal = item[f.key];
+
+        if (f.isPercent) {
+          valueEl.textContent = rawVal.toFixed(1) + "%";
+        } else {
+          valueEl.textContent = "$" + formatNumber(rawVal);
+        }
+
+        card.appendChild(title);
+        card.appendChild(valueEl);
+        cardsContainer.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html>
