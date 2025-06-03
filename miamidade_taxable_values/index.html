@@ -65,7 +65,6 @@
     // 2) When the page loads, fetch and parse the CSV, then populate the dropdown and cards
     //
     document.addEventListener("DOMContentLoaded", () => {
-      // Path to your CSV file (must be in the same folder as this HTML).
       const csvFile = "taxable_values_for_graphic.csv";
 
       Papa.parse(csvFile, {
@@ -74,13 +73,9 @@
         skipEmptyLines: true,
         complete: function (results) {
           const rawData = results.data;
-          // Normalize each row into a JavaScript object with appropriate numeric types
           const data = rawData.map((row) => {
-            // Helper to turn "1,234,567" → 1234567 (Number)
             const parseNum = (str) =>
               Number(str.replace(/,/g, "").trim());
-
-            // Helper to turn "9.8%" → 9.8 (Number)
             const parsePct = (str) =>
               Number(str.replace(/%/g, "").trim());
 
@@ -98,7 +93,6 @@
             };
           });
 
-          // Populate dropdown
           const selectEl = document.getElementById("authoritySelect");
           data.forEach((d) => {
             const opt = document.createElement("option");
@@ -107,12 +101,10 @@
             selectEl.appendChild(opt);
           });
 
-          // When selection changes, update the cards
           selectEl.addEventListener("change", () => {
             updateCards(selectEl.value, data);
           });
 
-          // Initialize with the first authority in the list
           if (data.length > 0) {
             updateCards(data[0].authority, data);
           }
@@ -131,23 +123,17 @@
       if (!item) return;
 
       const cardsContainer = document.getElementById("cards");
-      cardsContainer.innerHTML = ""; // clear previous cards
+      cardsContainer.innerHTML = "";
 
-      // Define which fields to show, with labels
       const fields = [
         { label: "2024 Preliminary Value", key: "value2024" },
         { label: "2025 Before New Construction", key: "value2025BeforeNew" },
-        { label: "Percent Change (Pre)", key: "pctChangePre", isPercent: true },
+        { label: "Percent Change", key: "pctChangePre", isPercent: true },
         { label: "New Construction", key: "newConstruction" },
         { label: "2025 June 1 Estimate", key: "value2025June" },
-        { label: "Percent Change (June)", key: "pctChangeJune", isPercent: true },
+        { label: "Percent Change From 2024", key: "pctChangeJune", isPercent: true },
         { label: "Net Change", key: "netChange" },
       ];
-
-      // Helper to format large numbers with commas
-      function formatNumber(num) {
-        return num.toLocaleString("en-US");
-      }
 
       fields.forEach((f) => {
         const card = document.createElement("div");
@@ -162,13 +148,30 @@
         if (f.isPercent) {
           valueEl.textContent = rawVal.toFixed(1) + "%";
         } else {
-          valueEl.textContent = "$" + formatNumber(rawVal);
+          valueEl.textContent = "$" + formatLargeNumber(rawVal);
         }
 
         card.appendChild(title);
         card.appendChild(valueEl);
         cardsContainer.appendChild(card);
       });
+    }
+
+    //
+    // 4) Convert a large number into a shortened string with "M" or "B"
+    //
+    function formatLargeNumber(num) {
+      const absNum = Math.abs(num);
+      if (absNum >= 1e9) {
+        // Billions, one decimal place
+        return (num / 1e9).toFixed(1) + "B";
+      }
+      if (absNum >= 1e6) {
+        // Millions, one decimal place
+        return (num / 1e6).toFixed(1) + "M";
+      }
+      // Under 1 million: show with commas
+      return num.toLocaleString("en-US");
     }
   </script>
 </body>
