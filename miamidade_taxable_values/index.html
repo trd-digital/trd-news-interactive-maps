@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Taxable Values Dashboard</title>
 
+  <!-- Leaflet CSS (integrity attributes removed) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -19,6 +25,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 15px;
+      margin-bottom: 20px;
     }
 
     .card {
@@ -47,6 +54,13 @@
       padding: 5px;
       font-size: 1em;
     }
+
+    #map {
+      width: 100%;
+      height: 500px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
   </style>
 </head>
 
@@ -58,81 +72,125 @@
 
   <div id="cards"></div>
 
-  <!-- 1) Include PapaParse from CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+  <div id="map"></div>
+
+  <!-- Leaflet JS (integrity attributes removed) -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <script>
-    //
-    // 2) When the page loads, fetch and parse the CSV, then populate the dropdown and cards
-    //
+    let geoJsonData = null;
+    let map, geoJsonLayer, highlightLayer;
+
+    // 1) Initialize on DOMContentLoaded
     document.addEventListener("DOMContentLoaded", () => {
-      const csvFile = "taxable_values_for_graphic.csv";
+      initializeMap();
+      loadGeoJsonAndPopulate();
+    });
 
-      Papa.parse(csvFile, {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
-        complete: function (results) {
-          const rawData = results.data;
-          const data = rawData.map((row) => {
-            const parseNum = (str) =>
-              Number(str.replace(/,/g, "").trim());
-            const parsePct = (str) =>
-              Number(str.replace(/%/g, "").trim());
+    // 2) Initialize the Leaflet map (no data yet)
+    function initializeMap() {
+      // Default center/zoom if nothing is selected
+      map = L.map("map").setView([27.7, -81.9], 7);
 
-            return {
-              authority: row["TAXING AUTHORITY"],
-              value2024: parseNum(row["2024 PRELIMINARY TAXABLE VALUE"]),
-              value2025BeforeNew: parseNum(
-                row["2025 ESTIMATED TAXABLE VALUE BEFORE NEW CONSTRUCTION"]
-              ),
-              pctChangePre: parsePct(row["PERCENT CHANGE"]),
-              newConstruction: parseNum(row["NEW CONSTRUCTION"]),
-              value2025June: parseNum(row["2025 JUNE 1ST ESTIMATE"]),
-              pctChangeJune: parsePct(row["PERCENT CHANGE FROM 2024"]),
-              netChange: parseNum(row["NET VALUE CHANGE"]),
-            };
-          });
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 18,
+        attribution:
+          '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+      }).addTo(map);
 
+      geoJsonLayer = L.geoJSON(null, {
+        style: {
+          color: "#3388ff",
+          weight: 1,
+          fillOpacity: 0.2,
+        },
+      }).addTo(map);
+
+      highlightLayer = L.geoJSON(null, {
+        style: {
+          color: "#ff0000",
+          weight: 2,
+          fillOpacity: 0.3,
+        },
+      }).addTo(map);
+    }
+
+    // 3) Load the merged GeoJSON, populate dropdown, add all features in base layer
+    function loadGeoJsonAndPopulate() {
+      fetch("merged_taxable_values.geojson")
+        .then((resp) => resp.json())
+        .then((geojson) => {
+          geoJsonData = geojson;
+
+          // Add every feature to the base layer
+          geoJsonLayer.addData(geoJsonData);
+
+          // Build dropdown from each feature's "TAXING AUTHORITY" property
           const selectEl = document.getElementById("authoritySelect");
-          data.forEach((d) => {
+          geoJsonData.features.forEach((feat) => {
+            const authorityName = feat.properties["TAXING AUTHORITY"];
             const opt = document.createElement("option");
-            opt.value = d.authority;
-            opt.textContent = d.authority;
+            opt.value = authorityName;
+            opt.textContent = authorityName;
             selectEl.appendChild(opt);
           });
 
+          // When the user picks a new authority, update cards + map
           selectEl.addEventListener("change", () => {
-            updateCards(selectEl.value, data);
+            updateCards(selectEl.value);
+            updateMap(selectEl.value);
           });
 
-          if (data.length > 0) {
-            updateCards(data[0].authority, data);
+          // Initialize with the first feature in the list
+          if (geoJsonData.features.length > 0) {
+            const firstAuthority =
+              geoJsonData.features[0].properties["TAXING AUTHORITY"];
+            selectEl.value = firstAuthority;
+            updateCards(firstAuthority);
+            updateMap(firstAuthority);
           }
-        },
-        error: function (err) {
-          console.error("Error loading CSV:", err);
-        },
-      });
-    });
+        })
+        .catch((err) => {
+          console.error("Error loading GeoJSON:", err);
+        });
+    }
 
-    //
-    // 3) Build / refresh the set of cards for the chosen authority
-    //
-    function updateCards(selectedAuthority, data) {
-      const item = data.find((d) => d.authority === selectedAuthority);
-      if (!item) return;
+    // 4) Update the card UI using properties from the selected feature
+    function updateCards(selectedAuthority) {
+      if (!geoJsonData) return;
 
+      // Find the matching feature in geoJsonData
+      const feat = geoJsonData.features.find(
+        (f) => f.properties["TAXING AUTHORITY"] === selectedAuthority
+      );
+      if (!feat) return;
+
+      const props = feat.properties;
       const cardsContainer = document.getElementById("cards");
       cardsContainer.innerHTML = "";
 
       const fields = [
-        { label: "2024 Preliminary Value", key: "value2024" },
-        { label: "2025 Before New Construction", key: "value2025BeforeNew" },
-        { label: "Percent Change", key: "pctChangePre", isPercent: true },
-        { label: "New Construction", key: "newConstruction" },
-        { label: "2025 June 1 Estimate", key: "value2025June" },
-        { label: "Percent Change From 2024", key: "pctChangeJune", isPercent: true },
-        { label: "Net Change", key: "netChange" },
+        {
+          label: "2024 Preliminary Value",
+          key: "2024 PRELIMINARY TAXABLE VALUE",
+        },
+        {
+          label: "2025 Before New Construction",
+          key: "2025 ESTIMATED TAXABLE VALUE BEFORE NEW CONSTRUCTION",
+        },
+        {
+          label: "Percent Change",
+          key: "PERCENT CHANGE",
+          isPercent: true,
+        },
+        { label: "New Construction", key: "NEW CONSTRUCTION" },
+        { label: "2025 June 1 Estimate", key: "2025 JUNE 1ST ESTIMATE" },
+        {
+          label: "Percent Change From 2024",
+          key: "PERCENT CHANGE FROM 2024",
+          isPercent: true,
+        },
+        { label: "Net Change", key: "NET VALUE CHANGE" },
       ];
 
       fields.forEach((f) => {
@@ -143,12 +201,17 @@
         title.textContent = f.label;
 
         const valueEl = document.createElement("p");
-        let rawVal = item[f.key];
+        let rawVal = props[f.key];
 
-        if (f.isPercent) {
-          valueEl.textContent = rawVal.toFixed(1) + "%";
+        if (rawVal === null || rawVal === undefined) {
+          valueEl.textContent = "N/A";
+        } else if (f.isPercent) {
+          // rawVal is a string like "9.8%", so display as-is
+          valueEl.textContent = rawVal;
         } else {
-          valueEl.textContent = "$" + formatLargeNumber(rawVal);
+          // rawVal is numeric or numeric-string; ensure number
+          const num = typeof rawVal === "string" ? Number(rawVal) : rawVal;
+          valueEl.textContent = "$" + formatLargeNumber(num);
         }
 
         card.appendChild(title);
@@ -157,20 +220,42 @@
       });
     }
 
-    //
-    // 4) Convert a large number into a shortened string with "M" or "B"
-    //
+    // 5) Highlight & zoom the map to the selected feature
+    function updateMap(selectedAuthority) {
+      if (!geoJsonData) return;
+
+      highlightLayer.clearLayers();
+
+      // Find the matching feature
+      const feat = geoJsonData.features.find(
+        (f) => f.properties["TAXING AUTHORITY"] === selectedAuthority
+      );
+      if (!feat) {
+        // No geometry: reset to default view
+        map.setView([27.7, -81.9], 7);
+        return;
+      }
+
+      // Add to highlight layer
+      highlightLayer.addData(feat);
+
+      // Compute bounds and fit
+      const tempLayer = L.geoJSON(feat);
+      map.fitBounds(tempLayer.getBounds().pad(0.25), {
+        animate: true,
+        duration: 0.5,
+      });
+    }
+
+    // 6) Helper: condense large numbers into M/B
     function formatLargeNumber(num) {
       const absNum = Math.abs(num);
       if (absNum >= 1e9) {
-        // Billions, one decimal place
         return (num / 1e9).toFixed(1) + "B";
       }
       if (absNum >= 1e6) {
-        // Millions, one decimal place
         return (num / 1e6).toFixed(1) + "M";
       }
-      // Under 1 million: show with commas
       return num.toLocaleString("en-US");
     }
   </script>
