@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Taxable Values Dashboard</title>
 
-  <!-- Leaflet CSS (no integrity attribute) -->
+  <!-- Leaflet CSS -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -81,15 +81,12 @@
     let geoJsonData = null;
     let map, geoJsonLayer, highlightLayer;
 
-    // 1) Initialize the map & load GeoJSON on DOMContentLoaded
     document.addEventListener("DOMContentLoaded", () => {
       initializeMap();
       loadGeoJsonAndPopulate();
     });
 
-    // 2) Initialize the Leaflet map (empty layers for now)
     function initializeMap() {
-      // Default view centered roughly on Florida
       map = L.map("map").setView([27.7, -81.9], 7);
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -98,10 +95,8 @@
           '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
       }).addTo(map);
 
-      // Placeholder empty GeoJSON layer; will be replaced when loading data
       geoJsonLayer = L.geoJSON(null).addTo(map);
 
-      // Separate layer for highlighting the selected feature
       highlightLayer = L.geoJSON(null, {
         style: {
           color: "#ff0000",
@@ -111,14 +106,13 @@
       }).addTo(map);
     }
 
-    // 3) Load merged GeoJSON, build dropdown, and attach click handlers
     function loadGeoJsonAndPopulate() {
       fetch("merged_taxable_values.geojson")
         .then((resp) => resp.json())
         .then((geojson) => {
           geoJsonData = geojson;
 
-          // Remove any pre-existing layer, then rebuild geoJsonLayer with onEachFeature
+          // Rebuild geoJsonLayer with click handlers
           if (geoJsonLayer) {
             map.removeLayer(geoJsonLayer);
           }
@@ -130,53 +124,55 @@
               fillOpacity: 0.2,
             },
             onEachFeature: function (feature, layer) {
-              // Attach a click listener to each polygon
               layer.on("click", function () {
                 const authorityName = feature.properties["TAXING AUTHORITY"];
-                // Update dropdown to match this authority
                 const selectEl = document.getElementById("authoritySelect");
                 selectEl.value = authorityName;
-                // Update cards and highlight/zoom on this feature
                 updateCards(authorityName);
                 highlightAndZoom(feature);
               });
             },
           }).addTo(map);
 
-          // Build dropdown from each feature’s "TAXING AUTHORITY"
+          // Extract and sort all authority names
+          const authorityNames = geoJsonData.features
+            .map((f) => f.properties["TAXING AUTHORITY"])
+            .sort((a, b) => a.localeCompare(b));
+
           const selectEl = document.getElementById("authoritySelect");
-          geoJsonData.features.forEach((feat) => {
-            const authorityName = feat.properties["TAXING AUTHORITY"];
+          authorityNames.forEach((name) => {
             const opt = document.createElement("option");
-            opt.value = authorityName;
-            opt.textContent = authorityName;
+            opt.value = name;
+            opt.textContent = name;
             selectEl.appendChild(opt);
           });
 
-          // When user selects from dropdown, find that feature and update
           selectEl.addEventListener("change", () => {
             const chosen = selectEl.value;
             updateCards(chosen);
-            // Find matching feature in geoJsonData
+            // Find matching feature
             const feat = geoJsonData.features.find(
               (f) => f.properties["TAXING AUTHORITY"] === chosen
             );
             if (feat) {
               highlightAndZoom(feat);
             } else {
-              // If none found, reset view and clear highlight
               highlightLayer.clearLayers();
               map.setView([27.7, -81.9], 7);
             }
           });
 
-          // Initialize with the first feature
-          if (geoJsonData.features.length > 0) {
-            const firstAuthority =
-              geoJsonData.features[0].properties["TAXING AUTHORITY"];
+          // Initialize with the first (alphabetical) authority
+          if (authorityNames.length > 0) {
+            const firstAuthority = authorityNames[0];
             selectEl.value = firstAuthority;
             updateCards(firstAuthority);
-            highlightAndZoom(geoJsonData.features[0]);
+            const firstFeature = geoJsonData.features.find(
+              (f) => f.properties["TAXING AUTHORITY"] === firstAuthority
+            );
+            if (firstFeature) {
+              highlightAndZoom(firstFeature);
+            }
           }
         })
         .catch((err) => {
@@ -184,11 +180,9 @@
         });
     }
 
-    // 4) Update the cards panel based on the selected authority
     function updateCards(selectedAuthority) {
       if (!geoJsonData) return;
 
-      // Find the matching GeoJSON feature
       const feat = geoJsonData.features.find(
         (f) => f.properties["TAXING AUTHORITY"] === selectedAuthority
       );
@@ -235,10 +229,8 @@
         if (rawVal === null || rawVal === undefined) {
           valueEl.textContent = "N/A";
         } else if (f.isPercent) {
-          // rawVal is already a string like "9.8%"
-          valueEl.textContent = rawVal;
+          valueEl.textContent = rawVal; // e.g. "9.8%"
         } else {
-          // Ensure rawVal is numeric
           const num = typeof rawVal === "string" ? Number(rawVal) : rawVal;
           valueEl.textContent = "$" + formatLargeNumber(num);
         }
@@ -249,12 +241,10 @@
       });
     }
 
-    // 5) Highlight a given GeoJSON feature and zoom to its bounds
     function highlightAndZoom(feature) {
       highlightLayer.clearLayers();
       highlightLayer.addData(feature);
 
-      // Compute bounds by creating a temporary layer
       const tempLayer = L.geoJSON(feature);
       map.fitBounds(tempLayer.getBounds().pad(0.25), {
         animate: true,
@@ -262,14 +252,13 @@
       });
     }
 
-    // 6) Condense a large number into M/B (millions/billions) or comma format
     function formatLargeNumber(num) {
       const absNum = Math.abs(num);
       if (absNum >= 1e9) {
         return (num / 1e9).toFixed(1) + "B";
       }
       if (absNum >= 1e6) {
-        return (num / 1e6).toFixed(1) + "M";
+        return (num / 1e6).toFixed(0) + "M";
       }
       return num.toLocaleString("en-US");
     }
