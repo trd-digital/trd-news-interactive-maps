@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Taxable Values Dashboard</title>
 
-  <!-- Leaflet CSS (integrity attributes removed) -->
+  <!-- Leaflet CSS (no integrity attribute) -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -74,22 +74,22 @@
 
   <div id="map"></div>
 
-  <!-- Leaflet JS (integrity attributes removed) -->
+  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
     let geoJsonData = null;
     let map, geoJsonLayer, highlightLayer;
 
-    // 1) Initialize on DOMContentLoaded
+    // 1) Initialize the map & load GeoJSON on DOMContentLoaded
     document.addEventListener("DOMContentLoaded", () => {
       initializeMap();
       loadGeoJsonAndPopulate();
     });
 
-    // 2) Initialize the Leaflet map (no data yet)
+    // 2) Initialize the Leaflet map (empty layers for now)
     function initializeMap() {
-      // Default center/zoom if nothing is selected
+      // Default view centered roughly on Florida
       map = L.map("map").setView([27.7, -81.9], 7);
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -98,14 +98,10 @@
           '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
       }).addTo(map);
 
-      geoJsonLayer = L.geoJSON(null, {
-        style: {
-          color: "#3388ff",
-          weight: 1,
-          fillOpacity: 0.2,
-        },
-      }).addTo(map);
+      // Placeholder empty GeoJSON layer; will be replaced when loading data
+      geoJsonLayer = L.geoJSON(null).addTo(map);
 
+      // Separate layer for highlighting the selected feature
       highlightLayer = L.geoJSON(null, {
         style: {
           color: "#ff0000",
@@ -115,17 +111,39 @@
       }).addTo(map);
     }
 
-    // 3) Load the merged GeoJSON, populate dropdown, add all features in base layer
+    // 3) Load merged GeoJSON, build dropdown, and attach click handlers
     function loadGeoJsonAndPopulate() {
       fetch("merged_taxable_values.geojson")
         .then((resp) => resp.json())
         .then((geojson) => {
           geoJsonData = geojson;
 
-          // Add every feature to the base layer
-          geoJsonLayer.addData(geoJsonData);
+          // Remove any pre-existing layer, then rebuild geoJsonLayer with onEachFeature
+          if (geoJsonLayer) {
+            map.removeLayer(geoJsonLayer);
+          }
 
-          // Build dropdown from each feature's "TAXING AUTHORITY" property
+          geoJsonLayer = L.geoJSON(geoJsonData, {
+            style: {
+              color: "#3388ff",
+              weight: 1,
+              fillOpacity: 0.2,
+            },
+            onEachFeature: function (feature, layer) {
+              // Attach a click listener to each polygon
+              layer.on("click", function () {
+                const authorityName = feature.properties["TAXING AUTHORITY"];
+                // Update dropdown to match this authority
+                const selectEl = document.getElementById("authoritySelect");
+                selectEl.value = authorityName;
+                // Update cards and highlight/zoom on this feature
+                updateCards(authorityName);
+                highlightAndZoom(feature);
+              });
+            },
+          }).addTo(map);
+
+          // Build dropdown from each feature’s "TAXING AUTHORITY"
           const selectEl = document.getElementById("authoritySelect");
           geoJsonData.features.forEach((feat) => {
             const authorityName = feat.properties["TAXING AUTHORITY"];
@@ -135,19 +153,30 @@
             selectEl.appendChild(opt);
           });
 
-          // When the user picks a new authority, update cards + map
+          // When user selects from dropdown, find that feature and update
           selectEl.addEventListener("change", () => {
-            updateCards(selectEl.value);
-            updateMap(selectEl.value);
+            const chosen = selectEl.value;
+            updateCards(chosen);
+            // Find matching feature in geoJsonData
+            const feat = geoJsonData.features.find(
+              (f) => f.properties["TAXING AUTHORITY"] === chosen
+            );
+            if (feat) {
+              highlightAndZoom(feat);
+            } else {
+              // If none found, reset view and clear highlight
+              highlightLayer.clearLayers();
+              map.setView([27.7, -81.9], 7);
+            }
           });
 
-          // Initialize with the first feature in the list
+          // Initialize with the first feature
           if (geoJsonData.features.length > 0) {
             const firstAuthority =
               geoJsonData.features[0].properties["TAXING AUTHORITY"];
             selectEl.value = firstAuthority;
             updateCards(firstAuthority);
-            updateMap(firstAuthority);
+            highlightAndZoom(geoJsonData.features[0]);
           }
         })
         .catch((err) => {
@@ -155,11 +184,11 @@
         });
     }
 
-    // 4) Update the card UI using properties from the selected feature
+    // 4) Update the cards panel based on the selected authority
     function updateCards(selectedAuthority) {
       if (!geoJsonData) return;
 
-      // Find the matching feature in geoJsonData
+      // Find the matching GeoJSON feature
       const feat = geoJsonData.features.find(
         (f) => f.properties["TAXING AUTHORITY"] === selectedAuthority
       );
@@ -206,10 +235,10 @@
         if (rawVal === null || rawVal === undefined) {
           valueEl.textContent = "N/A";
         } else if (f.isPercent) {
-          // rawVal is a string like "9.8%", so display as-is
+          // rawVal is already a string like "9.8%"
           valueEl.textContent = rawVal;
         } else {
-          // rawVal is numeric or numeric-string; ensure number
+          // Ensure rawVal is numeric
           const num = typeof rawVal === "string" ? Number(rawVal) : rawVal;
           valueEl.textContent = "$" + formatLargeNumber(num);
         }
@@ -220,34 +249,20 @@
       });
     }
 
-    // 5) Highlight & zoom the map to the selected feature
-    function updateMap(selectedAuthority) {
-      if (!geoJsonData) return;
-
+    // 5) Highlight a given GeoJSON feature and zoom to its bounds
+    function highlightAndZoom(feature) {
       highlightLayer.clearLayers();
+      highlightLayer.addData(feature);
 
-      // Find the matching feature
-      const feat = geoJsonData.features.find(
-        (f) => f.properties["TAXING AUTHORITY"] === selectedAuthority
-      );
-      if (!feat) {
-        // No geometry: reset to default view
-        map.setView([27.7, -81.9], 7);
-        return;
-      }
-
-      // Add to highlight layer
-      highlightLayer.addData(feat);
-
-      // Compute bounds and fit
-      const tempLayer = L.geoJSON(feat);
+      // Compute bounds by creating a temporary layer
+      const tempLayer = L.geoJSON(feature);
       map.fitBounds(tempLayer.getBounds().pad(0.25), {
         animate: true,
         duration: 0.5,
       });
     }
 
-    // 6) Helper: condense large numbers into M/B
+    // 6) Condense a large number into M/B (millions/billions) or comma format
     function formatLargeNumber(num) {
       const absNum = Math.abs(num);
       if (absNum >= 1e9) {
