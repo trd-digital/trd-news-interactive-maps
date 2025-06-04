@@ -5,44 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Taxable Values Dashboard</title>
 
-  <!-- Leaflet CSS -->
+  <!-- Leaflet CSS (no integrity attributes) -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   />
 
   <style>
+    /* 1) Define CSS variables for light mode (default) */
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #222222;
+      --card-bg: #f9f9f9;
+      --card-border: #ddd;
+      --card-shadow: rgba(0, 0, 0, 0.1);
+      --map-attribution-color: #555555;
+    }
+
+    /* 2) Override for dark mode */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-color: #1e1e1e;
+        --text-color: #eeeeee;
+        --card-bg: #2b2b2b;
+        --card-border: #444444;
+        --card-shadow: rgba(0, 0, 0, 0.5);
+        --map-attribution-color: #cccccc;
+      }
+    }
+
     body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
       font-family: Arial, sans-serif;
       margin: 20px;
     }
 
     #controls {
       margin-bottom: 20px;
-    }
-
-    #cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-
-    .card {
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 15px;
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .card h3 {
-      margin-top: 0;
-      font-size: 1.1em;
-    }
-
-    .card p {
-      margin: 5px 0;
-      font-size: 1em;
     }
 
     label {
@@ -53,13 +53,49 @@
     select {
       padding: 5px;
       font-size: 1em;
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+    }
+
+    #cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 2px 2px 5px var(--card-shadow);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      font-size: 1.1em;
+      color: var(--text-color);
+    }
+
+    .card p {
+      margin: 5px 0;
+      font-size: 1em;
+      color: var(--text-color);
     }
 
     #map {
       width: 100%;
       height: 500px;
-      border: 1px solid #ccc;
+      border: 1px solid var(--card-border);
       border-radius: 8px;
+    }
+
+    /* Style Leaflet attribution text for dark/light mode */
+    .leaflet-control-attribution {
+      color: var(--map-attribution-color) !important;
     }
   </style>
 </head>
@@ -79,23 +115,35 @@
 
   <script>
     let geoJsonData = null;
-    let map, geoJsonLayer, highlightLayer;
+    let map, geoJsonLayer, highlightLayer, tileLayer;
 
     document.addEventListener("DOMContentLoaded", () => {
       initializeMap();
       loadGeoJsonAndPopulate();
+
+      // Listen for changes to the user's color scheme preference
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      mediaQuery.addEventListener("change", (e) => {
+        updateTileLayer(e.matches);
+      });
     });
 
     function initializeMap() {
+      // 1) Create the map with a default view
       map = L.map("map").setView([27.7, -81.9], 7);
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 18,
-        attribution:
-          '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-      }).addTo(map);
+      // 2) Add the appropriate tile layer depending on current preference
+      const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      addTileLayer(isDark);
 
-      geoJsonLayer = L.geoJSON(null).addTo(map);
+      // 3) Prepare empty GeoJSON and highlight layers
+      geoJsonLayer = L.geoJSON(null, {
+        style: {
+          color: "#3388ff",
+          weight: 1,
+          fillOpacity: 0.2,
+        },
+      }).addTo(map);
 
       highlightLayer = L.geoJSON(null, {
         style: {
@@ -106,13 +154,39 @@
       }).addTo(map);
     }
 
+    // Helper: choose between light or dark tile URLs
+    function addTileLayer(isDarkMode) {
+      const lightUrl =
+        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
+      const darkUrl =
+        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+
+      if (tileLayer) {
+        map.removeLayer(tileLayer);
+      }
+
+      tileLayer = L.tileLayer(
+        isDarkMode ? darkUrl : lightUrl,
+        {
+          attribution:
+            '&copy; <a href="https://carto.com/attributions">CARTO</a> &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+          maxZoom: 19,
+        }
+      ).addTo(map);
+    }
+
+    // Called whenever the system dark/light mode changes
+    function updateTileLayer(isDarkMode) {
+      addTileLayer(isDarkMode);
+    }
+
     function loadGeoJsonAndPopulate() {
       fetch("merged_taxable_values.geojson")
         .then((resp) => resp.json())
         .then((geojson) => {
           geoJsonData = geojson;
 
-          // Rebuild geoJsonLayer with click handlers
+          // Remove any existing GeoJSON layer, then rebuild with click handlers
           if (geoJsonLayer) {
             map.removeLayer(geoJsonLayer);
           }
@@ -134,7 +208,7 @@
             },
           }).addTo(map);
 
-          // Extract and sort all authority names
+          // Extract all authority names, sort alphabetically
           const authorityNames = geoJsonData.features
             .map((f) => f.properties["TAXING AUTHORITY"])
             .sort((a, b) => a.localeCompare(b));
@@ -150,7 +224,6 @@
           selectEl.addEventListener("change", () => {
             const chosen = selectEl.value;
             updateCards(chosen);
-            // Find matching feature
             const feat = geoJsonData.features.find(
               (f) => f.properties["TAXING AUTHORITY"] === chosen
             );
@@ -162,7 +235,7 @@
             }
           });
 
-          // Initialize with the first (alphabetical) authority
+          // Initialize with the first authority (alphabetically)
           if (authorityNames.length > 0) {
             const firstAuthority = authorityNames[0];
             selectEl.value = firstAuthority;
