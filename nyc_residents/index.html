@@ -23,7 +23,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_3bab81494a1d47a2ce1d8bf89ce0eb7c {
+                #map_f31c7b1a3ebdb618a8faa623e3f1754e {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -34,8 +34,6 @@
         
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.css"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.css"/>
 </head>
 <body>    
     
@@ -53,15 +51,30 @@
   <b>Projects seeking 485x</b>
 </h3>
     
-            <div class="folium-map" id="map_3bab81494a1d47a2ce1d8bf89ce0eb7c" ></div>
+            <div class="folium-map" id="map_f31c7b1a3ebdb618a8faa623e3f1754e" ></div>
         
+    
+  <div style="
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: white;
+      padding: 6px 12px;
+      border: 2px solid grey;
+      z-index:9999;
+      font-size:16px;
+      font-weight: bold;
+      ">
+    Residences of NYC Mayoral Candidates
+  </div>
 </body>
 <script>    
     
-            var map_3bab81494a1d47a2ce1d8bf89ce0eb7c = L.map(
-                "map_3bab81494a1d47a2ce1d8bf89ce0eb7c",
+            var map_f31c7b1a3ebdb618a8faa623e3f1754e = L.map(
+                "map_f31c7b1a3ebdb618a8faa623e3f1754e",
                 {
-                    center: [40.6888653, -73.8020093],
+                    center: [40.7557524, -73.9634014],
                     crs: L.CRS.EPSG3857,
                     zoom: 10.5,
                     zoomControl: true,
@@ -74,260 +87,249 @@
 
         
     
-            var tile_layer_0210666403e631f145c6ec5548decc13 = L.tileLayer(
+            var tile_layer_e05fb507369e237e7168bd2960518617 = L.tileLayer(
                 "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
-            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+            ).addTo(map_f31c7b1a3ebdb618a8faa623e3f1754e);
         
     
-            var tile_layer_cddc90135068faeb16565b21a7bff34f = L.tileLayer(
+            var tile_layer_05b5f5a85219726774140c4f216eff70 = L.tileLayer(
                 "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
                 {"attribution": "Mapbox", "detectRetina": false, "maxNativeZoom": 20, "maxZoom": 20, "minZoom": 1, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
-            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+            ).addTo(map_f31c7b1a3ebdb618a8faa623e3f1754e);
         
     
             L.control.fullscreen(
                 {"forceSeparateButton": false, "position": "topleft", "title": "Full Screen", "titleCancel": "Exit Full Screen"}
-            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+            ).addTo(map_f31c7b1a3ebdb618a8faa623e3f1754e);
         
     
-            var tile_layer_6031094b9d53c97ccf3ed62c071a435f = L.tileLayer(
-                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
-            );
-            var mini_map_65ec8b6d252d2e7460467c1b2ab5eb14 = new L.Control.MiniMap(
-                tile_layer_6031094b9d53c97ccf3ed62c071a435f,
-                {"autoToggleDisplay": false, "centerFixed": false, "collapsedHeight": 25, "collapsedWidth": 25, "height": 150, "minimized": false, "position": "bottomright", "toggleDisplay": true, "width": 150, "zoomAnimation": false, "zoomLevelOffset": -5}
-            );
-            map_3bab81494a1d47a2ce1d8bf89ce0eb7c.addControl(mini_map_65ec8b6d252d2e7460467c1b2ab5eb14);
-        
-    
-            var circle_marker_f67932a9a7479af85f21a0a0ea1c3bd1 = L.circleMarker(
+            var circle_marker_df2dccfc25908709c97ce348f52fd555 = L.circleMarker(
                 [40.6888653, -73.8020093],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
-            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+            ).addTo(map_f31c7b1a3ebdb618a8faa623e3f1754e);
         
     
-        var popup_ea49f5008818c7afbecf888d79e3103b = L.popup({"maxWidth": 300});
+        var popup_3746eb967a82b973adbcbec61a85eb68 = L.popup({"maxWidth": 220});
 
         
             
-                var html_0922557252bbc3766f01df8dc049e546 = $(`<div id="html_0922557252bbc3766f01df8dc049e546" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Adrienne Adams</h3> <strong>Democratic</strong><br> <strong>144-20 109th Avenue, Jamaica</strong><br> </div></div>`)[0];
-                popup_ea49f5008818c7afbecf888d79e3103b.setContent(html_0922557252bbc3766f01df8dc049e546);
+                var html_360d25018d39b31bdc3e20a264d055f7 = $(`<div id="html_360d25018d39b31bdc3e20a264d055f7" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Adrienne Adams</h3> <strong>Democratic</strong><br> <strong>144-20 109th Avenue, Jamaica</strong><br> </div></div>`)[0];
+                popup_3746eb967a82b973adbcbec61a85eb68.setContent(html_360d25018d39b31bdc3e20a264d055f7);
             
         
 
-        circle_marker_f67932a9a7479af85f21a0a0ea1c3bd1.bindPopup(popup_ea49f5008818c7afbecf888d79e3103b)
+        circle_marker_df2dccfc25908709c97ce348f52fd555.bindPopup(popup_3746eb967a82b973adbcbec61a85eb68)
         ;
 
         
     
     
-            var circle_marker_9db55cb65c10a8884987d7aac9078d6d = L.circleMarker(
+            var circle_marker_ce507de96acc9168d5e891799f74b8cb = L.circleMarker(
                 [40.7557524, -73.9634014],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
-            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+            ).addTo(map_f31c7b1a3ebdb618a8faa623e3f1754e);
         
     
-        var popup_ffc9fc4504188762ad866d96d6f4b786 = L.popup({"maxWidth": 300});
+        var popup_5b389a371e51f32c067a08decbbac527 = L.popup({"maxWidth": 220});
 
         
             
-                var html_afb67e240b0dc884a9ac405db38cab7b = $(`<div id="html_afb67e240b0dc884a9ac405db38cab7b" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Andrew Cuomo</h3> <strong>Democratic</strong><br> <strong>420 East 54th Street</strong><br> </div></div>`)[0];
-                popup_ffc9fc4504188762ad866d96d6f4b786.setContent(html_afb67e240b0dc884a9ac405db38cab7b);
+                var html_110a37e946d77bf60467a8d76768767b = $(`<div id="html_110a37e946d77bf60467a8d76768767b" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Andrew Cuomo</h3> <strong>Democratic</strong><br> <strong>420 East 54th Street</strong><br> </div></div>`)[0];
+                popup_5b389a371e51f32c067a08decbbac527.setContent(html_110a37e946d77bf60467a8d76768767b);
             
         
 
-        circle_marker_9db55cb65c10a8884987d7aac9078d6d.bindPopup(popup_ffc9fc4504188762ad866d96d6f4b786)
+        circle_marker_ce507de96acc9168d5e891799f74b8cb.bindPopup(popup_5b389a371e51f32c067a08decbbac527)
         ;
 
         
     
     
-            var circle_marker_821c39af8e047276199a03adf7770b49 = L.circleMarker(
+            var circle_marker_82cadf7422fcfedd7bd4ac3a6ad27e17 = L.circleMarker(
                 [44.9891911, -93.2798538],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
-            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+            ).addTo(map_f31c7b1a3ebdb618a8faa623e3f1754e);
         
     
-        var popup_81c0b4da2ee8b1fc019dd6756dd4ba2d = L.popup({"maxWidth": 300});
+        var popup_882019f4e715d0655daf8b4e9c45922a = L.popup({"maxWidth": 220});
 
         
             
-                var html_280072fe7e64a362ddda7ee3b3d0159d = $(`<div id="html_280072fe7e64a362ddda7ee3b3d0159d" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Michael Blake</h3> <strong>Democratic</strong><br> <strong>837 Washington Avenue, Melrose</strong><br> </div></div>`)[0];
-                popup_81c0b4da2ee8b1fc019dd6756dd4ba2d.setContent(html_280072fe7e64a362ddda7ee3b3d0159d);
+                var html_26be4c2e6fbf3691ab2bb8c51ffda62d = $(`<div id="html_26be4c2e6fbf3691ab2bb8c51ffda62d" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Michael Blake</h3> <strong>Democratic</strong><br> <strong>837 Washington Avenue, Melrose</strong><br> </div></div>`)[0];
+                popup_882019f4e715d0655daf8b4e9c45922a.setContent(html_26be4c2e6fbf3691ab2bb8c51ffda62d);
             
         
 
-        circle_marker_821c39af8e047276199a03adf7770b49.bindPopup(popup_81c0b4da2ee8b1fc019dd6756dd4ba2d)
+        circle_marker_82cadf7422fcfedd7bd4ac3a6ad27e17.bindPopup(popup_882019f4e715d0655daf8b4e9c45922a)
         ;
 
         
     
     
-            var circle_marker_e92c93d89dafaaff185f5086ed913d9d = L.circleMarker(
+            var circle_marker_390b3b6699eb7fbef319df29d8527f7c = L.circleMarker(
                 [40.7599398, -73.9223299],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
-            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+            ).addTo(map_f31c7b1a3ebdb618a8faa623e3f1754e);
         
     
-        var popup_4756b3599d948182b49fd05093908437 = L.popup({"maxWidth": 300});
+        var popup_d8ddeca7f8ce23206c571749d45b7417 = L.popup({"maxWidth": 220});
 
         
             
-                var html_033b513425e6b4e7c6ac0fa357541ced = $(`<div id="html_033b513425e6b4e7c6ac0fa357541ced" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Zohran Mamdani</h3> <strong>Democratic</strong><br> <strong>32-15 35th Street, Astoria</strong><br> </div></div>`)[0];
-                popup_4756b3599d948182b49fd05093908437.setContent(html_033b513425e6b4e7c6ac0fa357541ced);
+                var html_8781bceef20a2187236f9883a3ab03f4 = $(`<div id="html_8781bceef20a2187236f9883a3ab03f4" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Zohran Mamdani</h3> <strong>Democratic</strong><br> <strong>32-15 35th Street, Astoria</strong><br> </div></div>`)[0];
+                popup_d8ddeca7f8ce23206c571749d45b7417.setContent(html_8781bceef20a2187236f9883a3ab03f4);
             
         
 
-        circle_marker_e92c93d89dafaaff185f5086ed913d9d.bindPopup(popup_4756b3599d948182b49fd05093908437)
+        circle_marker_390b3b6699eb7fbef319df29d8527f7c.bindPopup(popup_d8ddeca7f8ce23206c571749d45b7417)
         ;
 
         
     
     
-            var circle_marker_f66175a41e3df8852c7c639bd35fbac7 = L.circleMarker(
+            var circle_marker_f567fad930156e46c7dcfb0c574e198a = L.circleMarker(
                 [40.706055, -74.0110109],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
-            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+            ).addTo(map_f31c7b1a3ebdb618a8faa623e3f1754e);
         
     
-        var popup_79bdc15fc217d44527b0ff8e7ffb8793 = L.popup({"maxWidth": 300});
+        var popup_c74bb22063986b07ab4f4515b4a5bce5 = L.popup({"maxWidth": 220});
 
         
             
-                var html_bdb5aa6cef5413b777fbb62248f8c26f = $(`<div id="html_bdb5aa6cef5413b777fbb62248f8c26f" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Scott Stringer</h3> <strong>Democratic</strong><br> <strong>25 Broad Street</strong><br> </div></div>`)[0];
-                popup_79bdc15fc217d44527b0ff8e7ffb8793.setContent(html_bdb5aa6cef5413b777fbb62248f8c26f);
+                var html_815a89a850e61d5ed32cc194a4b0dff6 = $(`<div id="html_815a89a850e61d5ed32cc194a4b0dff6" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Scott Stringer</h3> <strong>Democratic</strong><br> <strong>25 Broad Street</strong><br> </div></div>`)[0];
+                popup_c74bb22063986b07ab4f4515b4a5bce5.setContent(html_815a89a850e61d5ed32cc194a4b0dff6);
             
         
 
-        circle_marker_f66175a41e3df8852c7c639bd35fbac7.bindPopup(popup_79bdc15fc217d44527b0ff8e7ffb8793)
+        circle_marker_f567fad930156e46c7dcfb0c574e198a.bindPopup(popup_c74bb22063986b07ab4f4515b4a5bce5)
         ;
 
         
     
     
-            var circle_marker_4f8dcf7bb31c75894ce894d88f3477f4 = L.circleMarker(
+            var circle_marker_05c5c5c32bf5fefb56c70f482ba2b98b = L.circleMarker(
                 [40.666986, -73.9891501],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
-            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+            ).addTo(map_f31c7b1a3ebdb618a8faa623e3f1754e);
         
     
-        var popup_220b8a14b0eb02b501bd721a4ca1afc2 = L.popup({"maxWidth": 300});
+        var popup_8953a4112e98a21bfa0997e113e21317 = L.popup({"maxWidth": 220});
 
         
             
-                var html_f816b227068272341627749edf143b62 = $(`<div id="html_f816b227068272341627749edf143b62" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Brad Lander</h3> <strong>Democratic</strong><br> <strong>256 13th Street, Park Slope</strong><br> </div></div>`)[0];
-                popup_220b8a14b0eb02b501bd721a4ca1afc2.setContent(html_f816b227068272341627749edf143b62);
+                var html_7c5ed880ee5c5416f59e55a8aee6ab8d = $(`<div id="html_7c5ed880ee5c5416f59e55a8aee6ab8d" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Brad Lander</h3> <strong>Democratic</strong><br> <strong>256 13th Street, Park Slope</strong><br> </div></div>`)[0];
+                popup_8953a4112e98a21bfa0997e113e21317.setContent(html_7c5ed880ee5c5416f59e55a8aee6ab8d);
             
         
 
-        circle_marker_4f8dcf7bb31c75894ce894d88f3477f4.bindPopup(popup_220b8a14b0eb02b501bd721a4ca1afc2)
+        circle_marker_05c5c5c32bf5fefb56c70f482ba2b98b.bindPopup(popup_8953a4112e98a21bfa0997e113e21317)
         ;
 
         
     
     
-            var circle_marker_d7029b64a941203e8fe16aafbfeb30b7 = L.circleMarker(
+            var circle_marker_492d8b76868e1c0535066d605353cd3e = L.circleMarker(
                 [40.7490003, -73.886776],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
-            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+            ).addTo(map_f31c7b1a3ebdb618a8faa623e3f1754e);
         
     
-        var popup_e92d97c0c19c2699f840055953cc4a08 = L.popup({"maxWidth": 300});
+        var popup_ab2fa8a7d26f1b86a81634e6189f4f76 = L.popup({"maxWidth": 220});
 
         
             
-                var html_861320134ff679d3f874e527928f783a = $(`<div id="html_861320134ff679d3f874e527928f783a" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Jessica Ramos</h3> <strong>Democratic</strong><br> <strong>37-15 79th Street, Jackson Heights</strong><br> </div></div>`)[0];
-                popup_e92d97c0c19c2699f840055953cc4a08.setContent(html_861320134ff679d3f874e527928f783a);
+                var html_56f0b205587e5968aba2f9277bd75219 = $(`<div id="html_56f0b205587e5968aba2f9277bd75219" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Jessica Ramos</h3> <strong>Democratic</strong><br> <strong>37-15 79th Street, Jackson Heights</strong><br> </div></div>`)[0];
+                popup_ab2fa8a7d26f1b86a81634e6189f4f76.setContent(html_56f0b205587e5968aba2f9277bd75219);
             
         
 
-        circle_marker_d7029b64a941203e8fe16aafbfeb30b7.bindPopup(popup_e92d97c0c19c2699f840055953cc4a08)
+        circle_marker_492d8b76868e1c0535066d605353cd3e.bindPopup(popup_ab2fa8a7d26f1b86a81634e6189f4f76)
         ;
 
         
     
     
-            var circle_marker_b7344ca2d0fd3c86529fd15750046cba = L.circleMarker(
+            var circle_marker_c044e08297c31eb7d5c030852a6d663e = L.circleMarker(
                 [40.6600923, -73.96017789999999],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
-            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+            ).addTo(map_f31c7b1a3ebdb618a8faa623e3f1754e);
         
     
-        var popup_cb4ba52b500629022169b254c5f775dc = L.popup({"maxWidth": 300});
+        var popup_ccf20b187ba3bc98b79534720ec74273 = L.popup({"maxWidth": 220});
 
         
             
-                var html_9b32ca5531bf8c74ef6eaf262c1e66bc = $(`<div id="html_9b32ca5531bf8c74ef6eaf262c1e66bc" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Zellnor Myrie</h3> <strong>Democratic</strong><br> <strong>10 Maple Street, Prospect–Lefferts Gardens</strong><br> </div></div>`)[0];
-                popup_cb4ba52b500629022169b254c5f775dc.setContent(html_9b32ca5531bf8c74ef6eaf262c1e66bc);
+                var html_027cd704634db2ac916b5ba784ebd2d1 = $(`<div id="html_027cd704634db2ac916b5ba784ebd2d1" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Zellnor Myrie</h3> <strong>Democratic</strong><br> <strong>10 Maple Street, Prospect–Lefferts Gardens</strong><br> </div></div>`)[0];
+                popup_ccf20b187ba3bc98b79534720ec74273.setContent(html_027cd704634db2ac916b5ba784ebd2d1);
             
         
 
-        circle_marker_b7344ca2d0fd3c86529fd15750046cba.bindPopup(popup_cb4ba52b500629022169b254c5f775dc)
+        circle_marker_c044e08297c31eb7d5c030852a6d663e.bindPopup(popup_ccf20b187ba3bc98b79534720ec74273)
         ;
 
         
     
     
-            var circle_marker_7c374f29f452efb79fbe704e282492fe = L.circleMarker(
+            var circle_marker_b57070d76180cdecc12d81cbd4adba4d = L.circleMarker(
                 [40.7888901, -73.9545402],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
-            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+            ).addTo(map_f31c7b1a3ebdb618a8faa623e3f1754e);
         
     
-        var popup_28619c999d2ea5e3a571e7e3f1d92d02 = L.popup({"maxWidth": 300});
+        var popup_a82e5dce46d5a651f029424a6a161dad = L.popup({"maxWidth": 220});
 
         
             
-                var html_55754eb3f6d888a569e3434f8dda988a = $(`<div id="html_55754eb3f6d888a569e3434f8dda988a" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Whitney Tilson</h3> <strong>Democratic</strong><br> <strong>1165 Fifth Avenue</strong><br> </div></div>`)[0];
-                popup_28619c999d2ea5e3a571e7e3f1d92d02.setContent(html_55754eb3f6d888a569e3434f8dda988a);
+                var html_bc1909ca7629b716fde17155eb080311 = $(`<div id="html_bc1909ca7629b716fde17155eb080311" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Whitney Tilson</h3> <strong>Democratic</strong><br> <strong>1165 Fifth Avenue</strong><br> </div></div>`)[0];
+                popup_a82e5dce46d5a651f029424a6a161dad.setContent(html_bc1909ca7629b716fde17155eb080311);
             
         
 
-        circle_marker_7c374f29f452efb79fbe704e282492fe.bindPopup(popup_28619c999d2ea5e3a571e7e3f1d92d02)
+        circle_marker_b57070d76180cdecc12d81cbd4adba4d.bindPopup(popup_a82e5dce46d5a651f029424a6a161dad)
         ;
 
         
     
     
-            var circle_marker_0b899ce6e5a1f779f8004244cda5a879 = L.circleMarker(
+            var circle_marker_deae416b71ae90afe6279c9df6df7257 = L.circleMarker(
                 [40.69549079999999, -73.9959748],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
-            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_f31c7b1a3ebdb618a8faa623e3f1754e);
         
     
-        var popup_3cbfa1eea57d4b0093f1e4207a12996b = L.popup({"maxWidth": 300});
+        var popup_f7f364e2525dab75922099320fce0d01 = L.popup({"maxWidth": 220});
 
         
             
-                var html_112b497b4c31e2c0020a1537a4e7f8a4 = $(`<div id="html_112b497b4c31e2c0020a1537a4e7f8a4" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Jim Walden</h3> <strong>Independent</strong><br> <strong>200 Hicks Street, Brooklyn Heights</strong><br> </div></div>`)[0];
-                popup_3cbfa1eea57d4b0093f1e4207a12996b.setContent(html_112b497b4c31e2c0020a1537a4e7f8a4);
+                var html_f89b0f86a8a4ae5eed1505757a9c7888 = $(`<div id="html_f89b0f86a8a4ae5eed1505757a9c7888" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Jim Walden</h3> <strong>Independent</strong><br> <strong>200 Hicks Street, Brooklyn Heights</strong><br> </div></div>`)[0];
+                popup_f7f364e2525dab75922099320fce0d01.setContent(html_f89b0f86a8a4ae5eed1505757a9c7888);
             
         
 
-        circle_marker_0b899ce6e5a1f779f8004244cda5a879.bindPopup(popup_3cbfa1eea57d4b0093f1e4207a12996b)
+        circle_marker_deae416b71ae90afe6279c9df6df7257.bindPopup(popup_f7f364e2525dab75922099320fce0d01)
         ;
 
         
     
     
-            var circle_marker_c125665c0709b051af4309f778274aa3 = L.circleMarker(
+            var circle_marker_6004bda1653d69c498e576404e907a86 = L.circleMarker(
                 [40.780127, -73.98359909999999],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
-            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_f31c7b1a3ebdb618a8faa623e3f1754e);
         
     
-        var popup_fe6f0b3f3a83aad0f4de933a4ffde7c3 = L.popup({"maxWidth": 300});
+        var popup_4dd17e1bff0d05418cc2885de557e6e4 = L.popup({"maxWidth": 220});
 
         
             
-                var html_ce5e11aa896cada5f16708b2118cb7d6 = $(`<div id="html_ce5e11aa896cada5f16708b2118cb7d6" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Curtis Sliwa</h3> <strong>Republican</strong><br> <strong>272 West 73rd Street</strong><br> </div></div>`)[0];
-                popup_fe6f0b3f3a83aad0f4de933a4ffde7c3.setContent(html_ce5e11aa896cada5f16708b2118cb7d6);
+                var html_507e52ff4ab9dd97e0195719913d129e = $(`<div id="html_507e52ff4ab9dd97e0195719913d129e" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Curtis Sliwa</h3> <strong>Republican</strong><br> <strong>272 West 73rd Street</strong><br> </div></div>`)[0];
+                popup_4dd17e1bff0d05418cc2885de557e6e4.setContent(html_507e52ff4ab9dd97e0195719913d129e);
             
         
 
-        circle_marker_c125665c0709b051af4309f778274aa3.bindPopup(popup_fe6f0b3f3a83aad0f4de933a4ffde7c3)
+        circle_marker_6004bda1653d69c498e576404e907a86.bindPopup(popup_4dd17e1bff0d05418cc2885de557e6e4)
         ;
 
         
