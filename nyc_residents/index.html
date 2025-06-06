@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_3bab81494a1d47a2ce1d8bf89ce0eb7c {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.css"/>
+</head>
+<body>    
+    
+<style>
+  .popup-content { min-width:300px; font-size:14px; color:#333; }
+  .leaflet-popup-content-wrapper { background:#f9f9f9; border:1px solid #bbb; }
+  .leaflet-popup-tip { background:#f9f9f9; }
+</style>
+    
+<h3 style="text-align:center;
+           font-family:Arial,sans-serif;
+           font-size:18px;
+           color:#333;
+           margin-top:10px;">
+  <b>Projects seeking 485x</b>
+</h3>
+    
+            <div class="folium-map" id="map_3bab81494a1d47a2ce1d8bf89ce0eb7c" ></div>
+        
+</body>
+<script>    
+    
+            var map_3bab81494a1d47a2ce1d8bf89ce0eb7c = L.map(
+                "map_3bab81494a1d47a2ce1d8bf89ce0eb7c",
+                {
+                    center: [40.6888653, -73.8020093],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 10.5,
+                    zoomControl: true,
+                    preferCanvas: false,
+                    scrollWheelZoom: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_0210666403e631f145c6ec5548decc13 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+        
+    
+            var tile_layer_cddc90135068faeb16565b21a7bff34f = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {"attribution": "Mapbox", "detectRetina": false, "maxNativeZoom": 20, "maxZoom": 20, "minZoom": 1, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+        
+    
+            L.control.fullscreen(
+                {"forceSeparateButton": false, "position": "topleft", "title": "Full Screen", "titleCancel": "Exit Full Screen"}
+            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+        
+    
+            var tile_layer_6031094b9d53c97ccf3ed62c071a435f = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+            var mini_map_65ec8b6d252d2e7460467c1b2ab5eb14 = new L.Control.MiniMap(
+                tile_layer_6031094b9d53c97ccf3ed62c071a435f,
+                {"autoToggleDisplay": false, "centerFixed": false, "collapsedHeight": 25, "collapsedWidth": 25, "height": 150, "minimized": false, "position": "bottomright", "toggleDisplay": true, "width": 150, "zoomAnimation": false, "zoomLevelOffset": -5}
+            );
+            map_3bab81494a1d47a2ce1d8bf89ce0eb7c.addControl(mini_map_65ec8b6d252d2e7460467c1b2ab5eb14);
+        
+    
+            var circle_marker_f67932a9a7479af85f21a0a0ea1c3bd1 = L.circleMarker(
+                [40.6888653, -73.8020093],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+        
+    
+        var popup_ea49f5008818c7afbecf888d79e3103b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_0922557252bbc3766f01df8dc049e546 = $(`<div id="html_0922557252bbc3766f01df8dc049e546" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Adrienne Adams</h3> <strong>Democratic</strong><br> <strong>144-20 109th Avenue, Jamaica</strong><br> </div></div>`)[0];
+                popup_ea49f5008818c7afbecf888d79e3103b.setContent(html_0922557252bbc3766f01df8dc049e546);
+            
+        
+
+        circle_marker_f67932a9a7479af85f21a0a0ea1c3bd1.bindPopup(popup_ea49f5008818c7afbecf888d79e3103b)
+        ;
+
+        
+    
+    
+            var circle_marker_9db55cb65c10a8884987d7aac9078d6d = L.circleMarker(
+                [40.7557524, -73.9634014],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+        
+    
+        var popup_ffc9fc4504188762ad866d96d6f4b786 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_afb67e240b0dc884a9ac405db38cab7b = $(`<div id="html_afb67e240b0dc884a9ac405db38cab7b" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Andrew Cuomo</h3> <strong>Democratic</strong><br> <strong>420 East 54th Street</strong><br> </div></div>`)[0];
+                popup_ffc9fc4504188762ad866d96d6f4b786.setContent(html_afb67e240b0dc884a9ac405db38cab7b);
+            
+        
+
+        circle_marker_9db55cb65c10a8884987d7aac9078d6d.bindPopup(popup_ffc9fc4504188762ad866d96d6f4b786)
+        ;
+
+        
+    
+    
+            var circle_marker_821c39af8e047276199a03adf7770b49 = L.circleMarker(
+                [44.9891911, -93.2798538],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+        
+    
+        var popup_81c0b4da2ee8b1fc019dd6756dd4ba2d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_280072fe7e64a362ddda7ee3b3d0159d = $(`<div id="html_280072fe7e64a362ddda7ee3b3d0159d" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Michael Blake</h3> <strong>Democratic</strong><br> <strong>837 Washington Avenue, Melrose</strong><br> </div></div>`)[0];
+                popup_81c0b4da2ee8b1fc019dd6756dd4ba2d.setContent(html_280072fe7e64a362ddda7ee3b3d0159d);
+            
+        
+
+        circle_marker_821c39af8e047276199a03adf7770b49.bindPopup(popup_81c0b4da2ee8b1fc019dd6756dd4ba2d)
+        ;
+
+        
+    
+    
+            var circle_marker_e92c93d89dafaaff185f5086ed913d9d = L.circleMarker(
+                [40.7599398, -73.9223299],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+        
+    
+        var popup_4756b3599d948182b49fd05093908437 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_033b513425e6b4e7c6ac0fa357541ced = $(`<div id="html_033b513425e6b4e7c6ac0fa357541ced" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Zohran Mamdani</h3> <strong>Democratic</strong><br> <strong>32-15 35th Street, Astoria</strong><br> </div></div>`)[0];
+                popup_4756b3599d948182b49fd05093908437.setContent(html_033b513425e6b4e7c6ac0fa357541ced);
+            
+        
+
+        circle_marker_e92c93d89dafaaff185f5086ed913d9d.bindPopup(popup_4756b3599d948182b49fd05093908437)
+        ;
+
+        
+    
+    
+            var circle_marker_f66175a41e3df8852c7c639bd35fbac7 = L.circleMarker(
+                [40.706055, -74.0110109],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+        
+    
+        var popup_79bdc15fc217d44527b0ff8e7ffb8793 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_bdb5aa6cef5413b777fbb62248f8c26f = $(`<div id="html_bdb5aa6cef5413b777fbb62248f8c26f" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Scott Stringer</h3> <strong>Democratic</strong><br> <strong>25 Broad Street</strong><br> </div></div>`)[0];
+                popup_79bdc15fc217d44527b0ff8e7ffb8793.setContent(html_bdb5aa6cef5413b777fbb62248f8c26f);
+            
+        
+
+        circle_marker_f66175a41e3df8852c7c639bd35fbac7.bindPopup(popup_79bdc15fc217d44527b0ff8e7ffb8793)
+        ;
+
+        
+    
+    
+            var circle_marker_4f8dcf7bb31c75894ce894d88f3477f4 = L.circleMarker(
+                [40.666986, -73.9891501],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+        
+    
+        var popup_220b8a14b0eb02b501bd721a4ca1afc2 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_f816b227068272341627749edf143b62 = $(`<div id="html_f816b227068272341627749edf143b62" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Brad Lander</h3> <strong>Democratic</strong><br> <strong>256 13th Street, Park Slope</strong><br> </div></div>`)[0];
+                popup_220b8a14b0eb02b501bd721a4ca1afc2.setContent(html_f816b227068272341627749edf143b62);
+            
+        
+
+        circle_marker_4f8dcf7bb31c75894ce894d88f3477f4.bindPopup(popup_220b8a14b0eb02b501bd721a4ca1afc2)
+        ;
+
+        
+    
+    
+            var circle_marker_d7029b64a941203e8fe16aafbfeb30b7 = L.circleMarker(
+                [40.7490003, -73.886776],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+        
+    
+        var popup_e92d97c0c19c2699f840055953cc4a08 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_861320134ff679d3f874e527928f783a = $(`<div id="html_861320134ff679d3f874e527928f783a" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Jessica Ramos</h3> <strong>Democratic</strong><br> <strong>37-15 79th Street, Jackson Heights</strong><br> </div></div>`)[0];
+                popup_e92d97c0c19c2699f840055953cc4a08.setContent(html_861320134ff679d3f874e527928f783a);
+            
+        
+
+        circle_marker_d7029b64a941203e8fe16aafbfeb30b7.bindPopup(popup_e92d97c0c19c2699f840055953cc4a08)
+        ;
+
+        
+    
+    
+            var circle_marker_b7344ca2d0fd3c86529fd15750046cba = L.circleMarker(
+                [40.6600923, -73.96017789999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+        
+    
+        var popup_cb4ba52b500629022169b254c5f775dc = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_9b32ca5531bf8c74ef6eaf262c1e66bc = $(`<div id="html_9b32ca5531bf8c74ef6eaf262c1e66bc" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Zellnor Myrie</h3> <strong>Democratic</strong><br> <strong>10 Maple Street, Prospect–Lefferts Gardens</strong><br> </div></div>`)[0];
+                popup_cb4ba52b500629022169b254c5f775dc.setContent(html_9b32ca5531bf8c74ef6eaf262c1e66bc);
+            
+        
+
+        circle_marker_b7344ca2d0fd3c86529fd15750046cba.bindPopup(popup_cb4ba52b500629022169b254c5f775dc)
+        ;
+
+        
+    
+    
+            var circle_marker_7c374f29f452efb79fbe704e282492fe = L.circleMarker(
+                [40.7888901, -73.9545402],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+        
+    
+        var popup_28619c999d2ea5e3a571e7e3f1d92d02 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_55754eb3f6d888a569e3434f8dda988a = $(`<div id="html_55754eb3f6d888a569e3434f8dda988a" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Whitney Tilson</h3> <strong>Democratic</strong><br> <strong>1165 Fifth Avenue</strong><br> </div></div>`)[0];
+                popup_28619c999d2ea5e3a571e7e3f1d92d02.setContent(html_55754eb3f6d888a569e3434f8dda988a);
+            
+        
+
+        circle_marker_7c374f29f452efb79fbe704e282492fe.bindPopup(popup_28619c999d2ea5e3a571e7e3f1d92d02)
+        ;
+
+        
+    
+    
+            var circle_marker_0b899ce6e5a1f779f8004244cda5a879 = L.circleMarker(
+                [40.69549079999999, -73.9959748],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+        
+    
+        var popup_3cbfa1eea57d4b0093f1e4207a12996b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_112b497b4c31e2c0020a1537a4e7f8a4 = $(`<div id="html_112b497b4c31e2c0020a1537a4e7f8a4" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Jim Walden</h3> <strong>Independent</strong><br> <strong>200 Hicks Street, Brooklyn Heights</strong><br> </div></div>`)[0];
+                popup_3cbfa1eea57d4b0093f1e4207a12996b.setContent(html_112b497b4c31e2c0020a1537a4e7f8a4);
+            
+        
+
+        circle_marker_0b899ce6e5a1f779f8004244cda5a879.bindPopup(popup_3cbfa1eea57d4b0093f1e4207a12996b)
+        ;
+
+        
+    
+    
+            var circle_marker_c125665c0709b051af4309f778274aa3 = L.circleMarker(
+                [40.780127, -73.98359909999999],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1}
+            ).addTo(map_3bab81494a1d47a2ce1d8bf89ce0eb7c);
+        
+    
+        var popup_fe6f0b3f3a83aad0f4de933a4ffde7c3 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_ce5e11aa896cada5f16708b2118cb7d6 = $(`<div id="html_ce5e11aa896cada5f16708b2118cb7d6" style="width: 100.0%; height: 100.0%;"><div class='popup-content'> <h3>Curtis Sliwa</h3> <strong>Republican</strong><br> <strong>272 West 73rd Street</strong><br> </div></div>`)[0];
+                popup_fe6f0b3f3a83aad0f4de933a4ffde7c3.setContent(html_ce5e11aa896cada5f16708b2118cb7d6);
+            
+        
+
+        circle_marker_c125665c0709b051af4309f778274aa3.bindPopup(popup_fe6f0b3f3a83aad0f4de933a4ffde7c3)
+        ;
+
+        
+    
+</script>
