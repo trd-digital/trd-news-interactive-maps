@@ -88,7 +88,7 @@
     <script src="../trd-data/common-table/table.js"></script>
     <script type="text/javascript">
       const displayColumns = [
-        { dataField: "Full Address", name: "Address", visible: true },
+        { dataField: "Address", name: "Address", visible: true },
         {
           dataField: "Construction status",
           name: "Construction Status",
@@ -100,10 +100,21 @@
           visible: true,
         },
         { dataField: "Developer", name: "Developer", visible: true },
-        { dataField: "Res Units", name: "Res Units", visible: true },
-        { dataField: "Hotels Rooms", name: "Hotel Rooms", visible: true },
-        { dataField: "Office Sq. Ft.", name: "Office SqFt", visible: true },
-        { dataField: "Retail Sq. Ft.", name: "Retail SqFt", visible: true },
+        {
+          dataField: "Residential Units",
+          name: "Residential units",
+          visible: false,
+        },
+        { dataField: "Condos", name: "Condos", visible: false },
+        {
+          dataField: "Affordable Units",
+          name: "Affordable units",
+          visible: false,
+        },
+        { dataField: "Hotel Rooms", name: "Hotel Rooms", visible: false },
+        { dataField: "Office SqFt", name: "Office SqFt", visible: true },
+        { dataField: "Retail SqFt", name: "Retail SqFt", visible: true },
+        { dataField: "Other uses", name: "Other uses", visible: false },
         {
           dataField: "Estimated Completion",
           name: "Estimated Completion",
@@ -113,7 +124,7 @@
 
       const fetchDataFilterCallback = (data) => {
         return new Promise((resolve) => {
-          let filteredData = data.features.map((item) => {
+          const filteredData = data.features.map((item) => {
             return {
               ...item.properties,
             };

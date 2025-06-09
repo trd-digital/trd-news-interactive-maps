@@ -219,36 +219,14 @@ const TrdDataCommonTable = (options) => {
         console.error("No data available to map columns.");
         return [];
       }
-      const columns = Object.keys(data[0])
-        .sort((a, b) => {
-          // sort it by displayColumns order
-          const aIndex = settings.displayColumns.findIndex(
-            (column) => column.dataField === a
-          );
-          const bIndex = settings.displayColumns.findIndex(
-            (column) => column.dataField === b
-          );
-          if (aIndex === -1 && bIndex !== -1) return 1;
-          if (aIndex !== -1 && bIndex === -1) return -1;
-          if (aIndex === -1 && bIndex === -1) return 0;
-
-          return aIndex - bIndex;
-        })
-        .map((property) => {
-          const displayColumn = settings.displayColumns.find(
-            (column) => column.dataField === property
-          );
-
-          if (!displayColumn) {
-            return null;
-          }
-
+      const columns = settings.displayColumns
+        .map((displayColumn) => {
           return {
             ...settings.columnConfig,
             ...displayColumn,
             visible: displayColumn.visible ? true : false,
-            field: TrdFormatters.getFieldName(property),
-            title: displayColumn.name || property,
+            field: TrdFormatters.getFieldName(displayColumn.dataField),
+            title: displayColumn.name || displayColumn.dataField,
           };
         })
         .filter((column) => column);
