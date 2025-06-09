@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_dc6aeddea05b024b9496f633dd1767d3 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+  <h3 align="center" style="font-size:16px"><b>Recent Palm Beach County Condo Sales</b></h3>
+    
+  <p align="center" style="font-size:13px"><i>May 30 — June 7</i></p>
+    
+            <div class="folium-map" id="map_dc6aeddea05b024b9496f633dd1767d3" ></div>
+        
+    
+  <div style="
+      position: fixed;
+      bottom: 50px; left: 50px;
+      background: white; padding: 8px;
+      border: 2px solid grey;
+      font-size: 12px;
+      z-index: 9999;
+  ">
+    <div style="display:inline-block; font-size:18px; color:gold; margin-right:6px;">&#9733;</div> Top Sale<br>
+    <i style="background: blue; width: 10px; height: 10px;
+       display: inline-block; margin-right: 6px;"></i> All other sales
+  </div>
+</body>
+<script>    
+    
+            var map_dc6aeddea05b024b9496f633dd1767d3 = L.map(
+                "map_dc6aeddea05b024b9496f633dd1767d3",
+                {
+                    center: [26.58420910537635, -80.10797563225806],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 9,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_f1c4306dc544be2102534209eb17ded1 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_dc6aeddea05b024b9496f633dd1767d3);
+        
+    
+            var tile_layer_8c386e413916097a38aee64e0b819106 = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {"attribution": "Mapbox", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_dc6aeddea05b024b9496f633dd1767d3);
+        
+    
+            var marker_d8bbe8bece6e1fb2230d372436cbd303 = L.marker(
+                [26.708264, -80.051289],
+                {}
+            ).addTo(map_dc6aeddea05b024b9496f633dd1767d3);
+        
+    
+            var div_icon_d9e0f67cedc71b3fdddb04c069070fca = L.divIcon({"className": "empty", "html": "\n                \u003cdiv style=\"font-size:24px; line-height:24px; color:gold;\"\u003e\n                  \u0026#9733;\n                \u003c/div\u003e\n                "});
+            marker_d8bbe8bece6e1fb2230d372436cbd303.setIcon(div_icon_d9e0f67cedc71b3fdddb04c069070fca);
+        
+    
+        var popup_f41da36c48e08d5a7e0e7c4bb729e675 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_6d79f9be697cba846dfccd5c357980b6 = $(`<div id="html_6d79f9be697cba846dfccd5c357980b6" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>525 S Flagler Dr Ph 3ab<br>     <strong>Sale Price: </strong>$6,050,000.0<br>     <strong>Price sq ft: </strong>$1,506.0<br>     <strong>Square Footage: </strong>4,018.0<br>     <strong>Year Built: </strong>1986.0<br>     </html>     </div>`)[0];
+                popup_f41da36c48e08d5a7e0e7c4bb729e675.setContent(html_6d79f9be697cba846dfccd5c357980b6);
+            
+        
+
+        marker_d8bbe8bece6e1fb2230d372436cbd303.bindPopup(popup_f41da36c48e08d5a7e0e7c4bb729e675)
+        ;
+
+        
+    
+    
+            var circle_marker_27173e08c160376fdf2c5fa2a76144b1 = L.circleMarker(
+                [26.3774679, -80.1634633],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_dc6aeddea05b024b9496f633dd1767d3);
+        
+    
+        var popup_59612368f4ff8470f4368bc96f31ba03 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_0e305c5b0f6ce24f2d68015e20e4429e = $(`<div id="html_0e305c5b0f6ce24f2d68015e20e4429e" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>20155 Boca West Dr Unit C601<br>     <strong>Sale Price: </strong>$5,300,000.0<br>     <strong>Price sq ft: </strong>$1,845.0<br>     <strong>Square Footage: </strong>2,873.0<br>     <strong>Year Built: </strong>2019.0<br>     </html>     </div>`)[0];
+                popup_59612368f4ff8470f4368bc96f31ba03.setContent(html_0e305c5b0f6ce24f2d68015e20e4429e);
+            
+        
+
+        circle_marker_27173e08c160376fdf2c5fa2a76144b1.bindPopup(popup_59612368f4ff8470f4368bc96f31ba03)
+        ;
+
+        
+    
+    
+            var circle_marker_e4c07abc8f51eb23965e1f4a5c899a98 = L.circleMarker(
+                [26.708413, -80.0511347],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_dc6aeddea05b024b9496f633dd1767d3);
+        
+    
+        var popup_ef1cfd42c773e5bb970049dd08d8518d = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_164670afce2f39ceeaf9beeada9fb631 = $(`<div id="html_164670afce2f39ceeaf9beeada9fb631" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>525 S Flagler Dr Unit 21 C/D<br>     <strong>Sale Price: </strong>$4,900,000.0<br>     <strong>Price sq ft: </strong>$1,220.0<br>     <strong>Square Footage: </strong>4,018.0<br>     <strong>Year Built: </strong>1986.0<br>     </html>     </div>`)[0];
+                popup_ef1cfd42c773e5bb970049dd08d8518d.setContent(html_164670afce2f39ceeaf9beeada9fb631);
+            
+        
+
+        circle_marker_e4c07abc8f51eb23965e1f4a5c899a98.bindPopup(popup_ef1cfd42c773e5bb970049dd08d8518d)
+        ;
+
+        
+    
+    
+            var circle_marker_ff90d8263c4972c378b311eed184be04 = L.circleMarker(
+                [26.785118, -80.033251],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_dc6aeddea05b024b9496f633dd1767d3);
+        
+    
+        var popup_4cbd68fee2ae54ea126bf5bf880018fd = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_d5a319cfebcf1ba1ff0ca4407da1c239 = $(`<div id="html_d5a319cfebcf1ba1ff0ca4407da1c239" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>2700 N Ocean Dr Unit 2502b<br>     <strong>Sale Price: </strong>$3,100,000.0<br>     <strong>Price sq ft: </strong>$1,165.0<br>     <strong>Square Footage: </strong>2,660.0<br>     <strong>Year Built: </strong>2008.0<br>     </html>     </div>`)[0];
+                popup_4cbd68fee2ae54ea126bf5bf880018fd.setContent(html_d5a319cfebcf1ba1ff0ca4407da1c239);
+            
+        
+
+        circle_marker_ff90d8263c4972c378b311eed184be04.bindPopup(popup_4cbd68fee2ae54ea126bf5bf880018fd)
+        ;
+
+        
+    
+    
+            var circle_marker_890d0b0052ece0084e2d990257988977 = L.circleMarker(
+                [26.4249437, -80.0631839],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_dc6aeddea05b024b9496f633dd1767d3);
+        
+    
+        var popup_8763aa38166b0cfd6d6c19817e50afdc = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_e4c9ebdc429789ab57fcc6dc360668bc = $(`<div id="html_e4c9ebdc429789ab57fcc6dc360668bc" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>2727 Ocean Blvd #407<br>     <strong>Sale Price: </strong>$2,750,000.0<br>     <strong>Price sq ft: </strong>$1,096.0<br>     <strong>Square Footage: </strong>2,510.0<br>     <strong>Year Built: </strong>1982.0<br>     </html>     </div>`)[0];
+                popup_8763aa38166b0cfd6d6c19817e50afdc.setContent(html_e4c9ebdc429789ab57fcc6dc360668bc);
+            
+        
+
+        circle_marker_890d0b0052ece0084e2d990257988977.bindPopup(popup_8763aa38166b0cfd6d6c19817e50afdc)
+        ;
+
+        
+    
+    
+            var circle_marker_887a625b24b25b3c9aae22a284f02195 = L.circleMarker(
+                [26.5038516, -80.0530383],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_dc6aeddea05b024b9496f633dd1767d3);
+        
+    
+        var popup_43e24e75f513b9e692109c2abc93db6c = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_8d256d457dc92dbe4a6859381f22879d = $(`<div id="html_8d256d457dc92dbe4a6859381f22879d" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>4475 N Ocean Blvd Unit 21d<br>     <strong>Sale Price: </strong>$1,532,500.0<br>     <strong>Price sq ft: </strong>$1,008.0<br>     <strong>Square Footage: </strong>1,520.0<br>     <strong>Year Built: </strong>1973.0<br>     </html>     </div>`)[0];
+                popup_43e24e75f513b9e692109c2abc93db6c.setContent(html_8d256d457dc92dbe4a6859381f22879d);
+            
+        
+
+        circle_marker_887a625b24b25b3c9aae22a284f02195.bindPopup(popup_43e24e75f513b9e692109c2abc93db6c)
+        ;
+
+        
+    
+    
+            var circle_marker_c20d3df5fccfa251428042bf61ab43b2 = L.circleMarker(
+                [26.460259, -80.063221],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_dc6aeddea05b024b9496f633dd1767d3);
+        
+    
+        var popup_e5904096e8aebe097c316832adec1a8d = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_5a1d8dc0e4a9e521444b16482b4a46d8 = $(`<div id="html_5a1d8dc0e4a9e521444b16482b4a46d8" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>86 Macfarlane Dr Unit 5b<br>     <strong>Sale Price: </strong>$1,520,000.0<br>     <strong>Price sq ft: </strong>$643.0<br>     <strong>Square Footage: </strong>2,363.0<br>     <strong>Year Built: </strong>1967.0<br>     </html>     </div>`)[0];
+                popup_e5904096e8aebe097c316832adec1a8d.setContent(html_5a1d8dc0e4a9e521444b16482b4a46d8);
+            
+        
+
+        circle_marker_c20d3df5fccfa251428042bf61ab43b2.bindPopup(popup_e5904096e8aebe097c316832adec1a8d)
+        ;
+
+        
+    
+    
+            var circle_marker_0366bc7251d48588cd4f112f829827a2 = L.circleMarker(
+                [26.3217451, -80.0752315],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_dc6aeddea05b024b9496f633dd1767d3);
+        
+    
+        var popup_53294accb73195401b3c707f5dd5e6b5 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_9478d32d2a3b42be3836d9068af67aec = $(`<div id="html_9478d32d2a3b42be3836d9068af67aec" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>3000 S Ocean Blvd #1501<br>     <strong>Sale Price: </strong>$1,250,000.0<br>     <strong>Price sq ft: </strong>$701.0<br>     <strong>Square Footage: </strong>1,782.0<br>     <strong>Year Built: </strong>1970.0<br>     </html>     </div>`)[0];
+                popup_53294accb73195401b3c707f5dd5e6b5.setContent(html_9478d32d2a3b42be3836d9068af67aec);
+            
+        
+
+        circle_marker_0366bc7251d48588cd4f112f829827a2.bindPopup(popup_53294accb73195401b3c707f5dd5e6b5)
+        ;
+
+        
+    
+    
+            var circle_marker_67b17cd391374fd19e6039f7d627dad4 = L.circleMarker(
+                [26.803026, -80.0334254],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_dc6aeddea05b024b9496f633dd1767d3);
+        
+    
+        var popup_ea1bce6c8b528be64867a44e32000844 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_07f1a6a97cafa9d678612fc5db8b4833 = $(`<div id="html_07f1a6a97cafa9d678612fc5db8b4833" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>5150 N Ocean Dr #1803<br>     <strong>Sale Price: </strong>$1,180,000.0<br>     <strong>Price sq ft: </strong>$565.0<br>     <strong>Square Footage: </strong>2,088.0<br>     <strong>Year Built: </strong>2003.0<br>     </html>     </div>`)[0];
+                popup_ea1bce6c8b528be64867a44e32000844.setContent(html_07f1a6a97cafa9d678612fc5db8b4833);
+            
+        
+
+        circle_marker_67b17cd391374fd19e6039f7d627dad4.bindPopup(popup_ea1bce6c8b528be64867a44e32000844)
+        ;
+
+        
+    
+    
+            var circle_marker_75de1c837323d6ddd5f21dae3ee72c63 = L.circleMarker(
+                [26.3691412, -80.0701],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_dc6aeddea05b024b9496f633dd1767d3);
+        
+    
+        var popup_47267485a78967518557cf477ceefda5 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_42f46313fc7299435a573b4891953413 = $(`<div id="html_42f46313fc7299435a573b4891953413" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>2003 N Ocean Blvd #302<br>     <strong>Sale Price: </strong>$985,000.0<br>     <strong>Price sq ft: </strong>$483.0<br>     <strong>Square Footage: </strong>2,038.0<br>     <strong>Year Built: </strong>1980.0<br>     </html>     </div>`)[0];
+                popup_47267485a78967518557cf477ceefda5.setContent(html_42f46313fc7299435a573b4891953413);
+            
+        
+
+        circle_marker_75de1c837323d6ddd5f21dae3ee72c63.bindPopup(popup_47267485a78967518557cf477ceefda5)
+        ;
+
+        
+    
+    
+            var layer_control_c4b609e5330e6350ab3dbe9a47de76a3 = {
+                base_layers : {
+                },
+                overlays :  {
+                },
+            };
+            L.control.layers(
+                layer_control_c4b609e5330e6350ab3dbe9a47de76a3.base_layers,
+                layer_control_c4b609e5330e6350ab3dbe9a47de76a3.overlays,
+                {"autoZIndex": true, "collapsed": false, "position": "topright"}
+            ).addTo(map_dc6aeddea05b024b9496f633dd1767d3);
+        
+</script>
