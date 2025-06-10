@@ -39,7 +39,7 @@
         label: dealType === "Buy" ? "Sale Price" : "Loan Amount",
       },
       {
-        field: "Deal Type",
+        field: "DEAL TYPE",
         label: "Deal Type",
       },
       {
@@ -53,7 +53,7 @@
         format: "formatDate",
       },
       {
-        field: "Full Address",
+        field: "FULL ADDRESS",
         label: "Full Address",
       },
       {
@@ -173,7 +173,7 @@
     return {
       ...data,
       features: data.features.filter((feature) => {
-        return feature.properties["Deal Type"] === dealType;
+        return feature.properties["DEAL TYPE"] === dealType;
       }),
     };
   };
@@ -208,7 +208,7 @@
     fetchDataFilterCallback,
     eventCategory: "new-york-city-deal-sheet-buy-map",
     filePath:
-      "https://teststatic.therealdeal.com/interactive-maps/nyc_dealsheet.geojson",
+      "https://static.therealdeal.com/interactive-maps/nyc-deal-sheet-map.geojson",
     mapElementId: "map",
     filterElementId: "map-filters",
     legendElementId: "legend",
@@ -222,7 +222,7 @@
     tooltipDisplayFields,
     modalDisplayFields,
     filterFields,
-    mapLayerFieldKey: "Deal Type",
+    mapLayerFieldKey: "DEAL TYPE",
     defaultColors: getDefaultColors(dealType),
     paintCircleColorType: "",
     loadingEnabled: true,

@@ -135,6 +135,7 @@
           dataField: "DEAL CLOSING DATE",
           name: "Deal Closing Date",
           visible: true,
+          formatter: TrdFormatters.formatDate,
           sorter: (a, b) => {
             if (
               TrdFormatters.isEmptyValue(a) ||
@@ -149,6 +150,7 @@
           dataField: "SALE PRICE/LOAN AMOUNT",
           name: "Sale/Loan Amount",
           visible: true,
+          formatter: TrdFormatters.formatPrice,
           sorter: (a, b) => {
             if (
               !TrdFormatters.isEmptyValue(a) &&
@@ -168,6 +170,7 @@
           dataField: "SQUARE FEET",
           name: "SqFt",
           visible: true,
+          formatter: TrdFormatters.formatNumber,
           sorter: (a, b) => {
             if (
               !TrdFormatters.isEmptyValue(a) &&
@@ -241,7 +244,7 @@
       const fetchDataFilterCallback = (data) => {
         return data.features
           .filter((item) => {
-            return item.properties["Deal Type"] === "Financing";
+            return item.properties["DEAL TYPE"] === "Financing";
           })
           .map((item) => {
             return {
@@ -252,7 +255,7 @@
 
       const table = TrdDataCommonTable({
         filePath:
-          "https://teststatic.therealdeal.com/interactive-maps/nyc_dealsheet.geojson",
+          "https://static.therealdeal.com/interactive-maps/nyc-deal-sheet-map.geojson",
         eventCategory: "new-york-dealsheet-financing-table",
         displayColumns,
         fetchDataFilterCallback,
