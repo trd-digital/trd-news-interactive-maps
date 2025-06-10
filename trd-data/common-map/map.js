@@ -688,12 +688,24 @@ const trdDataCommonMap = (options) => {
 
       return colors;
     },
+    Default: () => {
+      return [
+        "case",
+        ["boolean", ["feature-state", "hover"], false],
+        helpers.pickThemeColor("black", "white"),
+        helpers.pickThemeColor(
+          settings.defaultColors.light ? settings.defaultColors.light : "black",
+          settings.defaultColors.dark ? settings.defaultColors.dark : "white"
+        ),
+      ];
+    },
   };
 
   const map = {
     currentZoom: mapConfig.zoom,
     dataLoaded: false,
     mapboxLoaded: false,
+    mapSelectedFeatureId: null,
     init: () => {
       map.getData();
       map.load();
@@ -744,12 +756,12 @@ const trdDataCommonMap = (options) => {
       const timer = setInterval(() => {
         if (map.dataLoaded && map.mapboxLoaded) {
           clearInterval(timer);
-          map.loadSalesDataOnMap(settings.sourceId, {
+          map.loadDataOnMap(settings.sourceId, {
             ...mapData,
             features: filters.getFilterFeatures(mapData),
           });
           map.tooltip(settings.sourceId);
-          map.modal(settings.sourceId);
+          modal.init(settings.sourceId);
         }
       }, 100);
     },
@@ -820,21 +832,14 @@ const trdDataCommonMap = (options) => {
       });
     },
 
-    loadSalesDataOnMap: (id, data) => {
+    loadDataOnMap: (id, data) => {
       const circleColor =
         settings.paintCircleColorType &&
         Object.keys(paintCircleColorTypes).includes(
           settings.paintCircleColorType
         )
           ? paintCircleColorTypes[settings.paintCircleColorType]()
-          : helpers.pickThemeColor(
-              settings.defaultColors.light
-                ? settings.defaultColors.light
-                : "black",
-              settings.defaultColors.dark
-                ? settings.defaultColors.dark
-                : "white"
-            );
+          : paintCircleColorTypes.Default();
 
       let filters = settings.mapLayerFilter ? settings.mapLayerFilter : [];
       filters = settings.cluster
@@ -845,6 +850,7 @@ const trdDataCommonMap = (options) => {
         mapObj.addSource(id, {
           type: "geojson",
           data: data,
+          generateId: true, // Generate unique IDs for features
           cluster: settings.mapCluster,
           clusterMaxZoom: settings.mapClusterMaxZoom,
           clusterRadius: settings.mapClusterRadius,
@@ -861,6 +867,12 @@ const trdDataCommonMap = (options) => {
             "circle-pitch-alignment": "map",
             "circle-color": circleColor,
             ...(settings.mapLayerPaint ? settings.mapLayerPaint : {}),
+            "circle-radius": [
+              "case",
+              ["boolean", ["feature-state", "hover"], false],
+              10, // radius when hovered
+              5, // default radius
+            ],
           },
         });
       }
@@ -1026,7 +1038,39 @@ const trdDataCommonMap = (options) => {
       `;
     },
 
-    modal: (id) => {
+    setSelectedFeature: (featureId) => {
+      map.unSelectFeature();
+      map.mapSelectedFeatureId = featureId;
+
+      mapObj.setFeatureState(
+        {
+          source: settings.sourceId,
+          id: featureId,
+        },
+        {
+          hover: true,
+        }
+      );
+    },
+
+    unSelectFeature: () => {
+      if (map.mapSelectedFeatureId) {
+        mapObj.setFeatureState(
+          {
+            source: settings.sourceId,
+            id: map.mapSelectedFeatureId,
+          },
+          {
+            hover: false,
+          }
+        );
+        map.mapSelectedFeatureId = null;
+      }
+    },
+  };
+
+  const modal = {
+    init: (id) => {
       if (!settings?.modalDisplayFields) return;
 
       mapObj.on("click", `${id}-points`, (e) => {
@@ -1034,7 +1078,20 @@ const trdDataCommonMap = (options) => {
           return;
         }
 
-        const modal = document.querySelector("#modal");
+        map.unSelectFeature();
+
+        map.mapSelectedFeatureId = e.features[0].id;
+
+        // zoom to the clicked point
+        mapObj.flyTo({
+          center: modal.offsetCenter(e.features[0].geometry.coordinates),
+          zoom: 14,
+        });
+
+        // highlight the clicked point
+        map.setSelectedFeature(e.features[0].id);
+
+        const modalEl = document.querySelector("#modal");
         const modalTitle = document.querySelector("#modal .modal-title");
         const modalContent = document.querySelector("#modal .modal-body");
 
@@ -1112,14 +1169,30 @@ const trdDataCommonMap = (options) => {
 
         modalContent.innerHTML = html;
         modalContent.scrollTop = 0;
-        modal.style.display = "block";
+        modalEl.style.display = "block";
         tracking.trackEvent("detail_view", address.toLowerCase());
       });
 
       const close = document.querySelector("#modal .btn-close");
       close.addEventListener("click", () => {
-        modal.style.display = "none";
+        document.querySelector("#modal").style.display = "none";
+        map.unSelectFeature();
+        tracking.trackEvent("detail_view", "close");
+        // map zoom out to the original zoom level
+        mapObj.flyTo({
+          center: mapConfig.center,
+          zoom: mapConfig.zoom,
+        });
       });
+    },
+
+    offsetCenter: (coordinates) => {
+      // offset the center to right when model is open
+      const offset = 0.009; // adjust this value to change the offset
+      return [
+        coordinates[0] - offset,
+        coordinates[1], // keep the latitude the same
+      ];
     },
   };
 
