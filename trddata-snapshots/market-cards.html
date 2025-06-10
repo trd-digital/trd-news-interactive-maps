@@ -157,12 +157,12 @@
       const widgetCards = () => {
         const defaults = {
           rootElement: document.getElementById("snapshot"),
-          dataUrl: "TRD Data Snapshots - Snapshot2_0.csv",
-          region: "New York, NY metro area",
+          dataUrl: "nyc-snapshots.json",
+          region: "New York County, NY",
           sector: "Residential",
-          current_date_period: "Q1 2025",
-          previous_date_period: "Q4 2024",
-          display_title_order: [
+          currentDatePeriod: "Q1 2025",
+          previousDatePeriod: "Q4 2024",
+          displayOrder: [
             "Median Sale Price",
             "Median Price Per Sq. Ft.",
             "Number of Sales",
@@ -181,42 +181,35 @@
           },
 
           getData: () => {
-            Papa.parse(
-              defaults.dataUrl,
-              {
-                download: true,
-                header: true,
-                skipEmptyLines: true,
-                complete: (results) => {
-                  const currentPeriodData = results.data.filter(
+            fetch(defaults.dataUrl)
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error("Network response was not ok");
+                }
+                return response.json();
+              })
+              .then((data) => {
+                const regionData = data[defaults.region];
+                if (!regionData) {
+                  console.error("No data found for the specified region.");
+                  return;
+                }
+                const currentPeriodData = regionData.filter(
                     (item) =>
-                      item["region"] === defaults.region &&
-                      item["sector"] === defaults.sector &&
-                      item["date_period"] === defaults.current_date_period
-                  ).sort((a, b) => {
-                    const indexA = defaults.display_title_order.indexOf(a["display_title"]);
-                    const indexB = defaults.display_title_order.indexOf(b["display_title"]);
-                    return indexA - indexB;
-                  });
-
-                  const previousPeriodData = results.data.filter(
+                      item["Sector"] === defaults.sector &&
+                      item["Date Period"] === defaults.currentDatePeriod
+                  );
+                  const previousPeriodData = regionData.filter(
                     (item) =>
-                      item["region"] === defaults.region &&
-                      item["sector"] === defaults.sector &&
-                      item["date_period"] === defaults.previous_date_period
-                  ).sort((a, b) => {
-                    const indexA = defaults.display_title_order.indexOf(a["display_title"]);
-                    const indexB = defaults.display_title_order.indexOf(b["display_title"]);
-                    return indexA - indexB;
-                  });
+                      item["Sector"] === defaults.sector &&
+                      item["Date Period"] === defaults.previousDatePeriod
+                  );
 
                   fn.renderCards(currentPeriodData, previousPeriodData);
-                },
-                error: (error) => {
-                  console.error("Error parsing CSV:", error)
-                }
-            }
-            )
+              })
+              .catch(error => {
+                console.error("Error fetching data:", error);
+              });
           },
 
           addLoadingCards: () => {
@@ -247,34 +240,32 @@
             const root = defaults.rootElement;
             const container = document.createElement("div");
             container.classList.add("widget-cards");
-            currentData.forEach((item) => {
+            defaults.displayOrder.forEach((title) => {
+              const currentValue = currentData[0][title];
+              const previousValue = previousData[0][title];
+              // Skip rendering if both current and previous values are empty
+              if (!currentValue || !previousValue) {
+                return;
+              }
               const card = document.createElement("div");
               card.className = "widget-card";
               card.innerHTML = `
-                <h5 class="widget-card-title">${item["display_title"]}</h5>
-                <div class="widget-card-value">${item['value']}</div>
-                ${fn.renderCompare(item, previousData.filter(i => i["display_title"] === item["display_title"]))}
+                <h5 class="widget-card-title">${title}</h5>
+                <div class="widget-card-value">${currentValue}</div>
+                ${fn.renderCompare(currentValue, previousValue)}
               `;
               container.appendChild(card);
             });
             root.innerHTML = ""; // Clear previous content
             root.appendChild(container);
-
-            // const footer = document.createElement("div");
-            // footer.className = "d-flex mt-3 justify-content-between mx-4";
-            // footer.innerHTML = `
-            //   <div class="text-muted">Last updated: ${currentData[0]['last_updated']}</div>
-            //   <div class="text-muted">${currentData[0]["date_period"]}</div>
-            // `;
-            // root.appendChild(footer);
           },
 
-          renderCompare: (currentData, previousData) => {
-            if(!previousData || previousData.length === 0) {
+          renderCompare: (rawCurrentValue, rawPreviousValue) => {
+            if(!rawPreviousValue) {
               return '';
             }
-            const currentValue = parseFloat(currentData['value'].replace(/[$,]/g, ""));
-            const previousValue = parseFloat(previousData[0]['value'].replace(/[$,]/g, ""));
+            const currentValue = parseFloat(rawCurrentValue.replace(/[$,]/g, ""));
+            const previousValue = parseFloat(rawPreviousValue.replace(/[$,]/g, ""));
             const change = ((currentValue - previousValue) / previousValue) * 100;
             const changeText = change > 0 ? `+${change.toFixed(2)}%` : `${change.toFixed(2)}%`;
             const changeClass = change > 0 ? "text-success" : "text-danger";
