@@ -100,7 +100,7 @@
       fieldType: "radio",
       fieldLayoutClass: "radio-group",
       multiSelect: false,
-      defaultValue: "90",
+      defaultValue: "182", // 6 months
       callback: (values, item) => {
         const days = values[0];
         const date = new Date();
@@ -109,10 +109,6 @@
         return recordDate >= date;
       },
       options: [
-        {
-          label: "3 Months",
-          value: "90",
-        },
         {
           label: "6 Months",
           value: "182",
