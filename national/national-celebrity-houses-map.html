@@ -6,56 +6,14 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Celebrity houses map - The Real Deal</title>
     <link
       rel="icon"
       type="image/x-icon"
       href="https://therealdeal.com/favicon.ico"
     />
-
-    <!-- Primary Meta Tags -->
-    <title>National Celebrity Houses Map - The Real Deal</title>
-    <meta
-      name="title"
-      content="National Celebrity Houses Map - The Real Deal"
-    />
-    <meta
-      name="description"
-      content="Latest National Celebrity Houses in map view."
-    />
     <link rel="canonical" href="https://therealdeal.com/data/" />
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://therealdeal.com/data/" />
-    <meta
-      property="og:title"
-      content="National Celebrity Houses - The Real Deal"
-    />
-    <meta
-      property="og:description"
-      content="Latest National Celebrity Houses"
-    />
-    <meta
-      property="og:image"
-      content="https://static.therealdeal.com/wp-content/uploads/2019/10/trd-logo-16x9.jpg"
-    />
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://therealdeal.com/data/" />
-    <meta
-      property="twitter:title"
-      content="National Celebrity Houses - The Real Deal"
-    />
-    <meta
-      property="twitter:description"
-      content="Latest National Celebrity Houses"
-    />
-    <meta
-      property="twitter:image"
-      content="https://static.therealdeal.com/wp-content/uploads/2019/10/trd-logo-16x9.jpg"
-    />
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       rel="preconnect"
@@ -65,6 +23,10 @@
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Merriweather:wght@0,400;0,700;0,900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css"
     />
     <link
       rel="stylesheet"
@@ -102,27 +64,6 @@
       ></iframe
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
-
-    <main class="map-container">
-      <section id="map" class="map"></section>
-      <section id="modal" class="detail-modal modal">
-        <div class="modal-dialog modal-dialog-scrollable">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title"></h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body"></div>
-          </div>
-        </div>
-      </section>
-    </main>
-
     <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -131,6 +72,138 @@
     <script src="../trd-data/common-formatter/formatter.js"></script>
     <script src="../trd-data/common-loading/loading.js"></script>
     <script src="../trd-data/common-map/map.js?v=1.1"></script>
-    <script src="national-celebrity-houses-map.js"></script>
+    <script>
+      const tooltipDisplayFields = {
+        image: {
+          field: "image_links",
+        },
+        title: {
+          field: "Title",
+          label: "Title",
+        },
+        content: [
+          {
+            field: "Subject Address",
+            label: "Address",
+            className: "tooltip-block",
+          },
+          {
+            field: "Sale Price (text)",
+            label: "Sale Price",
+            className: "tooltip-block",
+          },
+        ],
+      };
+
+      const modalDisplayFields = {
+        title: {
+          field: "Title",
+          label: "Title",
+        },
+        content: [
+          {
+            field: "Subhead",
+            label: "Subhead",
+          },
+          {
+            field: "Authors",
+            label: "Authors",
+          },
+          {
+            field: "Published Date",
+            label: "Published Date",
+            format: "formatDate",
+          },
+          {
+            field: "Sale Price (text)",
+            label: "Sale Price",
+          },
+          {
+            field: "Subject Address",
+            label: "Address",
+          },
+          {
+            field: "Geographic Market",
+            label: "Market",
+          },
+          {
+            field: "URL",
+            label: "Source",
+            format: (value) =>
+              `<a href="${value}" target="_blank">Read more</a>`,
+          },
+          {
+            field: "Content",
+            label: "Content",
+          },
+        ],
+      };
+
+      const filterFields = [];
+
+      window.map = trdDataCommonMap({
+        filePath:
+          "https://static.therealdeal.com/interactive-maps/national-celebrity-houses-map.geojson",
+        eventCategory: "national-celebrity-map",
+        mapElementId: "map",
+        filterElementId: "map-filters",
+        legendElementId: "legend",
+        resultElementId: "result",
+        mapCenterLat: 39.8283,
+        mapCenterLng: -98.5795,
+        zoom: 4,
+        minZoom: 3,
+        tooltipDisplayFields,
+        modalDisplayFields,
+        filterFields,
+        loadingEnabled: true,
+        pointSettings: {
+          clickToCenter: true,
+          clickToZoom: false,
+          colorType: "case",
+          radiusType: "radius",
+          paintSettings: {
+            default: {
+              radius: 6,
+              color: {
+                light: "#FF5722",
+                dark: "#D84315",
+              },
+            },
+            hover: {
+              radius: 8,
+              color: {
+                light: "#FF5722",
+                dark: "#D84315",
+              },
+            },
+            active: {
+              radius: 10,
+              color: {
+                light: "#D84315",
+                dark: "#FF5722",
+              },
+            },
+          },
+        },
+        clusterSettings: {
+          enable: true,
+          colorType: "case",
+          textSize: 16,
+          paintSettings: {
+            default: {
+              color: {
+                light: "#FF5722",
+                dark: "#D84315",
+              },
+              textColor: {
+                light: "#ffffff",
+                dark: "#ffffff",
+              },
+            },
+          },
+        },
+      });
+    </script>
   </body>
 </html>

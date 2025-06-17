@@ -1,6 +1,75 @@
 (() => {
-  const map = document.getElementById("map");
-  const dealType = map.getAttribute("data-deal-type");
+  const getDealTypeFromUrl = () => {
+    const pathname = window.location.pathname;
+    if (pathname.includes("-buy-")) {
+      return "Buy";
+    }
+    if (pathname.includes("-financing-")) {
+      return "Financing";
+    }
+    if (pathname.includes("-office-leasing-")) {
+      return "Office Leasing";
+    }
+    if (pathname.includes("-retail-leasing-")) {
+      return "Retail Leasing";
+    }
+    return "Buy"; // Default case
+  };
+
+  const dealType = getDealTypeFromUrl();
+
+  const buyLegendKeys = [
+    {
+      title: dealType === "Buy" ? "Sales" : "Finance",
+      options: [
+        {
+          value: 10_000_000,
+          color: {
+            light: "#DEED97",
+            dark: "#DEED97",
+          },
+          text: "< $10M",
+          default: false,
+        },
+        {
+          value: 20_500_000,
+          color: {
+            light: "#FAE096",
+            dark: "#FAE096",
+          },
+          text: "$10M - $20.5M",
+          default: false,
+        },
+        {
+          value: 50_000_000,
+          color: {
+            light: "#F3AF6F",
+            dark: "#F3AF6F",
+          },
+          text: "$20.5M - $50M",
+          default: false,
+        },
+        {
+          value: 70_500_000,
+          color: {
+            light: "#E4734F",
+            dark: "#E4734F",
+          },
+          text: "$50M - $70.5M",
+          default: false,
+        },
+        {
+          value: 300_000_000,
+          color: {
+            light: "#C74032",
+            dark: "#C74032",
+          },
+          text: "> $70.5M",
+          default: true,
+        },
+      ],
+    },
+  ];
 
   const tooltipDisplayFields = {
     title: {
@@ -24,6 +93,7 @@
       {
         field: "SALE PRICE/LOAN AMOUNT",
         label: dealType === "Buy" ? "Sale Price" : "Loan Amount",
+        format: "formatPrice",
       },
     ],
   };
@@ -37,6 +107,7 @@
       {
         field: "SALE PRICE/LOAN AMOUNT",
         label: dealType === "Buy" ? "Sale Price" : "Loan Amount",
+        format: "formatPrice",
       },
       {
         field: "DEAL TYPE",
@@ -172,9 +243,18 @@
   const fetchDataFilterCallback = (data) => {
     return {
       ...data,
-      features: data.features.filter((feature) => {
-        return feature.properties["DEAL TYPE"] === dealType;
-      }),
+      features: data.features
+        .filter((feature) => {
+          return feature.properties["DEAL TYPE"] === dealType;
+        })
+        .map((feature) => {
+          // Convert SALE PRICE/LOAN AMOUNT to a number for comparison
+          feature.properties["SALE PRICE/LOAN AMOUNT"] =
+            TrdFormatters.getNumberValue(
+              feature.properties["SALE PRICE/LOAN AMOUNT"]
+            );
+          return feature;
+        }),
     };
   };
 
@@ -217,24 +297,33 @@
     mapCenterLng: -73.95044562100685,
     zoom: 11,
     minZoom: 10,
-    legendKeys: [],
-    dataPointKeys: [],
+    legendKeys:
+      dealType === "Buy" || dealType === "Financing" ? buyLegendKeys : [],
+    dataPointKeys:
+      dealType === "Buy" || dealType === "Financing"
+        ? buyLegendKeys[0].options
+        : [],
     tooltipDisplayFields,
     modalDisplayFields,
     filterFields,
-    mapLayerFieldKey: "DEAL TYPE",
-    defaultColors: getDefaultColors(dealType),
-    paintCircleColorType: "",
     loadingEnabled: true,
-    mapLayerPaint: {
-      "circle-radius": {
-        base: 1.75,
-        stops: [
-          [8, 4],
-          [12, 6],
-          [15, 8],
-          [20, 16],
-        ],
+    pointSettings: {
+      clickToCenter: true,
+      clickToZoom: true,
+      colorType:
+        dealType === "Buy" || dealType === "Financing" ? "step" : "case",
+      radiusType: "ratio",
+      colorTypeDataKey: "SALE PRICE/LOAN AMOUNT",
+      paintSettings: {
+        default: {
+          color: getDefaultColors(dealType),
+        },
+        hover: {
+          color: { light: "#FF9800", dark: "#F57C00" },
+        },
+        active: {
+          color: { light: "#FF5722", dark: "#D84315" },
+        },
       },
     },
   });

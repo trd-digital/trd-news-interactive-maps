@@ -76,25 +76,110 @@ const trdDataCommonMap = (options) => {
     filterFields: [],
     legendAutoCollapse: true,
     fetchDataFilterCallback: undefined,
-    mapLayerFilter: [],
-    mapLayerFieldKey: "Sale Price",
     mapLayerPaint: undefined, // object
     eventCategory: "unknown-map",
-    paintCircleColorType: "step",
     sourceId: "data",
-    defaultColors: {
-      light: "black",
-      dark: "white",
-      pointTextColorLight: "white",
-      pointTextColorDark: "white",
-    },
     loadingEnabled: false,
-    mapCluster: false,
-    mapClusterMaxZoom: 12, // Max zoom to cluster points on
-    mapClusterRadius: 50, // Radius of each cluster when clustering points (defaults to 50)
+    pointSettings: {
+      filter: [],
+      clickToCenter: false, // Whether to center the map on the clicked point
+      clickToZoom: false, // Whether to zoom in on the clicked point
+      colorType: "step", // "step", "case"
+      radiusType: "radius", // "radius" or "ratio"
+      colorTypeDataKey: undefined, // Field to use for step color
+      paintSettings: {
+        default: {
+          radius: 6, // Default radius for points
+          ratio: 1, // Ratio for points in default state
+          color: {
+            light: "black", // Default color for points in light mode
+            dark: "white", // Default color for points in dark mode
+          },
+        },
+        hover: {
+          radius: 8, // Radius when hovered
+          ratio: 1.5, // Ratio for points when hovered
+          color: {
+            light: "black", // Color for points in light mode when hovered
+            dark: "white", // Color for points in dark mode when hovered
+          },
+        },
+        active: {
+          radius: 10, // Radius when active
+          ratio: 1.75, // Ratio for points when active
+          color: {
+            light: "black", // Color for points in light mode when active
+            dark: "white", // Color for points in dark mode when active
+          },
+        },
+      },
+    },
+    clusterSettings: {
+      enable: false, // Whether to enable clustering
+      maxZoom: 12, // Max zoom to cluster points on
+      radius: 50, // Radius of each cluster when clustering points
+      colorType: "case", // "case" // TODO: Add "step" support
+      textSize: 16, // Size of the text in clusters
+      paintSettings: {
+        default: {
+          color: {
+            light: "black", // Default color for clusters in light mode
+            dark: "white", // Default color for clusters in dark mode
+          },
+          textColor: {
+            light: "white", // Default text color for clusters in light mode
+            dark: "white", // Default text color for clusters in dark mode
+          },
+        },
+      },
+    },
   };
 
-  const settings = Object.assign({}, defaults, options);
+  const defaultColors = {
+    default: {
+      light: "black",
+      dark: "white",
+    },
+    hover: {
+      light: "black",
+      dark: "white",
+    },
+    active: {
+      light: "black",
+      dark: "white",
+    },
+  };
+
+  // TODO: Remove this when the paintCircleColorType is removed
+  if (options.paintCircleColorType) {
+    defaults.pointSettings.colorType = options.paintCircleColorType;
+  }
+
+  // TODO: Remove this when the mapLayerFieldKey is removed
+  if (options.mapLayerFieldKey) {
+    defaults.pointSettings.colorTypeDataKey = options.mapLayerFieldKey;
+  }
+
+  // Deep merge defaults and options for nested objects
+  const mergeDeep = (target, source) => {
+    for (const key in source) {
+      if (
+        source[key] &&
+        typeof source[key] === "object" &&
+        !Array.isArray(source[key])
+      ) {
+        if (!target[key] || typeof target[key] !== "object") {
+          target[key] = {};
+        }
+        mergeDeep(target[key], source[key]);
+      } else {
+        target[key] = source[key];
+      }
+    }
+    return target;
+  };
+
+  const settings = mergeDeep(structuredClone(defaults), options || {});
 
   if (settings.filePath && !settings.filePaths.includes(settings.filePath)) {
     settings.filePaths.push(settings.filePath);
@@ -132,11 +217,26 @@ const trdDataCommonMap = (options) => {
   const fn = {
     init: async () => {
       tracking.eventCategory = settings.eventCategory;
+      fn.createContainer();
       trdTheme.init();
       legend.init();
       filters.init();
       map.init();
       fn.checkForIframe();
+    },
+
+    createContainer: () => {
+      if (document.querySelector(".map-container")) return;
+
+      const container = document.createElement("main");
+      container.className = "map-container";
+
+      const mapEl = document.createElement("div");
+      mapEl.id = settings.mapElementId;
+      mapEl.className = "map";
+
+      container.appendChild(mapEl);
+      document.body.appendChild(container);
     },
 
     checkForIframe: () => {
@@ -152,6 +252,13 @@ const trdDataCommonMap = (options) => {
 
     pickThemeColor: (lightColor, darkColor) => {
       return trdTheme.isDark() ? darkColor : lightColor;
+    },
+
+    pickColor: (colors, defaultColors) => {
+      return helpers.pickThemeColor(
+        colors.light || defaultColors.light,
+        colors.dark || defaultColors.dark
+      );
     },
 
     cleanValue: (value) => (TrdFormatters.isEmptyValue(value) ? "" : value),
@@ -230,16 +337,13 @@ const trdDataCommonMap = (options) => {
         parent.appendChild(li);
 
         const options =
-          settings.paintCircleColorType === "case"
+          defaults.pointSettings.colorType === "case"
             ? item.options.filter((opt) => !opt.default)
             : item.options;
 
         options.forEach((item) => {
           const li = document.createElement("li");
-          const color = helpers.pickThemeColor(
-            item.color.light,
-            item.color.dark
-          );
+          const color = helpers.pickColor(item.color, defaultColors.default);
           li.innerHTML = `<span class="legend-icon" style="background-color: ${color}"></span>${item.text}`;
           parent.appendChild(li);
         });
@@ -638,74 +742,10 @@ const trdDataCommonMap = (options) => {
     },
   };
 
-  const paintCircleColorTypes = {
-    step: () => {
-      const colors = [
-        "step",
-        ["to-number", ["get", settings.mapLayerFieldKey], 0],
-      ];
-
-      if (!settings?.dataPointKeys?.length) {
-        return colors;
-      }
-
-      settings.dataPointKeys.forEach((item) => {
-        colors.push(helpers.pickThemeColor(item.color.light, item.color.dark));
-
-        if (!item.default) {
-          colors.push(item.value);
-        }
-      });
-
-      return colors;
-    },
-    case: () => {
-      if (!settings?.dataPointKeys?.length) {
-        return ["circle-color", "black"];
-      }
-
-      const colors = ["case"];
-
-      settings.dataPointKeys
-        .filter((item) => !item.default)
-        .forEach((item) => {
-          const groupValue = item.value.split("|");
-          for (const value of groupValue) {
-            colors.push(["==", ["get", settings.mapLayerFieldKey], value]);
-            colors.push(
-              helpers.pickThemeColor(item.color.light, item.color.dark)
-            );
-          }
-        });
-
-      settings.dataPointKeys
-        .filter((item) => item.default)
-        .forEach((item) => {
-          colors.push(
-            helpers.pickThemeColor(item.color.light, item.color.dark)
-          );
-        });
-
-      return colors;
-    },
-    Default: () => {
-      return [
-        "case",
-        ["boolean", ["feature-state", "hover"], false],
-        helpers.pickThemeColor("black", "white"),
-        helpers.pickThemeColor(
-          settings.defaultColors.light ? settings.defaultColors.light : "black",
-          settings.defaultColors.dark ? settings.defaultColors.dark : "white"
-        ),
-      ];
-    },
-  };
-
   const map = {
     currentZoom: mapConfig.zoom,
     dataLoaded: false,
     mapboxLoaded: false,
-    mapSelectedFeatureId: null,
     init: () => {
       map.getData();
       map.load();
@@ -760,7 +800,6 @@ const trdDataCommonMap = (options) => {
             ...mapData,
             features: filters.getFilterFeatures(mapData),
           });
-          map.tooltip(settings.sourceId);
           modal.init(settings.sourceId);
         }
       }, 100);
@@ -833,150 +872,144 @@ const trdDataCommonMap = (options) => {
     },
 
     loadDataOnMap: (id, data) => {
-      const circleColor =
-        settings.paintCircleColorType &&
-        Object.keys(paintCircleColorTypes).includes(
-          settings.paintCircleColorType
-        )
-          ? paintCircleColorTypes[settings.paintCircleColorType]()
-          : paintCircleColorTypes.Default();
+      // add source data
+      map.addSourceData(id, data);
+      // load point data only
+      mapPoint.init(id);
+      // add cluster layer
+      mapCluster.init(id);
+    },
 
-      let filters = settings.mapLayerFilter ? settings.mapLayerFilter : [];
+    addSourceData: (id, data) => {
+      if (mapObj.getSource(id)) {
+        return;
+      }
+      mapObj.addSource(id, {
+        type: "geojson",
+        data,
+        generateId: true, // Generate unique IDs for features
+        cluster:
+          settings.clusterSettings.enable ?? defaults.clusterSettings.enable, // Whether to cluster points
+        clusterMaxZoom:
+          settings.clusterSettings.maxZoom ?? defaults.clusterSettings.maxZoom, // Max zoom to cluster points on
+        clusterRadius:
+          settings.clusterSettings.radius ?? defaults.clusterSettings.radius, // Radius of each cluster when clustering points
+      });
+    },
+  };
+
+  const mapPoint = {
+    hoverFeatureId: null,
+    init: (id) => {
+      if (mapObj.getLayer(`${id}-points`)) {
+        return;
+      }
+
+      let filters = settings.pointSettings.filter
+        ? settings.pointSettings.filter
+        : [];
       filters = settings.cluster
         ? ["!", ["has", "point_count"], ...filters]
         : filters;
 
-      if (!mapObj.getSource(id)) {
-        mapObj.addSource(id, {
-          type: "geojson",
-          data: data,
-          generateId: true, // Generate unique IDs for features
-          cluster: settings.mapCluster,
-          clusterMaxZoom: settings.mapClusterMaxZoom,
-          clusterRadius: settings.mapClusterRadius,
-        });
-      }
-
-      if (!mapObj.getLayer(`${id}-points`)) {
-        mapObj.addLayer({
-          id: `${id}-points`,
-          source: id,
-          type: "circle",
-          filters: filters,
-          paint: {
-            "circle-pitch-alignment": "map",
-            "circle-color": circleColor,
-            ...(settings.mapLayerPaint ? settings.mapLayerPaint : {}),
-            "circle-radius": [
-              "case",
-              ["boolean", ["feature-state", "hover"], false],
-              10, // radius when hovered
-              5, // default radius
-            ],
-          },
-        });
-      }
-
-      if (settings.mapCluster) {
-        // add cluster layer
-        if (!mapObj.getLayer(`${id}-clusters`)) {
-          mapObj.addLayer({
-            id: `${id}-clusters`,
-            source: id,
-            type: "circle",
-            filter: ["has", "point_count"],
-            paint: {
-              "circle-color": circleColor,
-              "circle-radius": [
-                "step",
-                ["get", "point_count"],
-                20, // circle radius
-                50, // stop value
-                30,
-                75,
-                40,
-                100,
-                50,
-              ],
-            },
-          });
-        }
-
-        // add cluster count layer
-        if (!mapObj.getLayer(`${id}-cluster-count`)) {
-          mapObj.addLayer({
-            id: `${id}-cluster-count`,
-            source: id,
-            type: "symbol",
-            filter: ["has", "point_count"],
-            layout: {
-              "text-field": ["get", "point_count_abbreviated"],
-              "text-size": 16,
-            },
-            paint: {
-              "text-color": helpers.pickThemeColor(
-                settings.defaultColors.pointTextColorLight
-                  ? settings.defaultColors.pointTextColorLight
-                  : "black",
-                settings.defaultColors.pointTextColorDark
-                  ? settings.defaultColors.pointTextColorDark
-                  : "white"
-              ),
-            },
-          });
-        }
-      }
-    },
-
-    tooltip: (id) => {
-      if (!settings?.tooltipDisplayFields) return;
-
-      const popup = new mapboxgl.Popup({
-        closeButton: false,
-        closeOnClick: false,
+      mapObj.addLayer({
+        id: `${id}-points`,
+        source: id,
+        type: "circle",
+        filters: filters,
+        paint: {
+          "circle-pitch-alignment": "map",
+          "circle-color": mapPoint.getCircleColor(),
+          "circle-radius": mapPoint.getCircleRadius(),
+          ...(settings.mapLayerPaint ? settings.mapLayerPaint : {}),
+        },
       });
 
-      if (settings.mapCluster) {
-        mapObj.on("mouseleave", `${id}-clusters`, (e) => {
-          mapObj.getCanvas().style.cursor = "";
-        });
-        mapObj.on("mouseenter", `${id}-clusters`, (e) => {
-          mapObj.getCanvas().style.cursor = "pointer";
-        });
-        mapObj.on("click", `${id}-clusters`, (e) => {
-          const features = mapObj.queryRenderedFeatures(e.point, {
-            layers: [`${id}-clusters`],
-          });
-          if (!features.length) return;
+      mapPoint.eventListeners(id);
+    },
 
-          const clusterId = features[0].properties.cluster_id;
-          mapObj
-            .getSource(id)
-            .getClusterExpansionZoom(clusterId, (err, zoom) => {
-              if (err) return;
+    getCircleColor: () => {
+      const colorType = settings?.pointSettings?.colorType;
+      return Object.keys(mapPoint._circleColor).includes(colorType)
+        ? mapPoint._circleColor[colorType]()
+        : mapPoint._circleColor.default();
+    },
 
-              mapObj.easeTo({
-                center: features[0].geometry.coordinates,
-                zoom: zoom,
-              });
-            });
-        });
+    getCircleRadius: () => {
+      const radiusType = settings?.pointSettings?.radiusType;
+      return Object.keys(mapPoint._circleRadius).includes(radiusType)
+        ? mapPoint._circleRadius[radiusType]()
+        : mapPoint._circleRadius.radius();
+    },
+
+    clearHoverState: () => {
+      if (!mapPoint.hoverFeatureId) return;
+      mapObj.removeFeatureState(
+        {
+          source: settings.sourceId,
+          id: mapPoint.hoverFeatureId,
+        },
+        "hover"
+      );
+      mapPoint.hoverFeatureId = null;
+    },
+
+    setHoverState: (featureId) => {
+      if (mapPoint.hoverFeatureId) {
+        mapPoint.clearHoverState();
       }
+      mapPoint.hoverFeatureId = featureId;
+      mapObj.setFeatureState(
+        {
+          source: settings.sourceId,
+          id: mapPoint.hoverFeatureId,
+        },
+        {
+          hover: true,
+        }
+      );
+    },
+
+    eventListeners: (id) => {
+      const popup = settings?.tooltipDisplayFields
+        ? new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+          })
+        : null;
 
       mapObj.on("mouseleave", `${id}-points`, (e) => {
         mapObj.getCanvas().style.cursor = "";
-        popup.remove();
+
+        // remove the popup if it exists
+        if (popup) popup.remove();
+
+        // remove hover state
+        mapPoint.clearHoverState();
       });
 
       mapObj.on("mouseenter", `${id}-points`, (e) => {
         mapObj.getCanvas().style.cursor = "pointer";
 
-        const cluster = e.features[0].properties.cluster;
-        if (cluster) {
-          return;
-        }
-        const coordinates = e.features[0].geometry.coordinates.slice();
-        const html = map.getTooltipHtml(e.features[0]);
+        // clear previous hover state
+        mapPoint.clearHoverState();
+
+        // check if we have a features
+        if (e.features.length === 0) return;
+
+        const feature = e.features[0];
+
+        // check if the feature is a cluster
+        const cluster = feature.properties.cluster;
+        if (cluster) return;
+
+        // set the hover state
+        mapPoint.setHoverState(feature.id);
+
+        if (!popup) return;
+        // show the popup
+        const coordinates = feature.geometry.coordinates.slice();
+        const html = mapPoint.getTooltipHtml(feature);
         popup.setLngLat(coordinates).setHTML(html).addTo(mapObj);
       });
     },
@@ -1038,58 +1071,273 @@ const trdDataCommonMap = (options) => {
       `;
     },
 
-    setSelectedFeature: (featureId) => {
-      map.unSelectFeature();
-      map.mapSelectedFeatureId = featureId;
-
-      mapObj.setFeatureState(
-        {
-          source: settings.sourceId,
-          id: featureId,
-        },
-        {
-          hover: true,
+    _circleColor: {
+      step: () => {
+        if (!settings?.pointSettings?.colorTypeDataKey) {
+          throw new Error("colorTypeDataKey is not defined in pointSettings");
         }
+        const colors = [
+          "step",
+          ["to-number", ["get", settings?.pointSettings?.colorTypeDataKey], 0],
+        ];
+
+        if (!settings?.dataPointKeys?.length) {
+          return colors;
+        }
+
+        settings.dataPointKeys.forEach((item) => {
+          colors.push(
+            helpers.pickColor(
+              item.color,
+              settings.pointSettings.paintSettings.default.color
+            )
+          );
+
+          if (!item.default) {
+            colors.push(item.value);
+          }
+        });
+
+        return [
+          "case",
+          ["boolean", ["feature-state", "active"], false],
+          helpers.pickColor(
+            settings.pointSettings.paintSettings.active.color,
+            defaultColors.active
+          ),
+          ["boolean", ["feature-state", "hover"], false],
+          helpers.pickColor(
+            settings.pointSettings.paintSettings.hover.color,
+            defaultColors.hover
+          ),
+          colors,
+        ];
+      },
+      case: () => {
+        if (!settings?.dataPointKeys?.length) {
+          return mapPoint._circleColor.default();
+        }
+
+        const colors = ["case"];
+
+        settings.dataPointKeys
+          .filter((item) => !item.default)
+          .forEach((item) => {
+            const groupValue = item.value.split("|");
+            for (const value of groupValue) {
+              colors.push([
+                "==",
+                ["get", settings?.pointSettings?.colorTypeDataKey],
+                value,
+              ]);
+              colors.push(helpers.pickColor(item.color, defaultColors.default));
+            }
+          });
+
+        settings.dataPointKeys
+          .filter((item) => item.default)
+          .forEach((item) => {
+            colors.push(helpers.pickColor(item.color, defaultColors.default));
+          });
+
+        return colors;
+      },
+      default: () => {
+        return [
+          "case",
+          ["boolean", ["feature-state", "active"], false],
+          helpers.pickColor(
+            settings.pointSettings.paintSettings.active.color,
+            defaultColors.active
+          ),
+          ["boolean", ["feature-state", "hover"], false],
+          helpers.pickColor(
+            settings.pointSettings.paintSettings.hover.color,
+            defaultColors.hover
+          ),
+          helpers.pickColor(
+            settings.pointSettings.paintSettings.default.color,
+            defaultColors.default
+          ),
+        ];
+      },
+    },
+
+    _circleRadius: {
+      radius: () => {
+        return [
+          "case",
+          ["boolean", ["feature-state", "active"], false],
+          settings.pointSettings.paintSettings.active.radius, // radius when active
+          ["boolean", ["feature-state", "hover"], false],
+          settings.pointSettings.paintSettings.hover.radius, // radius when hovered
+          settings.pointSettings.paintSettings.default.radius, // default radius
+        ];
+      },
+
+      ratio: () => {
+        return [
+          "interpolate",
+          ["exponential", 2],
+          ["zoom"],
+          8,
+          mapPoint._circleRadius._getActiveHoverRadius(2),
+          10,
+          mapPoint._circleRadius._getActiveHoverRadius(4),
+          12,
+          mapPoint._circleRadius._getActiveHoverRadius(6),
+          14,
+          mapPoint._circleRadius._getActiveHoverRadius(10),
+        ];
+      },
+
+      _getActiveHoverRadius: (radius) => {
+        const hoverRatio = settings.pointSettings.paintSettings.hover.ratio;
+        const activeRatio = settings.pointSettings.paintSettings.active.ratio;
+        const defaultRatio = settings.pointSettings.paintSettings.default.ratio;
+        return [
+          "case",
+          ["boolean", ["feature-state", "active"], false],
+          radius * activeRatio, // radius when active
+          ["boolean", ["feature-state", "hover"], false],
+          radius * hoverRatio, // radius when hovered
+          radius * defaultRatio, // default radius
+        ];
+      },
+    },
+  };
+
+  const mapCluster = {
+    init: (id) => {
+      if (!settings.clusterSettings.enable) {
+        return;
+      }
+
+      // add cluster layer
+      if (!mapObj.getLayer(`${id}-clusters`)) {
+        mapObj.addLayer({
+          id: `${id}-clusters`,
+          source: id,
+          type: "circle",
+          filter: ["has", "point_count"],
+          paint: {
+            "circle-color": mapCluster.getCircleColor(),
+            "circle-radius": mapCluster.getCircleRadius(),
+          },
+        });
+      }
+
+      // add cluster count layer
+      if (!mapObj.getLayer(`${id}-cluster-count`)) {
+        mapObj.addLayer({
+          id: `${id}-cluster-count`,
+          source: id,
+          type: "symbol",
+          filter: ["has", "point_count"],
+          layout: {
+            "text-field": ["get", "point_count_abbreviated"],
+            "text-size": mapCluster.getTextSize(),
+          },
+          paint: {
+            "text-color": mapCluster.getTextColor(),
+          },
+        });
+      }
+
+      mapCluster.eventListeners(id);
+    },
+
+    getCircleColor: () => {
+      return helpers.pickColor(
+        settings.clusterSettings.paintSettings.default.color,
+        defaultColors.default
       );
     },
 
-    unSelectFeature: () => {
-      if (map.mapSelectedFeatureId) {
-        mapObj.setFeatureState(
-          {
-            source: settings.sourceId,
-            id: map.mapSelectedFeatureId,
-          },
-          {
-            hover: false,
-          }
-        );
-        map.mapSelectedFeatureId = null;
-      }
+    getTextColor: () => {
+      return helpers.pickColor(
+        settings.clusterSettings.paintSettings.default.textColor,
+        defaultColors.default
+      );
+    },
+
+    getTextSize: () => {
+      return settings.clusterSettings.textSize;
+    },
+
+    getCircleRadius: () => {
+      return [
+        "step",
+        ["get", "point_count"],
+        20, // circle radius
+        50, // stop value
+        30,
+        75,
+        40,
+        100,
+        50,
+      ];
+    },
+
+    eventListeners: (id) => {
+      if (!settings.clusterSettings.enable) return;
+
+      mapObj.on("mouseleave", `${id}-clusters`, (e) => {
+        mapObj.getCanvas().style.cursor = "";
+      });
+
+      mapObj.on("mouseenter", `${id}-clusters`, (e) => {
+        mapObj.getCanvas().style.cursor = "pointer";
+      });
+
+      mapObj.on("click", `${id}-clusters`, (e) => {
+        const features = mapObj.queryRenderedFeatures(e.point, {
+          layers: [`${id}-clusters`],
+        });
+        if (!features.length) return;
+
+        const clusterId = features[0].properties.cluster_id;
+        mapObj.getSource(id).getClusterExpansionZoom(clusterId, (err, zoom) => {
+          if (err) return;
+
+          mapObj.easeTo({
+            center: features[0].geometry.coordinates,
+            zoom: zoom,
+          });
+        });
+      });
     },
   };
 
   const modal = {
+    activePointId: null,
     init: (id) => {
       if (!settings?.modalDisplayFields) return;
-
+      modal.createModal();
       mapObj.on("click", `${id}-points`, (e) => {
         if (e.features[0].properties.cluster) {
           return;
         }
 
-        map.unSelectFeature();
+        modal.deselectActivePointId();
 
-        map.mapSelectedFeatureId = e.features[0].id;
+        modal.activePointId = e.features[0].id;
 
         // zoom to the clicked point
-        mapObj.flyTo({
-          center: modal.offsetCenter(e.features[0].geometry.coordinates),
-          zoom: 14,
-        });
+        if (
+          settings.pointSettings.clickToZoom ||
+          settings.pointSettings.clickToCenter
+        ) {
+          mapObj.flyTo({
+            center: settings.pointSettings.clickToCenter
+              ? modal.offsetCenter(e.features[0].geometry.coordinates)
+              : mapObj.getCenter(),
+            zoom: settings.pointSettings.clickToZoom ? 14 : mapObj.getZoom(),
+          });
+        }
 
         // highlight the clicked point
-        map.setSelectedFeature(e.features[0].id);
+        modal.selectActivePointId(e.features[0].id);
 
         const modalEl = document.querySelector("#modal");
         const modalTitle = document.querySelector("#modal .modal-title");
@@ -1176,14 +1424,72 @@ const trdDataCommonMap = (options) => {
       const close = document.querySelector("#modal .btn-close");
       close.addEventListener("click", () => {
         document.querySelector("#modal").style.display = "none";
-        map.unSelectFeature();
+        modal.deselectActivePointId();
         tracking.trackEvent("detail_view", "close");
         // map zoom out to the original zoom level
-        mapObj.flyTo({
-          center: mapConfig.center,
-          zoom: mapConfig.zoom,
-        });
+        if (settings.pointSettings.clickToZoom) {
+          mapObj.flyTo({
+            center: mapConfig.center,
+            zoom: mapConfig.zoom,
+          });
+        }
       });
+    },
+
+    createModal: () => {
+      if (document.querySelector("#modal")) {
+        return; // modal already exists
+      }
+      const modal = document.createElement("section");
+      modal.id = "modal";
+      modal.className = "detail-modal modal";
+      modal.innerHTML = `
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title"></h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body"></div>
+          </div>
+        </div>
+      `;
+      document.querySelector(".map-container").appendChild(modal);
+    },
+
+    selectActivePointId: (featureId) => {
+      modal.deselectActivePointId();
+      modal.activePointId = featureId;
+
+      mapObj.setFeatureState(
+        {
+          source: settings.sourceId,
+          id: featureId,
+        },
+        {
+          active: true,
+        }
+      );
+    },
+
+    deselectActivePointId: () => {
+      if (modal.activePointId) {
+        mapObj.setFeatureState(
+          {
+            source: settings.sourceId,
+            id: modal.activePointId,
+          },
+          {
+            active: false,
+          }
+        );
+        modal.activePointId = null;
+      }
     },
 
     offsetCenter: (coordinates) => {

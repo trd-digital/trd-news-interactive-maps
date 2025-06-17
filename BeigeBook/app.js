@@ -15,7 +15,7 @@
       {
         field: "Last Updated",
         label: "Last Updated",
-      },      
+      },
       {
         field: "Last Updated By",
         label: "By",
@@ -47,10 +47,39 @@
 
     // optional: tweak the circle style
     mapLayerPaint: {
-      "circle-color": "#007cbf",
-      "circle-radius": 8,
-      "circle-stroke-width": 1,
+      "circle-stroke-width": 2,
       "circle-stroke-color": "#f1f1f1",
+    },
+
+    // point paint settings
+    pointSettings: {
+      clickToCenter: true,
+      clickToZoom: false,
+      colorType: "case",
+      radiusType: "radius",
+      paintSettings: {
+        default: {
+          radius: 8,
+          color: {
+            light: "#007cbf",
+            dark: "#007cbf",
+          },
+        },
+        hover: {
+          radius: 10,
+          color: {
+            light: "#007cbf",
+            dark: "#007cbf",
+          },
+        },
+        active: {
+          radius: 12,
+          color: {
+            light: "black",
+            dark: "white",
+          },
+        },
+      },
     },
   });
 })();

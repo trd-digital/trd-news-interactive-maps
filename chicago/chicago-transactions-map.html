@@ -64,28 +64,6 @@
       ></iframe
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
-
-    <main class="map-container">
-      <section id="map" class="map"></section>
-      <section id="modal" class="detail-modal modal">
-        <div class="modal-dialog modal-dialog-scrollable">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title"></h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body"></div>
-          </div>
-        </div>
-      </section>
-      <section id="result"></section>
-    </main>
-
     <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -104,8 +82,8 @@
             {
               value: 250_000,
               color: {
-                light: "#90CAF9",
-                dark: "#90CAF9",
+                light: "#DEED97",
+                dark: "#DEED97",
               },
               text: "< $250K",
               default: false,
@@ -113,8 +91,8 @@
             {
               value: 500_000,
               color: {
-                light: "#42A5F5",
-                dark: "#42A5F5",
+                light: "#FAE096",
+                dark: "#FAE096",
               },
               text: "$250K - $500K",
               default: false,
@@ -122,8 +100,8 @@
             {
               value: 750_000,
               color: {
-                light: "#1E88E5",
-                dark: "#1E88E5",
+                light: "#F3AF6F",
+                dark: "#F3AF6F",
               },
               text: "$500K - $750K",
               default: false,
@@ -131,8 +109,8 @@
             {
               value: 2_000_000,
               color: {
-                light: "#1565C0",
-                dark: "#1565C0",
+                light: "#E4734F",
+                dark: "#E4734F",
               },
               text: "$750K - $2M",
               default: false,
@@ -140,8 +118,8 @@
             {
               value: 100_000_000,
               color: {
-                light: "#0D47A1",
-                dark: "#0D47A1",
+                light: "#C74032",
+                dark: "#C74032",
               },
               text: "> $2M",
               default: true,
@@ -320,15 +298,19 @@
         filterFields,
         fetchDataFilterCallback,
         loadingEnabled: true,
-        mapLayerPaint: {
-          "circle-radius": {
-            base: 1.75,
-            stops: [
-              [1, 1],
-              [10, 4],
-              [15, 6],
-              [20, 8],
-            ],
+        pointSettings: {
+          clickToCenter: true,
+          clickToZoom: true,
+          colorType: "step",
+          radiusType: "ratio",
+          colorTypeDataKey: "Sale Price",
+          paintSettings: {
+            hover: {
+              color: { light: "#FF9800", dark: "#F57C00" },
+            },
+            active: {
+              color: { light: "#FF5722", dark: "#D84315" },
+            },
           },
         },
       });

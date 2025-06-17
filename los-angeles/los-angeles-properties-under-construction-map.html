@@ -64,27 +64,6 @@
       ></iframe
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
-
-    <main class="map-container">
-      <section id="map" class="map"></section>
-      <section id="modal" class="detail-modal modal">
-        <div class="modal-dialog modal-dialog-scrollable">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title"></h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body"></div>
-          </div>
-        </div>
-      </section>
-    </main>
-
     <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -209,28 +188,29 @@
         resultElementId: "result",
         mapCenterLat: 34.0521482,
         mapCenterLng: -118.2396273,
-        legendKeys,
-        dataPointKeys: legendKeys[0].options,
         zoom: 13,
         minZoom: 8,
+        legendKeys,
+        dataPointKeys: legendKeys[0].options,
         tooltipDisplayFields,
         modalDisplayFields,
-        defaultColors: {
-          light: "#FF7043",
-          dark: "#FF8A65",
-        },
-        mapLayerFieldKey: "Construction status",
-        paintCircleColorType: "case",
         loadingEnabled: false,
-        mapLayerPaint: {
-          "circle-radius": {
-            base: 1.75,
-            stops: [
-              [8, 4],
-              [12, 6],
-              [15, 8],
-              [20, 16],
-            ],
+        pointSettings: {
+          clickToCenter: true,
+          clickToZoom: true,
+          colorType: "case",
+          radiusType: "ratio",
+          colorTypeDataKey: "Construction status",
+          paintSettings: {
+            default: {
+              color: { light: "#FF7043", dark: "#FF8A65" },
+            },
+            hover: {
+              color: { light: "#FF9800", dark: "#F57C00" },
+            },
+            active: {
+              color: { light: "#FF5722", dark: "#D84315" },
+            },
           },
         },
       });

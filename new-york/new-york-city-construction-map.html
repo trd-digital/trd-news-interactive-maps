@@ -6,65 +6,14 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>New York City Construction Map - The Real Deal</title>
     <link
       rel="icon"
       type="image/x-icon"
       href="https://therealdeal.com/favicon.ico"
     />
-
-    <!-- Primary Meta Tags -->
-    <title>New York City Construction Map - The Real Deal</title>
-    <meta
-      name="title"
-      content="New York City Construction Map - The Real Deal"
-    />
-    <meta
-      name="description"
-      content="Latest New York City Construction in map view."
-    />
-    <link
-      rel="canonical"
-      href="https://therealdeal.com/data/miami/2024/priciest-new-york-city-sales/"
-    />
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:url"
-      content="https://therealdeal.com/data/miami/2024/priciest-new-york-city-sales/"
-    />
-    <meta
-      property="og:title"
-      content="New York City Construction - The Real Deal"
-    />
-    <meta
-      property="og:description"
-      content="Latest New York City Construction"
-    />
-    <meta
-      property="og:image"
-      content="https://static.therealdeal.com/wp-content/uploads/2019/10/trd-logo-16x9.jpg"
-    />
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta
-      property="twitter:url"
-      content="https://therealdeal.com/data/miami/2024/priciest-new-york-city-sales/"
-    />
-    <meta
-      property="twitter:title"
-      content="New York City Construction - The Real Deal"
-    />
-    <meta
-      property="twitter:description"
-      content="Latest New York City Construction"
-    />
-    <meta
-      property="twitter:image"
-      content="https://static.therealdeal.com/wp-content/uploads/2019/10/trd-logo-16x9.jpg"
-    />
-
+    <link rel="canonical" href="https://therealdeal.com/data/" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       rel="preconnect"
@@ -74,6 +23,10 @@
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Merriweather:wght@0,400;0,700;0,900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css"
     />
     <link
       rel="stylesheet"
@@ -111,28 +64,6 @@
       ></iframe
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
-
-    <main class="map-container">
-      <section id="map" class="map"></section>
-      <section id="modal" class="detail-modal modal">
-        <div class="modal-dialog modal-dialog-scrollable">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title"></h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body"></div>
-          </div>
-        </div>
-      </section>
-      <section id="result"></section>
-    </main>
-
     <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -141,6 +72,348 @@
     <script src="../trd-data/common-formatter/formatter.js"></script>
     <script src="../trd-data/common-loading/loading.js"></script>
     <script src="../trd-data/common-map/map.js?v=1.1"></script>
-    <script src="new-york-city-construction-map.js"></script>
+    <script>
+      const legendKeys = [
+        {
+          title: "Status",
+          options: [
+            {
+              text: "Submitted",
+              value: "Under Review|On Hold",
+              default: false,
+              color: {
+                light: "#A5D6A7",
+                dark: "#C8E6C9",
+              },
+            },
+            {
+              text: "Approved",
+              value: "Approved|Issued",
+              default: false,
+              color: {
+                light: "#43A047",
+                dark: "#4CAF50",
+              },
+            },
+            {
+              text: "Completed",
+              value: "Complete",
+              default: false,
+              color: {
+                light: "#FFEB3B",
+                dark: "#FBC02D",
+              },
+            },
+            {
+              text: "Denied",
+              value: "Denied|Withdrawn",
+              default: false,
+              color: {
+                light: "#EF5350",
+                dark: "#F44336",
+              },
+            },
+            {
+              text: "Expired",
+              value: "Expired|Cancelled",
+              default: false,
+              color: {
+                light: "#FF7043",
+                dark: "#FF5722",
+              },
+            },
+            {
+              text: "Other",
+              value: "Other",
+              default: true,
+              color: {
+                light: "#1B5E20",
+                dark: "#1B5E20",
+              },
+            },
+          ],
+        },
+      ];
+
+      const tooltipDisplayFields = {
+        title: {
+          field: "Property Address",
+          label: "Address",
+        },
+        content: [
+          {
+            field: "Instrument Status",
+            label: "Status",
+          },
+          {
+            field: "Instrument Type",
+            label: "Type",
+          },
+          {
+            field: "Filing Date",
+            label: "Filing Date",
+            format: "formatDate",
+          },
+          {
+            field: "Estimated Job Cost",
+            label: "Estimated Cost",
+            format: "formatPrice",
+            filter: (value) => value > 0,
+          },
+        ],
+      };
+
+      const modalDisplayFields = {
+        title: {
+          field: "Property Address",
+          label: "Address",
+        },
+        content: [
+          { field: "Instrument Type", label: "Type" },
+          {
+            field: "Instrument Number",
+            label: "Number",
+          },
+          { field: "BBL", label: "BBL", format: "formatInteger" },
+          { field: "BIN", label: "BIN", format: "formatInteger" },
+          {
+            field: "Property Address",
+            label: "Address",
+          },
+          {
+            field: "Borough",
+            label: "Borough",
+          },
+          {
+            field: "Filing Date",
+            label: "Filing Date",
+            format: "formatDate",
+          },
+          { field: "Description", label: "Description" },
+          {
+            field: "Estimated Job Cost",
+            label: "Estimated Job Cost",
+            format: "formatPrice",
+            filter: (value) => value > 0,
+          },
+          {
+            field: "Total Construction Floor Area",
+            label: "Total Construction Floor Area",
+            format: "formatNumber",
+          },
+          {
+            field: "Total Building Square Footage",
+            label: "Total Building Square Footage",
+            format: "formatNumber",
+          },
+          {
+            field: "Proposed Additional Square Feet",
+            label: "Proposed Additional Square Feet",
+            format: "formatNumber",
+          },
+          {
+            field: "Selected Proposed Square Feet",
+            label: "Selected Proposed Square Feet",
+            format: "formatNumber",
+          },
+          {
+            field: "Proposed Dwelling units",
+            label: "Proposed Dwelling units",
+            format: "formatInteger",
+          },
+          {
+            field: "Existing Dwelling Units",
+            label: "Existing Dwelling Units",
+            format: "formatInteger",
+          },
+          {
+            field: "Proposed Number of Stories",
+            label: "Proposed Number of Stories",
+            format: "formatInteger",
+          },
+          {
+            field: "Existing Number of Stories",
+            label: "Existing Number of Stories",
+          },
+          { field: "Instrument Status", label: "Instrument Status" },
+          {
+            field: "Instrument Status Date",
+            label: "Instrument Status Date",
+            format: "formatDate",
+          },
+          {
+            field: "Architect/Engineer Firm",
+            label: "Architect/Engineer Firm",
+          },
+          { field: "Propery Owner", label: "Property Owner" },
+          {
+            field: "PLUTO Total Residential Units",
+            label: "Total Residential Units",
+            format: "formatInteger",
+          },
+          {
+            field: "PLUTO Total Units",
+            label: "Total Units",
+            format: "formatInteger",
+          },
+          {
+            field: "PLUTO Lot Area",
+            label: "Lot Area",
+            format: "formatInteger",
+          },
+          {
+            field: "PLUTO Building Area",
+            label: "Building Area",
+            format: "formatInteger",
+          },
+        ],
+      };
+
+      const filterFields = [
+        {
+          title: "Days",
+          name: "days",
+          dataField: "Instrument Status Date",
+          fieldType: "radio",
+          fieldLayoutClass: "radio-group",
+          multiSelect: false,
+          defaultValue: "30",
+          callback: (values, item) => {
+            const days = values[0];
+            const date = new Date();
+            date.setDate(date.getDate() - days);
+            const recordDate = new Date(
+              item.properties["Instrument Status Date"]
+            );
+            return recordDate >= date;
+          },
+          options: [
+            {
+              label: "1 Month",
+              value: "30",
+            },
+            {
+              label: "3 Months",
+              value: "90",
+            },
+            {
+              label: "6 Months",
+              value: "180",
+            },
+            {
+              label: "1 Year",
+              value: "365",
+            },
+            {
+              label: "2 Years",
+              value: "730",
+            },
+          ],
+        },
+        {
+          title: "Status",
+          name: "status",
+          dataField: "Instrument Status",
+          fieldType: "checkbox",
+          fieldLayoutClass: "checkbox-group",
+          multiSelect: true,
+          callback: (values, item) => {
+            return values.some((value) => {
+              if (value === "" || value.length === 0) {
+                return item.properties["Instrument Status"] === "";
+              }
+
+              const group = value.split("|");
+              for (const v of group) {
+                if (item.properties["Instrument Status"].includes(v)) {
+                  return true;
+                }
+              }
+            });
+          },
+          options: [
+            {
+              label: "Submitted",
+              value: "Under Review|On Hold",
+            },
+            {
+              label: "Approved",
+              value: "Approved|Issued",
+            },
+            {
+              label: "Completed",
+              value: "Complete",
+            },
+            {
+              label: "Denied",
+              value: "Denied|Withdrawn",
+            },
+          ],
+        },
+        {
+          title: "Type",
+          name: "type",
+          dataField: "Instrument Type",
+          fieldType: "checkbox",
+          fieldLayoutClass: "checkbox-group",
+          multiSelect: true,
+          callback: (values, item) => {
+            return values.some(
+              (value) => item.properties["Instrument Type"] === value
+            );
+          },
+          options: [
+            {
+              label: "Major Alteration",
+              value: "Major Alteration",
+            },
+            {
+              label: "New Building",
+              value: "New Building",
+            },
+            {
+              label: "Demolition",
+              value: "Demolition",
+            },
+          ],
+        },
+      ];
+
+      window.map = trdDataCommonMap({
+        fetchDataFilterCallback: undefined,
+        eventCategory: "new-york-city-construction-map",
+        filePath:
+          "https://static.therealdeal.com/interactive-maps/new-york-city-dob-now-job-filings-map.geojson",
+        mapElementId: "map",
+        filterElementId: "map-filters",
+        legendElementId: "legend",
+        resultElementId: "result",
+        mapCenterLat: 40.755327020390325,
+        mapCenterLng: -73.95044562100685,
+        zoom: 11,
+        minZoom: 10,
+        legendKeys,
+        dataPointKeys: legendKeys[0].options,
+        tooltipDisplayFields,
+        modalDisplayFields,
+        filterFields,
+        loadingEnabled: true,
+        pointSettings: {
+          clickToCenter: true,
+          clickToZoom: true,
+          colorType: "case",
+          radiusType: "ratio",
+          colorTypeDataKey: "Instrument Status",
+          paintSettings: {
+            hover: {
+              color: { light: "#FF9800", dark: "#F57C00" },
+            },
+            active: {
+              color: { light: "#FF5722", dark: "#D84315" },
+            },
+          },
+        },
+      });
+    </script>
   </body>
 </html>

@@ -6,67 +6,16 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>
+      South Florida Condominium Development Planning Map - The Real Deal
+    </title>
     <link
       rel="icon"
       type="image/x-icon"
       href="https://therealdeal.com/favicon.ico"
     />
-
-    <!-- Primary Meta Tags -->
-    <title>
-      South Florida Condominium Development Planning Map - The Real Deal
-    </title>
-    <meta
-      name="title"
-      content="South Florida Condominium Development Planning Map - The Real Deal"
-    />
-    <meta
-      name="description"
-      content="Latest South Florida Condominium Development Planning in map view."
-    />
-    <link
-      rel="canonical"
-      href="https://therealdeal.com/data/miami/2024/priciest-new-york-city-sales/"
-    />
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:url"
-      content="https://therealdeal.com/data/miami/2024/priciest-new-york-city-sales/"
-    />
-    <meta
-      property="og:title"
-      content="South Florida Condominium Development Planning - The Real Deal"
-    />
-    <meta
-      property="og:description"
-      content="Latest South Florida Condominium Development Planning"
-    />
-    <meta
-      property="og:image"
-      content="https://static.therealdeal.com/wp-content/uploads/2019/10/trd-logo-16x9.jpg"
-    />
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta
-      property="twitter:url"
-      content="https://therealdeal.com/data/miami/2024/priciest-new-york-city-sales/"
-    />
-    <meta
-      property="twitter:title"
-      content="South Florida Condominium Development Planning - The Real Deal"
-    />
-    <meta
-      property="twitter:description"
-      content="Latest South Florida Condominium Development Planning"
-    />
-    <meta
-      property="twitter:image"
-      content="https://static.therealdeal.com/wp-content/uploads/2019/10/trd-logo-16x9.jpg"
-    />
-
+    <link rel="canonical" href="https://therealdeal.com/data/" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       rel="preconnect"
@@ -113,28 +62,6 @@
       ></iframe
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
-
-    <main class="map-container">
-      <section id="map" class="map"></section>
-      <section id="modal" class="detail-modal modal">
-        <div class="modal-dialog modal-dialog-scrollable">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title"></h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body"></div>
-          </div>
-        </div>
-      </section>
-      <section id="result"></section>
-    </main>
-
     <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -143,6 +70,272 @@
     <script src="../trd-data/common-formatter/formatter.js"></script>
     <script src="../trd-data/common-loading/loading.js"></script>
     <script src="../trd-data/common-map/map.js?v=1.1"></script>
-    <script src="south-florida-condominium-development-planning-map.js"></script>
+    <script>
+      const legendKeys = [
+        {
+          title: "Status",
+          options: [
+            {
+              text: "Submitted",
+              value: "Acknowledged",
+              default: false,
+              color: {
+                light: "#FFAB91",
+                dark: "#FFCCBC",
+              },
+            },
+            {
+              text: "Accepted",
+              value: "Approved",
+              default: false,
+              color: {
+                light: "#35cd7d",
+                dark: "#35cd7d",
+              },
+            },
+            {
+              text: "Other",
+              value: "",
+              default: true,
+              color: {
+                light: "#000000",
+                dark: "#ffffff",
+              },
+            },
+          ],
+        },
+      ];
+
+      const tooltipDisplayFields = {
+        title: {
+          field: "Condo Name",
+          label: "Project Name",
+        },
+        content: [
+          {
+            field: "Primary Status",
+            label: "Status",
+          },
+          {
+            field: "Recorded Date",
+            label: "Recorded Date",
+            format: "formatDate",
+          },
+          {
+            field: "Units",
+            label: "# of Units",
+            format: "formatInteger",
+          },
+        ],
+      };
+
+      const modalDisplayFields = {
+        title: {
+          field: "Condo Name",
+          label: "Project Name",
+        },
+        content: [
+          { field: "Project Number", label: "Project Number" },
+          {
+            field: "File Number",
+            label: "File Number",
+            format: "formatInteger",
+          },
+          { field: "Condo Name", label: "Condo Name" },
+          { field: "County", label: "County" },
+          { field: "Street City State Zip", label: "Address" },
+          { field: "Units", label: "Units", format: "formatInteger" },
+          {
+            field: "Recorded Date",
+            label: "Recorded Date",
+            format: "formateDate",
+          },
+          { field: "Primary Status", label: "Primary Status" },
+          { field: "Secondary Status", label: "Secondary Status" },
+          { field: "Managing Entity Number", label: "Managing Entity Number" },
+          { field: "Managing Entity Name", label: "Managing Entity Name" },
+          { field: "Managing Entity Route", label: "Managing Entity Route" },
+          {
+            field: "group",
+            label: "Managing Entity Address",
+            fields: [
+              {
+                field: "Managing Entity Street",
+                label: "Managing Entity Street",
+              },
+              { field: "Managing Entity City", label: "Managing Entity City" },
+              {
+                field: "Managing Entity State",
+                label: "Managing Entity State",
+              },
+              {
+                field: "Managing Entity Zip",
+                label: "Managing Entity Zip",
+                format: "formatInteger",
+              },
+            ],
+          },
+          { field: "Developer Name", label: "Developer Name" },
+          {
+            field: "group",
+            label: "Managing Address",
+            fields: [
+              { field: "Mailing Street", label: "Mailing Street" },
+              {
+                field: "Mailing Address Line 2",
+                label: "Mailing Address Line 2",
+              },
+              {
+                field: "Mailing Address Line 3",
+                label: "Mailing Address Line 3",
+              },
+              { field: "Mailing City", label: "Mailing City" },
+              { field: "Mailing State", label: "Mailing State" },
+              {
+                field: "Mailing Zip",
+                label: "Mailing Zip",
+                format: "formatInteger",
+              },
+            ],
+          },
+          { field: "Mailing County Name", label: "Mailing County Name" },
+          { field: "TRD_Developer", label: "TRD Developer" },
+          {
+            field: "Property Website",
+            label: "Property Website",
+            format: "formatLink",
+          },
+        ],
+      };
+
+      const filterFields = [
+        {
+          title: "County",
+          name: "county",
+          dataField: "County",
+          fieldType: "checkbox",
+          fieldLayoutClass: "checkbox-group",
+          multiSelect: true,
+          callback: (values, item) => {
+            return values.some((value) => {
+              if (value === "" || value.length === 0) {
+                return item.properties["County"] === "";
+              }
+              const group = value.split("|");
+              for (const v of group) {
+                if (item.properties["County"].includes(v)) {
+                  return true;
+                }
+              }
+            });
+          },
+          options: [
+            {
+              label: "Miami-Dade",
+              value: "Dade",
+            },
+            {
+              label: "Palm Beach",
+              value: "Palm Beach",
+            },
+            {
+              label: "Broward",
+              value: "Broward",
+            },
+          ],
+        },
+        {
+          title: "Status",
+          name: "status",
+          dataField: "Primary Status",
+          fieldType: "checkbox",
+          fieldLayoutClass: "checkbox-group",
+          multiSelect: true,
+          callback: (values, item) => {
+            return values.some((value) => {
+              if (value === "" || value.length === 0) {
+                return item.properties["Primary Status"] === "";
+              }
+              const group = value.split("|");
+              for (const v of group) {
+                if (item.properties["Primary Status"].includes(v)) {
+                  return true;
+                }
+              }
+            });
+          },
+          options: [
+            {
+              label: "Submitted",
+              value: "Acknowledged",
+            },
+            {
+              label: "Accepted",
+              value: "Approved",
+            },
+            {
+              label: "Other",
+              value: "",
+            },
+          ],
+        },
+      ];
+
+      const list = [];
+
+      fetchDataFilterCallback = (data) => {
+        return {
+          ...data,
+          features: data.features.filter((item) => {
+            if (!list.includes(item.properties["County"])) {
+              list.push(item.properties["County"]);
+            }
+            return true;
+          }),
+        };
+      };
+
+      window.list = list;
+
+      window.map = trdDataCommonMap({
+        fetchDataFilterCallback,
+        eventCategory: "south-florida-condo-dev-planning-map",
+        filePath:
+          "https://static.therealdeal.com/interactive-maps/south-florida-condo-pipeline-map_data.geojson",
+        mapElementId: "map",
+        filterElementId: "map-filters",
+        legendElementId: "legend",
+        resultElementId: "result",
+        mapCenterLat: 26.380126753919782,
+        mapCenterLng: -80.38513016032842,
+        zoom: 8,
+        minZoom: 8,
+        legendKeys,
+        dataPointKeys: legendKeys[0].options,
+        tooltipDisplayFields,
+        modalDisplayFields,
+        filterFields,
+        loadingEnabled: true,
+
+        pointSettings: {
+          clickToCenter: true,
+          clickToZoom: true,
+          colorType: "case",
+          radiusType: "radius",
+          colorTypeDataKey: "Primary Status",
+          paintSettings: {
+            default: {
+              radius: 6,
+            },
+            hover: {
+              color: { light: "#FF9800", dark: "#F57C00" },
+            },
+            active: {
+              color: { light: "#FF5722", dark: "#D84315" },
+            },
+          },
+        },
+      });
+    </script>
   </body>
 </html>
