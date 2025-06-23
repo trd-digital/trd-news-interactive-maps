@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TR Data Dashboard</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    /* Controls */
+    #controls { display: flex; gap: 1rem; margin-bottom: 1rem; }
+    #controls label { display: flex; flex-direction: column; font-size: 0.9rem; }
+    #controls select { padding: 0.25rem 0.5rem; }
+    /* Map */
+    #map-container { width: 100%; height: 400px; margin-bottom: 1rem; }
+    /* Cards */
+    #cards-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+    .card { padding: 1rem; border: 1px solid #ddd; border-radius: 8px; background: #fff; }
+    .card h3 { margin: 0 0 0.5rem; font-size: 1.1rem; }
+    .card p { margin: 0.25rem 0; font-size: 0.9rem; }
+    .metric-label { color: #555; margin-right: 0.25rem; }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <label>Borough
+      <select id="borough-select"><option value="">All</option></select>
+    </label>
+    <label>Neighborhood
+      <select id="neighborhood-select"><option value="">All</option></select>
+    </label>
+    <label>Quarter
+      <select id="quarter-select"><option value="">All</option></select>
+    </label>
+    <label>Property Type
+      <select id="property-select"><option value="">All</option></select>
+    </label>
+  </div>
+
+  <div id="map-container">
+    <!-- Ensure each borough path has data-borough="<Name>" -->
+    <object id="map-svg" type="image/svg+xml" data="Generated Design.svg"></object>
+  </div>
+
+  <div id="cards-container"></div>
+
+  <script>
+    let data;
+
+    // Formatters
+    const fmtNum = x => x != null ? x.toLocaleString() : 'N/A';
+    const fmtMoney = x => x != null ? '$' + (x >= 1e6 ? (x/1e6).toFixed(1) + 'M' : x.toLocaleString()) : 'N/A';
+    const fmtPSF = x => x != null ? '$' + Math.round(x) : 'N/A';
+
+    d3.csv('TRDataWithAskingRents.csv', d3.autoType).then(raw => {
+      data = raw.map(d => ({
+        borough: d.borough,
+        neighborhood: d.neighborhood,
+        year_quarter: d.year_quarter,
+        property_group: d.property_group,
+        sales_volume: +d.sales_volume,
+        avg_price: +d.avg_price,
+        median_price: +d.median_price,
+        number_of_deals: +d.number_of_deals,
+        avg_rent_psf: +d.avg_rent_psf
+      }));
+      initControls();
+      updateCards();
+      initMapInteractions();
+    });
+
+    function initControls() {
+      const boroughs = Array.from(new Set(data.map(d => d.borough))).sort();
+      const quarters = Array.from(new Set(data.map(d => d.year_quarter))).sort((a,b)=>{
+        const [ay,aq]=a.split('/Q').map(Number), [by,bq]=b.split('/Q').map(Number);
+        return ay!==by ? ay-by : aq-bq;
+      });
+      const properties = Array.from(new Set(data.map(d => d.property_group))).sort();
+
+      // Populate selects
+      const bSel = d3.select('#borough-select');
+      boroughs.forEach(b=> bSel.append('option').attr('value',b).text(b));
+      const qSel = d3.select('#quarter-select');
+      quarters.forEach(q=> qSel.append('option').attr('value',q).text(q));
+      // default to most recent quarter
+      qSel.property('value', quarters[quarters.length-1]);
+      const pSel = d3.select('#property-select');
+      properties.forEach(p=> pSel.append('option').attr('value',p).text(p));
+
+      // Listeners
+      bSel.on('change', ()=>{ updateNeighborhoods(); updateCards(); });
+      d3.select('#neighborhood-select').on('change', updateCards);
+      qSel.on('change', updateCards);
+      pSel.on('change', updateCards);
+
+      updateNeighborhoods();
+    }
+
+    function updateNeighborhoods() {
+      const selB = d3.select('#borough-select').property('value');
+      const subset = selB ? data.filter(d=>d.borough===selB) : data;
+      const nhs = Array.from(new Set(subset.map(d=>d.neighborhood))).sort();
+      const nSel = d3.select('#neighborhood-select').selectAll('option').data([''].concat(nhs));
+      nSel.enter().append('option')
+        .merge(nSel)
+        .attr('value', d=>d)
+        .text(d=> d || 'All');
+      nSel.exit().remove();
+    }
+
+    function updateCards() {
+      // Gather filters
+      const selB = d3.select('#borough-select').property('value');
+      const selQ = d3.select('#quarter-select').property('value');
+      const selP = d3.select('#property-select').property('value');
+      let subset = data;
+      if(selB) subset = subset.filter(d=>d.borough===selB);
+      if(selQ) subset = subset.filter(d=>d.year_quarter===selQ);
+      if(selP) subset = subset.filter(d=>d.property_group===selP);
+
+      // Group by neighborhood
+      const grouped = d3.rollups(
+        subset,
+        v => ({
+          sales_volume: d3.sum(v, d=>d.sales_volume),
+          number_of_deals: d3.sum(v, d=>d.number_of_deals),
+          avg_price: d3.mean(v, d=>d.avg_price),
+          median_price: d3.mean(v, d=>d.median_price),
+          avg_rent_psf: d3.mean(v, d=>d.avg_rent_psf)
+        }),
+        d=>d.neighborhood
+      );
+      const cardsData = grouped.map(([neighborhood, metrics]) => ({ neighborhood, ...metrics }));
+
+      // Render cards
+      const container = d3.select('#cards-container');
+      container.selectAll('.card').remove();
+      const cards = container.selectAll('.card').data(cardsData).enter().append('div').attr('class','card');
+
+      cards.append('h3').text(d=>d.neighborhood);
+      cards.append('p').html(`<span class="metric-label">Sales Volume:</span> ${fmtMoney(d3.arc()/* dummy */)}`);
+      // Fixed: use actual formatting
+      cards.append('p').text(d=>`Sales Volume: ${fmtMoney(d.sales_volume)}`);
+      cards.append('p').text(d=>`Deals: ${fmtNum(d.number_of_deals)}`);
+      cards.append('p').text(d=>`Avg Price: ${fmtMoney(d.avg_price)}`);
+      cards.append('p').text(d=>`Median Price: ${fmtMoney(d.median_price)}`);
+      cards.append('p').text(d=>`Rent/PSF: ${fmtPSF(d.avg_rent_psf)}`);
+    }
+
+    function initMapInteractions() {
+      const obj = document.getElementById('map-svg');
+      obj.addEventListener('load', ()=>{
+        const svg = obj.contentDocument;
+        d3.select(svg).selectAll('[data-borough]')
+          .style('cursor','pointer')
+          .on('click', function(){
+            const b = d3.select(this).attr('data-borough');
+            d3.select('#borough-select').property('value', b);
+            updateNeighborhoods();
+            updateCards();
+          });
+      });
+    }
+  </script>
+</body>
+</html>

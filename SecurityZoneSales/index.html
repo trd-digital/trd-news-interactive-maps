@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_519b47614a12dee1c2a84a095ef17559 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+<h3 align="center" style="font-size:16px">
+  <b>Residential Sales in the Mar-a-Lago Security Zone</b>
+</h3>
+    
+            <div class="folium-map" id="map_519b47614a12dee1c2a84a095ef17559" ></div>
+        
+</body>
+<script>    
+    
+            var map_519b47614a12dee1c2a84a095ef17559 = L.map(
+                "map_519b47614a12dee1c2a84a095ef17559",
+                {
+                    center: [26.6788667, -80.03717867499999],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 15,
+                    zoomControl: true,
+                    preferCanvas: false,
+                    scrollWheelZoom: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_e47ca9587fd03dc44fd3d8bc7a6d3615 = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {"attribution": "Mapbox", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 1, "noWrap": false, "opacity": 1, "subdomains": "abc", "tileSize": 256, "tms": false, "zoomOffset": 0}
+            ).addTo(map_519b47614a12dee1c2a84a095ef17559);
+        
+    
+            var layer_control_f951764dc0fa8bd3c41ae900b83a645f = {
+                base_layers : {
+                    "Mapbox Streets" : tile_layer_e47ca9587fd03dc44fd3d8bc7a6d3615,
+                },
+                overlays :  {
+                },
+            };
+            L.control.layers(
+                layer_control_f951764dc0fa8bd3c41ae900b83a645f.base_layers,
+                layer_control_f951764dc0fa8bd3c41ae900b83a645f.overlays,
+                {"autoZIndex": true, "collapsed": true, "position": "topright"}
+            ).addTo(map_519b47614a12dee1c2a84a095ef17559);
+        
+    
+            var circle_marker_4d557806c374d057de934a4b56728150 = L.circleMarker(
+                [26.6799431, -80.0371036],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_519b47614a12dee1c2a84a095ef17559);
+        
+    
+            circle_marker_4d557806c374d057de934a4b56728150.bindTooltip(
+                `<div>
+                     <div class="popup-content"><strong>Date:</strong> May 28, 2025<br><strong>Address:</strong> 142 Via Palma<br><strong>Price:</strong> $17M<br><strong>Last Sale:</strong> <a href="$5.4M, 2016" target="_blank" rel="noopener noreferrer">$5.4M, 2016</a></div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_a9ed3af3f9565098a60eebe9ca3acbc3 = L.circleMarker(
+                [26.6782783, -80.0370097],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_519b47614a12dee1c2a84a095ef17559);
+        
+    
+            circle_marker_a9ed3af3f9565098a60eebe9ca3acbc3.bindTooltip(
+                `<div>
+                     <div class="popup-content"><strong>Date:</strong> Apr 8, 2025<br><strong>Address:</strong> 129 Woodbridge Road<br><strong>Price:</strong> $14M<br><strong>Last Sale:</strong> <a href="$2.2M, 2013" target="_blank" rel="noopener noreferrer">$2.2M, 2013</a></div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_75307bbeeecc75ee239b02f72ee4c531 = L.circleMarker(
+                [26.6791403, -80.0381551],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_519b47614a12dee1c2a84a095ef17559);
+        
+    
+            circle_marker_75307bbeeecc75ee239b02f72ee4c531.bindTooltip(
+                `<div>
+                     <div class="popup-content"><strong>Date:</strong> Mar 12, 2025<br><strong>Address:</strong> 153 Kings Road<br><strong>Price:</strong> $14M<br><strong>Last Sale:</strong> <a href="$2.6M, 2004" target="_blank" rel="noopener noreferrer">$2.6M, 2004</a></div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_af44619a700a3e5f99bb9ea316206c6e = L.circleMarker(
+                [26.6736913, -80.0377475],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_519b47614a12dee1c2a84a095ef17559);
+        
+    
+            circle_marker_af44619a700a3e5f99bb9ea316206c6e.bindTooltip(
+                `<div>
+                     <div class="popup-content"><strong>Date:</strong> Feb 27, 2025<br><strong>Address:</strong> 1230 South Ocean Boulevard<br><strong>Price:</strong> $40M<br><strong>Last Sale:</strong> <a href="$11.5M, 2020" target="_blank" rel="noopener noreferrer">$11.5M, 2020</a></div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_63746e8dd901c89a8e40d697381f2b55 = L.circleMarker(
+                [26.6786584, -80.038837],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_519b47614a12dee1c2a84a095ef17559);
+        
+    
+            circle_marker_63746e8dd901c89a8e40d697381f2b55.bindTooltip(
+                `<div>
+                     <div class="popup-content"><strong>Date:</strong> Feb 21, 2025<br><strong>Address:</strong> 168 Kings Road<br><strong>Price:</strong> $12M<br><strong>Last Sale:</strong> <a href="$14M, 2023" target="_blank" rel="noopener noreferrer">$14M, 2023</a></div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_a4ec17c6e7eb1569b6d279fcc770f521 = L.circleMarker(
+                [26.6783263, -80.0362214],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_519b47614a12dee1c2a84a095ef17559);
+        
+    
+            circle_marker_a4ec17c6e7eb1569b6d279fcc770f521.bindTooltip(
+                `<div>
+                     <div class="popup-content"><strong>Date:</strong> Jan 31, 2025<br><strong>Address:</strong> 1090 South Ocean Boulevard<br><strong>Price:</strong> $19.5M<br><strong>Last Sale:</strong> <a href="$5.6M, 2020" target="_blank" rel="noopener noreferrer">$5.6M, 2020</a></div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_acc9fc6e3027f8ae988e54bb4218b53e = L.circleMarker(
+                [26.6832311, -80.0364761],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_519b47614a12dee1c2a84a095ef17559);
+        
+    
+            circle_marker_acc9fc6e3027f8ae988e54bb4218b53e.bindTooltip(
+                `<div>
+                     <div class="popup-content"><strong>Date:</strong> Jan 10, 2025<br><strong>Address:</strong> 120 Clarendon Avenue<br><strong>Price:</strong> $27.5M<br><strong>Last Sale:</strong> <a href="$22.7M, 2021" target="_blank" rel="noopener noreferrer">$22.7M, 2021</a></div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_3db492c77b509eecb4ea2ddf093e127c = L.circleMarker(
+                [26.6796648, -80.035879],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_519b47614a12dee1c2a84a095ef17559);
+        
+    
+            circle_marker_3db492c77b509eecb4ea2ddf093e127c.bindTooltip(
+                `<div>
+                     <div class="popup-content"><strong>Date:</strong> Dec 17, 2024<br><strong>Address:</strong> 30 Algoma Road<br><strong>Price:</strong> $14.3M<br><strong>Last Sale:</strong> <a href="$4.1M, 2021" target="_blank" rel="noopener noreferrer">$4.1M, 2021</a></div>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
