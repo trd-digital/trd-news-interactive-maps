@@ -1,162 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>TR Data Dashboard</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NYC Market Snapshot</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <style>
-    /* Controls */
-    #controls { display: flex; gap: 1rem; margin-bottom: 1rem; }
-    #controls label { display: flex; flex-direction: column; font-size: 0.9rem; }
-    #controls select { padding: 0.25rem 0.5rem; }
-    /* Map */
-    #map-container { width: 100%; height: 400px; margin-bottom: 1rem; }
-    /* Cards */
-    #cards-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
-    .card { padding: 1rem; border: 1px solid #ddd; border-radius: 8px; background: #fff; }
-    .card h3 { margin: 0 0 0.5rem; font-size: 1.1rem; }
-    .card p { margin: 0.25rem 0; font-size: 0.9rem; }
-    .metric-label { color: #555; margin-right: 0.25rem; }
+    :root {
+      --primary: #1a73e8;
+      --on-primary: #fff;
+      --bg: #f5f7fa;
+      --card-bg: #fff;
+      --text-primary: #202124;
+      --text-secondary: #5f6368;
+      --green: #188038;
+      --blue: #1a73e8;
+      --red: #d93025;
+      --font: 'Arial', sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--font); background: var(--bg); color: var(--text-primary); }
+    header { background: var(--card-bg); padding: 0.8rem 1.2rem; border-bottom: 1px solid #dadce0; }
+    header h1 { margin: 0; font-size: 1.4rem; }
+    header p { margin: 0.2rem 0 0; color: var(--text-secondary); font-size: 0.85rem; }
+    .top-row { display: flex; align-items: center; justify-content: space-between; margin: 0.8rem 1.2rem; }
+    .boroughs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .pill-btn { padding: 0.5rem 1rem; border: 1px solid #d2e3fc; background: var(--card-bg); border-radius: 999px; cursor: pointer; color: #1967d2; font-size: 0.9rem; }
+    .pill-btn.active { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+    #toggleFilters { padding: 0.5rem 1rem; background: var(--primary); color: var(--on-primary); border: none; border-radius: 4px; cursor: pointer; }
+    .filters { display: flex; gap: 0.8rem; margin: 0 1.2rem 0.8rem; }
+    .filters select { flex: 1; padding: 0.4rem; font-size: 0.85rem; border: 1px solid #dadce0; border-radius: 4px; }
+    .summary { margin: 0 1.2rem 0.8rem; color: var(--text-secondary); font-size: 0.85rem; }
+    #results { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 0.8rem; padding: 0 1.2rem 1rem; }
+    .card { background: var(--card-bg); border-radius: 8px; box-shadow: 0 1px 2px rgba(60,64,67,0.12); padding: 0.6rem; display: flex; flex-direction: column; }
+    .card-header { display: flex; justify-content: space-between; align-items: baseline; }
+    .card-header h4 { margin: 0; font-size: 1rem; line-height: 1.2; }
+    .avg-section { text-align: right; }
+    .avg-price { font-size: 1rem; font-weight: bold; color: var(--green); line-height: 1; }
+    .avg-label { font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.1rem; }
+    .median-section { text-align: right; margin-top: 0.15rem; }
+    .median-price { font-size: 0.9rem; font-weight: bold; color: var(--green); line-height: 1; }
+    .median-label { font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.05rem; }
+    .details { margin-top: 0.2rem; font-size: 0.7rem; color: var(--text-secondary); }
+    .pill-type { display: inline-block; padding: 0.2rem 0.5rem; background: #f1f3f4; border-radius: 4px; font-size: 0.7rem; margin: 0.2rem 0; color: var(--text-secondary); align-self: flex-start; }
+    .metrics { display: flex; justify-content: space-between; margin-top: 0.4rem; }
+    .metric { text-align: center; flex: 1; }
+    .metric p { margin: 0; font-size: 0.7rem; color: var(--text-secondary); }
+    .metric .value { font-weight: bold; font-size: 0.85rem; line-height: 1; }
+    .metric.sales .value { color: var(--blue); }
+    .metric.deals .value { color: var(--text-primary); }
+    .metric.rent .value { color: var(--red); }
   </style>
 </head>
 <body>
-  <div id="controls">
-    <label>Borough
-      <select id="borough-select"><option value="">All</option></select>
-    </label>
-    <label>Neighborhood
-      <select id="neighborhood-select"><option value="">All</option></select>
-    </label>
-    <label>Quarter
-      <select id="quarter-select"><option value="">All</option></select>
-    </label>
-    <label>Property Type
-      <select id="property-select"><option value="">All</option></select>
-    </label>
+  <header>
+    <h1>NYC Market Snapshot</h1>
+    <p>Filter neighborhoods by borough, price range, property type, and bedrooms</p>
+  </header>
+  <div class="top-row">
+    <div class="boroughs" id="boroughs"></div>
+    <button id="toggleFilters">Hide Filters</button>
   </div>
-
-  <div id="map-container">
-    <!-- Ensure each borough path has data-borough="<Name>" -->
-    <object id="map-svg" type="image/svg+xml" data="Generated Design.svg"></object>
+  <div class="filters" id="filters">
+    <select id="NeighborhoodSelect"><option>Neighborhoods</option></select>
+    <select id="DateRangeSelect"><option>Most recent quarter</option></select>
+    <select id="PropertyTypeSelect"><option>All Types</option></select>
   </div>
-
-  <div id="cards-container"></div>
+  <div class="summary" id="summary"></div>
+  <div id="results"></div>
 
   <script>
-    let data;
+    let rawData = [];
+    const boroughsSet = new Set(), neighborhoods = {}, dates = new Set(), types = new Set();
+    let selectedBorough = 'All Boroughs';
 
-    // Formatters
-    const fmtNum = x => x != null ? x.toLocaleString() : 'N/A';
-    const fmtMoney = x => x != null ? '$' + (x >= 1e6 ? (x/1e6).toFixed(1) + 'M' : x.toLocaleString()) : 'N/A';
-    const fmtPSF = x => x != null ? '$' + Math.round(x) : 'N/A';
+    function isValid(v){ return v != null && v.trim() && v.trim().toLowerCase() !== 'undefined'; }
+    function formatNum(n){ return n >= 1e9 ? (n/1e9).toFixed(1) + 'B' : n >= 1e6 ? (n/1e6).toFixed(1) + 'M' : n >= 1e3 ? (n/1e3).toFixed(1) + 'K' : n; }
 
-    d3.csv('TRDataWithAskingRents.csv', d3.autoType).then(raw => {
-      data = raw.map(d => ({
-        borough: d.borough,
-        neighborhood: d.neighborhood,
-        year_quarter: d.year_quarter,
-        property_group: d.property_group,
-        sales_volume: +d.sales_volume,
-        avg_price: +d.avg_price,
-        median_price: +d.median_price,
-        number_of_deals: +d.number_of_deals,
-        avg_rent_psf: +d.avg_rent_psf
-      }));
-      initControls();
-      updateCards();
-      initMapInteractions();
-    });
+    Papa.parse('data/real_estate_nyc.csv', { header: true, download: true, complete: r => { rawData = r.data; pre(); init(); filter(); } });
 
-    function initControls() {
-      const boroughs = Array.from(new Set(data.map(d => d.borough))).sort();
-      const quarters = Array.from(new Set(data.map(d => d.year_quarter))).sort((a,b)=>{
-        const [ay,aq]=a.split('/Q').map(Number), [by,bq]=b.split('/Q').map(Number);
-        return ay!==by ? ay-by : aq-bq;
+    function pre() {
+      rawData.forEach(r => {
+        const b = isValid(r.borough) ? r.borough.trim() : null;
+        if (!b) return;
+        boroughsSet.add(b);
+        const n = isValid(r.neighborhood) ? r.neighborhood.trim() : null;
+        if (n) { neighborhoods[b] = neighborhoods[b] || new Set(); neighborhoods[b].add(n); }
+        const d = isValid(r.year_quarter) ? r.year_quarter.trim() : null;
+        if (d) dates.add(d);
+        const t = isValid(r.property_group) ? r.property_group.trim() : null;
+        if (t) types.add(t);
       });
-      const properties = Array.from(new Set(data.map(d => d.property_group))).sort();
-
-      // Populate selects
-      const bSel = d3.select('#borough-select');
-      boroughs.forEach(b=> bSel.append('option').attr('value',b).text(b));
-      const qSel = d3.select('#quarter-select');
-      quarters.forEach(q=> qSel.append('option').attr('value',q).text(q));
-      // default to most recent quarter
-      qSel.property('value', quarters[quarters.length-1]);
-      const pSel = d3.select('#property-select');
-      properties.forEach(p=> pSel.append('option').attr('value',p).text(p));
-
-      // Listeners
-      bSel.on('change', ()=>{ updateNeighborhoods(); updateCards(); });
-      d3.select('#neighborhood-select').on('change', updateCards);
-      qSel.on('change', updateCards);
-      pSel.on('change', updateCards);
-
-      updateNeighborhoods();
     }
 
-    function updateNeighborhoods() {
-      const selB = d3.select('#borough-select').property('value');
-      const subset = selB ? data.filter(d=>d.borough===selB) : data;
-      const nhs = Array.from(new Set(subset.map(d=>d.neighborhood))).sort();
-      const nSel = d3.select('#neighborhood-select').selectAll('option').data([''].concat(nhs));
-      nSel.enter().append('option')
-        .merge(nSel)
-        .attr('value', d=>d)
-        .text(d=> d || 'All');
-      nSel.exit().remove();
+    function init() {
+      const brc = document.getElementById('boroughs');
+      ['All Boroughs', ...Array.from(boroughsSet).sort()].forEach(b => {
+        const btn = document.createElement('button');
+        btn.textContent = b;
+        btn.className = 'pill-btn' + (b === selectedBorough ? ' active' : '');
+        btn.onclick = () => { selectedBorough = b; updateBoroughs(); filter(); };
+        brc.append(btn);
+      });
+      updateBoroughs();
+
+      const nbr = document.getElementById('NeighborhoodSelect');
+      const dr = document.getElementById('DateRangeSelect');
+      const pt = document.getElementById('PropertyTypeSelect');
+      nbr.innerHTML = '<option>Neighborhoods</option>';
+      getNeighborhoodList().forEach(n => nbr.add(new Option(n, n)));
+      Array.from(dates).sort().forEach(d => dr.add(new Option(d, d)));
+      Array.from(types).sort().forEach(t => pt.add(new Option(t, t)));
+      [nbr, dr, pt].forEach(el => el.onchange = filter);
+
+      document.getElementById('toggleFilters').onclick = () => {
+        const f = document.getElementById('filters');
+        f.style.display = f.style.display === 'none' ? 'flex' : 'none';
+        document.getElementById('toggleFilters').textContent = f.style.display === 'none' ? 'Show Filters' : 'Hide Filters';
+      };
     }
 
-    function updateCards() {
-      // Gather filters
-      const selB = d3.select('#borough-select').property('value');
-      const selQ = d3.select('#quarter-select').property('value');
-      const selP = d3.select('#property-select').property('value');
-      let subset = data;
-      if(selB) subset = subset.filter(d=>d.borough===selB);
-      if(selQ) subset = subset.filter(d=>d.year_quarter===selQ);
-      if(selP) subset = subset.filter(d=>d.property_group===selP);
-
-      // Group by neighborhood
-      const grouped = d3.rollups(
-        subset,
-        v => ({
-          sales_volume: d3.sum(v, d=>d.sales_volume),
-          number_of_deals: d3.sum(v, d=>d.number_of_deals),
-          avg_price: d3.mean(v, d=>d.avg_price),
-          median_price: d3.mean(v, d=>d.median_price),
-          avg_rent_psf: d3.mean(v, d=>d.avg_rent_psf)
-        }),
-        d=>d.neighborhood
-      );
-      const cardsData = grouped.map(([neighborhood, metrics]) => ({ neighborhood, ...metrics }));
-
-      // Render cards
-      const container = d3.select('#cards-container');
-      container.selectAll('.card').remove();
-      const cards = container.selectAll('.card').data(cardsData).enter().append('div').attr('class','card');
-
-      cards.append('h3').text(d=>d.neighborhood);
-      cards.append('p').html(`<span class="metric-label">Sales Volume:</span> ${fmtMoney(d3.arc()/* dummy */)}`);
-      // Fixed: use actual formatting
-      cards.append('p').text(d=>`Sales Volume: ${fmtMoney(d.sales_volume)}`);
-      cards.append('p').text(d=>`Deals: ${fmtNum(d.number_of_deals)}`);
-      cards.append('p').text(d=>`Avg Price: ${fmtMoney(d.avg_price)}`);
-      cards.append('p').text(d=>`Median Price: ${fmtMoney(d.median_price)}`);
-      cards.append('p').text(d=>`Rent/PSF: ${fmtPSF(d.avg_rent_psf)}`);
+    function updateBoroughs() {
+      document.querySelectorAll('.pill-btn').forEach(btn => btn.classList.toggle('active', btn.textContent === selectedBorough));
+      updateDropdown();
     }
 
-    function initMapInteractions() {
-      const obj = document.getElementById('map-svg');
-      obj.addEventListener('load', ()=>{
-        const svg = obj.contentDocument;
-        d3.select(svg).selectAll('[data-borough]')
-          .style('cursor','pointer')
-          .on('click', function(){
-            const b = d3.select(this).attr('data-borough');
-            d3.select('#borough-select').property('value', b);
-            updateNeighborhoods();
-            updateCards();
-          });
+    function getNeighborhoodList() {
+      if (selectedBorough === 'All Boroughs') {
+        return Array.from(new Set([].concat(...Object.values(neighborhoods).map(s => [...s])))).sort();
+      }
+      return Array.from(neighborhoods[selectedBorough] || []).sort();
+    }
+
+    function updateDropdown() {
+      const nbr = document.getElementById('NeighborhoodSelect');
+      nbr.innerHTML = '<option>Neighborhoods</option>';
+      getNeighborhoodList().forEach(n => nbr.add(new Option(n, n)));
+    }
+
+    function filter() {
+      const nbrV = document.getElementById('NeighborhoodSelect').value;
+      const drV = document.getElementById('DateRangeSelect').value;
+      const ptV = document.getElementById('PropertyTypeSelect').value;
+      const filtered = rawData.filter(r => {
+        const b = isValid(r.borough) ? r.borough.trim() : null;
+        if (selectedBorough !== 'All Boroughs' && b !== selectedBorough) return false;
+        const n = isValid(r.neighborhood) ? r.neighborhood.trim() : null;
+        if (nbrV !== 'Neighborhoods' && n !== nbrV) return false;
+        const d = isValid(r.year_quarter) ? r.year_quarter.trim() : null;
+        if (drV !== 'Most recent quarter' && d !== drV) return false;
+        const t = isValid(r.property_group) ? r.property_group.trim() : null;
+        if (ptV !== 'All Types' && t !== ptV) return false;
+        return true;
+      });
+      document.getElementById('summary').textContent = `Showing ${filtered.length} of ${getNeighborhoodList().length} neighborhoods`;
+      render(filtered);
+    }
+
+    function render(data) {
+      const c = document.getElementById('results');
+      c.innerHTML = '';
+      data.forEach(r => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        const avg = parseFloat(r.avg_price);
+        const median = parseFloat(r.median_price);
+        const sales = parseFloat(r.sales_volume);
+        const deals = parseInt(r.number_of_deals, 10);
+        const rent = parseFloat(r.avg_asking_rent);
+        card.innerHTML = `
+          <div class="card-header">
+            <h4>${r.neighborhood}</h4>
+            <div class="avg-section">
+              <div class="avg-price">${isNaN(avg) ? '-' : '$' + formatNum(avg)}</div>
+              <div class="avg-label">Avg Price</div>
+            </div>
+          </div>
+          <div class="median-section">
+            <div class="median-price">${isNaN(median) ? '-' : '$' + formatNum(median)}</div>
+            <div class="median-label">Median Price</div>
+          </div>
+          <div class="details">${r.borough} • ${r.year_quarter}</div>
+          <div class="pill-type">${r.property_group}</div>
+          <div class="metrics">
+            <div class="metric sales"><div class="value">${isNaN(sales) ? '-' : '$' + formatNum(sales)}</div><p>Sales Volume</p></div>
+            <div class="metric deals"><div class="value">${isNaN(deals) ? '-' : deals}</div><p>Deals</p></div>
+            <div class="metric rent"><div class="value">${isNaN(rent) ? '-' : '$' + formatNum(rent)}</div><p>Rent/SqFt</p></div>
+          </div>
+        `;
+        c.appendChild(card);
       });
     }
   </script>
