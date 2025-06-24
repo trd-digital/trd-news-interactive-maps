@@ -77,7 +77,7 @@
     function isValid(v){ return v != null && v.trim() && v.trim().toLowerCase() !== 'undefined'; }
     function formatNum(n){ return n >= 1e9 ? (n/1e9).toFixed(1) + 'B' : n >= 1e6 ? (n/1e6).toFixed(1) + 'M' : n >= 1e3 ? (n/1e3).toFixed(1) + 'K' : n; }
 
-    Papa.parse('data/real_estate_nyc.csv', { header: true, download: true, complete: r => { rawData = r.data; pre(); init(); filter(); } });
+    Papa.parse('real_estate_nyc.csv', { header: true, download: true, complete: r => { rawData = r.data; pre(); init(); filter(); } });
 
     function pre() {
       rawData.forEach(r => {
