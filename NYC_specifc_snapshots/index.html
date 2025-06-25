@@ -18,7 +18,6 @@
       --red: #d93025;
       --font: 'Arial', sans-serif;
     }
-    /* Dark mode */
     @media (prefers-color-scheme: dark) {
       :root {
         --bg: #202124;
@@ -26,226 +25,272 @@
         --text-primary: #e8eaed;
         --text-secondary: #9aa0a6;
       }
+      .card { box-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+      .pill-btn { border-color: #5f6368; }
     }
-    * { box-sizing: border-box; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
       font-family: var(--font);
       background: var(--bg);
       color: var(--text-primary);
     }
     header {
       background: var(--card-bg);
-      padding: 0.8rem 1.2rem;
+      padding: 0.6rem 1rem;
       border-bottom: 1px solid #dadce0;
     }
-    header h1 { margin: 0; font-size: 1.4rem; }
+    header h1 { font-size: 1.3rem; }
     header p {
-      margin: 0.2rem 0 0;
+      margin-top: 0.2rem;
+      font-size: 0.8rem;
       color: var(--text-secondary);
-      font-size: 0.85rem;
     }
+
     .top-row {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin: 0.8rem 1.2rem;
+      gap: 1rem;
+      margin: 0.6rem 1rem;
     }
     .boroughs {
       display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
+      gap: 0.5rem; /* spacing between borough pills */
     }
     .pill-btn {
-      padding: 0.5rem 1rem;
+      padding: 0.4rem 0.8rem;
       border: 1px solid #d2e3fc;
-      background: var(--card-bg);
       border-radius: 999px;
+      background: var(--card-bg);
       cursor: pointer;
       color: #1967d2;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      transition: background .2s, transform .1s;
     }
+    .pill-btn:hover { background: rgba(26,115,232,0.1); }
+    .pill-btn:active { transform: scale(0.95); }
     .pill-btn.active {
       background: var(--primary);
       color: var(--on-primary);
       border-color: var(--primary);
     }
-    #toggleFilters {
-      padding: 0.5rem 1rem;
+    #toggleFilters,
+    #resetFilters {
+      padding: 0.4rem 0.8rem;
       background: var(--primary);
       color: var(--on-primary);
       border: none;
       border-radius: 4px;
       cursor: pointer;
     }
+
     .filters {
       display: flex;
-      gap: 0.8rem;
-      margin: 0 1.2rem 0.8rem;
+      gap: 0.6rem;
+      margin: 0 1rem 0.6rem;
     }
     .filters select {
       flex: 1;
-      padding: 0.4rem;
-      font-size: 0.85rem;
+      padding: 0.3rem;
+      font-size: 0.8rem;
       border: 1px solid #dadce0;
       border-radius: 4px;
     }
+
     .summary {
-      margin: 0 1.2rem 0.8rem;
-      color: var(--text-secondary);
+      margin: 0 1rem 0.6rem;
       font-size: 0.85rem;
+      color: var(--text-secondary);
     }
+
     #results {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 0.8rem;
+      grid-template-columns: repeat(auto-fill, 240px);
+      gap: 0.4rem;
+      justify-content: center;
       padding: 0 1.2rem 1rem;
     }
+
     .card {
       background: var(--card-bg);
-      border-radius: 8px;
-      box-shadow: 0 1px 2px rgba(60,64,67,0.12);
-      padding: 0.6rem;
+      border-radius: 6px;
+      box-shadow: 0 1px 1px rgba(60,64,67,0.1);
+      padding: 0.4rem;
+      width: 240px;
       display: flex;
       flex-direction: column;
+      transition: transform .2s ease, box-shadow .2s ease;
     }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .card:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--primary);
+      transform: translateY(-2px);
+    }
+    .card.skeleton {
+      background: #e0e0e0;
+      animation: pulse 1.5s infinite;
+      min-height: 160px;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50%     { opacity: 0.5; }
+    }
+
     .card-header {
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
+      align-items: center;
+      margin-bottom: 0.2rem;
     }
-    .card-header h4 { margin: 0; font-size: 1rem; line-height: 1.2; }
-    .avg-section { text-align: right; }
-    .avg-price {
-      font-size: 1rem;
-      font-weight: bold;
-      color: var(--green);
-      line-height: 1;
-    }
-    .avg-label {
-      font-size: 0.7rem;
-      color: var(--text-secondary);
-      margin-top: 0.1rem;
-    }
-    .median-section {
-      text-align: right;
-      margin-top: 0.15rem;
-    }
-    .median-price {
-      font-size: 0.9rem;
-      font-weight: bold;
-      color: var(--green);
-      line-height: 1;
-    }
-    .median-label {
-      font-size: 0.7rem;
-      color: var(--text-secondary);
-      margin-top: 0.05rem;
-    }
-    .details {
-      margin-top: 0.2rem;
-      font-size: 0.7rem;
-      color: var(--text-secondary);
+    .card-header h4 {
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+      line-height: 1.2;
     }
     .pill-type {
-      display: inline-block;
-      padding: 0.2rem 0.5rem;
-      background: #f1f3f4;
-      border-radius: 4px;
       font-size: 0.7rem;
-      margin: 0.2rem 0;
+      background: #f1f3f4;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
       color: var(--text-secondary);
-      align-self: flex-start;
+      /* always right aligned by virtue of justify-content */
     }
-    .metrics {
+
+    .details {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin: 0.2rem 0;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin: 0.4rem 0;
+    }
+    .price-item {
+      flex: 1;
+      text-align: center;
+    }
+    .price-item .value {
+      font-weight: bold;
+      line-height: 1;
+    }
+    .price-item.sales .value  { color: var(--blue);  font-size: 0.9rem; }
+    .price-item.avg .value    { color: var(--green); font-size: 1rem; }
+    .price-item.median .value { color: var(--green); font-size: 0.9rem; }
+    .price-item .label {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      display: block;
+    }
+
+    .bottom-row {
       display: flex;
       justify-content: space-between;
       margin-top: 0.4rem;
     }
-    .metric {
-      text-align: center;
+    .bottom-row .metric {
       flex: 1;
+      text-align: center;
     }
-    .metric p {
-      margin: 0;
-      font-size: 0.7rem;
-      color: var(--text-secondary);
+    .bottom-row .metric:not(:first-child) {
+      margin-left: 0.4rem;
     }
-    .metric .value {
+    .bottom-row .value {
       font-weight: bold;
       font-size: 0.85rem;
       line-height: 1;
+      display: block;
     }
-    .metric.sales .value { color: var(--blue); }
-    .metric.deals .value { color: var(--text-primary); }
-    .metric.rent .value { color: var(--red); }
+    .bottom-row .label {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 250px) {
+      .card { width: 100%; }
+      #results { justify-content: start; }
+    }
   </style>
 </head>
 <body>
   <header>
     <h1>NYC Market Snapshot</h1>
-    <p>Filter neighborhoods by borough, price range, property type, and bedrooms</p>
+    <p>Filter neighborhoods by borough, price range, property type</p>
   </header>
 
   <main>
     <div class="top-row">
       <div class="boroughs" id="boroughs" role="group" aria-label="Select Borough"></div>
-      <button
-        id="toggleFilters"
-        aria-controls="filters"
-        aria-expanded="true"
-      >Hide Filters</button>
+      <button id="toggleFilters" aria-controls="filters" aria-expanded="true">
+        Hide Filters
+      </button>
+      <button id="resetFilters">Reset Filters</button>
     </div>
 
-    <section id="filters" aria-label="Filters" class="filters">
+    <section id="filters" class="filters" aria-label="Filters">
       <select id="NeighborhoodSelect"><option>All Neighborhoods</option></select>
       <select id="DateRangeSelect"><option>Loading…</option></select>
       <select id="PropertyTypeSelect"><option>All Types</option></select>
     </section>
 
     <div class="summary" id="summary">Loading data…</div>
-
     <div id="results" role="region" aria-live="polite"></div>
   </main>
 
   <script>
-    let rawData = [];
+    function toNum(str) {
+      const clean = String(str).replace(/[$,]/g, '').trim();
+      return clean === '' ? NaN : parseFloat(clean);
+    }
+
+    let rawData = [], totalCards = 0;
     const boroughsSet = new Set(),
           neighborhoods = {},
           dates = new Set(),
           types = new Set();
     let selectedBorough = 'All Boroughs';
-    let totalNeighborhoodCount = 0;
+
+    function renderSkeletons(n = 8) {
+      const results = document.getElementById('results');
+      results.innerHTML = '';
+      for (let i = 0; i < n; i++) {
+        const s = document.createElement('div');
+        s.className = 'card skeleton';
+        results.appendChild(s);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => renderSkeletons());
+
+    Papa.parse('real_estate_nyc.csv', {
+      header: true,
+      download: true,
+      skipEmptyLines: true,
+      error: () => {
+        document.getElementById('results').textContent = '⚠️ Failed to load data.';
+      },
+      complete: r => {
+        rawData    = r.data;
+        totalCards = rawData.length;
+        pre(); init(); filter();
+      }
+    });
 
     function isValid(v) {
       const s = String(v);
       return s.trim() && s.trim().toLowerCase() !== 'undefined';
     }
-    function formatNum(n) {
-      return n >= 1e9 ? (n/1e9).toFixed(1) + 'B'
-           : n >= 1e6 ? (n/1e6).toFixed(1) + 'M'
-           : n >= 1e3 ? (n/1e3).toFixed(1) + 'K'
-           : n;
-    }
-
-    Papa.parse('real_estate_nyc.csv', {
-      header: true,
-      download: true,
-      error: err => {
-        const r = document.getElementById('results');
-        r.textContent = '⚠️ Failed to load data. Please try again.';
-      },
-      complete: r => {
-        rawData = r.data;
-        // compute total unique neighborhoods
-        totalNeighborhoodCount = new Set(rawData
-          .map(r => isValid(r.neighborhood) ? r.neighborhood.trim() : null)
-          .filter(n => n)).size;
-        pre();
-        init();
-        filter();
-      }
-    });
 
     function pre() {
       rawData.forEach(r => {
@@ -254,8 +299,7 @@
         boroughsSet.add(b);
         const n = isValid(r.neighborhood) ? r.neighborhood.trim() : null;
         if (n) {
-          neighborhoods[b] = neighborhoods[b] || new Set();
-          neighborhoods[b].add(n);
+          (neighborhoods[b] = neighborhoods[b]||new Set()).add(n);
         }
         const d = isValid(r.year_quarter) ? r.year_quarter.trim() : null;
         if (d) dates.add(d);
@@ -265,106 +309,87 @@
     }
 
     function init() {
-      // Borough buttons
       const brc = document.getElementById('boroughs');
-      ['All Boroughs', ...Array.from(boroughsSet).sort()].forEach(b => {
+      ['All Boroughs', ...[...boroughsSet].sort()].forEach(b => {
         const btn = document.createElement('button');
         btn.textContent = b;
-        btn.className = 'pill-btn' + (b === selectedBorough ? ' active' : '');
-        btn.setAttribute('aria-pressed', b === selectedBorough);
-        btn.onclick = () => {
-          selectedBorough = b;
-          updateBoroughs();
-          filter();
-        };
-        brc.append(btn);
+        btn.className = 'pill-btn' + (b===selectedBorough?' active':'');
+        btn.setAttribute('aria-pressed', b===selectedBorough);
+        btn.onclick = () => { selectedBorough=b; updateBoroughs(); filter(); };
+        brc.appendChild(btn);
       });
 
-      // Dropdowns
-      const nbr = document.getElementById('NeighborhoodSelect');
-      const dr  = document.getElementById('DateRangeSelect');
-      const pt  = document.getElementById('PropertyTypeSelect');
+      document.getElementById('resetFilters').onclick = () => {
+        selectedBorough = 'All Boroughs';
+        document.getElementById('NeighborhoodSelect').value = 'All Neighborhoods';
+        const dr = document.getElementById('DateRangeSelect');
+        dr.selectedIndex = dr.options.length - 1;
+        document.getElementById('PropertyTypeSelect').value = 'All Types';
+        updateBoroughs();
+        filter();
+      };
 
-      // Neighborhoods
+      const nbr = document.getElementById('NeighborhoodSelect'),
+            dr  = document.getElementById('DateRangeSelect'),
+            pt  = document.getElementById('PropertyTypeSelect');
+
       nbr.innerHTML = '<option>All Neighborhoods</option>';
-      getNeighborhoodList().forEach(n => nbr.add(new Option(n, n)));
+      getNeighborhoodList().forEach(n=>nbr.add(new Option(n,n)));
 
-      // Date ranges (quarters)
-      const sortedDates = Array.from(dates).sort();
       dr.innerHTML = '';
-      sortedDates.forEach((d, i) => {
-        const opt = new Option(d, d);
-        if (i === sortedDates.length - 1) opt.selected = true;
+      [...dates].sort().forEach((d,i,arr)=>{
+        const opt=new Option(d,d);
+        if (i===arr.length-1) opt.selected=true;
         dr.add(opt);
       });
 
-      // Property types
-      Array.from(types).sort()
-           .forEach(t => pt.add(new Option(t, t)));
+      [...types].sort().forEach(t=>pt.add(new Option(t,t)));
+      [nbr,dr,pt].forEach(el=>el.onchange=filter);
 
-      // event handlers
-      [nbr, dr, pt].forEach(el => el.onchange = filter);
-
-      // filters toggle
-      const tf = document.getElementById('toggleFilters');
-      tf.onclick = () => {
-        const f = document.getElementById('filters');
-        const hidden = f.style.display === 'none';
-        f.style.display = hidden ? 'flex' : 'none';
-        tf.textContent = hidden ? 'Hide Filters' : 'Show Filters';
-        tf.setAttribute('aria-expanded', hidden);
+      document.getElementById('toggleFilters').onclick = e => {
+        const f = document.getElementById('filters'),
+              hidden = f.style.display==='none';
+        f.style.display = hidden?'flex':'none';
+        e.target.textContent = hidden?'Hide Filters':'Show Filters';
+        e.target.setAttribute('aria-expanded', hidden);
       };
     }
 
     function updateBoroughs() {
-      document.querySelectorAll('.pill-btn')
-        .forEach(btn => {
-          const isActive = btn.textContent === selectedBorough;
-          btn.classList.toggle('active', isActive);
-          btn.setAttribute('aria-pressed', isActive);
-        });
-      updateDropdown();
+      document.querySelectorAll('.pill-btn').forEach(btn=>{
+        const active = btn.textContent===selectedBorough;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-pressed', active);
+      });
     }
 
     function getNeighborhoodList() {
-      if (selectedBorough === 'All Boroughs') {
-        return Array.from(new Set(
-          [].concat(...Object.values(neighborhoods).map(s => [...s]))
-        )).sort();
+      if (selectedBorough==='All Boroughs') {
+        return [...new Set([].concat(...Object.values(neighborhoods).map(s=>[...s])))]
+               .sort();
       }
-      return Array.from(neighborhoods[selectedBorough] || []).sort();
-    }
-
-    function updateDropdown() {
-      const nbr = document.getElementById('NeighborhoodSelect');
-      const prev = nbr.value;
-      nbr.innerHTML = '<option>All Neighborhoods</option>';
-      getNeighborhoodList().forEach(n => nbr.add(new Option(n, n)));
-      if (getNeighborhoodList().includes(prev)) {
-        nbr.value = prev;
-      }
+      return [...(neighborhoods[selectedBorough]||[])].sort();
     }
 
     function filter() {
-      const nbrV = document.getElementById('NeighborhoodSelect').value;
-      const drV  = document.getElementById('DateRangeSelect').value;
-      const ptV  = document.getElementById('PropertyTypeSelect').value;
+      const nbrV = document.getElementById('NeighborhoodSelect').value,
+            drV  = document.getElementById('DateRangeSelect').value,
+            ptV  = document.getElementById('PropertyTypeSelect').value;
 
       const filtered = rawData.filter(r => {
         const b = isValid(r.borough) ? r.borough.trim() : null;
-        if (selectedBorough !== 'All Boroughs' && b !== selectedBorough)
-          return false;
+        if (selectedBorough!=='All Boroughs' && b!==selectedBorough) return false;
         const n = isValid(r.neighborhood) ? r.neighborhood.trim() : null;
-        if (nbrV !== 'All Neighborhoods' && n !== nbrV) return false;
+        if (nbrV!=='All Neighborhoods' && n!==nbrV) return false;
         const d = isValid(r.year_quarter) ? r.year_quarter.trim() : null;
-        if (d !== drV) return false;
+        if (d!==drV) return false;
         const t = isValid(r.property_group) ? r.property_group.trim() : null;
-        if (ptV !== 'All Types' && t !== ptV) return false;
+        if (ptV!=='All Types' && t!==ptV) return false;
         return true;
       });
 
       document.getElementById('summary').textContent =
-        `Showing ${filtered.length} of ${totalNeighborhoodCount} neighborhoods`;
+        `Showing ${filtered.length} of ${totalCards} cards`;
 
       render(filtered);
     }
@@ -372,57 +397,68 @@
     function render(data) {
       const container = document.getElementById('results');
       container.innerHTML = '';
-      const frag = document.createDocumentFragment();
-
+      if (!data.length) {
+        container.innerHTML = '<div class="no-results">😔 No cards match.</div>';
+        return;
+      }
       data.forEach(r => {
+        const avg    = toNum(r.avg_price),
+              median = toNum(r.median_price),
+              sales  = toNum(r.sales_volume),
+              deals  = parseInt(r.number_of_deals,10),
+              rent   = toNum(r.avg_asking_rent),
+              ppsf   = toNum(r['Neighborhood PPSF']);
+
         const card = document.createElement('div');
         card.className = 'card';
-
-        const avg    = parseFloat(r.avg_price);
-        const median = parseFloat(r.median_price);
-        const sales  = parseFloat(r.sales_volume);
-        const deals  = parseInt(r.number_of_deals, 10);
-        const rent   = parseFloat(r.avg_asking_rent);
-
+        card.tabIndex    = 0;
+        card.setAttribute('role','button');
+        card.setAttribute('aria-label',
+          `${r.neighborhood}, avg ${isNaN(avg)?'-':formatNum(avg)}, median ${isNaN(median)?'-':formatNum(median)}`);
         card.innerHTML = `
           <div class="card-header">
             <h4>${r.neighborhood}</h4>
-            <div class="avg-section">
-              <div class="avg-price">
-                ${isNaN(avg) ? '-' : '$' + formatNum(avg)}
-              </div>
-              <div class="avg-label">Avg Price</div>
-            </div>
-          </div>
-          <div class="median-section">
-            <div class="median-price">
-              ${isNaN(median) ? '-' : '$' + formatNum(median)}
-            </div>
-            <div class="median-label">Median Price</div>
+            <span class="pill-type">${r.property_group}</span>
           </div>
           <div class="details">${r.borough} • ${r.year_quarter}</div>
-          <div class="pill-type">${r.property_group}</div>
-          <div class="metrics">
-            <div class="metric sales">
-              <div class="value">
-                ${isNaN(sales) ? '-' : '$' + formatNum(sales)}
-              </div><p>Sales Volume</p>
+          <div class="price-row">
+            <div class="price-item sales">
+              <div class="value">${isNaN(sales)?'-':'$'+formatNum(sales)}</div>
+              <div class="label">Sales Volume</div>
             </div>
+            <div class="price-item avg">
+              <div class="value">${isNaN(avg)?'-':'$'+formatNum(avg)}</div>
+              <div class="label">Avg Price</div>
+            </div>
+            <div class="price-item median">
+              <div class="value">${isNaN(median)?'-':'$'+formatNum(median)}</div>
+              <div class="label">Median Price</div>
+            </div>
+          </div>
+          <div class="bottom-row">
             <div class="metric deals">
-              <div class="value">${isNaN(deals) ? '-' : deals}</div>
-              <p>Deals</p>
+              <span class="value">${isNaN(deals)?'-':deals}</span>
+              <span class="label">Deals</span>
             </div>
             <div class="metric rent">
-              <div class="value">
-                ${isNaN(rent) ? '-' : '$' + formatNum(rent)}
-              </div><p>Rent/SqFt</p>
+              <span class="value">${isNaN(rent)?'-':'$'+formatNum(rent)}</span>
+              <span class="label">Asking Rent</span>
+            </div>
+            <div class="metric ppsf">
+              <span class="value">${isNaN(ppsf)?'-':'$'+formatNum(ppsf)}</span>
+              <span class="label">PPSF</span>
             </div>
           </div>
         `;
-        frag.appendChild(card);
+        container.appendChild(card);
       });
+    }
 
-      container.appendChild(frag);
+    function formatNum(n) {
+      return n >= 1e9 ? (n/1e9).toFixed(1)+'B'
+           : n >= 1e6 ? (n/1e6).toFixed(1)+'M'
+           : n >= 1e3 ? (n/1e3).toFixed(1)+'K'
+           : n;
     }
   </script>
 </body>
