@@ -190,7 +190,8 @@
     /* HISTORY PANEL */
     .history {
       position: absolute;
-      top: 100%;
+      /* default: below */
+      top: calc(100% + 0.4rem);
       left: 0;
       background: var(--card-bg);
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
@@ -203,6 +204,16 @@
       opacity: 0;
       transition: opacity .2s ease;
       z-index: 9;
+    }
+    /* flip horizontally when needed */
+    .history.left {
+      left: auto;
+      right: 0;
+    }
+    /* flip vertically when too low */
+    .history.above {
+      top: auto;
+      bottom: calc(100% + 0.4rem);
     }
     .card.expanded .history {
       visibility: visible;
@@ -226,7 +237,7 @@
 
     /* Highlight selected quarter */
     .history tr.selected-quarter {
-      background: rgba(26,115,232,0.3);
+      background: rgba(26,115,232,0.1);
     }
     .history tr.selected-quarter td {
       font-weight: bold;
@@ -242,7 +253,7 @@
     @media (prefers-color-scheme: dark) {
       .history tr.selected-quarter {
         background: rgba(255, 255, 224, 0.6);  /* pale yellow */
-      }
+      }}
 
     @media(max-width:250px){
       .card { width:100% }
@@ -294,7 +305,8 @@
     }
 
     let rawData = [], historyMap = {}, aggregates = [], totalCards = 0;
-    let latestQuarter = '', showingAggregates = true, selectedBorough = 'All Boroughs', currentExpanded = null;
+    let latestQuarter = '', showingAggregates = true,
+        selectedBorough = 'All Boroughs', currentExpanded = null;
     const boroughsSet = new Set(), neighborhoods = {}, dates = new Set(), types = new Set();
 
     function buildHistoryMap() {
@@ -354,7 +366,7 @@
     }
 
     function computeAggregates(){
-      aggregates = [];
+      aggregates = [];  
       boroughsSet.forEach(b=>{
         const rows = rawData.filter(r=>r.borough===b && r.year_quarter===latestQuarter);
         aggregates.push({
@@ -375,7 +387,7 @@
       ['All Boroughs', ...[...boroughsSet].sort()].forEach(b=>{
         const btn = document.createElement('button');
         btn.textContent = b;
-        btn.className = 'pill-btn' + (b===selectedBorough?' active':'');
+        btn.className = 'pill-btn'+(b===selectedBorough?' active':'');
         btn.setAttribute('aria-pressed', b===selectedBorough);
         btn.onclick = ()=>{
           showingAggregates = false;
@@ -418,24 +430,22 @@
       };
     }
 
-    function updateNeighborhoodDropdown() {
+    function updateNeighborhoodDropdown(){
       const nbr = document.getElementById('NeighborhoodSelect');
       const prev = nbr.value;
       nbr.innerHTML = '<option>All Neighborhoods</option>';
-      getNeighborhoodList().forEach(n => {
-        const opt = new Option(n, n);
-        nbr.add(opt);
+      getNeighborhoodList().forEach(n=>{
+        const o = new Option(n,n);
+        nbr.add(o);
       });
-      if (getNeighborhoodList().includes(prev)) {
-        nbr.value = prev;
-      }
+      if(getNeighborhoodList().includes(prev)) nbr.value = prev;
     }
 
     function updateBoroughs(){
       document.querySelectorAll('.pill-btn').forEach(btn=>{
-        const active = btn.textContent===selectedBorough;
-        btn.classList.toggle('active', active);
-        btn.setAttribute('aria-pressed', active);
+        const a = btn.textContent===selectedBorough;
+        btn.classList.toggle('active', a);
+        btn.setAttribute('aria-pressed', a);
       });
       updateNeighborhoodDropdown();
     }
@@ -456,8 +466,7 @@
       c.innerHTML = '';
       aggregates.forEach(a=>{
         const card = document.createElement('div');
-        card.className = 'card';
-        card.tabIndex = 0;
+        card.className = 'card'; card.tabIndex = 0;
         card.onclick = ()=>{
           showingAggregates = false;
           selectedBorough = a.borough;
@@ -466,10 +475,7 @@
           filter();
         };
         card.innerHTML = `
-          <div class="card-header">
-            <h4>${a.borough}</h4>
-            <span class="pill-type">All Types</span>
-          </div>
+          <div class="card-header"><h4>${a.borough}</h4><span class="pill-type">All Types</span></div>
           <div class="details">${a.year_quarter}</div>
           <div class="price-row">
             <div class="price-item sales"><div class="value">${fmtAbbrev(a.sales_volume)}</div><div class="label">Sales Vol.</div></div>
@@ -512,14 +518,10 @@
       }
       data.forEach(r=>{
         const card = document.createElement('div');
-        card.className = 'card';
-        card.tabIndex = 0;
+        card.className = 'card'; card.tabIndex = 0;
         card.onclick = () => toggleHistory(card, r.neighborhood, r.property_group);
         card.innerHTML = `
-          <div class="card-header">
-            <h4>${r.neighborhood}</h4>
-            <span class="pill-type">${r.property_group}</span>
-          </div>
+          <div class="card-header"><h4>${r.neighborhood}</h4><span class="pill-type">${r.property_group}</span></div>
           <div class="details">${r.borough} • ${r.year_quarter}</div>
           <div class="price-row">
             <div class="price-item sales"><div class="value">${fmtAbbrev(r.sales_volume)}</div><div class="label">Sales Vol.</div></div>
@@ -545,6 +547,8 @@
       currentExpanded = now ? card : null;
 
       const panel = card.querySelector('.history');
+      panel.classList.remove('left','above');
+
       if(!now || panel.dataset.filled) return;
 
       const selectedQ = document.getElementById('DateRangeSelect').value;
@@ -555,8 +559,7 @@
       let html = '<table><tr><th>Quarter</th><th>Sales</th><th>Avg</th><th>Med</th><th>Deals</th><th>Rent</th><th>PPSF</th></tr>';
       rows.forEach((row,i)=>{
         const nxt = rows[i+1]||row;
-        const isCurrent = row.year_quarter === selectedQ;
-        const cls = isCurrent ? 'selected-quarter' : '';
+        const isCurr = row.year_quarter===selectedQ ? 'selected-quarter':'';
         const m = {
           sales: row.sales_volume,
           avg:   row.avg_price,
@@ -573,22 +576,30 @@
           rent:  nxt.avg_asking_rent,
           ppsf:  nxt.PPSF
         };
-        html += `<tr class="${cls}"><td>${row.year_quarter}</td>`;
+        html += `<tr class="${isCurr}"><td>${row.year_quarter}</td>`;
         ['sales','avg','median','deals','rent','ppsf'].forEach(k=>{
-          const v = m[k], before = p[k];
+          const v=m[k], b=p[k];
           let dir='', arrow='';
-          if(!isNaN(v) && !isNaN(before)){
-            dir = v>=before ? 'up' : 'down';
-            arrow = ` <span class="${dir}">${dir==='up'?'▲':'▼'}</span>`;
+          if(!isNaN(v)&&!isNaN(b)){
+            dir = v>=b ? 'up':'down';
+            arrow=` <span class="${dir}">${dir==='up'?'▲':'▼'}</span>`;
           }
-          const text = k==='deals' ? (isNaN(v)?'–':v) : fmtAbbrev(v);
-          html += `<td class="${dir}">${text}${arrow}</td>`;
+          const txt = k==='deals' ? (isNaN(v)?'–':v) : fmtAbbrev(v);
+          html+=`<td class="${dir}">${txt}${arrow}</td>`;
         });
-        html += '</tr>';
+        html+='</tr>';
       });
-      html += '</table>';
-      panel.innerHTML = html;
-      panel.dataset.filled = 'true';
+      html+='</table>';
+      panel.innerHTML=html;
+      panel.dataset.filled='true';
+
+      // flip based on available space
+      requestAnimationFrame(()=>{
+        const rect = card.getBoundingClientRect();
+        const pw = panel.offsetWidth, ph = panel.offsetHeight;
+        if(rect.right + pw > window.innerWidth) panel.classList.add('left');
+        if(rect.bottom + ph > window.innerHeight) panel.classList.add('above');
+      });
     }
   </script>
 </body>
