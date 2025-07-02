@@ -53,7 +53,10 @@
       gap: 1rem;
       margin: 0.6rem 1rem;
     }
-    .boroughs { display: flex; gap: 0.5rem; }
+    .boroughs {
+      display: flex;
+      gap: 0.5rem;
+    }
     .pill-btn {
       padding: 0.4rem 0.8rem;
       border: 1px solid #d2e3fc;
@@ -105,11 +108,9 @@
       gap: 0.4rem;
       justify-content: center;
       padding: 0 1.2rem 1rem;
-      overflow: visible;
     }
 
     .card {
-      position: relative;
       background: var(--card-bg);
       border-radius: 6px;
       box-shadow: 0 1px 1px rgba(60,64,67,0.1);
@@ -118,7 +119,6 @@
       display: flex;
       flex-direction: column;
       transition: transform .2s ease, box-shadow .2s ease;
-      overflow: visible;
     }
     .card:hover {
       transform: translateY(-3px);
@@ -128,13 +128,6 @@
       outline: none;
       box-shadow: 0 0 0 3px var(--primary);
       transform: translateY(-2px);
-    }
-    .card.expanded {
-      transform: translateY(-8px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-      z-index: 10;
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
     }
 
     .card-header {
@@ -161,23 +154,27 @@
       margin: 0.2rem 0;
     }
 
-    .price-row, .bottom-row {
+    .price-row,
+    .bottom-row {
       display: flex;
       justify-content: space-between;
       margin: 0.4rem 0;
     }
-    .price-item, .bottom-row .metric {
+    .price-item,
+    .bottom-row .metric {
       flex: 1;
       text-align: center;
     }
-    .price-item .value, .bottom-row .value {
+    .price-item .value,
+    .bottom-row .value {
       font-weight: bold;
       line-height: 1;
     }
     .price-item.sales .value  { color: var(--blue); font-size: 0.9rem; }
-    .price-item.avg .value    { color: var(--green); font-size: 0.9rem; }
+    .price-item.avg .value    { color: var(--green); font-size: 1rem; }
     .price-item.median .value { color: var(--green); font-size: 0.9rem; }
-    .price-item .label, .bottom-row .label {
+    .price-item .label,
+    .bottom-row .label {
       font-size: 0.7rem;
       color: var(--text-secondary);
       display: block;
@@ -187,50 +184,28 @@
       margin-left: 0.4rem;
     }
 
-    /* HISTORY PANEL */
+    /* history accordion */
     .history {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background: var(--card-bg);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      min-width: 240px;
-      width: max-content;
-      max-height: 300px;
-      overflow-y: auto;
-      white-space: nowrap;
-      visibility: hidden;
-      opacity: 0;
-      transition: opacity .2s ease;
-      z-index: 9;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
     }
     .card.expanded .history {
-      visibility: visible;
-      opacity: 1;
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
+      max-height: 400px;
     }
     .history table {
+      width: 100%;
       border-collapse: collapse;
       font-size: 0.7rem;
-      margin: 0.4rem;
+      margin-top: 0.4rem;
     }
     .history th, .history td {
-      padding: 0.2rem 0.4rem;
-      border-bottom: 1px solid #444;
+      padding: 0.2rem;
+      border-bottom: 1px solid #ddd;
       text-align: left;
-      white-space: nowrap;
     }
     .history .up   { color: var(--green); }
     .history .down { color: var(--red); }
-
-    /* Highlight selected quarter */
-    .history tr.selected-quarter {
-      background: rgba(26,115,232,0.3);
-    }
-    .history tr.selected-quarter td {
-      font-weight: bold;
-    }
 
     .no-results {
       text-align: center;
@@ -238,15 +213,9 @@
       color: var(--text-secondary);
     }
 
-    /* Dark mode: pale yellow */
-    @media (prefers-color-scheme: dark) {
-      .history tr.selected-quarter {
-        background: rgba(255, 255, 224, 0.6);  /* pale yellow */
-      }
-
     @media(max-width:250px){
-      .card { width:100% }
-      #results { justify-content:start }
+      .card{width:100%}
+      #results{justify-content:start}
     }
   </style>
 </head>
@@ -271,77 +240,74 @@
   </main>
 
   <script>
-    // Helpers
+    // helpers
     function toNum(str) {
       const c = String(str).replace(/[$,]/g,'').trim();
-      return c === '' ? NaN : parseFloat(c);
+      return c==='' ? NaN : parseFloat(c);
     }
-    function fmt(n) {
-      return isNaN(n) ? '–' : '$' + n.toLocaleString();
-    }
-    function fmtAbbrev(n) {
+    function fmtCurrencyAbbrev(n) {
       if (isNaN(n)) return '–';
-      if (n >= 1e9) return '$' + (n/1e9).toFixed(2) + 'B';
-      if (n >= 1e6) return '$' + (n/1e6).toFixed(2) + 'M';
-      if (n >= 1e3) return '$' + (n/1e3).toFixed(2) + 'K';
-      return '$' + n.toFixed(2);
+      if (n >= 1e9) return '$'+(n/1e9).toFixed(2)+'B';
+      if (n >= 1e6) return '$'+(n/1e6).toFixed(2)+'M';
+      if (n >= 1e3) return '$'+(n/1e3).toFixed(2)+'K';
+      return '$'+n.toFixed(2);
     }
     function median(arr) {
-      const a = arr.filter(x=>!isNaN(x)).sort((a,b)=>a-b);
-      const m = a.length;
+      const nums = arr.filter(x=>!isNaN(x)).sort((a,b)=>a-b);
+      const m = nums.length;
       if (!m) return NaN;
-      return m % 2 ? a[(m-1)/2] : (a[m/2 -1] + a[m/2]) / 2;
+      return m%2 ? nums[(m-1)/2]
+                 : (nums[m/2-1]+nums[m/2])/2;
     }
 
-    let rawData = [], historyMap = {}, aggregates = [], totalCards = 0;
-    let latestQuarter = '', showingAggregates = true, selectedBorough = 'All Boroughs', currentExpanded = null;
-    const boroughsSet = new Set(), neighborhoods = {}, dates = new Set(), types = new Set();
+    // state
+    let rawData = [], historyMap = {}, aggregates = [],
+        totalCards = 0, latestQuarter = '',
+        showingAggregates = true, selectedBorough = 'All Boroughs';
+    const boroughsSet = new Set(),
+          neighborhoods = {},
+          dates = new Set(),
+          types = new Set();
 
-    function buildHistoryMap() {
-      rawData.forEach(r => {
-        historyMap[r.neighborhood] ||= [];
-        historyMap[r.neighborhood].push(r);
-      });
-      Object.values(historyMap).forEach(arr =>
-        arr.sort((a,b)=>a.year_quarter.localeCompare(b.year_quarter))
-      );
-    }
-
-    function showLoading(n=8){
-      const r = document.getElementById('results'); r.innerHTML = '';
-      for(let i=0;i<n;i++){
+    // show skeletons
+    function renderSkeletons(n=8) {
+      const c = document.getElementById('results');
+      c.innerHTML = '';
+      for (let i=0; i<n; i++) {
         const s = document.createElement('div');
         s.className = 'card skeleton';
-        r.appendChild(s);
+        c.appendChild(s);
       }
     }
-    document.addEventListener('DOMContentLoaded', ()=>showLoading());
+    document.addEventListener('DOMContentLoaded', ()=>renderSkeletons());
 
-    Papa.parse('real_estate_nyc.csv', {
+    // parse & normalize
+    Papa.parse('real_estate_nyc.csv',{
       header:true, download:true, skipEmptyLines:true,
       error:()=>document.getElementById('results').textContent='⚠️ Failed to load data.',
-      complete:res=>{
-        rawData = res.data.map(r=>({
-          borough: r.borough.trim(),
-          neighborhood: r.neighborhood.trim(),
-          property_group: r.property_group.trim(),
-          year_quarter: r.year_quarter.trim(),
-          avg_price: toNum(r.avg_price),
-          median_price: toNum(r.median_price),
-          sales_volume: toNum(r.sales_volume),
-          number_of_deals: parseInt(r.number_of_deals,10) || NaN,
-          avg_asking_rent: toNum(r.avg_asking_rent),
-          PPSF: toNum(r['Neighborhood PPSF'])
+      complete:r=>{
+        rawData = r.data.map(row=>({
+          borough: row.borough.trim(),
+          neighborhood: row.neighborhood.trim(),
+          property_group: row.property_group.trim(),
+          year_quarter: row.year_quarter.trim(),
+          avg_price: toNum(row.avg_price),
+          median_price: toNum(row.median_price),
+          sales_volume: toNum(row.sales_volume),
+          number_of_deals: parseInt(row.number_of_deals,10)||NaN,
+          avg_asking_rent: toNum(row.avg_asking_rent),
+          PPSF: toNum(row['Neighborhood PPSF'])
         }));
         totalCards = rawData.length;
         precompute();
         buildHistoryMap();
-        buildUI();
+        initUI();
         computeAggregates();
         renderAggregates();
       }
     });
 
+    // build sets & find latest quarter
     function precompute(){
       rawData.forEach(r=>{
         boroughsSet.add(r.borough);
@@ -353,8 +319,20 @@
       latestQuarter = [...dates].sort().pop();
     }
 
+    // build per-neighborhood history
+    function buildHistoryMap(){
+      rawData.forEach(r=>{
+        historyMap[r.neighborhood] ||= [];
+        historyMap[r.neighborhood].push(r);
+      });
+      Object.values(historyMap).forEach(arr=>
+        arr.sort((a,b)=>a.year_quarter.localeCompare(b.year_quarter))
+      );
+    }
+
+    // compute borough medians
     function computeAggregates(){
-      aggregates = [];
+      aggregates.length = 0;
       boroughsSet.forEach(b=>{
         const rows = rawData.filter(r=>r.borough===b && r.year_quarter===latestQuarter);
         aggregates.push({
@@ -365,12 +343,14 @@
           median_price: median(rows.map(r=>r.median_price)),
           number_of_deals: median(rows.map(r=>r.number_of_deals)),
           avg_asking_rent: median(rows.map(r=>r.avg_asking_rent)),
-          PPSF:            median(rows.map(r=>r.PPSF))
+          PPSF: median(rows.map(r=>r.PPSF))
         });
       });
     }
 
-    function buildUI(){
+    // init UI controls
+    function initUI(){
+      // borough pills
       const brc = document.getElementById('boroughs');
       ['All Boroughs', ...[...boroughsSet].sort()].forEach(b=>{
         const btn = document.createElement('button');
@@ -381,121 +361,144 @@
           showingAggregates = false;
           selectedBorough = b;
           document.getElementById('DateRangeSelect').value = latestQuarter;
+          document.getElementById('NeighborhoodSelect').value = 'All Neighborhoods';
+          document.getElementById('PropertyTypeSelect').value = 'All Types';
           updateBoroughs();
           filter();
         };
         brc.appendChild(btn);
       });
 
+      // reset
       document.getElementById('resetFilters').onclick = ()=>{
         showingAggregates = true;
         selectedBorough = 'All Boroughs';
         document.getElementById('DateRangeSelect').value = latestQuarter;
+        document.getElementById('NeighborhoodSelect').value = 'All Neighborhoods';
+        document.getElementById('PropertyTypeSelect').value = 'All Types';
         updateBoroughs();
         renderAggregates();
       };
 
+      // dropdowns
       const nbr = document.getElementById('NeighborhoodSelect'),
             dr  = document.getElementById('DateRangeSelect'),
             pt  = document.getElementById('PropertyTypeSelect');
 
-      updateNeighborhoodDropdown();
+      nbr.innerHTML = '<option>All Neighborhoods</option>';
+      getNeighborhoodList().forEach(n=>nbr.add(new Option(n,n)));
+
       dr.innerHTML = '';
       [...dates].sort().forEach((d,i,arr)=>{
         const o = new Option(d,d);
         if(i===arr.length-1) o.selected=true;
         dr.add(o);
       });
-      [...types].sort().forEach(t=>pt.add(new Option(t,t)));
-      [nbr,dr,pt].forEach(el=>el.onchange = filter);
 
+      [...types].sort().forEach(t=>pt.add(new Option(t,t)));
+      [nbr,dr,pt].forEach(el=>el.onchange=filter);
+
+      // toggle filter bar
       document.getElementById('toggleFilters').onclick = e=>{
         const f = document.getElementById('filters'),
               hidden = f.style.display==='none';
         f.style.display = hidden?'flex':'none';
         e.target.textContent = hidden?'Hide Filters':'Show Filters';
-        e.target.setAttribute('aria-expanded', hidden);
+        e.target.setAttribute('aria-expanded',hidden);
       };
-    }
-
-    function updateNeighborhoodDropdown() {
-      const nbr = document.getElementById('NeighborhoodSelect');
-      const prev = nbr.value;
-      nbr.innerHTML = '<option>All Neighborhoods</option>';
-      getNeighborhoodList().forEach(n => {
-        const opt = new Option(n, n);
-        nbr.add(opt);
-      });
-      if (getNeighborhoodList().includes(prev)) {
-        nbr.value = prev;
-      }
     }
 
     function updateBoroughs(){
       document.querySelectorAll('.pill-btn').forEach(btn=>{
-        const active = btn.textContent===selectedBorough;
-        btn.classList.toggle('active', active);
-        btn.setAttribute('aria-pressed', active);
+        const a=btn.textContent===selectedBorough;
+        btn.classList.toggle('active',a);
+        btn.setAttribute('aria-pressed',a);
       });
-      updateNeighborhoodDropdown();
     }
 
     function getNeighborhoodList(){
-      if(selectedBorough==='All Boroughs'){
+      if(selectedBorough==='All Boroughs') {
         return [...new Set([].concat(...Object.values(neighborhoods).map(s=>[...s])))]
                .sort();
       }
       return [...(neighborhoods[selectedBorough]||[])].sort();
     }
 
+    // render aggregate cards
     function renderAggregates(){
       showingAggregates = true;
       document.getElementById('summary').textContent =
         `Showing borough medians for ${latestQuarter}`;
-      const c = document.getElementById('results');
-      c.innerHTML = '';
+      const c=document.getElementById('results');
+      c.innerHTML='';
       aggregates.forEach(a=>{
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.tabIndex = 0;
-        card.onclick = ()=>{
-          showingAggregates = false;
-          selectedBorough = a.borough;
-          document.getElementById('DateRangeSelect').value = latestQuarter;
-          updateBoroughs();
-          filter();
+        const card=document.createElement('div');
+        card.className='card';
+        card.tabIndex=0;
+        card.setAttribute('role','button');
+        card.setAttribute('aria-label',
+          `${a.borough} median avg ${fmtCurrencyAbbrev(a.avg_price)}`);
+        card.onclick = ()=> {
+          showingAggregates=false;
+          selectedBorough=a.borough;
+          document.getElementById('DateRangeSelect').value=latestQuarter;
+          document.getElementById('NeighborhoodSelect').value='All Neighborhoods';
+          document.getElementById('PropertyTypeSelect').value='All Types';
+          updateBoroughs(); filter();
         };
-        card.innerHTML = `
+        card.innerHTML=`
           <div class="card-header">
             <h4>${a.borough}</h4>
             <span class="pill-type">All Types</span>
           </div>
           <div class="details">${a.year_quarter}</div>
           <div class="price-row">
-            <div class="price-item sales"><div class="value">${fmtAbbrev(a.sales_volume)}</div><div class="label">Sales Vol.</div></div>
-            <div class="price-item avg"><div class="value">${fmtAbbrev(a.avg_price)}</div><div class="label">Avg Price</div></div>
-            <div class="price-item median"><div class="value">${fmtAbbrev(a.median_price)}</div><div class="label">Median Price</div></div>
+            <div class="price-item sales">
+              <div class="value">${fmtCurrencyAbbrev(a.sales_volume)}</div>
+              <div class="label">Sales Vol.</div>
+            </div>
+            <div class="price-item avg">
+              <div class="value">${fmtCurrencyAbbrev(a.avg_price)}</div>
+              <div class="label">Avg Price</div>
+            </div>
+            <div class="price-item median">
+              <div class="value">${fmtCurrencyAbbrev(a.median_price)}</div>
+              <div class="label">Median Price</div>
+            </div>
           </div>
           <div class="bottom-row">
-            <div class="metric deals"><span class="value">${isNaN(a.number_of_deals)?'–':a.number_of_deals}</span><span class="label">Deals</span></div>
-            <div class="metric rent"><span class="value">${fmt(a.avg_asking_rent)}</span><span class="label">Asking Rent</span></div>
-            <div class="metric ppsf"><span class="value">${fmt(a.PPSF)}</span><span class="label">PPSF</span></div>
+            <div class="metric deals">
+              <span class="value">${isNaN(a.number_of_deals)?'–':a.number_of_deals}</span>
+              <span class="label">Deals</span>
+            </div>
+            <div class="metric rent">
+              <span class="value">${fmtCurrencyAbbrev(a.avg_asking_rent)}</span>
+              <span class="label">Asking Rent</span>
+            </div>
+            <div class="metric ppsf">
+              <span class="value">${fmtCurrencyAbbrev(a.PPSF)}</span>
+              <span class="label">PPSF</span>
+            </div>
           </div>
-          <div class="history"></div>`;
+        `;
         c.appendChild(card);
       });
     }
 
+    // main filter + render neighborhoods
     function filter(){
-      if(showingAggregates){ renderAggregates(); return; }
-      const nbrV = document.getElementById('NeighborhoodSelect').value,
-            drV  = document.getElementById('DateRangeSelect').value,
-            ptV  = document.getElementById('PropertyTypeSelect').value;
+      if(showingAggregates){
+        renderAggregates();
+        return;
+      }
+      const nbrV=document.getElementById('NeighborhoodSelect').value,
+            drV =document.getElementById('DateRangeSelect').value,
+            ptV =document.getElementById('PropertyTypeSelect').value;
       const filtered = rawData.filter(r=>{
         if(r.borough!==selectedBorough) return false;
-        if(nbrV!=='All Neighborhoods' && r.neighborhood!==nbrV) return false;
+        if(nbrV!=='All Neighborhoods'&&r.neighborhood!==nbrV) return false;
         if(r.year_quarter!==drV) return false;
-        if(ptV!=='All Types' && r.property_group!==ptV) return false;
+        if(ptV!=='All Types'&&r.property_group!==ptV) return false;
         return true;
       });
       document.getElementById('summary').textContent =
@@ -503,88 +506,79 @@
       renderNeighborhoods(filtered);
     }
 
+    // render neighborhood cards with accordion
     function renderNeighborhoods(data){
-      const c = document.getElementById('results');
-      c.innerHTML = '';
+      const c=document.getElementById('results');
+      c.innerHTML='';
       if(!data.length){
-        c.innerHTML = '<div class="no-results">😔 No cards match.</div>';
+        c.innerHTML='<div class="no-results">😔 No cards match.</div>';
         return;
       }
       data.forEach(r=>{
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.tabIndex = 0;
-        card.onclick = () => toggleHistory(card, r.neighborhood, r.property_group);
-        card.innerHTML = `
+        const card=document.createElement('div');
+        card.className='card';
+        card.tabIndex=0;
+        card.setAttribute('role','button');
+        card.setAttribute('aria-label',
+          `${r.neighborhood}, avg ${fmtCurrencyAbbrev(r.avg_price)}`);
+        card.onclick = ()=> toggleHistory(card, r.neighborhood);
+        card.innerHTML=`
           <div class="card-header">
             <h4>${r.neighborhood}</h4>
             <span class="pill-type">${r.property_group}</span>
           </div>
           <div class="details">${r.borough} • ${r.year_quarter}</div>
           <div class="price-row">
-            <div class="price-item sales"><div class="value">${fmtAbbrev(r.sales_volume)}</div><div class="label">Sales Vol.</div></div>
-            <div class="price-item avg"><div class="value">${fmtAbbrev(r.avg_price)}</div><div class="label">Avg Price</div></div>
-            <div class="price-item median"><div class="value">${fmtAbbrev(r.median_price)}</div><div class="label">Median Price</div></div>
+            <div class="price-item sales">
+              <div class="value">${fmtCurrencyAbbrev(r.sales_volume)}</div>
+              <div class="label">Sales Vol.</div>
+            </div>
+            <div class="price-item avg">
+              <div class="value">${fmtCurrencyAbbrev(r.avg_price)}</div>
+              <div class="label">Avg Price</div>
+            </div>
+            <div class="price-item median">
+              <div class="value">${fmtCurrencyAbbrev(r.median_price)}</div>
+              <div class="label">Median Price</div>
+            </div>
           </div>
           <div class="bottom-row">
-            <div class="metric deals"><span class="value">${isNaN(r.number_of_deals)?'–':r.number_of_deals}</span><span class="label">Deals</span></div>
-            <div class="metric rent"><span class="value">${fmt(r.avg_asking_rent)}</span><span class="label">Asking Rent</span></div>
-            <div class="metric ppsf"><span class="value">${fmt(r.PPSF)}</span><span class="label">PPSF</span></div>
+            <div class="metric deals">
+              <span class="value">${isNaN(r.number_of_deals)?'–':r.number_of_deals}</span>
+              <span class="label">Deals</span>
+            </div>
+            <div class="metric rent">
+              <span class="value">${fmtCurrencyAbbrev(r.avg_asking_rent)}</span>
+              <span class="label">Asking Rent</span>
+            </div>
+            <div class="metric ppsf">
+              <span class="value">${fmtCurrencyAbbrev(r.PPSF)}</span>
+              <span class="label">PPSF</span>
+            </div>
           </div>
-          <div class="history"></div>`;
+          <div class="history"></div>
+        `;
         c.appendChild(card);
       });
     }
 
-    function toggleHistory(card, neighborhood, type){
-      if(currentExpanded && currentExpanded!==card){
-        currentExpanded.classList.remove('expanded');
-      }
-      const now = !card.classList.contains('expanded');
-      card.classList.toggle('expanded', now);
-      currentExpanded = now ? card : null;
-
+    // toggle history panel
+    function toggleHistory(card, neighborhood){
       const panel = card.querySelector('.history');
-      if(!now || panel.dataset.filled) return;
-
-      const selectedQ = document.getElementById('DateRangeSelect').value;
-      const rows = historyMap[neighborhood]
-        .filter(r=>r.property_group===type)
-        .slice().sort((a,b)=>b.year_quarter.localeCompare(a.year_quarter));
-
-      let html = '<table><tr><th>Quarter</th><th>Sales</th><th>Avg</th><th>Med</th><th>Deals</th><th>Rent</th><th>PPSF</th></tr>';
+      const expanded = card.classList.toggle('expanded');
+      if(!expanded) return;
+      if(panel.dataset.filled) return;
+      const rows = historyMap[neighborhood];
+      let html = '<table><tr><th>Quarter</th><th>Sales</th><th>Avg Price</th><th>Median</th></tr>';
       rows.forEach((row,i)=>{
-        const nxt = rows[i+1]||row;
-        const isCurrent = row.year_quarter === selectedQ;
-        const cls = isCurrent ? 'selected-quarter' : '';
-        const m = {
-          sales: row.sales_volume,
-          avg:   row.avg_price,
-          median:row.median_price,
-          deals: row.number_of_deals,
-          rent:  row.avg_asking_rent,
-          ppsf:  row.PPSF
-        };
-        const p = {
-          sales: nxt.sales_volume,
-          avg:   nxt.avg_price,
-          median:nxt.median_price,
-          deals: nxt.number_of_deals,
-          rent:  nxt.avg_asking_rent,
-          ppsf:  nxt.PPSF
-        };
-        html += `<tr class="${cls}"><td>${row.year_quarter}</td>`;
-        ['sales','avg','median','deals','rent','ppsf'].forEach(k=>{
-          const v = m[k], before = p[k];
-          let dir='', arrow='';
-          if(!isNaN(v) && !isNaN(before)){
-            dir = v>=before ? 'up' : 'down';
-            arrow = ` <span class="${dir}">${dir==='up'?'▲':'▼'}</span>`;
-          }
-          const text = k==='deals' ? (isNaN(v)?'–':v) : fmtAbbrev(v);
-          html += `<td class="${dir}">${text}${arrow}</td>`;
-        });
-        html += '</tr>';
+        const prev = rows[i-1]||row;
+        const dir = row.avg_price >= prev.avg_price ? 'up' : 'down';
+        html += `<tr>
+          <td>${row.year_quarter}</td>
+          <td>${fmtCurrencyAbbrev(row.sales_volume)}</td>
+          <td class="${dir}">${fmtCurrencyAbbrev(row.avg_price)} ${dir==='up'?'▲':'▼'}</td>
+          <td>${fmtCurrencyAbbrev(row.median_price)}</td>
+        </tr>`;
       });
       html += '</table>';
       panel.innerHTML = html;
