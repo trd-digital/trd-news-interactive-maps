@@ -205,12 +205,10 @@
       transition: opacity .2s ease;
       z-index: 9;
     }
-    /* flip horizontally when needed */
     .history.left {
       left: auto;
       right: 0;
     }
-    /* flip vertically when too low */
     .history.above {
       top: auto;
       bottom: calc(100% + 0.4rem);
@@ -235,7 +233,6 @@
     .history .up   { color: var(--green); }
     .history .down { color: var(--red); }
 
-    /* Highlight selected quarter */
     .history tr.selected-quarter {
       background: rgba(26,115,232,0.1);
     }
@@ -248,13 +245,6 @@
       padding: 2rem;
       color: var(--text-secondary);
     }
-
-    /* Dark mode: pale yellow */
-    @media (prefers-color-scheme: dark) {
-      .history tr.selected-quarter {
-        background: rgba(255, 255, 224, 0.6);  /* pale yellow */
-      }}
-
     @media(max-width:250px){
       .card { width:100% }
       #results { justify-content:start }
@@ -300,8 +290,7 @@
     function median(arr) {
       const a = arr.filter(x=>!isNaN(x)).sort((a,b)=>a-b);
       const m = a.length;
-      if (!m) return NaN;
-      return m % 2 ? a[(m-1)/2] : (a[m/2 -1] + a[m/2]) / 2;
+      return m ? (m%2 ? a[(m-1)/2] : (a[m/2-1]+a[m/2])/2) : NaN;
     }
 
     let rawData = [], historyMap = {}, aggregates = [], totalCards = 0;
@@ -366,16 +355,31 @@
     }
 
     function computeAggregates(){
-      aggregates = [];  
+      aggregates = [];
+
+      // --- ALL NYC aggregate first ---
+      const allRows = rawData.filter(r=>r.year_quarter===latestQuarter);
+      aggregates.push({
+        borough:        'NYC',
+        year_quarter:   latestQuarter,
+        sales_volume:   allRows.reduce((sum,r)=>sum + (r.sales_volume||0), 0),
+        avg_price:      median(allRows.map(r=>r.avg_price)),
+        median_price:   median(allRows.map(r=>r.median_price)),
+        number_of_deals: allRows.reduce((sum,r)=>sum + (r.number_of_deals||0), 0),
+        avg_asking_rent: median(allRows.map(r=>r.avg_asking_rent)),
+        PPSF:            median(allRows.map(r=>r.PPSF))
+      });
+
+      // then one per borough
       boroughsSet.forEach(b=>{
         const rows = rawData.filter(r=>r.borough===b && r.year_quarter===latestQuarter);
         aggregates.push({
-          borough: b,
-          year_quarter: latestQuarter,
-          sales_volume: median(rows.map(r=>r.sales_volume)),
-          avg_price:    median(rows.map(r=>r.avg_price)),
-          median_price: median(rows.map(r=>r.median_price)),
-          number_of_deals: median(rows.map(r=>r.number_of_deals)),
+          borough:        b,
+          year_quarter:   latestQuarter,
+          sales_volume:   rows.reduce((sum,r)=>sum + (r.sales_volume||0), 0),      // sum instead of median
+          avg_price:      median(rows.map(r=>r.avg_price)),
+          median_price:   median(rows.map(r=>r.median_price)),
+          number_of_deals: rows.reduce((sum,r)=>sum + (r.number_of_deals||0), 0),  // sum instead of median
           avg_asking_rent: median(rows.map(r=>r.avg_asking_rent)),
           PPSF:            median(rows.map(r=>r.PPSF))
         });
@@ -410,7 +414,6 @@
       const nbr = document.getElementById('NeighborhoodSelect'),
             dr  = document.getElementById('DateRangeSelect'),
             pt  = document.getElementById('PropertyTypeSelect');
-
       updateNeighborhoodDropdown();
       dr.innerHTML = '';
       [...dates].sort().forEach((d,i,arr)=>{
@@ -461,31 +464,55 @@
     function renderAggregates(){
       showingAggregates = true;
       document.getElementById('summary').textContent =
-        `Showing borough medians for ${latestQuarter}`;
+        `Showing aggregates for ${latestQuarter}`;
       const c = document.getElementById('results');
       c.innerHTML = '';
       aggregates.forEach(a=>{
         const card = document.createElement('div');
-        card.className = 'card'; card.tabIndex = 0;
+        card.className = 'card';
+        card.tabIndex = 0;
         card.onclick = ()=>{
-          showingAggregates = false;
-          selectedBorough = a.borough;
-          document.getElementById('DateRangeSelect').value = latestQuarter;
-          updateBoroughs();
-          filter();
+          if(a.borough!=='NYC'){
+            showingAggregates = false;
+            selectedBorough = a.borough;
+            document.getElementById('DateRangeSelect').value = latestQuarter;
+            updateBoroughs();
+            filter();
+          }
         };
         card.innerHTML = `
-          <div class="card-header"><h4>${a.borough}</h4><span class="pill-type">All Types</span></div>
+          <div class="card-header">
+            <h4>${a.borough}</h4>
+            <span class="pill-type">All Types</span>
+          </div>
           <div class="details">${a.year_quarter}</div>
           <div class="price-row">
-            <div class="price-item sales"><div class="value">${fmtAbbrev(a.sales_volume)}</div><div class="label">Sales Vol.</div></div>
-            <div class="price-item avg"><div class="value">${fmtAbbrev(a.avg_price)}</div><div class="label">Avg Price</div></div>
-            <div class="price-item median"><div class="value">${fmtAbbrev(a.median_price)}</div><div class="label">Median Price</div></div>
+            <div class="price-item sales">
+              <div class="value">${fmtAbbrev(a.sales_volume)}</div>
+              <div class="label">Sales Vol.</div>
+            </div>
+            <div class="price-item avg">
+              <div class="value">${fmtAbbrev(a.avg_price)}</div>
+              <div class="label">Avg Price</div>
+            </div>
+            <div class="price-item median">
+              <div class="value">${fmtAbbrev(a.median_price)}</div>
+              <div class="label">Median Price</div>
+            </div>
           </div>
           <div class="bottom-row">
-            <div class="metric deals"><span class="value">${isNaN(a.number_of_deals)?'–':a.number_of_deals}</span><span class="label">Deals</span></div>
-            <div class="metric rent"><span class="value">${fmt(a.avg_asking_rent)}</span><span class="label">Asking Rent</span></div>
-            <div class="metric ppsf"><span class="value">${fmt(a.PPSF)}</span><span class="label">PPSF</span></div>
+            <div class="metric deals">
+              <span class="value">${isNaN(a.number_of_deals)?'–':a.number_of_deals}</span>
+              <span class="label">Deals</span>
+            </div>
+            <div class="metric rent">
+              <span class="value">${fmt(a.avg_asking_rent)}</span>
+              <span class="label">Asking Rent</span>
+            </div>
+            <div class="metric ppsf">
+              <span class="value">${fmt(a.PPSF)}</span>
+              <span class="label">PPSF</span>
+            </div>
           </div>
           <div class="history"></div>`;
         c.appendChild(card);
@@ -510,18 +537,20 @@
     }
 
     function renderNeighborhoods(data){
-      const c = document.getElementById('results');
-      c.innerHTML = '';
+      const c=document.getElementById('results'); c.innerHTML='';
       if(!data.length){
-        c.innerHTML = '<div class="no-results">😔 No cards match.</div>';
+        c.innerHTML='<div class="no-results">😔 No cards match.</div>';
         return;
       }
       data.forEach(r=>{
-        const card = document.createElement('div');
-        card.className = 'card'; card.tabIndex = 0;
-        card.onclick = () => toggleHistory(card, r.neighborhood, r.property_group);
-        card.innerHTML = `
-          <div class="card-header"><h4>${r.neighborhood}</h4><span class="pill-type">${r.property_group}</span></div>
+        const card=document.createElement('div');
+        card.className='card'; card.tabIndex=0;
+        card.onclick=()=>toggleHistory(card,r.neighborhood,r.property_group);
+        card.innerHTML=`
+          <div class="card-header">
+            <h4>${r.neighborhood}</h4>
+            <span class="pill-type">${r.property_group}</span>
+          </div>
           <div class="details">${r.borough} • ${r.year_quarter}</div>
           <div class="price-row">
             <div class="price-item sales"><div class="value">${fmtAbbrev(r.sales_volume)}</div><div class="label">Sales Vol.</div></div>
@@ -559,7 +588,7 @@
       let html = '<table><tr><th>Quarter</th><th>Sales</th><th>Avg</th><th>Med</th><th>Deals</th><th>Rent</th><th>PPSF</th></tr>';
       rows.forEach((row,i)=>{
         const nxt = rows[i+1]||row;
-        const isCurr = row.year_quarter===selectedQ ? 'selected-quarter':'';
+        const cls = row.year_quarter===selectedQ ? 'selected-quarter' : '';
         const m = {
           sales: row.sales_volume,
           avg:   row.avg_price,
@@ -576,29 +605,33 @@
           rent:  nxt.avg_asking_rent,
           ppsf:  nxt.PPSF
         };
-        html += `<tr class="${isCurr}"><td>${row.year_quarter}</td>`;
+        html += `<tr class="${cls}"><td>${row.year_quarter}</td>`;
         ['sales','avg','median','deals','rent','ppsf'].forEach(k=>{
           const v=m[k], b=p[k];
           let dir='', arrow='';
           if(!isNaN(v)&&!isNaN(b)){
-            dir = v>=b ? 'up':'down';
-            arrow=` <span class="${dir}">${dir==='up'?'▲':'▼'}</span>`;
+            dir = v>=b ? 'up' : 'down';
+            arrow = ` <span class="${dir}">${dir==='up'?'▲':'▼'}</span>`;
           }
           const txt = k==='deals' ? (isNaN(v)?'–':v) : fmtAbbrev(v);
-          html+=`<td class="${dir}">${txt}${arrow}</td>`;
+          html += `<td class="${dir}">${txt}${arrow}</td>`;
         });
-        html+='</tr>';
+        html += '</tr>';
       });
-      html+='</table>';
-      panel.innerHTML=html;
-      panel.dataset.filled='true';
+      html += '</table>';
+      panel.innerHTML = html;
+      panel.dataset.filled = 'true';
 
-      // flip based on available space
+      // adjust position: only flip above if card overlaps bottom of results
       requestAnimationFrame(()=>{
         const rect = card.getBoundingClientRect();
         const pw = panel.offsetWidth, ph = panel.offsetHeight;
         if(rect.right + pw > window.innerWidth) panel.classList.add('left');
-        if(rect.bottom + ph > window.innerHeight) panel.classList.add('above');
+        // only above if the panel would extend past the results container bottom
+        const resultsRect = document.getElementById('results').getBoundingClientRect();
+        if(rect.bottom + ph > resultsRect.bottom) {
+          panel.classList.add('above');
+        }
       });
     }
   </script>
