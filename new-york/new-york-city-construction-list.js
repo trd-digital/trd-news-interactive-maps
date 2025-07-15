@@ -119,8 +119,8 @@ const trdList = () => {
                 <div class="text-muted">${place.join(", ")}</div>
               </div>
               <div>
-                <div class="text-success price">${price}</div>
                 <div class="text-success sqft">${sqft} SqFt</div>
+                <div class="text-success price">${price}</div>
                 <div class="text-muted date">${date}</div>
               </div>
             </li>

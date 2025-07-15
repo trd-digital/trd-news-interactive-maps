@@ -9,6 +9,14 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css"
+    />
 
     <style>
       :root {
@@ -16,7 +24,8 @@
         --on-primary: #fff;
         --bg: #fff;
         --card-bg: #fff;
-        --card-border-color: #e0e0e0;
+        --pill-bg: #f3f4f6;
+        --border-color: #e5e7eb;
         --text-primary: #202124;
         --text-secondary: #5f6368;
         --green: #188038;
@@ -27,15 +36,13 @@
       body[data-bs-theme="dark"] {
         --bg: #202124;
         --card-bg: #303134;
-        --card-border-color: #757575;
+        --pill-bg: #3a3a3c;
+        --border-color: #757575;
         --text-primary: #e8eaed;
         --text-secondary: #9aa0a6;
       }
       body[data-bs-theme="dark"] .pill-type {
         background: #3a3a3c;
-      }
-      body[data-bs-theme="dark"] .history tr.selected-quarter {
-        background: rgba(255, 223, 0, 0.3);
       }
 
       * {
@@ -49,9 +56,10 @@
         color: var(--text-primary);
       }
       header {
-        background: var(--card-bg);
-        padding: 0.6rem 1rem;
-        border-bottom: 1px solid #dadce0;
+        padding: 16px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
       }
       header h1 {
         font-size: 1.3rem;
@@ -67,19 +75,21 @@
         gap: 1rem;
         margin: 0.6rem 1rem;
       }
+      .top-row.hide {
+        display: none;
+      }
       .boroughs {
         display: flex;
         gap: 0.5rem;
       }
       .pill-btn {
         padding: 0.4rem 0.8rem;
-        border: 1px solid #d2e3fc;
+        border: 1px solid var(--border-color);
         border-radius: 999px;
-        background: var(--card-bg);
+        background: transparent;
         cursor: pointer;
-        color: #1967d2;
+        color: var(--text-primary);
         font-size: 0.85rem;
-        transition: background 0.2s;
       }
       .pill-btn.active {
         background: var(--primary);
@@ -92,7 +102,7 @@
         background: var(--primary);
         color: var(--on-primary);
         border: none;
-        border-radius: 4px;
+        border-radius: 9px;
         cursor: pointer;
       }
       .filters {
@@ -100,36 +110,48 @@
         gap: 0.6rem;
         margin: 0 1rem 0.6rem;
       }
+      .filters.hide {
+        display: none;
+      }
       .filters select {
         flex: 1;
         padding: 0.3rem;
         font-size: 0.8rem;
-        border: 1px solid #dadce0;
-        border-radius: 4px;
+        border: 1px solid var(--border-color);
+        border-radius: 9px;
+        background: var(--card-bg);
+        color: var(--text-primary);
+        outline: none;
       }
       .summary {
-        margin: 0 1rem 0.6rem;
-        font-size: 0.85rem;
+        margin: 8px 16px;
+        font-size: 14px;
         color: var(--text-secondary);
       }
       #results {
         display: grid;
-        grid-template-columns: repeat(auto-fill, 300px);
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, 350px);
+        gap: 38px 40px;
         justify-content: center;
         padding: 0 1.2rem 1rem;
       }
       .card {
         position: relative;
         background: var(--card-bg);
-        border-radius: 6px;
-        border: 1px solid var(--card-border-color);
-        padding: 0.3rem;
-        width: 300px;
+        border-radius: 9px;
+        border: 1px solid var(--border-color);
+        padding: 18px 21px;
         cursor: pointer;
         display: flex;
         flex-direction: column;
         transition: transform 0.2s, box-shadow 0.2s;
+      }
+      body.page .card {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      body.page .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       }
       .card.skeleton {
         background: #e0e0e0;
@@ -141,38 +163,30 @@
           opacity: 0.6;
         }
       }
-      .card.expanded {
-        transform: translateY(-8px);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-        border: 2px solid var(--primary);
-        border-radius: 6px 6px 0 0;
-        z-index: 10;
-      }
-      .card.left {
-        border-radius: 6px 0 0 6px;
-      }
-      .card.above {
-        border-radius: 0 0 6px 6px;
-      }
       .card-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 0.2rem;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 16px;
+        margin-bottom: 16px;
       }
       .card-header h4 {
+        font-family: Merriweather, serif;
         font-size: clamp(0.9rem, 2.5vw, 1.1rem);
         line-height: 1.2;
         margin-bottom: 0.25rem;
       }
       .pill-type {
+        font-family: "Proxima Nova", sans-serif;
         font-size: 0.7rem;
-        background: var(--card-bg);
+        background: var(--pill-bg);
         padding: 0.2rem 0.5rem;
         border-radius: 4px;
         color: var(--text-secondary);
       }
       .details {
+        font-family: "Proxima Nova", sans-serif;
         font-size: 0.7rem;
         color: var(--text-secondary);
         margin: 0.25rem 0;
@@ -190,6 +204,7 @@
       }
       .price-item .value,
       .bottom-row .value {
+        font-family: Merriweather, serif;
         font-weight: bold;
         line-height: 1;
       }
@@ -207,6 +222,7 @@
       }
       .price-item .label,
       .bottom-row .label {
+        font-family: "Proxima Nova", sans-serif;
         font-size: 0.7rem;
         color: var(--text-secondary);
         display: block;
@@ -215,55 +231,108 @@
       .bottom-row .metric + .metric {
         margin-left: 0.3rem;
       }
-      .history {
-        position: absolute;
-        top: 100%;
-        left: -2px;
-        background: var(--card-bg);
-        box-shadow: 0 4px 8px var(--card-border-color);
-        border: 2px solid var(--primary);
-        border-radius: 0 6px 6px 6px;
-        width: max-content;
-        max-height: 400px;
-        overflow-y: auto;
-        white-space: nowrap;
-        visibility: hidden;
+      .iframe header,
+      .iframe .filters,
+      .iframe .top-row,
+      .iframe .summary {
+        display: none !important;
+      }
+      .iframe #results {
+        grid-template-columns: repeat(1, minmax(250px, 1fr));
+        gap: 8px;
+      }
+      @media (min-width: 550px) {
+        .iframe #results {
+          grid-template-columns: repeat(2, minmax(250px, 1fr));
+        }
+      }
+      @media (min-width: 850px) {
+        .iframe #results {
+          grid-template-columns: repeat(3, minmax(250px, 1fr));
+        }
+      }
+      .iframe .card {
+        width: auto;
+        padding: 8px;
+      }
+      .iframe .card-header {
+        padding-bottom: 8px;
+        margin-bottom: 8px;
+      }
+      .model {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 1000;
         opacity: 0;
-        transition: opacity 0.2s;
-        z-index: 9;
+        transition: opacity 0.3s ease-in-out, background-color 0.3s ease-in-out;
       }
-      .history.left {
-        left: auto;
-        right: -2px;
-        border-radius: 6px 0 6px 6px;
-      }
-      .history.above {
-        top: auto;
-        bottom: 100%;
-        box-shadow: 0 -4px 8px var(--card-border-color);
-        border-radius: 6px 6px 0 0;
-      }
-      .card.expanded .history {
-        visibility: visible;
+      .model.active {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         opacity: 1;
       }
-      .history table {
-        border-collapse: collapse;
-        font-size: 0.7rem;
-        margin: 0.3rem;
+      .model-container {
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px var(--border-color);
+        margin: 16px;
+        max-width: calc(1200px - 32px);
+        width: 100%;
+        position: relative;
       }
-      .history th,
-      .history td {
+      .model-header {
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 16px;
+      }
+      .model-header h3 {
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+      }
+      .model-header .pill-btn {
+        background: var(--primary);
+        color: var(--on-primary);
+        border: none;
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+        cursor: pointer;
+        position: absolute;
+        top: 16px;
+        right: 16px;
+      }
+      .model-content {
+        max-height: 70vh;
+        overflow-y: auto;
+      }
+      body.model-open {
+        overflow: hidden;
+      }
+
+      .table {
+        border-collapse: collapse;
+        font-size: 14px;
+        width: 100%;
+      }
+      .table th,
+      .table td {
         padding: 0.2rem 0.4rem;
         border-bottom: 1px solid #444;
+        text-align: center;
       }
-      .history .up {
+      .table .up {
         color: var(--green);
       }
-      .history .down {
+      .table .down {
         color: var(--red);
       }
-      .history tr.selected-quarter {
+      .table tr.selected-quarter {
         background: rgba(26, 115, 232, 0.1);
       }
       .no-results {
@@ -271,40 +340,42 @@
         padding: 2rem;
         color: var(--text-secondary);
       }
-      .history-chart-main,
-      .history-chart-rent {
-        width: calc(100% - 1rem);
-        height: 180px;
-        margin: 0.5rem auto;
-        display: block;
+      .graphs {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
       }
-      .iframe header,
-      .iframe .filters,
-      .iframe .top-row,
-      .iframe .summary {
-        display: none !important;
+      .graph-container {
+        width: calc(50% - 20px);
+      }
+      .chart {
+        width: 100%;
+        max-height: 300px;
       }
     </style>
   </head>
   <body>
     <header>
-      <h1>NYC Market Snapshot</h1>
-      <p>Filter neighborhoods by borough, price range, property type</p>
+      <div>
+        <h1>NYC Market Snapshot</h1>
+        <p>Filter neighborhoods by borough, price range, property type</p>
+      </div>
+      <div>
+        <button id="toggleFilters" aria-controls="filters" aria-expanded="true">
+          Show Filters
+        </button>
+      </div>
     </header>
     <main>
-      <div class="top-row">
+      <section class="top-row hide">
         <div
           class="boroughs"
           id="boroughs"
           role="group"
           aria-label="Select Borough"
         ></div>
-        <button id="toggleFilters" aria-controls="filters" aria-expanded="true">
-          Hide Filters
-        </button>
-        <button id="resetFilters">Reset Filters</button>
-      </div>
-      <section id="filters" class="filters" aria-label="Filters">
+      </section>
+      <section id="filters" class="filters hide" aria-label="Filters">
         <select id="NeighborhoodSelect">
           <option>All Neighborhoods</option>
         </select>
@@ -314,23 +385,29 @@
         <select id="PropertyTypeSelect">
           <option>All Types</option>
         </select>
+        <button id="resetFilters">Reset Filters</button>
       </section>
       <div class="summary" id="summary">Loading data…</div>
       <div id="results" role="region" aria-live="polite"></div>
+      <section id="model" class="model">
+        <div class="model-container history"></div>
+      </section>
     </main>
 
     <script>
+      // init TRD theme support
       const trdTheme = TrdTheme();
-      window.addEventListener("load", () => {
-        document.body.classList.toggle("iframe", window.self !== window.top);
-      });
+      trdTheme.init();
 
-      function updateParentWithHeight() {
-        window.addEventListener("resize", updateHeight);
-        window.addEventListener("load", updateHeight);
-        window.addEventListener("message", updateHeight);
+      // add class for iframe detection
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("type") === "dashboard") {
+        document.body.classList.toggle("iframe", window.self !== window.top);
+      } else {
+        document.body.classList.add("page");
       }
 
+      // send height to parent window if in an iframe
       function updateHeight() {
         const height = document.getElementById("results").offsetHeight;
         const origin =
@@ -343,8 +420,12 @@
         );
       }
 
-      updateParentWithHeight();
-      trdTheme.init();
+      // Listen for resize, load, and message events to update height
+      window.addEventListener("resize", updateHeight);
+      window.addEventListener("load", updateHeight);
+      window.addEventListener("message", updateHeight);
+
+      // Open link in new tab if in an iframe
       document.getElementById("results").addEventListener("click", (e) => {
         if (document.body.classList.contains("iframe")) {
           e.preventDefault();
@@ -360,12 +441,12 @@
         const c = String(v).replace(/[$,]/g, "").trim();
         return c ? parseFloat(c) : NaN;
       }
-      function fmtAbbrev(n) {
+      function fmtAbbrev(n, fixed = 2) {
         if (isNaN(n)) return "–";
-        if (n >= 1e9) return "$" + (n / 1e9).toFixed(2) + "B";
-        if (n >= 1e6) return "$" + (n / 1e6).toFixed(2) + "M";
-        if (n >= 1e3) return "$" + (n / 1e3).toFixed(2) + "K";
-        return "$" + n.toFixed(2);
+        if (n >= 1e9) return "$" + (n / 1e9).toFixed(fixed) + "B";
+        if (n >= 1e6) return "$" + (n / 1e6).toFixed(fixed) + "M";
+        if (n >= 1e3) return "$" + (n / 1e3).toFixed(fixed) + "K";
+        return "$" + n.toFixed(fixed);
       }
       function fmtWhole(n) {
         return isNaN(n) ? "–" : "$" + Math.round(n).toLocaleString();
@@ -387,8 +468,7 @@
         totalCards = 0;
       let latestQuarter = "",
         showingAggregates = true,
-        selectedBorough = "All Boroughs",
-        currentExpanded = null;
+        selectedBorough = "All Boroughs";
       const boroughsSet = new Set(),
         neighborhoods = {},
         dates = new Set(),
@@ -577,10 +657,15 @@
         nbr.onchange = filter;
 
         document.getElementById("toggleFilters").onclick = (e) => {
-          const f = document.getElementById("filters"),
-            hid = f.style.display === "none";
-          f.style.display = hid ? "flex" : "none";
-          e.target.textContent = hid ? "Hide Filters" : "Show Filters";
+          const f = document.getElementById("filters");
+          const hid = f.classList.toggle("hide");
+          const topRow = document.querySelector(".top-row");
+          if (selectedBorough === "All Boroughs") {
+            topRow.classList.toggle("hide", hid);
+          } else {
+            topRow.classList.remove("hide");
+          }
+          e.target.textContent = hid ? "Show Filters" : "Hide Filters";
           e.target.setAttribute("aria-expanded", !hid);
         };
         document.getElementById("resetFilters").onclick = () => {
@@ -592,6 +677,7 @@
           computeAggregates();
           renderAggregates();
         };
+        updateHeight();
       }
 
       function updateNeighborhoodDropdown() {
@@ -603,6 +689,16 @@
       }
 
       function updateBoroughs() {
+        if (
+          selectedBorough === "All Boroughs" &&
+          document
+            .getElementById("toggleFilters")
+            .getAttribute("aria-expanded") === "false"
+        ) {
+          document.querySelector(".top-row").classList.add("hide");
+        } else {
+          document.querySelector(".top-row").classList.remove("hide");
+        }
         document.querySelectorAll(".pill-btn").forEach((btn) => {
           const a = btn.textContent === selectedBorough;
           btn.classList.toggle("active", a);
@@ -626,7 +722,6 @@
         showingAggregates = true;
         const quarterSel = document.getElementById("DateRangeSelect").value;
         const typeSel = document.getElementById("PropertyTypeSelect").value;
-        const showRent = RENT_TYPES.has(typeSel);
         document.getElementById(
           "summary"
         ).textContent = `Showing aggregates for ${quarterSel}, ${typeSel}`;
@@ -654,7 +749,6 @@
             <h4>${a.borough}</h4>
             <span class="pill-type">${typeSel}</span>
           </div>
-          <div class="details">${a.year_quarter}</div>
           <div class="price-row">
             <div class="price-item sales">
               <div class="value">${fmtAbbrev(a.sales_volume)}</div>
@@ -678,21 +772,15 @@
               }</span>
               <span class="label">Deals</span>
             </div>
-            ${
-              showRent
-                ? `
             <div class="metric rent">
               <span class="value">${fmtWhole(a.avg_asking_rent)}</span>
               <span class="label">Median Asking Rent</span>
-            </div>`
-                : ""
-            }
+            </div>
             <div class="metric ppsf">
               <span class="value">${fmtAbbrev(a.PPSF)}</span>
               <span class="label">PPSF</span>
             </div>
-          </div>
-          <div class="history"></div>`;
+          </div>`;
           c.appendChild(card);
         });
       }
@@ -734,7 +822,6 @@
           return;
         }
         data.forEach((r) => {
-          const showRent = RENT_TYPES.has(r.property_group);
           const card = document.createElement("div");
           card.className = "card";
           card.tabIndex = 0;
@@ -749,10 +836,12 @@
           });
           card.innerHTML = `
           <div class="card-header">
+            <div>
             <h4>${r.neighborhood}</h4>
+            <div class="details">${r.borough} • ${r.year_quarter}</div>
+            </div>
             <span class="pill-type">${r.property_group}</span>
           </div>
-          <div class="details">${r.borough} • ${r.year_quarter}</div>
           <div class="price-row">
             <div class="price-item sales">
               <div class="value">${fmtAbbrev(r.sales_volume)}</div>
@@ -776,21 +865,15 @@
               }</span>
               <span class="label">Deals</span>
             </div>
-            ${
-              showRent
-                ? `
             <div class="metric rent">
               <span class="value">${fmtWhole(r.avg_asking_rent)}</span>
               <span class="label">Asking Rent</span>
-            </div>`
-                : ""
-            }
+            </div>
             <div class="metric ppsf">
             <span class="value">${fmtAbbrev(r.PPSF)}</span>
             <span class="label">PPSF</span>
           </div>
-        </div>
-        <div class="history"></div>`;
+        </div>`;
           c.appendChild(card);
         });
       }
@@ -806,9 +889,25 @@
             return +qb.replace("Q", "") - +qa.replace("Q", "");
           });
         let html = `
-      <canvas class="history-chart-main"></canvas>
-      <canvas class="history-chart-rent"></canvas>
-      <table>
+        <div class="model-header">
+          <h3>${neighborhood} - ${rows[0].borough}</h3>
+          <span class="pill-type">${type}</span>
+          <button class="pill-btn" onclick="closeModel()">
+            Close
+          </button>
+        </div>
+        <div class="model-content">
+          <div class="graphs">
+            <div class="graph-container">
+              <h4>Sales History</h4>
+              <div class="chart"><canvas id="chart-main"></canvas></div>
+            </div>
+            <div class="graph-container">
+              <h4>Rent History</h4>
+              <div class="chart"><canvas id="chart-rent"></canvas></div>
+            </div>
+          </div>
+      <table class="table">
         <tr><th>Quarter</th><th>Sales</th><th>Avg</th><th>Med</th>
             <th>Deals</th><th>Rent</th><th>PPSF</th></tr>`;
         rows.forEach((row, i) => {
@@ -851,6 +950,7 @@
           html += "</tr>";
         });
         html += "</table>";
+        html += `</div>`;
         return html;
       }
 
@@ -864,7 +964,7 @@
             if (+yb !== +ya) return +yb - +ya;
             return +qb.replace("Q", "") - +qa.replace("Q", "");
           });
-        const labels = rows.map((r) => r.year_quarter);
+        const labels = rows.map((r) => r.year_quarter).reverse();
         const mainData = {
           labels,
           datasets: [
@@ -872,16 +972,25 @@
               label: "Sales Vol.",
               data: rows.map((r) => r.sales_volume),
               tension: 0.3,
+              borderWidth: 2,
+              pointRadius: 2,
+              yAxisID: "y1",
             },
             {
               label: "Avg Price",
               data: rows.map((r) => r.avg_price),
               tension: 0.3,
+              borderWidth: 2,
+              pointRadius: 2,
+              yAxisID: "y2",
             },
             {
               label: "Median Price",
               data: rows.map((r) => r.median_price),
               tension: 0.3,
+              borderWidth: 2,
+              pointRadius: 2,
+              yAxisID: "y2",
             },
           ],
         };
@@ -892,15 +1001,23 @@
               label: "Median Rent",
               data: rows.map((r) => r.avg_asking_rent),
               tension: 0.3,
+              borderWidth: 2,
+              pointRadius: 2,
             },
-            { label: "PPSF", data: rows.map((r) => r.PPSF), tension: 0.3 },
+            {
+              label: "PPSF",
+              data: rows.map((r) => r.PPSF),
+              tension: 0.3,
+              borderWidth: 2,
+              pointRadius: 2,
+            },
           ],
         };
         const commonOpts = {
           scales: {
             y: {
               beginAtZero: true,
-              ticks: { callback: (v) => fmtAbbrev(v) },
+              ticks: { callback: (v) => fmtAbbrev(v, 0) },
             },
           },
           plugins: {
@@ -910,13 +1027,36 @@
             },
           },
         };
-
-        new Chart(panel.querySelector(".history-chart-main").getContext("2d"), {
+        if (Chart.getChart(panel.querySelector("#chart-main"))) {
+          Chart.getChart(panel.querySelector("#chart-main")).destroy();
+        }
+        if (Chart.getChart(panel.querySelector("#chart-rent"))) {
+          Chart.getChart(panel.querySelector("#chart-rent")).destroy();
+        }
+        panel.querySelector("#chart-main").innerHTML = "";
+        panel.querySelector("#chart-rent").innerHTML = "";
+        new Chart(panel.querySelector("#chart-main"), {
           type: "line",
           data: mainData,
-          options: commonOpts,
+          options: {
+            ...commonOpts,
+            scales: {
+              y1: {
+                type: "linear",
+                position: "left",
+                title: { display: true, text: "Sales Volume" },
+                ticks: { callback: (v) => fmtAbbrev(v, 0) },
+              },
+              y2: {
+                type: "linear",
+                position: "right",
+                title: { display: true, text: "Price" },
+                ticks: { callback: (v) => fmtAbbrev(v, 0) },
+              },
+            },
+          },
         });
-        new Chart(panel.querySelector(".history-chart-rent").getContext("2d"), {
+        new Chart(panel.querySelector("#chart-rent"), {
           type: "line",
           data: rentData,
           options: commonOpts,
@@ -925,43 +1065,21 @@
 
       // Wire it all up when a card is expanded
       function toggleHistory(card, neighborhood, type) {
-        if (currentExpanded && currentExpanded !== card) {
-          currentExpanded.classList.remove("expanded");
-        }
-        const now = !card.classList.contains("expanded");
-        card.classList.toggle("expanded", now);
-        currentExpanded = now ? card : null;
-        const panel = card.querySelector(".history");
-        panel.classList.remove("left", "above");
-        card.classList.remove("left", "above");
-        if (!now) return;
-        if (!panel.dataset.filled) {
-          panel.innerHTML = buildHistoryTableHTML(neighborhood, type);
-          panel.dataset.filled = "true";
-          renderHistoryCharts(panel, neighborhood, type);
-        }
-        // positioning logic (unchanged)...
-        requestAnimationFrame(() => {
-          const rect = card.getBoundingClientRect();
-          const w = panel.offsetWidth,
-            h = panel.offsetHeight;
-          const vw = window.innerWidth,
-            vh = window.innerHeight;
-          const above = rect.top,
-            below = vh - rect.bottom;
-          if (rect.right + w > vw) {
-            panel.classList.add("left");
-            card.classList.add("left");
-          }
-          if (h > below && h <= above) {
-            panel.classList.add("above");
-            card.classList.add("above");
-          } else if (h > below && above > below) {
-            panel.classList.add("above");
-            card.classList.add("above");
-          }
-        });
+        const panel = document.querySelector("#model .model-container");
+        panel.innerHTML = buildHistoryTableHTML(neighborhood, type);
+        renderHistoryCharts(panel, neighborhood, type);
+        document.getElementById("model").classList.add("active");
+        document.body.classList.add("model-open");
       }
+
+      function closeModel() {
+        document.getElementById("model").classList.remove("active");
+        document.body.classList.remove("model-open");
+      }
+      document.querySelector(".model").onclick = closeModel;
+      document.querySelector(".model-container").onclick = (e) => {
+        e.stopPropagation();
+      };
     </script>
   </body>
 </html>
