@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_45c329ca7ff3257db7451ed1b12ec5ff {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+  <h3 align="center" style="font-size:16px"><b>Recent Miami-Dade County Condo Sales</b></h3>
+    
+  <p align="center" style="font-size:13px"><i>July 7 — July 13</i></p>
+    
+            <div class="folium-map" id="map_45c329ca7ff3257db7451ed1b12ec5ff" ></div>
+        
+    
+  <div style="
+      position: fixed;
+      bottom: 50px; left: 50px;
+      background: white; padding: 8px;
+      border: 2px solid grey;
+      font-size: 12px;
+      z-index: 9999;
+  ">
+    <div style="display:inline-block; font-size:18px; color:gold; margin-right:6px;">&#9733;</div> Top Sale<br>
+    <i style="background: blue; width: 10px; height: 10px;
+       display: inline-block; margin-right: 6px;"></i> All other sales
+  </div>
+</body>
+<script>    
+    
+            var map_45c329ca7ff3257db7451ed1b12ec5ff = L.map(
+                "map_45c329ca7ff3257db7451ed1b12ec5ff",
+                {
+                    center: [25.825078557943925, -80.20956468971961],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 10.5,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_fa5cbda01ec71e8cfc3a9aee6c6745dd = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_45c329ca7ff3257db7451ed1b12ec5ff);
+        
+    
+            var tile_layer_d9a88a2fc3ad2506cc50dd7a1efb1d06 = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {"attribution": "Mapbox", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_45c329ca7ff3257db7451ed1b12ec5ff);
+        
+    
+            var marker_066ee994172b6f313e9093297e5fd4e3 = L.marker(
+                [25.8759175, -80.1211064],
+                {}
+            ).addTo(map_45c329ca7ff3257db7451ed1b12ec5ff);
+        
+    
+            var div_icon_c50ca582cdf98d76839f80b1da9d6692 = L.divIcon({"className": "empty", "html": "\n                \u003cdiv style=\"font-size:24px; line-height:24px; color:gold;\"\u003e\n                  \u0026#9733;\n                \u003c/div\u003e\n                "});
+            marker_066ee994172b6f313e9093297e5fd4e3.setIcon(div_icon_c50ca582cdf98d76839f80b1da9d6692);
+        
+    
+        var popup_b826ae1c632e7fb0b59f5dbf02c19650 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_5b38d70cb81e4b7377428c961405af5d = $(`<div id="html_5b38d70cb81e4b7377428c961405af5d" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>8955 Collins Ave #702<br>     <strong>Sale Price: </strong>$12,250,000.0<br>     <strong>Price sq ft: </strong>$3,906.0<br>     <strong>Square Footage: </strong>3,136.0<br>     <strong>Year Built: </strong>2020.0<br>     </html>     </div>`)[0];
+                popup_b826ae1c632e7fb0b59f5dbf02c19650.setContent(html_5b38d70cb81e4b7377428c961405af5d);
+            
+        
+
+        marker_066ee994172b6f313e9093297e5fd4e3.bindPopup(popup_b826ae1c632e7fb0b59f5dbf02c19650)
+        ;
+
+        
+    
+    
+            var circle_marker_656bf1b6c7c1f995c16c6ffa9b0458dc = L.circleMarker(
+                [25.9423323, -80.1201656],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_45c329ca7ff3257db7451ed1b12ec5ff);
+        
+    
+        var popup_ccd34b6fedb9e7976bffe02de2de8060 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_50cbf4f6e57e35357f1229df38156081 = $(`<div id="html_50cbf4f6e57e35357f1229df38156081" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>17975 Collins Ave #3102<br>     <strong>Sale Price: </strong>$8,900,000.0<br>     <strong>Price sq ft: </strong>$2,030.0<br>     <strong>Square Footage: </strong>4,385.0<br>     <strong>Year Built: </strong>2022.0<br>     </html>     </div>`)[0];
+                popup_ccd34b6fedb9e7976bffe02de2de8060.setContent(html_50cbf4f6e57e35357f1229df38156081);
+            
+        
+
+        circle_marker_656bf1b6c7c1f995c16c6ffa9b0458dc.bindPopup(popup_ccd34b6fedb9e7976bffe02de2de8060)
+        ;
+
+        
+    
+    
+            var circle_marker_82ddc3ecc5f284d5607dc11fb5c27406 = L.circleMarker(
+                [25.8951677, -80.12315],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_45c329ca7ff3257db7451ed1b12ec5ff);
+        
+    
+        var popup_7fea7d2c56f5ef6f9516605d911361f1 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_3b40ea1b47830b39f6ccf24ea6bd8ec5 = $(`<div id="html_3b40ea1b47830b39f6ccf24ea6bd8ec5" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>10201 Collins Ave #2306<br>     <strong>Sale Price: </strong>$6,575,000.0<br>     <strong>Price sq ft: </strong>$2,505.0<br>     <strong>Square Footage: </strong>2,625.0<br>     <strong>Year Built: </strong>2016.0<br>     </html>     </div>`)[0];
+                popup_7fea7d2c56f5ef6f9516605d911361f1.setContent(html_3b40ea1b47830b39f6ccf24ea6bd8ec5);
+            
+        
+
+        circle_marker_82ddc3ecc5f284d5607dc11fb5c27406.bindPopup(popup_7fea7d2c56f5ef6f9516605d911361f1)
+        ;
+
+        
+    
+    
+            var circle_marker_45191414a3ef8b41d0cd1cd1dbcfbf6e = L.circleMarker(
+                [25.9293834, -80.1256108],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_45c329ca7ff3257db7451ed1b12ec5ff);
+        
+    
+        var popup_b64115cdf79f48ae4bc840199200ec7e = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_10632356df25cb5f5c01e5c0df196318 = $(`<div id="html_10632356df25cb5f5c01e5c0df196318" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>300 Sunny Isles Blvd Unit 4-502<br>     <strong>Sale Price: </strong>$4,700,000.0<br>     <strong>Price sq ft: </strong>$1,011.0<br>     <strong>Square Footage: </strong>4,650.0<br>     <strong>Year Built: </strong>2019.0<br>     </html>     </div>`)[0];
+                popup_b64115cdf79f48ae4bc840199200ec7e.setContent(html_10632356df25cb5f5c01e5c0df196318);
+            
+        
+
+        circle_marker_45191414a3ef8b41d0cd1cd1dbcfbf6e.bindPopup(popup_b64115cdf79f48ae4bc840199200ec7e)
+        ;
+
+        
+    
+    
+            var circle_marker_728924edd2c54b846b1b40f4573efac6 = L.circleMarker(
+                [25.9349392, -80.1209182],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_45c329ca7ff3257db7451ed1b12ec5ff);
+        
+    
+        var popup_ea510bcf661b7181e6d559ba57c0b7c5 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_8a2ae23beae6e8dca392b36e0e2a158d = $(`<div id="html_8a2ae23beae6e8dca392b36e0e2a158d" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>17141 Collins Ave #701<br>     <strong>Sale Price: </strong>$4,700,000.0<br>     <strong>Price sq ft: </strong>$1,471.0<br>     <strong>Square Footage: </strong>3,195.0<br>     <strong>Year Built: </strong>2018.0<br>     </html>     </div>`)[0];
+                popup_ea510bcf661b7181e6d559ba57c0b7c5.setContent(html_8a2ae23beae6e8dca392b36e0e2a158d);
+            
+        
+
+        circle_marker_728924edd2c54b846b1b40f4573efac6.bindPopup(popup_ea510bcf661b7181e6d559ba57c0b7c5)
+        ;
+
+        
+    
+    
+            var circle_marker_472562e0a7adafccfba0f105d4c0e9a9 = L.circleMarker(
+                [25.6926193, -80.1589937],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_45c329ca7ff3257db7451ed1b12ec5ff);
+        
+    
+        var popup_ac23e00bdc3676d4614885672f244f71 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_74c1d74775a1aa02e4cdee6c7ddcd3f7 = $(`<div id="html_74c1d74775a1aa02e4cdee6c7ddcd3f7" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>445 Grand Bay Dr #1210<br>     <strong>Sale Price: </strong>$4,500,000.0<br>     <strong>Price sq ft: </strong>$1,525.0<br>     <strong>Square Footage: </strong>2,950.0<br>     <strong>Year Built: </strong>1996.0<br>     </html>     </div>`)[0];
+                popup_ac23e00bdc3676d4614885672f244f71.setContent(html_74c1d74775a1aa02e4cdee6c7ddcd3f7);
+            
+        
+
+        circle_marker_472562e0a7adafccfba0f105d4c0e9a9.bindPopup(popup_ac23e00bdc3676d4614885672f244f71)
+        ;
+
+        
+    
+    
+            var circle_marker_cb7dbc81f8b119dd3d5ba9002bb5a76f = L.circleMarker(
+                [25.775127, -80.141257],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_45c329ca7ff3257db7451ed1b12ec5ff);
+        
+    
+        var popup_0e93665e98c1396fcec6bbdc96c037ef = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_7bddba3a7041f241340da0560fb23240 = $(`<div id="html_7bddba3a7041f241340da0560fb23240" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>500 Alton #4304<br>     <strong>Sale Price: </strong>$3,890,000.0<br>     <strong>Price sq ft: </strong>$2,713.0<br>     <strong>Square Footage: </strong>1,434.0<br>     <strong>Year Built: </strong>2024.0<br>     </html>     </div>`)[0];
+                popup_0e93665e98c1396fcec6bbdc96c037ef.setContent(html_7bddba3a7041f241340da0560fb23240);
+            
+        
+
+        circle_marker_cb7dbc81f8b119dd3d5ba9002bb5a76f.bindPopup(popup_0e93665e98c1396fcec6bbdc96c037ef)
+        ;
+
+        
+    
+    
+            var circle_marker_c7cea5a2ebd947c5fc57a0e36b5e5ff0 = L.circleMarker(
+                [25.890231, -80.122819],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_45c329ca7ff3257db7451ed1b12ec5ff);
+        
+    
+        var popup_8b05b7f1473b69691e637d992caade67 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_70072c690b060b525451eb06ef73cc17 = $(`<div id="html_70072c690b060b525451eb06ef73cc17" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>9801 Collins Ave Unit 6A Oceanfront<br>     <strong>Sale Price: </strong>$2,375,000.0<br>     <strong>Price sq ft: </strong>$1,198.0<br>     <strong>Square Footage: </strong>1,983.0<br>     <strong>Year Built: </strong>1977.0<br>     </html>     </div>`)[0];
+                popup_8b05b7f1473b69691e637d992caade67.setContent(html_70072c690b060b525451eb06ef73cc17);
+            
+        
+
+        circle_marker_c7cea5a2ebd947c5fc57a0e36b5e5ff0.bindPopup(popup_8b05b7f1473b69691e637d992caade67)
+        ;
+
+        
+    
+    
+            var circle_marker_00076d6235544a8b75a1429a85e66aba = L.circleMarker(
+                [25.7293556, -80.2385542],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_45c329ca7ff3257db7451ed1b12ec5ff);
+        
+    
+        var popup_9a829b148a62b134489c8b386fdfa17d = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_61e2ef232cb3b82161726489b6ddf82e = $(`<div id="html_61e2ef232cb3b82161726489b6ddf82e" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>2831 S Bayshore Dr #1701<br>     <strong>Sale Price: </strong>$2,350,000.0<br>     <strong>Price sq ft: </strong>$1,835.0<br>     <strong>Square Footage: </strong>1,281.0<br>     <strong>Year Built: </strong>2018.0<br>     </html>     </div>`)[0];
+                popup_9a829b148a62b134489c8b386fdfa17d.setContent(html_61e2ef232cb3b82161726489b6ddf82e);
+            
+        
+
+        circle_marker_00076d6235544a8b75a1429a85e66aba.bindPopup(popup_9a829b148a62b134489c8b386fdfa17d)
+        ;
+
+        
+    
+    
+            var circle_marker_a1a2d6da8c1520f9ace9890907eb45d2 = L.circleMarker(
+                [25.9228339, -80.1218636],
+                {"bubblingMouseEvents": true, "color": null, "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.5, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_45c329ca7ff3257db7451ed1b12ec5ff);
+        
+    
+        var popup_16901c4142820a49817c1f44b6e5f2ff = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_31f7506efd621e0164c567a61c63b67c = $(`<div id="html_31f7506efd621e0164c567a61c63b67c" style="width: 100.0%; height: 100.0%;"><!DOCTYPE html>     <html>     <strong>Building Name: </strong>15811 Collins Ave #3302<br>     <strong>Sale Price: </strong>$1,900,000.0<br>     <strong>Price sq ft: </strong>$963.0<br>     <strong>Square Footage: </strong>1,974.0<br>     <strong>Year Built: </strong>2010.0<br>     </html>     </div>`)[0];
+                popup_16901c4142820a49817c1f44b6e5f2ff.setContent(html_31f7506efd621e0164c567a61c63b67c);
+            
+        
+
+        circle_marker_a1a2d6da8c1520f9ace9890907eb45d2.bindPopup(popup_16901c4142820a49817c1f44b6e5f2ff)
+        ;
+
+        
+    
+    
+            var layer_control_c85c6fe8c157e974610e54b50ccde7f6 = {
+                base_layers : {
+                },
+                overlays :  {
+                },
+            };
+            L.control.layers(
+                layer_control_c85c6fe8c157e974610e54b50ccde7f6.base_layers,
+                layer_control_c85c6fe8c157e974610e54b50ccde7f6.overlays,
+                {"autoZIndex": true, "collapsed": false, "position": "topright"}
+            ).addTo(map_45c329ca7ff3257db7451ed1b12ec5ff);
+        
+</script>
