@@ -110,7 +110,6 @@ const trdList = () => {
           <li class="list-group-item d-flex justify-content-between align-items-start">
             <div class="me-2" style="width: 100%;">
               <div class="loading-placeholder" style="width: 100%; height: 20px;"></div>
-              <div class="loading-placeholder" style="width: 80%; height: 15px;"></div>
             </div>
             <div>
               <div class="loading-placeholder" style="width: 100px; height: 20px;"></div>
@@ -137,20 +136,10 @@ const trdList = () => {
           const date = helpers.formatDate(properties["Record Date"]);
           const borough = helpers.formatBorough(properties["County"]);
 
-          const place = [];
-          if (!helpers.isEmptyValue(properties["Neighborhood"])) {
-            place.push(properties["Neighborhood"]);
-          }
-
-          if (!helpers.isEmptyValue(borough)) {
-            place.push(borough);
-          }
-
           return `
             <li class="list-group-item d-flex justify-content-between align-items-start">
               <div class="me-2">
                 <div>${address}</div>
-                <div class="text-muted">${place.join(", ")}</div>
               </div>
               <div>
                 <div class="text-success price">${price}</div>
