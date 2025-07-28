@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NYC Market Snapshot</title>
+
+  <!-- Chart.js for history graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #1a73e8;
+      --on-primary: #fff;
+      --bg: #f5f7fa;
+      --card-bg: #fff;
+      --text-primary: #202124;
+      --text-secondary: #5f6368;
+      --green: #188038;
+      --blue: #1a73e8;
+      --red: #d93025;
+      --font: 'Arial', sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #202124;
+        --card-bg: #303134;
+        --text-primary: #e8eaed;
+        --text-secondary: #9aa0a6;
+      }
+      .pill-type {
+        background: #3a3a3c;
+      }
+      .history tr.selected-quarter {
+        background: rgba(255, 223, 0, 0.3);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text-primary);
+    }
+    header {
+      background: var(--card-bg);
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid #dadce0;
+    }
+    header h1 { font-size: 1.3rem; }
+    header p {
+      margin-top: 0.2rem;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    .top-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 0.6rem 1rem;
+    }
+    .boroughs { display: flex; gap: 0.5rem; }
+    .pill-btn {
+      padding: 0.4rem 0.8rem;
+      border: 1px solid #d2e3fc;
+      border-radius: 999px;
+      background: var(--card-bg);
+      cursor: pointer;
+      color: #1967d2;
+      font-size: 0.85rem;
+      transition: background .2s;
+    }
+    .pill-btn.active {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+    #toggleFilters, #resetFilters {
+      padding: 0.4rem 0.8rem;
+      background: var(--primary);
+      color: var(--on-primary);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .filters {
+      display: flex;
+      gap: 0.6rem;
+      margin: 0 1rem 0.6rem;
+    }
+    .filters select {
+      flex: 1;
+      padding: 0.3rem;
+      font-size: 0.8rem;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+    }
+    .summary {
+      margin: 0 1rem 0.6rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    #results {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 300px);
+      gap: 0.3rem;
+      justify-content: center;
+      padding: 0 1.2rem 1rem;
+    }
+    .card {
+      position: relative;
+      background: var(--card-bg);
+      border-radius: 6px;
+      box-shadow: 0 1px 1px rgba(60,64,67,0.1);
+      padding: 0.3rem;
+      width: 300px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .card.skeleton {
+      background: #e0e0e0;
+      height: 8rem;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse { 50% { opacity: 0.6; } }
+    .card.expanded {
+      transform: translateY(-8px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+      z-index: 10;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.2rem;
+    }
+    .card-header h4 {
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+      line-height: 1.2;
+      margin-bottom: 0.25rem;
+    }
+    .pill-type {
+      font-size: 0.7rem;
+      background: var(--card-bg);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      color: var(--text-secondary);
+    }
+    .details {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin: 0.25rem 0;
+    }
+    .price-row, .bottom-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 0.3rem 0;
+    }
+    .price-item, .bottom-row .metric {
+      flex: 1;
+      text-align: center;
+    }
+    .price-item .value, .bottom-row .value {
+      font-weight: bold;
+      line-height: 1;
+    }
+    .price-item.sales .value { color: var(--blue); font-size: 0.9rem; }
+    .price-item.avg .value   { color: var(--green); font-size: 0.9rem; }
+    .price-item.median .value{ color: var(--green); font-size: 0.9rem; }
+    .price-item .label, .bottom-row .label {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      display: block;
+    }
+    .price-item + .price-item,
+    .bottom-row .metric + .metric {
+      margin-left: 0.3rem;
+    }
+    .history {
+      position: absolute;
+      top: calc(100% + 0.3rem);
+      left: 0;
+      background: var(--card-bg);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      width: max-content;
+      max-height: 400px;
+      overflow-y: auto;
+      white-space: nowrap;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity .2s;
+      z-index: 9;
+    }
+    .history.left { left: auto; right: 0; }
+    .history.above {
+      top: auto;
+      bottom: calc(100% + 0.3rem);
+    }
+    .card.expanded .history {
+      visibility: visible;
+      opacity: 1;
+    }
+    .history table {
+      border-collapse: collapse;
+      font-size: 0.7rem;
+      margin: 0.3rem;
+    }
+    .history th, .history td {
+      padding: 0.2rem 0.4rem;
+      border-bottom: 1px solid #444;
+    }
+    .history .up   { color: var(--green); }
+    .history .down { color: var(--red); }
+    .history tr.selected-quarter {
+      background: rgba(26,115,232,0.1);
+    }
+    .no-results {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-secondary);
+    }
+    .history-chart-main,
+    .history-chart-rent {
+      width: calc(100% - 1rem);
+      height: 180px;
+      margin: 0.5rem auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>NYC Market Snapshot</h1>
+    <p>Filter neighborhoods by borough, price range, property type</p>
+  </header>
+  <main>
+    <div class="top-row">
+      <div class="boroughs" id="boroughs" role="group" aria-label="Select Borough"></div>
+      <button id="toggleFilters" aria-controls="filters" aria-expanded="true">Hide Filters</button>
+      <button id="resetFilters">Reset Filters</button>
+    </div>
+    <section id="filters" class="filters" aria-label="Filters">
+      <select id="NeighborhoodSelect"><option>All Neighborhoods</option></select>
+      <select id="DateRangeSelect"><option>Loading…</option></select>
+      <select id="PropertyTypeSelect"><option>All Types</option></select>
+    </section>
+    <div class="summary" id="summary">Loading data…</div>
+    <div id="results" role="region" aria-live="polite"></div>
+  </main>
+
+  <script>
+    // Helpers
+    function toNum(v) {
+      const c = String(v).replace(/[$,]/g,'').trim();
+      return c ? parseFloat(c) : NaN;
+    }
+    function fmtAbbrev(n) {
+      if (isNaN(n)) return '–';
+      if (n >= 1e9) return '$' + (n/1e9).toFixed(2) + 'B';
+      if (n >= 1e6) return '$' + (n/1e6).toFixed(2) + 'M';
+      if (n >= 1e3) return '$' + (n/1e3).toFixed(2) + 'K';
+      return '$' + n.toFixed(2);
+    }
+    function fmtWhole(n) {
+      return isNaN(n) ? '–' : '$' + Math.round(n).toLocaleString();
+    }
+    function median(a) {
+      const x = a.filter(v=>!isNaN(v)).sort((u,v)=>u-v);
+      const m = x.length;
+      return m ? (m%2 ? x[(m-1)/2] : (x[m/2-1]+x[m/2])/2) : NaN;
+    }
+
+    const RENT_TYPES = new Set(['Condo','Co-op','Single-Family Home']);
+    let rawData = [], historyMap = {}, aggregates = [], totalCards = 0;
+    let latestQuarter = '', showingAggregates = true,
+        selectedBorough = 'All Boroughs', currentExpanded = null;
+    const boroughsSet = new Set(), neighborhoods = {}, dates = new Set(), types = new Set();
+
+    function buildHistoryMap() {
+      rawData.forEach(r => {
+        (historyMap[r.neighborhood]||(historyMap[r.neighborhood]=[])).push(r);
+      });
+      Object.values(historyMap).forEach(arr =>
+        arr.sort((a,b) => {
+          const [qa, ya] = a.year_quarter.split('/');
+          const [qb, yb] = b.year_quarter.split('/');
+          if (+yb !== +ya) return +yb - +ya;
+          return +qb.replace('Q','') - +qa.replace('Q','');
+        })
+      );
+    }
+
+    function showLoading(n=8) {
+      const r = document.getElementById('results'); r.innerHTML = '';
+      for (let i=0; i<n; i++){
+        const s = document.createElement('div');
+        s.className = 'card skeleton';
+        r.appendChild(s);
+      }
+    }
+    document.addEventListener('DOMContentLoaded', ()=>showLoading());
+
+    // Load CSV
+    Papa.parse('real_estate_nyc.csv', {
+      header: true, download: true, skipEmptyLines: true,
+      error: () => document.getElementById('results').textContent = '⚠️ Failed to load data.',
+      complete: res => {
+        rawData = res.data.map(r => {
+          let parts = r.year_quarter.trim().split('/');
+          let yq = parts.length===2 ? `${parts[1]}/${parts[0]}` : r.year_quarter.trim();
+          return {
+            borough:         r.borough.trim(),
+            neighborhood:    r.neighborhood.trim(),
+            property_group:  r.property_group.trim(),
+            year_quarter:    yq,
+            avg_price:       toNum(r.avg_price),
+            median_price:    toNum(r.median_price),
+            sales_volume:    toNum(r.sales_volume),
+            number_of_deals: parseInt(r.number_of_deals,10)||NaN,
+            avg_asking_rent: toNum(r.avg_asking_rent),
+            PPSF:            toNum(r['Neighborhood PPSF'])
+          };
+        });
+        totalCards = rawData.length;
+        precompute();
+        buildHistoryMap();
+        buildUI();
+        computeAggregates();
+        renderAggregates();
+      }
+    });
+
+    function precompute() {
+      rawData.forEach(r => {
+        boroughsSet.add(r.borough);
+        (neighborhoods[r.borough]||(neighborhoods[r.borough]=new Set())).add(r.neighborhood);
+        dates.add(r.year_quarter);
+        types.add(r.property_group);
+      });
+      latestQuarter = [...dates].sort().pop();
+    }
+
+    function computeAggregates() {
+      const q = document.getElementById('DateRangeSelect').value;
+      const t = document.getElementById('PropertyTypeSelect').value;
+      aggregates = [];
+      const all = rawData.filter(r =>
+        r.year_quarter===q && (t==='All Types' || r.property_group===t)
+      );
+      aggregates.push({
+        borough: 'NYC', year_quarter: q,
+        sales_volume:    all.reduce((s,r)=>s+(r.sales_volume||0),0),
+        avg_price:       median(all.map(r=>r.avg_price)),
+        median_price:    median(all.map(r=>r.median_price)),
+        number_of_deals: all.reduce((s,r)=>s+(r.number_of_deals||0),0),
+        avg_asking_rent: median(all.map(r=>r.avg_asking_rent)),
+        PPSF:            median(all.map(r=>r.PPSF))
+      });
+      boroughsSet.forEach(b => {
+        const rows = rawData.filter(r =>
+          r.borough===b &&
+          r.year_quarter===q &&
+          (t==='All Types' || r.property_group===t)
+        );
+        aggregates.push({
+          borough: b, year_quarter: q,
+          sales_volume:    rows.reduce((s,r)=>s+(r.sales_volume||0),0),
+          avg_price:       median(rows.map(r=>r.avg_price)),
+          median_price:    median(rows.map(r=>r.median_price)),
+          number_of_deals: rows.reduce((s,r)=>s+(r.number_of_deals||0),0),
+          avg_asking_rent: median(rows.map(r=>r.avg_asking_rent)),
+          PPSF:            median(rows.map(r=>r.PPSF))
+        });
+      });
+    }
+
+    function buildUI() {
+      const brc = document.getElementById('boroughs');
+      ['All Boroughs', ...[...boroughsSet].sort()].forEach(b => {
+        const btn = document.createElement('button');
+        btn.textContent = b;
+        btn.className = 'pill-btn' + (b===selectedBorough ? ' active' : '');
+        btn.setAttribute('aria-pressed', b===selectedBorough);
+        btn.onclick = () => {
+          selectedBorough = b;
+          updateBoroughs();
+          if (b === 'All Boroughs') {
+            showingAggregates = true;
+            document.getElementById('DateRangeSelect').value = latestQuarter;
+            document.getElementById('PropertyTypeSelect').value = 'All Types';
+            computeAggregates();
+            renderAggregates();
+          } else {
+            showingAggregates = false;
+            document.getElementById('DateRangeSelect').value = latestQuarter;
+            document.getElementById('PropertyTypeSelect').value = 'All Types';
+            filter();
+          }
+        };
+        brc.appendChild(btn);
+      });
+
+      const nbr = document.getElementById('NeighborhoodSelect'),
+            dr  = document.getElementById('DateRangeSelect'),
+            pt  = document.getElementById('PropertyTypeSelect');
+
+      updateNeighborhoodDropdown();
+
+      dr.innerHTML = '';
+      [...dates]
+        .sort((a, b) => {
+          const [qa, ya] = a.split('/');
+          const [qb, yb] = b.split('/');
+          if (+yb !== +ya) return +yb - +ya;
+          return +qb.replace('Q','') - +qa.replace('Q','');
+        })
+        .forEach((d, i) => {
+          const o = new Option(d, d);
+          if (i === 0) {
+            o.selected = true;
+            latestQuarter = d;
+          }
+          dr.add(o);
+        });
+
+      [...types].sort().forEach(tVal => pt.add(new Option(tVal,tVal)));
+
+      dr.onchange = pt.onchange = () => {
+        if (showingAggregates) {
+          computeAggregates();
+          renderAggregates();
+        } else {
+          filter();
+        }
+      };
+      nbr.onchange = filter;
+
+      document.getElementById('toggleFilters').onclick = e => {
+        const f = document.getElementById('filters'),
+              hid = f.style.display==='none';
+        f.style.display = hid ? 'flex' : 'none';
+        e.target.textContent = hid ? 'Hide Filters' : 'Show Filters';
+        e.target.setAttribute('aria-expanded', !hid);
+      };
+      document.getElementById('resetFilters').onclick = () => {
+        nbr.value = 'All Neighborhoods';
+        dr.value  = latestQuarter;
+        pt.value  = 'All Types';
+        selectedBorough = 'All Boroughs';
+        updateBoroughs();
+        computeAggregates();
+        renderAggregates();
+      };
+    }
+
+    function updateNeighborhoodDropdown() {
+      const nbr = document.getElementById('NeighborhoodSelect'),
+            prev = nbr.value;
+      nbr.innerHTML = '<option>All Neighborhoods</option>';
+      getNeighborhoodList().forEach(n => nbr.add(new Option(n,n)));
+      if (getNeighborhoodList().includes(prev)) nbr.value = prev;
+    }
+
+    function updateBoroughs() {
+      document.querySelectorAll('.pill-btn').forEach(btn => {
+        const a = btn.textContent === selectedBorough;
+        btn.classList.toggle('active', a);
+        btn.setAttribute('aria-pressed', a);
+      });
+      updateNeighborhoodDropdown();
+    }
+
+    function getNeighborhoodList() {
+      if (selectedBorough==='All Boroughs' || selectedBorough==='NYC') {
+        return [...new Set([].concat(...Object.values(neighborhoods).map(s=>[...s])))]
+               .sort();
+      }
+      return [...(neighborhoods[selectedBorough]||[])].sort();
+    }
+
+    function renderAggregates() {
+      showingAggregates = true;
+      const quarterSel = document.getElementById('DateRangeSelect').value;
+      const typeSel    = document.getElementById('PropertyTypeSelect').value;
+      const showRent   = RENT_TYPES.has(typeSel);
+      document.getElementById('summary').textContent =
+        `Showing aggregates for ${quarterSel}, ${typeSel}`;
+      const c = document.getElementById('results');
+      c.innerHTML = '';
+      aggregates.forEach(a => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.tabIndex = 0;
+        card.setAttribute('role','button');
+        card.onclick = () => {
+          showingAggregates = false;
+          selectedBorough = a.borough==='NYC' ? 'All Boroughs' : a.borough;
+          if (a.borough!=='NYC') updateBoroughs();
+          filter();
+        };
+        card.addEventListener('keydown', e => {
+          if (e.key==='Enter' || e.key===' ') { e.preventDefault(); card.click(); }
+        });
+        card.innerHTML = `
+          <div class="card-header">
+            <h4>${a.borough}</h4>
+            <span class="pill-type">${typeSel}</span>
+          </div>
+          <div class="details">${a.year_quarter}</div>
+          <div class="price-row">
+            <div class="price-item sales">
+              <div class="value">${fmtAbbrev(a.sales_volume)}</div>
+              <div class="label">Sales Vol.</div>
+            </div>
+            <div class="price-item avg">
+              <div class="value">${fmtAbbrev(a.avg_price)}</div>
+              <div class="label">Avg Price</div>
+            </div>
+            <div class="price-item median">
+              <div class="value">${fmtAbbrev(a.median_price)}</div>
+              <div class="label">Median Price</div>
+            </div>
+          </div>
+          <div class="bottom-row">
+            <div class="metric deals">
+              <span class="value">${
+                isNaN(a.number_of_deals)?'–':a.number_of_deals.toLocaleString()
+              }</span>
+              <span class="label">Deals</span>
+            </div>
+            ${showRent?`
+            <div class="metric rent">
+              <span class="value">${fmtWhole(a.avg_asking_rent)}</span>
+              <span class="label">Median Asking Rent</span>
+            </div>`:''}
+            <div class="metric ppsf">
+              <span class="value">${fmtAbbrev(a.PPSF)}</span>
+              <span class="label">PPSF</span>
+            </div>
+          </div>
+          <div class="history"></div>`;
+        c.appendChild(card);
+      });
+    }
+
+    function filter() {
+      if (showingAggregates) { renderAggregates(); return; }
+      const nbrV = document.getElementById('NeighborhoodSelect').value;
+      const drV  = document.getElementById('DateRangeSelect').value;
+      const ptV  = document.getElementById('PropertyTypeSelect').value;
+      const filtered = rawData.filter(r => {
+        if (selectedBorough!=='All Boroughs' && r.borough!==selectedBorough) return false;
+        if (nbrV!=='All Neighborhoods' && r.neighborhood!==nbrV) return false;
+        if (r.year_quarter!==drV) return false;
+        if (ptV!=='All Types' && r.property_group!==ptV) return false;
+        return true;
+      });
+      document.getElementById('summary').textContent =
+        `Showing ${filtered.length} of ${totalCards} cards`;
+      renderNeighborhoods(filtered);
+    }
+
+    function renderNeighborhoods(data) {
+      const c = document.getElementById('results');
+      c.innerHTML = '';
+      if (!data.length) {
+        c.innerHTML = '<div class="no-results">😔 No cards match.</div>';
+        return;
+      }
+      data.forEach(r => {
+        const showRent = RENT_TYPES.has(r.property_group);
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.tabIndex = 0;
+        card.setAttribute('role','button');
+        card.onclick = () => toggleHistory(card, r.neighborhood, r.property_group);
+        card.addEventListener('keydown', e => {
+          if (e.key==='Enter' || e.key===' ') { e.preventDefault(); card.click(); }
+        });
+        card.innerHTML = `
+          <div class="card-header">
+            <h4>${r.neighborhood}</h4>
+            <span class="pill-type">${r.property_group}</span>
+          </div>
+          <div class="details">${r.borough} • ${r.year_quarter}</div>
+          <div class="price-row">
+            <div class="price-item sales">
+              <div class="value">${fmtAbbrev(r.sales_volume)}</div>
+              <div class="label">Sales Vol.</div>
+            </div>
+            <div class="price-item avg">
+              <div class="value">${fmtAbbrev(r.avg_price)}</div>
+              <div class="label">Avg Price</div>
+            </div>
+            <div class="price-item median">
+              <div class="value">${fmtAbbrev(r.median_price)}</div>
+              <div class="label">Median Price</div>
+            </div>
+          </div>
+          <div class="bottom-row">
+            <div class="metric deals">
+              <span class="value">${
+                isNaN(r.number_of_deals)?'–':r.number_of_deals.toLocaleString()
+              }</span>
+              <span class="label">Deals</span>
+            </div>
+            ${showRent?`
+            <div class="metric rent">
+              <span class="value">${fmtWhole(r.avg_asking_rent)}</span>
+              <span class="label">Asking Rent</span>
+            </div>`:''}
+            <div class="metric ppsf">
+            <span class="value">${fmtAbbrev(r.PPSF)}</span>
+            <span class="label">PPSF</span>
+          </div>
+        </div>
+        <div class="history"></div>`;
+      c.appendChild(card);
+    });
+  }
+
+  // Reused from above: builds the two canvases + table
+  function buildHistoryTableHTML(neighborhood, type) {
+    const rows = historyMap[neighborhood]
+      .filter(r => r.property_group === type)
+      .sort((a,b)=>{
+        const [qa,ya]=a.year_quarter.split('/');
+        const [qb,yb]=b.year_quarter.split('/');
+        if(+yb!==+ya) return +yb-+ya;
+        return +qb.replace('Q','')-+qa.replace('Q','');
+      });
+    let html = `
+      <canvas class="history-chart-main"></canvas>
+      <canvas class="history-chart-rent"></canvas>
+      <table>
+        <tr><th>Quarter</th><th>Sales</th><th>Avg</th><th>Med</th>
+            <th>Deals</th><th>Rent</th><th>PPSF</th></tr>`;
+    rows.forEach((row,i)=>{
+      const nxt = rows[i+1]||row;
+      const sel = row.year_quarter===document.getElementById('DateRangeSelect').value
+                  ? 'selected-quarter':''; 
+      const m={sales:row.sales_volume,avg:row.avg_price,
+               median:row.median_price,deals:row.number_of_deals,
+               rent:row.avg_asking_rent,ppsf:row.PPSF};
+      const p={sales:nxt.sales_volume,avg:nxt.avg_price,
+               median:nxt.median_price,deals:nxt.number_of_deals,
+               rent:nxt.avg_asking_rent,ppsf:nxt.PPSF};
+      html+=`<tr class="${sel}"><td>${row.year_quarter}</td>`;
+      ['sales','avg','median','deals','rent','ppsf'].forEach(k=>{
+        let d='',a='';
+        if(!isNaN(m[k])&&!isNaN(p[k])){
+          d=m[k]>=p[k]?'up':'down';
+          a=` <span class="${d}">${d==='up'?'▲':'▼'}</span>`;
+        }
+        let val;
+        if(k==='deals') val = isNaN(m[k])?'–': m[k].toLocaleString();
+        else if(k==='rent') val = fmtWhole(m[k]);
+        else val = fmtAbbrev(m[k]);
+        html+=`<td class="${d}">${val}${a}</td>`;
+      });
+      html+='</tr>';
+    });
+    html+='</table>';
+    return html;
+  }
+
+  // Renders the two line charts
+  function renderHistoryCharts(panel, neighborhood, type) {
+    const rows = historyMap[neighborhood]
+      .filter(r=>r.property_group===type)
+      .sort((a,b)=>{
+        const [qa,ya]=a.year_quarter.split('/');
+        const [qb,yb]=b.year_quarter.split('/');
+        if(+yb!==+ya) return +yb-+ya;
+        return +qb.replace('Q','')-+qa.replace('Q','');
+      });
+    const labels = rows.map(r=>r.year_quarter);
+    const mainData = {
+      labels,
+      datasets: [
+        { label:'Sales Vol.',    data: rows.map(r=>r.sales_volume), tension:0.3 },
+        { label:'Avg Price',     data: rows.map(r=>r.avg_price),    tension:0.3 },
+        { label:'Median Price',  data: rows.map(r=>r.median_price), tension:0.3 }
+      ]
+    };
+    const rentData = {
+      labels,
+      datasets: [
+        { label:'Median Rent', data: rows.map(r=>r.avg_asking_rent), tension:0.3 },
+        { label:'PPSF',        data: rows.map(r=>r.PPSF),            tension:0.3 }
+      ]
+    };
+    const commonOpts = {
+      scales: {
+        y: {
+          beginAtZero:true,
+          ticks:{ callback: v=> fmtAbbrev(v) }
+        }
+      },
+      plugins:{
+        legend:{ position:'bottom', labels:{ boxWidth:12, padding:8 } }
+      }
+    };
+
+    new Chart(panel.querySelector('.history-chart-main').getContext('2d'), {
+      type:'line', data: mainData, options: commonOpts
+    });
+    new Chart(panel.querySelector('.history-chart-rent').getContext('2d'), {
+      type:'line', data: rentData, options: commonOpts
+    });
+  }
+
+  // Wire it all up when a card is expanded
+  function toggleHistory(card, neighborhood, type) {
+    if(currentExpanded && currentExpanded!==card){
+      currentExpanded.classList.remove('expanded');
+    }
+    const now = !card.classList.contains('expanded');
+    card.classList.toggle('expanded', now);
+    currentExpanded = now ? card : null;
+    const panel = card.querySelector('.history');
+    panel.classList.remove('left','above');
+    if(!now) return;
+    if(!panel.dataset.filled){
+      panel.innerHTML = buildHistoryTableHTML(neighborhood, type);
+      panel.dataset.filled = 'true';
+      renderHistoryCharts(panel, neighborhood, type);
+    }
+    // positioning logic (unchanged)...
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      const rect = card.getBoundingClientRect();
+      const w = panel.offsetWidth, h = panel.offsetHeight;
+      const vw = window.innerWidth, vh = window.innerHeight;
+      const above = rect.top, below = vh - rect.bottom;
+      if(rect.right + w > vw) panel.classList.add('left');
+      if(h > below && h <= above) panel.classList.add('above');
+      else if(h > below && above > below) panel.classList.add('above');
+    }));
+  }
+</script>
+</body>
+</html>
