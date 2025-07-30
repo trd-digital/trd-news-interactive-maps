@@ -368,7 +368,7 @@
       </div>
     </header>
     <main>
-      <section class="top-row ">
+      <section class="top-row">
         <div
           class="boroughs"
           id="boroughs"
@@ -376,7 +376,7 @@
           aria-label="Select Borough"
         ></div>
       </section>
-      <section id="filters" class="filters " aria-label="Filters">
+      <section id="filters" class="filters" aria-label="Filters">
         <select id="NeighborhoodSelect">
           <option>All Neighborhoods</option>
         </select>
@@ -399,6 +399,15 @@
       // init TRD theme support
       const trdTheme = TrdTheme();
       trdTheme.init();
+
+      const keys = [
+        "sales_volume",
+        "avg_price",
+        "median_price",
+        "number_of_deals",
+        "avg_asking_rent",
+        "PPSF",
+      ];
 
       // add class for iframe detection
       const params = new URLSearchParams(window.location.search);
@@ -460,6 +469,9 @@
             ? x[(m - 1) / 2]
             : (x[m / 2 - 1] + x[m / 2]) / 2
           : NaN;
+      }
+      function fmtNumber(n) {
+        return isNaN(n) ? "–" : n.toLocaleString();
       }
 
       const RENT_TYPES = new Set(["Condo", "Co-op", "Single-Family Home"]);
@@ -728,6 +740,15 @@
         ).textContent = `Showing aggregates for ${quarterSel}, ${typeSel}`;
         const c = document.getElementById("results");
         c.innerHTML = "";
+        // find out which fields to display. If the all the keys are NaN, hide them.
+        const displayKeys = [];
+        aggregates.forEach((a) => {
+          keys.forEach((k) => {
+            if (!isNaN(a[k]) && !displayKeys.includes(k)) {
+              displayKeys.push(k);
+            }
+          });
+        });
         aggregates.forEach((a) => {
           const card = document.createElement("div");
           card.className = "card";
@@ -739,51 +760,74 @@
             if (a.borough !== "NYC") updateBoroughs();
             filter();
           };
-          card.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              card.click();
-            }
-          });
           card.innerHTML = `
           <div class="card-header">
             <h4>${a.borough}</h4>
             <span class="pill-type">${typeSel}</span>
           </div>
           <div class="price-row">
-            <div class="price-item sales">
-              <div class="value">${fmtAbbrev(a.sales_volume)}</div>
-              <div class="label">Sales Vol.</div>
-            </div>
-            <div class="price-item avg">
-              <div class="value">${fmtAbbrev(a.avg_price)}</div>
-              <div class="label">Avg Price</div>
-            </div>
-            <div class="price-item median">
-              <div class="value">${fmtAbbrev(a.median_price)}</div>
-              <div class="label">Median Price</div>
-            </div>
+            ${
+              displayKeys.includes("sales_volume")
+                ? renderRowCell(
+                    fmtAbbrev(a.sales_volume),
+                    "Sales Vol.",
+                    "price-item sales"
+                  )
+                : ""
+            }
+            ${
+              displayKeys.includes("avg_price")
+                ? renderRowCell(
+                    fmtAbbrev(a.avg_price),
+                    "Avg Price",
+                    "price-item avg"
+                  )
+                : ""
+            }
+            ${
+              displayKeys.includes("median_price")
+                ? renderRowCell(
+                    fmtAbbrev(a.median_price),
+                    "Median Price",
+                    "price-item median"
+                  )
+                : ""
+            }
           </div>
           <div class="bottom-row">
-            <div class="metric deals">
-              <span class="value">${
-                isNaN(a.number_of_deals)
-                  ? "–"
-                  : a.number_of_deals.toLocaleString()
-              }</span>
-              <span class="label">Deals</span>
-            </div>
-            <div class="metric rent">
-              <span class="value">${fmtWhole(a.avg_asking_rent)}</span>
-              <span class="label">Median Asking Rent</span>
-            </div>
-            <div class="metric ppsf">
-              <span class="value">${fmtAbbrev(a.PPSF)}</span>
-              <span class="label">PPSF</span>
-            </div>
+          ${
+            displayKeys.includes("number_of_deals")
+              ? renderRowCell(
+                  fmtNumber(a.number_of_deals),
+                  "Deals",
+                  "metric deals"
+                )
+              : ""
+          }
+            ${
+              displayKeys.includes("avg_asking_rent")
+                ? renderRowCell(
+                    fmtWhole(a.avg_asking_rent),
+                    "Median Asking Rent",
+                    "metric rent"
+                  )
+                : ""
+            }
+            ${
+              displayKeys.includes("PPSF")
+                ? renderRowCell(fmtAbbrev(a.PPSF), "PPSF", "metric ppsf")
+                : ""
+            }
           </div>`;
           c.appendChild(card);
         });
+      }
+
+      function renderRowCell(value, label, className) {
+        return `<div class="${className}">
+          <div class="value">${value}</div>
+          <div class="label">${label}</div>
+        </div>`;
       }
 
       function filter() {
@@ -822,59 +866,83 @@
           c.innerHTML = '<div class="no-results">😔 No cards match.</div>';
           return;
         }
-        data.forEach((r) => {
+        const displayKeys = [];
+        aggregates.forEach((a) => {
+          keys.forEach((k) => {
+            if (!isNaN(a[k]) && !displayKeys.includes(k)) {
+              displayKeys.push(k);
+            }
+          });
+        });
+        data.forEach((a) => {
           const card = document.createElement("div");
           card.className = "card";
           card.tabIndex = 0;
           card.setAttribute("role", "button");
           card.onclick = () =>
-            toggleHistory(card, r.neighborhood, r.property_group);
-          card.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              card.click();
-            }
-          });
+            toggleHistory(card, a.neighborhood, a.property_group);
           card.innerHTML = `
           <div class="card-header">
             <div>
-            <h4>${r.neighborhood}</h4>
-            <div class="details">${r.borough} • ${r.year_quarter}</div>
+            <h4>${a.neighborhood}</h4>
+            <div class="details">${a.borough} • ${a.year_quarter}</div>
             </div>
-            <span class="pill-type">${r.property_group}</span>
+            <span class="pill-type">${a.property_group}</span>
           </div>
           <div class="price-row">
-            <div class="price-item sales">
-              <div class="value">${fmtAbbrev(r.sales_volume)}</div>
-              <div class="label">Sales Vol.</div>
-            </div>
-            <div class="price-item avg">
-              <div class="value">${fmtAbbrev(r.avg_price)}</div>
-              <div class="label">Avg Price</div>
-            </div>
-            <div class="price-item median">
-              <div class="value">${fmtAbbrev(r.median_price)}</div>
-              <div class="label">Median Price</div>
-            </div>
+            ${
+              displayKeys.includes("sales_volume")
+                ? renderRowCell(
+                    fmtAbbrev(a.sales_volume),
+                    "Sales Vol.",
+                    "price-item sales"
+                  )
+                : ""
+            }
+            ${
+              displayKeys.includes("avg_price")
+                ? renderRowCell(
+                    fmtAbbrev(a.avg_price),
+                    "Avg Price",
+                    "price-item avg"
+                  )
+                : ""
+            }
+            ${
+              displayKeys.includes("median_price")
+                ? renderRowCell(
+                    fmtAbbrev(a.median_price),
+                    "Median Price",
+                    "price-item median"
+                  )
+                : ""
+            }
           </div>
           <div class="bottom-row">
-            <div class="metric deals">
-              <span class="value">${
-                isNaN(r.number_of_deals)
-                  ? "–"
-                  : r.number_of_deals.toLocaleString()
-              }</span>
-              <span class="label">Deals</span>
-            </div>
-            <div class="metric rent">
-              <span class="value">${fmtWhole(r.avg_asking_rent)}</span>
-              <span class="label">Asking Rent</span>
-            </div>
-            <div class="metric ppsf">
-            <span class="value">${fmtAbbrev(r.PPSF)}</span>
-            <span class="label">PPSF</span>
-          </div>
-        </div>`;
+          ${
+            displayKeys.includes("number_of_deals")
+              ? renderRowCell(
+                  fmtNumber(a.number_of_deals),
+                  "Deals",
+                  "metric deals"
+                )
+              : ""
+          }
+            ${
+              displayKeys.includes("avg_asking_rent")
+                ? renderRowCell(
+                    fmtWhole(a.avg_asking_rent),
+                    "Median Asking Rent",
+                    "metric rent"
+                  )
+                : ""
+            }
+            ${
+              displayKeys.includes("PPSF")
+                ? renderRowCell(fmtAbbrev(a.PPSF), "PPSF", "metric ppsf")
+                : ""
+            }
+          </div>`;
           c.appendChild(card);
         });
       }
