@@ -49,6 +49,7 @@
               <option value="R">Republican</option>
             </select>
             <button
+
               onClick={() => controls.setExpandAll(!controls.expandAll)}
               className="px-4 py-2 bg-blue-600 text-white rounded"
             >
@@ -57,9 +58,9 @@
           </div>
           <div className="flex flex-wrap gap-6 text-gray-700">
             <div><strong>Legislators:</strong> {controls.stats.legislatorCount}</div>
-            <div><strong>Bills:</strong> {controls.stats.billCount}</div>
-            <div><strong>Yea %:</strong> {controls.stats.yeaPercent.toFixed(1)}%</div>
-            <div><strong>Nay %:</strong> {controls.stats.nayPercent.toFixed(1)}%</div>
+            <div><strong>Bills:</strong> 235</div>
+            <div><strong>Yea %:</strong> {controls.stats.yeaPercent.toFixed(1)}</div>
+            <div><strong>Nay %:</strong> {controls.stats.nayPercent.toFixed(1)}</div>
           </div>
         </div>
       );
@@ -154,8 +155,8 @@
                                 {bill.bill_title}
                               </a>
                               <div className="mt-1 flex justify-between text-sm text-gray-500">
-                                <span>{bill.vote}</span>
-                                <span>{bill.vote_date}</span>
+                                <span>Vote Cast: {bill.vote}</span>
+                                <span>Vote Date: {bill.vote_date}</span>
                               </div>
                             </div>
                           ))}
