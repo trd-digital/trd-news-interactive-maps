@@ -495,8 +495,8 @@
         });
         Object.values(historyMap).forEach((arr) =>
           arr.sort((a, b) => {
-            const [qa, ya] = a.year_quarter.split("/");
-            const [qb, yb] = b.year_quarter.split("/");
+            const [qa, ya] = a.year.split("/");
+            const [qb, yb] = b.year.split("/");
             if (+yb !== +ya) return +yb - +ya;
             return +qb.replace("Q", "") - +qa.replace("Q", "");
           })
@@ -524,16 +524,16 @@
             "⚠️ Failed to load data."),
         complete: (res) => {
           rawData = res.data.map((r) => {
-            let parts = r.year_quarter.trim().split("/");
+            let parts = r.year.trim().split("/");
             let yq =
               parts.length === 2
                 ? `${parts[1]}/${parts[0]}`
-                : r.year_quarter.trim();
+                : r.year.trim();
             return {
               borough: r.borough.trim(),
               neighborhood: r.neighborhood.trim(),
               property_group: r.property_group.trim(),
-              year_quarter: yq,
+              year: yq,
               avg_price: toNum(r.avg_price),
               median_price: toNum(r.median_price),
               sales_volume: toNum(r.sales_volume),
@@ -557,7 +557,7 @@
           (
             neighborhoods[r.borough] || (neighborhoods[r.borough] = new Set())
           ).add(r.neighborhood);
-          dates.add(r.year_quarter);
+          dates.add(r.year);
           types.add(r.property_group);
         });
         latestQuarter = [...dates].sort().pop();
@@ -569,12 +569,12 @@
         aggregates = [];
         const all = rawData.filter(
           (r) =>
-            r.year_quarter === q &&
+            r.year === q &&
             (t === "All Types" || r.property_group === t)
         );
         aggregates.push({
           borough: "NYC",
-          year_quarter: q,
+          year: q,
           sales_volume: all.reduce((s, r) => s + (r.sales_volume || 0), 0),
           avg_price: median(all.map((r) => r.avg_price)),
           median_price: median(all.map((r) => r.median_price)),
@@ -589,12 +589,12 @@
           const rows = rawData.filter(
             (r) =>
               r.borough === b &&
-              r.year_quarter === q &&
+              r.year === q &&
               (t === "All Types" || r.property_group === t)
           );
           aggregates.push({
             borough: b,
-            year_quarter: q,
+            year: q,
             sales_volume: rows.reduce((s, r) => s + (r.sales_volume || 0), 0),
             avg_price: median(rows.map((r) => r.avg_price)),
             median_price: median(rows.map((r) => r.median_price)),
@@ -849,7 +849,7 @@
             return false;
           if (nbrV !== "All Neighborhoods" && r.neighborhood !== nbrV)
             return false;
-          if (r.year_quarter !== drV) return false;
+          if (r.year !== drV) return false;
           if (ptV !== "All Types" && r.property_group !== ptV) return false;
           return true;
         });
@@ -885,7 +885,7 @@
           <div class="card-header">
             <div>
             <h4>${a.neighborhood}</h4>
-            <div class="details">${a.borough} • ${a.year_quarter}</div>
+            <div class="details">${a.borough} • ${a.year}</div>
             </div>
             <span class="pill-type">${a.property_group}</span>
           </div>
@@ -952,8 +952,8 @@
         const rows = historyMap[neighborhood]
           .filter((r) => r.property_group === type)
           .sort((a, b) => {
-            const [qa, ya] = a.year_quarter.split("/");
-            const [qb, yb] = b.year_quarter.split("/");
+            const [qa, ya] = a.year.split("/");
+            const [qb, yb] = b.year.split("/");
             if (+yb !== +ya) return +yb - +ya;
             return +qb.replace("Q", "") - +qa.replace("Q", "");
           });
@@ -982,7 +982,7 @@
         rows.forEach((row, i) => {
           const nxt = rows[i + 1] || row;
           const sel =
-            row.year_quarter ===
+            row.year ===
             document.getElementById("DateRangeSelect").value
               ? "selected-quarter"
               : "";
@@ -1002,7 +1002,7 @@
             rent: nxt.avg_asking_rent,
             ppsf: nxt.PPSF,
           };
-          html += `<tr class="${sel}"><td>${row.year_quarter}</td>`;
+          html += `<tr class="${sel}"><td>${row.year}</td>`;
           ["sales", "avg", "median", "deals", "rent", "ppsf"].forEach((k) => {
             let d = "",
               a = "";
@@ -1028,12 +1028,12 @@
         const rows = historyMap[neighborhood]
           .filter((r) => r.property_group === type)
           .sort((a, b) => {
-            const [qa, ya] = a.year_quarter.split("/");
-            const [qb, yb] = b.year_quarter.split("/");
+            const [qa, ya] = a.year.split("/");
+            const [qb, yb] = b.year.split("/");
             if (+yb !== +ya) return +yb - +ya;
             return +qb.replace("Q", "") - +qa.replace("Q", "");
           });
-        const labels = rows.map((r) => r.year_quarter).reverse();
+        const labels = rows.map((r) => r.year).reverse();
         const mainData = {
           labels,
           datasets: [
