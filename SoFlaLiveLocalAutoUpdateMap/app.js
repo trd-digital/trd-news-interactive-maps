@@ -54,7 +54,7 @@
     // Map view
     mapCenterLat: 25.7617,
     mapCenterLng: -80.1918,
-    zoom: 6,
+    zoom: 7,
     minZoom: 3,
 
     // Modal fields we defined above
