@@ -6,10 +6,10 @@
       label: "Address",
     },
     content: [
-      { field: "Developers",  label: "Developers" },
+      { field: "Developers", label: "Developers" },
       { field: "Description", label: "Description" },
       // We'll populate "Story" from "Landing Page" below
-      { field: "Story",       label: "Story" },
+      { field: "Story", label: "Story" },
     ],
   };
 
@@ -19,25 +19,29 @@
 
     // We’ll use this hook to normalize/augment feature props
     // (transform + keep all features)
-    fetchDataFilterCallback: (feature) => {
-      const props = feature?.properties || {};
+    fetchDataFilterCallback: (data) => {
+      return {
+        ...data,
+        features: data.features.map((feature) => {
+          const props = feature.properties || {};
 
-      // Normalize text fields to avoid 'null' / 'None' strings
-      const clean = (v) =>
-        (typeof v === "string" ? v.trim() : v) || "—";
+          // Normalize text fields to avoid 'null' / 'None' strings
+          const clean = (v) => (typeof v === "string" ? v.trim() : v) || "—";
 
-      props.Address     = clean(props.Address);
-      props.Developers  = clean(props.Developers);
-      props.Description = clean(props.Description);
+          props.Address = clean(props.Address);
+          props.Developers = clean(props.Developers);
+          props.Description = clean(props.Description);
 
-      // Create a presentational "Story" field from "Landing Page"
-      const link = (props["Landing Page"] || "").toString().trim();
-      props.Story = link && link.toLowerCase() !== "none"
-        ? `<a href="${link}" target="_blank" rel="noopener">Open story</a>`
-        : "—";
-
-      feature.properties = props;
-      return true; // keep the feature
+          // Create a presentational "Story" field from "Landing Page"
+          const link = (props["Landing Page"] || "").toString().trim();
+          props.Story =
+            link && link.toLowerCase() !== "none"
+              ? `<a href="${link}" target="_blank" rel="noopener">Open story</a>`
+              : "—";
+          feature.properties = props;
+          return feature;
+        }),
+      };
     },
 
     // Analytics + DOM targets
