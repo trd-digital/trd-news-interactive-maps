@@ -400,12 +400,8 @@
     (function() {
       const bodyEl = document.body;
       const toggleBtn = document.getElementById('themeToggleBtn');
-      const savedOverride = localStorage.getItem('themeOverride');
-      if (savedOverride === 'light') {
-        bodyEl.classList.add('override-light');
-      } else if (savedOverride === 'dark') {
-        bodyEl.classList.add('override-dark');
-      }
+      bodyEl.classList.add('override-light');
+    
       function getEffectiveTheme() {
         if (bodyEl.classList.contains('override-light')) return 'light';
         if (bodyEl.classList.contains('override-dark')) return 'dark';
