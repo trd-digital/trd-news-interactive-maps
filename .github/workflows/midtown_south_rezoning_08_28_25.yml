@@ -2,19 +2,30 @@ name: Midtown South Rezoning Map Update
 
 on:
   workflow_dispatch:
-  
+
 permissions:
   contents: write
 
+concurrency:
+  group: "midtown-south-rezoning"
+  cancel-in-progress: true
+
 jobs:
-  update-midtown-south:
+  build-and-publish:
     runs-on: ubuntu-latest
+
+    env:
+      FIXED_DIR: midtown_south_rezoning_08_28_25
+      NB_FILE: midtown_south_rezoning_08_28_25/midtown_south_rezoning.ipynb
+      SA_JSON: midtown_south_rezoning_08_28_25/autoscraper-380600-0d0c84856d6b.json
+      # If your page loads any runtime assets (GeoJSON/JS/CSS/images), list them here (space-separated globs or files).
+      ASSET_GLOBS: "midtown_south_rezoning_08_28_25/*.geojson midtown_south_rezoning_08_28_25/*.json midtown_south_rezoning_08_28_25/*.js midtown_south_rezoning_08_28_25/*.css midtown_south_rezoning_08_28_25/assets/**/*"
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # System packages needed by GeoPandas/Fiona (KML via GDAL/PROJ)
+      # System libs for GeoPandas/Fiona/GDAL/PROJ (KML support)
       - name: Install system libs (GDAL/PROJ/GEOS)
         run: |
           sudo apt-get update
@@ -29,37 +40,50 @@ jobs:
           python-version: "3.10"
           cache: "pip"
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r ./midtown_south_rezoning_08_28_25/requirements.txt
-          # Ensure notebook execution tool is present
+          # ensure we can execute notebooks
           pip install jupyter nbconvert
 
       - name: Write Google service account JSON
         run: |
-          echo "${{ secrets.AUTO_SCRAPER_CREDENTIALS_BASE64 }}" | base64 --decode > ./midtown_south_rezoning_08_28_25/autoscraper-380600-0d0c84856d6b.json
+          echo "${{ secrets.AUTO_SCRAPER_CREDENTIALS_BASE64 }}" | base64 --decode > "${SA_JSON}"
 
-      - name: Execute notebook → produce index.html
+      - name: Execute notebook (in-place) → produce index.html
         run: |
-          jupyter nbconvert \
-            --to notebook \
-            --execute ./midtown_south_rezoning_08_28_25/midtown_south_rezoning.ipynb \
-            --output ./midtown_south_rezoning_08_28_25/executed.ipynb \
+          cd "${FIXED_DIR}"
+          jupyter nbconvert --to notebook --execute "$(basename "${NB_FILE}")" \
+            --inplace \
             --ExecutePreprocessor.timeout=-1
 
-          # Sanity check: ensure index.html exists where your site expects it
-          test -f ./midtown_south_rezoning_08_28_25/index.html || (echo "index.html not found; check notebook save path" && exit 1)
+          # Sanity check: ensure index.html exists (your notebook should save it here)
+          test -f index.html || (echo "index.html not found; check notebook save path" && exit 1)
 
-      - name: Commit and push changes
+      - name: Commit & push ONLY site files (keep notebook uncommitted)
         run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git add ./midtown_south_rezoning_08_28_25/index.html ./midtown_south_rezoning_08_28_25/executed.ipynb || true
-          git commit -m "Update Midtown South Rezoning map" || echo "No changes to commit"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Always add the updated index.html at the constant URL
+          git add "${FIXED_DIR}/index.html"
+
+          # Optionally add any changed runtime assets the page needs (ignore missing globs)
+          shopt -s nullglob dotglob
+          for pattern in ${ASSET_GLOBS}; do
+            files=( $pattern )
+            if [ ${#files[@]} -gt 0 ]; then
+              git add "${files[@]}" || true
+            fi
+          done
+
+          # Do NOT add the notebook (even though it was executed in-place)
+          git reset "${NB_FILE}" || true
+
+          git commit -m "Auto-update Midtown South Rezoning map (constant URL)" || echo "No changes to commit"
           git push origin HEAD:main
 
       - name: Clean up (always)
         if: always()
-        run: |
-          rm -f ./midtown_south_rezoning_08_28_25/autoscraper-380600-0d0c84856d6b.json
+        run: rm -f "${SA_JSON}"
