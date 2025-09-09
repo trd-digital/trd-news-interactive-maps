@@ -1,13 +1,21 @@
-pandas==2.2.2
-geopandas==0.14.4
-shapely==2.0.4
-google-auth==2.29.0
-google-api-python-client==2.126.0
-requests==2.31.0
-googlemaps==4.10.0
-gspread==6.1.0
-oauth2client==4.1.3
-google-auth-oauthlib==1.2.0
-bleach==6.1.0
-notebook==7.4.0
-dotenv==0.9.9
+# --- Core data/visual ---
+pandas>=2.2,<2.3
+folium>=0.15,<0.17
+branca>=0.7,<0.8
+
+# --- Geo stack (Fiona/GDAL/PROJ handled by apt in the workflow) ---
+geopandas>=0.14,<1.2
+shapely>=2.0,<3.0
+fiona>=1.9,<2.0
+pyproj>=3.6,<4.0
+rtree>=1.1,<2.0        # optional, speeds spatial indexing if used
+
+# --- Google Sheets / Drive ---
+gspread>=6,<7
+google-api-python-client>=2.126,<3
+oauth2client==4.1.3    # deprecated but required by your current code
+google-auth>=2,<3      # underpinning auth lib used by google-* packages
+
+# --- Notebook execution (CLI: jupyter nbconvert --execute) ---
+nbconvert>=7.16,<8
+ipykernel>=6,<7
