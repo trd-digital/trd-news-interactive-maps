@@ -28,92 +28,183 @@
     {key: 'Residential', color: '#fde68a'},
     {key: 'Other',       color: '#c4b5fd'}
   ];
-  const groupColor = d3.scaleOrdinal().domain(GROUPS.map(g=>g.key)).range(GROUPS.map(g=>g.color));
+  const groupColor = d3.scaleOrdinal()
+    .domain(GROUPS.map(g=>g.key))
+    .range(GROUPS.map(g=>g.color));
 
-  // build legend
+  // Legend
   const legend = d3.select('#legend');
   GROUPS.forEach(g=>{
-    const item = legend.append('div').style('display','inline-flex').style('align-items','center').style('margin-right','10px');
+    const item = legend.append('div')
+      .style('display','inline-flex')
+      .style('align-items','center')
+      .style('margin-right','10px');
     item.append('span').attr('class','swatch').style('background',g.color);
     item.append('span').text(g.key);
   });
 
-  // load CSVs from same directory (defaults)
+  // CSVs from same directory (overridable with ?people=...&links=...)
   const params = new URLSearchParams(location.search);
   const PEOPLE_URL = params.get('people') || 'people.csv';
-  const LINKS_URL = params.get('links') || 'connections.csv';
+  const LINKS_URL  = params.get('links')  || 'connections.csv';
 
-  let people, connections;
+  let people = [], connections = [];
   try {
-    [people, connections] = await Promise.all([d3.csv(PEOPLE_URL), d3.csv(LINKS_URL)]);
+    [people, connections] = await Promise.all([ d3.csv(PEOPLE_URL), d3.csv(LINKS_URL) ]);
   } catch (err) {
     console.error("Failed to load CSVs", err);
-    people = [];
-    connections = [];
   }
 
-  function parseGroups(s){ if(!s) return []; return s.split(/[|,;/]/).map(x=>x.trim()).filter(Boolean); }
+  function parseGroups(s){
+    if(!s) return [];
+    return String(s).split(/[|,;/]/).map(x=>x.trim()).filter(Boolean);
+  }
 
+  // Build nodes/links via idMap so we can add missing endpoints from links
   const idMap = new Map();
-  const nodes = people.map(r=>{
-    const id = r.id || r.name;
+
+  // Seed from people.csv
+  for (const r of people) {
+    const id = (r.id || r.name || '').trim();
+    if (!id) continue;
     const node = {
       id,
-      name: r.name||id,
-      groups: parseGroups(r.groups||r.group||''),
-      title: r.title||'',
-      org: r.org||'',
-      description: r.description||''
+      name: (r.name || id).trim(),
+      groups: parseGroups(r.groups || r.group || '') || [],
+      title: r.title || '',
+      org: r.org || '',
+      description: r.description || ''
     };
-    idMap.set(id,node); return node;
-  });
+    if (!node.groups.length) node.groups = ['Other'];
+    idMap.set(id, node);
+  }
 
-  const links = connections.map(r=>{
-    const s = idMap.get(r.source)||{id:r.source,name:r.source,groups:['Other']};
-    const t = idMap.get(r.target)||{id:r.target,name:r.target,groups:['Other']};
-    if(!idMap.has(s.id)) idMap.set(s.id,s);
-    if(!idMap.has(t.id)) idMap.set(t.id,t);
-    return {source:s,target:t,relationship:r.relationship||''};
-  });
+  // Parse links and ensure endpoints exist in idMap
+  const links = [];
+  for (const r of connections) {
+    const sKey = (r.source || '').trim();
+    const tKey = (r.target || '').trim();
+    if (!sKey || !tKey) continue;
 
+    const s = idMap.get(sKey) || (() => {
+      const n = { id: sKey, name: sKey, groups: ['Other'] };
+      idMap.set(sKey, n);
+      return n;
+    })();
+
+    const t = idMap.get(tKey) || (() => {
+      const n = { id: tKey, name: tKey, groups: ['Other'] };
+      idMap.set(tKey, n);
+      return n;
+    })();
+
+    const strength = +r.strength || +r.weight || 1;
+    links.push({
+      source: s,
+      target: t,
+      relationship: r.relationship || '',
+      strength,
+      notes: r.notes || ''
+    });
+  }
+
+  // Final node array (includes any auto-added endpoints)
+  const nodes = Array.from(idMap.values());
+
+  // SVG layers
   const svg = d3.select('#svg');
   const g = svg.append('g');
   const linkLayer = g.append('g');
   const nodeLayer = g.append('g');
   const labelLayer = g.append('g');
 
+  // Simulation
   const sim = d3.forceSimulation(nodes)
-    .force('link', d3.forceLink(links).id(d=>d.id).distance(120))
+    .force('link',
+      d3.forceLink(links)
+        .id(d => d.id)
+        .distance(l => 150 - 12 * Math.max(1, Math.min(5, +l.strength || 1)))
+    )
     .force('charge', d3.forceManyBody().strength(-200))
     .force('center', d3.forceCenter(window.innerWidth/2, window.innerHeight/2));
 
-  const linkSel = linkLayer.selectAll('line').data(links).enter().append('line')
-    .attr('stroke','#888').attr('stroke-width',1.5)
-    .on('click',(e,d)=>{showPopup(`${d.source.name} ↔ ${d.target.name}<br>${d.relationship}`);});
+  // Links (strength affects width/opacity)
+  const linkSel = linkLayer.selectAll('line')
+    .data(links)
+    .enter().append('line')
+      .attr('stroke','#8891a3')
+      .attr('stroke-width', d => 1 + 0.8 * Math.max(1, Math.min(5, +d.strength || 1)))
+      .attr('stroke-opacity', d => Math.min(1, 0.3 + 0.12 * Math.max(1, Math.min(5, +d.strength || 1))))
+      .on('click',(e,d)=>{
+        showPopup(`${d.source.name} ↔ ${d.target.name}<br>${d.relationship}${d.strength?` (strength ${d.strength})`:''}`);
+      })
+      .on('mouseenter', function(){ d3.select(this).attr('stroke-opacity',1); })
+      .on('mouseleave', function(e,d){
+        d3.select(this).attr('stroke-opacity', Math.min(1, 0.3 + 0.12 * Math.max(1, Math.min(5, +d.strength || 1))));
+      });
 
-  const nodeSel = nodeLayer.selectAll('circle').data(nodes).enter().append('circle')
-    .attr('r',12)
-    .attr('fill',d=>groupColor((d.groups&&d.groups[0])||'Other'))
-    .call(d3.drag()
-      .on('start',(e,d)=>{if(!e.active) sim.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y;})
-      .on('drag',(e,d)=>{d.fx=e.x; d.fy=e.y;})
-      .on('end',(e,d)=>{if(!e.active) sim.alphaTarget(0); d.fx=null; d.fy=null;}))
-    .on('click',(e,d)=>{showPopup(`<b>${d.name}</b><br>${d.title} ${d.org}<br>${d.description}`);});
+  // Nodes (as <g> so we can draw wedges)
+  const nodeSel = nodeLayer.selectAll('g.node')
+    .data(nodes)
+    .enter().append('g')
+      .attr('class','node')
+      .call(d3.drag()
+        .on('start',(e,d)=>{ if(!e.active) sim.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y; })
+        .on('drag',(e,d)=>{ d.fx=e.x; d.fy=e.y; })
+        .on('end',(e,d)=>{ if(!e.active) sim.alphaTarget(0); if(!e.sourceEvent || !e.sourceEvent.shiftKey){ d.fx=null; d.fy=null; } })
+      )
+      .on('click',(e,d)=>{ showPopup(`<b>${d.name}</b><br>${d.title} ${d.org}<br>${d.description}`); });
 
-  const labelSel = labelLayer.selectAll('text').data(nodes).enter().append('text')
-    .text(d=>d.name).attr('font-size',10).attr('dy',-16).attr('fill','#eee');
+  // Multi-colored circles: full pie if multi-group
+  nodeSel.each(function(d){
+    const groups = (d.groups && d.groups.length) ? d.groups : ['Other'];
+    const r = 12;
 
-  sim.on('tick',()=>{
-    linkSel.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y).attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
-    nodeSel.attr('cx',d=>d.x).attr('cy',d=>d.y);
+    if (groups.length === 1) {
+      d3.select(this).append('circle')
+        .attr('r', r)
+        .attr('fill', groupColor(groups[0]) || '#999')
+        .attr('stroke', '#0b0f14')
+        .attr('stroke-width', 1.6);
+    } else {
+      const pie = d3.pie().sort(null).value(1)(groups);
+      const arc = d3.arc().innerRadius(0).outerRadius(r);
+      d3.select(this).selectAll('path')
+        .data(pie)
+        .enter().append('path')
+          .attr('d', arc)
+          .attr('fill', p => groupColor(p.data) || '#999')
+          .attr('stroke', '#0b0f14')
+          .attr('stroke-width', 1.2);
+    }
+  });
+
+  // Labels
+  const labelSel = labelLayer.selectAll('text')
+    .data(nodes)
+    .enter().append('text')
+      .text(d=>d.name)
+      .attr('font-size',10)
+      .attr('dy', -16)
+      .attr('fill','#eee');
+
+  // Tick
+  sim.on('tick', ()=>{
+    linkSel
+      .attr('x1',d=>d.source.x).attr('y1',d=>d.source.y)
+      .attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+    nodeSel.attr('transform', d => `translate(${d.x},${d.y})`);
     labelSel.attr('x',d=>d.x).attr('y',d=>d.y);
   });
 
-  const popup=document.getElementById('popup');
-  const popupContent=document.getElementById('popupContent');
-  function showPopup(html){popupContent.innerHTML=html; popup.classList.add('open');}
-  popup.addEventListener('click',e=>{if(e.target===popup) popup.classList.remove('open');});
+  // Popup
+  const popup = document.getElementById('popup');
+  const popupContent = document.getElementById('popupContent');
+  function showPopup(html){ popupContent.innerHTML = html; popup.classList.add('open'); }
+  popup.addEventListener('click', e=>{ if(e.target===popup) popup.classList.remove('open'); });
+
 })();
 </script>
+
 </body>
 </html>
