@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Real Estate Relationship Map</title>
+  <style>
+    body { margin:0; background:#0b0f14; color:#e6eef8; font:14px/1.4 system-ui; }
+    #legend { margin:10px; }
+    .swatch { width:12px; height:12px; border-radius:50%; display:inline-block; margin-right:4px; }
+    svg { width:100%; height:100vh; display:block; }
+    .popup { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:none; place-items:center; }
+    .popup.open { display:grid; }
+    .card { background:#121923; color:#fff; padding:20px; border-radius:10px; max-width:400px; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+</head>
+<body>
+<div id="legend"></div>
+<svg id="svg"></svg>
+<div class="popup" id="popup"><div class="card" id="popupContent"></div></div>
+<script>
+(async function(){
+  const GROUPS = [
+    {key: 'Development', color: '#7dd3fc'},
+    {key: 'Politics',    color: '#fca5a5'},
+    {key: 'CRE',         color: '#a7f3d0'},
+    {key: 'Residential', color: '#fde68a'},
+    {key: 'Other',       color: '#c4b5fd'}
+  ];
+  const groupColor = d3.scaleOrdinal().domain(GROUPS.map(g=>g.key)).range(GROUPS.map(g=>g.color));
+
+  // build legend
+  const legend = d3.select('#legend');
+  GROUPS.forEach(g=>{
+    const item = legend.append('div').style('display','inline-flex').style('align-items','center').style('margin-right','10px');
+    item.append('span').attr('class','swatch').style('background',g.color);
+    item.append('span').text(g.key);
+  });
+
+  // load CSVs from same directory (defaults)
+  const params = new URLSearchParams(location.search);
+  const PEOPLE_URL = params.get('people') || 'people.csv';
+  const LINKS_URL = params.get('links') || 'connections.csv';
+
+  let people, connections;
+  try {
+    [people, connections] = await Promise.all([d3.csv(PEOPLE_URL), d3.csv(LINKS_URL)]);
+  } catch (err) {
+    console.error("Failed to load CSVs", err);
+    people = [];
+    connections = [];
+  }
+
+  function parseGroups(s){ if(!s) return []; return s.split(/[|,;/]/).map(x=>x.trim()).filter(Boolean); }
+
+  const idMap = new Map();
+  const nodes = people.map(r=>{
+    const id = r.id || r.name;
+    const node = {
+      id,
+      name: r.name||id,
+      groups: parseGroups(r.groups||r.group||''),
+      title: r.title||'',
+      org: r.org||'',
+      description: r.description||''
+    };
+    idMap.set(id,node); return node;
+  });
+
+  const links = connections.map(r=>{
+    const s = idMap.get(r.source)||{id:r.source,name:r.source,groups:['Other']};
+    const t = idMap.get(r.target)||{id:r.target,name:r.target,groups:['Other']};
+    if(!idMap.has(s.id)) idMap.set(s.id,s);
+    if(!idMap.has(t.id)) idMap.set(t.id,t);
+    return {source:s,target:t,relationship:r.relationship||''};
+  });
+
+  const svg = d3.select('#svg');
+  const g = svg.append('g');
+  const linkLayer = g.append('g');
+  const nodeLayer = g.append('g');
+  const labelLayer = g.append('g');
+
+  const sim = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d=>d.id).distance(120))
+    .force('charge', d3.forceManyBody().strength(-200))
+    .force('center', d3.forceCenter(window.innerWidth/2, window.innerHeight/2));
+
+  const linkSel = linkLayer.selectAll('line').data(links).enter().append('line')
+    .attr('stroke','#888').attr('stroke-width',1.5)
+    .on('click',(e,d)=>{showPopup(`${d.source.name} ↔ ${d.target.name}<br>${d.relationship}`);});
+
+  const nodeSel = nodeLayer.selectAll('circle').data(nodes).enter().append('circle')
+    .attr('r',12)
+    .attr('fill',d=>groupColor((d.groups&&d.groups[0])||'Other'))
+    .call(d3.drag()
+      .on('start',(e,d)=>{if(!e.active) sim.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y;})
+      .on('drag',(e,d)=>{d.fx=e.x; d.fy=e.y;})
+      .on('end',(e,d)=>{if(!e.active) sim.alphaTarget(0); d.fx=null; d.fy=null;}))
+    .on('click',(e,d)=>{showPopup(`<b>${d.name}</b><br>${d.title} ${d.org}<br>${d.description}`);});
+
+  const labelSel = labelLayer.selectAll('text').data(nodes).enter().append('text')
+    .text(d=>d.name).attr('font-size',10).attr('dy',-16).attr('fill','#eee');
+
+  sim.on('tick',()=>{
+    linkSel.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y).attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+    nodeSel.attr('cx',d=>d.x).attr('cy',d=>d.y);
+    labelSel.attr('x',d=>d.x).attr('y',d=>d.y);
+  });
+
+  const popup=document.getElementById('popup');
+  const popupContent=document.getElementById('popupContent');
+  function showPopup(html){popupContent.innerHTML=html; popup.classList.add('open');}
+  popup.addEventListener('click',e=>{if(e.target===popup) popup.classList.remove('open');});
+})();
+</script>
+</body>
+</html>
