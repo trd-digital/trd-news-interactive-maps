@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Market Snapshot – Aggregates</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap"/>
+  <link rel="stylesheet" href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css"/>
+
+  <style>
+    :root{--primary:#1a73e8;--on-primary:#fff;--bg:#fff;--card-bg:#fff;--pill-bg:#f3f4f6;--border-color:#e5e7eb;--text-primary:#202124;--text-secondary:#4a4d50;--green:#188038;--blue:#1a73e8;--red:#d93025;--font:"Arial",sans-serif}
+    body[data-bs-theme="dark"]{--bg:#202124;--card-bg:#303134;--pill-bg:#242424;--border-color:#757575;--text-primary:#fff;--text-secondary:#e4e4e4}
+    body[data-bs-theme="dark"] .pill-type{background:#3a3a3c}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--font);background:var(--bg);color:var(--text-primary);max-width:900px;margin:0 auto}
+    header{padding:16px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between}
+    header p{margin-top:.2rem;font-size:.8rem;color:var(--text-secondary)}
+    .filters{display:flex;gap:.6rem;margin:0 1rem .6rem}
+    .filters select{flex:1;padding:.3rem;font-size:.8rem;border:1px solid var(--border-color);border-radius:9px;background:var(--card-bg);color:var(--text-primary);outline:none}
+    #resetFilters{padding:.4rem .8rem;background:var(--primary);color:var(--on-primary);border:none;border-radius:9px;cursor:pointer}
+    .summary{margin:8px 16px;font-size:14px;color:var(--text-secondary)}
+    #results{display:grid;grid-template-columns:repeat(auto-fill,350px);gap:38px 40px;justify-content:center;padding:0 1.2rem 1rem}
+    .card{background:var(--card-bg);border-radius:9px;border:1px solid var(--border-color);padding:18px 21px;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;cursor:pointer}
+    .card:hover{transform:translateY(-4px);box-shadow:0 4px 8px rgba(0,0,0,.2)}
+    .card-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-color);padding-bottom:16px;margin-bottom:16px}
+    .card-header h4{font-family:Merriweather,serif;font-size:clamp(.9rem,2.5vw,1.1rem);line-height:1.2;margin-bottom:.25rem}
+    .pill-type{font-family:"Proxima Nova",sans-serif;font-size:.7rem;background:var(--pill-bg);padding:.2rem .5rem;border-radius:4px;color:var(--text-secondary)}
+    .details{font-family:"Proxima Nova",sans-serif;font-size:.75rem;color:var(--text-secondary);margin:.25rem 0}
+    .price-row,.bottom-row{display:flex;justify-content:space-between;margin:.3rem 0}
+    .price-item,.bottom-row .metric{flex:1;text-align:center}
+    .price-item .value,.bottom-row .value{font-family:Merriweather,serif;font-weight:bold;line-height:1}
+    .price-item.avg .value,.price-item.median .value{color:var(--green);font-size:.9rem}
+    .bottom-row .label,.price-item .label{font-family:"Proxima Nova",sans-serif;font-size:.7rem;color:var(--text-secondary);display:block}
+    .price-item + .price-item,.bottom-row .metric + .metric{margin-left:.3rem}
+    .no-results{text-align:center;padding:2rem;color:var(--text-secondary)}
+
+    /* Modal */
+    .model{position:fixed;inset:0;background-color:rgba(0,0,0,.5);display:none;z-index:1000;opacity:0;transition:opacity .25s}
+    .model.active{display:flex;justify-content:center;align-items:center;opacity:1}
+    .model-container{background:var(--card-bg);color:var(--text-primary);padding:20px;border-radius:10px;box-shadow:0 6px 16px rgba(0,0,0,.25);margin:16px;max-width:1100px;width:100%;max-height:85vh;overflow:auto;position:relative;border:1px solid var(--border-color)}
+    .model-header{display:flex;align-items:center;gap:10px;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--border-color);margin-bottom:12px}
+    .model-header h3{font-size:1.05rem}
+    .close-btn{background:var(--primary);color:var(--on-primary);border:none;border-radius:6px;padding:.3rem .6rem;cursor:pointer}
+    .graphs{display:flex;gap:16px;flex-wrap:wrap}
+    .graph{flex:1 1 420px}
+    .graph canvas{width:100%;max-height:280px}
+    table{width:100%;border-collapse:collapse;margin-top:10px;font-size:.9rem}
+    th,td{border-bottom:1px solid var(--border-color);padding:.35rem .4rem;text-align:center}
+  </style>
+</head>
+<body>
+  <header><div><p>Filter by city, month, and property type. Click a card for history.</p></div></header>
+
+  <main>
+    <section class="filters" aria-label="Filters">
+      <select id="CitySelect"><option>All Cities</option></select>
+      <select id="MonthSelect"><option>All Months</option></select>
+      <select id="TypeSelect"><option>All Types</option></select>
+      <button id="resetFilters">Reset</button>
+    </section>
+    <div class="summary" id="summary">Loading data…</div>
+    <div id="results" role="region" aria-live="polite"></div>
+
+    <!-- Modal -->
+    <section id="model" class="model" aria-modal="true" role="dialog">
+      <div class="model-container">
+        <div class="model-header">
+          <div>
+            <h3 id="modelTitle">History</h3>
+            <div id="modelSub" class="details"></div>
+          </div>
+          <button class="close-btn" onclick="closeModel()">Close</button>
+        </div>
+        <div class="graphs">
+          <div class="graph"><canvas id="chart-price"></canvas></div>
+          <div class="graph"><canvas id="chart-deals"></canvas></div>
+        </div>
+        <table id="historyTable">
+          <thead><tr><th>Month</th><th>Avg</th><th>Median</th><th>Deals</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Init TRD theme (optional)
+    const trdTheme = TrdTheme(); trdTheme.init();
+
+    // Helpers
+    const MONTHS = [
+      "January","February","March","April","May","June",
+      "July","August","September","October","November","December"
+    ];
+    const monthIndex = m => Math.max(0, MONTHS.findIndex(x => String(m||"").toLowerCase() === x.toLowerCase()));
+    const fmtAbbrev = (n, fixed=2) => isNaN(n) ? "–"
+      : n>=1e9 ? "$"+(n/1e9).toFixed(fixed)+"B"
+      : n>=1e6 ? "$"+(n/1e6).toFixed(fixed)+"M"
+      : n>=1e3 ? "$"+(n/1e3).toFixed(fixed)+"K"
+      : "$"+Number(n).toFixed(fixed);
+    const fmtWhole = n => isNaN(n) ? "–" : "$"+Math.round(n).toLocaleString();
+    const fmtNum = n => isNaN(n) ? "–" : Number(n).toLocaleString();
+
+    let rows = [];
+    const cities = new Set(), months = new Set(), types = new Set();
+
+    function populateFilters() {
+      const cSel = document.getElementById("CitySelect");
+      const mSel = document.getElementById("MonthSelect");
+      const tSel = document.getElementById("TypeSelect");
+      cSel.innerHTML = "<option>All Cities</option>";
+      mSel.innerHTML = "<option>All Months</option>";
+      tSel.innerHTML = "<option>All Types</option>";
+      [...cities].sort().forEach(v => cSel.add(new Option(v, v)));
+      [...months].sort((a,b)=> monthIndex(a)-monthIndex(b)).forEach(v => mSel.add(new Option(v, v)));
+      [...types].sort().forEach(v => tSel.add(new Option(v, v)));
+    }
+
+    function summaryText(filtered) {
+      document.getElementById("summary").textContent =
+        `Showing ${filtered.length.toLocaleString()} groups`;
+    }
+
+    function rowCell(value, label, cls) {
+      return `<div class="${cls}">
+        <div class="value">${value}</div>
+        <div class="label">${label}</div>
+      </div>`;
+    }
+
+    function render(data) {
+      const wrap = document.getElementById("results");
+      wrap.innerHTML = "";
+      if (!data.length) { wrap.innerHTML = '<div class="no-results">No results.</div>'; return; }
+      data.forEach(r => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="card-header">
+            <div>
+              <h4>${r.PHY_CITY || "Unknown City"}</h4>
+              <div class="details">${r.SALE_MO1_NAME || "—"}</div>
+            </div>
+            <span class="pill-type">${r.MICRO_bucket}</span>
+          </div>
+          <div class="price-row">
+            ${rowCell(fmtAbbrev(+r.avg_price), "Avg Price", "price-item avg")}
+            ${rowCell(fmtAbbrev(+r.median_price), "Median Price", "price-item median")}
+          </div>
+          <div class="bottom-row">
+            ${rowCell(fmtNum(+r.n), "Deals", "metric deals")}
+          </div>
+        `;
+        card.onclick = () => openHistory(r.PHY_CITY, r.MICRO_bucket);
+        wrap.appendChild(card);
+      });
+    }
+
+    function filterAndRender() {
+      const c = document.getElementById("CitySelect").value;
+      const m = document.getElementById("MonthSelect").value;
+      const t = document.getElementById("TypeSelect").value;
+      const filtered = rows.filter(r =>
+        (c === "All Cities"  || r.PHY_CITY === c) &&
+        (m === "All Months"  || r.SALE_MO1_NAME === m) &&
+        (t === "All Types"   || r.MICRO_bucket === t)
+      );
+      summaryText(filtered);
+      render(filtered);
+    }
+
+    document.getElementById("resetFilters").onclick = () => {
+      document.getElementById("CitySelect").value = "All Cities";
+      document.getElementById("MonthSelect").value = "All Months";
+      document.getElementById("TypeSelect").value = "All Types";
+      filterAndRender();
+    };
+
+    // ----- History (modal) -----
+    let chartPrice, chartDeals;
+    function openHistory(city, type) {
+      const series = rows
+        .filter(r => r.PHY_CITY === city && r.MICRO_bucket === type)
+        .map(r => ({
+          month: r.SALE_MO1_NAME,
+          year:  (r.SALE_YR || r.SALE_YEAR || r.YEAR || "").toString().trim(),
+          avg: +r.avg_price,
+          med: +r.median_price,
+          deals: +r.n
+        }))
+        .sort((a,b) => {
+          // sort by year if present then month
+          const ya = parseInt(a.year,10), yb = parseInt(b.year,10);
+          if (!Number.isNaN(ya) && !Number.isNaN(yb) && ya !== yb) return ya - yb;
+          return monthIndex(a.month) - monthIndex(b.month);
+        });
+
+      // If nothing to show
+      if (!series.length) {
+        document.getElementById("modelTitle").textContent = `${city} – ${type}`;
+        document.getElementById("modelSub").textContent = "No historical data found.";
+        document.getElementById("historyTable").querySelector("tbody").innerHTML = "";
+        destroyCharts();
+        document.getElementById("model").classList.add("active");
+        document.body.classList.add("model-open");
+        return;
+      }
+
+      // Labels like "2025/January" if year exists, else "January"
+      const labels = series.map(s => s.year && !Number.isNaN(parseInt(s.year,10)) ? `${s.year}/${s.month}` : s.month);
+
+      // Fill header
+      document.getElementById("modelTitle").textContent = `${city}`;
+      document.getElementById("modelSub").textContent = `${type} — ${series.length} month${series.length>1?'s':''}`;
+
+      // Table
+      const tb = document.getElementById("historyTable").querySelector("tbody");
+      tb.innerHTML = series.map(s =>
+        `<tr><td>${s.year ? `${s.year}/${s.month}` : s.month}</td>
+             <td>${fmtAbbrev(s.avg)}</td>
+             <td>${fmtAbbrev(s.med)}</td>
+             <td>${fmtNum(s.deals)}</td></tr>`
+      ).join("");
+
+      // Charts
+      destroyCharts();
+      const ctxPrice = document.getElementById("chart-price").getContext("2d");
+      const ctxDeals = document.getElementById("chart-deals").getContext("2d");
+
+      chartPrice = new Chart(ctxPrice, {
+        type: "line",
+        data: {
+          labels,
+          datasets: [
+            { label:"Avg Price", data: series.map(s=>s.avg), tension:.3, borderWidth:2, pointRadius:2 },
+            { label:"Median Price", data: series.map(s=>s.med), tension:.3, borderWidth:2, pointRadius:2 }
+          ]
+        },
+        options: {
+          plugins:{ legend:{ position:"bottom", labels:{ boxWidth:12, padding:8 } },
+                    tooltip:{ callbacks:{ label: (ctx)=> `${ctx.dataset.label}: ${fmtAbbrev(ctx.parsed.y,0)}` } } },
+          scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>fmtAbbrev(v,0) } } }
+        }
+      });
+
+      chartDeals = new Chart(ctxDeals, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [
+            { type:"bar", label:"Deals", data: series.map(s=>s.deals), borderWidth:1 }
+          ]
+        },
+        options: {
+          plugins:{ legend:{ position:"bottom", labels:{ boxWidth:12, padding:8 } } },
+          scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>Number(v).toLocaleString() } } }
+        }
+      });
+
+      document.getElementById("model").classList.add("active");
+      document.body.classList.add("model-open");
+    }
+
+    function destroyCharts(){
+      if (chartPrice) { chartPrice.destroy(); chartPrice = null; }
+      if (chartDeals) { chartDeals.destroy(); chartDeals = null; }
+    }
+
+    function closeModel() {
+      document.getElementById("model").classList.remove("active");
+      document.body.classList.remove("model-open");
+    }
+    document.getElementById("model").addEventListener("click", (e)=>{
+      if(e.target.id === "model") closeModel();
+    });
+
+    // ----- Load CSV -----
+    Papa.parse("agg_df_cards.csv", {
+      header: true,
+      download: true,
+      skipEmptyLines: true,
+      complete: (res) => {
+        rows = res.data.map(r => ({
+          MICRO_bucket: (r.MICRO_bucket||"").trim() || "Unknown",
+          PHY_CITY: (r.PHY_CITY||"").trim() || "Unknown",
+          SALE_MO1_NAME: (r.SALE_MO1_NAME||"").trim() || "Unknown",
+          avg_price: parseFloat(r.avg_price),
+          median_price: parseFloat(r.median_price),
+          n: parseInt(r.n, 10),
+          // optional year columns if present (will be used automatically in sorting/labels)
+          SALE_YR: r.SALE_YR || r.SALE_YEAR || r.YEAR || ""
+        }));
+        rows.forEach(r => { cities.add(r.PHY_CITY); months.add(r.SALE_MO1_NAME); types.add(r.MICRO_bucket); });
+        populateFilters();
+        summaryText(rows);
+        render(rows);
+        ["CitySelect","MonthSelect","TypeSelect"].forEach(id =>
+          document.getElementById(id).onchange = filterAndRender
+        );
+      },
+      error: () => {
+        document.getElementById("results").textContent = "⚠️ Failed to load data.";
+      }
+    });
+  </script>
+</body>
+</html>
