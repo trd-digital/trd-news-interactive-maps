@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Real-Estate Bills Dashboard</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React + ReactDOM UMD -->
+  <script defer crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+  <script defer crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+
+  <!-- Gzip decompression (fallback) -->
+  <script defer src="https://unpkg.com/pako@2.1.0/dist/pako.min.js"></script>
+
+  <!-- Babel for in-browser JSX (okay for GH Pages dev; remove for prod bundling) -->
+  <script defer src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    /* Multi-line clamp helper (no plugin) */
+    .clamp-2 {
+      display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+    .clamp-3 {
+      display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="h-full bg-gray-100">
+  <div id="root" class="p-6"></div>
+
+  <script type="text/babel">
+    const { useEffect, useMemo, useState } = React;
+
+    // ---------- GZIP shard loader ----------
+    async function fetchJSONGz(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+
+      // Use native DecompressionStream when available; otherwise pako fallback
+      if ("DecompressionStream" in self && res.body) {
+        const ds = new DecompressionStream("gzip");
+        const stream = res.body.pipeThrough(ds);
+        const text = await new Response(stream).text();
+        return JSON.parse(text);
+      } else {
+        const buf = await res.arrayBuffer();
+        const text = pako.ungzip(new Uint8Array(buf), { to: "string" });
+        return JSON.parse(text);
+      }
+    }
+
+    async function loadAllShards(manifestUrl = "manifest.json", maxConcurrent = 3, onProgress = null) {
+      const manifest = await fetch(manifestUrl).then(r => r.json());
+      const base = manifestUrl.replace(/manifest\.json$/i, "");
+      const shards = manifest.shards || [];
+      const out = [];
+      let done = 0;
+
+      async function worker() {
+        while (true) {
+          const idx = done; // peek
+          if (idx >= shards.length) break;
+          done++;           // claim
+          const s = shards[idx];
+          const arr = await fetchJSONGz(base + s.file);
+          out.push(...arr);
+          if (onProgress) onProgress(idx + 1, shards.length);
+        }
+      }
+
+      const n = Math.min(maxConcurrent, Math.max(1, shards.length));
+      await Promise.all(Array.from({ length: n }, worker));
+      return out;
+    }
+
+    // ---------- Small utils ----------
+    const toArray = (v) =>
+      (v ?? "")
+        .toString()
+        .split(",")
+        .map(s => s.trim())
+        .filter(Boolean);
+
+    const fmtInt = (n) => (n ?? 0).toLocaleString();
+
+    const badgeTone = (passed) =>
+      passed ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800";
+
+    const chamberTone = (ch) =>
+      ch?.toLowerCase().includes("senate") ? "bg-purple-100 text-purple-800"
+      : ch?.toLowerCase().includes("assembly") || ch?.toLowerCase().includes("house") ? "bg-blue-100 text-blue-800"
+      : "bg-gray-100 text-gray-800";
+
+    // ---------- Spinner ----------
+    function Spinner({ note }) {
+      return (
+        <div className="flex flex-col justify-center items-center h-40 gap-3 text-gray-600">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          {note ? <div className="text-sm">{note}</div> : null}
+        </div>
+      );
+    }
+
+    // ---------- Header / Controls ----------
+    function DashboardHeader({ controls }) {
+      const {
+        searchText, setSearchText,
+        selectedTopic, setSelectedTopic,
+        selectedChamber, setSelectedChamber,
+        selectedResult, setSelectedResult,
+        expandAll, setExpandAll,
+        stats, topics
+      } = controls;
+
+      return (
+        <div className="mb-6 space-y-4">
+          <h1 className="text-2xl font-semibold text-gray-900">Real-Estate Bills Dashboard</h1>
+
+          <div className="flex flex-col lg:flex-row gap-3">
+            <input
+              type="text"
+              placeholder="Search bills (title, number, summary)…"
+              value={searchText}
+              onChange={e => setSearchText(e.target.value)}
+              className="p-2 border rounded flex-1"
+            />
+            <select
+              value={selectedTopic}
+              onChange={e => setSelectedTopic(e.target.value)}
+              className="p-2 border rounded w-full lg:w-56"
+            >
+              <option value="">All Topics</option>
+              {topics.map(t => <option key={t} value={t}>{t}</option>)}
+            </select>
+            <select
+              value={selectedChamber}
+              onChange={e => setSelectedChamber(e.target.value)}
+              className="p-2 border rounded w-full lg:w-44"
+            >
+              <option value="">All Chambers</option>
+              <option value="Assembly">Assembly/House</option>
+              <option value="Senate">Senate</option>
+            </select>
+            <select
+              value={selectedResult}
+              onChange={e => setSelectedResult(e.target.value)}
+              className="p-2 border rounded w-full lg:w-40"
+            >
+              <option value="">All Results</option>
+              <option value="passed">Passed</option>
+              <option value="failed">Failed</option>
+            </select>
+            <button
+              onClick={() => setExpandAll(v => !v)}
+              className="px-4 py-2 bg-blue-600 text-white rounded"
+            >
+              {expandAll ? "Collapse All" : "Expand All"}
+            </button>
+          </div>
+
+          <div className="flex flex-wrap gap-6 text-gray-700">
+            <div><strong>Bills:</strong> {fmtInt(stats.billCount)}</div>
+            <div><strong>Roll Calls:</strong> {fmtInt(stats.rollCallCount)}</div>
+            <div><strong>Yea:</strong> {fmtInt(stats.yea)}</div>
+            <div><strong>Nay:</strong> {fmtInt(stats.nay)}</div>
+            <div><strong>Other:</strong> {fmtInt(stats.other)}</div>
+          </div>
+        </div>
+      );
+    }
+
+    // ---------- Roll Call ----------
+    function RollCall({ rc, forceOpen }) {
+      const [open, setOpen] = useState(forceOpen);
+      const [showVoters, setShowVoters] = useState(false);
+
+      useEffect(() => setOpen(forceOpen), [forceOpen]);
+
+      const chamber = rc?.chamber || ""; // may be undefined in your JSON; safe-guarding
+      const passed = !!rc?.passed;
+
+      return (
+        <div className="border rounded-lg p-4 bg-gray-50">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span className={`px-2 py-1 rounded text-xs font-medium ${chamberTone(chamber)}`}>
+                {chamber || "—"}
+              </span>
+              <span className={`px-2 py-1 rounded text-xs font-medium ${badgeTone(passed)}`}>
+                {passed ? "Passed" : "Failed"}
+              </span>
+              <span className="text-sm text-gray-600">{rc.date || ""}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              {rc.url && (
+                <a className="text-blue-600 hover:underline text-sm" href={rc.url} target="_blank" rel="noopener noreferrer">
+                  Roll-call link
+                </a>
+              )}
+              <button
+                className="px-3 py-1 text-sm bg-white border rounded"
+                onClick={() => setOpen(v => !v)}
+              >
+                {open ? "Hide" : "Show"} details
+              </button>
+            </div>
+          </div>
+
+          {rc.description ? (
+            <div className="mt-2 text-sm text-gray-700">{rc.description}</div>
+          ) : null}
+
+          {open && (
+            <>
+              <div className="mt-3 grid grid-cols-3 sm:grid-cols-6 gap-3 text-sm">
+                <div className="bg-white rounded p-2 border text-center">
+                  <div className="text-gray-500">Yea</div>
+                  <div className="text-lg font-semibold text-gray-900">{fmtInt(rc.totals?.yea)}</div>
+                </div>
+                <div className="bg-white rounded p-2 border text-center">
+                  <div className="text-gray-500">Nay</div>
+                  <div className="text-lg font-semibold text-gray-900">{fmtInt(rc.totals?.nay)}</div>
+                </div>
+                <div className="bg-white rounded p-2 border text-center">
+                  <div className="text-gray-500">Other</div>
+                  <div className="text-lg font-semibold text-gray-900">{fmtInt(rc.totals?.other)}</div>
+                </div>
+                <div className="bg-white rounded p-2 border text-center">
+                  <div className="text-gray-500">Rep. Yea</div>
+                  <div className="text-lg font-semibold text-gray-900">{fmtInt(rc.reported_totals?.yea)}</div>
+                </div>
+                <div className="bg-white rounded p-2 border text-center">
+                  <div className="text-gray-500">Rep. Nay</div>
+                  <div className="text-lg font-semibold text-gray-900">{fmtInt(rc.reported_totals?.nay)}</div>
+                </div>
+                <div className="bg-white rounded p-2 border text-center">
+                  <div className="text-gray-500">Rep. Total</div>
+                  <div className="text-lg font-semibold text-gray-900">{fmtInt(rc.reported_totals?.total)}</div>
+                </div>
+              </div>
+
+              <div className="mt-3">
+                <button
+                  className="text-sm text-blue-600 hover:underline"
+                  onClick={() => setShowVoters(v => !v)}
+                >
+                  {showVoters ? "Hide" : "Show"} voter lists
+                </button>
+              </div>
+
+              {showVoters && (
+                <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <VoterList title="Yeas" voters={rc.yeas}/>
+                  <VoterList title="Nays" voters={rc.nays}/>
+                  <VoterList title="Other" voters={rc.other}/>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      );
+    }
+
+    function VoterList({ title, voters }) {
+      return (
+        <div className="bg-white border rounded-lg p-3">
+          <div className="font-semibold text-gray-800 mb-2">{title} ({fmtInt(voters?.length)})</div>
+          <div className="space-y-2 max-h-64 overflow-auto pr-1">
+            {(voters || []).map((v, i) => (
+              <div key={i} className="flex items-start justify-between gap-3">
+                <div className="text-sm">
+                  <div className="font-medium text-gray-900">{v.name}</div>
+                  <div className="text-gray-600">Party: {v.party || "—"} • District: {v.district || "—"}</div>
+                </div>
+                <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-700">
+                  {v.vote_text || ""}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // ---------- Bill Card ----------
+    function BillCard({ bill, forceOpen }) {
+      const [openAllRcs, setOpenAllRcs] = useState(forceOpen);
+      useEffect(() => setOpenAllRcs(forceOpen), [forceOpen]);
+
+      const topics = toArray(bill.topic);
+      const anyPassed = bill.roll_calls?.some(rc => !!rc.passed);
+      const rcCount = bill.roll_calls?.length ?? 0;
+
+      return (
+        <div className="bg-white rounded-xl shadow p-6">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <a
+                href={bill.url || bill.state_link || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-lg sm:text-xl font-semibold text-blue-700 hover:underline clamp-2"
+                title={bill.title}
+              >
+                {bill.title || "(Untitled Bill)"} 
+              </a>
+              <div className="mt-1 text-sm text-gray-600">
+                <span className="font-medium">Bill ID:</span> {bill.bill_id} •{" "}
+                <span className="font-medium">Session:</span> {bill.session_title || bill.session_name || "—"}
+              </div>
+              {bill.summary && (
+                <p className="mt-2 text-gray-700 clamp-3">{bill.summary}</p>
+              )}
+            </div>
+            <div className="flex flex-col items-end gap-2 shrink-0">
+              <span className={`px-3 py-1 rounded-full text-xs font-medium ${badgeTone(anyPassed)}`}>
+                {anyPassed ? "Has Passed Roll-Call(s)" : "No Passed Roll-Calls"}
+              </span>
+              <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                {rcCount} roll call{rcCount === 1 ? "" : "s"}
+              </span>
+            </div>
+          </div>
+
+          {/* Topics */}
+          {topics.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {topics.map(t => (
+                <span key={t} className="px-2 py-1 rounded-full text-xs bg-amber-100 text-amber-800">{t}</span>
+              ))}
+            </div>
+          )}
+
+          {/* Roll calls */}
+          <div className="mt-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-gray-800">Roll Calls</h3>
+              <button
+                className="text-sm px-3 py-1 bg-white border rounded"
+                onClick={() => setOpenAllRcs(v => !v)}
+              >
+                {openAllRcs ? "Collapse All" : "Expand All"}
+              </button>
+            </div>
+            {(bill.roll_calls || []).map(rc => (
+              <RollCall key={rc.roll_call_id} rc={rc} forceOpen={openAllRcs}/>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // ---------- Main App ----------
+    function App() {
+      const [raw, setRaw] = useState([]);
+      const [loading, setLoading] = useState(true);
+      const [progress, setProgress] = useState("");
+
+      // Controls
+      const [searchText, setSearchText] = useState("");
+      const [selectedTopic, setSelectedTopic] = useState("");
+      const [selectedChamber, setSelectedChamber] = useState("");
+      const [selectedResult, setSelectedResult] = useState("");
+      const [expandAll, setExpandAll] = useState(false);
+
+      useEffect(() => {
+        // Because manifest + shards are in the same directory as index.html:
+        loadAllShards("manifest.json", 3, (done, total) => {
+          setProgress(`Loading data… ${done}/${total} shard${total===1?"":"s"}`);
+        })
+          .then(json => { setRaw(json || []); setLoading(false); })
+          .catch(err => { console.error(err); setLoading(false); });
+      }, []);
+
+      // Build topic set
+      const topics = useMemo(() => {
+        const s = new Set();
+        raw.forEach(b => toArray(b.topic).forEach(t => s.add(t)));
+        return Array.from(s).sort((a,b) => a.localeCompare(b));
+      }, [raw]);
+
+      // Stats
+      const stats = useMemo(() => {
+        const billCount = raw.length;
+        let rollCallCount = 0, yea = 0, nay = 0, other = 0;
+        raw.forEach(b => {
+          (b.roll_calls || []).forEach(rc => {
+            rollCallCount += 1;
+            yea   += rc?.totals?.yea   ?? 0;
+            nay   += rc?.totals?.nay   ?? 0;
+            other += rc?.totals?.other ?? 0;
+          });
+        });
+        return { billCount, rollCallCount, yea, nay, other };
+      }, [raw]);
+
+      // Filters
+      const filtered = useMemo(() => {
+        const q = searchText.trim().toLowerCase();
+        return raw.filter(bill => {
+          if (selectedTopic) {
+            const hasTopic = toArray(bill.topic).some(t => t.toLowerCase() === selectedTopic.toLowerCase());
+            if (!hasTopic) return false;
+          }
+          if (selectedChamber) {
+            const passChamber = (bill.roll_calls || []).some(rc => {
+              const ch = (rc.chamber || "").toLowerCase();
+              return selectedChamber === "Senate"
+                ? ch.includes("senate")
+                : ch.includes("assembly") || ch.includes("house");
+            });
+            if (!passChamber) return false;
+          }
+          if (selectedResult) {
+            const passResult = (bill.roll_calls || []).some(rc =>
+              selectedResult === "passed" ? !!rc.passed : !rc.passed
+            );
+            if (!passResult) return false;
+          }
+          if (q) {
+            const hay = [
+              bill.title ?? "",
+              (bill.bill_id ?? "").toString(),
+              bill.summary ?? ""
+            ].join(" ").toLowerCase();
+            if (!hay.includes(q)) return false;
+          }
+          return true;
+        });
+      }, [raw, searchText, selectedTopic, selectedChamber, selectedResult]);
+
+      return (
+        <div className="max-w-7xl mx-auto">
+          <DashboardHeader
+            controls={{
+              searchText, setSearchText,
+              selectedTopic, setSelectedTopic,
+              selectedChamber, setSelectedChamber,
+              selectedResult, setSelectedResult,
+              expandAll, setExpandAll,
+              stats, topics
+            }}
+          />
+
+          {loading ? <Spinner note={progress}/> : (
+            filtered.length === 0 ? (
+              <div className="text-gray-600">No bills match your filters.</div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filtered.map(b => (
+                  <BillCard key={b.bill_id} bill={b} forceOpen={expandAll}/>
+                ))}
+              </div>
+            )
+          )}
+
+          <footer className="mt-10 text-xs text-gray-500">
+            Data source: TRD / LegiScan pipeline • Built with React + Tailwind
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App/>, document.getElementById("root"));
+  </script>
+</body>
+</html>
