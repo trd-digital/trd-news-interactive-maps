@@ -85,6 +85,8 @@
     <script src="../trd-data/common-formatter/formatter.js"></script>
     <script src="../trd-data/common-table/table.js"></script>
     <script>
+      const queryParams = new URLSearchParams(window.location.search);
+      const propertyType = queryParams.get("property-type");
       const displayColumns = [
         {
           dataField: "Physical Address",
@@ -158,13 +160,24 @@
               ...item.properties,
             };
           });
+          if (propertyType === "residential") {
+            filteredData = filteredData.filter((item) =>
+              item["Use Code Description"].includes("Residential")
+            );
+          } else if (propertyType === "commercial") {
+            filteredData = filteredData.filter((item) =>
+              item["Use Code Description"].includes("Commercial")
+            );
+          }
           resolve(filteredData);
         });
       };
 
       TrdDataCommonTable({
-        filePath:
-          "https://static.therealdeal.com/interactive-maps/new-york-city-transactions-map.geojson",
+        filePaths: [
+          "https://static.therealdeal.com/interactive-maps/new-york-city-residential-transactions-map.geojson",
+          "https://static.therealdeal.com/interactive-maps/new-york-city-commercial-transactions-map.geojson",
+        ],
         eventCategory: "new-york-transactions-table",
         displayColumns,
         fetchDataFilterCallback,

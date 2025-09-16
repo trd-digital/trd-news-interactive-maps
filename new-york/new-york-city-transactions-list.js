@@ -1,5 +1,7 @@
-const dataUrl =
-  "https://static.therealdeal.com/interactive-maps/new-york-city-transactions-map.geojson";
+const residentialDataUrl =
+  "https://static.therealdeal.com/interactive-maps/new-york-city-residential-transactions-list.json";
+const commercialDataUrl =
+  "https://static.therealdeal.com/interactive-maps/new-york-city-commercial-transactions-list.json";
 
 const excludeValue = [
   "null",
@@ -27,6 +29,7 @@ const trdList = () => {
   const list = document.querySelector("#list");
   const queryParams = new URLSearchParams(window.location.search);
   const view = queryParams.get("view");
+  const propertyType = queryParams.get("property-type");
   const uniqueBuilding = queryParams.get("uniqueBuilding");
   const updateHeight = queryParams.get("updateHeight");
   const maxLimit = 30;
@@ -49,7 +52,7 @@ const trdList = () => {
       trdTheme.init();
       fn.updateView();
       fn.addLoadingListItems();
-      fn.getData(dataUrl)
+      fn.getData()
         .then(fn.renderListItems)
         .catch(console.error)
         .finally(() => {
@@ -99,9 +102,18 @@ const trdList = () => {
       });
     },
 
-    getData: async (url) => {
-      const response = await fetch(url);
-      return response.json();
+    getData: async () => {
+      let dataUrls = [];
+      if (propertyType === "commercial") {
+        dataUrls.push(commercialDataUrl);
+      } else if (propertyType === "residential") {
+        dataUrls.push(residentialDataUrl);
+      } else {
+        dataUrls.push(residentialDataUrl, commercialDataUrl);
+      }
+      const responses = await Promise.all(dataUrls.map((url) => fetch(url)));
+      const data = await Promise.all(responses.map((res) => res.json()));
+      return data.flat();
     },
 
     addLoadingListItems: () => {
@@ -123,18 +135,16 @@ const trdList = () => {
     },
 
     renderListItems: (data) => {
-      let items = data.features
+      let items = data
         .filter(helpers.filterListEmptyData)
         .filter(helpers.removeDuplicateBuilding)
         .filter(helpers.filterToLast30Days)
         .sort(helpers.sortListBySalePrice)
         .slice(0, listLimit)
-        .map((feature) => {
-          const properties = feature.properties;
-          const address = properties["Physical Address"];
-          const price = helpers.formatCurrency(properties["Sale Price"], true);
-          const date = helpers.formatDate(properties["Record Date"]);
-          const borough = helpers.formatBorough(properties["County"]);
+        .map((item) => {
+          const address = item["Physical Address"];
+          const price = helpers.formatCurrency(item["Sale Price"], true);
+          const date = helpers.formatDate(item["Record Date"]);
 
           return `
             <li class="list-group-item d-flex justify-content-between align-items-start">
@@ -234,10 +244,9 @@ const trdList = () => {
     },
 
     filterListEmptyData: (data) => {
-      const properties = data.properties;
-      const address = properties["Physical Address"];
-      const price = properties["Sale Price"];
-      const date = properties["Record Date"];
+      const address = data["Physical Address"];
+      const price = data["Sale Price"];
+      const date = data["Record Date"];
 
       return (
         !helpers.isEmptyValue(price) &&
@@ -247,7 +256,7 @@ const trdList = () => {
     },
 
     filterToLast30Days: (data) => {
-      const date = Date.parse(data.properties["Record Date"]);
+      const date = Date.parse(data["Record Date"]);
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -256,17 +265,16 @@ const trdList = () => {
 
     removeDuplicateBuilding: (data, index, self) => {
       if (!uniqueBuilding) return true;
-      const properties = data.properties;
-      const buildingBBL = properties["Building BBL"];
+      const buildingBBL = data["Building BBL"];
       const isDuplicate = self.findIndex(
-        (item) => item.properties["Building BBL"] === buildingBBL
+        (item) => item["Building BBL"] === buildingBBL
       );
       return index === isDuplicate;
     },
 
     sortListBySalePrice: (a, b) => {
-      const priceA = a.properties["Sale Price"];
-      const priceB = b.properties["Sale Price"];
+      const priceA = a["Sale Price"];
+      const priceB = b["Sale Price"];
       return priceB - priceA;
     },
 

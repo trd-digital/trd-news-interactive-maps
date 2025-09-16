@@ -73,6 +73,8 @@
     <script src="../trd-data/common-loading/loading.js"></script>
     <script src="../trd-data/common-map/map.js?v=1.1"></script>
     <script>
+      const queryParams = new URLSearchParams(window.location.search);
+      const propertyType = queryParams.get("property-type");
       const minimumSalePrice = 250_000;
 
       const legendKeys = [
@@ -240,6 +242,9 @@
           fieldType: "checkbox",
           fieldLayoutClass: "checkbox-group",
           multiSelect: true,
+          defaultValue: propertyType
+            ? propertyType.charAt(0).toUpperCase() + propertyType.slice(1)
+            : null,
           callback: (values, item) => {
             return values.some((value) =>
               item.properties["Use Code Description"].includes(value)
@@ -308,9 +313,12 @@
         };
       };
 
+      const filePaths = [
+        "https://static.therealdeal.com/interactive-maps/new-york-city-residential-transactions-map.geojson",
+        "https://static.therealdeal.com/interactive-maps/new-york-city-commercial-transactions-map.geojson",
+      ];
       window.map = trdDataCommonMap({
-        filePath:
-          "https://static.therealdeal.com/interactive-maps/new-york-city-transactions-map.geojson",
+        filePaths,
         eventCategory: "new-york-transactions-map",
         mapElementId: "map",
         filterElementId: "map-filters",
