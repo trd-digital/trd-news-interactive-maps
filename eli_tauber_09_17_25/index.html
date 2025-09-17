@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_6028a8b070ce55f93414d474147403fa {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+<div style="position:fixed;bottom:20px;left:20px;z-index:9999;background:white;padding:10px 12px;border:1px solid #bbb;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,0.2);font-size:13px;max-width:260px;">
+  <div style="font-weight:600;margin-bottom:6px;">Status legend</div>
+  <ul style="list-style:none;padding:0;margin:0;"><li>None</li></ul>
+</div>
+    
+            <div class="folium-map" id="map_6028a8b070ce55f93414d474147403fa" ></div>
+        
+</body>
+<script>    
+    
+            var map_6028a8b070ce55f93414d474147403fa = L.map(
+                "map_6028a8b070ce55f93414d474147403fa",
+                {
+                    center: [41.7590047625, -87.63146759374999],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+            L.control.scale().addTo(map_6028a8b070ce55f93414d474147403fa);
+
+            
+
+        
+    
+            var tile_layer_92ea5d7c375190302485b389205195e7 = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+            var circle_marker_d8c340aba55e89c959766a3dbe8c550f = L.circleMarker(
+                [41.7452601, -87.6648366],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+        var popup_1e15a2520b766c72acaa98f8e56aa23d = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_a57f2bc04d2c2d66c644a94e9ab81c49 = $(`<div id="html_a57f2bc04d2c2d66c644a94e9ab81c49" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Owner</th><td>ETS3 LLC</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>8148 South Marshfield Avenue, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>3</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$371,250.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>CliffCo</td></tr><tr><th style='text-align:left;padding-right:8px'>Current Mortgage holder</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Sept. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$220,000.00</td></tr></table></div>`)[0];
+                popup_1e15a2520b766c72acaa98f8e56aa23d.setContent(html_a57f2bc04d2c2d66c644a94e9ab81c49);
+            
+        
+
+        circle_marker_d8c340aba55e89c959766a3dbe8c550f.bindPopup(popup_1e15a2520b766c72acaa98f8e56aa23d)
+        ;
+
+        
+    
+    
+            var circle_marker_c619e85e6a63ed1356a5336a2541d226 = L.circleMarker(
+                [41.7886327, -87.6501128],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+        var popup_9033f814b8178429f6a4eb5ad0445142 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_7e6480e93b72564d2efbe39b3ea77eb8 = $(`<div id="html_7e6480e93b72564d2efbe39b3ea77eb8" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Owner</th><td>MJNT 1003 W 58 LLC</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>1003 West 58th Street, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>9</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$820,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2023</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$565,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Accolend</td></tr><tr><th style='text-align:left;padding-right:8px'>Latest mortgage date</th><td>April 25, 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Latest mortgage amount</th><td>$1 million</td></tr><tr><th style='text-align:left;padding-right:8px'>Latest lender</th><td>Sharestates</td></tr><tr><th style='text-align:left;padding-right:8px'>Current Mortgage holder</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Sept. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$551,000.00</td></tr></table></div>`)[0];
+                popup_9033f814b8178429f6a4eb5ad0445142.setContent(html_7e6480e93b72564d2efbe39b3ea77eb8);
+            
+        
+
+        circle_marker_c619e85e6a63ed1356a5336a2541d226.bindPopup(popup_9033f814b8178429f6a4eb5ad0445142)
+        ;
+
+        
+    
+    
+            var circle_marker_b356f6df572efb20a397cae44e929f8f = L.circleMarker(
+                [41.7487769, -87.6308899],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+        var popup_a423e762de51fa947c27b916effc5d75 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_f1ba00b3e59e61781cec54a3a0d00087 = $(`<div id="html_f1ba00b3e59e61781cec54a3a0d00087" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Owner</th><td>ETS5 LLC</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>8004 South Yale Avenue, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>2</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$346,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Sharestates</td></tr><tr><th style='text-align:left;padding-right:8px'>Current Mortgage holder</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Sept. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$160,000.00</td></tr></table></div>`)[0];
+                popup_a423e762de51fa947c27b916effc5d75.setContent(html_f1ba00b3e59e61781cec54a3a0d00087);
+            
+        
+
+        circle_marker_b356f6df572efb20a397cae44e929f8f.bindPopup(popup_a423e762de51fa947c27b916effc5d75)
+        ;
+
+        
+    
+    
+            var circle_marker_e1b7c00878bbc96cc93b1a4c711d2bfb = L.circleMarker(
+                [41.7545061, -87.57940889999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+        var popup_681740fafb5a94e2956761ba94a83860 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_c6614b38db2318ec3ff66ff6d85d656c = $(`<div id="html_c6614b38db2318ec3ff66ff6d85d656c" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Owner</th><td>ETS1 LLC</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>7723 South Constance Avenue, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>2</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$371,250.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Current Mortgage holder</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Aug. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$201,000.00</td></tr></table></div>`)[0];
+                popup_681740fafb5a94e2956761ba94a83860.setContent(html_c6614b38db2318ec3ff66ff6d85d656c);
+            
+        
+
+        circle_marker_e1b7c00878bbc96cc93b1a4c711d2bfb.bindPopup(popup_681740fafb5a94e2956761ba94a83860)
+        ;
+
+        
+    
+    
+            var circle_marker_b16cc2941912703c09767d05fc4c6b4f = L.circleMarker(
+                [41.796352, -87.670962],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+        var popup_eb189c8d80564ce189e631be44db02c7 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_fbea403e7f884549edb5ce941eb84d34 = $(`<div id="html_fbea403e7f884549edb5ce941eb84d34" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Owner</th><td>CCP3 LLC</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>5344 South Honoree Street, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>2</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$560,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Nov. 2023</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$420,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Current Mortgage holder</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Aug. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$200,760.00</td></tr></table></div>`)[0];
+                popup_eb189c8d80564ce189e631be44db02c7.setContent(html_fbea403e7f884549edb5ce941eb84d34);
+            
+        
+
+        circle_marker_b16cc2941912703c09767d05fc4c6b4f.bindPopup(popup_eb189c8d80564ce189e631be44db02c7)
+        ;
+
+        
+    
+    
+            var circle_marker_16b51e7d3d27441870a037ca59ee78fc = L.circleMarker(
+                [41.753856, -87.55637089999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+        var popup_5403e91f8aaede9fc3d63cd418f3afc8 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_7137657b26eac718a74df59707a52ab6 = $(`<div id="html_7137657b26eac718a74df59707a52ab6" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Owner</th><td>ETMF 12 LLC</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>2814 East 78th Street, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>6</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$1,090,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>June 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$817,500.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>CliffCo</td></tr><tr><th style='text-align:left;padding-right:8px'>Current Mortgage holder</th><td>UMB Bank, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Aug. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$262,000.00</td></tr></table></div>`)[0];
+                popup_5403e91f8aaede9fc3d63cd418f3afc8.setContent(html_7137657b26eac718a74df59707a52ab6);
+            
+        
+
+        circle_marker_16b51e7d3d27441870a037ca59ee78fc.bindPopup(popup_5403e91f8aaede9fc3d63cd418f3afc8)
+        ;
+
+        
+    
+    
+            var circle_marker_f068c8445357765239eafd5e1077d795 = L.circleMarker(
+                [41.7447901, -87.6606731],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+        var popup_c64840888193f0f8b3fb2067c3ddd656 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_7220507b30ac9b99b955e4e52655026a = $(`<div id="html_7220507b30ac9b99b955e4e52655026a" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Owner</th><td>ETMF 15 LLC</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>8201 South Laflin Street, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>12</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$2,000,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>March 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$1,400,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>CliffCo</td></tr><tr><th style='text-align:left;padding-right:8px'>Current Mortgage holder</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Sept. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$587,850.00</td></tr></table></div>`)[0];
+                popup_c64840888193f0f8b3fb2067c3ddd656.setContent(html_7220507b30ac9b99b955e4e52655026a);
+            
+        
+
+        circle_marker_f068c8445357765239eafd5e1077d795.bindPopup(popup_c64840888193f0f8b3fb2067c3ddd656)
+        ;
+
+        
+    
+    
+            var circle_marker_c4e198f0f12edfe468715ba05794c1a2 = L.circleMarker(
+                [41.7276646, -87.65588939999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+        var popup_ae9d558bad065f71153bff954484cd67 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_78311c3e4f0fe208b46bc46774752d90 = $(`<div id="html_78311c3e4f0fe208b46bc46774752d90" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Owner</th><td>ETC5 LLC</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>9130 S. Throop Street, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>4</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$680,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>May 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$544,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Current Mortgage holder</th><td>Silver Hill Capital</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>June 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$340,000.00</td></tr></table></div>`)[0];
+                popup_ae9d558bad065f71153bff954484cd67.setContent(html_78311c3e4f0fe208b46bc46774752d90);
+            
+        
+
+        circle_marker_c4e198f0f12edfe468715ba05794c1a2.bindPopup(popup_ae9d558bad065f71153bff954484cd67)
+        ;
+
+        
+    
+    
+            var circle_marker_c15c2daf7bf3536cdf63adb8539d67eb = L.circleMarker(
+                [41.7479542, -87.6667587],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+        var popup_a6de8dbdbe854eec1f32eda7e64ea0b3 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_070087bde4137ad8ec5ae29d2e377a2b = $(`<div id="html_070087bde4137ad8ec5ae29d2e377a2b" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Owner</th><td>ETS2 LLC</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>8017 S. Hermitage Avenue, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>2</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>March 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$400,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Current Mortgage holder</th><td>Silver Hill Capital</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>August 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$180,000.00</td></tr></table></div>`)[0];
+                popup_a6de8dbdbe854eec1f32eda7e64ea0b3.setContent(html_070087bde4137ad8ec5ae29d2e377a2b);
+            
+        
+
+        circle_marker_c15c2daf7bf3536cdf63adb8539d67eb.bindPopup(popup_a6de8dbdbe854eec1f32eda7e64ea0b3)
+        ;
+
+        
+    
+    
+            var circle_marker_6770a88e2c83cdba853dc77faa7a5f32 = L.circleMarker(
+                [41.7986639, -87.66739489999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+        var popup_3925cfa9ce7b4f87d3734c264fb72c7e = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_db2ff3e56a7c8360ea119d1ef11449c2 = $(`<div id="html_db2ff3e56a7c8360ea119d1ef11449c2" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Owner</th><td>CCP1, LLC</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>5226 S. Paulina Street, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>4</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$485,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Dec. 2023</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$364,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Current Mortgage holder</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>July 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$460,000.00</td></tr></table></div>`)[0];
+                popup_3925cfa9ce7b4f87d3734c264fb72c7e.setContent(html_db2ff3e56a7c8360ea119d1ef11449c2);
+            
+        
+
+        circle_marker_6770a88e2c83cdba853dc77faa7a5f32.bindPopup(popup_3925cfa9ce7b4f87d3734c264fb72c7e)
+        ;
+
+        
+    
+    
+            var circle_marker_786654f54032fb04ba028bfca74ecdf7 = L.circleMarker(
+                [41.74788360000001, -87.60788389999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+        var popup_0497e2ce1b9eed174bd47ddf433e95d4 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_5d152355e45cbf5cad37ca5446fca151 = $(`<div id="html_5d152355e45cbf5cad37ca5446fca151" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Owner</th><td>ETS2 LLC</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>8052 S. Langley Avenue, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>2</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$396,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Current Mortgage holder</th><td>Silver Hill Capital</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>July 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$167,000.00</td></tr></table></div>`)[0];
+                popup_0497e2ce1b9eed174bd47ddf433e95d4.setContent(html_5d152355e45cbf5cad37ca5446fca151);
+            
+        
+
+        circle_marker_786654f54032fb04ba028bfca74ecdf7.bindPopup(popup_0497e2ce1b9eed174bd47ddf433e95d4)
+        ;
+
+        
+    
+    
+            var circle_marker_36170933554439b95ec882c9350bf115 = L.circleMarker(
+                [41.7479549, -87.61334660000001],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+        var popup_f6bf458556a66126043a65084ef25727 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_6ac31014934cfc97a757879928201b1f = $(`<div id="html_6ac31014934cfc97a757879928201b1f" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Owner</th><td>ETS LLC</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>8047 S. Vernon Avenue, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>3</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$496,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Current Mortgage holder</th><td>Silver Hill Capital</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>July 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$173,000.00</td></tr></table></div>`)[0];
+                popup_f6bf458556a66126043a65084ef25727.setContent(html_6ac31014934cfc97a757879928201b1f);
+            
+        
+
+        circle_marker_36170933554439b95ec882c9350bf115.bindPopup(popup_f6bf458556a66126043a65084ef25727)
+        ;
+
+        
+    
+    
+            var circle_marker_6ec2abbd045b5fdb190a227b529d4df8 = L.circleMarker(
+                [41.7918269, -87.6460505],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+        var popup_69454663e1d62d9b748f3d6767e6d10a = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_1535e98ddca9b5ab5774bcec8e1236e1 = $(`<div id="html_1535e98ddca9b5ab5774bcec8e1236e1" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Owner</th><td>ETC1 LLC</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>5621 S. Green Street, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>8</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$680,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>May 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$544,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Current Mortgage holder</th><td>Silver Hill Capital</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>July 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$235,000.00</td></tr></table></div>`)[0];
+                popup_69454663e1d62d9b748f3d6767e6d10a.setContent(html_1535e98ddca9b5ab5774bcec8e1236e1);
+            
+        
+
+        circle_marker_6ec2abbd045b5fdb190a227b529d4df8.bindPopup(popup_69454663e1d62d9b748f3d6767e6d10a)
+        ;
+
+        
+    
+    
+            var circle_marker_4a8e6dc796e9df413b67752efde01316 = L.circleMarker(
+                [41.7498099, -87.6127876],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+        var popup_45455ec13089e225da4f7ee85003c3ad = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_a0ce47e962faf04477044ad352934510 = $(`<div id="html_a0ce47e962faf04477044ad352934510" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Owner</th><td>ETS1 LLC</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>7944 S. Eberhart Avenue, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>2</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$371,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Current Mortgage holder</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>July 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$165,000.00</td></tr></table></div>`)[0];
+                popup_45455ec13089e225da4f7ee85003c3ad.setContent(html_a0ce47e962faf04477044ad352934510);
+            
+        
+
+        circle_marker_4a8e6dc796e9df413b67752efde01316.bindPopup(popup_45455ec13089e225da4f7ee85003c3ad)
+        ;
+
+        
+    
+    
+            var circle_marker_0e5c189d2ac578e860108c01e14c1a04 = L.circleMarker(
+                [41.7500667, -87.6079434],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+        var popup_09ecbff4f14517aeb81e06ba251f18b6 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_a70755a30ce2c05adf82c17ca99b01c7 = $(`<div id="html_a70755a30ce2c05adf82c17ca99b01c7" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Owner</th><td>ETS2 LLC</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>7938 S. Langley Avenure, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>2</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$396,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Current Mortgage holder</th><td>Silver Hill Capital</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>July 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$154,000.00</td></tr></table></div>`)[0];
+                popup_09ecbff4f14517aeb81e06ba251f18b6.setContent(html_a70755a30ce2c05adf82c17ca99b01c7);
+            
+        
+
+        circle_marker_0e5c189d2ac578e860108c01e14c1a04.bindPopup(popup_09ecbff4f14517aeb81e06ba251f18b6)
+        ;
+
+        
+    
+    
+            var circle_marker_c84af370c7f60b70fa7c5a79edbaa1f8 = L.circleMarker(
+                [41.7500776, -87.6121723],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_6028a8b070ce55f93414d474147403fa);
+        
+    
+        var popup_13cebd99b966199eb3201c819a182110 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_a7cd69cf8a4058ab2026654de015ba1e = $(`<div id="html_a7cd69cf8a4058ab2026654de015ba1e" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Owner</th><td>ETS1 LLC</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>7937 S. Eberhart Avenure, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>2</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$371,000.00</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Current Mortgage holder</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>June 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$148,000.00</td></tr></table></div>`)[0];
+                popup_13cebd99b966199eb3201c819a182110.setContent(html_a7cd69cf8a4058ab2026654de015ba1e);
+            
+        
+
+        circle_marker_c84af370c7f60b70fa7c5a79edbaa1f8.bindPopup(popup_13cebd99b966199eb3201c819a182110)
+        ;
+
+        
+    
+</script>
