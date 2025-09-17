@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_10df3b268552485cfa7272c3c89aaba8 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+<script>
+(function waitForMap() {
+  if (typeof map_10df3b268552485cfa7272c3c89aaba8 === 'undefined' || !map_10df3b268552485cfa7272c3c89aaba8._controlCorners) {
+    return setTimeout(waitForMap, 50);
+  }
+  var map = map_10df3b268552485cfa7272c3c89aaba8;
+  var nycBounds = [[40.7062255, -74.00839119999999], [40.7628672, -73.9689131]];
+  var sfBounds  = [[37.7887443, -122.4004663], [37.7937188, -122.3942152]];
+
+  function fly(bounds) {
+    if (bounds) map.fitBounds(bounds, { padding: [30, 30] });
+  }
+
+  var CityToggle = L.Control.extend({
+    options: { position: 'bottomleft' },  // where the legend used to be
+    onAdd: function() {
+      var wrap = L.DomUtil.create('div', 'leaflet-bar leaflet-control trd-city-toggle');
+      wrap.style.background = 'transparent';
+      wrap.style.border = 'none';
+      wrap.style.boxShadow = 'none';
+      wrap.style.margin = '6px';
+
+      var group = L.DomUtil.create('div', '', wrap);
+      group.style.display = 'flex';
+      group.style.gap = '8px';
+      group.style.flexWrap = 'wrap';
+
+      function mkBtn(label, onClick) {
+        var btn = L.DomUtil.create('button', '', group);
+        btn.type = 'button';
+        btn.textContent = label;
+        btn.style.padding = '10px 16px';
+        btn.style.fontSize = '15px';
+        btn.style.fontWeight = '600';
+        btn.style.lineHeight = '1.1';
+        btn.style.background = '#ffffff';
+        btn.style.border = '1px solid #888';
+        btn.style.borderRadius = '9999px';   // pill
+        btn.style.boxShadow = '0 1px 4px rgba(0,0,0,0.15)';
+        btn.style.cursor = 'pointer';
+        btn.style.userSelect = 'none';
+        btn.style.display = 'inline-flex';
+        btn.style.alignItems = 'center';
+        btn.style.justifyContent = 'center';
+        btn.style.minWidth = '160px';        // gives the label room
+        btn.style.textAlign = 'center';
+
+        btn.onmouseenter = function() { btn.style.background = '#f3f3f3'; };
+        btn.onmouseleave = function() { btn.style.background = '#ffffff'; };
+        btn.onfocus = function() { btn.style.outline = '2px solid #2b7cff'; btn.style.outlineOffset = '2px'; };
+        btn.onblur  = function() { btn.style.outline = 'none'; };
+
+        // prevent map drag/zoom on click
+        L.DomEvent.on(btn, 'click', function(e) {
+          L.DomEvent.stop(e);
+          onClick();
+        });
+        return btn;
+      }
+
+      if (nycBounds) mkBtn('New York City', function() { fly(nycBounds); });
+      if (sfBounds)  mkBtn('San Francisco', function() { fly(sfBounds); });
+
+      // Ensure map gestures don't steal focus while hovering the control
+      L.DomEvent.disableClickPropagation(wrap);
+      L.DomEvent.disableScrollPropagation(wrap);
+      return wrap;
+    },
+    onRemove: function() {}
+  });
+
+  (new CityToggle()).addTo(map);
+  console.log('CityToggle added. NYC?', !!nycBounds, 'SF?', !!sfBounds);
+})();
+</script>
+    
+            <div class="folium-map" id="map_10df3b268552485cfa7272c3c89aaba8" ></div>
+        
+</body>
+<script>    
+    
+            var map_10df3b268552485cfa7272c3c89aaba8 = L.map(
+                "map_10df3b268552485cfa7272c3c89aaba8",
+                {
+                    center: [40.7544037125, -73.982559075],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+            L.control.scale().addTo(map_10df3b268552485cfa7272c3c89aaba8);
+
+            
+
+        
+    
+            var tile_layer_1fdfaece1b61bf51095f62a199971614 = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_10df3b268552485cfa7272c3c89aaba8);
+        
+    
+            var feature_group_70aba9559d9ff60f575f8f1eb7f102e9 = L.featureGroup(
+                {}
+            ).addTo(map_10df3b268552485cfa7272c3c89aaba8);
+        
+    
+            var circle_marker_7dcdb07b39322158d1727a6d4e3fb285 = L.circleMarker(
+                [40.7619672, -73.9843241],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_70aba9559d9ff60f575f8f1eb7f102e9);
+        
+    
+        var popup_b08dd403cfe160f38a1f065e0ea61b43 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_3d428e34034d9c1900b3f24742f34de3 = $(`<div id="html_3d428e34034d9c1900b3f24742f34de3" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>1633 Broadway, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>SqFt</th><td>2.5MM</td></tr><tr><th style='text-align:left;padding-right:8px'>% Leased</th><td>92.6</td></tr><tr><th style='text-align:left;padding-right:8px'>% of Gross Asset Value</th><td>27</td></tr></table></div>`)[0];
+                popup_b08dd403cfe160f38a1f065e0ea61b43.setContent(html_3d428e34034d9c1900b3f24742f34de3);
+            
+        
+
+        circle_marker_7dcdb07b39322158d1727a6d4e3fb285.bindPopup(popup_b08dd403cfe160f38a1f065e0ea61b43)
+        ;
+
+        
+    
+    
+            var circle_marker_401ea8393c74c7fbac367e5236275d41 = L.circleMarker(
+                [40.7619923, -73.9805449],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_70aba9559d9ff60f575f8f1eb7f102e9);
+        
+    
+        var popup_63ce9080cea1303802e29eb5f5c74cc2 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_5bc53f2118844a3c1f654d0b4c47d6cc = $(`<div id="html_5bc53f2118844a3c1f654d0b4c47d6cc" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>1301 Avenue of the Americas, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>SqFt</th><td>1.8MM</td></tr><tr><th style='text-align:left;padding-right:8px'>% Leased</th><td>89.5</td></tr><tr><th style='text-align:left;padding-right:8px'>% of Gross Asset Value</th><td>22</td></tr></table></div>`)[0];
+                popup_63ce9080cea1303802e29eb5f5c74cc2.setContent(html_5bc53f2118844a3c1f654d0b4c47d6cc);
+            
+        
+
+        circle_marker_401ea8393c74c7fbac367e5236275d41.bindPopup(popup_63ce9080cea1303802e29eb5f5c74cc2)
+        ;
+
+        
+    
+    
+            var circle_marker_f32e05405c8f1166911e269bf5b35baa = L.circleMarker(
+                [40.760914, -73.9780103],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_70aba9559d9ff60f575f8f1eb7f102e9);
+        
+    
+        var popup_27d500adba883599f8c293f74dc08466 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_e044851b3bac2b962ccffbfd133e00ca = $(`<div id="html_e044851b3bac2b962ccffbfd133e00ca" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>31 West 52nd Street, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>SqFt</th><td>800K</td></tr><tr><th style='text-align:left;padding-right:8px'>% Leased</th><td>67.0</td></tr><tr><th style='text-align:left;padding-right:8px'>% of Gross Asset Value</th><td>13</td></tr></table></div>`)[0];
+                popup_27d500adba883599f8c293f74dc08466.setContent(html_e044851b3bac2b962ccffbfd133e00ca);
+            
+        
+
+        circle_marker_f32e05405c8f1166911e269bf5b35baa.bindPopup(popup_27d500adba883599f8c293f74dc08466)
+        ;
+
+        
+    
+    
+            var circle_marker_39bb76bc692d41137614eaa700685c68 = L.circleMarker(
+                [40.7628672, -73.98088039999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_70aba9559d9ff60f575f8f1eb7f102e9);
+        
+    
+        var popup_9ce3b7491f102b4b7c466c897ba11677 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_e235208bf74f74f83a8781b5a4be6ab6 = $(`<div id="html_e235208bf74f74f83a8781b5a4be6ab6" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>1325 of the Americas, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>SqFt</th><td>800K</td></tr><tr><th style='text-align:left;padding-right:8px'>% Leased</th><td>95.9</td></tr><tr><th style='text-align:left;padding-right:8px'>% of Gross Asset Value</th><td>7</td></tr></table></div>`)[0];
+                popup_9ce3b7491f102b4b7c466c897ba11677.setContent(html_e235208bf74f74f83a8781b5a4be6ab6);
+            
+        
+
+        circle_marker_39bb76bc692d41137614eaa700685c68.bindPopup(popup_9ce3b7491f102b4b7c466c897ba11677)
+        ;
+
+        
+    
+    
+            var circle_marker_33749f219c33c98c79bf87d997adcfeb = L.circleMarker(
+                [40.7622869, -73.9750432],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_70aba9559d9ff60f575f8f1eb7f102e9);
+        
+    
+        var popup_f11ff202badf29990a6fff36e9038ce6 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_6e67402f361fec3d02231dff4844740f = $(`<div id="html_6e67402f361fec3d02231dff4844740f" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>712 Fifth Avenue, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>SqFt</th><td>600K</td></tr><tr><th style='text-align:left;padding-right:8px'>% Leased</th><td>70.1</td></tr><tr><th style='text-align:left;padding-right:8px'>% of Gross Asset Value</th><td>4</td></tr></table></div>`)[0];
+                popup_f11ff202badf29990a6fff36e9038ce6.setContent(html_6e67402f361fec3d02231dff4844740f);
+            
+        
+
+        circle_marker_33749f219c33c98c79bf87d997adcfeb.bindPopup(popup_f11ff202badf29990a6fff36e9038ce6)
+        ;
+
+        
+    
+    
+            var circle_marker_56e376992970affb55a76495ef765275 = L.circleMarker(
+                [40.7587312, -73.9689131],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_70aba9559d9ff60f575f8f1eb7f102e9);
+        
+    
+        var popup_28d1c9451d2bb4066a895b8b7827bdba = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_fbc6b17f22382d6097f74da32f0a60fd = $(`<div id="html_fbc6b17f22382d6097f74da32f0a60fd" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>900 Third Avenue, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>SqFt</th><td>600K</td></tr><tr><th style='text-align:left;padding-right:8px'>% Leased</th><td>93.9</td></tr><tr><th style='text-align:left;padding-right:8px'>% of Gross Asset Value</th><td>3</td></tr></table></div>`)[0];
+                popup_28d1c9451d2bb4066a895b8b7827bdba.setContent(html_fbc6b17f22382d6097f74da32f0a60fd);
+            
+        
+
+        circle_marker_56e376992970affb55a76495ef765275.bindPopup(popup_28d1c9451d2bb4066a895b8b7827bdba)
+        ;
+
+        
+    
+    
+            var circle_marker_a69a9b90cd34d5d7fd33b1c32e54b9f2 = L.circleMarker(
+                [40.7062255, -74.00839119999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_70aba9559d9ff60f575f8f1eb7f102e9);
+        
+    
+        var popup_240018025cbe42f40c98aea8d483a529 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_36a09f63096fe44fd6289d971b9f3356 = $(`<div id="html_36a09f63096fe44fd6289d971b9f3356" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>60 Wall Street, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>SqFt</th><td>1.6MM</td></tr><tr><th style='text-align:left;padding-right:8px'>% of Gross Asset Value</th><td>1</td></tr></table></div>`)[0];
+                popup_240018025cbe42f40c98aea8d483a529.setContent(html_36a09f63096fe44fd6289d971b9f3356);
+            
+        
+
+        circle_marker_a69a9b90cd34d5d7fd33b1c32e54b9f2.bindPopup(popup_240018025cbe42f40c98aea8d483a529)
+        ;
+
+        
+    
+    
+            var circle_marker_43602ee06a971f783ce49fc356101982 = L.circleMarker(
+                [40.7602454, -73.9843654],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_70aba9559d9ff60f575f8f1eb7f102e9);
+        
+    
+        var popup_bc190f7e67d881e245c85631ed1497e4 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_0f70da46fade1a3b98e56c8bcefef1a8 = $(`<div id="html_0f70da46fade1a3b98e56c8bcefef1a8" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>1600 Broadway Retail, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>SqFt</th><td>26K</td></tr><tr><th style='text-align:left;padding-right:8px'>% Leased</th><td>100.0</td></tr><tr><th style='text-align:left;padding-right:8px'>% of Gross Asset Value</th><td>0</td></tr></table></div>`)[0];
+                popup_bc190f7e67d881e245c85631ed1497e4.setContent(html_0f70da46fade1a3b98e56c8bcefef1a8);
+            
+        
+
+        circle_marker_43602ee06a971f783ce49fc356101982.bindPopup(popup_bc190f7e67d881e245c85631ed1497e4)
+        ;
+
+        
+    
+    
+            var feature_group_c40d2e1a3feb9fd94e429446779af27b = L.featureGroup(
+                {}
+            ).addTo(map_10df3b268552485cfa7272c3c89aaba8);
+        
+    
+            var circle_marker_3ac9e073b4e962799fe1dec67d68b397 = L.circleMarker(
+                [37.7937188, -122.3942152],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c40d2e1a3feb9fd94e429446779af27b);
+        
+    
+        var popup_31acab31988d4dde115d397e13fe6bf9 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_8704cb5e4340bba6ef1c0718239c15ea = $(`<div id="html_8704cb5e4340bba6ef1c0718239c15ea" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>One Market Plaza, San Francisco, CA</td></tr><tr><th style='text-align:left;padding-right:8px'>SqFt</th><td>1.6MM</td></tr><tr><th style='text-align:left;padding-right:8px'>% Leased</th><td>69.8</td></tr><tr><th style='text-align:left;padding-right:8px'>% of Gross Asset Value</th><td>11</td></tr></table></div>`)[0];
+                popup_31acab31988d4dde115d397e13fe6bf9.setContent(html_8704cb5e4340bba6ef1c0718239c15ea);
+            
+        
+
+        circle_marker_3ac9e073b4e962799fe1dec67d68b397.bindPopup(popup_31acab31988d4dde115d397e13fe6bf9)
+        ;
+
+        
+    
+    
+            var circle_marker_0655fbfd81414c8cf4b538781039173e = L.circleMarker(
+                [37.791999, -122.3988258],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c40d2e1a3feb9fd94e429446779af27b);
+        
+    
+        var popup_9260040b40693f8d667df65d24d4a2f2 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_161c2d218fc62ce63631059ad6a44bda = $(`<div id="html_161c2d218fc62ce63631059ad6a44bda" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>One Front Street, San Francisco, CA</td></tr><tr><th style='text-align:left;padding-right:8px'>SqFt</th><td>600K</td></tr><tr><th style='text-align:left;padding-right:8px'>% Leased</th><td>80.7</td></tr><tr><th style='text-align:left;padding-right:8px'>% of Gross Asset Value</th><td>6</td></tr></table></div>`)[0];
+                popup_9260040b40693f8d667df65d24d4a2f2.setContent(html_161c2d218fc62ce63631059ad6a44bda);
+            
+        
+
+        circle_marker_0655fbfd81414c8cf4b538781039173e.bindPopup(popup_9260040b40693f8d667df65d24d4a2f2)
+        ;
+
+        
+    
+    
+            var circle_marker_f5aec017610bd13849569595745decdd = L.circleMarker(
+                [37.79130019999999, -122.3964012],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c40d2e1a3feb9fd94e429446779af27b);
+        
+    
+        var popup_68cc1cb3f692027f6cdcb042b2c6210c = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_d77972eb4639a8d408792a5046e1ebfc = $(`<div id="html_d77972eb4639a8d408792a5046e1ebfc" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>300 Mission Street, San Francisco, CA</td></tr><tr><th style='text-align:left;padding-right:8px'>SqFt</th><td>700K</td></tr><tr><th style='text-align:left;padding-right:8px'>% Leased</th><td>73.7</td></tr><tr><th style='text-align:left;padding-right:8px'>% of Gross Asset Value</th><td>2</td></tr></table></div>`)[0];
+                popup_68cc1cb3f692027f6cdcb042b2c6210c.setContent(html_d77972eb4639a8d408792a5046e1ebfc);
+            
+        
+
+        circle_marker_f5aec017610bd13849569595745decdd.bindPopup(popup_68cc1cb3f692027f6cdcb042b2c6210c)
+        ;
+
+        
+    
+    
+            var circle_marker_4380664c5e2bc3f7b721e1ed738ef81f = L.circleMarker(
+                [37.7887443, -122.4004663],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c40d2e1a3feb9fd94e429446779af27b);
+        
+    
+        var popup_5dde9407929455502e462644cf06b910 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_6f05dbd3bc4a6a498ff06d39876e9960 = $(`<div id="html_6f05dbd3bc4a6a498ff06d39876e9960" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>55 Second Street, San Francisco, CA</td></tr><tr><th style='text-align:left;padding-right:8px'>SqFt</th><td>400K</td></tr><tr><th style='text-align:left;padding-right:8px'>% Leased</th><td>85.3</td></tr><tr><th style='text-align:left;padding-right:8px'>% of Gross Asset Value</th><td>2</td></tr></table></div>`)[0];
+                popup_5dde9407929455502e462644cf06b910.setContent(html_6f05dbd3bc4a6a498ff06d39876e9960);
+            
+        
+
+        circle_marker_4380664c5e2bc3f7b721e1ed738ef81f.bindPopup(popup_5dde9407929455502e462644cf06b910)
+        ;
+
+        
+    
+    
+            var layer_control_90d83c232fff71ac2bcfdb1758df3389 = {
+                base_layers : {
+                    "cartodbpositron" : tile_layer_1fdfaece1b61bf51095f62a199971614,
+                },
+                overlays :  {
+                    "New York City" : feature_group_70aba9559d9ff60f575f8f1eb7f102e9,
+                    "San Francisco" : feature_group_c40d2e1a3feb9fd94e429446779af27b,
+                },
+            };
+            L.control.layers(
+                layer_control_90d83c232fff71ac2bcfdb1758df3389.base_layers,
+                layer_control_90d83c232fff71ac2bcfdb1758df3389.overlays,
+                {"autoZIndex": true, "collapsed": false, "position": "topright"}
+            ).addTo(map_10df3b268552485cfa7272c3c89aaba8);
+        
+    
+            map_10df3b268552485cfa7272c3c89aaba8.fitBounds(
+                [[40.7062255, -74.00839119999999], [40.7628672, -73.9689131]],
+                {"padding": [30, 30]}
+            );
+        
+</script>
