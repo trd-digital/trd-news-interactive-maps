@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>
+        Miami Construction Map - The Real Deal
+    </title>
+    <link rel="icon" type="image/x-icon" href="https://therealdeal.com/favicon.ico" />
+    <link rel="canonical" href="https://therealdeal.com/data/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Merriweather:wght@0,400;0,700;0,900&display=swap" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" />
+    <link rel="stylesheet" href="../trd-data/common-map/map.css" />
+    <style>
+        /* Company list styling inside modal */
+        .detail-value .company-list {
+            margin: 0;
+            padding-left: 1.15rem;
+        }
+
+        .detail-value .company-list li {
+            list-style: disc;
+            margin: 0;
+            line-height: 1.25rem;
+        }
+    </style>
+
+    <!-- Google Tag Manager -->
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != "dataLayer" ? "&l=" + l : "";
+            j.async = true;
+            j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, "script", "dataLayer", "GTM-K694XL6");
+    </script>
+    <!-- End Google Tag Manager -->
+</head>
+
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K694XL6" height="0" width="0"
+            style="display: none; visibility: hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+    <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
+    <script src="../trd-data/common-formatter/formatter.js"></script>
+    <script src="../trd-data/common-loading/loading.js"></script>
+    <script src="../trd-data/common-map/map.js?v=1.1"></script>
+    <script>
+        // 1 Active -> 2 Hold -> 3 Final -> 4 Expired -> 5 Revoked -> 6 Other
+        // Colors chosen for distinct hue / role; neutral gray for inactive, red for invalid.
+        const legendKeys = [
+            {
+                title: "Status",
+                options: [
+                    {
+                        text: "Active",
+                        value: "Active",
+                        default: true, /* now serves as fallback color after removing 'Other' */
+                        color: {
+                            light: "#FFAB91",
+                            dark: "#FFCCBC"
+                        },
+                    },
+                    {
+                        text: "Hold",
+                        value: "Hold",
+                        default: false,
+                        color: {
+                            light: "#F2B544",
+                            dark: "#F6C867"
+                        },
+                    },
+                    {
+                        text: "Final",
+                        value: "Final",
+                        default: false,
+                        color: {
+                            light: "#35cd7d",
+                            dark: "#35cd7d"
+                        },
+                    },
+                    {
+                        text: "Expired",
+                        value: "Expired",
+                        default: false,
+                        color: {
+                            light: "#8A939E",
+                            dark: "#B0B7C3"
+                        },
+                    },
+                    {
+                        text: "Revoked",
+                        value: "Revoked",
+                        default: false,
+                        color: {
+                            light: "#D9534F",
+                            dark: "#E27A76"
+                        },
+                    },
+                    /* Removed 'Other' category */
+                ],
+            },
+        ];
+
+        const tooltipDisplayFields = {
+            title: { field: "DeliveryAddress", label: "Address" },
+            content: [
+                { field: "PropertyType", label: "Property Type" },
+                {
+                    field: "LatestIssuedDate",
+                    label: "Latest Permit Issued Date",
+                    format: "formatDate",
+                },
+                { field: "TotalCost", label: "Total Construction Cost" },
+            ],
+        };
+
+        const modalDisplayFields = {
+            title: { field: "DeliveryAddress", label: "Address" },
+            content: [
+                { field: "FolioNumber", label: "Folio Number" },
+                { field: "PropertyType", label: "Property Type" },
+                { field: "TotalCost", label: "Total Construction Cost" },
+                { field: "TotalSQFT(MAX)", label: "Max Total SQFT" },
+                {
+                    field: "LatestIssuedDate",
+                    label: "Latest Permit Issued Date",
+                    format: "formatDate",
+                },
+                {
+                    field: "EarliestPlanAccepted",
+                    label: "Earliest Construction Plan Accepted",
+                    format: "formatDate",
+                },
+                { field: "LatestStatus", label: "Latest Permit Status" },
+                { field: "WorkItems_from_LowestID", label: "Work Items" },
+                {
+                    field: "CompanyNames",
+                    label: "Involved Companies",
+                    // Split semicolon-separated names into a bullet list
+                    format: (value) => {
+                        if (!value) return "";
+                        const items = value
+                            .split(/;+/) // split on one or more semicolons
+                            .map(v => v.trim())
+                            .filter(v => v.length > 0);
+                        if (!items.length) return "";
+                        return `<ul class="company-list">${items.map(c => `<li>${c}</li>`).join("")}</ul>`;
+                    }
+                },
+                { field: "Latitude", label: "Latitude" },
+                { field: "Longitude", label: "Longitude" },
+                {
+                    field: "Link_Check",
+                    label: "Property Reference Link",
+                    format: "formatLink",
+                },
+            ],
+        };
+
+        const filterFields = [
+            {
+                title: "Status",
+                name: "status",
+                dataField: "LatestStatus",
+                fieldType: "checkbox",
+                fieldLayoutClass: "checkbox-group",
+                multiSelect: true,
+                callback: (values, item) => {
+                    const status = (item.properties && item.properties["LatestStatus"]) || "";
+                    return values.some((value) => {
+                        // Empty value represents explicit blank / uncategorized
+                        if (value === "" || value.length === 0) {
+                            return status === "";
+                        }
+                        // Support grouped values separated by |
+                        const group = value.split("|");
+                        for (const v of group) {
+                            if (status.includes(v)) return true;
+                        }
+                        return false;
+                    });
+                },
+                options: [
+                    { label: "Active", value: "Active" },
+                    { label: "Hold", value: "Hold" },
+                    { label: "Final", value: "Final" },
+                    { label: "Expired", value: "Expired" },
+                    { label: "Revoked", value: "Revoked" }
+                ],
+            },
+        ];
+
+        const list = [];
+        const statusCounts = {}; // collect counts of each LatestStatus ('' for blank)
+        window.statusCounts = statusCounts;
+
+        // Defensive + explicit declaration
+        const fetchDataFilterCallback = (data) => {
+            if (!data || !Array.isArray(data.features)) {
+                console.warn("GeoJSON missing features array; received:", data);
+                return { type: "FeatureCollection", features: [] };
+            }
+
+            const allowedStatuses = ["Active", "Hold", "Final", "Expired", "Revoked"]; // legend + filters
+            const excludedSummary = { blank: 0, unmapped: 0 };
+            const excludedExamples = { blank: [], unmapped: [] };
+
+            // reset counts in case of re-load
+            Object.keys(statusCounts).forEach(k => delete statusCounts[k]);
+
+            const filteredFeatures = [];
+            for (const item of data.features) {
+                const rawStatus = (item.properties && item.properties["LatestStatus"]) || "";
+                const status = typeof rawStatus === 'string' ? rawStatus.trim() : rawStatus;
+                const isBlank = !status || status.length === 0;
+                const isLiteralBlack = typeof status === 'string' && status.toLowerCase() === 'black'; // user request typo safeguard
+                const isAllowed = allowedStatuses.includes(status);
+
+                if (isBlank || isLiteralBlack) {
+                    excludedSummary.blank++;
+                    if (excludedExamples.blank.length < 5) excludedExamples.blank.push(item.properties?.DeliveryAddress || '(no address)');
+                    continue; // skip
+                }
+                if (!isAllowed) {
+                    excludedSummary.unmapped++;
+                    if (excludedExamples.unmapped.length < 5) excludedExamples.unmapped.push(status);
+                    continue; // skip unmapped status
+                }
+
+                // include feature
+                if (status && !list.includes(status)) {
+                    list.push(status);
+                }
+                statusCounts[status] = (statusCounts[status] || 0) + 1;
+                filteredFeatures.push(item);
+            }
+
+            if (excludedSummary.blank || excludedSummary.unmapped) {
+                console.warn("[StatusFilter] Excluded features:", {
+                    blankStatuses: excludedSummary.blank,
+                    unmappedStatuses: excludedSummary.unmapped,
+                    blankExamples: excludedExamples.blank,
+                    unmappedExamples: excludedExamples.unmapped
+                });
+            }
+
+            return {
+                ...data,
+                features: filteredFeatures,
+            };
+        };
+
+        window.list = list;
+
+        window.map = trdDataCommonMap({
+            fetchDataFilterCallback,
+            eventCategory: "miami-construction-map",
+            filePath: "https://static.therealdeal.com/interactive-maps/miami-construction-map.geojson",
+            mapElementId: "map",
+            filterElementId: "map-filters",
+            legendElementId: "legend",
+            resultElementId: "result",
+            mapCenterLat: 25.771293165956543,
+            mapCenterLng: -80.19813878799437,
+            zoom: 12,
+            minZoom: 8,
+            legendKeys,
+            dataPointKeys: legendKeys[0].options,
+            tooltipDisplayFields,
+            modalDisplayFields,
+            filterFields,
+            loadingEnabled: true,
+            pointSettings: {
+                clickToCenter: true,
+                clickToZoom: true,
+                colorType: "case",
+                radiusType: "radius",
+                colorTypeDataKey: "LatestStatus",
+                paintSettings: {
+                    default: { radius: 6 },
+                    hover: { color: { light: "#FF9800", dark: "#F57C00" } },
+                    active: { color: { light: "#FF5722", dark: "#D84315" } },
+                },
+            },
+        });
+
+        // --- Status count labels updater ---
+        (function statusFilterCounts() {
+            function updateLabels() {
+                const form = document.getElementById('map-filters');
+                if (!form) return;
+                const optionContainers = form.querySelectorAll('.filter-option-container');
+                if (!optionContainers.length) return;
+
+                // Build a set of known option ids for the status field
+                optionContainers.forEach(container => {
+                    const input = container.querySelector('input[name="status"]');
+                    const label = container.querySelector('label.filter-option');
+                    if (!input || !label) return;
+                    // store base label once
+                    if (!label.dataset.baseLabel) {
+                        label.dataset.baseLabel = label.textContent.replace(/\s*\(.*\)$/, '').trim();
+                    }
+                    const value = input.value; // '' for Other
+                    const count = window.statusCounts ? (window.statusCounts[value] || 0) : 0;
+                    label.textContent = `${label.dataset.baseLabel} (${count.toLocaleString()})`;
+                });
+            }
+
+            // Try periodically until data & form ready
+            let attempts = 0;
+            const interval = setInterval(() => {
+                attempts++;
+                updateLabels();
+                // stop if we have counts applied and counts object has keys
+                if (Object.keys(window.statusCounts || {}).length && document.querySelector('#map-filters label[data-base-label]')) {
+                    clearInterval(interval);
+                }
+                if (attempts > 40) { // ~20s fallback
+                    clearInterval(interval);
+                }
+            }, 500);
+
+            // (Optional) public API to refresh after external filtering
+            window.refreshStatusCounts = () => updateLabels();
+
+            // If a custom filtered event is dispatched with features, recompute counts
+            document.addEventListener('trd:map:filtered', (e) => {
+                if (e.detail && Array.isArray(e.detail.features)) {
+                    // recompute counts from provided feature set
+                    const newCounts = {};
+                    e.detail.features.forEach(f => {
+                        const s = (f.properties && f.properties.LatestStatus) || '';
+                        newCounts[s] = (newCounts[s] || 0) + 1;
+                    });
+                    // replace global counts then refresh labels
+                    Object.keys(statusCounts).forEach(k => delete statusCounts[k]);
+                    Object.entries(newCounts).forEach(([k, v]) => statusCounts[k] = v);
+                    updateLabels();
+                }
+            });
+        })();
+        // --- End status count labels updater ---
+
+    </script>
+</body>
+
+</html>
