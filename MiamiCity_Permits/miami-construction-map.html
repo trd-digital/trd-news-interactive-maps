@@ -112,7 +112,7 @@
                             dark: "#E27A76"
                         },
                     },
-                    /* Removed 'Other' category */
+                    /* No 'Other' category */
                 ],
             },
         ];
@@ -150,18 +150,8 @@
                 { field: "LatestStatus", label: "Latest Permit Status" },
                 { field: "WorkItems_from_LowestID", label: "Work Items" },
                 {
-                    field: "CompanyNames",
+                    field: "CompanyNamesAsHTML",
                     label: "Involved Companies",
-                    // Split semicolon-separated names into a bullet list
-                    format: (value) => {
-                        if (!value) return "";
-                        const items = value
-                            .split(/;+/) // split on one or more semicolons
-                            .map(v => v.trim())
-                            .filter(v => v.length > 0);
-                        if (!items.length) return "";
-                        return `<ul class="company-list">${items.map(c => `<li>${c}</li>`).join("")}</ul>`;
-                    }
                 },
                 { field: "Latitude", label: "Latitude" },
                 { field: "Longitude", label: "Longitude" },
