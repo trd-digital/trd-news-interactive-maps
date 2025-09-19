@@ -29,6 +29,45 @@
             margin: 0;
             line-height: 1.25rem;
         }
+
+        /* Year range slider styling */
+        .range-slider {
+            position: relative;
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .range-slider-progress {
+            position: absolute;
+            height: 100%;
+            background-color: #007bff;
+            border-radius: 4px;
+        }
+
+        .range-slider-min,
+        .range-slider-max {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border: 2px solid #007bff;
+            border-radius: 50%;
+            top: -6px;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .range-slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .year-slider-container {
+            padding: 10px 5px;
+        }
     </style>
 
     <!-- Google Tag Manager -->
@@ -60,6 +99,7 @@
     <script src="../trd-data/common-formatter/formatter.js"></script>
     <script src="../trd-data/common-loading/loading.js"></script>
     <script src="../trd-data/common-map/map.js?v=1.1"></script>
+    <script src="filter-extension.js"></script>
     <script>
         // 1 Active -> 2 Hold -> 3 Final -> 4 Expired -> 5 Revoked -> 6 Other
         // Colors chosen for distinct hue / role; neutral gray for inactive, red for invalid.
@@ -153,8 +193,6 @@
                     field: "CompanyNamesAsHTML",
                     label: "Involved Companies",
                 },
-                { field: "Latitude", label: "Latitude" },
-                { field: "Longitude", label: "Longitude" },
                 {
                     field: "Link_Check",
                     label: "Property Reference Link",
@@ -194,6 +232,25 @@
                     { label: "Revoked", value: "Revoked" }
                 ],
             },
+            {
+                title: "Latest Permit Year",
+                name: "year",
+                dataField: "LatestPermitYear",
+                fieldType: "multi-range",
+                fieldLayoutClass: "year-slider-container",
+                minValue: 2010, // Starting year
+                maxValue: 2025, // Current year 
+                allowZero: false,
+                defaultValue: [2010, 2025], // Full range by default
+                format: "formatInteger",
+                callback: (values, item) => {
+                    if (!values || values.length !== 2) return true;
+                    const year = parseInt(item.properties?.LatestPermitYear, 10);
+                    if (!year || isNaN(year)) return false; // Skip if no valid year
+                    const [minYear, maxYear] = values.map(v => parseInt(v, 10));
+                    return year >= minYear && year <= maxYear;
+                }
+            }
         ];
 
         const list = [];
@@ -233,6 +290,7 @@
                     continue; // skip unmapped status
                 }
 
+
                 // include feature
                 if (status && !list.includes(status)) {
                     list.push(status);
@@ -250,6 +308,15 @@
                 });
             }
 
+            // Schedule an update for the filter labels after a short delay
+            // This gives time for the DOM to be ready for the count display
+            setTimeout(() => {
+                if (typeof window.refreshStatusCounts === 'function') {
+                    console.log("Calling refreshStatusCounts from fetchDataFilterCallback");
+                    window.refreshStatusCounts();
+                }
+            }, 1500);
+
             return {
                 ...data,
                 features: filteredFeatures,
@@ -257,6 +324,17 @@
         };
 
         window.list = list;
+
+        // Listen for mapbox load event to trigger status count update
+        document.addEventListener('mapboxglLoaded', function () {
+            console.log("Map loaded event received");
+            setTimeout(() => {
+                if (window.refreshStatusCounts) {
+                    console.log("Refreshing status counts after map load");
+                    window.refreshStatusCounts();
+                }
+            }, 1000);
+        });
 
         window.map = trdDataCommonMap({
             fetchDataFilterCallback,
@@ -285,7 +363,10 @@
                 paintSettings: {
                     default: { radius: 6 },
                     hover: { color: { light: "#FF9800", dark: "#F57C00" } },
-                    active: { color: { light: "#FF5722", dark: "#D84315" } },
+                    active: {
+                        radius: 15,
+                        color: { light: "#FF5722", dark: "#D84315" }
+                    },
                 },
             },
         });
@@ -294,19 +375,34 @@
         (function statusFilterCounts() {
             function updateLabels() {
                 const form = document.getElementById('map-filters');
-                if (!form) return;
+                if (!form) {
+                    console.log("Filter form not found");
+                    return;
+                }
+
+
                 const optionContainers = form.querySelectorAll('.filter-option-container');
-                if (!optionContainers.length) return;
+                if (!optionContainers.length) {
+                    console.log("No filter option containers found");
+                    return;
+                }
 
                 // Build a set of known option ids for the status field
                 optionContainers.forEach(container => {
                     const input = container.querySelector('input[name="status"]');
                     const label = container.querySelector('label.filter-option');
-                    if (!input || !label) return;
+
+                    if (!input || !label) {
+                        console.log("Missing input or label in container", container);
+                        return;
+                    }
+
                     // store base label once
                     if (!label.dataset.baseLabel) {
                         label.dataset.baseLabel = label.textContent.replace(/\s*\(.*\)$/, '').trim();
+                        console.log(`Set base label for ${input.value}: "${label.dataset.baseLabel}"`);
                     }
+
                     const value = input.value; // '' for Other
                     const count = window.statusCounts ? (window.statusCounts[value] || 0) : 0;
                     label.textContent = `${label.dataset.baseLabel} (${count.toLocaleString()})`;
@@ -317,21 +413,55 @@
             let attempts = 0;
             const interval = setInterval(() => {
                 attempts++;
+
+                // Check if DOM and data are ready
+                const formReady = document.getElementById('map-filters') !== null;
+                const dataReady = Object.keys(window.statusCounts || {}).length > 0;
+
+                // Always try to update - we want to keep trying even if initially unsuccessful
                 updateLabels();
-                // stop if we have counts applied and counts object has keys
-                if (Object.keys(window.statusCounts || {}).length && document.querySelector('#map-filters label[data-base-label]')) {
+
+                // Only stop interval if both form and data are ready and labels were updated
+                if (dataReady && formReady && document.querySelector('#map-filters label[data-base-label]')) {
                     clearInterval(interval);
                 }
-                if (attempts > 40) { // ~20s fallback
+
+                if (attempts > 60) { // ~30s fallback - increased from 20s
                     clearInterval(interval);
                 }
             }, 500);
 
-            // (Optional) public API to refresh after external filtering
-            window.refreshStatusCounts = () => updateLabels();
+            // Public API to refresh after external filtering
+            window.refreshStatusCounts = () => {
+                console.log("Manual refresh of status counts called");
+                updateLabels();
+            };
+
+            // Make the counts update after map data is loaded
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log("DOM loaded - setting up additional trigger");
+
+                // Add an observer to detect when the filter form is added to the DOM
+                const observer = new MutationObserver((mutations) => {
+                    for (const mutation of mutations) {
+                        if (mutation.addedNodes.length) {
+                            const filterForm = document.getElementById('map-filters');
+                            if (filterForm) {
+                                setTimeout(updateLabels, 1000); // Give some time for counts to be ready
+                                observer.disconnect();
+                                break;
+                            }
+                        }
+                    }
+                });
+
+                // Start observing the body for when the filter form is added
+                observer.observe(document.body, { childList: true, subtree: true });
+            });
 
             // If a custom filtered event is dispatched with features, recompute counts
             document.addEventListener('trd:map:filtered', (e) => {
+                console.log("Custom filtered event received");
                 if (e.detail && Array.isArray(e.detail.features)) {
                     // recompute counts from provided feature set
                     const newCounts = {};
@@ -347,7 +477,6 @@
             });
         })();
         // --- End status count labels updater ---
-
     </script>
 </body>
 
