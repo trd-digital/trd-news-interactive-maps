@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>South Florida Market Snapshot</title>
+
+    <!-- Chart.js for history graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css"
+    />
+
+    <style>
+      :root {
+        --primary: #1a73e8;
+        --on-primary: #fff;
+        --bg: #fff;
+        --card-bg: #fff;
+        --pill-bg: #f3f4f6;
+        --border-color: #e5e7eb;
+        --text-primary: #202124;
+        --text-secondary: #4a4d50;
+        --green: #188038;
+        --blue: #1a73e8;
+        --red: #d93025;
+        --font: "Arial", sans-serif;
+      }
+      body[data-bs-theme="dark"] {
+        --bg: #202124;
+        --card-bg: #303134;
+        --pill-bg: #242424;
+        --border-color: #757575;
+        --text-primary: #ffffff;
+        --text-secondary: #e4e4e4;
+      }
+      body[data-bs-theme="dark"] .pill-type {
+        background: #3a3a3c;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text-primary);
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      header {
+        padding: 16px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+      }
+      header h1 { font-size: 1.3rem; }
+      header p { margin-top: 0.2rem; font-size: 0.8rem; color: var(--text-secondary); }
+      .top-row { display: flex; align-items: center; gap: 1rem; margin: 0.6rem 1rem; }
+      .top-row.hide { display: none; }
+      .boroughs { display: flex; gap: 0.5rem; }
+      .pill-btn {
+        padding: 0.4rem 0.8rem;
+        border: 1px solid var(--border-color);
+        border-radius: 999px;
+        background: transparent;
+        cursor: pointer;
+        color: var(--text-primary);
+        font-size: 0.85rem;
+      }
+      .pill-btn.active { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+      #toggleFilters, #resetFilters {
+        padding: 0.4rem 0.8rem;
+        background: var(--primary);
+        color: var(--on-primary);
+        border: none;
+        border-radius: 9px;
+        cursor: pointer;
+      }
+      .filters { display: flex; gap: 0.6rem; margin: 0 1rem 0.6rem; }
+      .filters.hide { display: none; }
+      .filters select {
+        flex: 1; padding: 0.3rem; font-size: 0.8rem;
+        border: 1px solid var(--border-color);
+        border-radius: 9px;
+        background: var(--card-bg); color: var(--text-primary); outline: none;
+      }
+      .summary { margin: 8px 16px; font-size: 14px; color: var(--text-secondary); }
+      #results {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 350px);
+        gap: 38px 40px;
+        justify-content: center;
+        padding: 0 1.2rem 1rem;
+      }
+      .card {
+        position: relative;
+        background: var(--card-bg);
+        border-radius: 9px;
+        border: 1px solid var(--border-color);
+        padding: 18px 21px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      body.page .card { box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+      body.page .card:hover { transform: translateY(-4px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+      .card.skeleton { background: #e0e0e0; height: 8rem; animation: pulse 1.5s infinite; }
+      @keyframes pulse { 50% { opacity: 0.6; } }
+      .card-header {
+        display: flex; justify-content: space-between; align-items: center;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 16px; margin-bottom: 16px;
+      }
+      .card-header h4 { font-family: Merriweather, serif; font-size: clamp(0.9rem, 2.5vw, 1.1rem); line-height: 1.2; margin-bottom: 0.25rem; }
+      .pill-type { font-family: "Proxima Nova", sans-serif; font-size: 0.7rem; background: var(--pill-bg); padding: 0.2rem 0.5rem; border-radius: 4px; color: var(--text-secondary); }
+      .details { font-family: "Proxima Nova", sans-serif; font-size: 0.7rem; color: var(--text-secondary); margin: 0.25rem 0; }
+      .price-row, .bottom-row { display: flex; justify-content: space-between; margin: 0.3rem 0; }
+      .price-item, .bottom-row .metric { flex: 1; text-align: center; }
+      .price-item .value, .bottom-row .value { font-family: Merriweather, serif; font-weight: bold; line-height: 1; }
+      .price-item.sales .value { color: var(--blue); font-size: 0.9rem; }
+      .price-item.avg .value, .price-item.median .value { color: var(--green); font-size: 0.9rem; }
+      .price-item .label, .bottom-row .label { font-family: "Proxima Nova", sans-serif; font-size: 0.7rem; color: var(--text-secondary); display: block; }
+      .price-item + .price-item, .bottom-row .metric + .metric { margin-left: 0.3rem; }
+
+      .iframe header, .iframe .filters, .iframe .top-row, .iframe .summary { display: none !important; }
+      .iframe #results { grid-template-columns: repeat(1, minmax(250px, 1fr)); gap: 8px; }
+      @media (min-width: 550px) { .iframe #results { grid-template-columns: repeat(2, minmax(250px, 1fr)); } }
+      @media (min-width: 850px) { .iframe #results { grid-template-columns: repeat(3, minmax(250px, 1fr)); } }
+      .iframe .card { width: auto; padding: 8px; }
+      .iframe .card-header { padding-bottom: 8px; margin-bottom: 8px; }
+
+      .model { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: none; z-index: 1000; opacity: 0; transition: opacity 0.3s ease-in-out, background-color 0.3s ease-in-out; }
+      .model.active { display: flex; justify-content: center; align-items: center; opacity: 1; }
+      .model-container { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px var(--border-color); margin: 16px; max-width: calc(1200px - 32px); width: 100%; position: relative; }
+      .model-header { padding-bottom: 16px; border-bottom: 1px solid var(--border-color); margin-bottom: 16px; }
+      .model-header h3 { font-size: 1.1rem; margin-bottom: 4px; }
+      .model-header .pill-btn { background: var(--primary); color: var(--on-primary); border: none; padding: 0.2rem 0.6rem; border-radius: 4px; cursor: pointer; position: absolute; top: 16px; right: 16px; }
+      .model-content { max-height: 70vh; overflow-y: auto; }
+      body.model-open { overflow: hidden; }
+
+      .table { border-collapse: collapse; font-size: 14px; width: 100%; }
+      .table th, .table td { padding: 0.2rem 0.4rem; border-bottom: 1px solid #444; text-align: center; }
+      .table .up { color: var(--green); }
+      .table .down { color: var(--red); }
+      .table tr.selected-quarter { background: rgba(26, 115, 232, 0.1); }
+      .no-results { text-align: center; padding: 2rem; color: var(--text-secondary); }
+      .graphs { display: flex; justify-content: space-evenly; align-items: center; }
+      .graph-container { width: calc(50% - 20px); }
+      .chart { width: 100%; max-height: 300px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>South Florida Market Snapshot</h1>
+        <p>Click on a city card to see historical data.</p>
+      </div>
+      <div>
+        <button id="toggleFilters" aria-controls="filters" aria-expanded="true">Hide Filters</button>
+      </div>
+    </header>
+    <main>
+      <section class="top-row">
+        <div class="boroughs" id="boroughs" role="group" aria-label="Select County"></div>
+      </section>
+      <section id="filters" class="filters" aria-label="Filters">
+        <select id="NeighborhoodSelect" aria-label="Select City">
+          <option>All Neighborhoods</option>
+        </select>
+        <select id="DateRangeSelect" aria-label="Select Month">
+          <option>Loading…</option>
+        </select>
+        <select id="PropertyTypeSelect" aria-label="Select Property Group">
+          <option>All Types</option>
+        </select>
+        <button id="resetFilters">Reset Filters</button>
+      </section>
+      <div class="summary" id="summary">Loading data…</div>
+      <div id="results" role="region" aria-live="polite"></div>
+      <section id="model" class="model">
+        <div class="model-container history"></div>
+      </section>
+    </main>
+
+    <script>
+      // init TRD theme support
+      const trdTheme = TrdTheme();
+      trdTheme.init();
+
+      // add class for iframe detection
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("type") === "dashboard") {
+        document.body.classList.toggle("iframe", window.self !== window.top);
+      } else {
+        document.body.classList.add("page");
+      }
+
+      // send height to parent window if in an iframe
+      function updateHeight() {
+        const height = document.getElementById("results").offsetHeight;
+        const origin =
+          window.location.origin === "https://trd-digital.github.io"
+            ? "https://therealdeal.com"
+            : "http://localhost:3010";
+        try {
+          window.parent.postMessage(
+            { updateHeight: height + 10, src: window.location.href },
+            origin
+          );
+        } catch (e) {}
+      }
+
+      window.addEventListener("resize", updateHeight);
+      window.addEventListener("load", updateHeight);
+      window.addEventListener("message", updateHeight);
+
+      // Open link in new tab if in an iframe
+      document.getElementById("results").addEventListener("click", (e) => {
+        if (document.body.classList.contains("iframe")) {
+          e.preventDefault();
+          window.open(
+            "https://therealdeal.com/data/snapshots/?utm_source=embed&utm_medium=widget",
+            "_blank"
+          );
+          return false;
+        }
+      });
+
+      // Helpers
+      function fmtAbbrev(n, fixed = 2) {
+        if (isNaN(n)) return "–";
+        if (n >= 1e9) return "$" + (n / 1e9).toFixed(fixed) + "B";
+        if (n >= 1e6) return "$" + (n / 1e6).toFixed(fixed) + "M";
+        if (n >= 1e3) return "$" + (n / 1e3).toFixed(fixed) + "K";
+        return "$" + Number(n).toFixed(fixed);
+      }
+      function fmtWhole(n) { return isNaN(n) ? "–" : "$" + Math.round(n).toLocaleString(); }
+      function median(a) {
+        const x = a.filter((v) => !isNaN(v)).sort((u, v) => u - v);
+        const m = x.length; return m ? (m % 2 ? x[(m - 1) / 2] : (x[m / 2 - 1] + x[m / 2]) / 2) : NaN;
+      }
+      function fmtNumber(n) { return isNaN(n) ? "–" : Number(n).toLocaleString(); }
+      function fmtYearMonth(ym) {
+        if (!ym) return "";
+        const [y, m] = String(ym).split("-");
+        const d = new Date(Number(y), Number(m) - 1, 1);
+        return d.toLocaleString("en-US", { month: "long", year: "numeric" });
+      }
+
+      const keys = [
+        "sales_volume",
+        "avg_price",
+        "median_price",
+        "number_of_deals",
+        "avg_asking_rent",
+        "PPSF",
+      ];
+
+      let rawData = [], historyMap = {}, aggregates = [], totalCards = 0;
+      let latestQuarter = "", showingAggregates = true, selectedBorough = "All Counties";
+      const boroughsSet = new Set(), neighborhoods = {}, dates = new Set(), types = new Set();
+
+      function buildHistoryMap() {
+        rawData.forEach((r) => {
+          (historyMap[r.neighborhood] || (historyMap[r.neighborhood] = [])).push(r);
+        });
+        Object.values(historyMap).forEach((arr) =>
+          arr.sort((a, b) => a.year_month.localeCompare(b.year_month))
+        );
+      }
+
+      function showLoading(n = 8) {
+        const r = document.getElementById("results");
+        r.innerHTML = "";
+        for (let i = 0; i < n; i++) {
+          const s = document.createElement("div");
+          s.className = "card skeleton";
+          r.appendChild(s);
+        }
+      }
+      document.addEventListener("DOMContentLoaded", () => showLoading());
+
+      // Load JSON (exported from pandas)
+      fetch("./fl_market.json")
+        .then((res) => res.json())
+        .then((data) => {
+          rawData = data.map((r) => ({
+            borough: String(r.borough || r.county || "").trim(), // county
+            neighborhood: String(r.neighborhood || r.PHY_CITY || "").trim(), // city
+            property_group: String(r.property_group || r.simple_definition || "").trim(),
+            year_month: String(r.year_month || "").trim(),
+            sales_volume: Number(r.sales_volume),
+            avg_price: Number(r.avg_price),
+            median_price: Number(r.median_price),
+            number_of_deals: Number(r.number_of_deals),
+            avg_asking_rent: Number(r.avg_asking_rent), // often NaN/null
+            PPSF: Number(r.PPSF), // often NaN/null
+          }));
+          totalCards = rawData.length;
+          precompute();
+          buildHistoryMap();
+          buildUI();
+          computeAggregates();
+          renderAggregates();
+        })
+        .catch(() => {
+          document.getElementById("results").textContent = "⚠️ Failed to load data.";
+        });
+
+      function precompute() {
+        rawData.forEach((r) => {
+          boroughsSet.add(r.borough);
+          (neighborhoods[r.borough] || (neighborhoods[r.borough] = new Set())).add(r.neighborhood);
+          dates.add(r.year_month);
+          types.add(r.property_group);
+        });
+        latestQuarter = [...dates].sort().pop() || ""; // newest
+      }
+
+      function computeAggregates() {
+        const q = document.getElementById("DateRangeSelect").value;
+        const t = document.getElementById("PropertyTypeSelect").value;
+        aggregates = [];
+        const all = rawData.filter(
+          (r) => r.year_month === q && (t === "All Types" || r.property_group === t)
+        );
+        // South Florida total
+        aggregates.push({
+          borough: "South Florida",
+          year_month: q,
+          sales_volume: all.reduce((s, r) => s + (r.sales_volume || 0), 0),
+          avg_price: median(all.map((r) => r.avg_price)),
+          median_price: median(all.map((r) => r.median_price)),
+          number_of_deals: all.reduce((s, r) => s + (r.number_of_deals || 0), 0),
+          avg_asking_rent: median(all.map((r) => r.avg_asking_rent)),
+          PPSF: median(all.map((r) => r.PPSF)),
+        });
+        boroughsSet.forEach((b) => {
+          const rows = rawData.filter(
+            (r) => r.borough === b && r.year_month === q && (t === "All Types" || r.property_group === t)
+          );
+          aggregates.push({
+            borough: b,
+            year_month: q,
+            sales_volume: rows.reduce((s, r) => s + (r.sales_volume || 0), 0),
+            avg_price: median(rows.map((r) => r.avg_price)),
+            median_price: median(rows.map((r) => r.median_price)),
+            number_of_deals: rows.reduce((s, r) => s + (r.number_of_deals || 0), 0),
+            avg_asking_rent: median(rows.map((r) => r.avg_asking_rent)),
+            PPSF: median(rows.map((r) => r.PPSF)),
+          });
+        });
+      }
+
+      function buildUI() {
+        const brc = document.getElementById("boroughs");
+        ["All Counties", ...[...boroughsSet].sort()].forEach((b) => {
+          const btn = document.createElement("button");
+          btn.textContent = b;
+          btn.className = "pill-btn" + (b === selectedBorough ? " active" : "");
+          btn.setAttribute("aria-pressed", b === selectedBorough);
+          btn.onclick = () => {
+            selectedBorough = b;
+            updateBoroughs();
+            document.getElementById("DateRangeSelect").value = latestQuarter;
+            document.getElementById("PropertyTypeSelect").value = "All Types";
+            if (b === "All Counties") {
+              showingAggregates = true;
+              computeAggregates();
+              renderAggregates();
+            } else {
+              showingAggregates = false;
+              filter();
+            }
+          };
+          brc.appendChild(btn);
+        });
+
+        const nbr = document.getElementById("NeighborhoodSelect"),
+          dr = document.getElementById("DateRangeSelect"),
+          pt = document.getElementById("PropertyTypeSelect");
+
+        updateNeighborhoodDropdown();
+
+        dr.innerHTML = "";
+        const dateList = [...dates].sort(); // ascending
+        latestQuarter = dateList.at(-1) || ""; // newest
+        dateList.forEach((d) => {
+          const o = new Option(fmtYearMonth(d), d);
+          o.selected = d === latestQuarter; // default to latest
+          dr.add(o);
+        });
+
+        [...types].sort().forEach((tVal) => pt.add(new Option(tVal, tVal)));
+
+        dr.onchange = pt.onchange = () => {
+          if (showingAggregates) {
+            computeAggregates();
+            renderAggregates();
+          } else {
+            filter();
+          }
+        };
+        nbr.onchange = filter;
+
+        document.getElementById("toggleFilters").onclick = (e) => {
+          const f = document.getElementById("filters");
+          const hid = f.classList.toggle("hide");
+          const topRow = document.querySelector(".top-row");
+          if (selectedBorough === "All Counties") {
+            topRow.classList.toggle("hide", hid);
+          } else {
+            topRow.classList.remove("hide");
+          }
+          e.target.textContent = hid ? "Show Filters" : "Hide Filters";
+          e.target.setAttribute("aria-expanded", !hid);
+        };
+        document.getElementById("resetFilters").onclick = () => {
+          nbr.value = "All Neighborhoods";
+          dr.value = latestQuarter;
+          pt.value = "All Types";
+          selectedBorough = "All Counties";
+          updateBoroughs();
+          computeAggregates();
+          renderAggregates();
+        };
+        updateHeight();
+      }
+
+      function updateNeighborhoodDropdown() {
+        const nbr = document.getElementById("NeighborhoodSelect"), prev = nbr.value;
+        nbr.innerHTML = "<option>All Neighborhoods</option>";
+        getNeighborhoodList().forEach((n) => nbr.add(new Option(n, n)));
+        if (getNeighborhoodList().includes(prev)) nbr.value = prev;
+      }
+
+      function updateBoroughs() {
+        if (
+          selectedBorough === "All Counties" &&
+          document.getElementById("toggleFilters").getAttribute("aria-expanded") === "false"
+        ) {
+          document.querySelector(".top-row").classList.add("hide");
+        } else {
+          document.querySelector(".top-row").classList.remove("hide");
+        }
+        document.querySelectorAll(".pill-btn").forEach((btn) => {
+          const a = btn.textContent === selectedBorough;
+          btn.classList.toggle("active", a);
+          btn.setAttribute("aria-pressed", a);
+        });
+        updateNeighborhoodDropdown();
+      }
+
+      function getNeighborhoodList() {
+        if (selectedBorough === "All Counties" || selectedBorough === "South Florida") {
+          return [ ...new Set([].concat(...Object.values(neighborhoods).map((s) => [...s]))) ].sort();
+        }
+        return [...(neighborhoods[selectedBorough] || [])].sort();
+      }
+
+      function renderAggregates() {
+        showingAggregates = true;
+        const quarterSel = document.getElementById("DateRangeSelect").value;
+        const typeSel = document.getElementById("PropertyTypeSelect").value;
+        document.getElementById("summary").textContent = `Showing aggregates for ${fmtYearMonth(quarterSel)}, ${typeSel}`;
+        const c = document.getElementById("results");
+        c.innerHTML = "";
+        // find out which fields to display. If all the keys are NaN, hide them.
+        const displayKeys = [];
+        aggregates.forEach((a) => {
+          keys.forEach((k) => { if (!isNaN(a[k]) && !displayKeys.includes(k)) displayKeys.push(k); });
+        });
+        aggregates.forEach((a) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.tabIndex = 0;
+          card.setAttribute("role", "button");
+          card.onclick = () => {
+            showingAggregates = false;
+            selectedBorough = a.borough === "South Florida" ? "All Counties" : a.borough;
+            if (a.borough !== "South Florida") updateBoroughs();
+            filter();
+          };
+          card.innerHTML = `
+          <div class="card-header">
+            <h4>${a.borough}</h4>
+            <span class="pill-type">${typeSel}</span>
+          </div>
+          <div class="price-row">
+            ${ displayKeys.includes("sales_volume") ? renderRowCell(fmtAbbrev(a.sales_volume), "Sales Vol.", "price-item sales") : "" }
+            ${ displayKeys.includes("avg_price") ? renderRowCell(fmtAbbrev(a.avg_price), "Avg Price", "price-item avg") : "" }
+            ${ displayKeys.includes("median_price") ? renderRowCell(fmtAbbrev(a.median_price), "Median Price", "price-item median") : "" }
+          </div>
+          <div class="bottom-row">
+            ${ displayKeys.includes("number_of_deals") ? renderRowCell(fmtNumber(a.number_of_deals), "Deals", "metric deals") : "" }
+            ${ displayKeys.includes("avg_asking_rent") ? renderRowCell(fmtWhole(a.avg_asking_rent), "Median Asking Rent", "metric rent") : "" }
+            ${ displayKeys.includes("PPSF") ? renderRowCell(fmtAbbrev(a.PPSF), "PPSF", "metric ppsf") : "" }
+          </div>`;
+          c.appendChild(card);
+        });
+        updateHeight();
+      }
+
+      function renderRowCell(value, label, className) {
+        return `<div class="${className}">
+          <div class="value">${value}</div>
+          <div class="label">${label}</div>
+        </div>`;
+      }
+
+      function filter() {
+        if (document.body.classList.contains("iframe")) { return; }
+        if (showingAggregates) { renderAggregates(); return; }
+        const nbrV = document.getElementById("NeighborhoodSelect").value;
+        const drV = document.getElementById("DateRangeSelect").value;
+        const ptV = document.getElementById("PropertyTypeSelect").value;
+        const filtered = rawData.filter((r) => {
+          if (selectedBorough !== "All Counties" && r.borough !== selectedBorough) return false;
+          if (nbrV !== "All Neighborhoods" && r.neighborhood !== nbrV) return false;
+          if (r.year_month !== drV) return false;
+          if (ptV !== "All Types" && r.property_group !== ptV) return false;
+          return true;
+        });
+        document.getElementById("summary").textContent = `Showing ${filtered.length} of ${totalCards} cards`;
+        renderNeighborhoods(filtered);
+      }
+
+      function renderNeighborhoods(data) {
+        const c = document.getElementById("results");
+        c.innerHTML = "";
+        if (!data.length) {
+          c.innerHTML = '<div class="no-results">😔 No cards match.</div>';
+          return;
+        }
+        const displayKeys = [];
+        aggregates.forEach((a) => {
+          keys.forEach((k) => { if (!isNaN(a[k]) && !displayKeys.includes(k)) displayKeys.push(k); });
+        });
+        data.forEach((a) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.tabIndex = 0;
+          card.setAttribute("role", "button");
+          card.onclick = () => toggleHistory(card, a.neighborhood, a.property_group);
+          card.innerHTML = `
+          <div class="card-header">
+            <div>
+              <h4>${a.neighborhood}</h4>
+              <div class="details">${a.borough} • ${fmtYearMonth(a.year_month)}</div>
+            </div>
+            <span class="pill-type">${a.property_group}</span>
+          </div>
+          <div class="price-row">
+            ${ displayKeys.includes("sales_volume") ? renderRowCell(fmtAbbrev(a.sales_volume), "Sales Vol.", "price-item sales") : "" }
+            ${ displayKeys.includes("avg_price") ? renderRowCell(fmtAbbrev(a.avg_price), "Avg Price", "price-item avg") : "" }
+            ${ displayKeys.includes("median_price") ? renderRowCell(fmtAbbrev(a.median_price), "Median Price", "price-item median") : "" }
+          </div>
+          <div class="bottom-row">
+            ${ displayKeys.includes("number_of_deals") ? renderRowCell(fmtNumber(a.number_of_deals), "Deals", "metric deals") : "" }
+            ${ displayKeys.includes("avg_asking_rent") ? renderRowCell(fmtWhole(a.avg_asking_rent), "Median Asking Rent", "metric rent") : "" }
+            ${ displayKeys.includes("PPSF") ? renderRowCell(fmtAbbrev(a.PPSF), "PPSF", "metric ppsf") : "" }
+          </div>`;
+          c.appendChild(card);
+        });
+        updateHeight();
+      }
+
+      // Build the modal content (history table + charts)
+      function buildHistoryTableHTML(neighborhood, type) {
+        const rows = historyMap[neighborhood]
+          .filter((r) => r.property_group === type)
+          .sort((a, b) => a.year_month.localeCompare(b.year_month));
+        let html = `
+        <div class="model-header">
+          <h3>${neighborhood} - ${rows[0].borough}</h3>
+          <span class="pill-type">${type}</span>
+          <button class="pill-btn" onclick="closeModel()">Close</button>
+        </div>
+        <div class="model-content">
+          <div class="graphs">
+            <div class="graph-container">
+              <h4>Sales History</h4>
+              <div class="chart"><canvas id="chart-main"></canvas></div>
+            </div>
+            <div class="graph-container">
+              <h4>Price History</h4>
+              <div class="chart"><canvas id="chart-rent"></canvas></div>
+            </div>
+          </div>
+          <table class="table">
+            <tr><th>Month</th><th>Sales</th><th>Avg</th><th>Med</th><th>Deals</th><th>Rent</th><th>PPSF</th></tr>`;
+        rows.forEach((row, i) => {
+          const nxt = rows[i + 1] || row;
+          const sel = row.year_month === document.getElementById("DateRangeSelect").value ? "selected-quarter" : "";
+          const m = {
+            sales: row.sales_volume,
+            avg: row.avg_price,
+            median: row.median_price,
+            deals: row.number_of_deals,
+            rent: row.avg_asking_rent,
+            ppsf: row.PPSF,
+          };
+          const p = {
+            sales: nxt.sales_volume,
+            avg: nxt.avg_price,
+            median: nxt.median_price,
+            deals: nxt.number_of_deals,
+            rent: nxt.avg_asking_rent,
+            ppsf: nxt.PPSF,
+          };
+          html += `<tr class="${sel}"><td>${row.year_month}</td>`;
+          ["sales", "avg", "median", "deals", "rent", "ppsf"].forEach((k) => {
+            let d = "", a = "";
+            if (!isNaN(m[k]) && !isNaN(p[k])) {
+              d = m[k] >= p[k] ? "up" : "down";
+              a = ` <span class="${d}">${d === "up" ? "▲" : "▼"}</span>`;
+            }
+            let val;
+            if (k === "deals") val = isNaN(m[k]) ? "–" : Number(m[k]).toLocaleString();
+            else if (k === "rent") val = fmtWhole(m[k]);
+            else val = fmtAbbrev(m[k]);
+            html += `<td class="${d}">${val}${a}</td>`;
+          });
+          html += "</tr>";
+        });
+        html += "</table>";
+        html += `</div>`;
+        return html;
+      }
+
+      // Renders the two line charts
+      function renderHistoryCharts(panel, neighborhood, type) {
+        const rows = historyMap[neighborhood]
+          .filter((r) => r.property_group === type)
+          .sort((a, b) => a.year_month.localeCompare(b.year_month));
+        const labels = rows.map((r) => r.year_month);
+        const mainData = {
+          labels,
+          datasets: [
+            { label: "Sales Vol.", data: rows.map((r) => r.sales_volume), tension: 0.3, borderWidth: 2, pointRadius: 2, yAxisID: "y1" },
+            { label: "Avg Price", data: rows.map((r) => r.avg_price), tension: 0.3, borderWidth: 2, pointRadius: 2, yAxisID: "y2" },
+            { label: "Median Price", data: rows.map((r) => r.median_price), tension: 0.3, borderWidth: 2, pointRadius: 2, yAxisID: "y2" },
+          ],
+        };
+        const rentData = {
+          labels,
+          datasets: [
+            { label: "Median Rent", data: rows.map((r) => r.avg_asking_rent), tension: 0.3, borderWidth: 2, pointRadius: 2 },
+            { label: "PPSF", data: rows.map((r) => r.PPSF), tension: 0.3, borderWidth: 2, pointRadius: 2 },
+          ],
+        };
+        const commonOpts = {
+          scales: { y: { beginAtZero: true, ticks: { callback: (v) => fmtAbbrev(v, 0) } } },
+          plugins: { legend: { position: "bottom", labels: { boxWidth: 12, padding: 8 } } },
+        };
+        const cm = panel.querySelector("#chart-main");
+        const cr = panel.querySelector("#chart-rent");
+        if (Chart.getChart(cm)) Chart.getChart(cm).destroy();
+        if (Chart.getChart(cr)) Chart.getChart(cr).destroy();
+        new Chart(cm, {
+          type: "line",
+          data: mainData,
+          options: {
+            ...commonOpts,
+            scales: {
+              y1: { type: "linear", position: "left", title: { display: true, text: "Sales Volume" }, ticks: { callback: (v) => fmtAbbrev(v, 0) } },
+              y2: { type: "linear", position: "right", title: { display: true, text: "Price" }, ticks: { callback: (v) => fmtAbbrev(v, 0) } },
+            },
+          },
+        });
+        new Chart(cr, { type: "line", data: rentData, options: commonOpts });
+      }
+
+      // Wire it all up when a card is expanded
+      function toggleHistory(card, neighborhood, type) {
+        const panel = document.querySelector("#model .model-container");
+        panel.innerHTML = buildHistoryTableHTML(neighborhood, type);
+        renderHistoryCharts(panel, neighborhood, type);
+        document.getElementById("model").classList.add("active");
+        document.body.classList.add("model-open");
+      }
+
+      function closeModel() {
+        document.getElementById("model").classList.remove("active");
+        document.body.classList.remove("model-open");
+      }
+      document.querySelector(".model").onclick = closeModel;
+      document.querySelector(".model-container").onclick = (e) => { e.stopPropagation(); };
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModel(); });
+    </script>
+  </body>
+</html>
