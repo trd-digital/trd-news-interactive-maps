@@ -101,6 +101,10 @@
     <script src="../trd-data/common-map/map.js?v=1.1"></script>
     <script src="filter-extension.js"></script>
     <script>
+        // {map-url}?property-type="Residential"
+        const queryParams = new URLSearchParams(window.location.search);
+        const propertyType = queryParams.get("property-type");
+
         // 1 Active -> 2 Hold -> 3 Final -> 4 Expired -> 5 Revoked -> 6 Other
         // Colors chosen for distinct hue / role; neutral gray for inactive, red for invalid.
         const legendKeys = [
@@ -166,7 +170,7 @@
                     label: "Latest Permit Issued Date",
                     format: "formatDate",
                 },
-                { field: "TotalCost", label: "Total Construction Cost" },
+                { field: "ScopeOfWork", label:"Permit Type" },
             ],
         };
 
@@ -175,8 +179,9 @@
             content: [
                 { field: "FolioNumber", label: "Folio Number" },
                 { field: "PropertyType", label: "Property Type" },
-                { field: "TotalCost", label: "Total Construction Cost" },
-                { field: "TotalSQFT(MAX)", label: "Max Total SQFT" },
+                { field: "ScopeOfWork", label:"Permit Type" },
+                { field: "TotalCost", label: "Total Construction Cost", format: "formatNumber" },
+                { field: "TotalSQFT", label: "Total SQFT", format: "formatNumber" },
                 {
                     field: "LatestIssuedDate",
                     label: "Latest Permit Issued Date",
@@ -230,6 +235,81 @@
                     { label: "Final", value: "Final" },
                     { label: "Expired", value: "Expired" },
                     { label: "Revoked", value: "Revoked" }
+                ],
+            },
+            {
+                title: "Property Type",
+                name: "property-type",
+                dataField: "PropertyType",
+                fieldType: "checkbox",
+                fieldLayoutClass: "checkbox-group",
+                multiSelect: true,
+                defaultValue: propertyType
+                    ? propertyType.charAt(0).toUpperCase() + propertyType.slice(1)
+                    : null,
+                callback: (values, item) => {
+                    return values.some((value) =>
+                    item.properties["PropertyType"].includes(value)
+                    );
+                },
+                options: [
+                    {
+                    label: "Residential",
+                    value: "Residential",
+                    },
+                    {
+                    label: "Commercial",
+                    value: "Commercial",
+                    },
+                ],
+            },
+            {
+                title: "Total Square Footage",
+                name: "sqft",
+                dataField: "TotalSQFT",
+                fieldType: "checkbox",
+                fieldLayoutClass: "checkbox-group",
+                multiSelect: true,
+                defaultValue: null,
+                callback: (values, item) => {
+                    const sqftValue = item.properties?.TotalSQFT;
+                    if (sqftValue === undefined || sqftValue === null) return false;
+                    
+                    // Convert to number if it's a string
+                    const sqft = typeof sqftValue === 'string' ? 
+                        parseFloat(sqftValue.replace(/,/g, '')) : 
+                        Number(sqftValue);
+                        
+                    if (isNaN(sqft)) return false;
+                    
+                    // Check if sqft falls within any selected range
+                    return values.some(value => {
+                        const sqft_array = JSON.parse(value)
+                        console.log(sqft_array)
+                        if (Array.isArray(sqft_array) && sqft_array.length === 2) {
+                            const [minSqft, maxSqft] = sqft_array;
+                            return sqft >= minSqft && sqft < maxSqft;
+                        }
+                        return false;
+                    });
+                },
+                options: [
+                    {
+                        label: "< 5,000",
+                        value: "[0, 5000]",
+                    },
+                    {
+                        label: "5,000 to 10,000",
+                        value: "[5000, 10000]",
+                    },
+                    {
+                        label: "10,000 to 100,000",
+                        value: "[10000, 100000]",
+                    },
+                    {
+                        label: ">= 100,000",
+                        value: "[100000, 999999999999]",
+                    },
                 ],
             },
             {
@@ -339,7 +419,7 @@
         window.map = trdDataCommonMap({
             fetchDataFilterCallback,
             eventCategory: "miami-construction-map",
-            filePath: "https://static.therealdeal.com/interactive-maps/miami-construction-map.geojson",
+            filePath: "https://teststatic.therealdeal.com/interactive-maps/miami-construction-map.geojson",
             mapElementId: "map",
             filterElementId: "map-filters",
             legendElementId: "legend",
