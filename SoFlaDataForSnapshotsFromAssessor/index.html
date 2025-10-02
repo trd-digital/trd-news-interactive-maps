@@ -217,6 +217,20 @@
         const n = Number(String(x).replace(/[^\d.\-]/g, ""));
         return Number.isFinite(n) ? n : NaN;
       }
+    
+    // QoQ helpers
+      function qoqTrend(curr, prev) {
+        if (!Number.isFinite(curr) || !Number.isFinite(prev)) return { cls: "", arrow: "" };
+        if (curr > prev) return { cls: "up", arrow: "▲" };
+        if (curr < prev) return { cls: "down", arrow: "▼" };
+        return { cls: "", arrow: "" }; // unchanged
+      }
+      function tdTrend(curr, prev, fmtFn) {
+        const { cls, arrow } = qoqTrend(curr, prev);
+        const val = fmtFn(curr);
+        return `<td class="${cls}">${val}${arrow ? ` <span>${arrow}</span>` : ""}</td>`;
+      }
+
 
       // ---------- Load JSON ----------
       fetch("./fl_market.json")
@@ -571,43 +585,53 @@ function renderNeighborhoods(data) {
 
 
       // ---------- History modal (uses selected type; falls back to All Types) ----------
-      function buildHistoryTableHTML(city, typeSel) {
-        const byType = historyMap[city] || {};
-        const rows = (byType[typeSel] || byType["All Types"] || []).slice().sort((a,b)=>a.quarter.localeCompare(b.quarter));
-        if (!rows.length) return "<div style='padding:12px'>No history.</div>";
+function buildHistoryTableHTML(city, typeSel) {
+  const byType = historyMap[city] || {};
+  const rowsAsc = (byType[typeSel] || byType["All Types"] || [])
+    .slice()
+    .sort((a, b) => a.quarter.localeCompare(b.quarter)); // chronological (oldest -> newest)
 
-        let html = `
-          <div class="model-header">
-            <h3>${city} - ${rows[0].county}</h3>
-            <span class="pill-type">${typeSel}</span>
-            <button class="pill-btn" onclick="closeModel()">Close</button>
-          </div>
-          <div class="model-content">
-            <div class="graphs">
-              <div class="graph-container">
-                <h4>Deals & Price</h4>
-                <div class="chart"><canvas id="chart-main"></canvas></div>
-              </div>
-              <div class="graph-container">
-                <h4>Sales Volume</h4>
-                <div class="chart"><canvas id="chart-sum"></canvas></div>
-              </div>
-            </div>
-            <table class="table">
-              <tr><th>Quarter</th><th>Sales Vol.</th><th>Avg</th><th>Median</th><th>Deals</th></tr>`;
-        rows.forEach((row) => {
-          const sel = row.quarter === document.getElementById("DateRangeSelect").value ? "selected-quarter" : "";
-          html += `<tr class="${sel}">
-            <td>${fmtQuarter(row.quarter)}</td>
-            <td>${fmtAbbrev(row.sales_volume)}</td>
-            <td>${fmtAbbrev(row.avg_price)}</td>
-            <td>${fmtAbbrev(row.median_price)}</td>
-            <td>${fmtNumber(row.number_of_deals)}</td>
-          </tr>`;
-        });
-        html += "</table></div>";
-        return html;
-      }
+  const rows = rowsAsc.slice().reverse(); // newest -> oldest for table
+
+  if (!rows.length) return "<div style='padding:12px'>No history.</div>";
+
+  let html = `
+    <div class="model-header">
+      <h3>${city} - ${rows[rows.length - 1].county}</h3>
+      <span class="pill-type">${typeSel}</span>
+      <button class="pill-btn" onclick="closeModel()">Close</button>
+    </div>
+    <div class="model-content">
+      <div class="graphs">
+        <div class="graph-container">
+          <h4>Deals & Price</h4>
+          <div class="chart"><canvas id="chart-main"></canvas></div>
+        </div>
+        <div class="graph-container">
+          <h4>Sales Volume</h4>
+          <div class="chart"><canvas id="chart-sum"></canvas></div>
+        </div>
+      </div>
+      <table class="table">
+        <tr><th>Quarter</th><th>Sales Vol.</th><th>Avg</th><th>Median</th><th>Deals</th></tr>`;
+
+  rows.forEach((row, i) => {
+    // Since table is newest->oldest, the previous *chronological* quarter is the next row
+    const prev = i < rows.length - 1 ? rows[i + 1] : null;
+    const isSelected = row.quarter === document.getElementById("DateRangeSelect").value;
+    html += `<tr class="${isSelected ? "selected-quarter" : ""}">
+      <td>${fmtQuarter(row.quarter)}</td>
+      ${tdTrend(row.sales_volume,    prev?.sales_volume,    fmtAbbrev)}
+      ${tdTrend(row.avg_price,       prev?.avg_price,       fmtAbbrev)}
+      ${tdTrend(row.median_price,    prev?.median_price,    fmtAbbrev)}
+      ${tdTrend(row.number_of_deals, prev?.number_of_deals, fmtNumber)}
+    </tr>`;
+  });
+
+  html += "</table></div>";
+  return html;
+}
+
 
       function renderHistoryCharts(panel, city, typeSel) {
         const byType = historyMap[city] || {};
