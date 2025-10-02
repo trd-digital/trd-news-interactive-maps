@@ -313,6 +313,54 @@
                 ],
             },
             {
+                title: "Total Construction Cost",
+                name: "cost",
+                dataField: "TotalCost",
+                fieldType: "checkbox",
+                fieldLayoutClass: "checkbox-group",
+                multiSelect: true,
+                defaultValue: null,
+                callback: (values, item) => {
+                    const costValue = item.properties?.TotalCost;
+                    if (costValue === undefined || costValue === null) return false;
+                    
+                    // Convert to number if it's a string
+                    const cost = typeof costValue === 'string' ? 
+                        parseFloat(costValue.replace(/,/g, '')) : 
+                        Number(costValue);
+                        
+                    if (isNaN(cost)) return false;
+                    
+                    // Check if cost falls within any selected range
+                    return values.some(value => {
+                        const cost_array = JSON.parse(value)
+                        if (Array.isArray(cost_array) && cost_array.length === 2) {
+                            const [minCost, maxCost] = cost_array;
+                            return cost >= minCost && cost < maxCost;
+                        }
+                        return false;
+                    });
+                },
+                options: [
+                    {
+                        label: "< 100,000",
+                        value: "[0, 100000]",
+                    },
+                    {
+                        label: "100,000 to 1,000,000",
+                        value: "[100000, 1000000]",
+                    },
+                    {
+                        label: "1,000,000 to 10,000,000",
+                        value: "[1000000, 10000000]",
+                    },
+                    {
+                        label: ">= 10,000,000",
+                        value: "[10000000, 999999999999]",
+                    },
+                ],
+            },
+            {
                 title: "Latest Permit Year",
                 name: "year",
                 dataField: "LatestPermitYear",
@@ -335,9 +383,9 @@
 
         const list = [];
         const statusCounts = {}; // collect counts of each LatestStatus ('' for blank)
+        const sqftCounts = {}; // collect counts for square footage ranges
         window.statusCounts = statusCounts;
-
-        // Defensive + explicit declaration
+        window.sqftCounts = sqftCounts;        // Defensive + explicit declaration
         const fetchDataFilterCallback = (data) => {
             if (!data || !Array.isArray(data.features)) {
                 console.warn("GeoJSON missing features array; received:", data);
@@ -350,6 +398,7 @@
 
             // reset counts in case of re-load
             Object.keys(statusCounts).forEach(k => delete statusCounts[k]);
+            Object.keys(sqftCounts).forEach(k => delete sqftCounts[k]);
 
             const filteredFeatures = [];
             for (const item of data.features) {
@@ -376,6 +425,28 @@
                     list.push(status);
                 }
                 statusCounts[status] = (statusCounts[status] || 0) + 1;
+                
+                // Calculate square footage counts
+                const sqftValue = item.properties?.TotalSQFT;
+                if (sqftValue !== undefined && sqftValue !== null) {
+                    const sqft = typeof sqftValue === 'string' ? 
+                        parseFloat(sqftValue.replace(/,/g, '')) : 
+                        Number(sqftValue);
+                        
+                    if (!isNaN(sqft)) {
+                        // Check which range this square footage falls into
+                        if (sqft < 5000) {
+                            sqftCounts['[0, 5000]'] = (sqftCounts['[0, 5000]'] || 0) + 1;
+                        } else if (sqft < 10000) {
+                            sqftCounts['[5000, 10000]'] = (sqftCounts['[5000, 10000]'] || 0) + 1;
+                        } else if (sqft < 100000) {
+                            sqftCounts['[10000, 100000]'] = (sqftCounts['[10000, 100000]'] || 0) + 1;
+                        } else {
+                            sqftCounts['[100000, 999999999999]'] = (sqftCounts['[100000, 999999999999]'] || 0) + 1;
+                        }
+                    }
+                }
+                
                 filteredFeatures.push(item);
             }
 
@@ -467,9 +538,9 @@
                     return;
                 }
 
-                // Build a set of known option ids for the status field
+                // Update all filter option containers
                 optionContainers.forEach(container => {
-                    const input = container.querySelector('input[name="status"]');
+                    const input = container.querySelector('input[name="status"], input[name="sqft"]');
                     const label = container.querySelector('label.filter-option');
 
                     if (!input || !label) {
@@ -483,8 +554,16 @@
                         console.log(`Set base label for ${input.value}: "${label.dataset.baseLabel}"`);
                     }
 
-                    const value = input.value; // '' for Other
-                    const count = window.statusCounts ? (window.statusCounts[value] || 0) : 0;
+                    const value = input.value;
+                    let count = 0;
+                    
+                    // Get count based on filter type
+                    if (input.name === 'status') {
+                        count = window.statusCounts ? (window.statusCounts[value] || 0) : 0;
+                    } else if (input.name === 'sqft') {
+                        count = window.sqftCounts ? (window.sqftCounts[value] || 0) : 0;
+                    }
+                    
                     label.textContent = `${label.dataset.baseLabel} (${count.toLocaleString()})`;
                 });
             }
@@ -544,14 +623,42 @@
                 console.log("Custom filtered event received");
                 if (e.detail && Array.isArray(e.detail.features)) {
                     // recompute counts from provided feature set
-                    const newCounts = {};
+                    const newStatusCounts = {};
+                    const newSqftCounts = {};
+                    
                     e.detail.features.forEach(f => {
+                        // Status counts
                         const s = (f.properties && f.properties.LatestStatus) || '';
-                        newCounts[s] = (newCounts[s] || 0) + 1;
+                        newStatusCounts[s] = (newStatusCounts[s] || 0) + 1;
+                        
+                        // Square footage counts
+                        const sqftValue = f.properties?.TotalSQFT;
+                        if (sqftValue !== undefined && sqftValue !== null) {
+                            const sqft = typeof sqftValue === 'string' ? 
+                                parseFloat(sqftValue.replace(/,/g, '')) : 
+                                Number(sqftValue);
+                                
+                            if (!isNaN(sqft)) {
+                                if (sqft < 5000) {
+                                    newSqftCounts['[0, 5000]'] = (newSqftCounts['[0, 5000]'] || 0) + 1;
+                                } else if (sqft < 10000) {
+                                    newSqftCounts['[5000, 10000]'] = (newSqftCounts['[5000, 10000]'] || 0) + 1;
+                                } else if (sqft < 100000) {
+                                    newSqftCounts['[10000, 100000]'] = (newSqftCounts['[10000, 100000]'] || 0) + 1;
+                                } else {
+                                    newSqftCounts['[100000, 999999999999]'] = (newSqftCounts['[100000, 999999999999]'] || 0) + 1;
+                                }
+                            }
+                        }
                     });
+                    
                     // replace global counts then refresh labels
                     Object.keys(statusCounts).forEach(k => delete statusCounts[k]);
-                    Object.entries(newCounts).forEach(([k, v]) => statusCounts[k] = v);
+                    Object.entries(newStatusCounts).forEach(([k, v]) => statusCounts[k] = v);
+                    
+                    Object.keys(sqftCounts).forEach(k => delete sqftCounts[k]);
+                    Object.entries(newSqftCounts).forEach(([k, v]) => sqftCounts[k] = v);
+                    
                     updateLabels();
                 }
             });
