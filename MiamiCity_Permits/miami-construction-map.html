@@ -390,9 +390,11 @@
         const statusCounts = {}; // collect counts of each LatestStatus ('' for blank)
         const sqftCounts = {}; // collect counts for square footage ranges
         const costCounts = {};
+        const propertyTypeCounts = {};
         window.statusCounts = statusCounts;
         window.sqftCounts = sqftCounts;        // Defensive + explicit declaration
         window.costCounts = costCounts
+        window.propertyTypeCounts = propertyTypeCounts;
         const fetchDataFilterCallback = (data) => {
             if (!data || !Array.isArray(data.features)) {
                 console.warn("GeoJSON missing features array; received:", data);
@@ -407,6 +409,7 @@
             Object.keys(statusCounts).forEach(k => delete statusCounts[k]);
             Object.keys(sqftCounts).forEach(k => delete sqftCounts[k]);
             Object.keys(costCounts).forEach(k => delete costCounts[k]);
+            Object.keys(propertyTypeCounts).forEach(k => delete propertyTypeCounts[k]);
 
             const filteredFeatures = [];
             for (const item of data.features) {
@@ -473,6 +476,18 @@
                         } else {
                             costCounts['[10000000, 999999999999]'] = (costCounts['[10000000, 999999999999]'] || 0) + 1;
                         }
+                    }
+                }
+                
+                // Calculate property type counts
+                const propertyType = item.properties?.PropertyType;
+                if (propertyType) {
+                    // Increment count for this property type
+                    if (propertyType.includes('Residential')) {
+                        propertyTypeCounts['Residential'] = (propertyTypeCounts['Residential'] || 0) + 1;
+                    }
+                    if (propertyType.includes('Commercial')) {
+                        propertyTypeCounts['Commercial'] = (propertyTypeCounts['Commercial'] || 0) + 1;
                     }
                 }
                 
@@ -567,7 +582,7 @@
 
                 // Update all filter option containers
                 optionContainers.forEach(container => {
-                    const input = container.querySelector('input[name="status"], input[name="sqft"], input[name="cost"]');
+                    const input = container.querySelector('input[name="status"], input[name="sqft"], input[name="cost"], input[name="property-type"]');
                     const label = container.querySelector('label.filter-option');
 
                     if (!input || !label) {
@@ -591,6 +606,8 @@
                         count = window.sqftCounts ? (window.sqftCounts[value] || 0) : 0;
                     } else if (input.name === 'cost') {
                         count = window.costCounts ? (window.costCounts[value] || 0) : 0;
+                    } else if (input.name === 'property-type') {
+                        count = window.propertyTypeCounts ? (window.propertyTypeCounts[value] || 0) : 0;
                     }
                     
                     label.textContent = `${label.dataset.baseLabel} (${count.toLocaleString()})`;
@@ -655,6 +672,7 @@
                     const newStatusCounts = {};
                     const newSqftCounts = {};
                     const newCostCounts = {};
+                    const newPropertyTypeCounts = {};
                     
                     e.detail.features.forEach(f => {
                         // Status counts
@@ -700,6 +718,17 @@
                                 }
                             }
                         }
+                        
+                        // Property type counts
+                        const propertyType = f.properties?.PropertyType;
+                        if (propertyType) {
+                            if (propertyType.includes('Residential')) {
+                                newPropertyTypeCounts['Residential'] = (newPropertyTypeCounts['Residential'] || 0) + 1;
+                            }
+                            if (propertyType.includes('Commercial')) {
+                                newPropertyTypeCounts['Commercial'] = (newPropertyTypeCounts['Commercial'] || 0) + 1;
+                            }
+                        }
                     });
                     
                     // replace global counts then refresh labels
@@ -711,6 +740,9 @@
                     
                     Object.keys(costCounts).forEach(k => delete costCounts[k]);
                     Object.entries(newCostCounts).forEach(([k, v]) => costCounts[k] = v);
+                    
+                    Object.keys(propertyTypeCounts).forEach(k => delete propertyTypeCounts[k]);
+                    Object.entries(newPropertyTypeCounts).forEach(([k, v]) => propertyTypeCounts[k] = v);
                     
                     updateLabels();
                 }
