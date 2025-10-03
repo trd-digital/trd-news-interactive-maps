@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>September Notable Home Sales</title>
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_d6e83a9b20ad81b30eddce111bc3849e {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+<div style="
+  position: fixed;
+  top: 12px; left: 50%; transform: translateX(-50%);
+  z-index: 9999;
+  background: rgba(255,255,255,0.92);
+  padding: 8px 12px;
+  border: 1px solid #bbb; border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+  font: 600 16px/1.25 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  max-width: 92%;
+  text-align: center;
+">
+  September Notable Home Sales
+</div>
+    
+            <div class="folium-map" id="map_d6e83a9b20ad81b30eddce111bc3849e" ></div>
+        
+</body>
+<script>    
+    
+            var map_d6e83a9b20ad81b30eddce111bc3849e = L.map(
+                "map_d6e83a9b20ad81b30eddce111bc3849e",
+                {
+                    center: [42.065609159999994, -87.46374306],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 9,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+            L.control.scale().addTo(map_d6e83a9b20ad81b30eddce111bc3849e);
+
+            
+
+        
+    
+            var tile_layer_b775f18d1f42f881bf930adf27e6a12a = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_d6e83a9b20ad81b30eddce111bc3849e);
+        
+    
+            var circle_marker_d2f3041b586dc4fab7ca07149887feb5 = L.circleMarker(
+                [42.14498, -87.75490339999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_d6e83a9b20ad81b30eddce111bc3849e);
+        
+    
+        var popup_4a40e776c3c743b7c4fc2ff12e6e3b6b = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_c3611f43bb382c4968184090432e2f6a = $(`<div id="html_c3611f43bb382c4968184090432e2f6a" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>1 Glade Rd, Glencoe, IL 60022</td></tr><tr><th style='text-align:left;padding-right:8px'>Sale date</th><td>09/02/25</td></tr><tr><th style='text-align:left;padding-right:8px'>Sale price</th><td>$8,250,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Last asking price</th><td>N/A (off market)</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://www.redfin.com/IL/Glencoe/1-Glade-Rd-60022/home/13793420" target="_blank" rel="noopener">https://www.redfin.com/IL/Glencoe/1-Glade-Rd-60022/home/13793420</a></td></tr></table></div>`)[0];
+                popup_4a40e776c3c743b7c4fc2ff12e6e3b6b.setContent(html_c3611f43bb382c4968184090432e2f6a);
+            
+        
+
+        circle_marker_d2f3041b586dc4fab7ca07149887feb5.bindPopup(popup_4a40e776c3c743b7c4fc2ff12e6e3b6b)
+        ;
+
+        
+    
+    
+            var circle_marker_d15bd11788829915d4f54f57c87526e6 = L.circleMarker(
+                [42.0945086, -87.71072079999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_d6e83a9b20ad81b30eddce111bc3849e);
+        
+    
+        var popup_b40740ce85c5ea3c6297a9d67d4bb131 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_f9619debaf97cda1b73aa5255f6b9696 = $(`<div id="html_f9619debaf97cda1b73aa5255f6b9696" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>501 Sheridan Rd, Kenilworth, IL 60043</td></tr><tr><th style='text-align:left;padding-right:8px'>Sale date</th><td>09/11/25</td></tr><tr><th style='text-align:left;padding-right:8px'>Sale price</th><td>$6,800,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Last asking price</th><td>$7,695,750</td></tr><tr><th style='text-align:left;padding-right:8px'>Listing Agent</th><td>Nancy Nugent and Ryan Preuett, Jameson Sotheby&#x27;s International Realty</td></tr><tr><th style='text-align:left;padding-right:8px'>Buying Agent</th><td>Milena Birov, @properties Christie&#x27;s International Real Estate</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://www.zillow.com/homedetails/501-Sheridan-Rd-Kenilworth-IL-60043/3363985_zpid/" target="_blank" rel="noopener">https://www.zillow.com/homedetails/501-Sheridan-Rd-Kenilworth-IL-60043/3363985_zpid/</a></td></tr></table></div>`)[0];
+                popup_b40740ce85c5ea3c6297a9d67d4bb131.setContent(html_f9619debaf97cda1b73aa5255f6b9696);
+            
+        
+
+        circle_marker_d15bd11788829915d4f54f57c87526e6.bindPopup(popup_b40740ce85c5ea3c6297a9d67d4bb131)
+        ;
+
+        
+    
+    
+            var circle_marker_72cb0a8006a6fd3779c61f7e21a1eb2c = L.circleMarker(
+                [41.8823893, -87.65522539999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_d6e83a9b20ad81b30eddce111bc3849e);
+        
+    
+        var popup_9e9287cef25a0b66205f533cbc60b66d = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_7b40de798470f090a5f6ff48e65c0974 = $(`<div id="html_7b40de798470f090a5f6ff48e65c0974" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>21 N May St #1502, Chicago, IL 60607</td></tr><tr><th style='text-align:left;padding-right:8px'>Sale date</th><td>09/25/25</td></tr><tr><th style='text-align:left;padding-right:8px'>Sale price</th><td>$5,250,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Last asking price</th><td>$5,995,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Listing Agent</th><td>Mark Icuss and Timothy Sheahan, Compass</td></tr><tr><th style='text-align:left;padding-right:8px'>Buying Agent</th><td>Julie Busby, Compass</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://www.zillow.com/homedetails/21-N-May-St-1502-Chicago-IL-60607/443127024_zpid/" target="_blank" rel="noopener">https://www.zillow.com/homedetails/21-N-May-St-1502-Chicago-IL-60607/443127024_zpid/</a></td></tr></table></div>`)[0];
+                popup_9e9287cef25a0b66205f533cbc60b66d.setContent(html_7b40de798470f090a5f6ff48e65c0974);
+            
+        
+
+        circle_marker_72cb0a8006a6fd3779c61f7e21a1eb2c.bindPopup(popup_9e9287cef25a0b66205f533cbc60b66d)
+        ;
+
+        
+    
+    
+            var circle_marker_8a1f80515b61421649ed7cb1105d51b9 = L.circleMarker(
+                [42.41413499999999, -86.2752727],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_d6e83a9b20ad81b30eddce111bc3849e);
+        
+    
+        var popup_1b40bbfc7be0156d1ee9a3375d978e9a = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_f1d00815c012d59af87051dc30285b55 = $(`<div id="html_f1d00815c012d59af87051dc30285b55" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>443 N Shore Dr, South Haven, MI 49090</td></tr><tr><th style='text-align:left;padding-right:8px'>Sale date</th><td>09/05/25</td></tr><tr><th style='text-align:left;padding-right:8px'>Sale price</th><td>$4,000,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Last asking price</th><td>$4,400,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Listing Agent</th><td>Andis Klavins, Berkshire Hathaway HomeServices Michigan Real Estate</td></tr><tr><th style='text-align:left;padding-right:8px'>Buying Agent</th><td>Tammy L Kerr, BHG Connections</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://www.zillow.com/homedetails/443-N-Shore-Dr-South-Haven-MI-49090/74833365_zpid/" target="_blank" rel="noopener">https://www.zillow.com/homedetails/443-N-Shore-Dr-South-Haven-MI-49090/74833365_zpid/</a></td></tr></table></div>`)[0];
+                popup_1b40bbfc7be0156d1ee9a3375d978e9a.setContent(html_f1d00815c012d59af87051dc30285b55);
+            
+        
+
+        circle_marker_8a1f80515b61421649ed7cb1105d51b9.bindPopup(popup_1b40bbfc7be0156d1ee9a3375d978e9a)
+        ;
+
+        
+    
+    
+            var circle_marker_18d12a44094056ae8746f79369acd345 = L.circleMarker(
+                [41.7920329, -87.92259299999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_d6e83a9b20ad81b30eddce111bc3849e);
+        
+    
+        var popup_249af31dab4ba65687286f3c1093829d = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_8ea40c639724d0e2727dbd2223586dc3 = $(`<div id="html_8ea40c639724d0e2727dbd2223586dc3" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>818 S Elm St, Hinsdale, IL 60521</td></tr><tr><th style='text-align:left;padding-right:8px'>Sale date</th><td>09/11/25</td></tr><tr><th style='text-align:left;padding-right:8px'>Sale price</th><td>$5,900,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Last asking price</th><td>$7,295,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Listing Agent</th><td>Dawn McKenna, Coldwell Banker Realty</td></tr><tr><th style='text-align:left;padding-right:8px'>Buying Agent</th><td>Alexandra Shaban, Jameson Sotheby&#x27;s International Realty</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://www.zillow.com/homedetails/818-S-Elm-St-Hinsdale-IL-60521/72584616_zpid/" target="_blank" rel="noopener">https://www.zillow.com/homedetails/818-S-Elm-St-Hinsdale-IL-60521/72584616_zpid/</a></td></tr></table></div>`)[0];
+                popup_249af31dab4ba65687286f3c1093829d.setContent(html_8ea40c639724d0e2727dbd2223586dc3);
+            
+        
+
+        circle_marker_18d12a44094056ae8746f79369acd345.bindPopup(popup_249af31dab4ba65687286f3c1093829d)
+        ;
+
+        
+    
+</script>
