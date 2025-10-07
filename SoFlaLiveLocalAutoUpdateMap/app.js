@@ -9,7 +9,7 @@
       { field: "Total Units", label: "Total Units" },
       { field: "Percent Live Local", label: "Percent Live Local" },
       { field: "DescriptionDisplay", label: "" }, // italic line with <br>— prefix
-      { field: "Story", label: "Story" },         // hyperlink from Recent Coverage
+      { field: "Story", label: "Recent Coverage" },         // hyperlink from Recent Coverage
     ],
   };
 
