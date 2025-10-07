@@ -1,15 +1,15 @@
 (() => {
-  // Title = Developers; body shows Address, ital. Description (no label), and Story link
+  // Title = Developer; body shows Address, italic Description (no label), and Story link
   const modalDisplayFields = {
-    title: { field: "Developers", label: "Developers" },
+    title: { field: "Developers", label: "Developers" }, // we normalize to "Developers" below
     content: [
       { field: "Address", label: "Address" },
-      { field: "DescriptionDisplay", label: "" },  // italic, prefixed with line break + em dash
+      { field: "DescriptionDisplay", label: "" }, // italic, prefixed with line break + em dash
       { field: "Story", label: "Story" },
     ],
   };
 
-  // Treat blanks/None-ish as empty so fields are hidden
+  // Utilities
   const isEmpty = (v) => {
     if (v == null) return true;
     const s = String(v).trim();
@@ -18,6 +18,12 @@
     return ["none", "null", "n/a", "na", "—", "-"].includes(lower);
   };
   const cleanOrEmpty = (v) => (isEmpty(v) ? "" : String(v).trim());
+  const firstNonEmpty = (props, keys) => {
+    for (const k of keys) {
+      if (k in props && !isEmpty(props[k])) return String(props[k]).trim();
+    }
+    return "";
+  };
 
   window.map = trdDataCommonMap({
     filePath: "live_local.geojson",
@@ -26,25 +32,26 @@
       return {
         ...data,
         features: (data.features || []).map((feature) => {
-          const props = { ...(feature.properties || {}) };
+          const raw = feature.properties || {};
+          const props = { ...raw };
 
-          // Normalize fields we care about
-          const address = cleanOrEmpty(props.Address);
-          const devs = cleanOrEmpty(props.Developers);
-          const desc = cleanOrEmpty(props.Description);
-          const landing = cleanOrEmpty(props["Landing Page"]);
+          // Normalize fields (be lenient about key variants)
+          const developers = firstNonEmpty(props, ["Developer", "Developers", "Developer(s)"]);
+          const address = firstNonEmpty(props, ["Address", "Address(es)"]);
+          const description = firstNonEmpty(props, ["Description", "Desc"]);
+          const storyLink = firstNonEmpty(props, ["Recent Coverage", "Landing Page", "Story URL", "URL"]);
 
-          // Assign normalized values back
-          props.Address = address;                 // now in the body
-          props.Developers = devs;                 // now the title
+          // Title: Developers (fallback to Address if developer truly missing)
+          props.Developers = developers || address || "";
 
-          // Build Story from Landing Page (only if present)
-          props.Story = landing
-            ? `<a href="${landing}" target="_blank" rel="noopener">Open story</a>`
+          // Body fields
+          props.Address = address || "";
+          props.Story = storyLink
+            ? `<a href="${storyLink}" target="_blank" rel="noopener">Open story</a>`
             : "";
 
-          // Description: italicized w/ a preceding line break and em dash; no label
-          props.DescriptionDisplay = desc ? `<em><br>&mdash; ${desc}</em>` : "";
+          // Description as italic with a line break + em dash; no label
+          props.DescriptionDisplay = description ? `<em><br>&mdash; ${description}</em>` : "";
 
           feature.properties = props;
           return feature;
