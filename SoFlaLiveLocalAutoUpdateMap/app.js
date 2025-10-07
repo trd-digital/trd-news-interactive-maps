@@ -1,79 +1,51 @@
 (() => {
-  // Modal fields: Address as title; everything else is built into ContentHTML
+  // Title = Developers; body shows Address, ital. Description (no label), and Story link
   const modalDisplayFields = {
-    title: {
-      field: "Address",
-      label: "Address",
-    },
+    title: { field: "Developers", label: "Developers" },
     content: [
-      // This will contain labeled rows for Developers/Story and
-      // a special italic line for Description. Empty fields are skipped.
-      { field: "ContentHTML", label: "" },
+      { field: "Address", label: "Address" },
+      { field: "DescriptionDisplay", label: "" },  // italic, prefixed with line break + em dash
+      { field: "Story", label: "Story" },
     ],
   };
 
-  // Helper utils
+  // Treat blanks/None-ish as empty so fields are hidden
   const isEmpty = (v) => {
     if (v == null) return true;
     const s = String(v).trim();
     if (!s) return true;
-    // treat common placeholders as empty
     const lower = s.toLowerCase();
-    return lower === "none" || lower === "null" || lower === "n/a" || lower === "na" || lower === "—";
+    return ["none", "null", "n/a", "na", "—", "-"].includes(lower);
   };
-
-  const clean = (v) => {
-    if (isEmpty(v)) return "";
-    return String(v).trim();
-  };
-
-  // Build the inner HTML block shown in the modal
-  const buildContentHTML = (props) => {
-    const rows = [];
-
-    // Developers (with label), only if present
-    if (!isEmpty(props.Developers)) {
-      rows.push(`<div><strong>Developers:</strong> ${clean(props.Developers)}</div>`);
-    }
-
-    // Story derived from "Landing Page" (with label), only if present
-    const link = clean(props["Landing Page"]);
-    if (link) {
-      rows.push(
-        `<div><strong>Story:</strong> <a href="${link}" target="_blank" rel="noopener">Open story</a></div>`
-      );
-    }
-
-    // Description: italicized with a line break and an em dash
-    // Only if present. No "Description:" label per your spec.
-    if (!isEmpty(props.Description)) {
-      const desc = clean(props.Description);
-      rows.push(`<div><em><br>&mdash; ${desc}</em></div>`);
-    }
-
-    // If nothing to show, return an empty string (modal renderer should skip blank)
-    return rows.join("") || "";
-  };
+  const cleanOrEmpty = (v) => (isEmpty(v) ? "" : String(v).trim());
 
   window.map = trdDataCommonMap({
     filePath: "live_local.geojson",
 
-    // Normalize + compute presentational fields per feature
     fetchDataFilterCallback: (data) => {
       return {
         ...data,
         features: (data.features || []).map((feature) => {
           const props = { ...(feature.properties || {}) };
 
-          // Normalize core fields
-          props.Address = clean(props.Address);
-          props.Developers = clean(props.Developers);
-          props.Description = clean(props.Description);
+          // Normalize fields we care about
+          const address = cleanOrEmpty(props.Address);
+          const devs = cleanOrEmpty(props.Developers);
+          const desc = cleanOrEmpty(props.Description);
+          const landing = cleanOrEmpty(props["Landing Page"]);
 
-          // Build ContentHTML containing only non-empty sections
-          props.ContentHTML = buildContentHTML(props);
+          // Assign normalized values back
+          props.Address = address;                 // now in the body
+          props.Developers = devs;                 // now the title
 
-          // Keep original props (minus placeholders) on the feature
+          // Build Story from Landing Page (only if present)
+          props.Story = landing
+            ? `<a href="${landing}" target="_blank" rel="noopener">Open story</a>`
+            : "";
+
+          // Description: italicized w/ a preceding line break and em dash; no label
+          props.DescriptionDisplay = desc ? `<em><br>&mdash; ${desc}</em>` : "";
+
           feature.properties = props;
           return feature;
         }),
@@ -109,18 +81,9 @@
       colorType: "case",
       radiusType: "radius",
       paintSettings: {
-        default: {
-          radius: 8,
-          color: { light: "#007cbf", dark: "#007cbf" },
-        },
-        hover: {
-          radius: 10,
-          color: { light: "#007cbf", dark: "#007cbf" },
-        },
-        active: {
-          radius: 12,
-          color: { light: "black", dark: "white" },
-        },
+        default: { radius: 8, color: { light: "#007cbf", dark: "#007cbf" } },
+        hover: { radius: 10, color: { light: "#007cbf", dark: "#007cbf" } },
+        active: { radius: 12, color: { light: "black", dark: "white" } },
       },
     },
   });
