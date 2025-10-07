@@ -35,7 +35,7 @@
           // Keep the raw values (Status/Units/etc.) exactly as in the GeoJSON
           // Only build two presentational fields:
           const desc = clean(props.Description);
-          props.DescriptionDisplay = desc ? `<em><br>&mdash; ${desc}</em>` : "";
+          props.DescriptionDisplay = desc ? `<em>${desc}</em>` : "";
 
           const story = clean(props["Recent Coverage"]);
           props.Story = story ? `<a href="${story}" target="_blank" rel="noopener">Open story</a>` : "";
