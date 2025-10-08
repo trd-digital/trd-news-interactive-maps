@@ -92,12 +92,17 @@
           visible: true,
         },
         {
+          dataField: "Neighborhood",
+          name: "Neighborhood",
+          visible: true,
+        },
+        {
           dataField: "PropertyType",
           name: "Property Type",
           visible: true,
         },
         {
-          dataField: "ScopeofWork",
+          dataField: "PermitType",
           name: "Permit Type",
           visible: true,
         },
@@ -125,9 +130,9 @@
           visible: true,
         },
         {
-          dataField: "FolioNumber",
+          dataField: "FolioHyperlink",
           name: "Folio Number",
-          visible: true,
+          visible: false,
         },
         { 
           dataField: "WorkItems_from_LowestID", 
@@ -149,12 +154,6 @@
           name: "Latest Status Date",
           visible: false,
           sorter: TrdSorters.sortDate,
-        },
-        {
-          dataField: "URL", 
-          name: "Permit URL", 
-          visible: false,
-          formatter: TrdFormatters.formatLink,
         },
       ];
       const fetchDataFilterCallback = (data) => {
