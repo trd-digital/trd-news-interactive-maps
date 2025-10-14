@@ -10,16 +10,19 @@
     />
 
     <!-- Primary Meta Tags -->
-    <title>Daily Data Posts - The Real Deal</title>
-    <meta name="title" content="Daily Data Posts - The Real Deal" />
-    <meta name="description" content="Daily Data Posts in last month." />
-    <link rel="canonical" href="https://therealdeal.com/data/" />
+    <title>Daily News Articles - The Real Deal</title>
+    <meta name="title" content="Daily News Articles - The Real Deal" />
+    <meta name="description" content="Daily News Articles in last month." />
+    <link rel="canonical" href="https://therealdeal.com/latest/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://therealdeal.com/data/" />
-    <meta property="og:title" content="Daily Data Posts - The Real Deal" />
-    <meta property="og:description" content="Daily Data Posts in last month." />
+    <meta property="og:url" content="https://therealdeal.com/latest/" />
+    <meta property="og:title" content="Daily News Articles - The Real Deal" />
+    <meta
+      property="og:description"
+      content="Daily News Articles in last month."
+    />
     <meta
       property="og:image"
       content="https://static.therealdeal.com/wp-content/uploads/2019/10/trd-logo-16x9.jpg"
@@ -27,11 +30,14 @@
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://therealdeal.com/data/" />
-    <meta property="twitter:title" content="Daily Data Posts - The Real Deal" />
+    <meta property="twitter:url" content="https://therealdeal.com/latest/" />
+    <meta
+      property="twitter:title"
+      content="Daily News Articles - The Real Deal"
+    />
     <meta
       property="twitter:description"
-      content="Daily Data Posts in last month."
+      content="Daily News Articles in last month."
     />
     <meta
       property="twitter:image"
@@ -92,11 +98,17 @@
     <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
     <script src="../common-list/posts-list.js"></script>
     <script>
+      const searchParams = new URLSearchParams(window.location.search);
+      const market = searchParams.get("market");
+      let viewMoreSlug = "latest";
+      if (market) {
+        viewMoreSlug = market;
+      }
+
       trdPostList({
-        dataUrl:
-          "https://therealdeal.com/wp-json/wp/v2/dataset/?dataset-tag=53113",
+        dataUrl: "https://therealdeal.com/wp-json/wp/v2/posts/?",
         rootElement: document.getElementById("list"),
-        viewMoreUrl: "https://therealdeal.com/data/articles/",
+        viewMoreUrl: `https://therealdeal.com/${viewMoreSlug}/`,
       });
     </script>
   </body>
