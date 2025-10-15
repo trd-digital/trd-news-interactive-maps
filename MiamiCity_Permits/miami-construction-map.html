@@ -168,42 +168,46 @@
         ];
 
         const tooltipDisplayFields = {
-            title: { field: "DeliveryAddress", label: "Address" },
+            title: { field: "PropertyAddress", label: "Address" },
             content: [
                 { field: "PropertyType", label: "Property Type" },
                 {
-                    field: "LatestIssuedDate",
+                    field: "LatestPermitIssuedDate",
                     label: "Latest Permit Issued Date",
                     format: "formatDate",
                 },
-                { field: "ScopeofWork", label:"Permit Type" },
+                { field: "LatestPermitType", label:"Permit Type" },
             ],
         };
 
         const modalDisplayFields = {
-            title: { field: "DeliveryAddress", label: "Address" },
+            title: { field: "PropertyAddress", label: "Address" },
             content: [
                 { field: "Neighborhood", label: "Neighborhood" },
                 { field: "FolioHyperlink", label: "Folio Number" },
                 { field: "PropertyType", label: "Property Type" },
-                { field: "ScopeofWork", label:"Permit Type" },
-                { field: "TotalCost", label: "Total Construction Cost", format: "formatNumber" },
-                { field: "TotalSQFT", label: "Total SQFT", format: "formatNumber" },
+                { field: "LatestPermitType", label:"Permit Type" },
+                { field: "LatestApplicationType", label:"Application Type" },
+                { field: "LatestProposedUse", label:"Proposed Use" },
                 {
-                    field: "LatestIssuedDate",
+                    field: "LatestPermitIssuedDate",
                     label: "Latest Permit Issued Date",
                     format: "formatDate",
                 },
+                { field: "PermitCount", label: "Total Number of Permits", format: "formatNumber" }, 
+                { field: "MaxEstimatedValue", label: "Total Construction Cost", format: "formatNumber" },
+                { field: "MaxSquareFootage", label: "Total SQFT", format: "formatNumber" },
+                { field: "MaxStructureUnits", label: "Number of Units"},
+                { field: "MaxStructureFloors", label: "Number of Floors"},
+                { field: "PermitNumber", label: "Past Permits" },
+                { field: "DetailDescriptionComments", label: "Past Works" },
                 {
-                    field: "EarliestPlanAccepted",
-                    label: "Earliest Construction Plan Accepted",
-                    format: "formatDate",
+                    field: "ArchitectName",
+                    label: "Involved Architects",
                 },
-                { field: "LatestStatus", label: "Latest Permit Status" },
-                { field: "WorkItems_from_LowestID", label: "Work Items" },
                 {
-                    field: "CompanyNamesAsHTML",
-                    label: "Involved Companies",
+                    field: "ContractorName",
+                    label: "Involved Contractors",
                 },
                 {
                     field: "Link_Check",
@@ -273,7 +277,7 @@
             {
                 title: "Total Square Footage",
                 name: "sqft",
-                dataField: "TotalSQFT",
+                dataField: "MaxSquareFootage",
                 fieldType: "checkbox",
                 fieldLayoutClass: "checkbox-group",
                 multiSelect: true,
@@ -321,7 +325,7 @@
             {
                 title: "Total Construction Cost",
                 name: "cost",
-                dataField: "TotalCost",
+                dataField: "MaxEstimatedValue",
                 fieldType: "checkbox",
                 fieldLayoutClass: "checkbox-group",
                 multiSelect: true,
@@ -439,7 +443,7 @@
                 statusCounts[status] = (statusCounts[status] || 0) + 1;
                 
                 // Calculate square footage counts
-                const sqftValue = item.properties?.TotalSQFT;
+                const sqftValue = item.properties?.MaxSquareFootage;
                 if (sqftValue !== undefined && sqftValue !== null) {
                     const sqft = typeof sqftValue === 'string' ? 
                         parseFloat(sqftValue.replace(/,/g, '')) : 
@@ -460,7 +464,7 @@
                 }
                 
                 // Calculate construction cost counts
-                const costValue = item.properties?.TotalCost;
+                const costValue = item.properties?.MaxEstimatedValue;
                 if (costValue !== undefined && costValue !== null) {
                     const cost = typeof costValue === 'string' ? 
                         parseFloat(costValue.replace(/,/g, '')) : 
