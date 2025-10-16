@@ -219,36 +219,6 @@
 
         const filterFields = [
             {
-                title: "Status",
-                name: "status",
-                dataField: "LatestStatus",
-                fieldType: "checkbox",
-                fieldLayoutClass: "checkbox-group",
-                multiSelect: true,
-                callback: (values, item) => {
-                    const status = (item.properties && item.properties["LatestStatus"]) || "";
-                    return values.some((value) => {
-                        // Empty value represents explicit blank / uncategorized
-                        if (value === "" || value.length === 0) {
-                            return status === "";
-                        }
-                        // Support grouped values separated by |
-                        const group = value.split("|");
-                        for (const v of group) {
-                            if (status.includes(v)) return true;
-                        }
-                        return false;
-                    });
-                },
-                options: [
-                    { label: "Active", value: "Active" },
-                    { label: "Hold", value: "Hold" },
-                    { label: "Final", value: "Final" },
-                    { label: "Expired", value: "Expired" },
-                    { label: "Revoked", value: "Revoked" }
-                ],
-            },
-            {
                 title: "Property Type",
                 name: "property-type",
                 dataField: "PropertyType",
@@ -283,7 +253,7 @@
                 multiSelect: true,
                 defaultValue: null,
                 callback: (values, item) => {
-                    const sqftValue = item.properties?.TotalSQFT;
+                    const sqftValue = item.properties?.MaxSquareFootage;
                     if (sqftValue === undefined || sqftValue === null) return false;
                     
                     // Convert to number if it's a string
@@ -323,6 +293,58 @@
                 ],
             },
             {
+                title: "Total Number of Units",
+                name: "units",
+                dataField: "MaxStructureUnits",
+                fieldType: "checkbox",
+                fieldLayoutClass: "checkbox-group",
+                multiSelect: true,
+                defaultValue: null,
+                callback: (values, item) => {
+                    const sqftValue = item.properties?.MaxStructureUnits;
+                    if (sqftValue === undefined || sqftValue === null) return false;
+                    
+                    // Convert to number if it's a string
+                    const sqft = typeof sqftValue === 'string' ? 
+                        parseFloat(sqftValue.replace(/,/g, '')) : 
+                        Number(sqftValue);
+                        
+                    if (isNaN(sqft)) return false;
+                    
+                    // Check if sqft falls within any selected range
+                    return values.some(value => {
+                        const sqft_array = JSON.parse(value)
+                        if (Array.isArray(sqft_array) && sqft_array.length === 2) {
+                            const [minSqft, maxSqft] = sqft_array;
+                            return sqft >= minSqft && sqft < maxSqft;
+                        }
+                        return false;
+                    });
+                },
+                options: [
+                    {
+                        label: "0",
+                        value: "[0, 1]",
+                    },
+                    {
+                        label: "1",
+                        value: "[1, 2]",
+                    },
+                    {
+                        label: "2 to 3",
+                        value: "[2, 4]",
+                    },
+                    {
+                        label: "4 to 10",
+                        value: "[4, 10]",
+                    },
+                    {
+                        label: "10 +",
+                        value: "[10, 9999999999]",
+                    },
+                ],
+            },
+            {
                 title: "Total Construction Cost",
                 name: "cost",
                 dataField: "MaxEstimatedValue",
@@ -331,7 +353,7 @@
                 multiSelect: true,
                 defaultValue: null,
                 callback: (values, item) => {
-                    const costValue = item.properties?.TotalCost;
+                    const costValue = item.properties?.MaxEstimatedValue;
                     if (costValue === undefined || costValue === null) return false;
                     
                     // Convert to number if it's a string
