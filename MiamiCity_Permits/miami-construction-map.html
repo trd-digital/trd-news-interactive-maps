@@ -398,11 +398,13 @@
         ];
 
         const sqftCounts = {}; // collect counts for square footage ranges
-        const costCounts = {};
-        const propertyTypeCounts = {};
+        const costCounts = {}; // collect counts for total construction cost ranges
+        const propertyTypeCounts = {}; // collect counts for property types
+        const unitCounts = {}; // collect counts for number of units ranges
         window.sqftCounts = sqftCounts;        // Defensive + explicit declaration
-        window.costCounts = costCounts
+        window.costCounts = costCounts;
         window.propertyTypeCounts = propertyTypeCounts;
+        window.unitCounts = unitCounts;
         const fetchDataFilterCallback = (data) => {
             if (!data || !Array.isArray(data.features)) {
                 console.warn("GeoJSON missing features array; received:", data);
@@ -413,6 +415,7 @@
             Object.keys(sqftCounts).forEach(k => delete sqftCounts[k]);
             Object.keys(costCounts).forEach(k => delete costCounts[k]);
             Object.keys(propertyTypeCounts).forEach(k => delete propertyTypeCounts[k]);
+            Object.keys(unitCounts).forEach(k => delete unitCounts[k]);
 
             const filteredFeatures = [];
             for (const item of data.features) {
@@ -461,6 +464,29 @@
                     }
                 }
                 
+                // Calculate total number of units counts
+                const unitsValue = item.properties?.MaxStructureUnits;
+                if (unitsValue !== undefined && unitsValue !== null) {
+                    const units = typeof unitsValue === 'string' ? 
+                        parseFloat(unitsValue.replace(/,/g, '')) : 
+                        Number(unitsValue);
+                        
+                    if (!isNaN(units)) {
+                        // Check which range these units fall into
+                        if (units < 1) {
+                            unitCounts['[0, 1]'] = (unitCounts['[0, 1]'] || 0) + 1;
+                        } else if (units < 2) {
+                            unitCounts['[1, 2]'] = (unitCounts['[1, 2]'] || 0) + 1;
+                        } else if (units < 4) {
+                            unitCounts['[2, 4]'] = (unitCounts['[2, 4]'] || 0) + 1;
+                        } else if (units < 10) {
+                            unitCounts['[4, 10]'] = (unitCounts['[4, 10]'] || 0) + 1;
+                        } else {
+                            unitCounts['[10, 9999999999]'] = (unitCounts['[10, 9999999999]'] || 0) + 1;
+                        }
+                    }
+                }
+                
                 // Calculate property type counts
                 const propertyType = item.properties?.PropertyType;
                 if (propertyType) {
@@ -491,9 +517,6 @@
                     propertyTypeCounts['Other'] = (propertyTypeCounts['Other'] || 0) + 1;
                     item.properties.PropertyType = 'Other';
                 }
-                
-                // Add the feature to the filtered list (moved here to prevent duplication)
-                filteredFeatures.push(item);
             }
 
                 // Schedule an update for the filter labels after a short delay
@@ -574,7 +597,7 @@
 
                 // Update all filter option containers
                 optionContainers.forEach(container => {
-                    const input = container.querySelector('input[name="sqft"], input[name="cost"], input[name="property-type"]');
+                    const input = container.querySelector('input[name="sqft"], input[name="cost"], input[name="property-type"], input[name="units"]');
                     const label = container.querySelector('label.filter-option');
 
                     if (!input || !label) {
@@ -597,6 +620,8 @@
                         count = window.costCounts ? (window.costCounts[value] || 0) : 0;
                     } else if (input.name === 'property-type') {
                         count = window.propertyTypeCounts ? (window.propertyTypeCounts[value] || 0) : 0;
+                    } else if (input.name === 'units') {
+                        count = window.unitCounts ? (window.unitCounts[value] || 0) : 0;
                     }
                     
                     label.textContent = `${label.dataset.baseLabel} (${count.toLocaleString()})`;
@@ -666,6 +691,7 @@
                     const newSqftCounts = {};
                     const newCostCounts = {};
                     const newPropertyTypeCounts = {};
+                    const newUnitCounts = {};
                     
                     e.detail.features.forEach(f => {
                         // Square footage counts
@@ -718,6 +744,28 @@
                                 newPropertyTypeCounts['Commercial'] = (newPropertyTypeCounts['Commercial'] || 0) + 1;
                             }
                         }
+                        
+                        // Units counts for filtered features
+                        const unitsValue = f.properties?.MaxStructureUnits;
+                        if (unitsValue !== undefined && unitsValue !== null) {
+                            const units = typeof unitsValue === 'string' ? 
+                                parseFloat(unitsValue.replace(/,/g, '')) : 
+                                Number(unitsValue);
+                                
+                            if (!isNaN(units)) {
+                                if (units < 1) {
+                                    newUnitCounts['[0, 1]'] = (newUnitCounts['[0, 1]'] || 0) + 1;
+                                } else if (units < 2) {
+                                    newUnitCounts['[1, 2]'] = (newUnitCounts['[1, 2]'] || 0) + 1;
+                                } else if (units < 4) {
+                                    newUnitCounts['[2, 4]'] = (newUnitCounts['[2, 4]'] || 0) + 1;
+                                } else if (units < 10) {
+                                    newUnitCounts['[4, 10]'] = (newUnitCounts['[4, 10]'] || 0) + 1;
+                                } else {
+                                    newUnitCounts['[10, 9999999999]'] = (newUnitCounts['[10, 9999999999]'] || 0) + 1;
+                                }
+                            }
+                        }
                     });
                     
                     // replace global counts then refresh labels
@@ -729,6 +777,9 @@
                     
                     Object.keys(propertyTypeCounts).forEach(k => delete propertyTypeCounts[k]);
                     Object.entries(newPropertyTypeCounts).forEach(([k, v]) => propertyTypeCounts[k] = v);
+                    
+                    Object.keys(unitCounts).forEach(k => delete unitCounts[k]);
+                    Object.entries(newUnitCounts).forEach(([k, v]) => unitCounts[k] = v);
                     
                     updateLabels();
                 }
