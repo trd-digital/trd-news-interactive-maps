@@ -111,58 +111,38 @@
         const queryParams = new URLSearchParams(window.location.search);
         const propertyType = queryParams.get("property-type");
 
-        // 1 Active -> 2 Hold -> 3 Final -> 4 Expired -> 5 Revoked -> 6 Other
-        // Colors chosen for distinct hue / role; neutral gray for inactive, red for invalid.
+        // Property Type based legend
         const legendKeys = [
             {
-                title: "Status",
+                title: "Property Type",
                 options: [
                     {
-                        text: "Active",
-                        value: "Active",
-                        default: true, /* now serves as fallback color after removing 'Other' */
+                        text: "Residential",
+                        value: "Residential",
+                        default: true,
                         color: {
-                            light: "#FFAB91",
-                            dark: "#FFCCBC"
+                            light: "#4287f5", // Blue for Residential
+                            dark: "#6aa2f7"
                         },
                     },
                     {
-                        text: "Hold",
-                        value: "Hold",
+                        text: "Commercial",
+                        value: "Commercial",
                         default: false,
                         color: {
-                            light: "#F2B544",
-                            dark: "#F6C867"
+                            light: "#f58442", // Orange for Commercial
+                            dark: "#f7a46a"
                         },
                     },
                     {
-                        text: "Final",
-                        value: "Final",
+                        text: "Mixed/Other",
+                        value: "Other",
                         default: false,
                         color: {
-                            light: "#35cd7d",
-                            dark: "#35cd7d"
+                            light: "#8c42f5", // Purple for Mixed/Other
+                            dark: "#a46af7"
                         },
-                    },
-                    {
-                        text: "Expired",
-                        value: "Expired",
-                        default: false,
-                        color: {
-                            light: "#8A939E",
-                            dark: "#B0B7C3"
-                        },
-                    },
-                    {
-                        text: "Revoked",
-                        value: "Revoked",
-                        default: false,
-                        color: {
-                            light: "#D9534F",
-                            dark: "#E27A76"
-                        },
-                    },
-                    /* No 'Other' category */
+                    }
                 ],
             },
         ];
@@ -241,6 +221,10 @@
                     {
                     label: "Commercial",
                     value: "Commercial",
+                    },
+                    {
+                    label: "Mixed/Other",
+                    value: "Other",
                     },
                 ],
             },
@@ -413,12 +397,9 @@
             }
         ];
 
-        const list = [];
-        const statusCounts = {}; // collect counts of each LatestStatus ('' for blank)
         const sqftCounts = {}; // collect counts for square footage ranges
         const costCounts = {};
         const propertyTypeCounts = {};
-        window.statusCounts = statusCounts;
         window.sqftCounts = sqftCounts;        // Defensive + explicit declaration
         window.costCounts = costCounts
         window.propertyTypeCounts = propertyTypeCounts;
@@ -428,41 +409,15 @@
                 return { type: "FeatureCollection", features: [] };
             }
 
-            const allowedStatuses = ["Active", "Hold", "Final", "Expired", "Revoked"]; // legend + filters
-            const excludedSummary = { blank: 0, unmapped: 0 };
-            const excludedExamples = { blank: [], unmapped: [] };
-
             // reset counts in case of re-load
-            Object.keys(statusCounts).forEach(k => delete statusCounts[k]);
             Object.keys(sqftCounts).forEach(k => delete sqftCounts[k]);
             Object.keys(costCounts).forEach(k => delete costCounts[k]);
             Object.keys(propertyTypeCounts).forEach(k => delete propertyTypeCounts[k]);
 
             const filteredFeatures = [];
             for (const item of data.features) {
-                const rawStatus = (item.properties && item.properties["LatestStatus"]) || "";
-                const status = typeof rawStatus === 'string' ? rawStatus.trim() : rawStatus;
-                const isBlank = !status || status.length === 0;
-                const isLiteralBlack = typeof status === 'string' && status.toLowerCase() === 'black'; // user request typo safeguard
-                const isAllowed = allowedStatuses.includes(status);
-
-                if (isBlank || isLiteralBlack) {
-                    excludedSummary.blank++;
-                    if (excludedExamples.blank.length < 5) excludedExamples.blank.push(item.properties?.DeliveryAddress || '(no address)');
-                    continue; // skip
-                }
-                if (!isAllowed) {
-                    excludedSummary.unmapped++;
-                    if (excludedExamples.unmapped.length < 5) excludedExamples.unmapped.push(status);
-                    continue; // skip unmapped status
-                }
-
-
-                // include feature
-                if (status && !list.includes(status)) {
-                    list.push(status);
-                }
-                statusCounts[status] = (statusCounts[status] || 0) + 1;
+                // All features are now included, status filtering removed
+                filteredFeatures.push(item);
                 
                 // Calculate square footage counts
                 const sqftValue = item.properties?.MaxSquareFootage;
@@ -512,48 +467,55 @@
                     // Increment count for this property type
                     if (propertyType.includes('Residential')) {
                         propertyTypeCounts['Residential'] = (propertyTypeCounts['Residential'] || 0) + 1;
-                    }
-                    if (propertyType.includes('Commercial')) {
+                        
+                        // Set the property type for coloring
+                        if (!propertyType.includes('Commercial')) {
+                            item.properties.PropertyType = 'Residential';
+                        } else {
+                            // If it contains both, it's a mixed-use property
+                            item.properties.PropertyType = 'Other';
+                            propertyTypeCounts['Other'] = (propertyTypeCounts['Other'] || 0) + 1;
+                        }
+                    } 
+                    else if (propertyType.includes('Commercial')) {
                         propertyTypeCounts['Commercial'] = (propertyTypeCounts['Commercial'] || 0) + 1;
+                        item.properties.PropertyType = 'Commercial';
                     }
+                    else {
+                        // Any other property types that don't match the above
+                        propertyTypeCounts['Other'] = (propertyTypeCounts['Other'] || 0) + 1;
+                        item.properties.PropertyType = 'Other';
+                    }
+                } else {
+                    // Properties with no property type are categorized as Other
+                    propertyTypeCounts['Other'] = (propertyTypeCounts['Other'] || 0) + 1;
+                    item.properties.PropertyType = 'Other';
                 }
                 
+                // Add the feature to the filtered list (moved here to prevent duplication)
                 filteredFeatures.push(item);
             }
 
-            if (excludedSummary.blank || excludedSummary.unmapped) {
-                console.warn("[StatusFilter] Excluded features:", {
-                    blankStatuses: excludedSummary.blank,
-                    unmappedStatuses: excludedSummary.unmapped,
-                    blankExamples: excludedExamples.blank,
-                    unmappedExamples: excludedExamples.unmapped
-                });
-            }
+                // Schedule an update for the filter labels after a short delay
+                // This gives time for the DOM to be ready for the count display
+                setTimeout(() => {
+                    if (typeof window.refreshFilterCounts === 'function') {
+                        console.log("Calling refreshFilterCounts from fetchDataFilterCallback");
+                        window.refreshFilterCounts();
+                    }
+                }, 1500);
 
-            // Schedule an update for the filter labels after a short delay
-            // This gives time for the DOM to be ready for the count display
-            setTimeout(() => {
-                if (typeof window.refreshStatusCounts === 'function') {
-                    console.log("Calling refreshStatusCounts from fetchDataFilterCallback");
-                    window.refreshStatusCounts();
-                }
-            }, 1500);
-
-            return {
-                ...data,
-                features: filteredFeatures,
-            };
-        };
-
-        window.list = list;
-
-        // Listen for mapbox load event to trigger status count update
+                return {
+                    ...data,
+                    features: filteredFeatures,
+                };
+            };        // Listen for mapbox load event to trigger property type filter update
         document.addEventListener('mapboxglLoaded', function () {
             console.log("Map loaded event received");
             setTimeout(() => {
-                if (window.refreshStatusCounts) {
-                    console.log("Refreshing status counts after map load");
-                    window.refreshStatusCounts();
+                if (window.refreshFilterCounts) {
+                    console.log("Refreshing filter counts after map load");
+                    window.refreshFilterCounts();
                 }
             }, 1000);
         });
@@ -581,8 +543,12 @@
                 clickToZoom: true,
                 colorType: "case",
                 radiusType: "radius",
-                colorTypeDataKey: "LatestStatus",
+                colorTypeDataKey: "PropertyType",
                 paintSettings: {
+                    color: {
+                        light: "#8c42f5", // Default color (for points that don't match any case)
+                        dark: "#a46af7"
+                    },
                     hover: { color: { light: "#FF9800", dark: "#F57C00" } },
                     active: {
                         color: { light: "#FF5722", dark: "#D84315" }
@@ -591,15 +557,14 @@
             },
         });
 
-        // --- Status count labels updater ---
-        (function statusFilterCounts() {
+        // --- Filter count labels updater (status functionality removed) ---
+        (function filterCounts() {
             function updateLabels() {
                 const form = document.getElementById('map-filters');
                 if (!form) {
                     console.log("Filter form not found");
                     return;
                 }
-
 
                 const optionContainers = form.querySelectorAll('.filter-option-container');
                 if (!optionContainers.length) {
@@ -609,11 +574,10 @@
 
                 // Update all filter option containers
                 optionContainers.forEach(container => {
-                    const input = container.querySelector('input[name="status"], input[name="sqft"], input[name="cost"], input[name="property-type"]');
+                    const input = container.querySelector('input[name="sqft"], input[name="cost"], input[name="property-type"]');
                     const label = container.querySelector('label.filter-option');
 
                     if (!input || !label) {
-                        console.log("Missing input or label in container", container);
                         return;
                     }
 
@@ -627,9 +591,7 @@
                     let count = 0;
                     
                     // Get count based on filter type
-                    if (input.name === 'status') {
-                        count = window.statusCounts ? (window.statusCounts[value] || 0) : 0;
-                    } else if (input.name === 'sqft') {
+                    if (input.name === 'sqft') {
                         count = window.sqftCounts ? (window.sqftCounts[value] || 0) : 0;
                     } else if (input.name === 'cost') {
                         count = window.costCounts ? (window.costCounts[value] || 0) : 0;
@@ -646,26 +608,31 @@
             const interval = setInterval(() => {
                 attempts++;
 
-                // Check if DOM and data are ready
+                // Check if DOM and form are ready
                 const formReady = document.getElementById('map-filters') !== null;
-                const dataReady = Object.keys(window.statusCounts || {}).length > 0;
 
                 // Always try to update - we want to keep trying even if initially unsuccessful
                 updateLabels();
 
-                // Only stop interval if both form and data are ready and labels were updated
-                if (dataReady && formReady && document.querySelector('#map-filters label[data-base-label]')) {
+                // Only stop interval if form is ready and labels were updated
+                if (formReady && document.querySelector('#map-filters label[data-base-label]')) {
                     clearInterval(interval);
                 }
 
-                if (attempts > 60) { // ~30s fallback - increased from 20s
+                if (attempts > 60) { // ~30s fallback
                     clearInterval(interval);
                 }
             }, 500);
 
             // Public API to refresh after external filtering
-            window.refreshStatusCounts = () => {
-                console.log("Manual refresh of status counts called");
+            window.refreshFilterCounts = () => {
+                console.log("Manual refresh of filter counts called");
+                
+                // Ensure we have the "Other" category initialized for the filter UI
+                if (window.propertyTypeCounts && typeof window.propertyTypeCounts === 'object') {
+                    window.propertyTypeCounts['Other'] = window.propertyTypeCounts['Other'] || 0;
+                }
+                
                 updateLabels();
             };
 
@@ -696,16 +663,11 @@
                 console.log("Custom filtered event received");
                 if (e.detail && Array.isArray(e.detail.features)) {
                     // recompute counts from provided feature set
-                    const newStatusCounts = {};
                     const newSqftCounts = {};
                     const newCostCounts = {};
                     const newPropertyTypeCounts = {};
                     
                     e.detail.features.forEach(f => {
-                        // Status counts
-                        const s = (f.properties && f.properties.LatestStatus) || '';
-                        newStatusCounts[s] = (newStatusCounts[s] || 0) + 1;
-                        
                         // Square footage counts
                         const sqftValue = f.properties?.TotalSQFT;
                         if (sqftValue !== undefined && sqftValue !== null) {
@@ -759,9 +721,6 @@
                     });
                     
                     // replace global counts then refresh labels
-                    Object.keys(statusCounts).forEach(k => delete statusCounts[k]);
-                    Object.entries(newStatusCounts).forEach(([k, v]) => statusCounts[k] = v);
-                    
                     Object.keys(sqftCounts).forEach(k => delete sqftCounts[k]);
                     Object.entries(newSqftCounts).forEach(([k, v]) => sqftCounts[k] = v);
                     
@@ -775,7 +734,7 @@
                 }
             });
         })();
-        // --- End status count labels updater ---
+        // --- End filter count labels updater ---
     </script>
 </body>
 
