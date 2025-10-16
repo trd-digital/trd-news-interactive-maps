@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Miami Construction Map - The Real Deal</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://therealdeal.com/favicon.ico"
+    />
+    <link rel="canonical" href="https://therealdeal.com/data/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin="true"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@0,400;0,700;0,900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css"
+    />
+    <link rel="stylesheet" href="../trd-data/common-map/map.css" />
+    <style>
+      /* Company list styling inside modal */
+      .detail-value .company-list {
+        margin: 0;
+        padding-left: 1.15rem;
+      }
+
+      .detail-value .company-list li {
+        list-style: disc;
+        margin: 0;
+        line-height: 1.25rem;
+      }
+
+      /* Year range slider styling */
+      .range-slider {
+        position: relative;
+        height: 8px;
+        background-color: #e9ecef;
+        border-radius: 4px;
+        margin: 20px 0;
+      }
+
+      .range-slider-progress {
+        position: absolute;
+        height: 100%;
+        background-color: #007bff;
+        border-radius: 4px;
+      }
+
+      .range-slider-min,
+      .range-slider-max {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background-color: white;
+        border: 2px solid #007bff;
+        border-radius: 50%;
+        top: -6px;
+        cursor: pointer;
+        z-index: 1;
+      }
+
+      .range-slider-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+      }
+
+      .year-slider-container {
+        padding: 10px 5px;
+      }
+    </style>
+
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-K694XL6");
+    </script>
+    <!-- End Google Tag Manager -->
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-K694XL6"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+    <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
+    <script src="../trd-data/common-formatter/formatter.js"></script>
+    <script src="../trd-data/common-loading/loading.js"></script>
+    <script src="../trd-data/common-map/map.js?v=1.1"></script>
+    <script src="filter-extension.js"></script>
+    <script>
+      // {map-url}?property-type="Residential"
+      const queryParams = new URLSearchParams(window.location.search);
+      const propertyType = queryParams.get("property-type");
+
+      // 1 Active -> 2 Hold -> 3 Final -> 4 Expired -> 5 Revoked -> 6 Other
+      // Colors chosen for distinct hue / role; neutral gray for inactive, red for invalid.
+      const legendKeys = [
+        {
+          title: "Status",
+          options: [
+            {
+              text: "Active",
+              value: "Active",
+              default: true /* now serves as fallback color after removing 'Other' */,
+              color: {
+                light: "#FFAB91",
+                dark: "#FFCCBC",
+              },
+            },
+            {
+              text: "Hold",
+              value: "Hold",
+              default: false,
+              color: {
+                light: "#F2B544",
+                dark: "#F6C867",
+              },
+            },
+            {
+              text: "Final",
+              value: "Final",
+              default: false,
+              color: {
+                light: "#35cd7d",
+                dark: "#35cd7d",
+              },
+            },
+            {
+              text: "Expired",
+              value: "Expired",
+              default: false,
+              color: {
+                light: "#8A939E",
+                dark: "#B0B7C3",
+              },
+            },
+            {
+              text: "Revoked",
+              value: "Revoked",
+              default: false,
+              color: {
+                light: "#D9534F",
+                dark: "#E27A76",
+              },
+            },
+            /* No 'Other' category */
+          ],
+        },
+      ];
+
+      const tooltipDisplayFields = {
+        title: { field: "DeliveryAddress", label: "Address" },
+        content: [
+          { field: "PropertyType", label: "Property Type" },
+          {
+            field: "LatestIssuedDate",
+            label: "Latest Permit Issued Date",
+            format: "formatDate",
+          },
+          { field: "ScopeofWork", label: "Permit Type" },
+        ],
+      };
+
+      const modalDisplayFields = {
+        title: { field: "DeliveryAddress", label: "Address" },
+        content: [
+          { field: "Neighborhood", label: "Neighborhood" },
+          { field: "FolioHyperlink", label: "Folio Number" },
+          { field: "PropertyType", label: "Property Type" },
+          { field: "ScopeofWork", label: "Permit Type" },
+          {
+            field: "TotalCost",
+            label: "Total Construction Cost",
+            format: "formatNumber",
+          },
+          { field: "TotalSQFT", label: "Total SQFT", format: "formatNumber" },
+          {
+            field: "LatestIssuedDate",
+            label: "Latest Permit Issued Date",
+            format: "formatDate",
+          },
+          {
+            field: "EarliestPlanAccepted",
+            label: "Earliest Construction Plan Accepted",
+            format: "formatDate",
+          },
+          { field: "LatestStatus", label: "Latest Permit Status" },
+          { field: "WorkItems_from_LowestID", label: "Work Items" },
+          {
+            field: "CompanyNamesAsHTML",
+            label: "Involved Companies",
+          },
+          {
+            field: "Link_Check",
+            label: "Property Reference Link",
+            format: "formatLink",
+          },
+        ],
+      };
+
+      const filterFields = [
+        {
+          title: "Status",
+          name: "status",
+          dataField: "LatestStatus",
+          fieldType: "checkbox",
+          fieldLayoutClass: "checkbox-group",
+          multiSelect: true,
+          callback: (values, item) => {
+            const status =
+              (item.properties && item.properties["LatestStatus"]) || "";
+            return values.some((value) => {
+              // Empty value represents explicit blank / uncategorized
+              if (value === "" || value.length === 0) {
+                return status === "";
+              }
+              // Support grouped values separated by |
+              const group = value.split("|");
+              for (const v of group) {
+                if (status.includes(v)) return true;
+              }
+              return false;
+            });
+          },
+          options: [
+            { label: "Active", value: "Active" },
+            { label: "Hold", value: "Hold" },
+            { label: "Final", value: "Final" },
+            { label: "Expired", value: "Expired" },
+            { label: "Revoked", value: "Revoked" },
+          ],
+        },
+        {
+          title: "Property Type",
+          name: "property-type",
+          dataField: "PropertyType",
+          fieldType: "checkbox",
+          fieldLayoutClass: "checkbox-group",
+          multiSelect: true,
+          defaultValue: propertyType
+            ? propertyType.charAt(0).toUpperCase() + propertyType.slice(1)
+            : null,
+          callback: (values, item) => {
+            return values.some((value) =>
+              item.properties["PropertyType"].includes(value)
+            );
+          },
+          options: [
+            {
+              label: "Residential",
+              value: "Residential",
+            },
+            {
+              label: "Commercial",
+              value: "Commercial",
+            },
+          ],
+        },
+        {
+          title: "Total Square Footage",
+          name: "sqft",
+          dataField: "TotalSQFT",
+          fieldType: "checkbox",
+          fieldLayoutClass: "checkbox-group",
+          multiSelect: true,
+          defaultValue: null,
+          callback: (values, item) => {
+            const sqftValue = item.properties?.TotalSQFT;
+            if (sqftValue === undefined || sqftValue === null) return false;
+
+            // Convert to number if it's a string
+            const sqft =
+              typeof sqftValue === "string"
+                ? parseFloat(sqftValue.replace(/,/g, ""))
+                : Number(sqftValue);
+
+            if (isNaN(sqft)) return false;
+
+            // Check if sqft falls within any selected range
+            return values.some((value) => {
+              const sqft_array = JSON.parse(value);
+              if (Array.isArray(sqft_array) && sqft_array.length === 2) {
+                const [minSqft, maxSqft] = sqft_array;
+                return sqft >= minSqft && sqft < maxSqft;
+              }
+              return false;
+            });
+          },
+          options: [
+            {
+              label: "< 5,000",
+              value: "[0, 5000]",
+            },
+            {
+              label: "5,000 to 10,000",
+              value: "[5000, 10000]",
+            },
+            {
+              label: "10,000 to 100,000",
+              value: "[10000, 100000]",
+            },
+            {
+              label: "100,000 +",
+              value: "[100000, 999999999999]",
+            },
+          ],
+        },
+        {
+          title: "Total Construction Cost",
+          name: "cost",
+          dataField: "TotalCost",
+          fieldType: "checkbox",
+          fieldLayoutClass: "checkbox-group",
+          multiSelect: true,
+          defaultValue: null,
+          callback: (values, item) => {
+            const costValue = item.properties?.TotalCost;
+            if (costValue === undefined || costValue === null) return false;
+
+            // Convert to number if it's a string
+            const cost =
+              typeof costValue === "string"
+                ? parseFloat(costValue.replace(/,/g, ""))
+                : Number(costValue);
+
+            if (isNaN(cost)) return false;
+
+            // Check if cost falls within any selected range
+            return values.some((value) => {
+              const cost_array = JSON.parse(value);
+              if (Array.isArray(cost_array) && cost_array.length === 2) {
+                const [minCost, maxCost] = cost_array;
+                return cost >= minCost && cost < maxCost;
+              }
+              return false;
+            });
+          },
+          options: [
+            {
+              label: "< 100,000",
+              value: "[0, 100000]",
+            },
+            {
+              label: "100,000 to 1,000,000",
+              value: "[100000, 1000000]",
+            },
+            {
+              label: "1,000,000 to 10,000,000",
+              value: "[1000000, 10000000]",
+            },
+            {
+              label: "10,000,000 +",
+              value: "[10000000, 999999999999]",
+            },
+          ],
+        },
+        {
+          title: "Latest Permit Year",
+          name: "year",
+          dataField: "LatestPermitYear",
+          fieldType: "multi-range",
+          fieldLayoutClass: "year-slider-container",
+          minValue: 2010, // Starting year
+          maxValue: 2025, // Current year
+          allowZero: false,
+          defaultValue: [2010, 2025], // Full range by default
+          format: "formatInteger",
+          callback: (values, item) => {
+            if (!values || values.length !== 2) return true;
+            const year = parseInt(item.properties?.LatestPermitYear, 10);
+            if (!year || isNaN(year)) return false; // Skip if no valid year
+            const [minYear, maxYear] = values.map((v) => parseInt(v, 10));
+            return year >= minYear && year <= maxYear;
+          },
+        },
+      ];
+
+      const list = [];
+      const statusCounts = {}; // collect counts of each LatestStatus ('' for blank)
+      const sqftCounts = {}; // collect counts for square footage ranges
+      const costCounts = {};
+      const propertyTypeCounts = {};
+      window.statusCounts = statusCounts;
+      window.sqftCounts = sqftCounts; // Defensive + explicit declaration
+      window.costCounts = costCounts;
+      window.propertyTypeCounts = propertyTypeCounts;
+      const fetchDataFilterCallback = (data) => {
+        if (!data || !Array.isArray(data.features)) {
+          console.warn("GeoJSON missing features array; received:", data);
+          return { type: "FeatureCollection", features: [] };
+        }
+
+        const allowedStatuses = [
+          "Active",
+          "Hold",
+          "Final",
+          "Expired",
+          "Revoked",
+        ]; // legend + filters
+        const excludedSummary = { blank: 0, unmapped: 0 };
+        const excludedExamples = { blank: [], unmapped: [] };
+
+        // reset counts in case of re-load
+        Object.keys(statusCounts).forEach((k) => delete statusCounts[k]);
+        Object.keys(sqftCounts).forEach((k) => delete sqftCounts[k]);
+        Object.keys(costCounts).forEach((k) => delete costCounts[k]);
+        Object.keys(propertyTypeCounts).forEach(
+          (k) => delete propertyTypeCounts[k]
+        );
+
+        const filteredFeatures = [];
+        for (const item of data.features) {
+          const rawStatus =
+            (item.properties && item.properties["LatestStatus"]) || "";
+          const status =
+            typeof rawStatus === "string" ? rawStatus.trim() : rawStatus;
+          const isBlank = !status || status.length === 0;
+          const isLiteralBlack =
+            typeof status === "string" && status.toLowerCase() === "black"; // user request typo safeguard
+          const isAllowed = allowedStatuses.includes(status);
+
+          if (isBlank || isLiteralBlack) {
+            excludedSummary.blank++;
+            if (excludedExamples.blank.length < 5)
+              excludedExamples.blank.push(
+                item.properties?.DeliveryAddress || "(no address)"
+              );
+            continue; // skip
+          }
+          if (!isAllowed) {
+            excludedSummary.unmapped++;
+            if (excludedExamples.unmapped.length < 5)
+              excludedExamples.unmapped.push(status);
+            continue; // skip unmapped status
+          }
+
+          // include feature
+          if (status && !list.includes(status)) {
+            list.push(status);
+          }
+          statusCounts[status] = (statusCounts[status] || 0) + 1;
+
+          // Calculate square footage counts
+          const sqftValue = item.properties?.TotalSQFT;
+          if (sqftValue !== undefined && sqftValue !== null) {
+            const sqft =
+              typeof sqftValue === "string"
+                ? parseFloat(sqftValue.replace(/,/g, ""))
+                : Number(sqftValue);
+
+            if (!isNaN(sqft)) {
+              // Check which range this square footage falls into
+              if (sqft < 5000) {
+                sqftCounts["[0, 5000]"] = (sqftCounts["[0, 5000]"] || 0) + 1;
+              } else if (sqft < 10000) {
+                sqftCounts["[5000, 10000]"] =
+                  (sqftCounts["[5000, 10000]"] || 0) + 1;
+              } else if (sqft < 100000) {
+                sqftCounts["[10000, 100000]"] =
+                  (sqftCounts["[10000, 100000]"] || 0) + 1;
+              } else {
+                sqftCounts["[100000, 999999999999]"] =
+                  (sqftCounts["[100000, 999999999999]"] || 0) + 1;
+              }
+            }
+          }
+
+          // Calculate construction cost counts
+          const costValue = item.properties?.TotalCost;
+          if (costValue !== undefined && costValue !== null) {
+            const cost =
+              typeof costValue === "string"
+                ? parseFloat(costValue.replace(/,/g, ""))
+                : Number(costValue);
+
+            if (!isNaN(cost)) {
+              // Check which range this cost falls into
+              if (cost < 100000) {
+                costCounts["[0, 100000]"] =
+                  (costCounts["[0, 100000]"] || 0) + 1;
+              } else if (cost < 1000000) {
+                costCounts["[100000, 1000000]"] =
+                  (costCounts["[100000, 1000000]"] || 0) + 1;
+              } else if (cost < 10000000) {
+                costCounts["[1000000, 10000000]"] =
+                  (costCounts["[1000000, 10000000]"] || 0) + 1;
+              } else {
+                costCounts["[10000000, 999999999999]"] =
+                  (costCounts["[10000000, 999999999999]"] || 0) + 1;
+              }
+            }
+          }
+
+          // Calculate property type counts
+          const propertyType = item.properties?.PropertyType;
+          if (propertyType) {
+            // Increment count for this property type
+            if (propertyType.includes("Residential")) {
+              propertyTypeCounts["Residential"] =
+                (propertyTypeCounts["Residential"] || 0) + 1;
+            }
+            if (propertyType.includes("Commercial")) {
+              propertyTypeCounts["Commercial"] =
+                (propertyTypeCounts["Commercial"] || 0) + 1;
+            }
+          }
+
+          filteredFeatures.push(item);
+        }
+
+        if (excludedSummary.blank || excludedSummary.unmapped) {
+          console.warn("[StatusFilter] Excluded features:", {
+            blankStatuses: excludedSummary.blank,
+            unmappedStatuses: excludedSummary.unmapped,
+            blankExamples: excludedExamples.blank,
+            unmappedExamples: excludedExamples.unmapped,
+          });
+        }
+
+        // Schedule an update for the filter labels after a short delay
+        // This gives time for the DOM to be ready for the count display
+        setTimeout(() => {
+          if (typeof window.refreshStatusCounts === "function") {
+            console.log(
+              "Calling refreshStatusCounts from fetchDataFilterCallback"
+            );
+            window.refreshStatusCounts();
+          }
+        }, 1500);
+
+        return {
+          ...data,
+          features: filteredFeatures,
+        };
+      };
+
+      window.list = list;
+
+      // Listen for mapbox load event to trigger status count update
+      document.addEventListener("mapboxglLoaded", function () {
+        console.log("Map loaded event received");
+        setTimeout(() => {
+          if (window.refreshStatusCounts) {
+            console.log("Refreshing status counts after map load");
+            window.refreshStatusCounts();
+          }
+        }, 1000);
+      });
+
+      window.map = trdDataCommonMap({
+        fetchDataFilterCallback,
+        eventCategory: "miami-construction-map",
+        filePath:
+          "https://teststatic.therealdeal.com/interactive-maps/miami-construction-map.geojson",
+        mapElementId: "map",
+        filterElementId: "map-filters",
+        legendElementId: "legend",
+        resultElementId: "result",
+        mapCenterLat: 25.771293165956543,
+        mapCenterLng: -80.19813878799437,
+        zoom: 11,
+        minZoom: 10,
+        legendKeys,
+        dataPointKeys: legendKeys[0].options,
+        tooltipDisplayFields,
+        modalDisplayFields,
+        filterFields,
+        loadingEnabled: true,
+        pointSettings: {
+          clickToCenter: true,
+          clickToZoom: true,
+          colorType: "case",
+          radiusType: "radius",
+          colorTypeDataKey: "LatestStatus",
+          paintSettings: {
+            hover: { color: { light: "#FF9800", dark: "#F57C00" } },
+            active: {
+              color: { light: "#FF5722", dark: "#D84315" },
+            },
+          },
+        },
+      });
+
+      // --- Status count labels updater ---
+      (function statusFilterCounts() {
+        function updateLabels() {
+          const form = document.getElementById("map-filters");
+          if (!form) {
+            console.log("Filter form not found");
+            return;
+          }
+
+          const optionContainers = form.querySelectorAll(
+            ".filter-option-container"
+          );
+          if (!optionContainers.length) {
+            console.log("No filter option containers found");
+            return;
+          }
+
+          // Update all filter option containers
+          optionContainers.forEach((container) => {
+            const input = container.querySelector(
+              'input[name="status"], input[name="sqft"], input[name="cost"], input[name="property-type"]'
+            );
+            const label = container.querySelector("label.filter-option");
+
+            if (!input || !label) {
+              console.log("Missing input or label in container", container);
+              return;
+            }
+
+            // store base label once
+            if (!label.dataset.baseLabel) {
+              label.dataset.baseLabel = label.textContent
+                .replace(/\s*\(.*\)$/, "")
+                .trim();
+              console.log(
+                `Set base label for ${input.value}: "${label.dataset.baseLabel}"`
+              );
+            }
+
+            const value = input.value;
+            let count = 0;
+
+            // Get count based on filter type
+            if (input.name === "status") {
+              count = window.statusCounts ? window.statusCounts[value] || 0 : 0;
+            } else if (input.name === "sqft") {
+              count = window.sqftCounts ? window.sqftCounts[value] || 0 : 0;
+            } else if (input.name === "cost") {
+              count = window.costCounts ? window.costCounts[value] || 0 : 0;
+            } else if (input.name === "property-type") {
+              count = window.propertyTypeCounts
+                ? window.propertyTypeCounts[value] || 0
+                : 0;
+            }
+
+            label.textContent = `${
+              label.dataset.baseLabel
+            } (${count.toLocaleString()})`;
+          });
+        }
+
+        // Try periodically until data & form ready
+        let attempts = 0;
+        const interval = setInterval(() => {
+          attempts++;
+
+          // Check if DOM and data are ready
+          const formReady = document.getElementById("map-filters") !== null;
+          const dataReady = Object.keys(window.statusCounts || {}).length > 0;
+
+          // Always try to update - we want to keep trying even if initially unsuccessful
+          updateLabels();
+
+          // Only stop interval if both form and data are ready and labels were updated
+          if (
+            dataReady &&
+            formReady &&
+            document.querySelector("#map-filters label[data-base-label]")
+          ) {
+            clearInterval(interval);
+          }
+
+          if (attempts > 60) {
+            // ~30s fallback - increased from 20s
+            clearInterval(interval);
+          }
+        }, 500);
+
+        // Public API to refresh after external filtering
+        window.refreshStatusCounts = () => {
+          console.log("Manual refresh of status counts called");
+          updateLabels();
+        };
+
+        // Make the counts update after map data is loaded
+        document.addEventListener("DOMContentLoaded", () => {
+          console.log("DOM loaded - setting up additional trigger");
+
+          // Add an observer to detect when the filter form is added to the DOM
+          const observer = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+              if (mutation.addedNodes.length) {
+                const filterForm = document.getElementById("map-filters");
+                if (filterForm) {
+                  setTimeout(updateLabels, 1000); // Give some time for counts to be ready
+                  observer.disconnect();
+                  break;
+                }
+              }
+            }
+          });
+
+          // Start observing the body for when the filter form is added
+          observer.observe(document.body, { childList: true, subtree: true });
+        });
+
+        // If a custom filtered event is dispatched with features, recompute counts
+        document.addEventListener("trd:map:filtered", (e) => {
+          console.log("Custom filtered event received");
+          if (e.detail && Array.isArray(e.detail.features)) {
+            // recompute counts from provided feature set
+            const newStatusCounts = {};
+            const newSqftCounts = {};
+            const newCostCounts = {};
+            const newPropertyTypeCounts = {};
+
+            e.detail.features.forEach((f) => {
+              // Status counts
+              const s = (f.properties && f.properties.LatestStatus) || "";
+              newStatusCounts[s] = (newStatusCounts[s] || 0) + 1;
+
+              // Square footage counts
+              const sqftValue = f.properties?.TotalSQFT;
+              if (sqftValue !== undefined && sqftValue !== null) {
+                const sqft =
+                  typeof sqftValue === "string"
+                    ? parseFloat(sqftValue.replace(/,/g, ""))
+                    : Number(sqftValue);
+
+                if (!isNaN(sqft)) {
+                  if (sqft < 5000) {
+                    newSqftCounts["[0, 5000]"] =
+                      (newSqftCounts["[0, 5000]"] || 0) + 1;
+                  } else if (sqft < 10000) {
+                    newSqftCounts["[5000, 10000]"] =
+                      (newSqftCounts["[5000, 10000]"] || 0) + 1;
+                  } else if (sqft < 100000) {
+                    newSqftCounts["[10000, 100000]"] =
+                      (newSqftCounts["[10000, 100000]"] || 0) + 1;
+                  } else {
+                    newSqftCounts["[100000, 999999999999]"] =
+                      (newSqftCounts["[100000, 999999999999]"] || 0) + 1;
+                  }
+                }
+              }
+
+              // Construction cost counts
+              const costValue = f.properties?.TotalCost;
+              if (costValue !== undefined && costValue !== null) {
+                const cost =
+                  typeof costValue === "string"
+                    ? parseFloat(costValue.replace(/,/g, ""))
+                    : Number(costValue);
+
+                if (!isNaN(cost)) {
+                  if (cost < 100000) {
+                    newCostCounts["[0, 100000]"] =
+                      (newCostCounts["[0, 100000]"] || 0) + 1;
+                  } else if (cost < 1000000) {
+                    newCostCounts["[100000, 1000000]"] =
+                      (newCostCounts["[100000, 1000000]"] || 0) + 1;
+                  } else if (cost < 10000000) {
+                    newCostCounts["[1000000, 10000000]"] =
+                      (newCostCounts["[1000000, 10000000]"] || 0) + 1;
+                  } else {
+                    newCostCounts["[10000000, 999999999999]"] =
+                      (newCostCounts["[10000000, 999999999999]"] || 0) + 1;
+                  }
+                }
+              }
+
+              // Property type counts
+              const propertyType = f.properties?.PropertyType;
+              if (propertyType) {
+                if (propertyType.includes("Residential")) {
+                  newPropertyTypeCounts["Residential"] =
+                    (newPropertyTypeCounts["Residential"] || 0) + 1;
+                }
+                if (propertyType.includes("Commercial")) {
+                  newPropertyTypeCounts["Commercial"] =
+                    (newPropertyTypeCounts["Commercial"] || 0) + 1;
+                }
+              }
+            });
+
+            // replace global counts then refresh labels
+            Object.keys(statusCounts).forEach((k) => delete statusCounts[k]);
+            Object.entries(newStatusCounts).forEach(
+              ([k, v]) => (statusCounts[k] = v)
+            );
+
+            Object.keys(sqftCounts).forEach((k) => delete sqftCounts[k]);
+            Object.entries(newSqftCounts).forEach(
+              ([k, v]) => (sqftCounts[k] = v)
+            );
+
+            Object.keys(costCounts).forEach((k) => delete costCounts[k]);
+            Object.entries(newCostCounts).forEach(
+              ([k, v]) => (costCounts[k] = v)
+            );
+
+            Object.keys(propertyTypeCounts).forEach(
+              (k) => delete propertyTypeCounts[k]
+            );
+            Object.entries(newPropertyTypeCounts).forEach(
+              ([k, v]) => (propertyTypeCounts[k] = v)
+            );
+
+            updateLabels();
+          }
+        });
+      })();
+      // --- End status count labels updater ---
+    </script>
+  </body>
+</html>
