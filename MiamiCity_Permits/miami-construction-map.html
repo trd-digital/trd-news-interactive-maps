@@ -397,14 +397,10 @@
             }
         ];
 
-        const sqftCounts = {}; // collect counts for square footage ranges
-        const costCounts = {}; // collect counts for total construction cost ranges
-        const propertyTypeCounts = {}; // collect counts for property types
-        const unitCounts = {}; // collect counts for number of units ranges
-        window.sqftCounts = sqftCounts;        // Defensive + explicit declaration
-        window.costCounts = costCounts;
-        window.propertyTypeCounts = propertyTypeCounts;
-        window.unitCounts = unitCounts;
+        window.sqftCounts = {}; // collect counts for square footage ranges
+        window.costCounts = {}; // collect counts for total construction cost ranges
+        window.propertyTypeCounts = {}; // collect counts for property types
+        window.unitCounts = {}; // collect counts for number of units ranges
         const fetchDataFilterCallback = (data) => {
             if (!data || !Array.isArray(data.features)) {
                 console.warn("GeoJSON missing features array; received:", data);
@@ -695,7 +691,7 @@
                     
                     e.detail.features.forEach(f => {
                         // Square footage counts
-                        const sqftValue = f.properties?.TotalSQFT;
+                        const sqftValue = f.properties?.MaxSquareFootage;
                         if (sqftValue !== undefined && sqftValue !== null) {
                             const sqft = typeof sqftValue === 'string' ? 
                                 parseFloat(sqftValue.replace(/,/g, '')) : 
