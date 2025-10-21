@@ -1,0 +1,225 @@
+<script>
+(() => {
+  // === 1) CHOOSE MODE: "agent" or "brokerage" =================================
+  const MODE = "agent"; // "agent" | "brokerage"
+
+  // === 2) Files per mode (from the export notebook) ============================
+  const files = {
+    agent: {
+      points: "agents_points.geojson",
+      hulls:  "agents_hulls.geojson",
+      titleField: "Agent_Name",
+      groupLabel: "Agent",
+    },
+    brokerage: {
+      points: "brokerages_points.geojson",
+      hulls:  "brokerages_hulls.geojson",
+      titleField: "Brokerage_Firm",
+      groupLabel: "Brokerage",
+    },
+  };
+  const cfg = files[MODE];
+
+  // === 3) Modal fields (tweak as you like) ====================================
+  // Title = Agent or Brokerage (auto), body shows any present fields
+  const modalDisplayFields = {
+    title: { field: "TitleDisplay", label: MODE === "agent" ? "Agent" : "Brokerage" },
+    content: [
+      { field: "Address", label: "Address" },
+      { field: "priceDisplay", label: "Price" },
+      { field: "Side", label: "Side" },
+      { field: "Agent_Name", label: "Agent" },
+      { field: "Brokerage_Firm", label: "Brokerage" },
+      { field: "TRD_noteDisplay", label: "" }, // italicized line, optional
+    ],
+  };
+
+  // === 4) Small utilities ======================================================
+  const isBlank = (v) => {
+    if (v == null) return true;
+    const s = String(v).trim();
+    if (!s) return true;
+    const lower = s.toLowerCase();
+    return ["none", "null", "n/a", "na", "—", "-", "undefined"].includes(lower);
+  };
+  const clean = (v) => (isBlank(v) ? "" : String(v).trim());
+  const fmtMoney = (v) => {
+    if (v == null || v === "") return "";
+    const n = Number(v);
+    if (!isFinite(n)) return clean(v);
+    return n.toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+  };
+  // Deterministic color for a string (used if you want category-based colors)
+  const hashColor = (str) => {
+    let h = 0;
+    for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0;
+    const hue = Math.abs(h) % 360;
+    return `hsl(${hue}, 70%, 45%)`;
+  };
+
+  // === 5) Build the map via your helper =======================================
+  window.map = trdDataCommonMap({
+    filePath: cfg.points, // points GeoJSON for the chosen MODE
+
+    // Clean + presentational fields for the modal
+    fetchDataFilterCallback: (data) => {
+      return {
+        ...data,
+        features: (data.features || []).map((feature, i) => {
+          const props = { ...(feature.properties || {}) };
+
+          // Normalize title: Agent_Name or Brokerage_Firm
+          const titleRaw = clean(props[cfg.titleField]);
+          props.TitleDisplay = titleRaw;
+
+          // Presentational bits
+          props.Address = clean(props.Address);
+          props.priceDisplay = fmtMoney(props.price);
+          const note = clean(props.TRD_note);
+          props.TRD_noteDisplay = note ? `<em>${note}</em>` : "";
+
+          // (Optional) Category color derived from title (can be used in pointSettings)
+          props._categoryColor = titleRaw ? hashColor(titleRaw) : "#007cbf";
+
+          feature.properties = props;
+          return feature;
+        }),
+      };
+    },
+
+    // Analytics + DOM targets
+    eventCategory: `prevalence-${MODE}`,
+    mapElementId: "map",            // <div id="map"></div>
+    filterElementId: undefined,
+    legendElementId: undefined,
+    resultElementId: undefined,
+
+    // Map view (tweak to your area)
+    mapCenterLat: 40.75,
+    mapCenterLng: -73.98,
+    zoom: 10,
+    minZoom: 3,
+
+    // Modal fields we defined above
+    modalDisplayFields,
+
+    // Circle styling (stroke only; fill set in pointSettings below)
+    mapLayerPaint: {
+      "circle-stroke-width": 1.5,
+      "circle-stroke-color": "#f1f1f1",
+    },
+
+    // Point interaction/paint
+    pointSettings: {
+      clickToCenter: true,
+      clickToZoom: false,
+      colorType: "property",          // "case" | "radius" | "property"
+      radiusType: "radius",
+      // Map the color to our computed _categoryColor (or switch to fixed color)
+      colorProperty: "_categoryColor", // requires colorType="property"
+      // Optional: radius by price (sqrt scale w/ caps)
+      radiusProperty: "price",
+      radiusScale: (v) => {
+        const n = Number(v);
+        if (!isFinite(n)) return 6;
+        return Math.max(4, Math.min(14, Math.sqrt(n) / 300)); // tune to your price distribution
+      },
+      paintSettings: {
+        default: { radius: 8,  color: { light: "#007cbf", dark: "#007cbf" } },
+        hover:   { radius: 10, color: { light: "#007cbf", dark: "#007cbf" } },
+        active:  { radius: 12, color: { light: "black",  dark: "white" } },
+      },
+    },
+  });
+
+  // === 6) Add the HULL (zones) layers after the helper finishes ===============
+  // Your helper usually exposes the map instance on window.map (mapboxgl.Map).
+  // If you expose a callback in trdDataCommonMap, call this block from there instead.
+  const ensureMapReady = () => {
+    if (!window.map || !window.map.on) {
+      requestAnimationFrame(ensureMapReady);
+      return;
+    }
+    const map = window.map;
+    map.on("load", () => {
+      // Sources
+      if (!map.getSource("zones")) {
+        map.addSource("zones", { type: "geojson", data: cfg.hulls });
+      }
+
+      // Fill (translucent)
+      if (!map.getLayer("zones-fill")) {
+        map.addLayer({
+          id: "zones-fill",
+          type: "fill",
+          source: "zones",
+          paint: {
+            "fill-opacity": 0.22,
+            "fill-color": [
+              "case",
+              ["has", cfg.groupLabel, ["get", "properties"]],
+              [
+                "let",
+                "groupName",
+                ["get", cfg.groupLabel],
+                [
+                  "case",
+                  // Give each group a stable color based on its name's hash (approximation):
+                  // Mapbox style expressions can't run JS; for a simple approach we just pick a single color.
+                  // For multi-color hulls by group, pre-compute "hull_color" server-side and use ["get","hull_color"] here.
+                  true, "#0066cc"
+                ]
+              ],
+              "#0066cc"
+            ],
+          },
+        });
+      }
+
+      // Outline
+      if (!map.getLayer("zones-outline")) {
+        map.addLayer({
+          id: "zones-outline",
+          type: "line",
+          source: "zones",
+          paint: {
+            "line-width": 1.5,
+            "line-color": "#002d72",
+            "line-opacity": 0.9,
+          },
+        });
+      }
+
+      // Simple hover tooltip for hulls
+      map.on("mousemove", "zones-fill", (e) => {
+        map.getCanvas().style.cursor = "pointer";
+        const f = e.features && e.features[0];
+        if (!f) return;
+        const props = f.properties || {};
+        const name = props[cfg.groupLabel] || "(unknown)";
+        const count = props.count ? ` (${props.count})` : "";
+        const html = `<strong>${cfg.groupLabel} Zone:</strong> ${name}${count}`;
+        // Basic ad-hoc popup
+        if (!window._zonesPopup) {
+          window._zonesPopup = new mapboxgl.Popup({ closeButton: false, closeOnClick: false });
+        }
+        window._zonesPopup.setLngLat(e.lngLat).setHTML(html).addTo(map);
+      });
+      map.on("mouseleave", "zones-fill", () => {
+        map.getCanvas().style.cursor = "";
+        if (window._zonesPopup) window._zonesPopup.remove();
+      });
+    });
+  };
+  ensureMapReady();
+
+  // === 7) Optional: quick UI toggles for layers ===============================
+  // Add checkboxes in your DOM and wire them up like this:
+  // document.getElementById("toggle-zones").addEventListener("change", (e) => {
+  //   const visible = e.target.checked ? "visible" : "none";
+  //   window.map.setLayoutProperty("zones-fill", "visibility", visible);
+  //   window.map.setLayoutProperty("zones-outline", "visibility", visible);
+  // });
+
+})();
+</script>
