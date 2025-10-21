@@ -4,8 +4,11 @@
   <meta charset="utf-8" />
   <title>South Florida Dominance Map — Agents & Brokerages</title>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+  <!-- Mapbox -->
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+
   <style>
     :root {
       --card-bg: #ffffff;
@@ -19,7 +22,7 @@
     #map { position:absolute; inset:0; }
 
     .panel {
-      position: absolute; top: 12px; left: 12px; z-index: 2;
+      position: absolute; top: 12px; left: 12px; z-index: 3;
       background: var(--card-bg); border-radius: 10px; box-shadow: var(--shadow);
       padding: 10px 12px; max-width: 320px;
     }
@@ -38,18 +41,19 @@
     .legend .label { font-size:12px; color:var(--muted); }
 
     .modal {
-      position:absolute; right:12px; top:12px; width:360px; max-width:92vw;
+      position:absolute; right:12px; top:12px; width:460px; max-width:92vw;
       background:var(--card-bg); border-radius:10px; box-shadow:var(--shadow);
-      padding:12px 14px; display:none; z-index:3;
+      padding:12px 14px; display:none; z-index:4;
     }
     .modal h3 { margin:0 0 6px; font-size:16px; }
     .modal .meta { color:var(--muted); font-size:12px; margin-bottom:6px; }
     .modal table { width:100%; border-collapse:collapse; margin-top:6px; font-size:13px; }
-    .modal td { padding:3px 0; border-bottom:1px solid #f0f0f0; }
-    .modal td:last-child { text-align:right; }
+    .modal th, .modal td { padding:4px 0; border-bottom:1px solid #f0f0f0; }
+    .modal td:last-child, .modal th:last-child { text-align:right; }
+    .modal td:nth-child(2), .modal th:nth-child(2) { text-align:right; }
+    .modal td em { color: var(--muted); font-style: italic; }
     .close { position:absolute; top:6px; right:8px; border:0; background:transparent; font-size:18px; cursor:pointer; }
 
-    /* Checkbox + radio spacing */
     .row input[type="radio"], .row input[type="checkbox"] { margin-right:4px; }
     select, input[type="range"] { accent-color: var(--accent); }
   </style>
@@ -97,11 +101,11 @@
 <div class="legend" aria-hidden="true">
   <div class="small" style="margin-bottom:6px;">Top share (darker = more dominant)</div>
   <div class="scale">
-    <div class="swatch" style="background:#f2f2f2" title="0%"></div>
-    <div class="swatch" style="background:#c7d9ff" title="25%"></div>
-    <div class="swatch" style="background:#7fb3ff" title="50%"></div>
-    <div class="swatch" style="background:#2a7dff" title="75%"></div>
-    <div class="swatch" style="background:#0047b3" title="90%+"></div>
+    <div class="swatch" style="background:#e0ecf7" title="0%"></div>
+    <div class="swatch" style="background:#9dc3ff" title="25%"></div>
+    <div class="swatch" style="background:#4688f0" title="50%"></div>
+    <div class="swatch" style="background:#1a56c4" title="75%"></div>
+    <div class="swatch" style="background:#002f87" title="90%+"></div>
     <span class="label" style="margin-left:6px;">0% → 100%</span>
   </div>
 </div>
@@ -116,35 +120,30 @@
 
 <script>
   // ===== Config =====
-  mapboxgl.accessToken = 'pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ';
+  mapboxgl.accessToken = 'pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ'; // <-- your token
 
   // Center on Miami-Dade
   const INITIAL_CENTER = [-80.30, 25.75];
   const INITIAL_ZOOM = 9;
 
-  // Filename pattern from the notebook exports:
-  // hex_{agent|broker}_{count|volume}_res{7|8|9}.geojson
+  // Filenames from the notebook:
   function dataUrl(mode, metric, res) {
     return `hex_${mode}_${metric}_res${res}.geojson`;
   }
 
-  // Property keys vary with mode/metric:
-  function shareKey(mode) {
-    // top_Agent_Name_share or top_Brokerage_Firm_share
-    return mode === 'agent' ? 'top_Agent_Name_share' : 'top_Brokerage_Firm_share';
-  }
-  function titleKey(mode) {
-    return mode === 'agent' ? 'top_Agent_Name_name' : 'top_Brokerage_Firm_name';
-  }
-  function top3NamesKey(mode) {
-    return mode === 'agent' ? 'Agent_Name_top3_names' : 'Brokerage_Firm_top3_names';
-  }
+  // Property keys by mode/metric:
+  function shareKey(mode) { return mode === 'agent' ? 'top_Agent_Name_share' : 'top_Brokerage_Firm_share'; }
+  function titleKey(mode) { return mode === 'agent' ? 'top_Agent_Name_name' : 'top_Brokerage_Firm_name'; }
+  function top3NamesKey(mode) { return mode === 'agent' ? 'Agent_Name_top3_names' : 'Brokerage_Firm_top3_names'; }
   function top3ValsKey(mode, metric) {
     if (mode === 'agent') return metric === 'count' ? 'Agent_Name_top3_counts' : 'Agent_Name_top3_volume';
     return metric === 'count' ? 'Brokerage_Firm_top3_counts' : 'Brokerage_Firm_top3_volume';
   }
+  // We’ll also need the “other metric” arrays regardless of toggle:
+  function top3CountsKey(mode) { return mode === 'agent' ? 'Agent_Name_top3_counts' : 'Brokerage_Firm_top3_counts'; }
+  function top3VolumeKey(mode) { return mode === 'agent' ? 'Agent_Name_top3_volume' : 'Brokerage_Firm_top3_volume'; }
 
-  // Build map
+  // Map
   const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/light-v11',
@@ -153,7 +152,7 @@
     attributionControl: true
   });
 
-  // UI handles
+  // UI
   const resSelect = document.getElementById('resSelect');
   const minSample = document.getElementById('minSample');
   const minSampleVal = document.getElementById('minSampleVal');
@@ -163,7 +162,7 @@
 
   let current = { mode: 'agent', metric: 'count', res: 8, min: 10 };
 
-  // Layers/Source IDs
+  // IDs
   const SRC_ID = 'hex';
   const LAYER_FILL = 'hex-fill';
   const LAYER_OUTLINE = 'hex-outline';
@@ -173,31 +172,26 @@
     // Source
     map.addSource(SRC_ID, { type: 'geojson', data: dataUrl(current.mode, current.metric, current.res) });
 
-    // Choropleth fill by share
+    // Fill (contrast ramp + outline)
     map.addLayer({
-    id: LAYER_FILL, type: 'fill', source: SRC_ID,
-    paint: {
+      id: LAYER_FILL, type: 'fill', source: SRC_ID,
+      paint: {
         'fill-color': [
-        'interpolate', ['linear'], ['get', shareKey(current.mode)],
-        0.0, '#e0ecf7',
-        0.25, '#9dc3ff',
-        0.5, '#4688f0',
-        0.75, '#1a56c4',
-        0.9, '#002f87'
+          'interpolate', ['linear'], ['get', shareKey(current.mode)],
+          0.0, '#e0ecf7',
+          0.25, '#9dc3ff',
+          0.5, '#4688f0',
+          0.75, '#1a56c4',
+          0.9, '#002f87'
         ],
-        'fill-outline-color': '#333',      // ✅ subtle dark outline per hex
-        'fill-opacity': 0.75               // ✅ a bit stronger
-    }
+        'fill-outline-color': '#333',
+        'fill-opacity': 0.8
+      }
     });
 
-
     map.addLayer({
-    id: LAYER_OUTLINE, type: 'line', source: SRC_ID,
-    paint: {
-        'line-color': '#222',              // darker border
-        'line-width': 0.6,
-        'line-opacity': 0.9
-    }
+      id: LAYER_OUTLINE, type: 'line', source: SRC_ID,
+      paint: { 'line-color': '#111', 'line-width': 0.5, 'line-opacity': 0.8 }
     });
 
     map.addLayer({
@@ -212,22 +206,22 @@
       paint: { 'text-halo-color': '#fff', 'text-halo-width': 1.2 }
     });
 
+    // Subtle background tint
     map.addLayer({
-    id: 'map-tint',
-    type: 'background',
-    paint: { 'background-color': '#000', 'background-opacity': 0.04 }
-    }, LAYER_FILL); // add just beneath the fill layer
+      id: 'map-tint',
+      type: 'background',
+      paint: { 'background-color': '#000', 'background-opacity': 0.04 }
+    }, LAYER_FILL);
 
-    // Initial filter by min sample
     applyMinSampleFilter();
 
-    // Interactions
+    // Click -> popup
     map.on('click', LAYER_FILL, (e) => showPopup(e));
     map.on('click', LAYER_LABEL, (e) => showPopup(e));
     map.on('mousemove', LAYER_FILL, () => map.getCanvas().style.cursor = 'pointer');
     map.on('mouseleave', LAYER_FILL, () => map.getCanvas().style.cursor = '');
 
-    // Wire controls
+    // Controls
     modeRadios.forEach(r => r.addEventListener('change', () => {
       current.mode = document.querySelector('input[name="mode"]:checked').value;
       refreshSourceAndStyles();
@@ -255,19 +249,15 @@
     const src = map.getSource(SRC_ID);
     if (src) src.setData(url);
 
-    // Update share key used by style; we do this by resetting the paint property
     map.setPaintProperty(LAYER_FILL, 'fill-color', [
       'interpolate', ['linear'], ['get', shareKey(current.mode)],
-      0.0, '#f2f2f2',
-      0.25, '#c7d9ff',
-      0.5, '#7fb3ff',
-      0.75, '#2a7dff',
-      0.9, '#0047b3'
+      0.0, '#e0ecf7',
+      0.25, '#9dc3ff',
+      0.5, '#4688f0',
+      0.75, '#1a56c4',
+      0.9, '#002f87'
     ]);
-
-    // Update label field to correct top name property
     map.setLayoutProperty(LAYER_LABEL, 'text-field', ['coalesce', ['get', titleKey(current.mode)], '']);
-
     applyMinSampleFilter();
   }
 
@@ -282,7 +272,7 @@
     }
   }
 
-  // ===== Modal / Popup =====
+  // ===== Popup helpers (headline % from table; tie-aware title; dual metrics) =====
   const modal = document.getElementById('infoModal');
   const closeModalBtn = document.getElementById('closeModal');
   const modalTitle = document.getElementById('modalTitle');
@@ -290,34 +280,100 @@
   const modalTable = document.getElementById('modalTable');
   closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
 
+  function parseJSONSafe(s, fallback=[]) { try { return JSON.parse(s); } catch { return fallback; } }
+  function fmtUSD(n) { return Number(n||0).toLocaleString(undefined, {style:'currency', currency:'USD', maximumFractionDigits:0}); }
+  function pct(n, d) { return (d>0) ? Math.round((Number(n)/d)*100) : 0; }
+
+  // Tie detection among visible values (based on current metric)
+  function isTieAtTop(vals) {
+    const v0 = Number(vals[0] || 0), v1 = Number(vals[1] || 0), v2 = Number(vals[2] || -1);
+    if (v0 === 0) return { tied:false, k:0 };
+    let k = 1; if (v1 === v0) k++; if (v2 === v0) k++;
+    return { tied: k > 1, k };
+  }
+  function formatTitleForTie(names, tieInfo) {
+    if (!tieInfo.tied) return names[0] || '(no leader)';
+    if (tieInfo.k === 2) {
+      const [a,b] = [names[0]||'', names[1]||''].sort((x,y)=>x.localeCompare(y,undefined,{sensitivity:'base'}));
+      return `Tie for leader (2): ${a}, ${b}`;
+    }
+    const topTwo = [names[0]||'', names[1]||''].sort((x,y)=>x.localeCompare(y,undefined,{sensitivity:'base'}));
+    return `Tie for leader (${tieInfo.k}): ${topTwo[0]}, ${topTwo[1]} +${tieInfo.k-2} more`;
+  }
+
   function showPopup(e) {
     const f = e.features && e.features[0];
     if (!f) return;
     const p = f.properties || {};
-    const title = p[titleKey(current.mode)] || '(no leader)';
-    const share = Number(p[shareKey(current.mode)] || 0);
-    const sample = p.sample_size || 0;
 
-    // Parse top3 arrays (JSON strings in properties)
-    let names = [], vals = [];
-    try { names = JSON.parse(p[top3NamesKey(current.mode)] || '[]'); } catch {}
-    try { vals  = JSON.parse(p[top3ValsKey(current.mode, current.metric)] || '[]'); } catch {}
+    // Names are shared across both metrics
+    const names = parseJSONSafe(p[top3NamesKey(current.mode)] || '[]');
 
-    modalTitle.textContent = title;
+    // Pull both metrics (top3)
+    const valsCount  = parseJSONSafe(p[top3CountsKey(current.mode)] || '[]').map(Number);
+    const valsVolume = parseJSONSafe(p[top3VolumeKey(current.mode)] || '[]').map(Number);
+
+    const sample = Number(p.sample_size || 0);
+    const totalVolume = Number(p.sum_price || valsVolume.reduce((s,v)=>s+(Number(v)||0), 0));
+
+    // For the headline: use the currently selected metric’s top value / total
+    const currentVals = current.metric === 'count' ? valsCount : valsVolume;
+    const currentTotal = current.metric === 'count' ? sample : totalVolume;
+    const topVal = Number(currentVals[0] || 0);
+    const dominancePct = pct(topVal, currentTotal);
+
+    // Title with tie handling (based on current metric’s ordering)
+    const tieInfo = isTieAtTop(currentVals);
+    const modeTitle = tieInfo.tied
+      ? formatTitleForTie(names, tieInfo)
+      : (p[titleKey(current.mode)] || '(no leader)');
+
+    const modeLabel = current.mode === 'agent' ? 'Agent' : 'Brokerage';
     const metricLabel = current.metric === 'count' ? 'Deals' : 'Price volume';
+
+    modalTitle.textContent = modeTitle;
     modalMeta.innerHTML = `
-      <div><strong>${current.mode === 'agent' ? 'Agent' : 'Brokerage'}</strong> dominance
-      — <strong>${Math.round(share*100)}%</strong> by ${metricLabel}
-      · sample: ${sample}</div>
+      <div><strong>${modeLabel}</strong> dominance — <strong>${dominancePct}%</strong> by ${metricLabel}
+      · sample: ${sample.toLocaleString()} · total volume: ${fmtUSD(totalVolume)}</div>
       <div class="small">Hex res ${current.res} · Miami-Dade</div>
     `;
 
-    modalTable.innerHTML = names.map((n, i) => `
-      <tr><td>${n ?? '—'}</td><td>${current.metric === 'count'
-        ? (vals[i] ?? 0)
-        : (Number(vals[i] ?? 0)).toLocaleString(undefined, {style:'currency', currency:'USD', maximumFractionDigits:0})}</td></tr>
-    `).join('');
+    // Build a two-column table: Name | Deals (n, %) | Price volume ($, %)
+    const sumTopCount  = valsCount.reduce((s,v)=>s+(Number(v)||0),0);
+    const sumTopVolume = valsVolume.reduce((s,v)=>s+(Number(v)||0),0);
+    const otherCount   = Math.max(sample - sumTopCount, 0);
+    const otherVolume  = Math.max(totalVolume - sumTopVolume, 0);
 
+    // Header
+    let rows = `
+      <tr><th>Name</th><th>Deals</th><th>Price volume</th></tr>
+    `;
+
+    // Top rows (align by index; if lengths differ, missing values treated as 0)
+    for (let i = 0; i < Math.max(names.length, valsCount.length, valsVolume.length); i++) {
+      const nm = names[i] ?? '—';
+      const c  = Number(valsCount[i]  || 0);
+      const v  = Number(valsVolume[i] || 0);
+      rows += `
+        <tr>
+          <td>${nm}</td>
+          <td>${c.toLocaleString()} (${pct(c, sample)}%)</td>
+          <td>${fmtUSD(v)} (${pct(v, totalVolume)}%)</td>
+        </tr>`;
+    }
+
+    // “Other …” row for both metrics so totals add up
+    if (otherCount > 0 || otherVolume > 0) {
+      const label = current.mode === 'agent' ? 'Other agents' : 'Other brokerages';
+      rows += `
+        <tr>
+          <td><em>${label}</em></td>
+          <td>${otherCount.toLocaleString()} (${pct(otherCount, sample)}%)</td>
+          <td>${fmtUSD(otherVolume)} (${pct(otherVolume, totalVolume)}%)</td>
+        </tr>`;
+    }
+
+    modalTable.innerHTML = rows;
     modal.style.display = 'block';
   }
 </script>
