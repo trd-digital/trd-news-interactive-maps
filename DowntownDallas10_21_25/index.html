@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Jess&#x27;s Map</title>
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_9239d5d6ce1ce52df78380a0a1796fd7 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+<div style="position:fixed;bottom:20px;left:20px;z-index:9999;background:white;padding:10px 12px;border:1px solid #bbb;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,0.2);font-size:13px;max-width:260px;">
+  <div style="font-weight:600;margin-bottom:6px;">Status legend</div>
+  <ul style="list-style:none;padding:0;margin:0;"><li><span style='display:inline-block;width:12px;height:12px;background:blue;margin-right:6px;border:1px solid #333'></span>New Development</li><li><span style='display:inline-block;width:12px;height:12px;background:red;margin-right:6px;border:1px solid #333'></span>Possible departure</li><li><span style='display:inline-block;width:12px;height:12px;background:green;margin-right:6px;border:1px solid #333'></span>Redevelopment</li></ul>
+</div>
+    
+<div style="
+  position: fixed;
+  top: 12px; left: 50%; transform: translateX(-50%);
+  z-index: 9999;
+  background: rgba(255,255,255,0.92);
+  padding: 8px 12px;
+  border: 1px solid #bbb; border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+  font: 600 16px/1.25 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  max-width: 92%;
+  text-align: center;
+">
+  Jess&#x27;s Map
+</div>
+    
+            <div class="folium-map" id="map_9239d5d6ce1ce52df78380a0a1796fd7" ></div>
+        
+</body>
+<script>    
+    
+            var map_9239d5d6ce1ce52df78380a0a1796fd7 = L.map(
+                "map_9239d5d6ce1ce52df78380a0a1796fd7",
+                {
+                    center: [32.78092335555555, -96.80447687777777],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 14,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+            L.control.scale().addTo(map_9239d5d6ce1ce52df78380a0a1796fd7);
+
+            
+
+        
+    
+            var tile_layer_da0104025a5188b71b2aaf6f74aa1b90 = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_9239d5d6ce1ce52df78380a0a1796fd7);
+        
+    
+            var circle_marker_0a28eee57ce4f58549dd22eebad9f945 = L.circleMarker(
+                [32.7795587, -96.7989004],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_9239d5d6ce1ce52df78380a0a1796fd7);
+        
+    
+        var popup_73992db4a0f55744bd0415c270efc3bc = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_bb3682774934cd48626b096f66047dc0 = $(`<div id="html_bb3682774934cd48626b096f66047dc0" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>208 S Akard St, Dallas, TX</td></tr><tr><th style='text-align:left;padding-right:8px'>Development</th><td>Whitacre Tower</td></tr><tr><th style='text-align:left;padding-right:8px'>Entity</th><td>AT&amp;T</td></tr><tr><th style='text-align:left;padding-right:8px'>Activity</th><td>Possible departure</td></tr></table></div>`)[0];
+                popup_73992db4a0f55744bd0415c270efc3bc.setContent(html_bb3682774934cd48626b096f66047dc0);
+            
+        
+
+        circle_marker_0a28eee57ce4f58549dd22eebad9f945.bindPopup(popup_73992db4a0f55744bd0415c270efc3bc)
+        ;
+
+        
+    
+    
+            var circle_marker_3849d8597dfd51dcbc47c887c973474f = L.circleMarker(
+                [32.7903143, -96.810148],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_9239d5d6ce1ce52df78380a0a1796fd7);
+        
+    
+        var popup_9f67e20446ad63a53ba99cfc798ea99f = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_e70b20193d4b2e1eb6bddf4b0158b659 = $(`<div id="html_e70b20193d4b2e1eb6bddf4b0158b659" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>2500 Victory Ave, Dallas, TX</td></tr><tr><th style='text-align:left;padding-right:8px'>Development</th><td>American Airlines</td></tr><tr><th style='text-align:left;padding-right:8px'>Entity</th><td>Mavericks</td></tr><tr><th style='text-align:left;padding-right:8px'>Activity</th><td>Possible departure</td></tr></table></div>`)[0];
+                popup_9f67e20446ad63a53ba99cfc798ea99f.setContent(html_e70b20193d4b2e1eb6bddf4b0158b659);
+            
+        
+
+        circle_marker_3849d8597dfd51dcbc47c887c973474f.bindPopup(popup_9f67e20446ad63a53ba99cfc798ea99f)
+        ;
+
+        
+    
+    
+            var circle_marker_dbfbfa30cc2c80cc602b18e590cc70a4 = L.circleMarker(
+                [32.7903143, -96.810148],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_9239d5d6ce1ce52df78380a0a1796fd7);
+        
+    
+        var popup_83f9a0a7c07ea996edb104277733364b = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_92409e09d057087574bef8566b1e5192 = $(`<div id="html_92409e09d057087574bef8566b1e5192" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>2500 Victory Ave, Dallas, TX</td></tr><tr><th style='text-align:left;padding-right:8px'>Development</th><td>American Airlines</td></tr><tr><th style='text-align:left;padding-right:8px'>Entity</th><td>Stars</td></tr><tr><th style='text-align:left;padding-right:8px'>Activity</th><td>Possible departure</td></tr></table></div>`)[0];
+                popup_83f9a0a7c07ea996edb104277733364b.setContent(html_92409e09d057087574bef8566b1e5192);
+            
+        
+
+        circle_marker_dbfbfa30cc2c80cc602b18e590cc70a4.bindPopup(popup_83f9a0a7c07ea996edb104277733364b)
+        ;
+
+        
+    
+    
+            var circle_marker_05635cf52a5eb7d979949ceab2e5a2f2 = L.circleMarker(
+                [32.7739061, -96.8084737],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_9239d5d6ce1ce52df78380a0a1796fd7);
+        
+    
+        var popup_473f8eb912a7e2bf2ad3d6b88c97c4c1 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_d2dc3feac7833fcda04bc79066fc70da = $(`<div id="html_d2dc3feac7833fcda04bc79066fc70da" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>300 Reunion Blvd, Dallas, TX</td></tr><tr><th style='text-align:left;padding-right:8px'>Development</th><td>Reunion Tower</td></tr><tr><th style='text-align:left;padding-right:8px'>Entity</th><td>Hunt Realty</td></tr><tr><th style='text-align:left;padding-right:8px'>Activity</th><td>Redevelopment</td></tr><tr><th style='text-align:left;padding-right:8px'>Estimated cost</th><td>$5B</td></tr><tr><th style='text-align:left;padding-right:8px'>Details</th><td>3,000 units, 600-1,000-key hotel, 150,000 SF retail and up to 2M SF office, surrounding 3- to 4-acre park</td></tr><tr><th style='text-align:left;padding-right:8px'>Source</th><td>DMN</td></tr></table></div>`)[0];
+                popup_473f8eb912a7e2bf2ad3d6b88c97c4c1.setContent(html_d2dc3feac7833fcda04bc79066fc70da);
+            
+        
+
+        circle_marker_05635cf52a5eb7d979949ceab2e5a2f2.bindPopup(popup_473f8eb912a7e2bf2ad3d6b88c97c4c1)
+        ;
+
+        
+    
+    
+            var circle_marker_906eccf6cb9110d6da77d25cb8ca27a7 = L.circleMarker(
+                [32.774509, -96.8006052],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_9239d5d6ce1ce52df78380a0a1796fd7);
+        
+    
+        var popup_09b4192054609d5742f56654730c0009 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_32f0659d5b481c591b806f9a5ecb84bc = $(`<div id="html_32f0659d5b481c591b806f9a5ecb84bc" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>650 S Griffin St, Dallas, TX</td></tr><tr><th style='text-align:left;padding-right:8px'>Development</th><td>Convention Center</td></tr><tr><th style='text-align:left;padding-right:8px'>Entity</th><td>City of Dallas</td></tr><tr><th style='text-align:left;padding-right:8px'>Activity</th><td>Redevelopment</td></tr><tr><th style='text-align:left;padding-right:8px'>Estimated cost</th><td>$3.7B</td></tr><tr><th style='text-align:left;padding-right:8px'>Details</th><td>2.5M-SF</td></tr></table></div>`)[0];
+                popup_09b4192054609d5742f56654730c0009.setContent(html_32f0659d5b481c591b806f9a5ecb84bc);
+            
+        
+
+        circle_marker_906eccf6cb9110d6da77d25cb8ca27a7.bindPopup(popup_09b4192054609d5742f56654730c0009)
+        ;
+
+        
+    
+    
+            var circle_marker_ac0b1f5537d860c9008cfb57cc0a5072 = L.circleMarker(
+                [32.788151, -96.8079715],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_9239d5d6ce1ce52df78380a0a1796fd7);
+        
+    
+        var popup_c515317f92f11aa37ba41871f90e6ba1 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_b99b5ce46f2aa12e2ccc84081765b5ee = $(`<div id="html_b99b5ce46f2aa12e2ccc84081765b5ee" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>2323 N Field St, Dallas, TX</td></tr><tr><th style='text-align:left;padding-right:8px'>Development</th><td>NorthEnd</td></tr><tr><th style='text-align:left;padding-right:8px'>Entity</th><td>Hunt Realty</td></tr><tr><th style='text-align:left;padding-right:8px'>Activity</th><td>New Development</td></tr><tr><th style='text-align:left;padding-right:8px'>Estimated cost</th><td>$500M for Goldman campus</td></tr><tr><th style='text-align:left;padding-right:8px'>Details</th><td>3.8M-SF of mixed-use on 11 acres, including 1.5-acre park</td></tr></table></div>`)[0];
+                popup_c515317f92f11aa37ba41871f90e6ba1.setContent(html_b99b5ce46f2aa12e2ccc84081765b5ee);
+            
+        
+
+        circle_marker_ac0b1f5537d860c9008cfb57cc0a5072.bindPopup(popup_c515317f92f11aa37ba41871f90e6ba1)
+        ;
+
+        
+    
+    
+            var circle_marker_1a36a079b26be6897df3115143c48734 = L.circleMarker(
+                [32.7769986, -96.7944664],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_9239d5d6ce1ce52df78380a0a1796fd7);
+        
+    
+        var popup_cd4ce61eb723e13ff0133ba9f674e404 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_41eab8d01c00e154f5fb407642db3b94 = $(`<div id="html_41eab8d01c00e154f5fb407642db3b94" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>711 St Paul St, Dallas, TX</td></tr><tr><th style='text-align:left;padding-right:8px'>Development</th><td>Newpark</td></tr><tr><th style='text-align:left;padding-right:8px'>Entity</th><td>Hoque Global</td></tr><tr><th style='text-align:left;padding-right:8px'>Activity</th><td>New Development</td></tr><tr><th style='text-align:left;padding-right:8px'>Details</th><td>20 acres MU with office, retail, mixed-income housing and a hotel</td></tr><tr><th style='text-align:left;padding-right:8px'>Source</th><td>DBJ</td></tr></table></div>`)[0];
+                popup_cd4ce61eb723e13ff0133ba9f674e404.setContent(html_41eab8d01c00e154f5fb407642db3b94);
+            
+        
+
+        circle_marker_1a36a079b26be6897df3115143c48734.bindPopup(popup_cd4ce61eb723e13ff0133ba9f674e404)
+        ;
+
+        
+    
+    
+            var circle_marker_a8017dde9a9b4270fe90f6f97d233031 = L.circleMarker(
+                [32.7802567, -96.8035338],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_9239d5d6ce1ce52df78380a0a1796fd7);
+        
+    
+        var popup_28e43eb96dc82c9f827f690d3a609598 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_44593f66b29a611560d494c42e7f6174 = $(`<div id="html_44593f66b29a611560d494c42e7f6174" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>901 Main St, Dallas, TX</td></tr><tr><th style='text-align:left;padding-right:8px'>Development</th><td>Bank of America</td></tr><tr><th style='text-align:left;padding-right:8px'>Entity</th><td>Hoque Global, PegasusAblon</td></tr><tr><th style='text-align:left;padding-right:8px'>Activity</th><td>Redevelopment</td></tr><tr><th style='text-align:left;padding-right:8px'>Estimated cost</th><td>$350M</td></tr><tr><th style='text-align:left;padding-right:8px'>Details</th><td>Add a 300-key hotel</td></tr><tr><th style='text-align:left;padding-right:8px'>Source</th><td>DMag</td></tr></table></div>`)[0];
+                popup_28e43eb96dc82c9f827f690d3a609598.setContent(html_44593f66b29a611560d494c42e7f6174);
+            
+        
+
+        circle_marker_a8017dde9a9b4270fe90f6f97d233031.bindPopup(popup_28e43eb96dc82c9f827f690d3a609598)
+        ;
+
+        
+    
+    
+            var circle_marker_6d87213edf51b82ddedc04d5bf6cd16e = L.circleMarker(
+                [32.7743015, -96.8060449],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_9239d5d6ce1ce52df78380a0a1796fd7);
+        
+    
+        var popup_23b723424522648d2baddff82821f861 = L.popup({"maxWidth": 450});
+
+        
+            
+                var html_b60c1d2c959a49436be90b2682729fb2 = $(`<div id="html_b60c1d2c959a49436be90b2682729fb2" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>508 Young St, Dallas, TX</td></tr><tr><th style='text-align:left;padding-right:8px'>Development</th><td>Old DMN</td></tr><tr><th style='text-align:left;padding-right:8px'>Entity</th><td>City of Dallas</td></tr><tr><th style='text-align:left;padding-right:8px'>Activity</th><td>Redevelopment</td></tr><tr><th style='text-align:left;padding-right:8px'>Details</th><td>TBD</td></tr></table></div>`)[0];
+                popup_23b723424522648d2baddff82821f861.setContent(html_b60c1d2c959a49436be90b2682729fb2);
+            
+        
+
+        circle_marker_6d87213edf51b82ddedc04d5bf6cd16e.bindPopup(popup_23b723424522648d2baddff82821f861)
+        ;
+
+        
+    
+</script>
