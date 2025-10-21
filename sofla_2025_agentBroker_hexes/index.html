@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>South Florida Dominance Map — Agents & Brokerages</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+  <style>
+    :root {
+      --card-bg: #ffffff;
+      --shadow: 0 8px 24px rgba(0,0,0,.18);
+      --text: #1d1d1f;
+      --muted: #666;
+      --accent: #0047b3;
+    }
+    html, body { height: 100%; }
+    body { margin: 0; font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; color: var(--text); }
+    #map { position:absolute; inset:0; }
+
+    .panel {
+      position: absolute; top: 12px; left: 12px; z-index: 2;
+      background: var(--card-bg); border-radius: 10px; box-shadow: var(--shadow);
+      padding: 10px 12px; max-width: 320px;
+    }
+    .panel h2 { margin: 0 0 6px; font-size: 15px; }
+    .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin: 6px 0; }
+    .row label { margin-right:10px; white-space:nowrap; }
+    .row .group { display:flex; gap:10px; flex-wrap:wrap; }
+    .small { color: var(--muted); font-size: 12px; }
+
+    .legend {
+      position:absolute; bottom:12px; left:12px; background:var(--card-bg);
+      border-radius:10px; box-shadow:var(--shadow); padding:8px 10px; z-index:2;
+    }
+    .legend .scale { display:flex; gap:6px; align-items:center; }
+    .legend .swatch { width:22px; height:12px; border-radius:3px; border:1px solid #eee; }
+    .legend .label { font-size:12px; color:var(--muted); }
+
+    .modal {
+      position:absolute; right:12px; top:12px; width:360px; max-width:92vw;
+      background:var(--card-bg); border-radius:10px; box-shadow:var(--shadow);
+      padding:12px 14px; display:none; z-index:3;
+    }
+    .modal h3 { margin:0 0 6px; font-size:16px; }
+    .modal .meta { color:var(--muted); font-size:12px; margin-bottom:6px; }
+    .modal table { width:100%; border-collapse:collapse; margin-top:6px; font-size:13px; }
+    .modal td { padding:3px 0; border-bottom:1px solid #f0f0f0; }
+    .modal td:last-child { text-align:right; }
+    .close { position:absolute; top:6px; right:8px; border:0; background:transparent; font-size:18px; cursor:pointer; }
+
+    /* Checkbox + radio spacing */
+    .row input[type="radio"], .row input[type="checkbox"] { margin-right:4px; }
+    select, input[type="range"] { accent-color: var(--accent); }
+  </style>
+</head>
+<body>
+<div id="map" aria-label="Dominance map"></div>
+
+<!-- Control Panel -->
+<div class="panel" role="region" aria-label="Map controls">
+  <h2>Dominance</h2>
+  <div class="row">
+    <div class="group" aria-label="Mode">
+      <label><input type="radio" name="mode" value="agent" checked> Agent</label>
+      <label><input type="radio" name="mode" value="broker"> Brokerage</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="group" aria-label="Metric">
+      <label><input type="radio" name="metric" value="count" checked> Count</label>
+      <label><input type="radio" name="metric" value="volume"> Price volume</label>
+    </div>
+  </div>
+  <div class="row">
+    <label for="resSelect">Resolution</label>
+    <select id="resSelect">
+      <option value="7">7 (largest hexes)</option>
+      <option value="8" selected>8</option>
+      <option value="9">9 (smallest hexes)</option>
+    </select>
+  </div>
+  <div class="row">
+    <label for="minSample">Min sample</label>
+    <input id="minSample" type="range" min="1" max="50" step="1" value="10">
+    <span id="minSampleVal" class="small">10</span>
+  </div>
+  <div class="row small">
+    <label><input id="labelsToggle" type="checkbox" checked> Show labels</label>
+  </div>
+  <div class="row small">
+    Miami-Dade focus (centered). Use zoom 9–11 to compare neighborhoods.
+  </div>
+</div>
+
+<!-- Legend -->
+<div class="legend" aria-hidden="true">
+  <div class="small" style="margin-bottom:6px;">Top share (darker = more dominant)</div>
+  <div class="scale">
+    <div class="swatch" style="background:#f2f2f2" title="0%"></div>
+    <div class="swatch" style="background:#c7d9ff" title="25%"></div>
+    <div class="swatch" style="background:#7fb3ff" title="50%"></div>
+    <div class="swatch" style="background:#2a7dff" title="75%"></div>
+    <div class="swatch" style="background:#0047b3" title="90%+"></div>
+    <span class="label" style="margin-left:6px;">0% → 100%</span>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <button class="close" id="closeModal" aria-label="Close">×</button>
+  <h3 id="modalTitle">Details</h3>
+  <div class="meta" id="modalMeta"></div>
+  <table id="modalTable"></table>
+</div>
+
+<script>
+  // ===== Config =====
+  mapboxgl.accessToken = 'pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ';
+
+  // Center on Miami-Dade
+  const INITIAL_CENTER = [-80.30, 25.75];
+  const INITIAL_ZOOM = 9;
+
+  // Filename pattern from the notebook exports:
+  // hex_{agent|broker}_{count|volume}_res{7|8|9}.geojson
+  function dataUrl(mode, metric, res) {
+    return `hex_${mode}_${metric}_res${res}.geojson`;
+  }
+
+  // Property keys vary with mode/metric:
+  function shareKey(mode) {
+    // top_Agent_Name_share or top_Brokerage_Firm_share
+    return mode === 'agent' ? 'top_Agent_Name_share' : 'top_Brokerage_Firm_share';
+  }
+  function titleKey(mode) {
+    return mode === 'agent' ? 'top_Agent_Name_name' : 'top_Brokerage_Firm_name';
+  }
+  function top3NamesKey(mode) {
+    return mode === 'agent' ? 'Agent_Name_top3_names' : 'Brokerage_Firm_top3_names';
+  }
+  function top3ValsKey(mode, metric) {
+    if (mode === 'agent') return metric === 'count' ? 'Agent_Name_top3_counts' : 'Agent_Name_top3_volume';
+    return metric === 'count' ? 'Brokerage_Firm_top3_counts' : 'Brokerage_Firm_top3_volume';
+  }
+
+  // Build map
+  const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/light-v11',
+    center: INITIAL_CENTER,
+    zoom: INITIAL_ZOOM,
+    attributionControl: true
+  });
+
+  // UI handles
+  const resSelect = document.getElementById('resSelect');
+  const minSample = document.getElementById('minSample');
+  const minSampleVal = document.getElementById('minSampleVal');
+  const labelsToggle = document.getElementById('labelsToggle');
+  const modeRadios = document.querySelectorAll('input[name="mode"]');
+  const metricRadios = document.querySelectorAll('input[name="metric"]');
+
+  let current = { mode: 'agent', metric: 'count', res: 8, min: 10 };
+
+  // Layers/Source IDs
+  const SRC_ID = 'hex';
+  const LAYER_FILL = 'hex-fill';
+  const LAYER_OUTLINE = 'hex-outline';
+  const LAYER_LABEL = 'hex-label';
+
+  map.on('load', async () => {
+    // Source
+    map.addSource(SRC_ID, { type: 'geojson', data: dataUrl(current.mode, current.metric, current.res) });
+
+    // Choropleth fill by share
+    map.addLayer({
+    id: LAYER_FILL, type: 'fill', source: SRC_ID,
+    paint: {
+        'fill-color': [
+        'interpolate', ['linear'], ['get', shareKey(current.mode)],
+        0.0, '#e0ecf7',
+        0.25, '#9dc3ff',
+        0.5, '#4688f0',
+        0.75, '#1a56c4',
+        0.9, '#002f87'
+        ],
+        'fill-outline-color': '#333',      // ✅ subtle dark outline per hex
+        'fill-opacity': 0.75               // ✅ a bit stronger
+    }
+    });
+
+
+    map.addLayer({
+    id: LAYER_OUTLINE, type: 'line', source: SRC_ID,
+    paint: {
+        'line-color': '#222',              // darker border
+        'line-width': 0.6,
+        'line-opacity': 0.9
+    }
+    });
+
+    map.addLayer({
+      id: LAYER_LABEL, type: 'symbol', source: SRC_ID,
+      minzoom: 10,
+      layout: {
+        'text-field': ['coalesce', ['get', titleKey(current.mode)], ''],
+        'text-size': 11,
+        'text-allow-overlap': false,
+        'text-optional': true
+      },
+      paint: { 'text-halo-color': '#fff', 'text-halo-width': 1.2 }
+    });
+
+    map.addLayer({
+    id: 'map-tint',
+    type: 'background',
+    paint: { 'background-color': '#000', 'background-opacity': 0.04 }
+    }, LAYER_FILL); // add just beneath the fill layer
+
+    // Initial filter by min sample
+    applyMinSampleFilter();
+
+    // Interactions
+    map.on('click', LAYER_FILL, (e) => showPopup(e));
+    map.on('click', LAYER_LABEL, (e) => showPopup(e));
+    map.on('mousemove', LAYER_FILL, () => map.getCanvas().style.cursor = 'pointer');
+    map.on('mouseleave', LAYER_FILL, () => map.getCanvas().style.cursor = '');
+
+    // Wire controls
+    modeRadios.forEach(r => r.addEventListener('change', () => {
+      current.mode = document.querySelector('input[name="mode"]:checked').value;
+      refreshSourceAndStyles();
+    }));
+    metricRadios.forEach(r => r.addEventListener('change', () => {
+      current.metric = document.querySelector('input[name="metric"]:checked').value;
+      refreshSourceAndStyles();
+    }));
+    resSelect.addEventListener('change', () => {
+      current.res = Number(resSelect.value);
+      refreshSourceAndStyles();
+    });
+    minSample.addEventListener('input', () => {
+      current.min = Number(minSample.value);
+      minSampleVal.textContent = String(current.min);
+      applyMinSampleFilter();
+    });
+    labelsToggle.addEventListener('change', () => {
+      map.setLayoutProperty(LAYER_LABEL, 'visibility', labelsToggle.checked ? 'visible' : 'none');
+    });
+  });
+
+  async function refreshSourceAndStyles() {
+    const url = dataUrl(current.mode, current.metric, current.res);
+    const src = map.getSource(SRC_ID);
+    if (src) src.setData(url);
+
+    // Update share key used by style; we do this by resetting the paint property
+    map.setPaintProperty(LAYER_FILL, 'fill-color', [
+      'interpolate', ['linear'], ['get', shareKey(current.mode)],
+      0.0, '#f2f2f2',
+      0.25, '#c7d9ff',
+      0.5, '#7fb3ff',
+      0.75, '#2a7dff',
+      0.9, '#0047b3'
+    ]);
+
+    // Update label field to correct top name property
+    map.setLayoutProperty(LAYER_LABEL, 'text-field', ['coalesce', ['get', titleKey(current.mode)], '']);
+
+    applyMinSampleFilter();
+  }
+
+  function applyMinSampleFilter() {
+    const filter = ['>=', ['to-number', ['get', 'sample_size']], current.min];
+    map.setFilter(LAYER_FILL, filter);
+    map.setFilter(LAYER_OUTLINE, filter);
+    if (labelsToggle.checked) {
+      map.setFilter(LAYER_LABEL, filter);
+    } else {
+      map.setLayoutProperty(LAYER_LABEL, 'visibility', 'none');
+    }
+  }
+
+  // ===== Modal / Popup =====
+  const modal = document.getElementById('infoModal');
+  const closeModalBtn = document.getElementById('closeModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalMeta = document.getElementById('modalMeta');
+  const modalTable = document.getElementById('modalTable');
+  closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+
+  function showPopup(e) {
+    const f = e.features && e.features[0];
+    if (!f) return;
+    const p = f.properties || {};
+    const title = p[titleKey(current.mode)] || '(no leader)';
+    const share = Number(p[shareKey(current.mode)] || 0);
+    const sample = p.sample_size || 0;
+
+    // Parse top3 arrays (JSON strings in properties)
+    let names = [], vals = [];
+    try { names = JSON.parse(p[top3NamesKey(current.mode)] || '[]'); } catch {}
+    try { vals  = JSON.parse(p[top3ValsKey(current.mode, current.metric)] || '[]'); } catch {}
+
+    modalTitle.textContent = title;
+    const metricLabel = current.metric === 'count' ? 'Deals' : 'Price volume';
+    modalMeta.innerHTML = `
+      <div><strong>${current.mode === 'agent' ? 'Agent' : 'Brokerage'}</strong> dominance
+      — <strong>${Math.round(share*100)}%</strong> by ${metricLabel}
+      · sample: ${sample}</div>
+      <div class="small">Hex res ${current.res} · Miami-Dade</div>
+    `;
+
+    modalTable.innerHTML = names.map((n, i) => `
+      <tr><td>${n ?? '—'}</td><td>${current.metric === 'count'
+        ? (vals[i] ?? 0)
+        : (Number(vals[i] ?? 0)).toLocaleString(undefined, {style:'currency', currency:'USD', maximumFractionDigits:0})}</td></tr>
+    `).join('');
+
+    modal.style.display = 'block';
+  }
+</script>
+</body>
+</html>
