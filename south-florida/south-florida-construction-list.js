@@ -1,5 +1,5 @@
 const dataUrl =
-  "https://teststatic.therealdeal.com/interactive-maps/miami-construction-map.geojson";
+  "https://static.therealdeal.com/interactive-maps/miami-construction-map.geojson";
 
 const trdTheme = TrdTheme();
 
@@ -90,12 +90,12 @@ const trdList = () => {
         .slice(0, listLimit)
         .map((feature) => {
           const properties = feature.properties;
-          const price = helpers.formatCurrency(properties["TotalCost"], true);
+          const price = helpers.formatCurrency(properties["MaxEstimatedValue"], true);
           const sqft = TrdFormatters.formatNumber(
-            properties["TotalSQFT"],
+            properties["MaxSquareFootage"],
             true
           );
-          const date = helpers.formatDate(properties["LatestIssuedDate"]);
+          const date = helpers.formatDate(properties["LatestPermitIssuedDate"]);
 
           const place = [];
           if (!helpers.isEmptyValue(properties["Neighborhood"])) {
@@ -106,9 +106,9 @@ const trdList = () => {
             <li class="list-group-item d-flex justify-content-between align-items-start">
               <div class="me-2">
                 <div class="text-muted text-small">${
-                  properties["PermitType"]
+                  properties["LatestPermitType"]
                 } | ${properties["LatestStatus"]}</div>
-                <div>${properties["DeliveryAddress"]}</div>
+                <div>${properties["PropertyAddress"]}</div>
                 <div class="text-muted">${place.join(", ")}</div>
               </div>
               <div>
@@ -166,13 +166,13 @@ const trdList = () => {
 
     filterListEmptyData: (data) => {
       const properties = data.properties;
-      const address = properties["DeliveryAddress"];
+      const address = properties["PropertyAddress"];
 
       return !helpers.isEmptyValue(address);
     },
 
     filterToLast30Days: (data) => {
-      const date = Date.parse(data.properties["LatestIssuedDate"]);
+      const date = Date.parse(data.properties["LatestPermitIssuedDate"]);
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -180,8 +180,8 @@ const trdList = () => {
     },
 
     sortListByStatusDate: (a, b) => {
-      const priceA = new Date(a.properties["LatestIssuedDate"]);
-      const priceB = new Date(b.properties["LatestIssuedDate"]);
+      const priceA = new Date(a.properties["LatestPermitIssuedDate"]);
+      const priceB = new Date(b.properties["LatestPermitIssuedDate"]);
       return priceB.getTime() - priceA.getTime();
     },
 
