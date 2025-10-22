@@ -24,9 +24,22 @@ const excludeValue = [
 const trdTheme = TrdTheme();
 
 const trdList = () => {
-  const list = document.querySelector("#luxury-sales-list");
-
-  const listLimit = 30;
+  const list = document.querySelector("#list");
+  const queryParams = new URLSearchParams(window.location.search);
+  const view = queryParams.get("view");
+  const propertyType = queryParams.get("property-type");
+  const uniqueBuilding = queryParams.get("uniqueBuilding");
+  const updateHeight = queryParams.get("updateHeight");
+  const maxLimit = 30;
+  let listLimit = queryParams.get("limit");
+  if (!listLimit || isNaN(listLimit)) {
+    listLimit = maxLimit;
+  } else {
+    listLimit = parseInt(listLimit, 10);
+    if (listLimit > maxLimit) {
+      listLimit = maxLimit;
+    }
+  }
 
   let scroller;
 
@@ -35,11 +48,25 @@ const trdList = () => {
       fn.setupTooltip();
       fn.addEventListeners();
       trdTheme.init();
-
-      fn.getData(dataUrl)
+      fn.updateView();
+      fn.addLoadingListItems();
+      fn.getData()
         .then(fn.renderListItems)
         .catch(console.error)
-        .finally(fn.autoScrollListEvent);
+        .finally(() => {
+          if (view === "dashboard") {
+            fn.updateParentWithHeight();
+          }
+        });
+    },
+
+    updateView: () => {
+      if (view === "dashboard") {
+        document.querySelector(".card").classList.remove("card");
+        document.querySelector(".card-body").classList.add("d-none");
+        list.classList.add("list-view-numbers");
+        fn.updateParentWithHeight();
+      }
     },
 
     setupTooltip: () => {
@@ -59,33 +86,59 @@ const trdList = () => {
         window.open(url, "_blank");
       });
       window.addEventListener("load", helpers.addGamTrackUrls);
-
       window.addEventListener("blur", helpers.autoScrollListStart);
       window.addEventListener("load", helpers.autoScrollListStart);
       list.addEventListener("mouseleave", helpers.autoScrollListStart);
       list.addEventListener("mouseenter", helpers.autoScrollListStop);
       list.addEventListener("touchstart", helpers.autoScrollListStop);
+      window.addEventListener("resize", fn.updateParentWithHeight);
+      window.addEventListener("load", fn.updateParentWithHeight);
+      window.addEventListener("message", (event) => {
+        if (event.data.type === "updateHeight") {
+          fn.updateParentWithHeight();
+        }
+      });
     },
 
-    getData: async (url) => {
-      const response = await fetch(url);
+    getData: async () => {
+      const response = await fetch(dataUrl);
       return response.json();
     },
 
+    addLoadingListItems: () => {
+      const items = Array.from({ length: listLimit }, (_, i) => {
+        return `
+          <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="me-2" style="width: 100%;">
+              <div class="loading-placeholder" style="width: 100%; height: 20px;"></div>
+            </div>
+            <div>
+              <div class="loading-placeholder" style="width: 100px; height: 20px;"></div>
+              <div class="loading-placeholder" style="width: 80px; height: 15px;"></div>
+            </div>
+          </li>
+        `;
+      }).join("");
+
+      list.innerHTML = items;
+    },
+
     renderListItems: (data) => {
-      const items = data.features
+      let items = data.features
         .filter(helpers.filterListEmptyData)
         .sort(helpers.sortListBySalePrice)
         .slice(0, listLimit)
         .map((feature) => {
-          const properties = feature.properties;
-          const address = properties["Physical Address"];
-          const price = helpers.formatCurrency(properties["Sale Price"], true);
-          const date = helpers.formatDate(properties["Record Date"]);
+          const item = feature.properties;
+          const address = item["Physical Address"];
+          const price = helpers.formatCurrency(item["Sale Price"], true);
+          const date = helpers.formatDate(item["Record Date"]);
 
           return `
             <li class="list-group-item d-flex justify-content-between align-items-start">
-              <div class="me-2">${address}</div>
+              <div class="me-2">
+                <div>${address}</div>
+              </div>
               <div>
                 <div class="text-success price">${price}</div>
                 <div class="text-muted date">${date}</div>
@@ -96,6 +149,17 @@ const trdList = () => {
         .join("");
 
       list.innerHTML = items;
+
+      if (view === "dashboard") {
+        const viewMore = document.createElement("div");
+        viewMore.className = "text-center";
+        viewMore.innerHTML = `
+        <a href="https://therealdeal.com/data/new-york/2024/nyc-transactions/?utm_source=embed&utm_medium=widget" class="btn btn-primary" target="_parent">
+          <div class="me-2 text-uppercase label">View More</div>
+        </a>
+        `;
+        list.parentNode.appendChild(viewMore);
+      }
     },
 
     autoScrollList: () => {
@@ -110,6 +174,21 @@ const trdList = () => {
           });
         }
       }, 10);
+    },
+
+    updateParentWithHeight: () => {
+      if (!updateHeight) return;
+
+      const origin =
+        window.location.origin === "https://trd-digital.github.io"
+          ? "https://therealdeal.com"
+          : "http://localhost:3010";
+
+      const height = list.offsetHeight;
+      window.parent.postMessage(
+        { updateHeight: height + 10, src: window.location.href },
+        origin
+      );
     },
   };
 

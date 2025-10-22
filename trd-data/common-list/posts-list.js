@@ -89,6 +89,9 @@ const trdPostList = (options) => {
     getMarketId: (market) => {
       const marketIdMap = {
         "new-york": 9572,
+        miami: 9574,
+        chicago: 9569,
+        la: 9570,
       };
       return marketIdMap[market] || null;
     },
