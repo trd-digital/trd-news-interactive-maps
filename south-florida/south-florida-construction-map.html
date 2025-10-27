@@ -596,6 +596,25 @@
                     },
                 },
             },
+            clusterSettings: {
+                enable: true, // Whether to enable clustering
+                maxZoom: 12, // Max zoom to cluster points on
+                radius: 100, // Radius of each cluster when clustering points
+                colorType: "case", // "case" // TODO: Add "step" support
+                textSize: 16, // Size of the text in clusters
+                paintSettings: {
+                    default: {
+                    color: {
+                        light: "#FF5722", // Default color for clusters in light mode
+                        dark: "#D84315", // Default color for clusters in dark mode
+                    },
+                    textColor: {
+                        light: "#ffffff", // Default text color for clusters in light mode
+                        dark: "#ffffff", // Default text color for clusters in dark mode
+                    },
+                    },
+                },
+            }
         });
 
         // --- Filter count labels updater (status functionality removed) ---
