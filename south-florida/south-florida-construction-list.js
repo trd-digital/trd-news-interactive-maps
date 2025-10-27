@@ -86,7 +86,7 @@ const trdList = () => {
       const items = data.features
         .filter(helpers.filterListEmptyData)
         .filter(helpers.filterToLast30Days)
-        .sort(helpers.sortListByStatusDate)
+        .sort(helpers.sortListByPermitDate)
         .slice(0, listLimit)
         .map((feature) => {
           const properties = feature.properties;
@@ -107,7 +107,7 @@ const trdList = () => {
               <div class="me-2">
                 <div class="text-muted text-small">${
                   properties["LatestPermitType"]
-                } | ${properties["LatestStatus"]}</div>
+                }
                 <div>${properties["PropertyAddress"]}</div>
                 <div class="text-muted">${place.join(", ")}</div>
               </div>
@@ -179,7 +179,7 @@ const trdList = () => {
       return date > thirtyDaysAgo;
     },
 
-    sortListByStatusDate: (a, b) => {
+    sortListByPermitDate: (a, b) => {
       const priceA = new Date(a.properties["LatestPermitIssuedDate"]);
       const priceB = new Date(b.properties["LatestPermitIssuedDate"]);
       return priceB.getTime() - priceA.getTime();
