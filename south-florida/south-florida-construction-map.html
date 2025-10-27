@@ -595,7 +595,7 @@
 
                 // Update all filter option containers
                 optionContainers.forEach(container => {
-                    const input = container.querySelector('input[name="sqft"], input[name="cost"], input[name="property-type"], input[name="units"]');
+                    const input = container.querySelector('input[name="sqft"], input[name="cost"], input[name="property-type"], input[name="units"], input[name="year"]');
                     const label = container.querySelector('label.filter-option');
 
                     if (!input || !label) {
@@ -620,6 +620,8 @@
                         count = window.propertyTypeCounts ? (window.propertyTypeCounts[value] || 0) : 0;
                     } else if (input.name === 'units') {
                         count = window.unitCounts ? (window.unitCounts[value] || 0) : 0;
+                    } else if (input.name === 'year') {
+                        count = window.yearCounts ? (window.yearCounts[value] || 0) : 0;
                     }
                     
                     label.textContent = `${label.dataset.baseLabel} (${count.toLocaleString()})`;
@@ -690,6 +692,7 @@
                     const newCostCounts = {};
                     const newPropertyTypeCounts = {};
                     const newUnitCounts = {};
+                    const newYearCounts = {};
                     
                     e.detail.features.forEach(f => {
                         // Square footage counts
@@ -764,6 +767,14 @@
                                 }
                             }
                         }
+                        // Year counts for filtered features
+                        const yearValue = f.properties?.LatestPermitYear;
+                        if (yearValue !== undefined && yearValue !== null) {
+                            const year = parseInt(yearValue, 10);
+                            if (!isNaN(year)) {
+                                newYearCounts[year.toString()] = (newYearCounts[year.toString()] || 0) + 1;
+                            }
+                        }
                     });
                     
                     // replace global counts then refresh labels
@@ -778,6 +789,8 @@
                     
                     Object.keys(unitCounts).forEach(k => delete unitCounts[k]);
                     Object.entries(newUnitCounts).forEach(([k, v]) => unitCounts[k] = v);
+                    Object.keys(yearCounts).forEach(k => delete yearCounts[k]);
+                    Object.entries(newYearCounts).forEach(([k, v]) => yearCounts[k] = v);
                     
                     updateLabels();
                 }
