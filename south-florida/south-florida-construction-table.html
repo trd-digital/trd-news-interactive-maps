@@ -87,7 +87,7 @@
     <script>
       const displayColumns = [
         {
-          dataField: "DeliveryAddress",
+          dataField: "PropertyAddress",
           name: "Address",
           visible: true,
         },
@@ -102,24 +102,40 @@
           visible: true,
         },
         {
-          dataField: "PermitType",
+          dataField: "PermitCount",
+          name: "Total Number of Permits",
+          visible: true,
+        },
+        {
+          dataField: "LatestPermitType",
           name: "Permit Type",
           visible: true,
         },
         {
-          dataField: "TotalCost",
+          dataField: "LatestApplicationType",
+          name: "Application Type",
+          visible: false,
+        },
+        {
+          dataField: "MaxEstimatedValue",
           name: "Total Construction Cost",
           visible: true,
           formatter: TrdFormatters.formatPrice,
         },
         {
-          dataField: "TotalSQFT",
+          dataField: "LatestProposedUse",
+          name: "Proposed Use",
+          visible: false,
+          formatter: TrdFormatters.formatPrice,
+        },
+        {
+          dataField: "MaxSquareFootage",
           name: "Total Square Footage",
           visible: true,
           formatter: TrdFormatters.formatNumber,
         },
         {
-          dataField: "LatestIssuedDate",
+          dataField: "LatestPermitIssuedDate",
           name: "Latest Permit Date",
           visible: true,
           sorter: TrdSorters.sortDate,
@@ -135,18 +151,23 @@
           visible: false,
         },
         { 
-          dataField: "WorkItems_from_LowestID", 
-          name: "Work Items", 
+          dataField: "DetailDescriptionComments", 
+          name: "Past Works",
+          visible: false 
+        },
+        {
+          dataField: "ArchitectName", 
+          name: "Involved Architects", 
           visible: false 
         },
         { 
-          dataField: "CompanyNamesAsHTML", 
-          name: "Involved Companies", 
+          dataField: "ContractorName", 
+          name: "Involved Contractors", 
           visible: false 
         },
         { 
-          dataField: "PermitID", 
-          name: "Permit ID", 
+          dataField: "PermitNumber", 
+          name: "Past Permits", 
           visible: false 
         },
         {
@@ -170,12 +191,12 @@
 
       TrdDataCommonTable({
         filePath:
-          "https://teststatic.therealdeal.com/interactive-maps/miami-construction-map.geojson",
+          "https://static.therealdeal.com/interactive-maps/miami-construction-map.geojson",
         eventCategory: "miami-construction-table",
         displayColumns,
         fetchDataFilterCallback,
         tableConfig: {
-          sortName: TrdFormatters.getFieldName("TotalCost"),
+          sortName: TrdFormatters.getFieldName("MaxEstimatedValue"),
           sortOrder: "desc",
           sortResetPage: true,
         },
