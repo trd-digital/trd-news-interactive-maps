@@ -5,10 +5,9 @@ const trdTheme = TrdTheme();
 
 const trdList = () => {
   const list = document.querySelector("#list");
-
   const queryParams = new URLSearchParams(window.location.search);
+  const view = queryParams.get("view");
   const updateHeight = queryParams.get("updateHeight");
-
   const maxLimit = 10;
   let listLimit = queryParams.get("limit");
   if (!listLimit || isNaN(listLimit)) {
@@ -22,17 +21,40 @@ const trdList = () => {
 
   const fn = {
     init: () => {
-      trdTheme.init();
       fn.addEventListeners();
+      trdTheme.init();
+      fn.updateView();
       fn.addLoadingListItems();
-      fn.getData(dataUrl)
+      fn.getData()
         .then(fn.renderListItems)
         .catch(console.error)
-        .finally(fn.updateParentWithHeight);
+        .finally(() => {
+          if (view === "dashboard") {
+            fn.updateParentWithHeight();
+          }
+        });
     },
 
-    getData: async (url) => {
-      const response = await fetch(url);
+    updateView: () => {
+      if (view === "dashboard") {
+        document.querySelector(".card").classList.remove("card");
+        document.querySelector(".card-body").classList.add("d-none");
+        list.classList.add("list-view-numbers");
+        fn.updateParentWithHeight();
+      }
+    },
+    addEventListeners: () => {
+      window.addEventListener("resize", fn.updateParentWithHeight);
+      window.addEventListener("load", fn.updateParentWithHeight);
+      window.addEventListener("message", (event) => {
+        if (event.data.type === "updateHeight") {
+          fn.updateParentWithHeight();
+        }
+      });
+    },
+
+    getData: async () => {
+      const response = await fetch(dataUrl);
       return response.json();
     },
 
@@ -57,32 +79,7 @@ const trdList = () => {
       list.innerHTML = items;
     },
 
-    addEventListeners: () => {
-      window.addEventListener("resize", fn.updateParentWithHeight);
-      window.addEventListener("load", fn.updateParentWithHeight);
-      window.addEventListener("message", (event) => {
-        if (event.data.type === "updateHeight") {
-          fn.updateParentWithHeight();
-        }
-      });
-    },
-
-    updateParentWithHeight: () => {
-      if (!updateHeight) return;
-      const origin =
-        window.location.origin === "https://trd-digital.github.io"
-          ? "https://therealdeal.com"
-          : "http://localhost:3010";
-
-      const height = list.offsetHeight;
-      window.parent.postMessage(
-        { updateHeight: height + 10, src: window.location.href },
-        origin
-      );
-    },
-
     renderListItems: (data) => {
-      console.log(data.features[0].properties);
       const items = data.features
         .filter(helpers.filterListEmptyData)
         .filter(helpers.filterToLast30Days)
@@ -90,7 +87,10 @@ const trdList = () => {
         .slice(0, listLimit)
         .map((feature) => {
           const properties = feature.properties;
-          const price = helpers.formatCurrency(properties["MaxEstimatedValue"], true);
+          const price = helpers.formatCurrency(
+            properties["MaxEstimatedValue"],
+            true
+          );
           const sqft = TrdFormatters.formatNumber(
             properties["MaxSquareFootage"],
             true
@@ -107,7 +107,7 @@ const trdList = () => {
               <div class="me-2">
                 <div class="text-muted text-small">${
                   properties["LatestPermitType"]
-                }
+                }</div>
                 <div>${properties["PropertyAddress"]}</div>
                 <div class="text-muted">${place.join(", ")}</div>
               </div>
@@ -123,14 +123,30 @@ const trdList = () => {
 
       list.innerHTML = items;
 
-      const viewMore = document.createElement("div");
-      viewMore.className = "text-center";
-      viewMore.innerHTML = `
+      if (view === "dashboard") {
+        const viewMore = document.createElement("div");
+        viewMore.className = "text-center";
+        viewMore.innerHTML = `
         <a href="https://therealdeal.com/data/new-york/2024/nyc-transactions/?utm_source=embed&utm_medium=widget" class="btn btn-primary" target="_parent">
           <div class="me-2 text-uppercase label">View More</div>
         </a>
         `;
-      list.parentNode.appendChild(viewMore);
+        list.parentNode.appendChild(viewMore);
+      }
+    },
+
+    updateParentWithHeight: () => {
+      if (!updateHeight) return;
+      const origin =
+        window.location.origin === "https://trd-digital.github.io"
+          ? "https://therealdeal.com"
+          : "http://localhost:3010";
+
+      const height = list.offsetHeight;
+      window.parent.postMessage(
+        { updateHeight: height + 10, src: window.location.href },
+        origin
+      );
     },
   };
 
