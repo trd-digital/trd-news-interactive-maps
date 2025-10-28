@@ -23,26 +23,13 @@ const trdList = () => {
     init: () => {
       fn.addEventListeners();
       trdTheme.init();
-      fn.updateView();
       fn.addLoadingListItems();
       fn.getData()
         .then(fn.renderListItems)
         .catch(console.error)
-        .finally(() => {
-          if (view === "dashboard") {
-            fn.updateParentWithHeight();
-          }
-        });
+        .finally(fn.updateParentWithHeight);
     },
 
-    updateView: () => {
-      if (view === "dashboard") {
-        document.querySelector(".card").classList.remove("card");
-        document.querySelector(".card-body").classList.add("d-none");
-        list.classList.add("list-view-numbers");
-        fn.updateParentWithHeight();
-      }
-    },
     addEventListeners: () => {
       window.addEventListener("resize", fn.updateParentWithHeight);
       window.addEventListener("load", fn.updateParentWithHeight);
@@ -123,16 +110,14 @@ const trdList = () => {
 
       list.innerHTML = items;
 
-      if (view === "dashboard") {
-        const viewMore = document.createElement("div");
-        viewMore.className = "text-center";
-        viewMore.innerHTML = `
+      const viewMore = document.createElement("div");
+      viewMore.className = "text-center";
+      viewMore.innerHTML = `
         <a href="https://therealdeal.com/data/new-york/2024/nyc-transactions/?utm_source=embed&utm_medium=widget" class="btn btn-primary" target="_parent">
           <div class="me-2 text-uppercase label">View More</div>
         </a>
         `;
-        list.parentNode.appendChild(viewMore);
-      }
+      list.parentNode.appendChild(viewMore);
     },
 
     updateParentWithHeight: () => {
