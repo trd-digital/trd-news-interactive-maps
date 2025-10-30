@@ -1,14 +1,14 @@
 (() => {
   /**
    * Live Local Map Script
-   * Added Search (2025-10-30):
-   * - Input #search-input filters features by Developers, Address, or Status (case-insensitive substring).
-   * - Clear button resets to full dataset.
-   * - Count shown vs total displayed in #search-count.
-   * Implementation details:
-   * - Caches original features once geojson loaded (polls until available).
-   * - Assumes trdDataCommonMap exposes setData(newFC) OR redraw() to update.
-   * - If neither present, it mutates window.map.data.features as fallback.
+  * Search & Autocomplete (2025-10-30):
+  * - Top-centered box (#search-input) filters features by Developers, Address, Status.
+  * - Autocomplete suggestions (listbox) appear after typing; keyboard nav (↑/↓/Enter/Esc) supported.
+  * - Selection zooms to point and attempts to open detail modal.
+  * - Directly fetches live_local.geojson for independent autocomplete dataset (removes polling race).
+  * - ARIA attributes added for accessibility: role=listbox, role=option, aria-selected, aria-expanded.
+  * - Count of visible features updated dynamically (#search-count).
+  * - Map dataset updated via map.setData if available; fallback to mutate and redraw.
    */
   // Title = Developers; body shows existing fields (only if present)
   const modalDisplayFields = {
@@ -109,7 +109,7 @@
   const searchCount = document.getElementById('search-count');
 
   let originalFeatures = [];
-  let suggestionFeatures = []; // cache for quick lookup by id/index
+  let suggestionFeatures = []; // cache for quick lookup
   let activeSuggestionIndex = -1;
   const suggestionsEl = document.getElementById('search-suggestions');
 
@@ -117,25 +117,18 @@
   const suggestionFields = ['Developers', 'Address', 'Status'];
   const maxSuggestions = 30;
 
-  // Wait for map data to be loaded; assume trdDataCommonMap exposes a promise or event
-  // If not, we poll until features available on window.map.data
-  function cacheOriginal() {
-    try {
-      if (window.map && window.map.data && window.map.data.features && window.map.data.features.length) {
-        originalFeatures = window.map.data.features.slice();
-        updateCount(originalFeatures.length, originalFeatures.length);
-        return true;
+  // Fetch geojson directly for autocomplete to avoid timing issues
+  fetch('live_local.geojson')
+    .then(r => r.json())
+    .then(json => {
+      originalFeatures = (json.features || []).map(f => ({ ...f }));
+      updateCount(originalFeatures.length, originalFeatures.length);
+      // If user typed before data loaded, rebuild suggestions
+      if (searchInput && searchInput.value.trim()) {
+        applyFilter();
       }
-    } catch (e) {}
-    return false;
-  }
-
-  function pollForData(retries = 40) {
-    if (cacheOriginal()) return;
-    if (retries <= 0) return;
-    setTimeout(() => pollForData(retries - 1), 250);
-  }
-  pollForData();
+    })
+    .catch(err => console.error('Autocomplete data fetch failed', err));
 
   function normalize(str) {
     return (str || '').toLowerCase();
@@ -164,15 +157,15 @@
   }
 
   function applyFilter() {
-    if (!originalFeatures.length) return;
+  if (!originalFeatures.length) return;
     const query = searchInput ? searchInput.value : '';
     const filtered = filterFeatures(query);
     updateCount(filtered.length, originalFeatures.length);
     // Update map source data; assume underlying map uses window.map.data
+    // Update map data if API available
     if (window.map && window.map.setData) {
       window.map.setData({ type: 'FeatureCollection', features: filtered });
-    } else if (window.map) {
-      // Fallback: mutate and trigger redraw if a redraw method exists
+    } else if (window.map && window.map.data && Array.isArray(window.map.data.features)) {
       window.map.data.features = filtered;
       if (typeof window.map.redraw === 'function') window.map.redraw();
     }
@@ -230,9 +223,10 @@
     suggestionFeatures = items;
     activeSuggestionIndex = -1;
     suggestionsEl.innerHTML = items
-      .map((item, i) => `<li class="list-group-item list-group-item-action" data-index="${i}">${highlightMatch(item.label, q)}</li>`)
+      .map((item, i) => `<li class="list-group-item list-group-item-action" role="option" aria-selected="${i===activeSuggestionIndex}" data-index="${i}">${highlightMatch(item.label, q)}</li>`)
       .join('');
     suggestionsEl.style.display = 'block';
+    if (searchInput) searchInput.setAttribute('aria-expanded', 'true');
   }
 
   function highlightMatch(label, query) {
@@ -248,6 +242,7 @@
     }
     activeSuggestionIndex = -1;
     suggestionFeatures = [];
+    if (searchInput) searchInput.setAttribute('aria-expanded', 'false');
   }
 
   // Keyboard navigation for suggestions
@@ -276,11 +271,11 @@
   function updateActiveSuggestion() {
     const children = suggestionsEl.querySelectorAll('li');
     children.forEach((el, i) => {
-      if (i === activeSuggestionIndex) {
-        el.classList.add('active');
+      const isActive = i === activeSuggestionIndex;
+      el.classList.toggle('active', isActive);
+      el.setAttribute('aria-selected', String(isActive));
+      if (isActive) {
         el.scrollIntoView({ block: 'nearest' });
-      } else {
-        el.classList.remove('active');
       }
     });
   }
