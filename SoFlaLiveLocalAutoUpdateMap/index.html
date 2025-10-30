@@ -60,6 +60,18 @@
     <!-- End Google Tag Manager (noscript) -->
 
     <main class="map-container">
+      <div id="map-search" class="position-absolute top-0 start-0 p-2" style="z-index:1000; width:320px;">
+        <div class="card shadow-sm">
+          <div class="card-body py-2 px-3">
+            <label for="search-input" class="form-label mb-1 small fw-bold">Search Projects</label>
+            <input id="search-input" type="text" class="form-control form-control-sm" placeholder="Developer, address or status" autocomplete="off" />
+            <div class="d-flex justify-content-between mt-2">
+              <small class="text-muted" id="search-count"></small>
+              <button id="search-clear" type="button" class="btn btn-link btn-sm p-0">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <section id="map" class="map"></section>
       <section id="modal" class="detail-modal modal">
         <div class="modal-dialog modal-dialog-scrollable">

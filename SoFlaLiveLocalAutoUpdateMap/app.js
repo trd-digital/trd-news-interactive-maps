@@ -1,4 +1,15 @@
 (() => {
+  /**
+   * Live Local Map Script
+   * Added Search (2025-10-30):
+   * - Input #search-input filters features by Developers, Address, or Status (case-insensitive substring).
+   * - Clear button resets to full dataset.
+   * - Count shown vs total displayed in #search-count.
+   * Implementation details:
+   * - Caches original features once geojson loaded (polls until available).
+   * - Assumes trdDataCommonMap exposes setData(newFC) OR redraw() to update.
+   * - If neither present, it mutates window.map.data.features as fallback.
+   */
   // Title = Developers; body shows existing fields (only if present)
   const modalDisplayFields = {
     title: { field: "Developers", label: "Developers" },
@@ -91,4 +102,84 @@
       },
     },
   });
+
+  // --- Live search implementation ---
+  const searchInput = document.getElementById('search-input');
+  const searchClear = document.getElementById('search-clear');
+  const searchCount = document.getElementById('search-count');
+
+  let originalFeatures = [];
+
+  // Wait for map data to be loaded; assume trdDataCommonMap exposes a promise or event
+  // If not, we poll until features available on window.map.data
+  function cacheOriginal() {
+    try {
+      if (window.map && window.map.data && window.map.data.features && window.map.data.features.length) {
+        originalFeatures = window.map.data.features.slice();
+        updateCount(originalFeatures.length, originalFeatures.length);
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  function pollForData(retries = 40) {
+    if (cacheOriginal()) return;
+    if (retries <= 0) return;
+    setTimeout(() => pollForData(retries - 1), 250);
+  }
+  pollForData();
+
+  function normalize(str) {
+    return (str || '').toLowerCase();
+  }
+
+  function featureMatches(feature, query) {
+    if (!query) return true;
+    const props = feature.properties || {};
+    const haystack = [props.Developers, props.Address, props.Status]
+      .filter(Boolean)
+      .map(normalize)
+      .join(' | ');
+    return haystack.includes(query);
+  }
+
+  function filterFeatures(query) {
+    const q = normalize(query.trim());
+    if (!q) return originalFeatures.slice();
+    return originalFeatures.filter(f => featureMatches(f, q));
+  }
+
+  function updateCount(shown, total) {
+    if (searchCount) {
+      searchCount.textContent = `${shown} / ${total} shown`;
+    }
+  }
+
+  function applyFilter() {
+    if (!originalFeatures.length) return;
+    const query = searchInput ? searchInput.value : '';
+    const filtered = filterFeatures(query);
+    updateCount(filtered.length, originalFeatures.length);
+    // Update map source data; assume underlying map uses window.map.data
+    if (window.map && window.map.setData) {
+      window.map.setData({ type: 'FeatureCollection', features: filtered });
+    } else if (window.map) {
+      // Fallback: mutate and trigger redraw if a redraw method exists
+      window.map.data.features = filtered;
+      if (typeof window.map.redraw === 'function') window.map.redraw();
+    }
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', applyFilter);
+    searchInput.addEventListener('focus', applyFilter);
+  }
+  if (searchClear) {
+    searchClear.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      applyFilter();
+      searchInput && searchInput.focus();
+    });
+  }
 })();
