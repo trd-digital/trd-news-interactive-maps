@@ -307,26 +307,57 @@
 
   function zoomToFeature(feature) {
     try {
-      const coords = feature.geometry && feature.geometry.coordinates;
+      const coords = feature?.geometry?.coordinates;
       if (!coords || coords.length < 2) return;
-      const lng = coords[0];
-      const lat = coords[1];
-      if (window.map && window.map.map) {
-        // Assume underlying Mapbox GL instance is at window.map.map
-        window.map.map.flyTo({ center: [lng, lat], zoom: 13, speed: 0.8 });
+      const [lng, lat] = coords;
+      const mapbox = window.map?.map || window.mapboxglMap || window.mapboxMap;
+      if (mapbox && typeof mapbox.flyTo === 'function') {
+        mapbox.flyTo({ center: [lng, lat], zoom: Math.max(mapbox.getZoom() || 7, 13), speed: 0.9, essential: true });
+        trackEvent && trackEvent('zoom_to_feature', feature.properties?.Developers || 'unknown');
       }
-    } catch (e) {}
+    } catch (e) {
+      console.warn('zoomToFeature failed', e);
+    }
   }
 
   function openFeatureDetail(feature) {
-    // Assume trdDataCommonMap provides an openModal(feature) or similar; fallback triggers click simulation
+    // First try provided API
     if (window.map && typeof window.map.openModal === 'function') {
       window.map.openModal(feature);
-    } else if (window.map && window.map.map) {
-      // Fallback: create a synthetic event or rely on existing click handler
-      // If features rendered as a layer, we could dispatch a queryRenderedFeatures and toggle state.
-      // Minimal fallback: log feature.
-      console.log('Detail open fallback for feature', feature.properties);
+      return;
+    }
+
+    // Manual Bootstrap modal fallback (targets #modal structure in HTML)
+    const modalSection = document.getElementById('modal');
+    if (!modalSection) return;
+    const titleEl = modalSection.querySelector('.modal-title');
+    const bodyEl = modalSection.querySelector('.modal-body');
+    if (!titleEl || !bodyEl) return;
+
+    const props = feature.properties || {};
+    const fields = [
+      ['Address', props.Address],
+      ['Status', props.Status],
+      ['Live Local Units', props['Live Local Units']],
+      ['Total Units', props['Total Units']],
+      ['Percent Live Local', props['Percent Live Local']],
+    ];
+    const metaRows = fields
+      .filter(([, v]) => v)
+      .map(([k, v]) => `<tr><th class="pe-2 text-nowrap">${k}</th><td>${v}</td></tr>`)
+      .join('');
+    const description = props.Description ? `<p class="mt-3"><em>${props.Description}</em></p>` : '';
+    const coverage = props['Recent Coverage'] ? `<p class="mt-2"><a href="${props['Recent Coverage']}" target="_blank" rel="noopener">Recent coverage</a></p>` : '';
+
+    titleEl.innerHTML = props.Developers || 'Project';
+    bodyEl.innerHTML = `<table class="table table-sm mb-0"><tbody>${metaRows}</tbody></table>${description}${coverage}`;
+
+    // Activate modal using Bootstrap if available
+    try {
+      const modalInstance = bootstrap?.Modal?.getOrCreateInstance(modalSection);
+      modalInstance && modalInstance.show();
+    } catch (e) {
+      modalSection.style.display = 'block';
     }
   }
 
