@@ -53,6 +53,11 @@
 
   // Initialize table
   const initTable = (rows) => {
+    // Guard against double init
+    if ($(tableEl).data('bootstrap.table')) {
+      $(tableEl).bootstrapTable('load', rows);
+      return;
+    }
     $(tableEl).bootstrapTable({
       data: rows,
       columns,
