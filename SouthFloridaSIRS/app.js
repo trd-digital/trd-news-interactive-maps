@@ -222,7 +222,7 @@
   document.addEventListener('click', (e)=>{ if (!suggestionsEl) return; if (e.target===searchInput || suggestionsEl.contains(e.target)) return; hideSuggestions(); });
   if (suggestionsEl) { suggestionsEl.addEventListener('click', (e)=>{ const li = e.target.closest('li[data-index]'); if(!li) return; selectSuggestion(parseInt(li.getAttribute('data-index'),10)); }); }
 
-  // --- Fetch CSV and init map ---
+  // --- Fetch CSV, build GeoJSON, THEN init map (to ensure data present for library) ---
   function init() {
     fetch('data.csv')
       .then(r => r.text())
@@ -230,7 +230,6 @@
         const rows = parseCSV(text);
         const geo = rowsToGeoJSON(rows);
 
-        // Clean selected fields for modal consistency
         geo.features.forEach(f => {
           const p = f.properties;
           p['Project Name'] = clean(p['Project Name']);
@@ -241,10 +240,11 @@
           p['Project Type'] = clean(p['Project Type']);
         });
 
-        // Initialize map
+        // Create map AFTER we have data. We still supply a filePath pointing to an empty placeholder
+        // so the library's internal fetch succeeds; then override via fetchDataFilterCallback
         window.map = trdDataCommonMap({
-          filePath: undefined, // we'll inject data directly
-          externalData: geo,
+          filePath: 'empty.geojson',
+          fetchDataFilterCallback: () => geo, // replace fetched empty data with our CSV-derived geojson
           eventCategory: 'south-florida-sirs',
           mapElementId: 'map',
           modalDisplayFields,
