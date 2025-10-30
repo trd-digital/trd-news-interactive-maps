@@ -248,24 +248,46 @@
 
   // Keyboard navigation for suggestions
   function handleKeyDown(e) {
-    if (suggestionsEl.style.display !== 'block') return;
+    const suggestionsOpen = suggestionsEl.style.display === 'block';
     const total = suggestionFeatures.length;
-    if (!total) return;
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      activeSuggestionIndex = (activeSuggestionIndex + 1) % total;
-      updateActiveSuggestion();
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      activeSuggestionIndex = (activeSuggestionIndex - 1 + total) % total;
-      updateActiveSuggestion();
-    } else if (e.key === 'Enter') {
-      if (activeSuggestionIndex >= 0) {
+    if (suggestionsOpen && total) {
+      if (e.key === 'ArrowDown') {
         e.preventDefault();
-        selectSuggestion(activeSuggestionIndex);
+        activeSuggestionIndex = (activeSuggestionIndex + 1) % total;
+        updateActiveSuggestion();
+        return;
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeSuggestionIndex = (activeSuggestionIndex - 1 + total) % total;
+        updateActiveSuggestion();
+        return;
+      } else if (e.key === 'Enter') {
+        if (activeSuggestionIndex >= 0) {
+          e.preventDefault();
+          selectSuggestion(activeSuggestionIndex);
+          return;
+        }
+      } else if (e.key === 'Escape') {
+        hideSuggestions();
+        return;
       }
-    } else if (e.key === 'Escape') {
-      hideSuggestions();
+    }
+    // If Enter pressed and no suggestion is actively selected, but there is only one filtered result, select and zoom to it
+    if (e.key === 'Enter' && (!suggestionsOpen || activeSuggestionIndex === -1)) {
+      const query = searchInput ? searchInput.value : '';
+      const filtered = filterFeatures(query);
+      if (filtered.length === 1) {
+        e.preventDefault();
+        // Simulate suggestion selection for the only result
+        const feature = filtered[0];
+        searchInput.value = feature.properties?.Developers || '';
+        hideSuggestions();
+        applyFilter();
+        zoomToFeature(feature);
+        openFeatureDetail(feature);
+        trackEvent && trackEvent('autocomplete_select', feature.properties?.Developers || '');
+        lastSelectedFeature = feature;
+      }
     }
   }
 
