@@ -395,7 +395,13 @@
 
         // types (MICRO)
         pt.innerHTML = "";
-        [...types].sort((a,b)=>a.localeCompare(b)).forEach((t) => pt.add(new Option(t, t)));
+        [...types].sort((a,b)=>a.localeCompare(b)).forEach((t) => {
+          // Explicitly mark 'All Types' as selected so initial load always shows aggregate view
+          const opt = new Option(t, t, t === "All Types", t === "All Types");
+          pt.add(opt);
+        });
+        // Fallback: force value in case browser ignores selected flags above
+        pt.value = "All Types";
 
         updateNeighborhoodDropdown();
 
