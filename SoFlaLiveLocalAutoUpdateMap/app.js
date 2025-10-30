@@ -112,6 +112,7 @@
   let suggestionFeatures = []; // cache for quick lookup
   let activeSuggestionIndex = -1;
   const suggestionsEl = document.getElementById('search-suggestions');
+  let lastSelectedFeature = null; // track last selected/highlighted feature for popup
 
   /** Autocomplete configuration */
   const suggestionFields = ['Developers', 'Address', 'Status'];
@@ -303,6 +304,7 @@
     zoomToFeature(feature);
     openFeatureDetail(feature);
     trackEvent && trackEvent('autocomplete_select', item.label);
+    lastSelectedFeature = feature;
   }
 
   function zoomToFeature(feature) {
@@ -407,9 +409,48 @@
         src.setData(geo);
         trackEvent && trackEvent('highlight_feature', feature.properties?.Developers || 'unknown');
       }
+      lastSelectedFeature = feature;
     } catch (e) {
       console.warn('highlightFeature failed', e);
     }
+  }
+
+  // --- Popup trigger button logic ---
+  const popupBtn = document.getElementById('open-popup-btn');
+  if (popupBtn) {
+    popupBtn.addEventListener('click', () => {
+      if (!lastSelectedFeature) {
+        popupBtn.classList.add('disabled');
+        setTimeout(() => popupBtn.classList.remove('disabled'), 800);
+        return;
+      }
+      const mapbox = window.map?.map || window.mapboxglMap || window.mapboxMap;
+      if (!mapbox || typeof mapbox.getCanvas !== 'function') return;
+      const coords = lastSelectedFeature?.geometry?.coordinates;
+      if (!coords) return;
+      // Build popup HTML content (compact summary)
+      const props = lastSelectedFeature.properties || {};
+      const title = props.Developers || 'Project';
+      const address = props.Address ? `<div class="small text-muted">${props.Address}</div>` : '';
+      const status = props.Status ? `<div><strong>Status:</strong> ${props.Status}</div>` : '';
+      const units = props['Live Local Units'] || props['Total Units'] ? `<div><strong>Units:</strong> ${props['Live Local Units'] || props['Total Units']}</div>` : '';
+      const link = props['Recent Coverage'] ? `<div><a href="${props['Recent Coverage']}" target="_blank" rel="noopener">Coverage</a></div>` : '';
+      const popupHTML = `<div style="min-width:180px"><h6 class="mb-1">${title}</h6>${address}${status}${units}${link}</div>`;
+
+      // Remove previous popup if any
+      if (window.__liveLocalPopup) {
+        try { window.__liveLocalPopup.remove(); } catch (e) {}
+      }
+
+      const PopupConstructor = window.mapboxgl?.Popup || mapbox.Popup; // adapt if mapboxgl global exists
+      if (!PopupConstructor) return;
+      const popup = new PopupConstructor({ closeOnMove: false, closeButton: true, offset: 12 })
+        .setLngLat(coords)
+        .setHTML(popupHTML)
+        .addTo(mapbox);
+      window.__liveLocalPopup = popup;
+      trackEvent && trackEvent('popup_open', title);
+    });
   }
 
   // Hide suggestions if clicking outside
