@@ -133,6 +133,23 @@ const trdDataCommonMap = (options) => {
         },
       },
     },
+
+    shapeSettings: {
+      enable: false,
+      idPrefix: "shape-",
+      filePaths: [],
+      paintSettings: {
+        fillOpacity: 0.4,
+        fillColor: {
+          light: "rgba(200, 100, 240, 0.4)",
+          dark: "rgba(200, 100, 240, 0.4)",
+        },
+        outlineColor: {
+          light: "rgba(200, 100, 240, 1)",
+          dark: "rgba(200, 100, 240, 1)",
+        },
+      },
+    },
   };
 
   const defaultColors = {
@@ -878,6 +895,8 @@ const trdDataCommonMap = (options) => {
       mapPoint.init(id);
       // add cluster layer
       mapCluster.init(id);
+      // add shape layers
+      mapShapes.init();
     },
 
     addSourceData: (id, data) => {
@@ -1304,6 +1323,40 @@ const trdDataCommonMap = (options) => {
             center: features[0].geometry.coordinates,
             zoom: zoom,
           });
+        });
+      });
+    },
+  };
+
+  const mapShapes = {
+    init: () => {
+      if (!settings?.shapeSettings?.enable) return;
+
+      settings.shapeSettings.filePaths.forEach((shapeFilePath, index) => {
+        const shapeSourceId = `${settings.shapeSettings.idPrefix}-source-${index}`;
+
+        mapObj.addSource(shapeSourceId, {
+          type: "geojson",
+          data: shapeFilePath,
+        });
+
+        const shapeLayerId = `${settings.shapeSettings.idPrefix}-layer-${index}`;
+        mapObj.addLayer({
+          id: shapeLayerId,
+          type: "fill",
+          source: shapeSourceId,
+          layout: {},
+          paint: {
+            "fill-color": helpers.pickColor(
+              settings.shapeSettings.paintSettings.fillColor,
+              defaultColors.default
+            ),
+            "fill-opacity": settings.shapeSettings.paintSettings.fillOpacity,
+            "fill-outline-color": helpers.pickColor(
+              settings.shapeSettings.paintSettings.outlineColor,
+              defaultColors.default
+            ),
+          },
         });
       });
     },
