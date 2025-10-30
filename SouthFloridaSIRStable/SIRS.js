@@ -2,6 +2,50 @@
   const dataUrl = 'SIRS.csv';
   const table = document.querySelector('#sirs-table');
 
+  // Define the table columns
+  const columns = [
+    {
+      field: '',  // Empty first column from CSV
+      title: '#',
+      visible: false
+    },
+    {
+      field: 'Project Type',
+      title: 'Project Type',
+      sortable: true
+    },
+    {
+      field: 'Project Name',
+      title: 'Project Name',
+      sortable: true
+    },
+    {
+      field: 'Association Name',
+      title: 'Association',
+      sortable: true
+    },
+    {
+      field: 'City',
+      title: 'City',
+      sortable: true
+    },
+    {
+      field: 'Zip',
+      title: 'ZIP',
+      sortable: true
+    },
+    {
+      field: 'County',
+      title: 'County',
+      sortable: true
+    },
+    {
+      field: 'ID',
+      title: 'ID',
+      sortable: true
+    }
+  ];
+
   const displayColumns = [
     { 
       field: 'Project Type',
@@ -40,6 +84,7 @@
     }
   ];
 
+  // Parse CSV data
   const parseCSV = (text) => {
     const lines = text.split('\n');
     const headers = lines[0].split(',').map(header => header.trim().replace(/^"(.+)"$/, '$1'));
@@ -47,13 +92,14 @@
     return lines.slice(1)
       .filter(line => line.trim()) // Remove empty lines
       .map(line => {
-        const values = line.split(',').map(value => value.trim().replace(/^"(.+)"$/, '$1'));
-        return headers.reduce((obj, header, i) => {
-          obj[header] = values[i] || '';
-          return obj;
-        }, {});
+        const values = line.split(',');
+        const row = {};
+        headers.forEach((header, i) => {
+          row[header] = values[i] ? values[i].trim().replace(/^"(.+)"$/, '$1') : '';
+        });
+        return row;
       })
-      .filter(row => row['Project Name'] && row['Project Name'] !== ''); // Filter out rows with empty project names
+      .filter(row => row['Project Name'] && row['Project Name'].length > 0);
   };
 
   const trackEvent = (action, label) => {
