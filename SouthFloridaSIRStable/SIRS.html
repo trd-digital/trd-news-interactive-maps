@@ -11,17 +11,14 @@
 
     <!-- Primary Meta Tags -->
     <title>South Florida SIRS Table - The Real Deal</title>
-    <meta
-      name="title"
-      content="South Florida SIRS Table - The Real Deal"
-    />
+    <meta name="title" content="South Florida SIRS Table - The Real Deal" />
     <meta
       name="description"
-      content="South Florida Structural Integrity Reserve Study (SIRS) building information."
+      content="Interactive table of South Florida Structural Integrity Reserve Study (SIRS) filings and association data."
     />
     <link
       rel="canonical"
-      href="https://therealdeal.com/south-florida/sirs-table/"
+      href="https://therealdeal.com/data/south-florida/2025/sirs/"
     />
 
     <!-- Open Graph / Facebook -->
@@ -64,20 +61,21 @@
 
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     />
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
     />
     <link
       rel="stylesheet"
-      href="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/bootstrap-table.min.css"
     />
     <link
       rel="stylesheet"
-      href="https://unpkg.com/bootstrap-table@1.22.1/dist/extensions/sticky-header/bootstrap-table-sticky-header.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/extensions/sticky-header/bootstrap-table-sticky-header.css"
     />
+    <link rel="stylesheet" href="../trd-data/common-table/table.css" />
 
     <!-- Google Tag Manager -->
     <script>
@@ -96,43 +94,7 @@
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
-    <noscript>
-      <iframe
-        src="https://www.googletagmanager.com/ns.html?id=GTM-K694XL6"
-        height="0"
-        width="0"
-        style="display: none; visibility: hidden"
-      ></iframe>
-    </noscript>
-    <!-- End Google Tag Manager (noscript) -->
-
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-12">
-          <h1>South Florida SIRS Table</h1>
-          <p>Browse Structural Integrity Reserve Study (SIRS) information for buildings in South Florida.</p>
-          
-          <table
-            id="sirs-table"
-            class="table"
-            data-toggle="table"
-            data-pagination="true"
-            data-search="true"
-            data-show-columns="true"
-            data-sticky-header="true"
-            data-height="700"
-          >
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.22.1/dist/extensions/sticky-header/bootstrap-table-sticky-header.min.js"></script>
-    <script src="SIRS.js"></script>
+    <noscript
       ><iframe
         src="https://www.googletagmanager.com/ns.html?id=GTM-K694XL6"
         height="0"
@@ -141,18 +103,34 @@
       ></iframe
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
-    <main>
-      <table id="luxury-sales-table"></table>
+    <main class="container-fluid py-4">
+      <div class="row mb-3">
+        <div class="col">
+          <h1 class="h3">South Florida SIRS Table</h1>
+          <p class="text-muted mb-0">Browse Structural Integrity Reserve Study (SIRS) related association records across South Florida counties. Use the search box and column controls to refine the list.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <table
+            id="sirs-table"
+            class="table"
+            data-toggle="table"
+            data-pagination="true"
+            data-search="true"
+            data-show-columns="true"
+            data-sticky-header="true"
+            data-page-size="25"
+            data-page-list="[10,25,50,100]"
+          ></table>
+        </div>
+      </div>
     </main>
 
-    <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/bootstrap-table.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/extensions/sticky-header/bootstrap-table-sticky-header.min.js"></script>
-    <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
-    <script src="../trd-data/common-formatter/formatter.js"></script>
-    <script src="../trd-data/common-loading/loading.js"></script>
-    <script src="new-york-city-construction-table.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/bootstrap-table.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/extensions/sticky-header/bootstrap-table-sticky-header.min.js"></script>
+  <script src="SIRS.js"></script>
   </body>
 </html>
