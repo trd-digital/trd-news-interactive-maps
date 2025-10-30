@@ -311,9 +311,20 @@
       if (!coords || coords.length < 2) return;
       const [lng, lat] = coords;
       const mapbox = window.map?.map || window.mapboxglMap || window.mapboxMap;
-      if (mapbox && typeof mapbox.flyTo === 'function') {
-        mapbox.flyTo({ center: [lng, lat], zoom: Math.max(mapbox.getZoom() || 7, 13), speed: 0.9, essential: true });
+      if (!mapbox || typeof mapbox.flyTo !== 'function') return;
+
+      const doFly = () => {
+        const targetZoom = Math.max((mapbox.getZoom && mapbox.getZoom()) || 7, 13);
+        mapbox.flyTo({ center: [lng, lat], zoom: targetZoom, speed: 0.9, essential: true });
         trackEvent && trackEvent('zoom_to_feature', feature.properties?.Developers || 'unknown');
+        highlightFeature(feature); // highlight after fly
+      };
+
+      // Wait until style is fully loaded if not yet
+      if (mapbox.loaded && !mapbox.loaded()) {
+        mapbox.once('load', doFly);
+      } else {
+        doFly();
       }
     } catch (e) {
       console.warn('zoomToFeature failed', e);
@@ -358,6 +369,46 @@
       modalInstance && modalInstance.show();
     } catch (e) {
       modalSection.style.display = 'block';
+    }
+  }
+
+  // ---- Highlight Selected Feature Overlay ----
+  function ensureHighlightLayer(mapbox) {
+    if (!mapbox || !mapbox.getSource) return;
+    if (!mapbox.getSource('selected-point')) {
+      mapbox.addSource('selected-point', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [] }
+      });
+    }
+    if (!mapbox.getLayer('selected-point-layer')) {
+      mapbox.addLayer({
+        id: 'selected-point-layer',
+        type: 'circle',
+        source: 'selected-point',
+        paint: {
+          'circle-radius': 14,
+          'circle-color': '#ff6600',
+          'circle-stroke-width': 3,
+          'circle-stroke-color': '#ffffff'
+        }
+      });
+    }
+  }
+
+  function highlightFeature(feature) {
+    try {
+      const mapbox = window.map?.map || window.mapboxglMap || window.mapboxMap;
+      if (!mapbox) return;
+      ensureHighlightLayer(mapbox);
+      const geo = { type: 'FeatureCollection', features: [feature] };
+      const src = mapbox.getSource && mapbox.getSource('selected-point');
+      if (src && src.setData) {
+        src.setData(geo);
+        trackEvent && trackEvent('highlight_feature', feature.properties?.Developers || 'unknown');
+      }
+    } catch (e) {
+      console.warn('highlightFeature failed', e);
     }
   }
 
