@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Tauber &amp; Nussbaum Foreclosures as of Oct. 2025</title>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_8ea3b9e609f792f815a16e64ae9fb6ab {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+<div style="
+  position: fixed;
+  top: 12px; left: 50%; transform: translateX(-50%);
+  z-index: 9999;
+  background: rgba(255,255,255,0.92);
+  padding: 8px 12px;
+  border: 1px solid #bbb; border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+  font: 600 16px/1.25 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  max-width: 92%;
+  text-align: center;
+">
+  Tauber &amp; Nussbaum Foreclosures as of Oct. 2025
+</div>
+    
+            <div class="folium-map" id="map_8ea3b9e609f792f815a16e64ae9fb6ab" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_8ea3b9e609f792f815a16e64ae9fb6ab = L.map(
+                "map_8ea3b9e609f792f815a16e64ae9fb6ab",
+                {
+                    center: [41.760231762068955, -87.62582001724138],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+
+            
+
+        
+    
+            var tile_layer_037bf506df6c34947acc30c692f867e5 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_037bf506df6c34947acc30c692f867e5.addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+            var circle_marker_626c87e9654ec7712e5d3c97549825ba = L.circleMarker(
+                [41.756002, -87.5596317],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_8b58d1f655d99d29d8d3349dc369943f = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_8c44140745fc4a0102a6c113d4b6230b = $(`<div id="html_8c44140745fc4a0102a6c113d4b6230b" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>7641 South Saginaw Avenue, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>17.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$2,000,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>June 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$1,400,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>CliffCo</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Trust, as trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Oct. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$635,010</td></tr></table></div>`)[0];
+                popup_8b58d1f655d99d29d8d3349dc369943f.setContent(html_8c44140745fc4a0102a6c113d4b6230b);
+            
+        
+
+        circle_marker_626c87e9654ec7712e5d3c97549825ba.bindPopup(popup_8b58d1f655d99d29d8d3349dc369943f)
+        ;
+
+        
+    
+    
+            var circle_marker_3d28e03b61a780074378042650d3472a = L.circleMarker(
+                [41.79439319999999, -87.66195689999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_b3f31553cc084e38648ccb55b93614a4 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_ee9b0d5d1e2fcb2badc4d09e9c47181e = $(`<div id="html_ee9b0d5d1e2fcb2badc4d09e9c47181e" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Mark Nussbaum, Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>5451 South Laflin Street, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>12.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$1,080,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2023</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$741,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Accolend</td></tr><tr><th style='text-align:left;padding-right:8px'>Refinance date</th><td>May 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Refinance amount</th><td>$1,200,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Latest lender</th><td>CliffCo</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Trust, as trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Oct. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$440,000</td></tr></table></div>`)[0];
+                popup_b3f31553cc084e38648ccb55b93614a4.setContent(html_ee9b0d5d1e2fcb2badc4d09e9c47181e);
+            
+        
+
+        circle_marker_3d28e03b61a780074378042650d3472a.bindPopup(popup_b3f31553cc084e38648ccb55b93614a4)
+        ;
+
+        
+    
+    
+            var circle_marker_88eab6153499d25c8b8eacb3d260761c = L.circleMarker(
+                [41.7093442, -87.61113859999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_3bc87de7949df42125012493f93fcbe9 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_048e19183c8b872cf526157143bfe44c = $(`<div id="html_048e19183c8b872cf526157143bfe44c" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>10155 South Eberhart Avenue, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>15.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$887,500</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Sept. 2022</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$1,176,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Roc Capital</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Trust, as trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Oct. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$742,000</td></tr></table></div>`)[0];
+                popup_3bc87de7949df42125012493f93fcbe9.setContent(html_048e19183c8b872cf526157143bfe44c);
+            
+        
+
+        circle_marker_88eab6153499d25c8b8eacb3d260761c.bindPopup(popup_3bc87de7949df42125012493f93fcbe9)
+        ;
+
+        
+    
+    
+            var circle_marker_d2e34733c7b6de72b0cca9119b00507c = L.circleMarker(
+                [41.7935367, -87.6538396],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_e07a0ada19f38bf10a647c57fa9d83f3 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_3d33677ffdc740f08d578be1d3c78d94 = $(`<div id="html_3d33677ffdc740f08d578be1d3c78d94" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Mark Nussbaum, Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>1135 West Garfield Boulevard, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>7.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$875,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>April 2023</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$770,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Roc Capital</td></tr><tr><th style='text-align:left;padding-right:8px'>Refinance date</th><td>July 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Refinance amount</th><td>$1,120,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Latest lender</th><td>CliffCo</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Trust, as trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Oct. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$691,000</td></tr></table></div>`)[0];
+                popup_e07a0ada19f38bf10a647c57fa9d83f3.setContent(html_3d33677ffdc740f08d578be1d3c78d94);
+            
+        
+
+        circle_marker_d2e34733c7b6de72b0cca9119b00507c.bindPopup(popup_e07a0ada19f38bf10a647c57fa9d83f3)
+        ;
+
+        
+    
+    
+            var circle_marker_1edc04995d6314639adc6b2f8aa1878f = L.circleMarker(
+                [41.7508743, -87.6006412],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_8de31e09111fc9b5dc78473182e09596 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_47e4f3edc48a2e1163059a0f9d98bfe4 = $(`<div id="html_47e4f3edc48a2e1163059a0f9d98bfe4" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>7912 South Ellis Avenue, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>8.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$1,500,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>May 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$1,050,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>CliffCo</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Trust, as trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Oct. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$212,410</td></tr></table></div>`)[0];
+                popup_8de31e09111fc9b5dc78473182e09596.setContent(html_47e4f3edc48a2e1163059a0f9d98bfe4);
+            
+        
+
+        circle_marker_1edc04995d6314639adc6b2f8aa1878f.bindPopup(popup_8de31e09111fc9b5dc78473182e09596)
+        ;
+
+        
+    
+    
+            var circle_marker_2f97ad741b1a719db614f1ce2b30d883 = L.circleMarker(
+                [41.7761348, -87.6540573],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_cd75b8608bd347ad65f127d92bfe7202 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_a77ab60288bed2667311c45278699a56 = $(`<div id="html_a77ab60288bed2667311c45278699a56" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>6459 South Racine Avenue, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$1,750,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>March 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$1,225,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>CliffCo</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Trust, as trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Oct. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$511,000</td></tr></table></div>`)[0];
+                popup_cd75b8608bd347ad65f127d92bfe7202.setContent(html_a77ab60288bed2667311c45278699a56);
+            
+        
+
+        circle_marker_2f97ad741b1a719db614f1ce2b30d883.bindPopup(popup_cd75b8608bd347ad65f127d92bfe7202)
+        ;
+
+        
+    
+    
+            var circle_marker_bac10e87437bbee28fc77fd59e791f82 = L.circleMarker(
+                [41.7594838, -87.6354064],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_92c8056a88bcfa8b07716ba8aba2d292 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_1cc61717268d6b650a7fcaca40e39f42 = $(`<div id="html_1cc61717268d6b650a7fcaca40e39f42" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Mark Nussbaum</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>7411 South Eggleston Avenue, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>7.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$1,250,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>June 2023</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$875,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Sharestates</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Trust, as trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Oct. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$500,000</td></tr></table></div>`)[0];
+                popup_92c8056a88bcfa8b07716ba8aba2d292.setContent(html_1cc61717268d6b650a7fcaca40e39f42);
+            
+        
+
+        circle_marker_bac10e87437bbee28fc77fd59e791f82.bindPopup(popup_92c8056a88bcfa8b07716ba8aba2d292)
+        ;
+
+        
+    
+    
+            var circle_marker_58e16f06ba6a4ed97a8999fa9c8b822a = L.circleMarker(
+                [41.748707, -87.6667808],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_a8f8778d42a0eb41eb85202ad9e44a5e = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_32ee2dd4abf0c621285d131742187741 = $(`<div id="html_32ee2dd4abf0c621285d131742187741" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>7955 South Hermitage Avenue, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>13.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$2,000,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Aug. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$1,400,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>CliffCo</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Trust, as trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Oct. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$711,000</td></tr></table></div>`)[0];
+                popup_a8f8778d42a0eb41eb85202ad9e44a5e.setContent(html_32ee2dd4abf0c621285d131742187741);
+            
+        
+
+        circle_marker_58e16f06ba6a4ed97a8999fa9c8b822a.bindPopup(popup_a8f8778d42a0eb41eb85202ad9e44a5e)
+        ;
+
+        
+    
+    
+            var circle_marker_47cd453facc803dba6f5902c49053026 = L.circleMarker(
+                [41.7617215, -87.623466],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_4e1ca3a93b5bd1c83f065758a921ab48 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_ed30cc6bae7e9bfb51917890be5358e0 = $(`<div id="html_ed30cc6bae7e9bfb51917890be5358e0" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Mark Nussbaum</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>7300 South Wabash Avenue, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>12.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$1,780,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Aug. 2023</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$1,246,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Sharestates</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Trust, as trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Oct. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$1,138,000</td></tr></table></div>`)[0];
+                popup_4e1ca3a93b5bd1c83f065758a921ab48.setContent(html_ed30cc6bae7e9bfb51917890be5358e0);
+            
+        
+
+        circle_marker_47cd453facc803dba6f5902c49053026.bindPopup(popup_4e1ca3a93b5bd1c83f065758a921ab48)
+        ;
+
+        
+    
+    
+            var circle_marker_1ecd3e4bc91699876a1da63c44e2a51a = L.circleMarker(
+                [41.7573167, -87.5885586],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_0e32ddd6eab30831512a50d978fb3780 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_1b133fd6058e41d1e35b36d92bfd1fd1 = $(`<div id="html_1b133fd6058e41d1e35b36d92bfd1fd1" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Mark Nussbaum</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>7548 South Blackstone Avenue, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>13.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$1,950,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Aug. 2023</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$1,267,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Sharestates</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Trust, as trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Oct. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$1,253,000</td></tr></table></div>`)[0];
+                popup_0e32ddd6eab30831512a50d978fb3780.setContent(html_1b133fd6058e41d1e35b36d92bfd1fd1);
+            
+        
+
+        circle_marker_1ecd3e4bc91699876a1da63c44e2a51a.bindPopup(popup_0e32ddd6eab30831512a50d978fb3780)
+        ;
+
+        
+    
+    
+            var circle_marker_dc139eb75da0f28f156c947a53499e9b = L.circleMarker(
+                [41.7889601, -87.6496519],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_627d4c43a0f3785602bca3e9a5675c70 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_1e3caf1d2340d9ece0d4e036a98a16f2 = $(`<div id="html_1e3caf1d2340d9ece0d4e036a98a16f2" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Mark Nussbaum</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>5757 South Morgan Street, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>8.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$1,430,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>June 2023</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$1,001,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Sharestates</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Trust, as trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Oct. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$551,000</td></tr></table></div>`)[0];
+                popup_627d4c43a0f3785602bca3e9a5675c70.setContent(html_1e3caf1d2340d9ece0d4e036a98a16f2);
+            
+        
+
+        circle_marker_dc139eb75da0f28f156c947a53499e9b.bindPopup(popup_627d4c43a0f3785602bca3e9a5675c70)
+        ;
+
+        
+    
+    
+            var circle_marker_bb230143ab2d750192b0faad915f4c8b = L.circleMarker(
+                [41.7523146, -87.5837991],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_fcdddcbc6df4cf2b4a5482ff955a2151 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_65fbad857914247f1e1dbb3fd8f2cc42 = $(`<div id="html_65fbad857914247f1e1dbb3fd8f2cc42" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Mark Nussbaum, Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>7830 South East End Avenue, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>13.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$1,020,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>June 2023</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$867,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Spreo Capital</td></tr><tr><th style='text-align:left;padding-right:8px'>Refinance date</th><td>Nov. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Refinance amount</th><td>$1,404,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Latest lender</th><td>CliffCo</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Trust, as trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Oct. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$989,000</td></tr></table></div>`)[0];
+                popup_fcdddcbc6df4cf2b4a5482ff955a2151.setContent(html_65fbad857914247f1e1dbb3fd8f2cc42);
+            
+        
+
+        circle_marker_bb230143ab2d750192b0faad915f4c8b.bindPopup(popup_fcdddcbc6df4cf2b4a5482ff955a2151)
+        ;
+
+        
+    
+    
+            var circle_marker_d4277d4d9a7c9c3cf0d88ca51cec6250 = L.circleMarker(
+                [41.753856, -87.55637089999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_c4b4cd4bcdc10b4bcc91ea3db6e2c7f3 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_5d7022bd2200a96db4174fc8cc626cf4 = $(`<div id="html_5d7022bd2200a96db4174fc8cc626cf4" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>2814 East 78th Street, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>6.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$1,090,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>June 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$817,500</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>CliffCo</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>City of Chicago</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>July 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$262,000</td></tr></table></div>`)[0];
+                popup_c4b4cd4bcdc10b4bcc91ea3db6e2c7f3.setContent(html_5d7022bd2200a96db4174fc8cc626cf4);
+            
+        
+
+        circle_marker_d4277d4d9a7c9c3cf0d88ca51cec6250.bindPopup(popup_c4b4cd4bcdc10b4bcc91ea3db6e2c7f3)
+        ;
+
+        
+    
+    
+            var circle_marker_dd17d8f82b6d5b744fbc622f3158073c = L.circleMarker(
+                [41.7452601, -87.6648366],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_332ef174909c73ab56b6b6cbbb1e22fe = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_82f5ab0fa80b0c447e5015653d838a21 = $(`<div id="html_82f5ab0fa80b0c447e5015653d838a21" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>8148 South Marshfield Avenue, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>3.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$371,250</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>CliffCo</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Sept. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$220,000</td></tr></table></div>`)[0];
+                popup_332ef174909c73ab56b6b6cbbb1e22fe.setContent(html_82f5ab0fa80b0c447e5015653d838a21);
+            
+        
+
+        circle_marker_dd17d8f82b6d5b744fbc622f3158073c.bindPopup(popup_332ef174909c73ab56b6b6cbbb1e22fe)
+        ;
+
+        
+    
+    
+            var circle_marker_9d73f5671811764afb574ac419fca5f3 = L.circleMarker(
+                [41.7886327, -87.6501128],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_f338354c46254aaf8a9a870e1388425f = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_a62e26c742edd0caaf46ff63b9f9602a = $(`<div id="html_a62e26c742edd0caaf46ff63b9f9602a" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Mark Nussbaum</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>1003 West 58th Street, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>9.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$820,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2023</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$565,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Accolend</td></tr><tr><th style='text-align:left;padding-right:8px'>Refinance date</th><td>April 25, 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Refinance amount</th><td>$1,000,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Latest lender</th><td>Sharestates</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Sept. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$551,000</td></tr></table></div>`)[0];
+                popup_f338354c46254aaf8a9a870e1388425f.setContent(html_a62e26c742edd0caaf46ff63b9f9602a);
+            
+        
+
+        circle_marker_9d73f5671811764afb574ac419fca5f3.bindPopup(popup_f338354c46254aaf8a9a870e1388425f)
+        ;
+
+        
+    
+    
+            var circle_marker_127a8d727b0e1e1f36f2a70e24c693f8 = L.circleMarker(
+                [41.7487769, -87.6308899],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_e3ab47cd97df8f632e51b8ff883eb21f = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_9c09534ccfab52de395db7831d668395 = $(`<div id="html_9c09534ccfab52de395db7831d668395" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>8004 South Yale Avenue, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>2.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$346,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Sharestates</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Sept. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$160,000</td></tr></table></div>`)[0];
+                popup_e3ab47cd97df8f632e51b8ff883eb21f.setContent(html_9c09534ccfab52de395db7831d668395);
+            
+        
+
+        circle_marker_127a8d727b0e1e1f36f2a70e24c693f8.bindPopup(popup_e3ab47cd97df8f632e51b8ff883eb21f)
+        ;
+
+        
+    
+    
+            var circle_marker_be1f629c403bb1744cd7dbd959dd5e18 = L.circleMarker(
+                [41.7545061, -87.57940889999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_0ceaf7c7f374e2701361b1d5fad2afa0 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_39c2028cb198e602bb2027bcaa4ba88f = $(`<div id="html_39c2028cb198e602bb2027bcaa4ba88f" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>7723 South Constance Avenue, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>2.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$371,250</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Aug. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$201,000</td></tr></table></div>`)[0];
+                popup_0ceaf7c7f374e2701361b1d5fad2afa0.setContent(html_39c2028cb198e602bb2027bcaa4ba88f);
+            
+        
+
+        circle_marker_be1f629c403bb1744cd7dbd959dd5e18.bindPopup(popup_0ceaf7c7f374e2701361b1d5fad2afa0)
+        ;
+
+        
+    
+    
+            var circle_marker_1acc934ec97a623a131566cc04fe1c6c = L.circleMarker(
+                [41.796352, -87.670962],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_1770140e50b477b4ee35be284ea4f903 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_48f8134c6e757929198b4ee9ff6ee238 = $(`<div id="html_48f8134c6e757929198b4ee9ff6ee238" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>5344 South Honoree Street, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>2.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$560,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Nov. 2023</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$420,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Aug. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$200,760</td></tr></table></div>`)[0];
+                popup_1770140e50b477b4ee35be284ea4f903.setContent(html_48f8134c6e757929198b4ee9ff6ee238);
+            
+        
+
+        circle_marker_1acc934ec97a623a131566cc04fe1c6c.bindPopup(popup_1770140e50b477b4ee35be284ea4f903)
+        ;
+
+        
+    
+    
+            var circle_marker_5d84be79e9b92f6f2bd70ffd5bcd4311 = L.circleMarker(
+                [41.753856, -87.55637089999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_3b819138ba75d8285d4e353467e73447 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_50038a0a700dc21d981377f2ee8518af = $(`<div id="html_50038a0a700dc21d981377f2ee8518af" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>2814 East 78th Street, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>6.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$1,090,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>June 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$817,500</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>CliffCo</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>UMB Bank, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Aug. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$262,000</td></tr></table></div>`)[0];
+                popup_3b819138ba75d8285d4e353467e73447.setContent(html_50038a0a700dc21d981377f2ee8518af);
+            
+        
+
+        circle_marker_5d84be79e9b92f6f2bd70ffd5bcd4311.bindPopup(popup_3b819138ba75d8285d4e353467e73447)
+        ;
+
+        
+    
+    
+            var circle_marker_d4a92157db60cb9fcf01200cfdcec396 = L.circleMarker(
+                [41.7447901, -87.6606731],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_46bbd16c63c7e8fdb101199902b567fd = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_f3365ab5656546e786d49df56189ff84 = $(`<div id="html_f3365ab5656546e786d49df56189ff84" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>8201 South Laflin Street, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>12.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$2,000,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>March 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$1,400,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>CliffCo</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>Sept. 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$587,850</td></tr></table></div>`)[0];
+                popup_46bbd16c63c7e8fdb101199902b567fd.setContent(html_f3365ab5656546e786d49df56189ff84);
+            
+        
+
+        circle_marker_d4a92157db60cb9fcf01200cfdcec396.bindPopup(popup_46bbd16c63c7e8fdb101199902b567fd)
+        ;
+
+        
+    
+    
+            var circle_marker_503a7c38eea1bc12663bea343d631c7d = L.circleMarker(
+                [41.7276646, -87.65588939999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_bfd9c0c9f01d5f9324d69d3dd28ae65c = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_79d83cb6a5400af80a3cfd5407743a46 = $(`<div id="html_79d83cb6a5400af80a3cfd5407743a46" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>9130 South Throop Street, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>4.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$680,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>May 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$544,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Silver Hill Capital</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>June 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$340,000</td></tr></table></div>`)[0];
+                popup_bfd9c0c9f01d5f9324d69d3dd28ae65c.setContent(html_79d83cb6a5400af80a3cfd5407743a46);
+            
+        
+
+        circle_marker_503a7c38eea1bc12663bea343d631c7d.bindPopup(popup_bfd9c0c9f01d5f9324d69d3dd28ae65c)
+        ;
+
+        
+    
+    
+            var circle_marker_cec68713a1d01a1098fb23a9df75ceef = L.circleMarker(
+                [41.7479542, -87.6667587],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_427ec22170136b328c7615cfb1e647d7 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_f006fd1354fa33370ca073255545172e = $(`<div id="html_f006fd1354fa33370ca073255545172e" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>8017 South Hermitage Avenue, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>2.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>March 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$400,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Silver Hill Capital</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>August 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$180,000</td></tr></table></div>`)[0];
+                popup_427ec22170136b328c7615cfb1e647d7.setContent(html_f006fd1354fa33370ca073255545172e);
+            
+        
+
+        circle_marker_cec68713a1d01a1098fb23a9df75ceef.bindPopup(popup_427ec22170136b328c7615cfb1e647d7)
+        ;
+
+        
+    
+    
+            var circle_marker_355ea6ef51368a21ae8f57762becc09c = L.circleMarker(
+                [41.7986639, -87.66739489999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_6c440a518f6a02148b98304d76de2d38 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_7c89eaf0a01c6f331646dc7fe7115bb3 = $(`<div id="html_7c89eaf0a01c6f331646dc7fe7115bb3" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>5226 South Paulina Street, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>4.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$485,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Dec. 2023</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$364,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>July 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$460,000</td></tr></table></div>`)[0];
+                popup_6c440a518f6a02148b98304d76de2d38.setContent(html_7c89eaf0a01c6f331646dc7fe7115bb3);
+            
+        
+
+        circle_marker_355ea6ef51368a21ae8f57762becc09c.bindPopup(popup_6c440a518f6a02148b98304d76de2d38)
+        ;
+
+        
+    
+    
+            var circle_marker_f1eb821c27c3d8510debdfda83b17f66 = L.circleMarker(
+                [41.74788360000001, -87.60788389999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_27ec962d7651307e25cf447ececfc0ec = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_9193920c3dcbc21c8db5fbe297dd87ba = $(`<div id="html_9193920c3dcbc21c8db5fbe297dd87ba" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>8052 South Langley Avenue, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>2.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$396,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Silver Hill Capital</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>July 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$167,000</td></tr></table></div>`)[0];
+                popup_27ec962d7651307e25cf447ececfc0ec.setContent(html_9193920c3dcbc21c8db5fbe297dd87ba);
+            
+        
+
+        circle_marker_f1eb821c27c3d8510debdfda83b17f66.bindPopup(popup_27ec962d7651307e25cf447ececfc0ec)
+        ;
+
+        
+    
+    
+            var circle_marker_56bb3476f0cca284deadfee4b431491a = L.circleMarker(
+                [41.7479549, -87.61334660000001],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_5a214cd6aaef18342a20a79c6501aa90 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_27de725365c4b74a403729f0856fb1c6 = $(`<div id="html_27de725365c4b74a403729f0856fb1c6" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>8047 South Vernon Avenue, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>3.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$496,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Silver Hill Capital</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>July 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$173,000</td></tr></table></div>`)[0];
+                popup_5a214cd6aaef18342a20a79c6501aa90.setContent(html_27de725365c4b74a403729f0856fb1c6);
+            
+        
+
+        circle_marker_56bb3476f0cca284deadfee4b431491a.bindPopup(popup_5a214cd6aaef18342a20a79c6501aa90)
+        ;
+
+        
+    
+    
+            var circle_marker_dd1292479f961882f7a1caa5c73198d9 = L.circleMarker(
+                [41.7918269, -87.6460505],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_a245bfa4b7eb32530582f74640ed9acf = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_4313c72d53bbbde39ba05de63cb5147a = $(`<div id="html_4313c72d53bbbde39ba05de63cb5147a" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>5621 South Green Street, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>8.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$680,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>May 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$544,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Silver Hill Capital</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>July 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$235,000</td></tr></table></div>`)[0];
+                popup_a245bfa4b7eb32530582f74640ed9acf.setContent(html_4313c72d53bbbde39ba05de63cb5147a);
+            
+        
+
+        circle_marker_dd1292479f961882f7a1caa5c73198d9.bindPopup(popup_a245bfa4b7eb32530582f74640ed9acf)
+        ;
+
+        
+    
+    
+            var circle_marker_d9379141420d11e2caa2f1d689ebe497 = L.circleMarker(
+                [41.7498099, -87.6127876],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_e7205ca7b5ecad1dde3839d80303945c = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_b8f7eda25578579515346b7b04d0befb = $(`<div id="html_b8f7eda25578579515346b7b04d0befb" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>7944 South Eberhart Avenue, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>2.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$371,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>July 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$165,000</td></tr></table></div>`)[0];
+                popup_e7205ca7b5ecad1dde3839d80303945c.setContent(html_b8f7eda25578579515346b7b04d0befb);
+            
+        
+
+        circle_marker_d9379141420d11e2caa2f1d689ebe497.bindPopup(popup_e7205ca7b5ecad1dde3839d80303945c)
+        ;
+
+        
+    
+    
+            var circle_marker_5acaff4e63084ec794f9542340ce4359 = L.circleMarker(
+                [41.7500667, -87.6079434],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_d96bdcfcd90b2a7d78b02bef3a95f16d = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_27ab18641e11e7d7e9d522a30ef51ac9 = $(`<div id="html_27ab18641e11e7d7e9d522a30ef51ac9" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>7938 South Langley Avenure, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>2.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$396,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Silver Hill Capital</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>July 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$154,000</td></tr></table></div>`)[0];
+                popup_d96bdcfcd90b2a7d78b02bef3a95f16d.setContent(html_27ab18641e11e7d7e9d522a30ef51ac9);
+            
+        
+
+        circle_marker_5acaff4e63084ec794f9542340ce4359.bindPopup(popup_d96bdcfcd90b2a7d78b02bef3a95f16d)
+        ;
+
+        
+    
+    
+            var circle_marker_2a8a2d5fe34b34ee2ff1d5f2baa72208 = L.circleMarker(
+                [41.7500776, -87.6121723],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "gray", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_8ea3b9e609f792f815a16e64ae9fb6ab);
+        
+    
+        var popup_f4623b2037ef9009dbf61de32712e021 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_86ca368dfd4b0af7316f4493f1f944b8 = $(`<div id="html_86ca368dfd4b0af7316f4493f1f944b8" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Borrower</th><td>Eliazer Tauber</td></tr><tr><th style='text-align:left;padding-right:8px'>Address</th><td>7937 South Eberhart Avenure, Chicago, Chicago, IL</td></tr><tr><th style='text-align:left;padding-right:8px'>Number of Units</th><td>2.0</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Amount</th><td>$495,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Purchase Date</th><td>Feb. 2024</td></tr><tr><th style='text-align:left;padding-right:8px'>Mortgage Amount</th><td>$371,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan Originator</th><td>Ark Mortgage</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filer</th><td>Wilmington Savings Fund Society, as owner trustee</td></tr><tr><th style='text-align:left;padding-right:8px'>Foreclosure filed</th><td>June 2025</td></tr><tr><th style='text-align:left;padding-right:8px'>Board of Review 2024 value</th><td>$148,000</td></tr></table></div>`)[0];
+                popup_f4623b2037ef9009dbf61de32712e021.setContent(html_86ca368dfd4b0af7316f4493f1f944b8);
+            
+        
+
+        circle_marker_2a8a2d5fe34b34ee2ff1d5f2baa72208.bindPopup(popup_f4623b2037ef9009dbf61de32712e021)
+        ;
+
+        
+    
+</script>
+</html>
