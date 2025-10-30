@@ -92,6 +92,7 @@
   let originalFeatures = [];
   let suggestionCache = [];
   let activeSuggestionIndex = -1;
+  let mapReady = false; // becomes true once window.map.data populated
 
   const searchInput = document.getElementById('search-input');
   const searchClear = document.getElementById('search-clear');
@@ -118,13 +119,14 @@
   }
 
   function applyFilter() {
-    if (!originalFeatures.length) return;
+    // Guard until map fully initialized and data cached
+    if (!mapReady || !originalFeatures.length) return;
     const query = searchInput ? searchInput.value : '';
     const filtered = filterFeatures(query);
     updateCount(filtered.length, originalFeatures.length);
     if (window.map && window.map.setData) {
       window.map.setData({ type: 'FeatureCollection', features: filtered });
-    } else if (window.map) {
+    } else if (window.map && window.map.data && window.map.data.features) {
       window.map.data.features = filtered;
       if (typeof window.map.redraw === 'function') window.map.redraw();
     }
@@ -222,7 +224,7 @@
   document.addEventListener('click', (e)=>{ if (!suggestionsEl) return; if (e.target===searchInput || suggestionsEl.contains(e.target)) return; hideSuggestions(); });
   if (suggestionsEl) { suggestionsEl.addEventListener('click', (e)=>{ const li = e.target.closest('li[data-index]'); if(!li) return; selectSuggestion(parseInt(li.getAttribute('data-index'),10)); }); }
 
-  // --- Fetch CSV, build GeoJSON, THEN init map (to ensure data present for library) ---
+  // --- Fetch CSV, build GeoJSON, create object URL and init map ---
   function init() {
     fetch('data.csv')
       .then(r => r.text())
@@ -230,21 +232,26 @@
         const rows = parseCSV(text);
         const geo = rowsToGeoJSON(rows);
 
-        geo.features.forEach(f => {
-          const p = f.properties;
-          p['Project Name'] = clean(p['Project Name']);
-          p['Association Name'] = clean(p['Association Name']);
-          p['Address'] = clean(p['Address']);
-          p['City'] = clean(p['City']);
-          p['County'] = clean(p['County']);
-          p['Project Type'] = clean(p['Project Type']);
-        });
+        // Build object URL so library can fetch like a normal file
+        const blobUrl = URL.createObjectURL(new Blob([JSON.stringify(geo)], { type: 'application/json' }));
 
-        // Create map AFTER we have data. We still supply a filePath pointing to an empty placeholder
-        // so the library's internal fetch succeeds; then override via fetchDataFilterCallback
         window.map = trdDataCommonMap({
-          filePath: 'empty.geojson',
-          fetchDataFilterCallback: () => geo, // replace fetched empty data with our CSV-derived geojson
+          filePath: blobUrl,
+          fetchDataFilterCallback: (data) => {
+            // Clean in callback to keep contract similar to sample.js
+            if (data && data.features) {
+              data.features.forEach(f => {
+                const p = f.properties;
+                p['Project Name'] = clean(p['Project Name']);
+                p['Association Name'] = clean(p['Association Name']);
+                p['Address'] = clean(p['Address']);
+                p['City'] = clean(p['City']);
+                p['County'] = clean(p['County']);
+                p['Project Type'] = clean(p['Project Type']);
+              });
+            }
+            return data;
+          },
           eventCategory: 'south-florida-sirs',
           mapElementId: 'map',
           modalDisplayFields,
@@ -266,10 +273,21 @@
           },
         });
 
-        originalFeatures = geo.features.slice();
-        updateCount(originalFeatures.length, originalFeatures.length);
+        // Poll until library sets map.data
+        waitForMapData();
       })
       .catch(err => { console.error('Failed to load CSV', err); });
+  }
+
+  function waitForMapData(retries = 40) {
+    if (window.map && window.map.data && window.map.data.features) {
+      originalFeatures = window.map.data.features.slice();
+      mapReady = true;
+      updateCount(originalFeatures.length, originalFeatures.length);
+      return;
+    }
+    if (retries <= 0) return;
+    setTimeout(() => waitForMapData(retries - 1), 250);
   }
 
   if (document.readyState === 'loading') {
