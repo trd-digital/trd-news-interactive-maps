@@ -97,18 +97,18 @@
           visible: true,
           formatter: TrdFormatters.formatPrice,
         },
-        {
-          dataField: "Sale Date",
-          name: "Sale Date",
-          visible: true,
-          sorter: TrdSorters.sortDate,
-        },
-        {
-          dataField: "Record Date",
-          name: "Record Date",
-          visible: true,
-          sorter: TrdSorters.sortDate,
-        },
+        // {
+        //   dataField: "Sale Date",
+        //   name: "Sale Date",
+        //   visible: true,
+        //   sorter: TrdSorters.sortDate,
+        // },
+        // {
+        //   dataField: "Record Date",
+        //   name: "Record Date",
+        //   visible: true,
+        //   sorter: TrdSorters.sortDate,
+        // },
         {
           dataField: "Use Code Description",
           name: "Description",
@@ -116,18 +116,18 @@
         },
         { dataField: "Seller", name: "Seller", visible: true },
         { dataField: "Buyer", name: "Buyer", visible: true },
-        {
-          dataField: "Building Sq. Ft",
-          name: "SqFt",
-          visible: true,
-          formatter: TrdFormatters.formatNumber,
-        },
+        // {
+        //   dataField: "Building Sq. Ft",
+        //   name: "SqFt",
+        //   visible: true,
+        //   formatter: TrdFormatters.formatNumber,
+        // },
         { dataField: "Doc Type", name: "Doc Type", visible: false },
         { dataField: "Folio", name: "Folio", visible: false },
-        { dataField: "Lot Size", name: "Lot Size", visible: false },
+        // { dataField: "Lot Size", name: "Lot Size", visible: false },
         {
-          dataField: "Date of Previous Sale",
-          name: "Date of Previous Sale",
+          dataField: "Previous Sale Date",
+          name: "Previous Sale Date",
           visible: false,
         },
         {
@@ -140,93 +140,6 @@
           name: "Previous Sale Price",
           visible: false,
         },
-        {
-          dataField: "Mailing Address",
-          name: "Mailing Address",
-          visible: false,
-        },
-        {
-          dataField: "First Party Registered Agent Name & Address",
-          name: "First Party Registered Agent Name & Address",
-          visible: false,
-        },
-        {
-          dataField: "First Party Document Number",
-          name: "First Party Document Number",
-          visible: false,
-        },
-        {
-          dataField: "First Party FEI/EIN Number",
-          name: "First Party FEI/EIN Number",
-          visible: false,
-        },
-        {
-          dataField: "First Party Mailing Address",
-          name: "First Party Mailing Address",
-          visible: false,
-        },
-        {
-          dataField: "First Party Principal Address",
-          name: "First Party Principal Address",
-          visible: false,
-        },
-        {
-          dataField: "First Party State",
-          name: "First Party State",
-          visible: false,
-        },
-        {
-          dataField: "First Party Date Filed",
-          name: "First Party Date Filed",
-          visible: false,
-        },
-        {
-          dataField: "Second Party Registered Agent Name & Address",
-          name: "Second Party Registered Agent Name & Address",
-          visible: false,
-        },
-        {
-          dataField: "Second Party Status",
-          name: "Second Party Status",
-          visible: false,
-        },
-        {
-          dataField: "Second Party Document Number",
-          name: "Second Party Document Number",
-          visible: false,
-        },
-        {
-          dataField: "Second Party FEI/EIN Number",
-          name: "Second Party FEI/EIN Number",
-          visible: false,
-        },
-        {
-          dataField: "Second Party Mailing Address",
-          name: "Second Party Mailing Address",
-          visible: false,
-        },
-        {
-          dataField: "Second Party Principal Address",
-          name: "Second Party Principal Address",
-          visible: false,
-        },
-        {
-          dataField: "Second Party State",
-          name: "Second Party State",
-          visible: false,
-        },
-        {
-          dataField: "Second Party Date Filed",
-          name: "Second Party Date Filed",
-          visible: false,
-        },
-        { dataField: "Lender", name: "Lender", visible: false },
-        {
-          dataField: "Loan Amount",
-          name: "Loan Amount",
-          visible: false,
-          formatter: TrdFormatters.formatPrice,
-        },
       ];
       const fetchDataFilterCallback = (data) => {
         return new Promise((resolve) => {
@@ -234,6 +147,16 @@
             if (_i === 0) console.log(item);
             return {
               ...item.properties,
+              "Use Code Description": item.properties["Description"] || null,
+              "Sale Price": TrdFormatters.getNumberValue(
+                item.properties["Sale Price"] ||
+                  item.properties["Consideration"] ||
+                  null
+              ),
+              "Previous Sale Date":
+                item.properties["Previous Sale Date"] ||
+                item.properties["Date of Previous Sale"] ||
+                null,
             };
           });
           resolve(filteredData);
@@ -241,7 +164,7 @@
       };
 
       TrdDataCommonTable({
-        filePaths: ["south-florida-transactions.geojson"],
+        filePaths: ["miami_dade_output.geojson", "palm_beach_output.geojson"],
         eventCategory: "south-florida-transactions-table",
         displayColumns,
         fetchDataFilterCallback,
