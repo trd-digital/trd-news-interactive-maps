@@ -125,6 +125,153 @@
     <script src="../trd-data/common-formatter/formatter.js"></script>
     <script src="../trd-data/common-loading/loading.js"></script>
     <script src="../trd-data/common-map/map.js?v=1.1"></script>
-    <script src="texas-dallas-transactions-map.js"></script>
+    <script>
+      const tooltipDisplayFields = {
+        title: {
+          field: "Property Address",
+          label: "Address",
+        },
+        content: [
+          {
+            field: "Recorded Date",
+            label: "Recorded Date",
+            format: "formatDate",
+          },
+          {
+            field: "Town",
+            label: "Town",
+          },
+          {
+            field: "Doc Type",
+            label: "Doc Type",
+          },
+        ],
+      };
+
+      const zipCodeFormatter = (value) => {
+        if (!value) return "N/A";
+        const zipString = value.toString();
+        // remove .0 if present
+        const integerPart = zipString.split(".")[0];
+        return integerPart.length > 5
+          ? integerPart.slice(0, 5) + "-" + integerPart.slice(5)
+          : integerPart;
+      };
+
+      const modalDisplayFields = {
+        title: {
+          field: "Property Address",
+          label: "Address",
+        },
+        content: [
+          { field: "Grantor", label: "Grantor" },
+          { field: "Grantee", label: "Grantee" },
+          { field: "Doc Type", label: "Doc Type" },
+          {
+            field: "Recorded Date",
+            label: "Recorded Date",
+            format: "formatDate",
+          },
+          { field: "Doc Number", label: "Doc Number" },
+          { field: "Town", label: "Town" },
+          { field: "Legal Description", label: "Legal Description" },
+          {
+            field: "Record Link",
+            label: "Record Link",
+            format: (value) =>
+              `<a href="${value}" target="_blank">View Record</a>`,
+          },
+          { field: "SubdivisionName", label: "SubdivisionName" },
+          { field: "Lot", label: "Lot" },
+          { field: "Block", label: "Block" },
+          { field: "Township", label: "Township" },
+          { field: "Reference", label: "Reference" },
+          { field: "Account Number", label: "Account Number" },
+          {
+            field: "Appraisal Year",
+            label: "Appraisal Year",
+            format: "formatInteger",
+          },
+          { field: "Division CD", label: "Division CD" },
+          { field: "Owner Name1", label: "Owner Name1" },
+          { field: "Owner Name2", label: "Owner Name2" },
+          { field: "Owner Address Line1", label: "Owner Address Line1" },
+          { field: "Owner Address Line2", label: "Owner Address Line2" },
+          { field: "Owner Address Line3", label: "Owner Address Line3" },
+          { field: "Owner Address Line4", label: "Owner Address Line4" },
+          { field: "Owner City", label: "Owner City" },
+          { field: "Owner State", label: "Owner State" },
+          {
+            field: "Owner ZipCode",
+            label: "Owner ZipCode",
+            format: zipCodeFormatter,
+          },
+          { field: "Owner Country", label: "Owner Country" },
+          { field: "Property City", label: "Property City" },
+          {
+            field: "Property ZipCode",
+            label: "Property ZipCode",
+            format: zipCodeFormatter,
+          },
+          { field: "NBND CD", label: "NBND CD" },
+          { field: "Legal1", label: "Legal1" },
+          { field: "Legal2", label: "Legal2" },
+          { field: "Legal3", label: "Legal3" },
+          { field: "Deed TXFR Date", label: "Deed TXFR Date" },
+          { field: "GIS Parcel ID", label: "GIS Parcel ID" },
+        ],
+      };
+
+      window.map = trdDataCommonMap({
+        filePaths: [
+          "https://static.therealdeal.com/interactive-maps/dallas-transactions-map.geojson",
+        ],
+        eventCategory: "texas-dallas-transactions-table",
+        mapElementId: "map",
+        filterElementId: "map-filters",
+        legendElementId: "legend",
+        resultElementId: "result",
+        mapCenterLat: 32.8185041,
+        mapCenterLng: -96.7320961,
+        zoom: 10,
+        minZoom: 8,
+        tooltipDisplayFields,
+        modalDisplayFields,
+        loadingEnabled: true,
+        pointSettings: {
+          clickToCenter: true,
+          clickToZoom: true,
+          colorType: "case",
+          radiusType: "radius",
+          paintSettings: {
+            hover: {
+              color: { light: "#FF9800", dark: "#F57C00" },
+            },
+            active: {
+              color: { light: "#FF5722", dark: "#D84315" },
+            },
+            default: {
+              radius: 5,
+              color: { light: "#90CAF9", dark: "#90CAF9" },
+            },
+          },
+        },
+        searchSettings: {
+          enable: true,
+          placeholderText: "Search by Address or Town...",
+          resultTitleField: "Property Address",
+          searchFields: [
+            "Property Address",
+            "Owner Name1",
+            "Owner Name2",
+            "Grantor",
+            "Grantee",
+            "Doc Number",
+            "Legal1",
+            "Legal2",
+          ],
+        },
+      });
+    </script>
   </body>
 </html>
