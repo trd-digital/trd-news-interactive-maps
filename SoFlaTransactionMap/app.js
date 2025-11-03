@@ -165,8 +165,12 @@
   // --- Fetch GeoJSON and init map ---
   function init() {
     fetch('miami_dade_output.geojson')
-      .then(r => r.json())
-      .then(geo => {
+      .then(r => r.text())
+      .then(text => {
+        // Replace NaN values with null to make valid JSON
+        const cleanedText = text.replace(/:\s*NaN/g, ': null');
+        const geo = JSON.parse(cleanedText);
+        
         if (!geo || !geo.features) {
           console.error('Invalid GeoJSON format');
           return;
@@ -176,8 +180,8 @@
         const validFeatures = geo.features.filter(feature => {
           if (!feature.geometry || !feature.geometry.coordinates) return false;
           const [lon, lat] = feature.geometry.coordinates;
-          return !isNaN(lon) && !isNaN(lat) && 
-                 lon !== null && lat !== null &&
+          return lon !== null && lat !== null &&
+                 !isNaN(lon) && !isNaN(lat) && 
                  Math.abs(lon) <= 180 && Math.abs(lat) <= 90;
         });
 
