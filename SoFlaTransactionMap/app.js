@@ -172,8 +172,24 @@
           return;
         }
 
+        // Filter out features with invalid coordinates
+        const validFeatures = geo.features.filter(feature => {
+          if (!feature.geometry || !feature.geometry.coordinates) return false;
+          const [lon, lat] = feature.geometry.coordinates;
+          return !isNaN(lon) && !isNaN(lat) && 
+                 lon !== null && lat !== null &&
+                 Math.abs(lon) <= 180 && Math.abs(lat) <= 90;
+        });
+
+        console.log(`Loaded ${validFeatures.length} valid features out of ${geo.features.length} total`);
+
+        const cleanedGeo = {
+          type: 'FeatureCollection',
+          features: validFeatures
+        };
+
         // Build object URL so library can fetch like a normal file
-        const blobUrl = URL.createObjectURL(new Blob([JSON.stringify(geo)], { type: 'application/json' }));
+        const blobUrl = URL.createObjectURL(new Blob([JSON.stringify(cleanedGeo)], { type: 'application/json' }));
 
         window.map = trdDataCommonMap({
           filePath: blobUrl,
