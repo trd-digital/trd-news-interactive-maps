@@ -410,7 +410,6 @@
       window.yearCounts = {}; // collect counts for latest permit years
       const fetchDataFilterCallback = (data) => {
         if (!data || !Array.isArray(data.features)) {
-          console.warn("GeoJSON missing features array; received:", data);
           return { type: "FeatureCollection", features: [] };
         }
 
@@ -554,9 +553,6 @@
         // This gives time for the DOM to be ready for the count display
         setTimeout(() => {
           if (typeof window.refreshFilterCounts === "function") {
-            console.log(
-              "Calling refreshFilterCounts from fetchDataFilterCallback"
-            );
             window.refreshFilterCounts();
           }
         }, 1500);
@@ -567,10 +563,8 @@
         };
       }; // Listen for mapbox load event to trigger property type filter update
       document.addEventListener("mapboxglLoaded", function () {
-        console.log("Map loaded event received");
         setTimeout(() => {
           if (window.refreshFilterCounts) {
-            console.log("Refreshing filter counts after map load");
             window.refreshFilterCounts();
           }
         }, 1000);
@@ -645,7 +639,6 @@
         function updateLabels() {
           const form = document.getElementById("map-filters");
           if (!form) {
-            console.log("Filter form not found");
             return;
           }
 
@@ -653,7 +646,6 @@
             ".filter-option-container"
           );
           if (!optionContainers.length) {
-            console.log("No filter option containers found");
             return;
           }
 
@@ -673,9 +665,6 @@
               label.dataset.baseLabel = label.textContent
                 .replace(/\s*\(.*\)$/, "")
                 .trim();
-              console.log(
-                `Set base label for ${input.value}: "${label.dataset.baseLabel}"`
-              );
             }
 
             const value = input.value;
@@ -729,8 +718,6 @@
 
         // Public API to refresh after external filtering
         window.refreshFilterCounts = () => {
-          console.log("Manual refresh of filter counts called");
-
           // Ensure we have the "Other" category initialized for the filter UI
           if (
             window.propertyTypeCounts &&
@@ -745,8 +732,6 @@
 
         // Make the counts update after map data is loaded
         document.addEventListener("DOMContentLoaded", () => {
-          console.log("DOM loaded - setting up additional trigger");
-
           // Add an observer to detect when the filter form is added to the DOM
           const observer = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
@@ -767,7 +752,6 @@
 
         // If a custom filtered event is dispatched with features, recompute counts
         document.addEventListener("trd:map:filtered", (e) => {
-          console.log("Custom filtered event received");
           if (e.detail && Array.isArray(e.detail.features)) {
             // recompute counts from provided feature set
             const newSqftCounts = {};
