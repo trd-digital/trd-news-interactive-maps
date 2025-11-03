@@ -55,8 +55,10 @@ const trdTheme = TrdTheme({
     }
   },
 });
-
 const trdDataCommonMap = (options) => {
+  //--------------------------------------------------------------------------------------//
+  //                                       Settings                                       //
+  //--------------------------------------------------------------------------------------//
   const defaults = {
     filePath: "",
     filePaths: [],
@@ -80,6 +82,18 @@ const trdDataCommonMap = (options) => {
     eventCategory: "unknown-map",
     sourceId: "data",
     loadingEnabled: false,
+    // search settings
+    searchSettings: {
+      enable: false,
+      elementId: "map-search-form",
+      resultTitleField: undefined, // Field to use as title in search results
+      resultDescriptionField: undefined, // Field to use as description in search results
+      placeholderText: "Search...",
+      minChars: 3,
+      maxResults: 100,
+      searchFields: [], // Fields to search in
+    },
+    // point settings
     pointSettings: {
       filter: [],
       clickToCenter: false, // Whether to center the map on the clicked point
@@ -114,6 +128,7 @@ const trdDataCommonMap = (options) => {
         },
       },
     },
+    // cluster settings
     clusterSettings: {
       enable: false, // Whether to enable clustering
       maxZoom: 12, // Max zoom to cluster points on
@@ -133,7 +148,7 @@ const trdDataCommonMap = (options) => {
         },
       },
     },
-
+    // shape settings
     shapeSettings: {
       enable: false,
       idPrefix: "shape-",
@@ -202,13 +217,6 @@ const trdDataCommonMap = (options) => {
     settings.filePaths.push(settings.filePath);
   }
 
-  const loading = settings.loadingEnabled
-    ? TrdLoading({
-        init: true,
-        active: true,
-      })
-    : undefined;
-
   mapboxgl.accessToken =
     "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
 
@@ -231,6 +239,13 @@ const trdDataCommonMap = (options) => {
     cooperativeGestures: window.self !== window.top, // this is set to true when page is loaded in an iframe
   };
 
+  const loading = settings.loadingEnabled
+    ? TrdLoading({
+        init: true,
+        active: true,
+      })
+    : undefined;
+
   const fn = {
     init: async () => {
       tracking.eventCategory = settings.eventCategory;
@@ -238,6 +253,7 @@ const trdDataCommonMap = (options) => {
       trdTheme.init();
       legend.init();
       filters.init();
+      search.init();
       map.init();
       fn.checkForIframe();
     },
@@ -668,6 +684,11 @@ const trdDataCommonMap = (options) => {
       field.appendChild(maxInput);
     },
 
+    isOpen: () => {
+      const filterEl = filters.getElement();
+      return filterEl.classList.contains("active");
+    },
+
     close: () => {
       const filterEl = filters.getElement();
       filterEl.classList.remove("active");
@@ -759,6 +780,229 @@ const trdDataCommonMap = (options) => {
     },
   };
 
+  const search = {
+    _inputTimeoutId: null,
+    init: () => {
+      if (!search.isEnabled()) return;
+
+      search._createSearch();
+      search._eventListeners();
+    },
+
+    _getFormElement: () => {
+      if (!search.isEnabled()) return null;
+
+      const el = document.getElementById(settings.searchSettings.elementId);
+      return el ? el : search._createSearch();
+    },
+
+    _getInputElement: () => {
+      if (!search.isEnabled()) return null;
+
+      return document.getElementById(
+        `${settings.searchSettings.elementId}-search`
+      );
+    },
+
+    _getResultElement: () => {
+      if (!search.isEnabled()) return null;
+
+      return document.getElementById(
+        `${settings.searchSettings.elementId}-results`
+      );
+    },
+
+    _createSearch: () => {
+      const mapEl = document.getElementById(settings.mapElementId);
+      mapEl.insertAdjacentHTML(
+        "afterend",
+        `<form id="${settings.searchSettings.elementId}" class="map-filters-container map-search-form" method="dialog">
+        <div class="map-filters-header">
+          <h4 class="map-filters-title">Search</h4>
+          <button
+            class="btn-close map-search-close"
+            type="button"
+            data-bs-dismiss="map-filters"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="map-filters-body">
+          <input id="${settings.searchSettings.elementId}-search" class="map-search-input" name="search" type="search" placeholder="${settings.searchSettings.placeholderText}" />
+          <ul id="${settings.searchSettings.elementId}-results" class="map-search-result-list"></ul>
+        </div>
+      </form>`
+      );
+    },
+
+    _eventListeners: () => {
+      const formEl = search._getFormElement();
+      const searchInputEl = search._getInputElement();
+      const closeButtonEl = formEl.querySelector(".map-search-close");
+
+      closeButtonEl.addEventListener("click", search._onClose);
+      formEl.addEventListener("submit", search._onSubmit);
+      formEl.addEventListener("reset", search._onReset);
+      searchInputEl.addEventListener("input", search._onInputSearch);
+    },
+
+    isEnabled: () => {
+      return settings.searchSettings.enable;
+    },
+
+    isOpen: () => {
+      if (!search.isEnabled()) return false;
+
+      const formEl = search._getFormElement();
+      return formEl.classList.contains("active");
+    },
+
+    close: () => {
+      if (!search.isEnabled()) return null;
+
+      const formEl = search._getFormElement();
+      formEl.classList.remove("active");
+      document
+        .querySelector("button.map-search-btn")
+        .classList.remove("active");
+    },
+
+    onToggle: () => {
+      if (!search.isEnabled()) return null;
+
+      const formEl = search._getFormElement();
+      const isActive = formEl.classList.contains("active");
+
+      formEl.classList.toggle("active");
+      document
+        .querySelector("button.map-search-btn")
+        .classList.toggle("active");
+      tracking.trackEvent("search", isActive ? "close" : "open");
+    },
+
+    _onClose: () => {
+      search.close();
+      tracking.trackEvent("search-form", "close");
+    },
+
+    _onSubmit: (e) => {
+      e.preventDefault();
+      const query = search._getInputElement().value;
+      search._performSearch(query);
+    },
+
+    _onReset: () => {
+      search._getInputElement().value = "";
+      search._clearResults();
+    },
+
+    _onInputSearch: (e) => {
+      clearTimeout(search._inputTimeoutId);
+      search._inputTimeoutId = setTimeout(() => {
+        search._performSearch(e.target.value);
+      }, 300);
+    },
+
+    _performSearch: (query) => {
+      // query too short
+      if (query.length < settings.searchSettings.minChars) {
+        search._clearResults();
+        return;
+      }
+
+      // use the specified search fields or all fields if none specified
+      const searchFields =
+        settings.searchSettings.searchFields || mapData.features.length
+          ? Object.keys(mapData.features[0].properties)
+          : [];
+
+      const results = mapData.features
+        .filter((feature) => {
+          const val = searchFields.some((key) => {
+            const value = feature.properties[key];
+            return (
+              value &&
+              value.toString().toLowerCase().startsWith(query.toLowerCase())
+            );
+          });
+          return val;
+        })
+        .sort((a, b) => {
+          // Sort results by the first matching the resultTitleField or resultDescriptionField
+          const titleField = settings.searchSettings.resultTitleField;
+          const descField = settings.searchSettings.resultDescriptionField;
+
+          const aTitle = titleField ? a.properties[titleField] || "" : "";
+          const bTitle = titleField ? b.properties[titleField] || "" : "";
+
+          const aDesc = descField ? a.properties[descField] || "" : "";
+          const bDesc = descField ? b.properties[descField] || "" : "";
+
+          if (aTitle !== bTitle) {
+            const v = aTitle.localeCompare(bTitle, "en", {
+              sensitivity: "base",
+            });
+            return v;
+          }
+          return aDesc.localeCompare(bDesc);
+        });
+
+      search._showResults(results.slice(0, settings.searchSettings.maxResults));
+    },
+
+    _clearResults: () => {
+      const resultEl = search._getResultElement();
+      if (resultEl) {
+        resultEl.innerHTML = "";
+      }
+    },
+
+    _showResults: (results) => {
+      const resultEl = search._getResultElement();
+      if (!resultEl) return;
+
+      if (!results.length) {
+        resultEl.innerHTML =
+          '<li class="map-search-result-item empty">No results found.</li>';
+        return;
+      }
+
+      resultEl.innerHTML = "";
+      results.forEach((feature) => {
+        const li = document.createElement("li");
+        li.classList.add("map-search-result-item");
+        if (
+          settings.searchSettings.resultTitleField &&
+          settings.searchSettings.resultTitleField.length &&
+          feature.properties[settings.searchSettings.resultTitleField]
+        ) {
+          li.innerHTML += `<div class="map-search-result-title">${
+            feature.properties[settings.searchSettings.resultTitleField]
+          }</div>`;
+        }
+        if (
+          settings.searchSettings.resultDescriptionField &&
+          settings.searchSettings.resultDescriptionField.length &&
+          feature.properties[settings.searchSettings.resultDescriptionField]
+        ) {
+          li.innerHTML += `<div class="map-search-result-description">${
+            feature.properties[
+              settings.searchSettings.resultDescriptionField
+            ] || ""
+          }</div>`;
+        }
+
+        li.onclick = () => {
+          modal.open(feature);
+          search.close();
+          search._getInputElement().value = "";
+          search._clearResults();
+        };
+
+        resultEl.appendChild(li);
+      });
+    },
+  };
+
   const map = {
     currentZoom: mapConfig.zoom,
     dataLoaded: false,
@@ -772,23 +1016,44 @@ const trdDataCommonMap = (options) => {
     },
 
     addControls: () => {
-      mapObj.addControl(
-        new mapboxgl.NavigationControl({
-          showCompass: false,
-        }),
-        "top-right"
-      );
+      if (settings.searchSettings.enable) {
+        mapObj.addControl(
+          new MapboxGLButtonControl({
+            className: "map-search-btn",
+            title: "Search",
+            eventHandler: () => {
+              if (filters.isOpen()) {
+                filters.close();
+              }
+              search.onToggle();
+            },
+          }),
+          "top-right"
+        );
+      }
 
       if (settings?.filterFields?.length && settings?.filterElementId) {
         mapObj.addControl(
           new MapboxGLButtonControl({
             className: "map-filters",
             title: "Filters",
-            eventHandler: filters.onToggle,
+            eventHandler: () => {
+              if (search.isOpen()) {
+                search.onClose();
+              }
+              filters.onToggle();
+            },
           }),
           "top-right"
         );
       }
+
+      mapObj.addControl(
+        new mapboxgl.NavigationControl({
+          showCompass: false,
+        }),
+        "top-right"
+      );
 
       mapObj.addControl(
         new MapboxGLButtonControl({
@@ -845,7 +1110,7 @@ const trdDataCommonMap = (options) => {
                   settings.fileAddKeyValues &&
                   settings.fileAddKeyValues[cIndex]
                 ) {
-                  data.features = data.features.map((feature) => {
+                  data.features = data.features.map((feature, fIndex) => {
                     return {
                       ...feature,
                       properties: {
@@ -861,6 +1126,15 @@ const trdDataCommonMap = (options) => {
             },
             { type: "FeatureCollection", features: [] }
           );
+
+          merged.features = merged.features.map((feature, index) => {
+            // Ensure each feature has a unique ID
+            return {
+              ...feature,
+              id: feature.id || index,
+            };
+          });
+
           mapData = settings.fetchDataFilterCallback
             ? settings.fetchDataFilterCallback(merged)
             : merged;
@@ -903,10 +1177,11 @@ const trdDataCommonMap = (options) => {
       if (mapObj.getSource(id)) {
         return;
       }
+
       mapObj.addSource(id, {
         type: "geojson",
         data,
-        generateId: true, // Generate unique IDs for features
+        generateId: false, // Generate unique IDs for features
         cluster:
           settings.clusterSettings.enable ?? defaults.clusterSettings.enable, // Whether to cluster points
         clusterMaxZoom:
@@ -919,6 +1194,8 @@ const trdDataCommonMap = (options) => {
 
   const mapPoint = {
     hoverFeatureId: null,
+    activeFeatureId: null,
+
     init: (id) => {
       if (mapObj.getLayer(`${id}-points`)) {
         return;
@@ -974,9 +1251,10 @@ const trdDataCommonMap = (options) => {
     },
 
     setHoverState: (featureId) => {
-      if (mapPoint.hoverFeatureId) {
-        mapPoint.clearHoverState();
-      }
+      // clear previous hover state
+      mapPoint.clearHoverState();
+
+      // set new hover state
       mapPoint.hoverFeatureId = featureId;
       mapObj.setFeatureState(
         {
@@ -985,6 +1263,35 @@ const trdDataCommonMap = (options) => {
         },
         {
           hover: true,
+        }
+      );
+    },
+
+    clearActiveState: () => {
+      if (!mapPoint.activeFeatureId) return;
+      mapObj.setFeatureState(
+        {
+          source: settings.sourceId,
+          id: mapPoint.activeFeatureId,
+        },
+        { active: false }
+      );
+      mapPoint.activeFeatureId = null;
+    },
+
+    setActiveState: (featureId) => {
+      // clear previous active state
+      mapPoint.clearActiveState();
+
+      // set new active state
+      mapPoint.activeFeatureId = featureId;
+      mapObj.setFeatureState(
+        {
+          source: settings.sourceId,
+          id: featureId,
+        },
+        {
+          active: true,
         }
       );
     },
@@ -1090,6 +1397,21 @@ const trdDataCommonMap = (options) => {
       `;
     },
 
+    zoomToFeature: (feature) => {
+      // zoom to the clicked point
+      if (
+        settings.pointSettings.clickToZoom ||
+        settings.pointSettings.clickToCenter
+      ) {
+        mapObj.flyTo({
+          center: settings.pointSettings.clickToCenter
+            ? modal.offsetCenter(feature.geometry.coordinates)
+            : mapObj.getCenter(),
+          zoom: settings.pointSettings.clickToZoom ? 14 : mapObj.getZoom(),
+        });
+      }
+    },
+
     _circleColor: {
       step: () => {
         if (!settings?.pointSettings?.colorTypeDataKey) {
@@ -1137,7 +1459,19 @@ const trdDataCommonMap = (options) => {
           return mapPoint._circleColor.default();
         }
 
-        const colors = ["case"];
+        const colors = [
+          "case",
+          ["boolean", ["feature-state", "active"], false],
+          helpers.pickColor(
+            settings.pointSettings.paintSettings.active.color,
+            defaultColors.active
+          ),
+          ["boolean", ["feature-state", "hover"], false],
+          helpers.pickColor(
+            settings.pointSettings.paintSettings.hover.color,
+            defaultColors.hover
+          ),
+        ];
 
         settings.dataPointKeys
           .filter((item) => !item.default)
@@ -1363,121 +1697,17 @@ const trdDataCommonMap = (options) => {
   };
 
   const modal = {
-    activePointId: null,
     init: (id) => {
       if (!settings?.modalDisplayFields) return;
       modal.createModal();
+
       mapObj.on("click", `${id}-points`, (e) => {
-        if (e.features[0].properties.cluster) {
-          return;
-        }
-
-        modal.deselectActivePointId();
-
-        modal.activePointId = e.features[0].id;
-
-        // zoom to the clicked point
-        if (
-          settings.pointSettings.clickToZoom ||
-          settings.pointSettings.clickToCenter
-        ) {
-          mapObj.flyTo({
-            center: settings.pointSettings.clickToCenter
-              ? modal.offsetCenter(e.features[0].geometry.coordinates)
-              : mapObj.getCenter(),
-            zoom: settings.pointSettings.clickToZoom ? 14 : mapObj.getZoom(),
-          });
-        }
-
-        // highlight the clicked point
-        modal.selectActivePointId(e.features[0].id);
-
-        const modalEl = document.querySelector("#modal");
-        const modalTitle = document.querySelector("#modal .modal-title");
-        const modalContent = document.querySelector("#modal .modal-body");
-
-        const address =
-          e.features[0].properties[settings.modalDisplayFields.title.field] ||
-          `Unknown ${settings.modalDisplayFields.title.label}`;
-        modalTitle.innerHTML = address;
-
-        let html = "";
-
-        settings.modalDisplayFields.content.forEach((item) => {
-          let value = helpers.cleanValue(e.features[0].properties[item.field]);
-          if (item.field === "group") {
-            if (!item.fields || !item.fields.length) {
-              return;
-            }
-
-            const fieldValues = [];
-            item.fields.forEach((subField) => {
-              let subValue = helpers.cleanValue(
-                e.features[0].properties[subField.field]
-              );
-              if (
-                subField.filter &&
-                typeof subField.filter === "function" &&
-                !subField.filter(subValue)
-              ) {
-                subValue = "";
-              }
-
-              if (subValue) {
-                subValue = formatters.format(subValue, subField.format);
-                if (
-                  subField.field.endsWith("Zip") ||
-                  subField.field.endsWith("Line 2") ||
-                  subField.field.endsWith("Line 3") ||
-                  subField.field.endsWith("Address2")
-                ) {
-                  fieldValues.push(" " + subValue);
-                } else if (
-                  subField.field.endsWith("City") ||
-                  subField.field.endsWith("State")
-                ) {
-                  fieldValues.push(", " + subValue);
-                } else {
-                  fieldValues.push(
-                    formatters.format(subValue, subField.format)
-                  );
-                }
-              }
-            });
-            value = fieldValues.join("");
-          }
-
-          if (
-            item.filter &&
-            typeof item.filter === "function" &&
-            !item.filter(value)
-          ) {
-            value = "";
-          }
-
-          if (value) {
-            html += `<div class="detail-item">`;
-            if (item.label) {
-              html += `<div class="detail-label">${item.label}:</div>`;
-            }
-            html += `<div class="detail-value">${formatters.format(
-              value,
-              item.format
-            )}</div>`;
-            html += `</div>`;
-          }
-        });
-
-        modalContent.innerHTML = html;
-        modalContent.scrollTop = 0;
-        modalEl.style.display = "block";
-        tracking.trackEvent("detail_view", address.toLowerCase());
+        modal.open(e.features[0]);
       });
 
       const close = document.querySelector("#modal .btn-close");
       close.addEventListener("click", () => {
-        document.querySelector("#modal").style.display = "none";
-        modal.deselectActivePointId();
+        modal.close();
         tracking.trackEvent("detail_view", "close");
         // map zoom out to the original zoom level
         if (settings.pointSettings.clickToZoom) {
@@ -1515,34 +1745,97 @@ const trdDataCommonMap = (options) => {
       document.querySelector(".map-container").appendChild(modal);
     },
 
-    selectActivePointId: (featureId) => {
-      modal.deselectActivePointId();
-      modal.activePointId = featureId;
-
-      mapObj.setFeatureState(
-        {
-          source: settings.sourceId,
-          id: featureId,
-        },
-        {
-          active: true,
-        }
-      );
+    close: () => {
+      document.querySelector("#modal").style.display = "none";
+      mapPoint.clearActiveState();
     },
 
-    deselectActivePointId: () => {
-      if (modal.activePointId) {
-        mapObj.setFeatureState(
-          {
-            source: settings.sourceId,
-            id: modal.activePointId,
-          },
-          {
-            active: false,
-          }
-        );
-        modal.activePointId = null;
+    open: (feature) => {
+      if (feature.properties.cluster) {
+        return;
       }
+
+      mapPoint.zoomToFeature(feature); // zoom to the clicked point
+      mapPoint.setActiveState(feature.id); // highlight the clicked point
+
+      const modalEl = document.querySelector("#modal");
+      const modalTitle = document.querySelector("#modal .modal-title");
+      const modalContent = document.querySelector("#modal .modal-body");
+
+      const address =
+        feature.properties[settings.modalDisplayFields.title.field] ||
+        `Unknown ${settings.modalDisplayFields.title.label}`;
+      modalTitle.innerHTML = address;
+
+      let html = "";
+
+      settings.modalDisplayFields.content.forEach((item) => {
+        let value = helpers.cleanValue(feature.properties[item.field]);
+        if (item.field === "group") {
+          if (!item.fields || !item.fields.length) {
+            return;
+          }
+
+          const fieldValues = [];
+          item.fields.forEach((subField) => {
+            let subValue = helpers.cleanValue(
+              feature.properties[subField.field]
+            );
+            if (
+              subField.filter &&
+              typeof subField.filter === "function" &&
+              !subField.filter(subValue)
+            ) {
+              subValue = "";
+            }
+
+            if (subValue) {
+              subValue = formatters.format(subValue, subField.format);
+              if (
+                subField.field.endsWith("Zip") ||
+                subField.field.endsWith("Line 2") ||
+                subField.field.endsWith("Line 3") ||
+                subField.field.endsWith("Address2")
+              ) {
+                fieldValues.push(" " + subValue);
+              } else if (
+                subField.field.endsWith("City") ||
+                subField.field.endsWith("State")
+              ) {
+                fieldValues.push(", " + subValue);
+              } else {
+                fieldValues.push(formatters.format(subValue, subField.format));
+              }
+            }
+          });
+          value = fieldValues.join("");
+        }
+
+        if (
+          item.filter &&
+          typeof item.filter === "function" &&
+          !item.filter(value)
+        ) {
+          value = "";
+        }
+
+        if (value) {
+          html += `<div class="detail-item">`;
+          if (item.label) {
+            html += `<div class="detail-label">${item.label}:</div>`;
+          }
+          html += `<div class="detail-value">${formatters.format(
+            value,
+            item.format
+          )}</div>`;
+          html += `</div>`;
+        }
+      });
+
+      modalContent.innerHTML = html;
+      modalContent.scrollTop = 0;
+      modalEl.style.display = "block";
+      tracking.trackEvent("detail_view", address.toLowerCase());
     },
 
     offsetCenter: (coordinates) => {

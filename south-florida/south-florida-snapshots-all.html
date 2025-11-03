@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>South Florida Residential Market Snapshot</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css"
+    />
+
+    <style>
+      :root {
+        --primary: #1a73e8;
+        --on-primary: #fff;
+        --bg: #fff;
+        --card-bg: #fff;
+        --pill-bg: #f3f4f6;
+        --border-color: #e5e7eb;
+        --text-primary: #202124;
+        --text-secondary: #4a4d50;
+        --green: #188038;
+        --blue: #1a73e8;
+        --red: #d93025;
+        --font: "Arial", sans-serif;
+      }
+      body[data-bs-theme="dark"] {
+        --bg: #202124;
+        --card-bg: #303134;
+        --pill-bg: #242424;
+        --border-color: #757575;
+        --text-primary: #ffffff;
+        --text-secondary: #e4e4e4;
+      }
+      body[data-bs-theme="dark"] .pill-type {
+        background: #3a3a3c;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text-primary);
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      header {
+        padding: 16px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+      }
+      header h1 {
+        font-size: 1.3rem;
+      }
+      header p {
+        margin-top: 0.2rem;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+      }
+      .top-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 0.6rem 1rem;
+      }
+      .top-row.hide {
+        display: none;
+      }
+      .boroughs {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .pill-btn {
+        padding: 0.4rem 0.8rem;
+        border: 1px solid var(--border-color);
+        border-radius: 999px;
+        background: transparent;
+        cursor: pointer;
+        color: var(--text-primary);
+        font-size: 0.85rem;
+      }
+      .pill-btn.active {
+        background: var(--primary);
+        color: var(--on-primary);
+        border-color: var(--primary);
+      }
+      #toggleFilters,
+      #resetFilters {
+        padding: 0.4rem 0.8rem;
+        background: var(--primary);
+        color: var(--on-primary);
+        border: none;
+        border-radius: 9px;
+        cursor: pointer;
+      }
+      .filters {
+        display: flex;
+        gap: 0.6rem;
+        margin: 0 1rem 0.6rem;
+        flex-wrap: wrap;
+      }
+      .filters.hide {
+        display: none;
+      }
+      .filters select {
+        flex: 1;
+        min-width: 200px;
+        padding: 0.3rem;
+        font-size: 0.8rem;
+        border: 1px solid var(--border-color);
+        border-radius: 9px;
+        background: var(--card-bg);
+        color: var(--text-primary);
+        outline: none;
+      }
+      .summary {
+        margin: 8px 16px;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+      #results {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 350px);
+        gap: 38px 40px;
+        justify-content: center;
+        padding: 0 1.2rem 1rem;
+      }
+      .card {
+        position: relative;
+        background: var(--card-bg);
+        border-radius: 9px;
+        border: 1px solid var(--border-color);
+        padding: 18px 21px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      body.page .card {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      body.page .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      .card.skeleton {
+        background: #e0e0e0;
+        height: 8rem;
+        animation: pulse 1.5s infinite;
+      }
+      @keyframes pulse {
+        50% {
+          opacity: 0.6;
+        }
+      }
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+      }
+      .card-header h4 {
+        font-family: Merriweather, serif;
+        font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+        line-height: 1.2;
+        margin-bottom: 0.25rem;
+      }
+      .pill-type {
+        font-family: "Proxima Nova", sans-serif;
+        font-size: 0.7rem;
+        background: var(--pill-bg);
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        color: var(--text-secondary);
+      }
+      .details {
+        font-family: "Proxima Nova", sans-serif;
+        font-size: 0.7rem;
+        color: var(--text-secondary);
+        margin: 0.25rem 0;
+      }
+      .price-row,
+      .bottom-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 0.3rem 0;
+      }
+      .price-item,
+      .bottom-row .metric {
+        flex: 1;
+        text-align: center;
+      }
+      .price-item .value,
+      .bottom-row .value {
+        font-family: Merriweather, serif;
+        font-weight: bold;
+        line-height: 1;
+      }
+      .price-item.sales .value {
+        color: var(--blue);
+        font-size: 0.9rem;
+      }
+      .price-item.avg .value,
+      .price-item.median .value {
+        color: var(--green);
+        font-size: 0.9rem;
+      }
+      .price-item .label,
+      .bottom-row .label {
+        font-family: "Proxima Nova", sans-serif;
+        font-size: 0.7rem;
+        color: var(--text-secondary);
+        display: block;
+      }
+      .price-item + .price-item,
+      .bottom-row .metric + .metric {
+        margin-left: 0.3rem;
+      }
+
+      .iframe header,
+      .iframe .filters,
+      .iframe .top-row,
+      .iframe .summary {
+        display: none !important;
+      }
+      .iframe #results {
+        grid-template-columns: repeat(1, minmax(250px, 1fr));
+        gap: 8px;
+      }
+      @media (min-width: 550px) {
+        .iframe #results {
+          grid-template-columns: repeat(2, minmax(250px, 1fr));
+        }
+      }
+      @media (min-width: 850px) {
+        .iframe #results {
+          grid-template-columns: repeat(3, minmax(250px, 1fr));
+        }
+      }
+      .iframe .card {
+        width: auto;
+        padding: 8px;
+      }
+      .iframe .card-header {
+        padding-bottom: 8px;
+        margin-bottom: 8px;
+      }
+
+      .model {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out, background-color 0.3s ease-in-out;
+      }
+      .model.active {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 1;
+      }
+      .model-container {
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px var(--border-color);
+        margin: 16px;
+        max-width: calc(1200px - 32px);
+        width: 100%;
+        position: relative;
+      }
+      .model-header {
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 16px;
+      }
+      .model-header h3 {
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+      }
+      .model-header .pill-btn {
+        background: var(--primary);
+        color: var(--on-primary);
+        border: none;
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+        cursor: pointer;
+        position: absolute;
+        top: 16px;
+        right: 16px;
+      }
+      .model-content {
+        max-height: 70vh;
+        overflow-y: auto;
+      }
+
+      .table {
+        border-collapse: collapse;
+        font-size: 14px;
+        width: 100%;
+      }
+      .table th,
+      .table td {
+        padding: 0.2rem 0.4rem;
+        border-bottom: 1px solid #444;
+        text-align: center;
+      }
+      .table .up {
+        color: var(--green);
+      }
+      .table .down {
+        color: var(--red);
+      }
+      .table tr.selected-quarter {
+        background: rgba(26, 115, 232, 0.1);
+      }
+      .no-results {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-secondary);
+      }
+      .graphs {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        gap: 20px;
+      }
+      .graph-container {
+        width: calc(50% - 20px);
+      }
+      .chart {
+        width: 100%;
+        max-height: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>South Florida Market Snapshots</h1>
+        <p>Click on a city card to see historical data.</p>
+      </div>
+      <div>
+        <button id="toggleFilters" aria-controls="filters" aria-expanded="true">
+          Hide Filters
+        </button>
+      </div>
+    </header>
+    <main>
+      <section class="top-row">
+        <div
+          class="boroughs"
+          id="boroughs"
+          role="group"
+          aria-label="Select County"
+        ></div>
+      </section>
+      <section id="filters" class="filters" aria-label="Filters">
+        <select id="NeighborhoodSelect" aria-label="Select City">
+          <option>All Neighborhoods</option>
+        </select>
+        <select id="DateRangeSelect" aria-label="Select Quarter">
+          <option>Loading…</option>
+        </select>
+        <!-- now visible and populated from MICRO -->
+        <select id="PropertyTypeSelect" aria-label="Select Property Type">
+          <option selected>All Types</option>
+        </select>
+        <button id="resetFilters">Reset Filters</button>
+      </section>
+      <div class="summary" id="summary">Loading data…</div>
+      <div id="results" role="region" aria-live="polite"></div>
+      <section id="model" class="model">
+        <div class="model-container history"></div>
+      </section>
+    </main>
+
+    <script>
+      const trdTheme = TrdTheme();
+      trdTheme.init();
+
+      // iframe handling
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("type") === "dashboard") {
+        document.body.classList.toggle("iframe", window.self !== window.top);
+      } else {
+        document.body.classList.add("page");
+      }
+      function updateHeight() {
+        const height = document.getElementById("results").offsetHeight;
+        const origin =
+          window.location.origin === "https://trd-digital.github.io"
+            ? "https://therealdeal.com"
+            : "http://localhost:3010";
+        try {
+          window.parent.postMessage(
+            { updateHeight: height + 10, src: window.location.href },
+            origin
+          );
+        } catch (e) {}
+      }
+      window.addEventListener("resize", updateHeight);
+      window.addEventListener("load", updateHeight);
+      window.addEventListener("message", updateHeight);
+      document.getElementById("results").addEventListener("click", (e) => {
+        if (document.body.classList.contains("iframe")) {
+          e.preventDefault();
+          window.open(
+            "https://therealdeal.com/data/snapshots/?utm_source=embed&utm_medium=widget",
+            "_blank"
+          );
+          return false;
+        }
+      });
+
+      // ---------- Helpers ----------
+      function fmtAbbrev(n, fixed = 2) {
+        if (isNaN(n)) return "–";
+        if (n >= 1e9) return "$" + (n / 1e9).toFixed(fixed) + "B";
+        if (n >= 1e6) return "$" + (n / 1e6).toFixed(fixed) + "M";
+        if (n >= 1e3) return "$" + (n / 1e3).toFixed(fixed) + "K";
+        return "$" + Number(n).toFixed(fixed);
+      }
+      function fmtWhole(n) {
+        return isNaN(n) ? "–" : "$" + Math.round(n).toLocaleString();
+      }
+      function fmtNumber(n) {
+        return isNaN(n) ? "–" : Number(n).toLocaleString();
+      }
+      function fmtQuarter(q) {
+        if (!q || !/^\d{4}Q[1-4]$/.test(q)) return String(q || "");
+        const year = q.slice(0, 4),
+          qi = q.slice(4);
+        return `${qi} ${year}`;
+      }
+      function median(a) {
+        const x = a.filter((v) => !isNaN(v)).sort((u, v) => u - v);
+        const m = x.length;
+        return m
+          ? m % 2
+            ? x[(m - 1) / 2]
+            : (x[m / 2 - 1] + x[m / 2]) / 2
+          : NaN;
+      }
+
+      const keys = [
+        "sales_volume",
+        "avg_price",
+        "median_price",
+        "number_of_deals",
+      ];
+
+      // ---------- State ----------
+      let rawData = []; // row-level from fl_market.json
+      let cityQByType = []; // city × quarter × MICRO (type-specific)
+      let cityQAllType = []; // city × quarter (aggregated across MICRO)
+      let historyMap = {}; // { city: { "All Types":[], [type]:[] } }
+      let aggregates = []; // South Florida + per-county for selected quarter + type
+      let totalCards = 0;
+      let latestQuarter = "";
+      let showingAggregates = true;
+      let selectedBorough = "All Counties";
+
+      const boroughsSet = new Set();
+      const neighborhoods = {}; // { county: Set(cities) }
+      const quarters = new Set();
+      const types = new Set(["All Types"]); // MICRO
+
+      function showLoading(n = 8) {
+        const r = document.getElementById("results");
+        r.innerHTML = "";
+        for (let i = 0; i < n; i++) {
+          const s = document.createElement("div");
+          s.className = "card skeleton";
+          r.appendChild(s);
+        }
+      }
+      document.addEventListener("DOMContentLoaded", () => showLoading());
+
+      function toNum(x) {
+        if (x === null || x === undefined) return NaN;
+        const n = Number(String(x).replace(/[^\d.\-]/g, ""));
+        return Number.isFinite(n) ? n : NaN;
+      }
+
+      // QoQ helpers
+      function qoqTrend(curr, prev) {
+        if (!Number.isFinite(curr) || !Number.isFinite(prev))
+          return { cls: "", arrow: "" };
+        if (curr > prev) return { cls: "up", arrow: "▲" };
+        if (curr < prev) return { cls: "down", arrow: "▼" };
+        return { cls: "", arrow: "" }; // unchanged
+      }
+      function tdTrend(curr, prev, fmtFn) {
+        const { cls, arrow } = qoqTrend(curr, prev);
+        const val = fmtFn(curr);
+        return `<td class="${cls}">${val}${
+          arrow ? ` <span>${arrow}</span>` : ""
+        }</td>`;
+      }
+
+      // ---------- Load JSON ----------
+
+      Promise.all([
+        fetch("south-florida-snapshots-residential.json").then((res) =>
+          res.json()
+        ),
+        fetch("south-florida-snapshots-commercial.json").then((res) =>
+          res.json()
+        ),
+        // add more files as needed
+      ])
+        .then((allData) => {
+          // Merge all arrays into one
+          const data = [].concat(...allData);
+          return data;
+        })
+        .then((data) => {
+          // Map Pandas records to normalized fields
+          rawData = data.map((r) => {
+            const county = String(r.County ?? r.county ?? "").trim();
+            const city = String(r.PHY_CITY ?? r.city ?? "").trim();
+            const macro = String(r.MACRO ?? "").trim();
+            const micro = String(r.MICRO ?? "").trim(); // property type
+            const quarter = String(r.sale_qtr ?? r.quarter ?? "").trim(); // "YYYYQn"
+
+            // Deals can be named several ways; your JSON uses num_deals_size
+            const numDeals = toNum(
+              r.num_deals ??
+                r.num_deals_size ??
+                r.num_deals_count ??
+                r.deal_count ??
+                r.deals
+            );
+
+            // Prices: accept either the explicit stats or compute as needed
+            const priceSum = toNum(r.price_sum);
+            const priceMeanRaw = toNum(r.price_mean ?? r.avg_price);
+            const priceMedian = toNum(r.price_median ?? r.median_price);
+            const priceMin = toNum(r.price_min);
+            const priceMax = toNum(r.price_max);
+
+            // Prefer explicit mean; otherwise fall back to sum/deals
+            const avgPrice = Number.isFinite(priceMeanRaw)
+              ? priceMeanRaw
+              : numDeals
+              ? priceSum / numDeals
+              : NaN;
+
+            return {
+              county,
+              city,
+              macro,
+              micro,
+              quarter,
+              num_deals: Number.isFinite(numDeals) ? numDeals : 0,
+              price_sum: priceSum,
+              price_mean: avgPrice, // keep for reference
+              price_median: priceMedian,
+              price_min: priceMin,
+              price_max: priceMax,
+            };
+          });
+
+          // Build sets
+          rawData.forEach((r) => {
+            if (r.county) boroughsSet.add(r.county);
+            if (r.county && r.city)
+              (
+                neighborhoods[r.county] || (neighborhoods[r.county] = new Set())
+              ).add(r.city);
+            if (r.quarter) quarters.add(r.quarter);
+            if (r.micro) types.add(r.micro);
+          });
+          latestQuarter = [...quarters].sort().pop() || "";
+
+          // Aggregate city × quarter × MICRO (type-specific dataset)
+          const keyType = (r) =>
+            `${r.county}||${r.city}||${r.quarter}||${r.micro}`;
+          const mapType = new Map();
+          rawData.forEach((r) => {
+            const k = keyType(r);
+            const o = mapType.get(k) || {
+              county: r.county,
+              city: r.city,
+              quarter: r.quarter,
+              type: r.micro,
+              num_deals: 0,
+              price_sum: 0,
+              med_list: [],
+            };
+            o.num_deals += Number.isFinite(r.num_deals) ? r.num_deals : 0;
+            o.price_sum += Number.isFinite(r.price_sum) ? r.price_sum : 0;
+            if (Number.isFinite(r.price_median))
+              o.med_list.push(r.price_median);
+            mapType.set(k, o);
+          });
+          cityQByType = [...mapType.values()].map((o) => ({
+            county: o.county,
+            city: o.city,
+            quarter: o.quarter,
+            property_type: o.type, // MICRO
+            number_of_deals: o.num_deals,
+            sales_volume: o.price_sum,
+            avg_price: o.num_deals ? o.price_sum / o.num_deals : NaN,
+            median_price: median(o.med_list),
+          }));
+
+          // Aggregate city × quarter across MICRO (All Types)
+          const keyAll = (r) => `${r.county}||${r.city}||${r.quarter}`;
+          const mapAll = new Map();
+          rawData.forEach((r) => {
+            const k = keyAll(r);
+            const o = mapAll.get(k) || {
+              county: r.county,
+              city: r.city,
+              quarter: r.quarter,
+              num_deals: 0,
+              price_sum: 0,
+              med_list: [],
+            };
+            o.num_deals += Number.isFinite(r.num_deals) ? r.num_deals : 0;
+            o.price_sum += Number.isFinite(r.price_sum) ? r.price_sum : 0;
+            if (Number.isFinite(r.price_median))
+              o.med_list.push(r.price_median);
+            mapAll.set(k, o);
+          });
+          cityQAllType = [...mapAll.values()].map((o) => ({
+            county: o.county,
+            city: o.city,
+            quarter: o.quarter,
+            property_type: "All Types",
+            number_of_deals: o.num_deals,
+            sales_volume: o.price_sum,
+            avg_price: o.num_deals ? o.price_sum / o.num_deals : NaN,
+            median_price: median(o.med_list),
+          }));
+
+          totalCards = cityQByType.length;
+
+          buildHistoryMap();
+          buildUI();
+          computeAggregates();
+          renderAggregates();
+        })
+        .catch((err) => {
+          console.error(err);
+          document.getElementById("results").textContent =
+            "⚠️ Failed to load data.";
+        });
+
+      // ---------- History: keep both "All Types" and each type ----------
+      function buildHistoryMap() {
+        historyMap = {};
+        function add(row) {
+          const bucket = historyMap[row.city] || (historyMap[row.city] = {});
+          (bucket[row.property_type] || (bucket[row.property_type] = [])).push(
+            row
+          );
+        }
+        cityQAllType.forEach(add);
+        cityQByType.forEach(add);
+        Object.values(historyMap).forEach((byType) => {
+          Object.values(byType).forEach((arr) =>
+            arr.sort((a, b) => a.quarter.localeCompare(b.quarter))
+          );
+        });
+      }
+
+      // ---------- UI ----------
+      function buildUI() {
+        const brc = document.getElementById("boroughs");
+        ["All Counties", ...[...boroughsSet].sort()].forEach((b) => {
+          const btn = document.createElement("button");
+          btn.textContent = b;
+          btn.className = "pill-btn" + (b === selectedBorough ? " active" : "");
+          btn.setAttribute("aria-pressed", b === selectedBorough);
+          btn.onclick = () => {
+            selectedBorough = b;
+            updateBoroughs();
+            document.getElementById("DateRangeSelect").value = latestQuarter;
+            if (b === "All Counties") {
+              showingAggregates = true;
+              computeAggregates();
+              renderAggregates();
+            } else {
+              showingAggregates = false;
+              filter();
+            }
+          };
+          brc.appendChild(btn);
+        });
+
+        const nbr = document.getElementById("NeighborhoodSelect"),
+          dr = document.getElementById("DateRangeSelect"),
+          pt = document.getElementById("PropertyTypeSelect");
+
+        // quarters
+        dr.innerHTML = "";
+        const qList = [...quarters].sort();
+        latestQuarter = qList.at(-1) || "";
+        qList.forEach((q) => {
+          const o = new Option(fmtQuarter(q), q);
+          o.selected = q === latestQuarter;
+          dr.add(o);
+        });
+
+        // types (MICRO)
+        pt.innerHTML = "";
+        [...types]
+          .sort((a, b) => a.localeCompare(b))
+          .forEach((t) =>
+            pt.add(new Option(t, t, t === "All Types", t === "All Types"))
+          );
+
+        updateNeighborhoodDropdown();
+
+        dr.onchange = pt.onchange = () => {
+          if (showingAggregates) {
+            computeAggregates();
+            renderAggregates();
+          } else {
+            filter();
+          }
+        };
+        nbr.onchange = filter;
+
+        document.getElementById("toggleFilters").onclick = (e) => {
+          const f = document.getElementById("filters");
+          const hid = f.classList.toggle("hide");
+          const topRow = document.querySelector(".top-row");
+          if (selectedBorough === "All Counties")
+            topRow.classList.toggle("hide", hid);
+          else topRow.classList.remove("hide");
+          e.target.textContent = hid ? "Show Filters" : "Hide Filters";
+          e.target.setAttribute("aria-expanded", !hid);
+        };
+        document.getElementById("resetFilters").onclick = () => {
+          nbr.value = "All Neighborhoods";
+          dr.value = latestQuarter;
+          pt.value = "All Types";
+          selectedBorough = "All Counties";
+          updateBoroughs();
+          computeAggregates();
+          renderAggregates();
+        };
+        updateHeight();
+      }
+
+      function updateNeighborhoodDropdown() {
+        const nbr = document.getElementById("NeighborhoodSelect"),
+          prev = nbr.value;
+        nbr.innerHTML = "<option>All Neighborhoods</option>";
+        getNeighborhoodList().forEach((n) => nbr.add(new Option(n, n)));
+        if (getNeighborhoodList().includes(prev)) nbr.value = prev;
+      }
+
+      function updateBoroughs() {
+        if (
+          selectedBorough === "All Counties" &&
+          document
+            .getElementById("toggleFilters")
+            .getAttribute("aria-expanded") === "false"
+        ) {
+          document.querySelector(".top-row").classList.add("hide");
+        } else {
+          document.querySelector(".top-row").classList.remove("hide");
+        }
+        document.querySelectorAll(".pill-btn").forEach((btn) => {
+          const a = btn.textContent === selectedBorough;
+          btn.classList.toggle("active", a);
+          btn.setAttribute("aria-pressed", a);
+        });
+        updateNeighborhoodDropdown();
+      }
+
+      function getNeighborhoodList() {
+        if (
+          selectedBorough === "All Counties" ||
+          selectedBorough === "South Florida"
+        ) {
+          return [
+            ...new Set(
+              [].concat(...Object.values(neighborhoods).map((s) => [...s]))
+            ),
+          ].sort();
+        }
+        return [...(neighborhoods[selectedBorough] || [])].sort();
+      }
+
+      // Return the appropriate dataset for current type selection
+      function getDatasetForType() {
+        const tSel = document.getElementById("PropertyTypeSelect").value;
+        if (tSel === "All Types") return cityQAllType;
+        return cityQByType.filter((r) => r.property_type === tSel);
+      }
+
+      // ---------- Aggregates ----------
+      function computeAggregates() {
+        const q = document.getElementById("DateRangeSelect").value;
+        const tSel = document.getElementById("PropertyTypeSelect").value;
+        const dataForType = getDatasetForType();
+        aggregates = [];
+
+        const allRows = dataForType.filter((r) => r.quarter === q);
+        const sf_deals = allRows.reduce(
+          (s, r) => s + (r.number_of_deals || 0),
+          0
+        );
+        const sf_sum = allRows.reduce((s, r) => s + (r.sales_volume || 0), 0);
+        const sf_avg = sf_deals ? sf_sum / sf_deals : NaN;
+        const sf_med = median(allRows.map((r) => r.median_price));
+        aggregates.push({
+          borough: "South Florida",
+          quarter: q,
+          sales_volume: sf_sum,
+          avg_price: sf_avg,
+          median_price: sf_med,
+          number_of_deals: sf_deals,
+          type: tSel,
+        });
+
+        boroughsSet.forEach((b) => {
+          const rows = allRows.filter((r) => r.county === b);
+          const deals = rows.reduce((s, r) => s + (r.number_of_deals || 0), 0);
+          const sum = rows.reduce((s, r) => s + (r.sales_volume || 0), 0);
+          const avg = deals ? sum / deals : NaN;
+          const med = median(rows.map((r) => r.median_price));
+          aggregates.push({
+            borough: b,
+            quarter: q,
+            sales_volume: sum,
+            avg_price: avg,
+            median_price: med,
+            number_of_deals: deals,
+            type: tSel,
+          });
+        });
+      }
+
+      // ---------- Rendering ----------
+      function renderAggregates() {
+        showingAggregates = true;
+        const quarterSel = document.getElementById("DateRangeSelect").value;
+        const typeSel = document.getElementById("PropertyTypeSelect").value;
+
+        document.getElementById(
+          "summary"
+        ).textContent = `Showing aggregates for ${fmtQuarter(
+          quarterSel
+        )}, ${typeSel}`;
+
+        const c = document.getElementById("results");
+        c.innerHTML = "";
+
+        aggregates.forEach((a) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.tabIndex = 0;
+          card.setAttribute("role", "button");
+          card.onclick = () => {
+            showingAggregates = false;
+            selectedBorough =
+              a.borough === "South Florida" ? "All Counties" : a.borough;
+            if (a.borough !== "South Florida") updateBoroughs();
+            filter();
+          };
+          card.innerHTML = `
+      <div class="card-header">
+        <h4>${a.borough}</h4>
+        <span class="pill-type">${typeSel}</span>
+      </div>
+      <div class="price-row">
+        ${renderRowCell(
+          fmtAbbrev(a.sales_volume),
+          "Sales Vol.",
+          "price-item sales"
+        )}
+        ${renderRowCell(fmtAbbrev(a.avg_price), "Avg Price", "price-item avg")}
+        ${renderRowCell(
+          fmtAbbrev(a.median_price),
+          "Median Price",
+          "price-item median"
+        )}
+      </div>
+      <div class="bottom-row">
+        ${renderRowCell(fmtNumber(a.number_of_deals), "Deals", "metric deals")}
+      </div>`;
+          c.appendChild(card);
+        });
+        updateHeight();
+      }
+
+      function renderRowCell(value, label, className) {
+        return `<div class="${className}">
+          <div class="value">${value}</div>
+          <div class="label">${label}</div>
+        </div>`;
+      }
+
+      function filter() {
+        if (document.body.classList.contains("iframe")) {
+          return;
+        }
+        if (showingAggregates) {
+          renderAggregates();
+          return;
+        }
+
+        const nbrV = document.getElementById("NeighborhoodSelect").value;
+        const drV = document.getElementById("DateRangeSelect").value;
+        const tSel = document.getElementById("PropertyTypeSelect").value;
+
+        const source = getDatasetForType(); // respects selected type
+        const pool = source
+          .filter((r) => r.quarter === drV)
+          .filter(
+            (r) =>
+              selectedBorough === "All Counties" || r.county === selectedBorough
+          );
+        const filtered = pool.filter(
+          (r) => nbrV === "All Neighborhoods" || r.city === nbrV
+        );
+
+        document.getElementById(
+          "summary"
+        ).textContent = `Showing ${filtered.length} city cards`;
+        renderNeighborhoods(filtered, tSel);
+      }
+
+      function renderNeighborhoods(data) {
+        const c = document.getElementById("results");
+        c.innerHTML = "";
+        if (!data.length) {
+          c.innerHTML = '<div class="no-results">😔 No cards match.</div>';
+          return;
+        }
+        data.forEach((a) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.tabIndex = 0;
+          card.setAttribute("role", "button");
+          const pill =
+            a.property_type ||
+            document.getElementById("PropertyTypeSelect").value ||
+            "All Types";
+          card.onclick = () => toggleHistory(card, a.city, pill);
+          card.innerHTML = `
+      <div class="card-header">
+        <div>
+          <h4>${a.city}</h4>
+          <div class="details">${a.county} • ${fmtQuarter(a.quarter)}</div>
+        </div>
+        <span class="pill-type">${pill}</span>
+      </div>
+      <div class="price-row">
+        ${renderRowCell(
+          fmtAbbrev(a.sales_volume),
+          "Sales Vol.",
+          "price-item sales"
+        )}
+        ${renderRowCell(fmtAbbrev(a.avg_price), "Avg Price", "price-item avg")}
+        ${renderRowCell(
+          fmtAbbrev(a.median_price),
+          "Median Price",
+          "price-item median"
+        )}
+      </div>
+      <div class="bottom-row">
+        ${renderRowCell(fmtNumber(a.number_of_deals), "Deals", "metric deals")}
+      </div>`;
+          c.appendChild(card);
+        });
+        updateHeight();
+      }
+
+      // ---------- History modal (uses selected type; falls back to All Types) ----------
+      function buildHistoryTableHTML(city, typeSel) {
+        const byType = historyMap[city] || {};
+        const rowsAsc = (byType[typeSel] || byType["All Types"] || [])
+          .slice()
+          .sort((a, b) => a.quarter.localeCompare(b.quarter)); // chronological (oldest -> newest)
+
+        const rows = rowsAsc.slice().reverse(); // newest -> oldest for table
+
+        if (!rows.length) return "<div style='padding:12px'>No history.</div>";
+
+        let html = `
+    <div class="model-header">
+      <h3>${city} - ${rows[rows.length - 1].county}</h3>
+      <span class="pill-type">${typeSel}</span>
+      <button class="pill-btn" onclick="closeModel()">Close</button>
+    </div>
+    <div class="model-content">
+      <div class="graphs">
+        <div class="graph-container">
+          <h4>Deals & Price</h4>
+          <div class="chart"><canvas id="chart-main"></canvas></div>
+        </div>
+        <div class="graph-container">
+          <h4>Sales Volume</h4>
+          <div class="chart"><canvas id="chart-sum"></canvas></div>
+        </div>
+      </div>
+      <table class="table">
+        <tr><th>Quarter</th><th>Sales Vol.</th><th>Avg</th><th>Median</th><th>Deals</th></tr>`;
+
+        rows.forEach((row, i) => {
+          // Since table is newest->oldest, the previous *chronological* quarter is the next row
+          const prev = i < rows.length - 1 ? rows[i + 1] : null;
+          const isSelected =
+            row.quarter === document.getElementById("DateRangeSelect").value;
+          html += `<tr class="${isSelected ? "selected-quarter" : ""}">
+      <td>${fmtQuarter(row.quarter)}</td>
+      ${tdTrend(row.sales_volume, prev?.sales_volume, fmtAbbrev)}
+      ${tdTrend(row.avg_price, prev?.avg_price, fmtAbbrev)}
+      ${tdTrend(row.median_price, prev?.median_price, fmtAbbrev)}
+      ${tdTrend(row.number_of_deals, prev?.number_of_deals, fmtNumber)}
+    </tr>`;
+        });
+
+        html += "</table></div>";
+        return html;
+      }
+
+      function renderHistoryCharts(panel, city, typeSel) {
+        const byType = historyMap[city] || {};
+        const rows = (byType[typeSel] || byType["All Types"] || [])
+          .slice()
+          .sort((a, b) => a.quarter.localeCompare(b.quarter));
+        const labels = rows.map((r) => r.quarter);
+
+        const mainData = {
+          labels,
+          datasets: [
+            {
+              label: "Deals",
+              data: rows.map((r) => r.number_of_deals),
+              tension: 0.3,
+              borderWidth: 2,
+              pointRadius: 2,
+              yAxisID: "y1",
+            },
+            {
+              label: "Avg Price",
+              data: rows.map((r) => r.avg_price),
+              tension: 0.3,
+              borderWidth: 2,
+              pointRadius: 2,
+              yAxisID: "y2",
+            },
+            {
+              label: "Median Price",
+              data: rows.map((r) => r.median_price),
+              tension: 0.3,
+              borderWidth: 2,
+              pointRadius: 2,
+              yAxisID: "y2",
+            },
+          ],
+        };
+        const sumData = {
+          labels,
+          datasets: [
+            {
+              label: "Sales Volume",
+              data: rows.map((r) => r.sales_volume),
+              tension: 0.3,
+              borderWidth: 2,
+              pointRadius: 2,
+            },
+          ],
+        };
+        const cm = panel.querySelector("#chart-main");
+        const cs = panel.querySelector("#chart-sum");
+        if (Chart.getChart(cm)) Chart.getChart(cm).destroy();
+        if (Chart.getChart(cs)) Chart.getChart(cs).destroy();
+
+        new Chart(cm, {
+          type: "line",
+          data: mainData,
+          options: {
+            scales: {
+              x: { ticks: { callback: (v, i) => fmtQuarter(labels[i]) } },
+              y1: {
+                type: "linear",
+                position: "left",
+                title: { display: true, text: "Deals" },
+                ticks: { callback: (v) => fmtNumber(v) },
+              },
+              y2: {
+                type: "linear",
+                position: "right",
+                title: { display: true, text: "Price" },
+                ticks: { callback: (v) => fmtAbbrev(v, 0) },
+              },
+            },
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: { boxWidth: 12, padding: 8 },
+              },
+            },
+          },
+        });
+        new Chart(cs, {
+          type: "line",
+          data: sumData,
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { callback: (v) => fmtAbbrev(v, 0) },
+              },
+              x: { ticks: { callback: (v, i) => fmtQuarter(labels[i]) } },
+            },
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: { boxWidth: 12, padding: 8 },
+              },
+            },
+          },
+        });
+      }
+
+      function toggleHistory(card, city, typeSel) {
+        const panel = document.querySelector("#model .model-container");
+        panel.innerHTML = buildHistoryTableHTML(city, typeSel);
+        renderHistoryCharts(panel, city, typeSel);
+        document.getElementById("model").classList.add("active");
+        document.body.classList.add("model-open");
+      }
+      function closeModel() {
+        document.getElementById("model").classList.remove("active");
+        document.body.classList.remove("model-open");
+      }
+      document.querySelector(".model").onclick = closeModel;
+      document.querySelector(".model-container").onclick = (e) => {
+        e.stopPropagation();
+      };
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeModel();
+      });
+    </script>
+  </body>
+</html>

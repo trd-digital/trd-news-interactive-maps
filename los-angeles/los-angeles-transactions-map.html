@@ -174,7 +174,7 @@
           fieldType: "radio",
           fieldLayoutClass: "radio-group",
           multiSelect: false,
-          defaultValue: "182", // 6 months
+          defaultValue: "365", // 12 months
           callback: (values, item) => {
             const days = values[0];
             const date = new Date();
@@ -297,6 +297,13 @@
               color: { light: "#FF5722", dark: "#D84315" },
             },
           },
+        },
+        searchSettings: {
+          enable: true,
+          resultTitleField: "Owner",
+          resultDescriptionField: "Address",
+          placeholderText: "Search by owner name, and address",
+          searchFields: ["Owner", "Address", "Assessor Identification Number"],
         },
       });
     </script>

@@ -158,6 +158,10 @@ const TrdFormatters = {
 
     return value;
   },
+
+  cleanValue: (value) => {
+    return TrdFormatters.isEmptyValue(value) ? "" : value;
+  },
 };
 
 const TrdSorters = {

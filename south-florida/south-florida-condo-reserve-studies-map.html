@@ -64,6 +64,11 @@
       ></iframe
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
+
+    <main class="map-container">
+      <section id="map" class="map"></section>
+    </main>
+
     <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -164,171 +169,110 @@
       };
 
       const modalDisplayFields = {
-        title: {
-          field: "Physical Address",
-          label: "Address",
-        },
+        title: { field: "Project Name", label: "Project Name" },
         content: [
-          { field: "Doc Type", label: "Doc Type" },
-          { field: "Instrument_Num", label: "Instrument Number" },
-          { field: "Record Date", label: "Record Date" },
-          { field: "Seller", label: "Seller" },
-          { field: "Buyer", label: "Buyer" },
-          {
-            field: "Sale Price",
-            label: "Sale Price",
-            format: "formatPrice",
-          },
-          { field: "Folio", label: "Folio" },
-          { field: "Use Code Description", label: "Use Code Description" },
-          { field: "Building Sq. Ft", label: "Building Sq. Ft" },
-          { field: "Lot Size", label: "Lot Size" },
-          { field: "Date of Previous Sale", label: "Date of Previous Sale" },
-          { field: "Previous Owner Name", label: "Previous Owner Name" },
-          {
-            field: "Previous Sale Price",
-            label: "Previous Sale Price",
-          },
-          { field: "Physical Address", label: "Address" },
-          { field: "Mailing Address", label: "Mailing Address" },
-          {
-            field: "First Party Registered Agent Name & Address",
-            label: "First Party Registered Agent Name & Address",
-          },
-          { field: "First Party Status", label: "First Party Status" },
-          {
-            field: "First Party Document Number",
-            label: "First Party Document Number",
-          },
-          {
-            field: "First Party FEI/EIN Number",
-            label: "First Party FEI/EIN Number",
-          },
-          {
-            field: "First Party Mailing Address",
-            label: "First Party Mailing Address",
-          },
-          {
-            field: "First Party Principal Address",
-            label: "First Party Principal Address",
-          },
-          { field: "First Party State", label: "First Party State" },
-          { field: "First Party Date Filed", label: "First Party Date Filed" },
-          {
-            field: "Second Party Registered Agent Name & Address",
-            label: "Second Party Registered Agent Name & Address",
-          },
-          { field: "Second Party Status", label: "Second Party Status" },
-          {
-            field: "Second Party Document Number",
-            label: "Second Party Document Number",
-          },
-          {
-            field: "Second Party FEI/EIN Number",
-            label: "Second Party FEI/EIN Number",
-          },
-          {
-            field: "Second Party Mailing Address",
-            label: "Second Party Mailing Address",
-          },
-          {
-            field: "Second Party Principal Address",
-            label: "Second Party Principal Address",
-          },
-          { field: "Second Party State", label: "Second Party State" },
-          {
-            field: "Second Party Date Filed",
-            label: "Second Party Date Filed",
-          },
-          {
-            field: "Lender",
-            label: "Lender",
-          },
-          {
-            field: "Loan Amount",
-            label: "Loan Amount",
-            format: "formatPrice",
-          },
+          { field: "Association Name", label: "Association" },
+          { field: "Project Type", label: "Type" },
+          { field: "Address", label: "Address" },
+          { field: "City", label: "City" },
+          { field: "County", label: "County" },
+          { field: "Zip", label: "Zip" },
         ],
       };
-
       const filterFields = [
         {
-          title: "Property Type",
-          name: "property_type",
-          dataField: "Use Code Description",
+          title: "Project Type",
+          name: "project_type",
+          dataField: "Project Type",
+          fieldType: "checkbox",
+          fieldLayoutClass: "checkbox-list",
+          multiSelect: true,
+          defaultValue: "",
+          callback: (values, item) => {
+            return values.some((value) =>
+              item.properties["Project Type"].includes(value)
+            );
+          },
+          options: [
+            {
+              label: "Cooperative",
+              value: "COOPERATIVE",
+            },
+            {
+              label: "Condominium",
+              value: "CONDOMINIUM",
+            },
+          ],
+        },
+        {
+          title: "County",
+          name: "country",
+          dataField: "County",
           fieldType: "checkbox",
           fieldLayoutClass: "checkbox-list",
           multiSelect: true,
           callback: (values, item) => {
             return values.some((value) =>
-              item.properties["Use Code Description"].includes(value)
+              item.properties["County"].includes(value)
             );
           },
           options: [
             {
-              label: "Single Family Home",
-              value: "SINGLE FAMILY",
+              label: "Broward",
+              value: "BROWARD",
             },
             {
-              label: "Multi-Family Dwelling",
-              value: "CONDOMINIUM",
+              label: "Miami-Dade",
+              value: "MIAMI-DADE",
             },
             {
-              label: "Commercial",
-              value: "COMMERCIAL",
-            },
-            {
-              label: "Vacant Land",
-              value: "VACANT LAND",
-            },
-            {
-              label: "Office Building",
-              value: "OFFICE BUILDING",
+              label: "Palm Beach",
+              value: "PALM BEACH",
             },
           ],
         },
       ];
 
       const fetchDataFilterCallback = (data) => {
-        return {
-          ...data,
-          features: data.features.filter((feature) => {
-            return (
-              feature.properties["physical_address_lat"] !== 0 &&
-              feature.properties["physical_address_lng"] !== 0
+        // Clean in callback to keep contract similar to sample.js
+        if (data && data.features) {
+          data.features.forEach((f) => {
+            const p = f.properties;
+            p["Project Name"] = TrdFormatters.cleanValue(p["Project Name"]);
+            p["Association Name"] = TrdFormatters.cleanValue(
+              p["Association Name"]
             );
-          }),
-        };
+            p["Address"] = TrdFormatters.cleanValue(p["Address"]);
+            p["City"] = TrdFormatters.cleanValue(p["City"]);
+            p["County"] = TrdFormatters.cleanValue(p["County"]);
+            p["Project Type"] = TrdFormatters.cleanValue(p["Project Type"]);
+          });
+        }
+        return data;
       };
 
       window.map = trdDataCommonMap({
-        filePath:
-          "map_data.geojson",
-        eventCategory: "south-florida-transactions-map",
-        mapElementId: "map",
-        filterElementId: "map-filters",
-        legendElementId: "legend",
-        resultElementId: "result",
-        mapCenterLat: 26.380126753919782,
-        mapCenterLng: -80.38513016032842,
-        zoom: 8,
-        minZoom: 8,
-        legendKeys,
-        dataPointKeys: legendKeys[1].options,
-        tooltipDisplayFields,
-        modalDisplayFields,
-        filterFields,
+        filePaths: ["south-florida-condo-reserve-studies.geojson"],
         fetchDataFilterCallback,
         loadingEnabled: true,
 
+        eventCategory: "south-florida-sirs",
+        mapElementId: "map",
+        modalDisplayFields,
+        mapCenterLat: 26.1,
+        mapCenterLng: -80.2,
+        filterFields,
+        zoom: 7,
+        minZoom: 4,
+        mapLayerPaint: {
+          "circle-stroke-width": 1,
+          "circle-stroke-color": "#e1e1e1",
+        },
         pointSettings: {
-          filter: ["==", ["get", "Doc Type"], "DEED"],
           clickToCenter: true,
           clickToZoom: true,
-          colorType: "step",
-          radiusType: "ratio",
-          colorTypeDataKey: "Sale Price",
+          colorType: "case",
+          radiusType: "radius",
           paintSettings: {
             hover: {
               color: { light: "#FF9800", dark: "#F57C00" },
@@ -336,16 +280,18 @@
             active: {
               color: { light: "#FF5722", dark: "#D84315" },
             },
+            default: {
+              radius: 5,
+              color: { light: "#007cbf", dark: "#007cbf" },
+            },
           },
         },
-        mapLayerPaint: {
-          "circle-stroke-color": trdTheme.isDark() ? "#FFCC80" : "#FB8C00",
-          "circle-stroke-width": [
-            "case",
-            [">", ["get", "Loan Amount"], 0],
-            3,
-            0,
-          ],
+        searchSettings: {
+          enable: true,
+          placeholderText: "Search by project name, address, or association...",
+          resultTitleField: "Project Name",
+          resultDescriptionField: "Address",
+          searchFields: ["Project Name", "Address", "Association Name"],
         },
       });
     </script>

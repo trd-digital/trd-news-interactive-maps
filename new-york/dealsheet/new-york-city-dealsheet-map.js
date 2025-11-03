@@ -326,5 +326,11 @@
         },
       },
     },
+    searchSettings: {
+      enable: true,
+      placeholderText: "Search by Address or BBL",
+      resultTitleField: "ADDRESS",
+      searchFields: ["ADDRESS", "BBL"],
+    },
   });
 })();
