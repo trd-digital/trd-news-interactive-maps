@@ -146,6 +146,11 @@
             field: "Description",
             label: "Use Code",
           },
+          {
+            field: "Record Date",
+            label: "Record Date",
+            format: "formatDate",
+          },
         ],
       };
 
@@ -157,12 +162,14 @@
           fieldType: "radio",
           fieldLayoutClass: "radio-group",
           multiSelect: false,
-          defaultValue: "30",
+          defaultValue: "7",
           callback: (values, item) => {
             const days = values[0];
             const date = new Date();
             date.setDate(date.getDate() - days);
-            const recordDate = new Date(item.properties["Record Date"]);
+            const recordDate = new Date(
+              TrdFormatters.formatDate(item.properties["Record Date"])
+            );
             return recordDate >= date;
           },
           options: [
@@ -219,7 +226,11 @@
           { field: "Folio", label: "Folio" },
           { field: "Description", label: "Use Code Description" },
           { field: "Acres", label: "Lot Size" },
-          { field: "Previous Sale Date", label: "Date of Previous Sale" },
+          // {
+          //   field: "Previous Sale Date",
+          //   label: "Date of Previous Sale",
+          //   format: "formatDate",
+          // },
           { field: "Previous Owner Name", label: "Previous Owner Name" },
           {
             field: "Previous Sale Price",
@@ -254,7 +265,11 @@
       };
 
       window.map = trdDataCommonMap({
-        filePaths: ["miami_dade_output.geojson", "palm_beach_output.geojson"],
+        filePaths: [
+          "miami_dade_output.geojson",
+          "palm_beach_output.geojson",
+          "broward_output.geojson",
+        ],
         eventCategory: "south-florida-transactions-map",
         mapElementId: "map",
         filterElementId: "map-filters",

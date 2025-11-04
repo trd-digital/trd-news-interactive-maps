@@ -107,6 +107,7 @@
           dataField: "Record Date",
           name: "Record Date",
           visible: true,
+          formatter: TrdFormatters.formatDate,
           sorter: TrdSorters.sortDate,
         },
         {
@@ -125,11 +126,11 @@
         { dataField: "Doc Type", name: "Doc Type", visible: false },
         { dataField: "Folio", name: "Folio", visible: false },
         // { dataField: "Lot Size", name: "Lot Size", visible: false },
-        {
-          dataField: "Previous Sale Date",
-          name: "Previous Sale Date",
-          visible: false,
-        },
+        // {
+        //   dataField: "Previous Sale Date",
+        //   name: "Previous Sale Date",
+        //   visible: false,
+        // },
         {
           dataField: "Previous Owner Name",
           name: "Previous Owner Name",
@@ -164,7 +165,11 @@
       };
 
       TrdDataCommonTable({
-        filePaths: ["miami_dade_output.geojson", "palm_beach_output.geojson"],
+        filePaths: [
+          "miami_dade_output.geojson",
+          "palm_beach_output.geojson",
+          "broward_output.geojson",
+        ],
         eventCategory: "south-florida-transactions-table",
         displayColumns,
         fetchDataFilterCallback,
