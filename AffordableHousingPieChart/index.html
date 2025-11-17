@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Project Cost Breakdown</title>
+  <title>How a LIHTC application comes together</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Chart.js CDN -->
@@ -27,20 +27,21 @@
     }
 
     h1 {
-      font-size: 1.6rem;
+      font-size: 1.8rem;
       margin-bottom: 0.35rem;
+      font-weight: 700;
     }
 
     .subtitle {
-      font-size: 0.9rem;
-      color: #666;
-      margin-bottom: 1.25rem;
+      font-size: 1rem;
+      color: #444;
+      margin-bottom: 1.5rem;
+      line-height: 1.45;
     }
 
     .chart-wrapper {
       position: relative;
-      /* This controls the visible height of the chart */
-      height: 480px;
+      height: 500px;
     }
 
     .notes {
@@ -48,10 +49,6 @@
       font-size: 0.85rem;
       color: #555;
       line-height: 1.4;
-    }
-
-    .notes strong {
-      font-weight: 600;
     }
 
     @media (max-width: 600px) {
@@ -66,8 +63,11 @@
 </head>
 <body>
   <div class="container">
-    <h1>Project Cost Breakdown</h1>
-    <div class="subtitle">Interactive pie chart of project cost by category</div>
+    <h1>How a LIHTC application comes together</h1>
+
+    <div class="subtitle">
+      An $66 million affordable housing development in Agoura Hills, California is expected to cost about $800,000 per unit. Costs that can drive the price up include permitting costs, legal and consulting fees and steps taken to follow specific design standards.
+    </div>
 
     <div class="chart-wrapper">
       <canvas id="costChart"></canvas>
@@ -75,45 +75,33 @@
 
     <div class="notes">
       <strong>Notes:</strong>
-      The “TOTAL PROJECT COST” value is not shown as a separate slice because it is
-      the sum of all individual cost categories.
-      Hover over each slice to see the dollar amount and percent of total.
+      Hover over each slice to view the dollar amount and its percentage of the total project cost.
     </div>
   </div>
 
   <script>
-    // ---- DATA (from your table, excluding total row) ----
+    // ---- UPDATED DATA ----
     const labels = [
-      "Land Cost / Acquisition Cost",
-      "Predevelopment Interest/Land Holding Cost",
-      "New Construction Costs",
-      "Architectural Costs",
-      "Survey & Engineering Costs",
-      "Construction Interest & Fees",
-      "Permanent Financing Costs",
-      "Legal and Consulting Costs",
-      "Reserve Costs",
-      "Contingency Costs",
-      "Other Costs",
-      "Developer Costs"
+      "Reserves/Contingencies",
+      "Interest and fees",
+      "Non-construction costs",
+      "Developer Overhead/Profit",
+      "Pre-development costs",
+      "Construction costs",
+      "Land/Acquisition cost"
     ];
 
     const dataValues = [
-      5856194,
-      150000,
+      2994491,
+      4536216,
+      4666134,
+      2500000,
+      2600000,
       41724448,
-      1850000,
-      600000,
-      4472310,
-      63906,
-      145000,
-      344088,
-      2650403,
-      4521134,
-      2500000
+      5856194
     ];
 
-    // Helper to format numbers as USD without cents
+    // Format USD
     function formatCurrency(value) {
       return value.toLocaleString("en-US", {
         style: "currency",
@@ -122,9 +110,9 @@
       });
     }
 
-    const ctx = document.getElementById("costChart").getContext("2d");
-
     const totalCost = dataValues.reduce((sum, v) => sum + v, 0);
+
+    const ctx = document.getElementById("costChart").getContext("2d");
 
     const costChart = new Chart(ctx, {
       type: "pie",
@@ -133,7 +121,6 @@
         datasets: [
           {
             data: dataValues,
-            // You can tweak these colors as needed
             backgroundColor: [
               "#264653",
               "#2a9d8f",
@@ -141,12 +128,7 @@
               "#f4a261",
               "#e76f51",
               "#6d597a",
-              "#b56576",
-              "#e56b6f",
-              "#355070",
-              "#43aa8b",
-              "#f3722c",
-              "#577590"
+              "#43aa8b"
             ],
             borderColor: "#ffffff",
             borderWidth: 2
@@ -162,9 +144,7 @@
             labels: {
               boxWidth: 16,
               padding: 12,
-              font: {
-                size: 12
-              }
+              font: { size: 12 }
             }
           },
           tooltip: {
@@ -172,15 +152,10 @@
               label: function (context) {
                 const label = context.label || "";
                 const value = context.raw || 0;
-
-                // Calculate % of total
                 const percentage = ((value / totalCost) * 100).toFixed(1);
                 return `${label}: ${formatCurrency(value)} (${percentage}%)`;
               }
             }
-          },
-          title: {
-            display: false
           }
         }
       }
