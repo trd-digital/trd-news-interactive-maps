@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_b7d0e692b5f61051f1aa7a882174028f {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_b7d0e692b5f61051f1aa7a882174028f" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_b7d0e692b5f61051f1aa7a882174028f = L.map(
+                "map_b7d0e692b5f61051f1aa7a882174028f",
+                {
+                    center: [26.133572076923073, -80.15166557692307],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+  "name": "Base",
+}
+
+                }
+            );
+            L.control.scale().addTo(map_b7d0e692b5f61051f1aa7a882174028f);
+
+            
+
+        
+    
+            var tile_layer_7ccacbb7039cc15b267e6f0163deecef = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "\u00a9 Mapbox \u00a9 OpenStreetMap",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_7ccacbb7039cc15b267e6f0163deecef.addTo(map_b7d0e692b5f61051f1aa7a882174028f);
+        
+    
+            var circle_marker_db70ab93144c7db3426247c0e4c2f573 = L.circleMarker(
+                [25.7778664, -80.1888536],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_b7d0e692b5f61051f1aa7a882174028f);
+        
+    
+        var popup_19bf8387ce3bb09a1a3251ca6397cad0 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_54304fa88ad1b32beeb416b37e067623 = $(`<div id="html_54304fa88ad1b32beeb416b37e067623" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>340 Biscayne Boulevard, Miami, 33132</td></tr><tr><th style='text-align:left;padding-right:8px'>Description</th><td>Downtown Miami Holiday Inn site set for a bankruptcy auction with bid submittal period between Dec. 3 -Dec. 17. Ownership entity, led by Brazilian developer Gilberto Bomeny, forced into chapter 11 to avert a UCC foreclosure in December of last year by lender Cirrus Real Estate Funding, which is trying to collect on an allegedly defaulted mortgage debt of $70M.</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/miami/2025/11/14/miami-holiday-inn-site-headed-to-auction-for-100m-plus/" target="_blank" rel="noopener">https://therealdeal.com/miami/2025/11/14/miami-holiday-inn-site-headed-to-auction-for-100m-plus/</a></td></tr></table></div>`)[0];
+                popup_19bf8387ce3bb09a1a3251ca6397cad0.setContent(html_54304fa88ad1b32beeb416b37e067623);
+            
+        
+
+        circle_marker_db70ab93144c7db3426247c0e4c2f573.bindPopup(popup_19bf8387ce3bb09a1a3251ca6397cad0)
+        ;
+
+        
+    
+    
+            circle_marker_db70ab93144c7db3426247c0e4c2f573.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>340 Biscayne Boulevard, Miami, 33132</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a8fabd87f57baa626f5775812efd35b5 = L.circleMarker(
+                [26.2607111, -80.0856275],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_b7d0e692b5f61051f1aa7a882174028f);
+        
+    
+        var popup_96b33aad2bcf7f2f00e735666978e62d = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_37c4adbda09446d999a740566d92db68 = $(`<div id="html_37c4adbda09446d999a740566d92db68" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>2507 North Ocean Boulevard and 2629 North Ocean Boulevard, Pompano Beach, FL 33062</td></tr><tr><th style='text-align:left;padding-right:8px'>Description</th><td>Chetrit Group’s waterfront condo development site in Pompano Beach and its units at the Hollywood Beach Resort condo are schedule to be sold at a Dec. 22 UCC foreclosure auction. Lender New York-based Madison Realty Capital is seeking to generate $21.7 million to cover the debt’s principal, interest, default interest and reasonable fees and costs. In 2022, Madison provided Chetrit with a $94 million loan on the Pompano Beach property and a $78 million loan to purchase the Hollywood Beach Resort units.</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/miami/2025/11/13/chetrits-broward-dev-site-condo-units-head-to-ucc-auction/" target="_blank" rel="noopener">https://therealdeal.com/miami/2025/11/13/chetrits-broward-dev-site-condo-units-head-to-ucc-auction/</a></td></tr></table></div>`)[0];
+                popup_96b33aad2bcf7f2f00e735666978e62d.setContent(html_37c4adbda09446d999a740566d92db68);
+            
+        
+
+        circle_marker_a8fabd87f57baa626f5775812efd35b5.bindPopup(popup_96b33aad2bcf7f2f00e735666978e62d)
+        ;
+
+        
+    
+    
+            circle_marker_a8fabd87f57baa626f5775812efd35b5.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>2507 North Ocean Boulevard and 2629 North Ocean Boulevard, Pompano Beach, FL 33062</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0c4330f41361682e6d5ec4fe9eff7a96 = L.circleMarker(
+                [25.926574, -80.1623956],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_b7d0e692b5f61051f1aa7a882174028f);
+        
+    
+        var popup_9ed5603067a310dbd1f4c1bafe629e5e = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_b092e12f6573537968ecd810bea64185 = $(`<div id="html_b092e12f6573537968ecd810bea64185" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>16300 Northeast 19th Avenue, North Miami Beach, 33162</td></tr><tr><th style='text-align:left;padding-right:8px'>Description</th><td>Developer Celal Ozkan’s CEO Contract lost a North Miami Beach development site four years after securing approval for a 354-unit luxury apartment tower in North Miami Beach. A federal bankruptcy judge approved turning over the site to an affiliate of Safe Harbor Equity, which had foreclosed on the 1-acre property after Ozkan’s firm allegedly defaulted on an $8.5 million mortgage debt. An auction was canceled due to a lack of qualified bidders. Safe Harbor sued in February.</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/miami/2025/11/04/safe-harbor-takes-over-north-miami-beach-rentals-dev-site/" target="_blank" rel="noopener">https://therealdeal.com/miami/2025/11/04/safe-harbor-takes-over-north-miami-beach-rentals-dev-site/</a></td></tr></table></div>`)[0];
+                popup_9ed5603067a310dbd1f4c1bafe629e5e.setContent(html_b092e12f6573537968ecd810bea64185);
+            
+        
+
+        circle_marker_0c4330f41361682e6d5ec4fe9eff7a96.bindPopup(popup_9ed5603067a310dbd1f4c1bafe629e5e)
+        ;
+
+        
+    
+    
+            circle_marker_0c4330f41361682e6d5ec4fe9eff7a96.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>16300 Northeast 19th Avenue, North Miami Beach, 33162</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cb5425d7ccff49d28abda5038e456ea9 = L.circleMarker(
+                [25.9723331, -80.1458746],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_b7d0e692b5f61051f1aa7a882174028f);
+        
+    
+        var popup_a558a5c16711c0d68e70275dfe7b73b2 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_b7c878f5a6daf1b63f7b09dd86cada93 = $(`<div id="html_b7c878f5a6daf1b63f7b09dd86cada93" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>21291 Northeast 28th Avenue, Aventura, 33180</td></tr><tr><th style='text-align:left;padding-right:8px'>Description</th><td>Rok Lending paid $477,800 for a 1.6-acre development site for a medical office project in a foreclosure auction. The lender won a hard legal fight with developer Marlon Gomez, who repeatedly delayed the sale by filing appeals and bankruptcy petitions that were denied. Rok Lending had secured a $19.9 million foreclosure judgement against Gomez’s entity that owned the site for allegedly defaulting on a $15 million loan issued in 2023.</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/miami/2025/10/22/rok-family-acquires-distressed-aventura-development-site/" target="_blank" rel="noopener">https://therealdeal.com/miami/2025/10/22/rok-family-acquires-distressed-aventura-development-site/</a></td></tr></table></div>`)[0];
+                popup_a558a5c16711c0d68e70275dfe7b73b2.setContent(html_b7c878f5a6daf1b63f7b09dd86cada93);
+            
+        
+
+        circle_marker_cb5425d7ccff49d28abda5038e456ea9.bindPopup(popup_a558a5c16711c0d68e70275dfe7b73b2)
+        ;
+
+        
+    
+    
+            circle_marker_cb5425d7ccff49d28abda5038e456ea9.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>21291 Northeast 28th Avenue, Aventura, 33180</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cb3e943df0d968f20ca252cb1d79c5f6 = L.circleMarker(
+                [26.6795405, -80.20982219999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_b7d0e692b5f61051f1aa7a882174028f);
+        
+    
+        var popup_e7296f3f6bdfec691945d430ca3ef8b6 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_4bb6ab96284c93cd063e58fe41438ecb = $(`<div id="html_4bb6ab96284c93cd063e58fe41438ecb" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>10481 Acme Road, Royal Palm Beach, 33414</td></tr><tr><th style='text-align:left;padding-right:8px'>Description</th><td>Brian Tuttle, developer of Mainstreet at Tuttle mixed-use project in Royal Palm Beach, filed for chapter 11 bankruptcy to avert a foreclosure auction. Fort Lauderdale-based Fuse Group won a $47.4 million foreclosure judgement in July against Tuttle’s entity that owns the site where he is planning 400,000 square feet of retail, 401 apartments, a 125-key hotel, nearly 83,000 square feet of medical offices and three parking garages with 3,435 total spaces. Fuse filed petitions seeking to have the bankruptcy dismissed, alleging that Tuttle had long planned to use bankruptcy to delay the end of the foreclosure case.</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/miami/2025/10/08/lender-seeks-dismissal-of-mainstreet-at-tuttle-bankruptcy/" target="_blank" rel="noopener">https://therealdeal.com/miami/2025/10/08/lender-seeks-dismissal-of-mainstreet-at-tuttle-bankruptcy/</a></td></tr></table></div>`)[0];
+                popup_e7296f3f6bdfec691945d430ca3ef8b6.setContent(html_4bb6ab96284c93cd063e58fe41438ecb);
+            
+        
+
+        circle_marker_cb3e943df0d968f20ca252cb1d79c5f6.bindPopup(popup_e7296f3f6bdfec691945d430ca3ef8b6)
+        ;
+
+        
+    
+    
+            circle_marker_cb3e943df0d968f20ca252cb1d79c5f6.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>10481 Acme Road, Royal Palm Beach, 33414</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9ef8541ba0c1e84b0f9665c0803d6fc4 = L.circleMarker(
+                [25.783492, -80.19251],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_b7d0e692b5f61051f1aa7a882174028f);
+        
+    
+        var popup_ddf66ebd0a34f6e288ff037bc5ec4c8d = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_8ec666b4180d18802a9ae17b6a805716 = $(`<div id="html_8ec666b4180d18802a9ae17b6a805716" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>942 Northeast 1st Avenue, Miami, FL 33132</td></tr><tr><th style='text-align:left;padding-right:8px'>Description</th><td>Monarch Alternative Capital is seeking to foreclose on Dan Kodsi’s Legacy Hotel &amp; Residences project site at Miami Worldcenter. Construction of the partially built 50-story tower has been on hold since last year. Kodsi missed a court ordered deadline to post a $32 million surety bond, and had until early November to pay Monarch more than $35 million, plus accrued and unpaid interest and late fees. Silverstein Capital Partners provided the developer with the original construction loan in late 2021. Monarch Alternative Capital took over the loan on June 6 of this year.</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/miami/2025/10/01/kodsi-misses-deadline-in-legacy-miami-worldcenter-foreclosure/" target="_blank" rel="noopener">https://therealdeal.com/miami/2025/10/01/kodsi-misses-deadline-in-legacy-miami-worldcenter-foreclosure/</a></td></tr></table></div>`)[0];
+                popup_ddf66ebd0a34f6e288ff037bc5ec4c8d.setContent(html_8ec666b4180d18802a9ae17b6a805716);
+            
+        
+
+        circle_marker_9ef8541ba0c1e84b0f9665c0803d6fc4.bindPopup(popup_ddf66ebd0a34f6e288ff037bc5ec4c8d)
+        ;
+
+        
+    
+    
+            circle_marker_9ef8541ba0c1e84b0f9665c0803d6fc4.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>942 Northeast 1st Avenue, Miami, FL 33132</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e30ec2d9260b770365b10e62ba15c10f = L.circleMarker(
+                [26.7061837, -80.05416249999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_b7d0e692b5f61051f1aa7a882174028f);
+        
+    
+        var popup_ad050b8edb7a9283ac72d3fe1f0f20e4 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_c84810c3a23b34ec8eeaae7711dde27a = $(`<div id="html_c84810c3a23b34ec8eeaae7711dde27a" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>801 South Dixie Highway, West Palm Beach, 33401</td></tr><tr><th style='text-align:left;padding-right:8px'>Description</th><td>Union Labor Life Insurance Company filed a foreclosure complaint in Palm Beach County tied to the 2.4-acre site of a stalled office project in West Palm Beach by Charles Cohen, adding more woes to the New York-based billionaire developer. The foreclosure complaint alleges the Cohen affiliate defaulted on a $10 million loan issued in 2022, by allegedly failing to repay the mortgage by a May 4 maturity date.</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/miami/2025/09/25/charles-cohen-palm-beach-dev-site-faces-foreclosure/" target="_blank" rel="noopener">https://therealdeal.com/miami/2025/09/25/charles-cohen-palm-beach-dev-site-faces-foreclosure/</a></td></tr></table></div>`)[0];
+                popup_ad050b8edb7a9283ac72d3fe1f0f20e4.setContent(html_c84810c3a23b34ec8eeaae7711dde27a);
+            
+        
+
+        circle_marker_e30ec2d9260b770365b10e62ba15c10f.bindPopup(popup_ad050b8edb7a9283ac72d3fe1f0f20e4)
+        ;
+
+        
+    
+    
+            circle_marker_e30ec2d9260b770365b10e62ba15c10f.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>801 South Dixie Highway, West Palm Beach, 33401</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_89146770e0f0f78d91b6c1adec4b8e7e = L.circleMarker(
+                [25.7879552, -80.19429160000001],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_b7d0e692b5f61051f1aa7a882174028f);
+        
+    
+        var popup_5f6b4da03307e623e0d0a7c9c2c393ca = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_091036cacf16d50a70da00cabca6284b = $(`<div id="html_091036cacf16d50a70da00cabca6284b" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>1317 North Miami Avenue and 1352 North Miami Avenue, Miami, 33136</td></tr><tr><th style='text-align:left;padding-right:8px'>Description</th><td>Forman Capital, led by Brett Forman and Ben Jacobson, is seeking to foreclose on a development site slated for a condo-hotel in Miami’s Art &amp; Entertainment District over an alleged $8.3 million loan default. The project was being managed by developer Dan Kodsi, but he and the borrowers’ attorney Joseph Pardo told The Real Deal he is no longer involved. The foreclosure complaint, filed in Miami-Dade Circuit Court, alleges that the entities defaulted on an $8.3 million bridge loan that matured on Aug. 16. Forman Capital is also seeking default interest and fees totaling roughly $220,000.</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/miami/2025/09/11/forman-capital-seeks-foreclosure-of-miami-condo-hotel-dev-site/" target="_blank" rel="noopener">https://therealdeal.com/miami/2025/09/11/forman-capital-seeks-foreclosure-of-miami-condo-hotel-dev-site/</a></td></tr></table></div>`)[0];
+                popup_5f6b4da03307e623e0d0a7c9c2c393ca.setContent(html_091036cacf16d50a70da00cabca6284b);
+            
+        
+
+        circle_marker_89146770e0f0f78d91b6c1adec4b8e7e.bindPopup(popup_5f6b4da03307e623e0d0a7c9c2c393ca)
+        ;
+
+        
+    
+    
+            circle_marker_89146770e0f0f78d91b6c1adec4b8e7e.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>1317 North Miami Avenue and 1352 North Miami Avenue, Miami, 33136</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9c4244db638ae8037645d91564097ba7 = L.circleMarker(
+                [25.7838522, -80.22117410000001],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_b7d0e692b5f61051f1aa7a882174028f);
+        
+    
+        var popup_8aec863c428b432c6c9d86bc87715283 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_5c6ab4aecb795e7ef1a83b7fad7d3b3e = $(`<div id="html_5c6ab4aecb795e7ef1a83b7fad7d3b3e" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>​​​​​​​1515, 1529, 1543 Northwest South River Drive, Miami, 33125</td></tr><tr><th style='text-align:left;padding-right:8px'>Description</th><td>A court appointed receiver is attempting to sell a Miami River dev site at an asking price of $18 million. The property is another stalled project involving developer Marlon Gomez. The 1.8-acre site comes with city approvals for a 40-unit townhome development called Miami River Cove. An affiliate of Coral Gables-based The Fiorentino Family Office has a pending foreclosure complaint against the Gomez-led entity that owns the Miami River site. The lawsuit alleges the Gomez-led entity defaulted on a $10 million loan.</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/miami/2025/07/23/distressed-miami-river-site-hits-market-for-18m/" target="_blank" rel="noopener">https://therealdeal.com/miami/2025/07/23/distressed-miami-river-site-hits-market-for-18m/</a></td></tr></table></div>`)[0];
+                popup_8aec863c428b432c6c9d86bc87715283.setContent(html_5c6ab4aecb795e7ef1a83b7fad7d3b3e);
+            
+        
+
+        circle_marker_9c4244db638ae8037645d91564097ba7.bindPopup(popup_8aec863c428b432c6c9d86bc87715283)
+        ;
+
+        
+    
+    
+            circle_marker_9c4244db638ae8037645d91564097ba7.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>​​​​​​​1515, 1529, 1543 Northwest South River Drive, Miami, 33125</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7cb922846095d645bfa172b3e76e9ff5 = L.circleMarker(
+                [26.121094, -80.14616199999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_b7d0e692b5f61051f1aa7a882174028f);
+        
+    
+        var popup_623801351cd6af28939cdddfcd90d56b = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_9eb6c9b7f96c4ddfa74598c1f8fb14ed = $(`<div id="html_9eb6c9b7f96c4ddfa74598c1f8fb14ed" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>200 West Broward Boulevard, Fort Lauderdale, 33311</td></tr><tr><th style='text-align:left;padding-right:8px'>Description</th><td>An affiliate of New York-based Kushner, led by Laurent Morali and Nicole Kushner Meyer, is seeking to foreclose on the 1-acre site at 200 West Broward Boulevard near Fort Lauderdale’s Brightline station, where Harvey Hernandez’s Newgard Development Group is planning a 40-story tower with 384 units, Broward County court records and real estate database Vizzda show. Newgard allegedly failed to repay a $22.9 million mortgage, including fees and interest, by a June 15 maturity date. Kushner also recently sued Hernandez as personal guarantor of the distressed loan.</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/miami/2025/07/18/newgards-natiivo-fort-lauderdale-site-faces-foreclosure/" target="_blank" rel="noopener">https://therealdeal.com/miami/2025/07/18/newgards-natiivo-fort-lauderdale-site-faces-foreclosure/</a></td></tr></table></div>`)[0];
+                popup_623801351cd6af28939cdddfcd90d56b.setContent(html_9eb6c9b7f96c4ddfa74598c1f8fb14ed);
+            
+        
+
+        circle_marker_7cb922846095d645bfa172b3e76e9ff5.bindPopup(popup_623801351cd6af28939cdddfcd90d56b)
+        ;
+
+        
+    
+    
+            circle_marker_7cb922846095d645bfa172b3e76e9ff5.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>200 West Broward Boulevard, Fort Lauderdale, 33311</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ede7d50c5ed6eecce38a80a725482b5d = L.circleMarker(
+                [26.2038454, -80.14790909999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_b7d0e692b5f61051f1aa7a882174028f);
+        
+    
+        var popup_88102777992b91f5d73cd18614d6701d = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_82f95140ea1dc2506f2963da13f74778 = $(`<div id="html_82f95140ea1dc2506f2963da13f74778" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>6210 North Andrews Avenue, Fort Lauderdale, 33309</td></tr><tr><th style='text-align:left;padding-right:8px'>Description</th><td>On June 13, a Naples-based lending entity managed by lawyer Anthony Korda sued Fort Lauderdale-based DMD Ventures in Broward County Circuit Court for allegedly defaulting on an $11 million mortgage secured by a 2-acre multifamily development site. The vacant parcel on North Andrews Avenue is approved for a seven-story building with 200 apartments and 5,000 square feet of retail.</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/miami/2025/06/25/lender-seeks-foreclosure-against-dmds-fort-lauderdale-site/" target="_blank" rel="noopener">https://therealdeal.com/miami/2025/06/25/lender-seeks-foreclosure-against-dmds-fort-lauderdale-site/</a></td></tr></table></div>`)[0];
+                popup_88102777992b91f5d73cd18614d6701d.setContent(html_82f95140ea1dc2506f2963da13f74778);
+            
+        
+
+        circle_marker_ede7d50c5ed6eecce38a80a725482b5d.bindPopup(popup_88102777992b91f5d73cd18614d6701d)
+        ;
+
+        
+    
+    
+            circle_marker_ede7d50c5ed6eecce38a80a725482b5d.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>6210 North Andrews Avenue, Fort Lauderdale, 33309</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_dd1f203adca123a0d5334cbf0186645c = L.circleMarker(
+                [26.7568246, -80.0788479],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_b7d0e692b5f61051f1aa7a882174028f);
+        
+    
+        var popup_6fc24af618c774b22c85de0c6597354e = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_c439369ada246aa8460876d36034b027 = $(`<div id="html_c439369ada246aa8460876d36034b027" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>1415 45th Street, Mangonia Park, 33407</td></tr><tr><th style='text-align:left;padding-right:8px'>Description</th><td>An affiliate of Taylor Made Lending, a Pompano Beach-based hard money lender, is suing an entity managed by boxing promoter Don King for allegedly defaulting on a $38 million mortgage debt secured by a 52-acre former Jai-Alai fronton in Mangonia Park. Taylor Made is the special servicer, representing a consortium of investors that own three mortgages, including Miami-based Winston Capital Management. King personally guaranteed repayment of the loans.</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/miami/2025/05/02/don-kings-mangonia-park-site-faces-38m-foreclosure/" target="_blank" rel="noopener">https://therealdeal.com/miami/2025/05/02/don-kings-mangonia-park-site-faces-38m-foreclosure/</a></td></tr></table></div>`)[0];
+                popup_6fc24af618c774b22c85de0c6597354e.setContent(html_c439369ada246aa8460876d36034b027);
+            
+        
+
+        circle_marker_dd1f203adca123a0d5334cbf0186645c.bindPopup(popup_6fc24af618c774b22c85de0c6597354e)
+        ;
+
+        
+    
+    
+            circle_marker_dd1f203adca123a0d5334cbf0186645c.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>1415 45th Street, Mangonia Park, 33407</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2347176589fa7d875b3d6015daa0211f = L.circleMarker(
+                [25.9761648, -80.14402179999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_b7d0e692b5f61051f1aa7a882174028f);
+        
+    
+        var popup_65abeb90ebc17369b9489dbfcb41fe4f = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_f78c98a16e3311d0125fb6545786b5d6 = $(`<div id="html_f78c98a16e3311d0125fb6545786b5d6" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>400 Southeast Ninth Street, Hallandale Beach, 33009</td></tr><tr><th style='text-align:left;padding-right:8px'>Description</th><td>Developer ST 9 Holdings, an affiliate of Coastline Management Group planning a medical office building in Hallandale Beach, was hit with a $5.8 million foreclosure suit on the site. OptimumBank provided the financing in 2023. The loan matures in 2035 and requires interest-only payments until April. The developer proposes an eight-story building on the site with 76,100 square feet of medical offices and a garage. Construction has not started.</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/miami/2025/02/19/optimumbank-files-foreclosure-on-hallandale-beach-dev-site/" target="_blank" rel="noopener">https://therealdeal.com/miami/2025/02/19/optimumbank-files-foreclosure-on-hallandale-beach-dev-site/</a></td></tr></table></div>`)[0];
+                popup_65abeb90ebc17369b9489dbfcb41fe4f.setContent(html_f78c98a16e3311d0125fb6545786b5d6);
+            
+        
+
+        circle_marker_2347176589fa7d875b3d6015daa0211f.bindPopup(popup_65abeb90ebc17369b9489dbfcb41fe4f)
+        ;
+
+        
+    
+    
+            circle_marker_2347176589fa7d875b3d6015daa0211f.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>400 Southeast Ninth Street, Hallandale Beach, 33009</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+</script>
+</html>
