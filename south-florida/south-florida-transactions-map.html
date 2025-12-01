@@ -143,6 +143,11 @@
             format: "formatPrice",
           },
           {
+            field: "Loan Amount",
+            label: "Loan Amount",
+            format: "formatPrice",
+          },
+          {
             field: "Description",
             label: "Use Code",
           },
@@ -219,6 +224,15 @@
             format: "formatPrice",
           },
           {
+            field: "Loan Amount",
+            label: "Loan Amount",
+            format: "formatPrice",
+          },
+          {
+            field: "Instrument # (loan)",
+            label: "Mortgage Instrument #",
+          },
+          {
             field: "Record Date",
             label: "Record Date",
             format: "formatDate",
@@ -253,6 +267,9 @@
                   feature.properties["Sale Price"] ||
                     feature.properties["Consideration"] ||
                     null
+                ),
+                "Loan Amount": TrdFormatters.getNumberValue(
+                  feature.properties["Loan Amount"] || null
                 ),
                 "Previous Sale Date":
                   feature.properties["Previous Sale Date"] ||
@@ -303,6 +320,15 @@
             default: {
               radius: 4,
             },
+          },
+          strokeSettings: {
+            width: 2,
+            color: [
+              "case",
+              [">", ["get", "Loan Amount"], 0],
+              "#FF9800",
+              "#ffffff"
+            ],
           },
         },
         searchSettings: {
