@@ -304,13 +304,13 @@
         fetchDataFilterCallback,
         loadingEnabled: true,
         mapLayerPaint: {
-          'circle-stroke-width': 2,
-          'circle-stroke-color': [
+          'circle-stroke-width': [
             "case",
             [">", ["to-number", ["get", "Loan Amount"], 0], 0],
-            "#FF9800",
-            "#ffffff"
+            2,
+            0
           ],
+          'circle-stroke-color': "#FF9800",
         },
         pointSettings: {
           clickToCenter: true,
