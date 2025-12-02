@@ -303,7 +303,15 @@
         filterFields,
         fetchDataFilterCallback,
         loadingEnabled: true,
-
+        mapLayerPaint: {
+          'circle-stroke-width': 2,
+          'circle-stroke-color': [
+            "case",
+            [">", ["to-number", ["get", "Loan Amount"], 0], 0],
+            "#FF9800",
+            "#ffffff"
+          ],
+        },
         pointSettings: {
           clickToCenter: true,
           clickToZoom: true,
@@ -320,15 +328,6 @@
             default: {
               radius: 4,
             },
-          },
-          strokeSettings: {
-            width: 2,
-            color: [
-              "case",
-              [">", ["to-number", ["get", "Loan Amount"], 0], 0],
-              "#FF9800",
-              "#ffffff"
-            ],
           },
         },
         searchSettings: {
