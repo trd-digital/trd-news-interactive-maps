@@ -73,7 +73,12 @@
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <main>
-      <table id="table"></table>
+      <div class="container-fluid py-3">
+        <div class="alert alert-info mb-3" role="alert">
+          <i class="bi bi-info-circle"></i> <strong>Tip:</strong> Click any column header to sort. Hold <kbd>Shift</kbd> and click multiple headers to sort by multiple criteria.
+        </div>
+        <table id="table"></table>
+      </div>
     </main>
 
     <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
@@ -186,7 +191,14 @@
         displayColumns,
         fetchDataFilterCallback,
         tableConfig: {
-          sortName: TrdFormatters.getFieldName("Sale Price"),
+          sortName: TrdFormatters.getFieldName("Record Date"),
+          sortOrder: "desc",
+          multipleSelectRow: false,
+          multiSort: true,
+          sortPriority: [
+            { sortName: TrdFormatters.getFieldName("Record Date"), sortOrder: "desc" },
+            { sortName: TrdFormatters.getFieldName("Sale Price"), sortOrder: "desc" }
+          ],
           sortResetPage: true,
         },
       });
