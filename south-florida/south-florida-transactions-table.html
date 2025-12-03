@@ -252,16 +252,21 @@
         },
       });
     </script>
-    <script>
+<script>
   let allRowsCache = [];
   let recent5mRowsCache = [];
 
-  // When Bootstrap Table finishes loading data, cache the full dataset
-  $(document).on("load-success.bs.table", "#table", function (e, data) {
-    // `data` is the array of rows returned to bootstrap-table
-    allRowsCache = Array.isArray(data) ? data.slice() : [];
-    // Reset cached filtered rows (in case you ever reload)
+  // Helper to grab everything currently in the table
+  function refreshAllRowsCache() {
+    // false = all rows, not just current page
+    const rows = $("#table").bootstrapTable("getData", false) || [];
+    allRowsCache = rows.slice();
     recent5mRowsCache = [];
+  }
+
+  // When Bootstrap Table finishes loading data, cache the full dataset
+  $("#table").on("load-success.bs.table", function () {
+    refreshAllRowsCache();
   });
 
   function computeRecent5mRows() {
@@ -276,10 +281,12 @@
       )
     );
 
-    // Sort dates (most recent first). Assumes Record Date parseable by Date()
+    if (dateStrings.length === 0) return [];
+
+    // Sort dates (most recent first)
     dateStrings.sort((a, b) => new Date(b) - new Date(a));
 
-    // Take the most recent and second-most-recent dates
+    // Most recent + second-most-recent
     const cutoffDates = new Set(dateStrings.slice(0, 2));
 
     // Filter for $5M+ sales on those dates
@@ -289,7 +296,7 @@
       return price >= 5000000 && cutoffDates.has(recordDate);
     });
 
-    // Sort those by Sale Price desc (most expensive first)
+    // Sort by Sale Price desc (most expensive first)
     filtered.sort(
       (a, b) => (Number(b["Sale Price"]) || 0) - (Number(a["Sale Price"]) || 0)
     );
@@ -299,6 +306,11 @@
 
   // Button behaviors
   $("#btn-recent-5m").on("click", function () {
+    if (!allRowsCache.length) {
+      // In case user clicks before load-success fired (rare)
+      refreshAllRowsCache();
+    }
+
     if (!recent5mRowsCache.length) {
       recent5mRowsCache = computeRecent5mRows();
     }
@@ -311,6 +323,10 @@
   });
 
   $("#btn-all-sales").on("click", function () {
+    if (!allRowsCache.length) {
+      refreshAllRowsCache();
+    }
+
     $("#table").bootstrapTable("load", allRowsCache);
 
     // UI state
@@ -318,4 +334,3 @@
     $("#btn-recent-5m").removeClass("active");
   });
 </script>
-
