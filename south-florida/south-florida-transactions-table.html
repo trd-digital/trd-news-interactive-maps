@@ -191,14 +191,10 @@
         displayColumns,
         fetchDataFilterCallback,
         tableConfig: {
-          sortName: TrdFormatters.getFieldName("Record Date"),
+          sortName: "Record Date",
           sortOrder: "desc",
-          multipleSelectRow: false,
           multiSort: true,
-          sortPriority: [
-            { sortName: TrdFormatters.getFieldName("Record Date"), sortOrder: "desc" },
-            { sortName: TrdFormatters.getFieldName("Sale Price"), sortOrder: "desc" }
-          ],
+          sortStable: true,
           sortResetPage: true,
         },
       });
