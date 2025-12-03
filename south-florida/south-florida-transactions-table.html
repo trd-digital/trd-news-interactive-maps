@@ -96,6 +96,14 @@
           name: "Sale Price",
           visible: true,
           formatter: TrdFormatters.formatPrice,
+          sortable: true,
+        },
+        {
+          dataField: "Loan Amount",
+          name: "Loan Amount",
+          visible: true,
+          formatter: TrdFormatters.formatPrice,
+          sortable: true,
         },
         // {
         //   dataField: "Sale Date",
@@ -109,6 +117,7 @@
           visible: true,
           formatter: TrdFormatters.formatDate,
           sorter: TrdSorters.sortDate,
+          sortable: true,
         },
         {
           dataField: "Use Code Description",
@@ -153,6 +162,9 @@
                 item.properties["Sale Price"] ||
                   item.properties["Consideration"] ||
                   null
+              ),
+              "Loan Amount": TrdFormatters.getNumberValue(
+                item.properties["Loan Amount"] || null
               ),
               "Previous Sale Date":
                 item.properties["Previous Sale Date"] ||
