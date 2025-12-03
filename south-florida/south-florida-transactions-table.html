@@ -80,6 +80,24 @@
         Click any column header to sort by that column.  
         To sort by multiple columns, use the <strong>“Multiple Sort”</strong> button to the right of the search bar.
       </div>
+      <div class="d-flex justify-content-between align-items-center mb-2">
+  <div class="btn-group btn-group-sm" role="group" aria-label="Sales filter">
+    <button
+      type="button"
+      id="btn-all-sales"
+      class="btn btn-outline-primary active"
+    >
+      All sales
+    </button>
+    <button
+      type="button"
+      id="btn-recent-5m"
+      class="btn btn-outline-primary"
+    >
+      Recent $5M+ sales
+    </button>
+  </div>
+</div>
         <table id="table"></table>
       </div>
     </main>
@@ -234,3 +252,70 @@
         },
       });
     </script>
+    <script>
+  let allRowsCache = [];
+  let recent5mRowsCache = [];
+
+  // When Bootstrap Table finishes loading data, cache the full dataset
+  $(document).on("load-success.bs.table", "#table", function (e, data) {
+    // `data` is the array of rows returned to bootstrap-table
+    allRowsCache = Array.isArray(data) ? data.slice() : [];
+    // Reset cached filtered rows (in case you ever reload)
+    recent5mRowsCache = [];
+  });
+
+  function computeRecent5mRows() {
+    if (!allRowsCache || !allRowsCache.length) return [];
+
+    // Collect unique Record Dates
+    const dateStrings = Array.from(
+      new Set(
+        allRowsCache
+          .map((row) => row["Record Date"])
+          .filter((d) => d != null && d !== "")
+      )
+    );
+
+    // Sort dates (most recent first). Assumes Record Date parseable by Date()
+    dateStrings.sort((a, b) => new Date(b) - new Date(a));
+
+    // Take the most recent and second-most-recent dates
+    const cutoffDates = new Set(dateStrings.slice(0, 2));
+
+    // Filter for $5M+ sales on those dates
+    const filtered = allRowsCache.filter((row) => {
+      const price = Number(row["Sale Price"]) || 0;
+      const recordDate = row["Record Date"];
+      return price >= 5000000 && cutoffDates.has(recordDate);
+    });
+
+    // Sort those by Sale Price desc (most expensive first)
+    filtered.sort(
+      (a, b) => (Number(b["Sale Price"]) || 0) - (Number(a["Sale Price"]) || 0)
+    );
+
+    return filtered;
+  }
+
+  // Button behaviors
+  $("#btn-recent-5m").on("click", function () {
+    if (!recent5mRowsCache.length) {
+      recent5mRowsCache = computeRecent5mRows();
+    }
+
+    $("#table").bootstrapTable("load", recent5mRowsCache);
+
+    // UI state
+    $(this).addClass("active");
+    $("#btn-all-sales").removeClass("active");
+  });
+
+  $("#btn-all-sales").on("click", function () {
+    $("#table").bootstrapTable("load", allRowsCache);
+
+    // UI state
+    $(this).addClass("active");
+    $("#btn-recent-5m").removeClass("active");
+  });
+</script>
+
