@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <title>Real Estate Lookup Tool</title>
   <!-- Google Font: Merriweather -->
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;500;700&display=swap" rel="stylesheet">
+   <link
+      href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css"
+      rel="stylesheet"
+    />
   <style>
     /* 1) Light Mode (default) */
     :root {
@@ -50,18 +53,23 @@
 
     /* Global Styles */
     body {
-      font-family: 'Merriweather', serif;
-      margin: 0;
-      padding: 20px;
-      background-color: var(--background-color);
-      color: var(--text-color);
-      transition: background-color 0.3s, color 0.3s;
+      font-family: "Proxima Nova", serif;
+        letter-spacing: 0.5px;
+        margin: 0;
+        padding: 20px;
+        background-image: url("images/blue-background.png");
+        background-position: top center;
+        background-repeat: no-repeat; 
+        background-color: var(--background-color);
+        color: var(--text-color);
+        transition: background-color 0.3s, color 0.3s;
     }
     h1 {
-      text-align: center;
-      color: var(--primary-color);
-      margin-bottom: 30px;
-      font-size: 2em;
+       text-align: center;
+        color: #fff;
+        margin-bottom: 30px;
+        font-size: 2em;
+        letter-spacing: 1px;
     }
 
     /* Filters Section */
@@ -75,36 +83,36 @@
     .filters input,
     .filters select,
     .filters button {
-      padding: 8px 12px;
-      border: 1px solid var(--border-color);
-      border-radius: 5px;
-      font-size: 0.9em;
-      background-color: var(--secondary-color);
-      color: var(--primary-color);
-      transition: border-color 0.3s, box-shadow 0.3s;
+       padding: 8px 12px;
+        border: 1px solid #fff;;
+        border-radius: 5px;
+        font-size: 0.9em;
+        background-color: transparent;
+        color: #fff;
+        transition: border-color 0.3s, box-shadow 0.3s;
     }
     .filters input::placeholder {
       color: #AAAAAA;
     }
     .filters input:focus,
     .filters select:focus {
-      border-color: var(--accent-color);
-      box-shadow: 0 0 5px var(--hover-shadow);
-      outline: none;
-      background-color: var(--secondary-color);
+      border-color: var(--border-color);
+        box-shadow: 0 0 5px var(--hover-shadow);
+        outline: none;
     }
     .filters button {
-      background-color: var(--accent-color);
-      color: var(--secondary-color);
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-      font-weight: bold;
+      background-color: transparent;
+        color: #fff;
+        border: 1px solid #fff;;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+        font-weight: bold;
     }
     .filters button:hover {
-      background-color: #187bcd;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 6px var(--hover-shadow);
+      background-color: #092e4d;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px var(--hover-shadow);
     }
 
     /* Prevent autofill background override (for Chrome/WebKit) */
@@ -126,14 +134,12 @@
     /* Group Card Styles */
     .group-card {
       background-color: var(--secondary-color);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.2s, box-shadow 0.2s;
-      height: 100%;
-      position: relative;
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        padding: 30px;
     }
     .group-card:hover {
       transform: translateY(-3px);
@@ -143,12 +149,11 @@
     /* Group Header Styles */
     .group-header {
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 12px 16px;
-      background-color: var(--secondary-color);
-      border-bottom: 1px solid var(--border-color);
-      transition: background-color 0.3s;
+        flex-direction: column;
+        align-items: flex-start;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--accent-color);
+        transition: background-color 0.3s;
     }
     .header-region {
       font-size: 1.1em;
@@ -167,7 +172,7 @@
 
     /* Group Details (Always Expanded) */
     .group-details {
-      padding: 16px;
+      padding: 16px 0;
       display: flex !important;
       background-color: var(--secondary-color);
       flex-grow: 1;
@@ -723,9 +728,6 @@
           const header = document.createElement('div');
           header.classList.add('group-header');
           header.innerHTML = `
-            <div class="header-classification">
-              ${group.sector !== 'N/A' ? group.sector : 'N/A'}
-            </div>
             <div class="header-region">
               ${group.region !== 'N/A' ? `<span>${group.region}</span>` : `<span>N/A</span>`}
             </div>
