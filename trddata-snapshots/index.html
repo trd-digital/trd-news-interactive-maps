@@ -1,819 +1,900 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Real Estate Lookup Tool</title>
-  <!-- Google Font: Merriweather -->
-   <link
+  <head>
+    <meta charset="UTF-8" />
+    <title>Real Estate Lookup Tool</title>
+    <!-- Google Font: Merriweather -->
+    <link
       href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css"
       rel="stylesheet"
     />
-  <style>
-    /* 1) Light Mode (default) */
-    :root {
-      --primary-color: #000000;          /* Black text */
-      --secondary-color: #FFFFFF;        /* White card background */
-      --accent-color: #1E90FF;           /* Dodger Blue */
-      --text-color: #000000;             /* Black for general text */
-      --background-color: #F7F7F7;       /* Light grayish background */
-      --border-color: #CCCCCC;           /* Light gray border */
-      --hover-shadow: rgba(0, 0, 0, 0.1);/* Subtle shadow on hover */
-    }
-    /* 2) Dark Mode if OS/browser prefers dark */
-    @media (prefers-color-scheme: dark) {
+    <style>
+      /* 1) Light Mode (default) */
       :root {
-        --primary-color: #FFFFFF;
-        --secondary-color: #1A1A1A;
-        --accent-color: #1E90FF;
-        --text-color: #FFFFFF;
+        --primary-color: #000000; /* Black text */
+        --secondary-color: #ffffff; /* White card background */
+        --accent-color: #1e90ff; /* Dodger Blue */
+        --text-color: #000000; /* Black for general text */
+        --background-color: #f7f7f7; /* Light grayish background */
+        --border-color: #cccccc; /* Light gray border */
+        --hover-shadow: rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
+      }
+      /* 2) Dark Mode if OS/browser prefers dark */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --primary-color: #ffffff;
+          --secondary-color: #1a1a1a;
+          --accent-color: #1e90ff;
+          --text-color: #ffffff;
+          --background-color: #212121;
+          --border-color: #333333;
+          --hover-shadow: rgba(255, 255, 255, 0.2);
+        }
+      }
+      /* 3) Override Classes */
+      .override-light {
+        --primary-color: #000000;
+        --secondary-color: #ffffff;
+        --accent-color: #1e90ff;
+        --text-color: #000000;
+        --background-color: #f7f7f7;
+        --border-color: #cccccc;
+        --hover-shadow: rgba(0, 0, 0, 0.1);
+      }
+      .override-dark {
+        --primary-color: #ffffff;
+        --secondary-color: #1a1a1a;
+        --accent-color: #1e90ff;
+        --text-color: #ffffff;
         --background-color: #212121;
         --border-color: #333333;
         --hover-shadow: rgba(255, 255, 255, 0.2);
       }
-    }
-    /* 3) Override Classes */
-    .override-light {
-      --primary-color: #000000;
-      --secondary-color: #FFFFFF;
-      --accent-color: #1E90FF;
-      --text-color: #000000;
-      --background-color: #F7F7F7;
-      --border-color: #CCCCCC;
-      --hover-shadow: rgba(0, 0, 0, 0.1);
-    }
-    .override-dark {
-      --primary-color: #FFFFFF;
-      --secondary-color: #1A1A1A;
-      --accent-color: #1E90FF;
-      --text-color: #FFFFFF;
-      --background-color: #212121;
-      --border-color: #333333;
-      --hover-shadow: rgba(255, 255, 255, 0.2);
-    }
 
-    /* Global Styles */
-    body {
-      font-family: "Proxima Nova", serif;
-        letter-spacing: 0.5px;
+      /* Global Styles */
+      body {
+        font-family: "Proxima Nova", serif;
         margin: 0;
         padding: 20px;
         background-image: url("images/blue-background.png");
         background-position: top center;
-        background-repeat: no-repeat; 
+        background-repeat: no-repeat;
         background-color: var(--background-color);
         color: var(--text-color);
         transition: background-color 0.3s, color 0.3s;
-    }
-    h1 {
-       text-align: center;
+      }
+      h1 {
+        text-align: center;
         color: #fff;
         margin-bottom: 30px;
-        font-size: 2em;
+        font-size: 3.6em;
         letter-spacing: 1px;
-    }
+      }
 
-    /* Filters Section */
-    .filters {
-      margin-bottom: 30px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      justify-content: center;
-    }
-    .filters input,
-    .filters select,
-    .filters button {
-       padding: 8px 12px;
-        border: 1px solid #fff;;
+      /* Filters Section */
+      .filters {
+        margin-bottom: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+      }
+      .filters input,
+      .filters select,
+      .filters button {
+        padding: 8px 12px;
+        border: 1px solid #fff;
         border-radius: 5px;
         font-size: 0.9em;
         background-color: transparent;
         color: #fff;
         transition: border-color 0.3s, box-shadow 0.3s;
-    }
-    .filters input::placeholder {
-      color: #AAAAAA;
-    }
-    .filters input:focus,
-    .filters select:focus {
-      border-color: var(--border-color);
+      }
+      .filters input::placeholder {
+        color: #aaaaaa;
+      }
+      .filters input:focus,
+      .filters select:focus {
+        border-color: var(--border-color);
         box-shadow: 0 0 5px var(--hover-shadow);
         outline: none;
-    }
-    .filters button {
-      background-color: transparent;
+      }
+      .filters button {
+        background-color: transparent;
         color: #fff;
-        border: 1px solid #fff;;
+        border: 1px solid #fff;
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.3s, transform 0.2s;
         font-weight: bold;
-    }
-    .filters button:hover {
-      background-color: #092e4d;
+      }
+      .filters button:hover {
+        background-color: #092e4d;
         transform: translateY(-2px);
         box-shadow: 0 4px 6px var(--hover-shadow);
-    }
+      }
 
-    /* Prevent autofill background override (for Chrome/WebKit) */
-    input:-webkit-autofill,
-    input:-webkit-autofill:focus,
-    input:-webkit-autofill:hover {
-      -webkit-box-shadow: 0 0 0px 1000px var(--secondary-color) inset !important;
-      -webkit-text-fill-color: var(--primary-color) !important;
-    }
+      /* Prevent autofill background override (for Chrome/WebKit) */
+      input:-webkit-autofill,
+      input:-webkit-autofill:focus,
+      input:-webkit-autofill:hover {
+        -webkit-box-shadow: 0 0 0px 1000px var(--secondary-color) inset !important;
+        -webkit-text-fill-color: var(--primary-color) !important;
+      }
 
-    /* Results Container */
-    #resultsContainer {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-      align-items: start;
-    }
+      /* Results Container */
+      #resultsContainer {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        align-items: start;
+      }
 
-    /* Group Card Styles */
-    .group-card {
-      background-color: var(--secondary-color);
+      /* Group Card Styles */
+      .group-card {
+        background-color: var(--secondary-color);
         border: 1px solid var(--border-color);
         border-radius: 20px;
         display: flex;
         flex-direction: column;
         position: relative;
         padding: 30px;
-    }
-    .group-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
-    }
+      }
+      .group-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+      }
 
-    /* Group Header Styles */
-    .group-header {
-      display: flex;
+      /* Group Header Styles */
+      .group-header {
+        display: flex;
         flex-direction: column;
         align-items: flex-start;
         padding-bottom: 12px;
         border-bottom: 1px solid var(--accent-color);
         transition: background-color 0.3s;
-    }
-    .header-region {
-      font-size: 1.1em;
-      font-weight: 700;
-      color: var(--primary-color);
-      max-width: 100%;
-      word-wrap: break-word;
-    }
-    .header-classification {
-      font-size: 0.75em;
-      color: var(--primary-color);
-      max-width: 35%;
-      text-align: right;
-      word-wrap: break-word;
-    }
-
-    /* Group Details (Always Expanded) */
-    .group-details {
-      padding: 16px 0;
-      display: flex !important;
-      background-color: var(--secondary-color);
-      flex-grow: 1;
-      flex-direction: column;
-      justify-content: flex-start;
-    }
-
-    /* Metrics List */
-    .metrics-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .metrics-list li {
-      margin-bottom: 12px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .metrics-list li:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-    .metrics-title {
-      font-weight: bold;
-      color: var(--primary-color);
-      font-size: 0.95em;
-    }
-    .metrics-value {
-      color: var(--accent-color);
-      font-size: 0.95em;
-    }
-
-    /* Submetrics */
-    .submetrics {
-      padding-top: 25px;
-      font-size: 0.75em;
-      color: var(--primary-color);
-    }
-    .submetrics div {
-      margin-bottom: 4px;
-    }
-
-    /* Source Link */
-    .source-entry {
-      text-align: right;
-      font-size: 0.55em;
-      margin-top: -15px;
-    }
-    .source-entry a {
-      text-decoration: none;
-      color: var(--accent-color);
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-    .source-entry a:hover {
-      color: #1C86EE;
-      text-decoration: underline;
-    }
-
-    /* Loading + Error Messages */
-    #loadingIndicator,
-    #errorMessage {
-      text-align: center;
-      padding: 20px;
-      font-size: 1.1em;
-      color: var(--primary-color);
-    }
-    #errorMessage {
-      color: #FF6347;
-    }
-
-    /* Spinner */
-    .spinner {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid var(--accent-color);
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      animation: spin 2s linear infinite;
-      display: inline-block;
-      vertical-align: middle;
-      margin-right: 10px;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* Custom Date Filter Styles */
-    #dateFilterContainer {
-      position: relative;
-      display: inline-block;
-    }
-    #dateFilterInput {
-      cursor: pointer;
-    }
-    #dateFilterDropdown {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background: var(--secondary-color);
-      border: 1px solid var(--border-color);
-      padding: 10px;
-      display: none;
-      z-index: 100;
-      width: 200px;
-    }
-
-    /* WebKit-based browsers */
-    ::-webkit-scrollbar {
-      width: 12px; /* Width of the scrollbar */
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #f1f1f1; /* Track color */
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background-color: #1E90FF; /* Thumb color */
-      border-radius: 6px;
-      border: 3px solid #f1f1f1; /* Creates padding around the thumb */
-    }
-
-    /* Firefox */
-    * {
-      scrollbar-width: thin; /* Options: auto, thin, none */
-      scrollbar-color: #1E90FF #f1f1f1; /* thumb color, track color */
-    }
-
-    /* Responsive Typography */
-    @media (max-width: 768px) {
-      .group-header {
-        flex-direction: column;
-        align-items: flex-start;
       }
       .header-region {
+        font-size: 1.1em;
+        font-weight: 700;
+        color: var(--primary-color);
         max-width: 100%;
+        word-wrap: break-word;
       }
       .header-classification {
-        margin-top: 6px;
-        max-width: 100%;
-        text-align: left;
+        font-size: 0.75em;
+        color: var(--primary-color);
+        max-width: 35%;
+        text-align: right;
+        word-wrap: break-word;
+      }
+
+      /* Group Details (Always Expanded) */
+      .group-details {
+        padding: 16px 0;
+        display: flex !important;
+        background-color: var(--secondary-color);
+        flex-grow: 1;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+
+      /* Metrics List */
+      .metrics-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
       }
       .metrics-list li {
-        margin-bottom: 10px;
-        padding-bottom: 8px;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
-      .metrics-title,
+      .metrics-list li:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      .metrics-title {
+        font-weight: bold;
+        color: var(--primary-color);
+        font-size: 0.95em;
+      }
       .metrics-value {
-        font-size: 0.9em;
+        color: var(--accent-color);
+        font-size: 0.95em;
       }
+
+      /* Submetrics */
       .submetrics {
-        font-size: 0.7em;
+        padding-top: 25px;
+        font-size: 0.75em;
+        color: var(--primary-color);
       }
+      .submetrics div {
+        margin-bottom: 4px;
+      }
+
+      /* Source Link */
       .source-entry {
-        font-size: 0.7em;
-        margin-top: 6px;
+        text-align: right;
+        font-size: 0.55em;
+        margin-top: -15px;
       }
-      .filters {
-        gap: 10px;
+      .source-entry a {
+        text-decoration: none;
+        color: var(--accent-color);
+        font-weight: 500;
+        transition: color 0.3s;
       }
-      .filters input,
-      .filters select,
-      .filters button {
-        padding: 6px 10px;
-        font-size: 0.85em;
+      .source-entry a:hover {
+        color: #1c86ee;
+        text-decoration: underline;
       }
-  
-    }
-  </style>
-</head>
-<body>
-  <!-- Theme Toggle Button -->
-  <button id="themeToggleBtn" style="position: fixed; top: 10px; right: 10px; z-index: 999;">Toggle Theme</button>
 
-  <h1>Real Estate Data Lookup</h1>
+      /* Loading + Error Messages */
+      #loadingIndicator,
+      #errorMessage {
+        text-align: center;
+        padding: 20px;
+        font-size: 1.1em;
+        color: var(--primary-color);
+      }
+      #errorMessage {
+        color: #ff6347;
+      }
 
-  <!-- Filters Section -->
-  <div class="filters">
-    <input type="text" id="searchRegion" placeholder="Search Region">
-    <select id="filterSector">
-      <option value="">All Sectors</option>
-      <!-- Options added dynamically -->
-    </select>
-    <!-- Custom Date Filter UI -->
-    <div id="dateFilterContainer">
-      <input type="text" id="dateFilterInput" readonly placeholder="Select Date Period(s)">
-      <div id="dateFilterDropdown">
-        <div>
-          <input type="radio" name="dpOption" id="radioMostRecent" value="most_recent" checked>
-          <label for="radioMostRecent">Most Recent</label>
+      /* Spinner */
+      .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid var(--accent-color);
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        animation: spin 2s linear infinite;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 10px;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Custom Date Filter Styles */
+      #dateFilterContainer {
+        position: relative;
+        display: inline-block;
+      }
+      #dateFilterInput {
+        cursor: pointer;
+      }
+      #dateFilterDropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: var(--secondary-color);
+        border: 1px solid var(--border-color);
+        padding: 10px;
+        display: none;
+        z-index: 100;
+        width: 200px;
+      }
+
+      /* WebKit-based browsers */
+      ::-webkit-scrollbar {
+        width: 12px; /* Width of the scrollbar */
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1; /* Track color */
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: #1e90ff; /* Thumb color */
+        border-radius: 6px;
+        border: 3px solid #f1f1f1; /* Creates padding around the thumb */
+      }
+
+      /* Firefox */
+      * {
+        scrollbar-width: thin; /* Options: auto, thin, none */
+        scrollbar-color: #1e90ff #f1f1f1; /* thumb color, track color */
+      }
+
+      /* Responsive Typography */
+      @media (max-width: 768px) {
+        .group-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .header-region {
+          max-width: 100%;
+        }
+        .header-classification {
+          margin-top: 6px;
+          max-width: 100%;
+          text-align: left;
+        }
+        .metrics-list li {
+          margin-bottom: 10px;
+          padding-bottom: 8px;
+        }
+        .metrics-title,
+        .metrics-value {
+          font-size: 0.9em;
+        }
+        .submetrics {
+          font-size: 0.7em;
+        }
+        .source-entry {
+          font-size: 0.7em;
+          margin-top: 6px;
+        }
+        .filters {
+          gap: 10px;
+        }
+        .filters input,
+        .filters select,
+        .filters button {
+          padding: 6px 10px;
+          font-size: 0.85em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Theme Toggle Button -->
+    <button
+      id="themeToggleBtn"
+      style="position: fixed; top: 10px; right: 10px; z-index: 999"
+    >
+      Toggle Theme
+    </button>
+
+    <h1>Real Estate Data Lookup</h1>
+
+    <!-- Filters Section -->
+    <div class="filters">
+      <input type="text" id="searchRegion" placeholder="Search Region" />
+      <select id="filterSector">
+        <option value="">All Sectors</option>
+        <!-- Options added dynamically -->
+      </select>
+      <!-- Custom Date Filter UI -->
+      <div id="dateFilterContainer">
+        <input
+          type="text"
+          id="dateFilterInput"
+          readonly
+          placeholder="Select Date Period(s)"
+        />
+        <div id="dateFilterDropdown">
+          <div>
+            <input
+              type="radio"
+              name="dpOption"
+              id="radioMostRecent"
+              value="most_recent"
+              checked
+            />
+            <label for="radioMostRecent">Most Recent</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              name="dpOption"
+              id="radioSelect"
+              value="select"
+            />
+            <label for="radioSelect">Select Dates</label>
+          </div>
+          <div
+            id="checkboxContainer"
+            style="margin-top: 10px; display: none"
+          ></div>
+          <button id="dateFilterApply" style="margin-top: 10px">Apply</button>
         </div>
-        <div>
-          <input type="radio" name="dpOption" id="radioSelect" value="select">
-          <label for="radioSelect">Select Dates</label>
-        </div>
-        <div id="checkboxContainer" style="margin-top: 10px; display: none;"></div>
-        <button id="dateFilterApply" style="margin-top: 10px;">Apply</button>
       </div>
+      <button id="resetFilters">Reset Filters</button>
     </div>
-    <button id="resetFilters">Reset Filters</button>
-  </div>
 
-  <!-- Loading Indicator -->
-  <div id="loadingIndicator" style="display: none;">
-    <div class="spinner"></div>
-    <span>Loading data, please wait...</span>
-  </div>
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" style="display: none">
+      <div class="spinner"></div>
+      <span>Loading data, please wait...</span>
+    </div>
 
-  <!-- Error Message -->
-  <div id="errorMessage" style="display: none;">
-    Failed to load data. Please
-    <button id="retryButton" style="background: none; border: none; color: var(--accent-color); text-decoration: underline; cursor: pointer;">try again</button>.
-  </div>
+    <!-- Error Message -->
+    <div id="errorMessage" style="display: none">
+      Failed to load data. Please
+      <button
+        id="retryButton"
+        style="
+          background: none;
+          border: none;
+          color: var(--accent-color);
+          text-decoration: underline;
+          cursor: pointer;
+        "
+      >
+        try again</button
+      >.
+    </div>
 
-  <!-- Results Container -->
-  <div id="resultsContainer"><!-- Dynamically populated --></div>
+    <!-- Results Container -->
+    <div id="resultsContainer"><!-- Dynamically populated --></div>
 
-  <!-- PapaParse Library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- PapaParse Library -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"
+      integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
 
-  <!-- JQuery AutoComplete -->
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <!-- JQuery AutoComplete -->
+    <link
+      rel="stylesheet"
+      href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
-  <!-- Theme Toggle Script -->
-  <script>
-    (function() {
-      const bodyEl = document.body;
-      const toggleBtn = document.getElementById('themeToggleBtn');
-      bodyEl.classList.add('override-light');
-    
-      function getEffectiveTheme() {
-        if (bodyEl.classList.contains('override-light')) return 'light';
-        if (bodyEl.classList.contains('override-dark')) return 'dark';
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        return prefersDark ? 'dark' : 'light';
-      }
-      function applyOverride(theme) {
-        bodyEl.classList.remove('override-light', 'override-dark');
-        if (theme === 'light') {
-          bodyEl.classList.add('override-light');
-          localStorage.setItem('themeOverride', 'light');
-        } else if (theme === 'dark') {
-          bodyEl.classList.add('override-dark');
-          localStorage.setItem('themeOverride', 'dark');
+    <!-- Theme Toggle Script -->
+    <script>
+      (function () {
+        const bodyEl = document.body;
+        const toggleBtn = document.getElementById("themeToggleBtn");
+        bodyEl.classList.add("override-light");
+
+        function getEffectiveTheme() {
+          if (bodyEl.classList.contains("override-light")) return "light";
+          if (bodyEl.classList.contains("override-dark")) return "dark";
+          const prefersDark =
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+          return prefersDark ? "dark" : "light";
         }
-      }
-      toggleBtn.addEventListener('click', () => {
-        const currentTheme = getEffectiveTheme();
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        applyOverride(newTheme);
-      });
-    })();
-  </script>
-
-  <!-- Data Fetching & Rendering Script -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const csvUrl = 'TRD Data Snapshots - Snapshot2_0.csv'; // Replace with your CSV URL
-      let data = [];
-
-      const searchRegion = document.getElementById('searchRegion');
-      const filterSector = document.getElementById('filterSector');
-      const dateFilterInput = document.getElementById('dateFilterInput');
-      const dateFilterDropdown = document.getElementById('dateFilterDropdown');
-      const radioMostRecent = document.getElementById('radioMostRecent');
-      const radioSelect = document.getElementById('radioSelect');
-      const checkboxContainer = document.getElementById('checkboxContainer');
-      const dateFilterApply = document.getElementById('dateFilterApply');
-      const resetFilters = document.getElementById('resetFilters');
-      const resultsContainer = document.getElementById('resultsContainer');
-      const loadingIndicator = document.getElementById('loadingIndicator');
-      const errorMessage = document.getElementById('errorMessage');
-      const retryButton = document.getElementById('retryButton');
-
-      // Global custom order array (most recent first)
-      const customOrder = ["Q1 2025","Q4 2024", "Q3 2024", "Q2 2024", "Q1 2024", "Q4 2023"];
-
-      // Debounce function
-      function debounce(func, delay) {
-        let debounceTimer;
-        return function() {
-          const context = this;
-          const args = arguments;
-          clearTimeout(debounceTimer);
-          debounceTimer = setTimeout(() => func.apply(context, args), delay);
-        };
-      }
-
-      // Normalize CSV headers
-      function normalizeHeaders(item) {
-        const normalizedItem = {};
-        for (let key in item) {
-          const normalizedKey = key.trim().toLowerCase().replace(/\s+/g, '_');
-          normalizedItem[normalizedKey] = item[key];
-        }
-        return normalizedItem;
-      }
-
-      // Extract hostname from URL
-      function getHostname(url) {
-        try {
-          const hostname = new URL(url).hostname;
-          return hostname.startsWith('www.') ? hostname.slice(4) : hostname;
-        } catch (e) {
-          console.error('Invalid URL:', url);
-          return 'Source';
-        }
-      }
-
-      // Fetch CSV data
-      function fetchData() {
-        loadingIndicator.style.display = 'block';
-        Papa.parse(csvUrl, {
-          download: true,
-          header: true,
-          skipEmptyLines: true,
-          complete: function(results) {
-            loadingIndicator.style.display = 'none';
-            data = results.data.map(normalizeHeaders);
-            // console.log('Normalized Data:', data);
-            if (data.length === 0) {
-              console.error('CSV contains no data.');
-              errorMessage.style.display = 'block';
-              return;
-            }
-
-          // After data is loaded, inside the PapaParse complete callback:
-          const regions = [...new Set(data.map(item => item.region).filter(Boolean))].sort();
-          $("#searchRegion").autocomplete({
-            source: regions,
-            select: function(event, ui) {
-              // Update the search input with the selected value
-              $("#searchRegion").val(ui.item.value);
-              // Trigger filtering automatically
-              filterData();
-            }
-          });
-
-            populateFilters();
-            // Set default values:
-            searchRegion.value = "New York";
-            // Default date filter input shows "Most Recent" (i.e. Q4 2024)
-            dateFilterInput.value = customOrder[0];
-            filterData();
-          },
-          error: function(err) {
-            loadingIndicator.style.display = 'none';
-            console.error('Error loading CSV:', err);
-            errorMessage.style.display = 'block';
+        function applyOverride(theme) {
+          bodyEl.classList.remove("override-light", "override-dark");
+          if (theme === "light") {
+            bodyEl.classList.add("override-light");
+            localStorage.setItem("themeOverride", "light");
+          } else if (theme === "dark") {
+            bodyEl.classList.add("override-dark");
+            localStorage.setItem("themeOverride", "dark");
           }
-        });
-      }
-
-      // Populate sector filter and set default for date filter input
-      function populateFilters() {
-        // Populate sector dropdown
-        const sectors = [...new Set(data.map(item => item.sector).filter(Boolean))].sort();
-        filterSector.innerHTML = '<option value="">All Sectors</option>';
-        sectors.forEach(sector => {
-          const option = document.createElement('option');
-          option.value = sector;
-          option.textContent = sector;
-          filterSector.appendChild(option);
-        });
-        // Set default for date filter input to "Most Recent"
-        dateFilterInput.value = customOrder[0];
-      }
-
-      // Populate checkboxes for selecting multiple dates (include all dates)
-      function populateCheckboxes() {
-        checkboxContainer.innerHTML = "";
-        customOrder.forEach(date => {
-          const wrapper = document.createElement("div");
-          const cb = document.createElement("input");
-          cb.type = "checkbox";
-          cb.value = date;
-          cb.id = "dp_" + date;
-          const label = document.createElement("label");
-          label.htmlFor = cb.id;
-          label.textContent = date;
-          wrapper.appendChild(cb);
-          wrapper.appendChild(label);
-          checkboxContainer.appendChild(wrapper);
-        });
-      }
-
-      // Show/hide the custom dropdown when the date filter input is clicked
-      dateFilterInput.addEventListener("click", () => {
-        dateFilterDropdown.style.display = "block";
-      });
-
-      // Radio button change events
-      radioMostRecent.addEventListener("change", () => {
-        if (radioMostRecent.checked) {
-          checkboxContainer.style.display = "none";
         }
-      });
-      radioSelect.addEventListener("change", () => {
-        if (radioSelect.checked) {
-          checkboxContainer.style.display = "block";
-          populateCheckboxes();
-        }
-      });
+        toggleBtn.addEventListener("click", () => {
+          const currentTheme = getEffectiveTheme();
+          const newTheme = currentTheme === "light" ? "dark" : "light";
+          applyOverride(newTheme);
+        });
+      })();
+    </script>
 
-      // When "Apply" is clicked, update the date filter input and trigger filtering
-      dateFilterApply.addEventListener("click", () => {
-        let selectedDates;
-        if (radioMostRecent.checked) {
-          selectedDates = [customOrder[0]];
-        } else {
-          selectedDates = Array.from(checkboxContainer.querySelectorAll("input[type='checkbox']:checked"))
-                              .map(cb => cb.value);
-          // If none are selected, default back to most recent
-          if(selectedDates.length === 0) {
-            selectedDates = [customOrder[0]];
-            radioMostRecent.checked = true;
+    <!-- Data Fetching & Rendering Script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const csvUrl = "TRD Data Snapshots - Snapshot2_0.csv"; // Replace with your CSV URL
+        let data = [];
+
+        const searchRegion = document.getElementById("searchRegion");
+        const filterSector = document.getElementById("filterSector");
+        const dateFilterInput = document.getElementById("dateFilterInput");
+        const dateFilterDropdown =
+          document.getElementById("dateFilterDropdown");
+        const radioMostRecent = document.getElementById("radioMostRecent");
+        const radioSelect = document.getElementById("radioSelect");
+        const checkboxContainer = document.getElementById("checkboxContainer");
+        const dateFilterApply = document.getElementById("dateFilterApply");
+        const resetFilters = document.getElementById("resetFilters");
+        const resultsContainer = document.getElementById("resultsContainer");
+        const loadingIndicator = document.getElementById("loadingIndicator");
+        const errorMessage = document.getElementById("errorMessage");
+        const retryButton = document.getElementById("retryButton");
+
+        // Global custom order array (most recent first)
+        const customOrder = [
+          "Q1 2025",
+          "Q4 2024",
+          "Q3 2024",
+          "Q2 2024",
+          "Q1 2024",
+          "Q4 2023",
+        ];
+
+        // Debounce function
+        function debounce(func, delay) {
+          let debounceTimer;
+          return function () {
+            const context = this;
+            const args = arguments;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => func.apply(context, args), delay);
+          };
+        }
+
+        // Normalize CSV headers
+        function normalizeHeaders(item) {
+          const normalizedItem = {};
+          for (let key in item) {
+            const normalizedKey = key.trim().toLowerCase().replace(/\s+/g, "_");
+            normalizedItem[normalizedKey] = item[key];
+          }
+          return normalizedItem;
+        }
+
+        // Extract hostname from URL
+        function getHostname(url) {
+          try {
+            const hostname = new URL(url).hostname;
+            return hostname.startsWith("www.") ? hostname.slice(4) : hostname;
+          } catch (e) {
+            console.error("Invalid URL:", url);
+            return "Source";
+          }
+        }
+
+        // Fetch CSV data
+        function fetchData() {
+          loadingIndicator.style.display = "block";
+          Papa.parse(csvUrl, {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            complete: function (results) {
+              loadingIndicator.style.display = "none";
+              data = results.data.map(normalizeHeaders);
+              // console.log('Normalized Data:', data);
+              if (data.length === 0) {
+                console.error("CSV contains no data.");
+                errorMessage.style.display = "block";
+                return;
+              }
+
+              // After data is loaded, inside the PapaParse complete callback:
+              const regions = [
+                ...new Set(data.map((item) => item.region).filter(Boolean)),
+              ].sort();
+              $("#searchRegion").autocomplete({
+                source: regions,
+                select: function (event, ui) {
+                  // Update the search input with the selected value
+                  $("#searchRegion").val(ui.item.value);
+                  // Trigger filtering automatically
+                  filterData();
+                },
+              });
+
+              populateFilters();
+              // Set default values:
+              searchRegion.value = "New York";
+              // Default date filter input shows "Most Recent" (i.e. Q4 2024)
+              dateFilterInput.value = customOrder[0];
+              filterData();
+            },
+            error: function (err) {
+              loadingIndicator.style.display = "none";
+              console.error("Error loading CSV:", err);
+              errorMessage.style.display = "block";
+            },
+          });
+        }
+
+        // Populate sector filter and set default for date filter input
+        function populateFilters() {
+          // Populate sector dropdown
+          const sectors = [
+            ...new Set(data.map((item) => item.sector).filter(Boolean)),
+          ].sort();
+          filterSector.innerHTML = '<option value="">All Sectors</option>';
+          sectors.forEach((sector) => {
+            const option = document.createElement("option");
+            option.value = sector;
+            option.textContent = sector;
+            filterSector.appendChild(option);
+          });
+          // Set default for date filter input to "Most Recent"
+          dateFilterInput.value = customOrder[0];
+        }
+
+        // Populate checkboxes for selecting multiple dates (include all dates)
+        function populateCheckboxes() {
+          checkboxContainer.innerHTML = "";
+          customOrder.forEach((date) => {
+            const wrapper = document.createElement("div");
+            const cb = document.createElement("input");
+            cb.type = "checkbox";
+            cb.value = date;
+            cb.id = "dp_" + date;
+            const label = document.createElement("label");
+            label.htmlFor = cb.id;
+            label.textContent = date;
+            wrapper.appendChild(cb);
+            wrapper.appendChild(label);
+            checkboxContainer.appendChild(wrapper);
+          });
+        }
+
+        // Show/hide the custom dropdown when the date filter input is clicked
+        dateFilterInput.addEventListener("click", () => {
+          dateFilterDropdown.style.display = "block";
+        });
+
+        // Radio button change events
+        radioMostRecent.addEventListener("change", () => {
+          if (radioMostRecent.checked) {
             checkboxContainer.style.display = "none";
           }
-        }
-        dateFilterInput.value = selectedDates.join(", ");
-        dateFilterDropdown.style.display = "none";
-        filterData();
-      });
-
-      // Filter data based on user input
-      function filterData() {
-        const reg = searchRegion.value.trim().toLowerCase();
-        const sec = filterSector.value;
-        let effectiveDates;
-        // Determine effective dates from the dateFilterInput value.
-        if(dateFilterInput.value === customOrder[0]){
-          effectiveDates = [customOrder[0]];
-        } else {
-          effectiveDates = dateFilterInput.value.split(", ").filter(v => v);
-        }
-        const newData = data.filter(item => {
-          const matchesRegion = reg === '' || (item.region && item.region.toLowerCase().includes(reg));
-          const matchesSector = sec === '' || item.sector === sec;
-          const matchesDate = effectiveDates.length === 0 || effectiveDates.includes(item.date_period);
-          return matchesRegion && matchesSector && matchesDate;
         });
-        displayGroupedResults(newData);
-      }
-
-      // Group data based on several keys, and include ranking_priority from the CSV
-      function groupData(dataArray) {
-        const groups = {};
-        dataArray.forEach(item => {
-          const groupKey = `
-            ${item.sector || 'N/A'}|
-            ${item.region || 'N/A'}|
-            ${item.last_updated || 'N/A'}|
-            ${item.date_period || 'N/A'}|
-            ${item.source_link || 'N/A'}
-          `.trim();
-          if (!groups[groupKey]) {
-            groups[groupKey] = {
-              sector: item.sector || 'N/A',
-              region: item.region || 'N/A',
-              last_updated: item.last_updated || 'N/A',
-              date_period: item.date_period || 'N/A',
-              source_link: item.source_link || 'N/A',
-              source: item.source || 'N/A',
-              // Store ranking_priority (assuming it's numeric; if not, convert to int)
-              ranking_priority: parseInt(item.ranking_priority, 10) || 0,
-              entries: []
-            };
+        radioSelect.addEventListener("change", () => {
+          if (radioSelect.checked) {
+            checkboxContainer.style.display = "block";
+            populateCheckboxes();
           }
-          groups[groupKey].entries.push({
-            display_title: item.display_title || 'N/A',
-            value: item.value || 'N/A'
-          });
         });
-        return Object.values(groups);
-      }
 
-      // Validate URL
-      function isValidURL(str) {
-        try {
-          new URL(str);
-          return true;
-        } catch (_) {
-          return false;
-        }
-      }
-
-      // Display grouped results (cards are always expanded)
-      function displayGroupedResults(dataToDisplay) {
-        resultsContainer.innerHTML = '';
-        if (dataToDisplay.length === 0) {
-          const noDataDiv = document.createElement('div');
-          noDataDiv.textContent = 'No results found.';
-          noDataDiv.style.textAlign = 'center';
-          noDataDiv.style.padding = '20px';
-          resultsContainer.appendChild(noDataDiv);
-          return;
-        }
-        let grouped = groupData(dataToDisplay);
-        
-        // Sort groups: first by ranking_priority (1 before 0), then by date period order
-        grouped.sort((a, b) => {
-          if (b.ranking_priority !== a.ranking_priority) {
-            return b.ranking_priority - a.ranking_priority;
+        // When "Apply" is clicked, update the date filter input and trigger filtering
+        dateFilterApply.addEventListener("click", () => {
+          let selectedDates;
+          if (radioMostRecent.checked) {
+            selectedDates = [customOrder[0]];
           } else {
-            return customOrder.indexOf(a.date_period) - customOrder.indexOf(b.date_period);
+            selectedDates = Array.from(
+              checkboxContainer.querySelectorAll(
+                "input[type='checkbox']:checked"
+              )
+            ).map((cb) => cb.value);
+            // If none are selected, default back to most recent
+            if (selectedDates.length === 0) {
+              selectedDates = [customOrder[0]];
+              radioMostRecent.checked = true;
+              checkboxContainer.style.display = "none";
+            }
           }
+          dateFilterInput.value = selectedDates.join(", ");
+          dateFilterDropdown.style.display = "none";
+          filterData();
         });
-        
-        // Optionally limit groups if not using the full range (here we only slice if the date filter is not most recent)
-        // if(dateFilterInput.value !== customOrder[0]){
-        //   grouped = grouped.slice(0, 12);
-        // }
-        // Limit the number of results to 20
-        grouped = grouped.slice(0, 20);
-        
-        // console.log('Grouped Data:', grouped);
 
-        // Define metrics for Residential vs. Commercial
-        const residentialMetrics = [
-          'Median Sale Price',
-          'Median Price Per Sq. Ft.',
-          'Number of Sales',
-          'Median Days on Market',
-          'Listing Inventory',
-          'Months of Supply'
-        ];
-        const commercialMetrics = [
-          'Vacancy Rate',
-          'Asking psf',
-          'Absorption',
-          'Inventory',
-          'Deliveries YTD',
-          'Under Construction'
-        ];
+        // Filter data based on user input
+        function filterData() {
+          const reg = searchRegion.value.trim().toLowerCase();
+          const sec = filterSector.value;
+          let effectiveDates;
+          // Determine effective dates from the dateFilterInput value.
+          if (dateFilterInput.value === customOrder[0]) {
+            effectiveDates = [customOrder[0]];
+          } else {
+            effectiveDates = dateFilterInput.value.split(", ").filter((v) => v);
+          }
+          const newData = data.filter((item) => {
+            const matchesRegion =
+              reg === "" ||
+              (item.region && item.region.toLowerCase().includes(reg));
+            const matchesSector = sec === "" || item.sector === sec;
+            const matchesDate =
+              effectiveDates.length === 0 ||
+              effectiveDates.includes(item.date_period);
+            return matchesRegion && matchesSector && matchesDate;
+          });
+          displayGroupedResults(newData);
+        }
 
-        const resiConstructionMetrics = [
-          'Single-Family Home', 
-          'Two-Family Home',
-          'Three- and Four-Family Buildings',
-          'Five-or-More Family Buildings', 
-          'Total Family Buildings'
-        ];
+        // Group data based on several keys, and include ranking_priority from the CSV
+        function groupData(dataArray) {
+          const groups = {};
+          dataArray.forEach((item) => {
+            const groupKey = `
+            ${item.sector || "N/A"}|
+            ${item.region || "N/A"}|
+            ${item.last_updated || "N/A"}|
+            ${item.date_period || "N/A"}|
+            ${item.source_link || "N/A"}
+          `.trim();
+            if (!groups[groupKey]) {
+              groups[groupKey] = {
+                sector: item.sector || "N/A",
+                region: item.region || "N/A",
+                last_updated: item.last_updated || "N/A",
+                date_period: item.date_period || "N/A",
+                source_link: item.source_link || "N/A",
+                source: item.source || "N/A",
+                // Store ranking_priority (assuming it's numeric; if not, convert to int)
+                ranking_priority: parseInt(item.ranking_priority, 10) || 0,
+                entries: [],
+              };
+            }
+            groups[groupKey].entries.push({
+              display_title: item.display_title || "N/A",
+              value: item.value || "N/A",
+            });
+          });
+          return Object.values(groups);
+        }
 
-        grouped.forEach(group => {
-          const card = document.createElement('div');
-          card.classList.add('group-card');
+        // Validate URL
+        function isValidURL(str) {
+          try {
+            new URL(str);
+            return true;
+          } catch (_) {
+            return false;
+          }
+        }
 
-          // Header (static)
-          const header = document.createElement('div');
-          header.classList.add('group-header');
-          header.innerHTML = `
+        // Display grouped results (cards are always expanded)
+        function displayGroupedResults(dataToDisplay) {
+          resultsContainer.innerHTML = "";
+          if (dataToDisplay.length === 0) {
+            const noDataDiv = document.createElement("div");
+            noDataDiv.textContent = "No results found.";
+            noDataDiv.style.textAlign = "center";
+            noDataDiv.style.padding = "20px";
+            resultsContainer.appendChild(noDataDiv);
+            return;
+          }
+          let grouped = groupData(dataToDisplay);
+
+          // Sort groups: first by ranking_priority (1 before 0), then by date period order
+          grouped.sort((a, b) => {
+            if (b.ranking_priority !== a.ranking_priority) {
+              return b.ranking_priority - a.ranking_priority;
+            } else {
+              return (
+                customOrder.indexOf(a.date_period) -
+                customOrder.indexOf(b.date_period)
+              );
+            }
+          });
+
+          // Optionally limit groups if not using the full range (here we only slice if the date filter is not most recent)
+          // if(dateFilterInput.value !== customOrder[0]){
+          //   grouped = grouped.slice(0, 12);
+          // }
+          // Limit the number of results to 20
+          grouped = grouped.slice(0, 20);
+
+          // console.log('Grouped Data:', grouped);
+
+          // Define metrics for Residential vs. Commercial
+          const residentialMetrics = [
+            "Median Sale Price",
+            "Median Price Per Sq. Ft.",
+            "Number of Sales",
+            "Median Days on Market",
+            "Listing Inventory",
+            "Months of Supply",
+          ];
+          const commercialMetrics = [
+            "Vacancy Rate",
+            "Asking psf",
+            "Absorption",
+            "Inventory",
+            "Deliveries YTD",
+            "Under Construction",
+          ];
+
+          const resiConstructionMetrics = [
+            "Single-Family Home",
+            "Two-Family Home",
+            "Three- and Four-Family Buildings",
+            "Five-or-More Family Buildings",
+            "Total Family Buildings",
+          ];
+
+          grouped.forEach((group) => {
+            const card = document.createElement("div");
+            card.classList.add("group-card");
+
+            // Header (static)
+            const header = document.createElement("div");
+            header.classList.add("group-header");
+            header.innerHTML = `
             <div class="header-region">
-              ${group.region !== 'N/A' ? `<span>${group.region}</span>` : `<span>N/A</span>`}
+              ${
+                group.region !== "N/A"
+                  ? `<span>${group.region}</span>`
+                  : `<span>N/A</span>`
+              }
             </div>
           `;
-          card.appendChild(header);
+            card.appendChild(header);
 
-          // Details (always visible)
-          const details = document.createElement('div');
-          details.classList.add('group-details');
+            // Details (always visible)
+            const details = document.createElement("div");
+            details.classList.add("group-details");
 
-          // Choose metrics based on sector
-          let metricsToDisplay = residentialMetrics;
-          if (group.sector && group.sector.toLowerCase() === 'office') {
-            metricsToDisplay = commercialMetrics;
-          }
+            // Choose metrics based on sector
+            let metricsToDisplay = residentialMetrics;
+            if (group.sector && group.sector.toLowerCase() === "office") {
+              metricsToDisplay = commercialMetrics;
+            }
 
-          if (group.sector && group.sector.toLowerCase() === 'residential construction') {
-            metricsToDisplay = resiConstructionMetrics;
-          }
+            if (
+              group.sector &&
+              group.sector.toLowerCase() === "residential construction"
+            ) {
+              metricsToDisplay = resiConstructionMetrics;
+            }
 
-          // Build metrics list
-          const metricsList = document.createElement('ul');
-          metricsList.classList.add('metrics-list');
-          metricsToDisplay.forEach(metricTitle => {
-            const li = document.createElement('li');
-            const foundEntry = group.entries.find(
-              e => e.display_title && e.display_title.toLowerCase() === metricTitle.toLowerCase()
-            );
-            const val = foundEntry ? foundEntry.value : 'N/A';
-            li.innerHTML = `
+            // Build metrics list
+            const metricsList = document.createElement("ul");
+            metricsList.classList.add("metrics-list");
+            metricsToDisplay.forEach((metricTitle) => {
+              const li = document.createElement("li");
+              const foundEntry = group.entries.find(
+                (e) =>
+                  e.display_title &&
+                  e.display_title.toLowerCase() === metricTitle.toLowerCase()
+              );
+              const val = foundEntry ? foundEntry.value : "N/A";
+              li.innerHTML = `
               <div class="metrics-title">${metricTitle}:</div>
               <div class="metrics-value">${val}</div>
             `;
-            metricsList.appendChild(li);
-          });
-          details.appendChild(metricsList);
+              metricsList.appendChild(li);
+            });
+            details.appendChild(metricsList);
 
-          // Submetrics (Last Updated, Date Period)
-          const submetrics = document.createElement('div');
-          submetrics.classList.add('submetrics');
-          const lu = group.last_updated !== 'N/A' ? group.last_updated : 'N/A';
-          const dp = group.date_period !== 'N/A' ? group.date_period : 'N/A';
-          submetrics.innerHTML = `
+            // Submetrics (Last Updated, Date Period)
+            const submetrics = document.createElement("div");
+            submetrics.classList.add("submetrics");
+            const lu =
+              group.last_updated !== "N/A" ? group.last_updated : "N/A";
+            const dp = group.date_period !== "N/A" ? group.date_period : "N/A";
+            submetrics.innerHTML = `
             <div><strong>Last Updated:</strong> ${lu}</div>
             <div><strong>Date Period:</strong> ${dp}</div>
           `;
-          details.appendChild(submetrics);
+            details.appendChild(submetrics);
 
-          // Source link
-          if (group.source_link !== 'N/A' && isValidURL(group.source_link)) {
-            const sourceDiv = document.createElement('div');
-            sourceDiv.classList.add('source-entry');
-            let linkText = (group.source && group.source !== 'N/A')
-              ? group.source
-              : getHostname(group.source_link);
-            sourceDiv.innerHTML = `<a href="${group.source_link}" target="_blank">${linkText}</a>`;
-            details.appendChild(sourceDiv);
-          }
-          card.appendChild(details);
-          resultsContainer.appendChild(card);
-        });
-      }
+            // Source link
+            if (group.source_link !== "N/A" && isValidURL(group.source_link)) {
+              const sourceDiv = document.createElement("div");
+              sourceDiv.classList.add("source-entry");
+              let linkText =
+                group.source && group.source !== "N/A"
+                  ? group.source
+                  : getHostname(group.source_link);
+              sourceDiv.innerHTML = `<a href="${group.source_link}" target="_blank">${linkText}</a>`;
+              details.appendChild(sourceDiv);
+            }
+            card.appendChild(details);
+            resultsContainer.appendChild(card);
+          });
+        }
 
-      // Reset filters function
-      function resetAllFilters() {
-        searchRegion.value = '';
-        filterSector.value = '';
-        dateFilterInput.value = customOrder[0];
-        radioMostRecent.checked = true;
-        checkboxContainer.style.display = "none";
-        displayGroupedResults(data);
-      }
+        // Reset filters function
+        function resetAllFilters() {
+          searchRegion.value = "";
+          filterSector.value = "";
+          dateFilterInput.value = customOrder[0];
+          radioMostRecent.checked = true;
+          checkboxContainer.style.display = "none";
+          displayGroupedResults(data);
+        }
 
-      // Initialize
-      fetchData();
-
-      // Event Listeners for dynamic filtering
-      searchRegion.addEventListener('input', debounce(filterData, 300));
-      filterSector.addEventListener('change', filterData);
-      // The custom date filter calls filterData() when "Apply" is clicked.
-      resetFilters.addEventListener('click', resetAllFilters);
-      retryButton && retryButton.addEventListener('click', () => {
-        errorMessage.style.display = 'none';
+        // Initialize
         fetchData();
+
+        // Event Listeners for dynamic filtering
+        searchRegion.addEventListener("input", debounce(filterData, 300));
+        filterSector.addEventListener("change", filterData);
+        // The custom date filter calls filterData() when "Apply" is clicked.
+        resetFilters.addEventListener("click", resetAllFilters);
+        retryButton &&
+          retryButton.addEventListener("click", () => {
+            errorMessage.style.display = "none";
+            fetchData();
+          });
       });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
