@@ -17,6 +17,21 @@
 		<link rel="stylesheet" href="../trd-data/common-table/table.css" />
 		<!-- Google Tag Manager -->
 		<script>
+			// State helpers: persist to URL and localStorage
+			const STATE_KEYS = ['county','search','sortName','sortOrder','sortPriority','pageSize','pageNumber'];
+			function getState(){
+				const params = new URLSearchParams(location.search);
+				const s = {};
+				STATE_KEYS.forEach(k => { if (params.has(k)) s[k] = params.get(k); });
+				try { const ls = JSON.parse(localStorage.getItem('sf-transactions-state')||'{}'); return { ...ls, ...s }; } catch(_) { return s; }
+			}
+			function setState(part){
+				const prev = getState(); const next = { ...prev, ...part };
+				try { localStorage.setItem('sf-transactions-state', JSON.stringify(next)); } catch(_){}
+				const params = new URLSearchParams(location.search);
+				Object.entries(next).forEach(([k,v])=>{ if (v===undefined||v===null||v==='') params.delete(k); else params.set(k, Array.isArray(v)?JSON.stringify(v):v); });
+				history.replaceState(null, '', `${location.pathname}?${params.toString()}`);
+			}
 			(function (w, d, s, l, i) {
 				w[l] = w[l] || [];
 				w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
@@ -30,7 +45,8 @@
 		</script>
 		<!-- End Google Tag Manager -->
 		<style>
-			main { margin-top: 56px; }
+			/* Increase top offset so content clears the fixed navbar */
+			main { margin-top: 80px; }
 			/* Mapbox needs an explicit height, not just min-height */
 			.map-height { height: 75vh; }
 			/* Highlight matching table rows */
@@ -68,18 +84,28 @@
 			.bootstrap-table .table thead th .bootstrap-table-sort-icon,
 			.bootstrap-table .table thead th .sort-priority,
 			.bootstrap-table .fixed-table-header thead th .bootstrap-table-sort-icon { display: none !important; }
+
+			/* Search suggestions dropdown */
+			.navbar .input-group { position: relative; }
+			#search-suggestions { position: absolute; top: 100%; left: 0; right: 0; z-index: 1050; max-height: 300px; overflow-y: auto; }
+			#search-suggestions .dropdown-item small { color: #6c757d; }
+			/* Compact background around navbar controls (subtle on black banner) */
+			.navbar-controls { background-color: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; }
+			/* Brand pill on black banner */
+			.brand-pill { background-color: transparent; border: none; border-radius: 8px; padding: 4px 8px; color: #fff; }
 		</style>
 	</head>
 	<body>
 		<!-- Google Tag Manager (noscript) -->
 		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K694XL6" height="0" width="0" style="display: none; visibility: hidden"></iframe></noscript>
 		<!-- End Google Tag Manager (noscript) -->
-		<nav class="navbar fixed-top navbar-light bg-light border-bottom">
+		<nav class="navbar fixed-top navbar-dark border-bottom" style="background-color: #000;">
 			<div class="container-fluid">
-				<span class="navbar-brand mb-0 h6">South Florida Transactions</span>
-				<div class="d-flex align-items-center gap-2">
+			<span class="navbar-brand mb-0 h6 brand-pill">South Florida Transactions</span>
+				<div class="navbar-controls d-flex align-items-center gap-2 px-2 py-2">
 					<div class="input-group input-group-sm" style="width: 320px;">
 						<input id="global-search" type="text" class="form-control" placeholder="Search address, folio, seller, buyer" />
+						<div id="search-suggestions" class="dropdown-menu"></div>
 					</div>
 					<div class="input-group input-group-sm" style="width: 220px;">
 						<span class="input-group-text"><i class="bi bi-geo"></i></span>
@@ -243,7 +269,8 @@
 				],
 				eventCategory: "south-florida-transactions-map",
 				mapElementId: "map",
-				filterElementId: "map-filters",
+				// Remove built-in map filter UI; use top toolbar dropdown instead
+				filterElementId: null,
 				legendElementId: "legend",
 				resultElementId: "result",
 				mapCenterLat: 26.380126753919782,
@@ -277,34 +304,15 @@
 						default: { radius: 4 },
 					},
 				},
+				// Disable built-in map search UI (magnifying glass)
 				searchSettings: {
-					enable: true,
+					enable: false,
 					placeholderText: "Search by address, folio, seller, buyer...",
 					resultTitleField: "Address",
 					searchFields: ["Address", "Folio", "Buyer", "Seller"],
 				},
-				filterFields: [
-					{
-						title: "County",
-						name: "county",
-						dataField: "County",
-						fieldType: "radio",
-						fieldLayoutClass: "radio-group",
-						multiSelect: false,
-						defaultValue: "All",
-						callback: (values, item) => {
-							const v = values[0];
-							if (!v || v === "All") return true;
-							return item.properties && item.properties["County"] === v;
-						},
-						options: [
-							{ label: "All Counties", value: "All" },
-							{ label: "Miami-Dade", value: "Miami-Dade" },
-							{ label: "Palm Beach", value: "Palm Beach" },
-							{ label: "Broward", value: "Broward" },
-						],
-					},
-				],
+				// Disable built-in filter selector; filtering controlled by toolbar dropdown
+				filterFields: [],
 			});
 
 			// Table columns
@@ -341,6 +349,7 @@
 			// Init Table without common-table wrapper to avoid conflicts
 			(async function initTable(){
 				const tableEl = document.getElementById('table');
+				const initialState = getState();
 				const COUNTY_FIELD = TrdFormatters.getFieldName('County');
 
 				const fetchFile = (path, county) => fetch(path)
@@ -401,14 +410,14 @@
 						buttonsPrefix: 'btn',
 						buttonsClass: 'btn btn-sm btn-outline-secondary',
 						icons: { sortAscending: 'bi bi-arrow-up-short', sortDescending: 'bi bi-arrow-down-short', detailOpen: 'bi bi-chevron-down', detailClose: 'bi bi-chevron-up', multipleSort: 'bi bi-sliders' },
-						sortName: TrdFormatters.getFieldName('Record Date'),
-						sortOrder: 'desc',
+						sortName: initialState.sortName || TrdFormatters.getFieldName('Record Date'),
+						sortOrder: initialState.sortOrder || 'desc',
 						sortStable: true,
 						sortResetPage: true,
 						pagination: true,
 						paginationVAlign: 'both',
 						pageList: [10, 50, 100],
-						pageSize: 10,
+						pageSize: initialState.pageSize ? parseInt(initialState.pageSize,10) : 10,
 						classes: 'table table-responsive',
 						theadClasses: 'header-style',
 						detailView: true,
@@ -443,14 +452,33 @@
 						},
 						showMultiSort: true,
 						showMultiSortButton: true,
-						sortPriority: [
-							{ sortName: TrdFormatters.getFieldName('Record Date'), sortOrder: 'desc' },
-							{ sortName: TrdFormatters.getFieldName('Sale Price'), sortOrder: 'desc' },
-						],
+						sortPriority: (function(){
+							if (initialState.sortPriority){
+								try { const p = JSON.parse(initialState.sortPriority); if (Array.isArray(p)) return p; } catch(_){}
+							}
+							return [
+								{ sortName: TrdFormatters.getFieldName('Record Date'), sortOrder: 'desc' },
+								{ sortName: TrdFormatters.getFieldName('Sale Price'), sortOrder: 'desc' },
+							];
+						})(),
 						onLoadSuccess: function(){ ensureMultiSortButtonInPagination(true); },
 						onPageChange: function(){ ensureMultiSortButtonInPagination(); },
 						onPostBody: function(){ ensureMultiSortButtonInPagination(); }
 					});
+
+					// Apply initial search and county from state
+					if (initialState.search){ document.getElementById('global-search').value = initialState.search; $(tableEl).bootstrapTable('resetSearch', initialState.search); }
+					if (initialState.county){
+						const sel = document.getElementById('county-filter');
+						sel.value = initialState.county;
+						sel.dispatchEvent(new Event('change'));
+					} else {
+						// Default to All Counties and apply consistent center/zoom
+						const sel = document.getElementById('county-filter');
+						sel.value = 'All';
+						sel.dispatchEvent(new Event('change'));
+					}
+					if (initialState.pageNumber){ $(tableEl).bootstrapTable('selectPage', parseInt(initialState.pageNumber,10)); }
 				}
 
 					function ensureMultiSortButtonInPagination(withRetry){
@@ -470,7 +498,43 @@
 							btn.addEventListener('click', function(){
 								openMultiSortModal();
 							});
-							host.appendChild(btn);
+							// Create an inline controls cluster on the pagination row
+							let cluster = host.querySelector('.inline-controls-cluster');
+							if (!cluster){
+								cluster = document.createElement('div');
+								cluster.className = 'inline-controls-cluster d-flex align-items-center gap-2 ms-2';
+								// Insert cluster before the page-list (if present) so it sits alongside
+								const pageList = wrapper.querySelector('.fixed-table-pagination .page-list');
+								if (pageList && pageList.parentNode === host){ host.insertBefore(cluster, pageList); }
+								else { host.appendChild(cluster); }
+							}
+							cluster.appendChild(btn);
+							// Add Export CSV into the cluster (only once)
+							if (!cluster.querySelector('.export-csv-btn')){
+								const eb = document.createElement('button');
+								eb.type='button'; eb.className='btn btn-sm btn-outline-secondary export-csv-btn';
+								eb.innerHTML = '<i class="bi bi-download"></i> Export CSV';
+								eb.addEventListener('click', ()=>{
+									const data = $('#table').bootstrapTable('getData', true) || [];
+									const cols = $('#table').bootstrapTable('getOptions').columns[0];
+									const headers = cols.filter(c=>c.visible!==false).map(c=>c.title);
+									const fields = cols.filter(c=>c.visible!==false).map(c=>c.field);
+									const csvRows = [headers.join(',')].concat(data.map(row => fields.map(f => {
+										let v = row[f]; if (v === undefined || v === null) return '';
+										v = (typeof v === 'string') ? v.replace(/"/g,'""') : v;
+										return '"' + v + '"';
+									}).join(',')));
+									const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+									const url = URL.createObjectURL(blob);
+									const a = document.createElement('a'); a.href = url; a.download = 'south-florida-transactions.csv'; a.click();
+									URL.revokeObjectURL(url);
+								});
+								cluster.appendChild(eb);
+							}
+							// Move Show Columns dropdown into the cluster to keep all controls reachable
+							const btToolbar = wrapper.querySelector('.fixed-table-toolbar');
+							const showCols = btToolbar && btToolbar.querySelector('.keep-open');
+							if (showCols && !cluster.querySelector('.keep-open')){ cluster.appendChild(showCols); }
 						}
 						// Optional retry to catch late-rendered pagination on initial load
 						if (withRetry){
@@ -482,11 +546,43 @@
 									|| wrap2.querySelector('.fixed-table-pagination .page-list')
 									|| wrap2.querySelector('.fixed-table-pagination .pagination'));
 								if (host2 && !host2.querySelector('.multi-sort-inline-btn')){
+									let cluster2 = host2.querySelector('.inline-controls-cluster');
+									if (!cluster2){
+										cluster2 = document.createElement('div');
+										cluster2.className = 'inline-controls-cluster d-flex align-items-center gap-2 ms-2';
+										const pageList2 = wrap2.querySelector('.fixed-table-pagination .page-list');
+										if (pageList2 && pageList2.parentNode === host2){ host2.insertBefore(cluster2, pageList2); }
+										else { host2.appendChild(cluster2); }
+									}
 									const btn2 = btn.cloneNode(true);
-									btn2.addEventListener('click', function(){
-										openMultiSortModal();
-									});
-									host2.appendChild(btn2);
+									btn2.addEventListener('click', function(){ openMultiSortModal(); });
+									cluster2.appendChild(btn2);
+									// Export CSV in retry path
+									if (!cluster2.querySelector('.export-csv-btn')){
+										const eb2 = document.createElement('button');
+										eb2.type='button'; eb2.className='btn btn-sm btn-outline-secondary export-csv-btn';
+										eb2.innerHTML = '<i class="bi bi-download"></i> Export CSV';
+										eb2.addEventListener('click', ()=>{
+											const data = $('#table').bootstrapTable('getData', true) || [];
+											const cols = $('#table').bootstrapTable('getOptions').columns[0];
+											const headers = cols.filter(c=>c.visible!==false).map(c=>c.title);
+											const fields = cols.filter(c=>c.visible!==false).map(c=>c.field);
+											const csvRows = [headers.join(',')].concat(data.map(row => fields.map(f => {
+												let v = row[f]; if (v === undefined || v === null) return '';
+												v = (typeof v === 'string') ? v.replace(/"/g,'""') : v;
+												return '"' + v + '"';
+											}).join(',')));
+											const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+											const url = URL.createObjectURL(blob);
+											const a = document.createElement('a'); a.href = url; a.download = 'south-florida-transactions.csv'; a.click();
+											URL.revokeObjectURL(url);
+										});
+										cluster2.appendChild(eb2);
+									}
+									// Move Show Columns dropdown into cluster2
+									const btToolbar2 = wrap2.querySelector('.fixed-table-toolbar');
+									const showCols2 = btToolbar2 && btToolbar2.querySelector('.keep-open');
+									if (showCols2 && !cluster2.querySelector('.keep-open')){ cluster2.appendChild(showCols2); }
 									clearInterval(timer);
 								}
 								if (attempts >= 10) clearInterval(timer);
@@ -551,6 +647,7 @@
 					return { sortName: selects[0].value, sortOrder: selects[1].value };
 				}).filter(r => r.sortName);
 				$('#table').bootstrapTable('refreshOptions', { sortPriority: rules });
+				setState({ sortPriority: JSON.stringify(rules) });
 				// Close modal
 				const modalEl = document.getElementById('multiSortModal');
 				bootstrap.Modal.getInstance(modalEl)?.hide();
@@ -562,57 +659,112 @@
 
 			// Global search -> table and map (if supported)
 			const globalSearch = document.getElementById("global-search");
+			const searchSuggestions = document.getElementById("search-suggestions");
 			let searchHighlightMarker = null;
+			let searchDebounce;
+
+			function renderSuggestions(text){
+				if (!text){ searchSuggestions.classList.remove('show'); searchSuggestions.innerHTML = ''; return; }
+				const rows = $("#table").bootstrapTable("getData", false) || [];
+				const lower = text.toLowerCase();
+				const matches = rows.filter(r => {
+					const values = Object.values(r).filter(v => typeof v === 'string' || typeof v === 'number');
+					return values.join(' ').toLowerCase().includes(lower);
+				}).slice(0, 10);
+				if (matches.length === 0){ searchSuggestions.classList.remove('show'); searchSuggestions.innerHTML = ''; return; }
+				searchSuggestions.innerHTML = matches.map(m => {
+					const addr = m[TrdFormatters.getFieldName('Physical Address')] || m[TrdFormatters.getFieldName('Address')] || 'Address N/A';
+					const price = m[TrdFormatters.getFieldName('Sale Price')];
+					const county = m[TrdFormatters.getFieldName('County')] || '';
+					const priceText = (typeof price === 'number') ? TrdFormatters.formatPrice(price) : (price || '');
+					const displayText = addr; // use address as the search text
+					return `<button type="button" class="dropdown-item" data-text="${displayText.replace(/"/g,'&quot;')}" data-coords="${(m.__coords||[]).join(',')}"><strong>${addr}</strong><br/><small>${priceText} ${county? '· '+county : ''}</small></button>`;
+				}).join('');
+				searchSuggestions.classList.add('show');
+			}
+
+			function flyToCoords(coords){
+				if (!Array.isArray(coords)) return;
+				const center = [coords[0], coords[1]];
+				try {
+					const mapInstance = (window.map && window.map._map) ? window.map._map : (window.map.map || window.map);
+					const fly = (mapInstance && typeof mapInstance.flyTo === 'function') ? mapInstance.flyTo.bind(mapInstance) : (window.map.flyTo || (window.map.map && window.map.map.flyTo));
+					if (typeof fly === 'function') fly({ center, zoom: 13, essential: true });
+				} catch(_){}
+				try {
+					if (searchHighlightMarker) { searchHighlightMarker.remove(); searchHighlightMarker = null; }
+					const el = document.createElement('div'); el.className = 'search-highlight-marker';
+					const mapInstance = (window.map && window.map._map) ? window.map._map : (window.map.map || window.map);
+					searchHighlightMarker = new mapboxgl.Marker({ element: el, anchor: 'center' }).setLngLat(center).addTo(mapInstance);
+					setTimeout(() => { if (searchHighlightMarker) { searchHighlightMarker.remove(); searchHighlightMarker = null; } }, 5000);
+				} catch(_){}
+			}
+
+			// Input: updates table + suggestions; map only on Enter
 			globalSearch.addEventListener("input", (e) => {
+				clearTimeout(searchDebounce);
 				const text = (e.target.value || "").trim();
-				// Table search via built-in support
-				$("#table").bootstrapTable("resetSearch", text);
-				// Highlight matching rows
-				const $tbodyRows = $("#table").find("tbody tr");
-				$tbodyRows.removeClass("table-row-highlight");
-				if (text.length > 0) {
-					$tbodyRows.each(function(){
-						const rowText = $(this).text().toLowerCase();
-						if (rowText.includes(text.toLowerCase())) {
-							$(this).addClass("table-row-highlight");
-						}
-					});
-				}
-				// Map search: prefer library API; otherwise fly to first matching row coordinates
-				if (window.map && typeof window.map.search === "function") {
-					try { window.map.search(text); } catch (err) {}
-				} else if (window.map && (typeof window.map.flyTo === "function" || (window.map.map && typeof window.map.map.flyTo === "function"))) {
-					// find first matching row with coordinates
-					const rows = $("#table").bootstrapTable("getData", false) || [];
-					const match = rows.find(r => {
-						const values = Object.values(r).filter(v => typeof v === 'string' || typeof v === 'number');
-						return values.join(' ').toLowerCase().includes(text.toLowerCase());
-					});
-					if (match && match.__coords && Array.isArray(match.__coords)) {
-						const center = [match.__coords[0], match.__coords[1]];
-						try {
-							if (typeof window.map.flyTo === "function") {
-								window.map.flyTo({ center, zoom: 13, essential: true });
-							} else if (window.map.map && typeof window.map.map.flyTo === "function") {
-								window.map.map.flyTo({ center, zoom: 13, essential: true });
-							}
-						} catch (_) {}
-						// Add a temporary highlight marker at the matched location
-						try {
-							if (searchHighlightMarker) { searchHighlightMarker.remove(); searchHighlightMarker = null; }
-							const el = document.createElement('div');
-							el.className = 'search-highlight-marker';
-							const mapInstance = (window.map && window.map._map) ? window.map._map : (window.map.map || window.map);
-							searchHighlightMarker = new mapboxgl.Marker({ element: el, anchor: 'center' }).setLngLat(center).addTo(mapInstance);
-							setTimeout(() => { if (searchHighlightMarker) { searchHighlightMarker.remove(); searchHighlightMarker = null; } }, 5000);
-						} catch (_) {}
+				searchDebounce = setTimeout(()=>{
+					$("#table").bootstrapTable("resetSearch", text);
+					const $tbodyRows = $("#table").find("tbody tr");
+					$tbodyRows.removeClass("table-row-highlight");
+					if (text.length > 0) {
+						$tbodyRows.each(function(){
+							const rowText = $(this).text().toLowerCase();
+							if (rowText.includes(text.toLowerCase())) { $(this).addClass("table-row-highlight"); }
+						});
 					}
+					setState({ search: text });
+					renderSuggestions(text);
+				}, 200);
+			});
+
+			// Enter triggers map search/fly; Escape closes suggestions
+			globalSearch.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape'){ searchSuggestions.classList.remove('show'); }
+				if (e.key !== 'Enter') return;
+				const text = (globalSearch.value || '').trim();
+				if (!text) return;
+				// Map's built-in search UI is disabled; use table match
+				const rows = $("#table").bootstrapTable("getData", false) || [];
+				const lower = text.toLowerCase();
+				const match = rows.find(r => {
+					const values = Object.values(r).filter(v => typeof v === 'string' || typeof v === 'number');
+					return values.join(' ').toLowerCase().includes(lower);
+				});
+				if (match && Array.isArray(match.__coords)) flyToCoords(match.__coords);
+				searchSuggestions.classList.remove('show');
+			});
+
+			// Suggestion click -> fly to that entry
+			searchSuggestions.addEventListener('click', (e) => {
+				const item = e.target.closest('.dropdown-item');
+				if (!item) return;
+				const text = item.getAttribute('data-text') || '';
+				if (text){
+					globalSearch.value = text;
+					// Immediately sync table search and state
+					$("#table").bootstrapTable("resetSearch", text);
+					setState({ search: text });
 				}
+				const raw = item.getAttribute('data-coords') || '';
+				const coords = raw.split(',').map(v => parseFloat(v)).filter(v => !Number.isNaN(v));
+				if (coords.length === 2) flyToCoords(coords);
+				searchSuggestions.classList.remove('show');
+				globalSearch.focus();
 			});
 
 			// County dropdown -> filter table & map
 			const countySelect = document.getElementById("county-filter");
+			// Global navigation lock to avoid competing animations
+			window.__mapNavLockUntil = window.__mapNavLockUntil || 0;
 			countySelect.addEventListener("change", () => {
+				// Known county centers to avoid snapping to wrong spots
+				const COUNTY_CENTERS = {
+					'Miami-Dade': [-80.1918, 25.7617],
+					'Broward': [-80.3659, 26.1901],
+					'Palm Beach': [-80.2767, 26.6515]
+				};
 				const selected = countySelect.value;
 				// Capture current table state to persist
 				const opts = $("#table").bootstrapTable('getOptions') || {};
@@ -620,6 +772,8 @@
 				const currentSortName = opts.sortName;
 				const currentSortOrder = opts.sortOrder;
 				const currentSortPriority = opts.sortPriority || [];
+				const currentPageSize = opts.pageSize;
+				const currentPageNumber = opts.pageNumber;
 
 				// Table: filter by County from original full dataset
 				const sourceRows = Array.isArray(window.originalRows) ? window.originalRows : ([]);
@@ -634,21 +788,77 @@
 				});
 				// Reapply search text
 				$("#table").bootstrapTable("resetSearch", currentSearch);
+				// Reapply page size and number
+				if (currentPageSize) $("#table").bootstrapTable('refreshOptions', { pageSize: currentPageSize });
+				if (currentPageNumber) $("#table").bootstrapTable('selectPage', currentPageNumber);
+				// Persist to state
+				setState({ county: selected, search: currentSearch, sortName: currentSortName, sortOrder: currentSortOrder, sortPriority: JSON.stringify(currentSortPriority), pageSize: currentPageSize, pageNumber: currentPageNumber });
 
-				// Map: update filter field programmatically if supported by map UI
-				// Fallback: trigger internal filters via custom event if library supports it
+				// Smoothly move the map: use a single animation to avoid jitter
 				try {
-					const filtersEl = document.getElementById("map-filters");
-					if (filtersEl) {
-						// Attempt to find a radio matching value and click it
-						const inputs = filtersEl.querySelectorAll('input[type="radio"][name="county"]');
-						inputs.forEach((input) => {
-							if (input.value === selected) { input.click(); }
-							if (selected === "All" && input.value === "All") { input.click(); }
-						});
+					const mapInstance = (window.map && window.map._map) ? window.map._map : (window.map.map || window.map);
+					if (!mapInstance) { /* no-op */ }
+					// Stop any ongoing animation to prevent jitter, then proceed
+					if (typeof mapInstance.stop === 'function') { mapInstance.stop(); }
+					if (selected === 'All') {
+						// All Counties center: [lng, lat]
+						const allCenter = new mapboxgl.LngLat(-80.09429790707776, 26.23707354237017);
+						if (typeof mapInstance.easeTo === 'function') {
+							mapInstance.easeTo({ center: allCenter, zoom: 8, duration: 600, essential: true });
+						} else if (typeof mapInstance.flyTo === 'function') {
+							mapInstance.flyTo({ center: allCenter, zoom: 8, essential: true });
+						}
+					} else {
+						// Specific county: use same zoom as All for consistency
+						const center = COUNTY_CENTERS[selected];
+						if (center && typeof mapInstance.easeTo === 'function') {
+							mapInstance.easeTo({ center: new mapboxgl.LngLat(center[0], center[1]), zoom: 8, duration: 600, essential: true });
+						} else if (center && typeof mapInstance.flyTo === 'function') {
+							mapInstance.flyTo({ center: new mapboxgl.LngLat(center[0], center[1]), zoom: 8, essential: true });
+						}
 					}
-				} catch (e) {}
+					// Lock further programmatic navigation briefly
+					window.__mapNavLockUntil = Date.now() + 900;
+				} catch(_){ }
+
+				// Map: filter points by county via Mapbox expression filter if available
+				try {
+					const mapInstance = (window.map && window.map._map) ? window.map._map : (window.map.map || window.map);
+					if (!mapInstance || typeof mapInstance.getStyle !== 'function' || typeof mapInstance.setFilter !== 'function') return;
+					// Determine target layers: prefer explicit layerId, else all circle layers
+					const targetLayerIds = [];
+					const explicitId = (window.map && window.map.layerId) ? window.map.layerId : null;
+					if (explicitId) { targetLayerIds.push(explicitId); }
+					else {
+						const style = mapInstance.getStyle();
+						(style.layers || []).forEach(l => { if (l && l.type === 'circle') targetLayerIds.push(l.id); });
+					}
+					const filterExpr = (selected === 'All') ? null : ['==', ['get','County'], selected];
+					for (const lid of targetLayerIds) {
+						try { mapInstance.setFilter(lid, filterExpr); } catch(__){}
+					}
+				} catch (_) {}
 			});
+
+			// Table row hover -> map center highlight
+			(function(){
+				// On row click, center the map on the row's coordinates
+				$('#table').on('click', 'tbody tr', function(){
+					const idx = $(this).data('index');
+					const row = $('#table').bootstrapTable('getData')[idx];
+					if (row && Array.isArray(row.__coords)){
+						const center = [row.__coords[0], row.__coords[1]];
+						try {
+							const mapInstance = (window.map && window.map._map) ? window.map._map : (window.map.map || window.map);
+							if (mapInstance && typeof mapInstance.easeTo === 'function'){
+								mapInstance.easeTo({ center, zoom: Math.max((mapInstance.getZoom?.()||13), 13), duration: 500, essential: true });
+							} else if (mapInstance && typeof mapInstance.flyTo === 'function'){
+								mapInstance.flyTo({ center, zoom: Math.max((mapInstance.getZoom?.()||13), 13), essential: true });
+							}
+						} catch(_){ }
+					}
+				});
+			})();
 		</script>
 	</body>
 </html>
