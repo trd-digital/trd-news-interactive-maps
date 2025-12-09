@@ -85,6 +85,13 @@
 			.bootstrap-table .table thead th .sort-priority,
 			.bootstrap-table .fixed-table-header thead th .bootstrap-table-sort-icon { display: none !important; }
 
+			/* Hide Bootstrap Table loading overlay/message entirely */
+			.fixed-table-loading { display: none !important; }
+
+			/* Add spacing between inline control buttons in pagination row */
+			.inline-controls-cluster .btn + .btn { margin-left: 0.5rem; }
+			.inline-controls-cluster .keep-open { margin-left: 0.5rem; }
+
 			/* Search suggestions dropdown */
 			.navbar .input-group { position: relative; }
 			#search-suggestions { position: absolute; top: 100%; left: 0; right: 0; z-index: 1050; max-height: 300px; overflow-y: auto; }
@@ -282,7 +289,8 @@
 				tooltipDisplayFields,
 				modalDisplayFields,
 				fetchDataFilterCallback,
-				loadingEnabled: true,
+				// Disable global loading overlay/text
+				loadingEnabled: false,
 				mapLayerPaint: {
 					'circle-stroke-width': [
 						"case",
@@ -406,6 +414,9 @@
 						search: true,
 						searchSelector: '#global-search',
 						searchHighlight: true,
+						// Remove loading message overlay
+						showLoading: false,
+						formatLoadingMessage: function(){ return ''; },
 						iconsPrefix: 'bi',
 						buttonsPrefix: 'btn',
 						buttonsClass: 'btn btn-sm btn-outline-secondary',
@@ -667,18 +678,41 @@
 				if (!text){ searchSuggestions.classList.remove('show'); searchSuggestions.innerHTML = ''; return; }
 				const rows = $("#table").bootstrapTable("getData", false) || [];
 				const lower = text.toLowerCase();
+				// Define preferred fields to check and present
+				const preferredFields = [
+					TrdFormatters.getFieldName('Physical Address'),
+					TrdFormatters.getFieldName('Address'),
+					TrdFormatters.getFieldName('Folio'),
+					TrdFormatters.getFieldName('Buyer'),
+					TrdFormatters.getFieldName('Seller')
+				];
 				const matches = rows.filter(r => {
 					const values = Object.values(r).filter(v => typeof v === 'string' || typeof v === 'number');
 					return values.join(' ').toLowerCase().includes(lower);
 				}).slice(0, 10);
 				if (matches.length === 0){ searchSuggestions.classList.remove('show'); searchSuggestions.innerHTML = ''; return; }
 				searchSuggestions.innerHTML = matches.map(m => {
-					const addr = m[TrdFormatters.getFieldName('Physical Address')] || m[TrdFormatters.getFieldName('Address')] || 'Address N/A';
+					// Find the first preferred field that matches the input
+					let matchedFieldKey = null;
+					let matchedValue = '';
+					for (const key of preferredFields){
+						const v = m[key];
+						if (typeof v === 'string' && v.toLowerCase().includes(lower)) { matchedFieldKey = key; matchedValue = v; break; }
+						if (typeof v === 'number' && (''+v).toLowerCase().includes(lower)) { matchedFieldKey = key; matchedValue = ''+v; break; }
+					}
+					// Fallback to address if nothing matched directly
+					if (!matchedFieldKey){
+						matchedFieldKey = TrdFormatters.getFieldName('Physical Address');
+						matchedValue = m[matchedFieldKey] || m[TrdFormatters.getFieldName('Address')] || 'Address N/A';
+					}
+					const addr = m[TrdFormatters.getFieldName('Physical Address')] || m[TrdFormatters.getFieldName('Address')] || '';
 					const price = m[TrdFormatters.getFieldName('Sale Price')];
 					const county = m[TrdFormatters.getFieldName('County')] || '';
 					const priceText = (typeof price === 'number') ? TrdFormatters.formatPrice(price) : (price || '');
-					const displayText = addr; // use address as the search text
-					return `<button type="button" class="dropdown-item" data-text="${displayText.replace(/"/g,'&quot;')}" data-coords="${(m.__coords||[]).join(',')}"><strong>${addr}</strong><br/><small>${priceText} ${county? '· '+county : ''}</small></button>`;
+					// Build label: bold the matched field value, show address and details below if different
+					const boldText = (matchedValue || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+					const secondaryLine = addr && addr !== matchedValue ? `${addr}` : '';
+					return `<button type="button" class="dropdown-item" data-text="${String(matchedValue).replace(/"/g,'&quot;')}" data-coords="${(m.__coords||[]).join(',')}"><strong>${boldText}</strong>${secondaryLine? '<br/>'+secondaryLine : ''}<br/><small>${priceText} ${county? '· '+county : ''}</small></button>`;
 				}).join('');
 				searchSuggestions.classList.add('show');
 			}
