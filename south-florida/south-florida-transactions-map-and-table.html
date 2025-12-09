@@ -31,7 +31,43 @@
 		<!-- End Google Tag Manager -->
 		<style>
 			main { margin-top: 56px; }
-			.map-height { min-height: 60vh; }
+			/* Mapbox needs an explicit height, not just min-height */
+			.map-height { height: 75vh; }
+			/* Highlight matching table rows */
+			.table-row-highlight { background-color: rgba(255, 235, 59, 0.3); }
+			/* Keep map interactions unobstructed without breaking popups */
+			#map { position: relative; }
+			#legend, #result { pointer-events: none; }
+			/* Temporary highlight marker */
+			.search-highlight-marker { width: 24px; height: 24px; border-radius: 50%; box-shadow: 0 0 0 6px rgba(255, 87, 34, 0.3); background-color: #FF5722; opacity: 0.85; border: 2px solid #FFF; animation: pulse 1.5s ease-in-out infinite; }
+			@keyframes pulse { 0% { box-shadow: 0 0 0 4px rgba(255,87,34,0.25); } 50% { box-shadow: 0 0 0 10px rgba(255,87,34,0.15); } 100% { box-shadow: 0 0 0 4px rgba(255,87,34,0.25); } }
+
+			/* Override repeating sort indicator backgrounds from table.css (stronger selectors) */
+			.bootstrap-table .fixed-table-header thead th,
+			.bootstrap-table .table thead th,
+			.header-style,
+			.header-style .th-inner { background-image: none !important; }
+			/* Remove pseudo-arrow decorations inserted by some themes */
+			.bootstrap-table .table thead th .th-inner::before,
+			.bootstrap-table .table thead th .th-inner::after,
+			.header-style .th-inner::before,
+			.header-style .th-inner::after { content: none !important; display: none !important; }
+			/* Hide default text-based order arrows to rely on Bootstrap Icons */
+			.bootstrap-table .table thead th .order,
+			.header-style .sortable .order { display: none !important; }
+
+			/* Completely remove any sort arrows/icons in headers, regardless of source */
+			.header-style .th-inner i,
+			.header-style .th-inner svg,
+			.bootstrap-table .table thead th i,
+			.bootstrap-table .table thead th svg { display: none !important; }
+			/* Remove possible background patterns on inner container */
+			.header-style .th-inner,
+			.bootstrap-table .table thead th .th-inner { background: none !important; }
+			/* Remove additional indicators from Bootstrap Table classes */
+			.bootstrap-table .table thead th .bootstrap-table-sort-icon,
+			.bootstrap-table .table thead th .sort-priority,
+			.bootstrap-table .fixed-table-header thead th .bootstrap-table-sort-icon { display: none !important; }
 		</style>
 	</head>
 	<body>
@@ -43,7 +79,6 @@
 				<span class="navbar-brand mb-0 h6">South Florida Transactions</span>
 				<div class="d-flex align-items-center gap-2">
 					<div class="input-group input-group-sm" style="width: 320px;">
-						<span class="input-group-text"><i class="bi bi-search"></i></span>
 						<input id="global-search" type="text" class="form-control" placeholder="Search address, folio, seller, buyer" />
 					</div>
 					<div class="input-group input-group-sm" style="width: 220px;">
@@ -59,44 +94,55 @@
 			</div>
 		</nav>
 		<main class="container-fluid py-3">
-			<div class="row g-3">
-				<!-- Map Column -->
-				<div class="col-12 col-lg-6">
-					<div class="card">
-						<div class="card-header">South Florida Transactions Map</div>
-						<div class="card-body">
-							<section id="map" class="map map-height"></section>
-							<!-- Optional: legend & filters containers if used by map.js -->
-							<div id="legend" class="mt-2"></div>
-							<div id="map-filters" class="mt-2"></div>
-							<div id="result" class="mt-2"></div>
+			<!-- Map Section (full width) -->
+			<div class="card mb-3">
+				<div class="card-header">South Florida Transactions Map</div>
+				<div class="card-body">
+					<section id="map" class="map map-height"></section>
+					<!-- Map filters UI will be auto-created by map.js -->
+					<!-- Optional: legend container used by map.js -->
+					<div id="legend" class="mt-2"></div>
+					<div id="result" class="mt-2"></div>
+				</div>
+			</div>
+
+			<!-- Table Section (full width) -->
+			<div id="table-collapse">
+			<div class="card">
+				<div class="card-header d-flex justify-content-between align-items-center">
+					<span>South Florida Sales Table</span>
+					<div id="table-toolbar" class="d-flex gap-2"></div>
+				</div>
+				<div class="card-body">
+					<table id="table"></table>
+				</div>
+			</div>
+			</div>
+		</main>
+
+		<!-- Custom Multi Sort Modal (Bootstrap 5 native) -->
+		<div class="modal fade" id="multiSortModal" tabindex="-1" aria-labelledby="multiSortModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="multiSortModalLabel">Multi-column Sort</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div id="multi-sort-rows" class="d-flex flex-column gap-2"></div>
+						<div class="mt-3">
+							<button id="add-sort-row" type="button" class="btn btn-sm btn-outline-secondary">
+								<i class="bi bi-plus-circle"></i> Add Sort Rule
+							</button>
 						</div>
 					</div>
-				</div>
-
-				<!-- Table Column -->
-				<div class="col-12 col-lg-6">
-					<div class="card">
-						<div class="card-header d-flex justify-content-between align-items-center">
-							<span>South Florida Sales Table</span>
-							<div class="btn-group btn-group-sm" role="group" aria-label="Sales filter">
-								<button type="button" id="btn-all-sales" class="btn btn-outline-primary active">All sales</button>
-								<button type="button" id="btn-recent-5m" class="btn btn-outline-primary">Recent $5M+ sales</button>
-							</div>
-						</div>
-						<div class="card-body">
-							<div class="alert alert-info mb-3" role="alert">
-								<i class="bi bi-info-circle"></i>
-								<strong>Tip:</strong>
-								Click any column header to sort by that column.
-								To sort by multiple columns, use the <strong>“Multiple Sort”</strong> button to the right of the search bar.
-							</div>
-							<table id="table"></table>
-						</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<button id="apply-multi-sort" type="button" class="btn btn-primary">Apply Sort</button>
 					</div>
 				</div>
 			</div>
-		</main>
+		</div>
 
 		<!-- Core libs -->
 		<script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
@@ -113,7 +159,7 @@
 		<script src="../trd-data/common-formatter/formatter.js"></script>
 		<script src="../trd-data/common-loading/loading.js"></script>
 		<script src="../trd-data/common-map/map.js?v=1.1"></script>
-		<script src="../trd-data/common-table/table.js"></script>
+		<!-- Note: omit common-table/table.js to avoid global conflicts with map.js -->
 
 		<script>
 			// Shared constants/config
@@ -270,6 +316,7 @@
 				{ dataField: "Use Code Description", name: "Description", visible: true, sortable: true },
 				{ dataField: "Seller", name: "Seller", visible: true, sortable: true },
 				{ dataField: "Buyer", name: "Buyer", visible: true, sortable: true },
+				{ dataField: "County", name: "County", visible: true, sortable: true },
 				{ dataField: "Doc Type", name: "Doc Type", visible: false },
 				{ dataField: "Folio", name: "Folio", visible: false },
 				{ dataField: "Previous Owner Name", name: "Previous Owner Name", visible: false },
@@ -291,88 +338,275 @@
 				});
 			};
 
-			// Init Table
-			TrdDataCommonTable({
-				filePaths,
-				fileAddKeyValues: [
-					{ County: "Miami-Dade" },
-					{ County: "Palm Beach" },
-					{ County: "Broward" },
-				],
-				eventCategory: "south-florida-transactions-table",
-				displayColumns,
-				fetchDataFilterCallback: tableFilterCallback,
-				tableConfig: {
-					sortName: TrdFormatters.getFieldName("Record Date"),
-					sortOrder: "desc",
-					sortStable: true,
-					sortResetPage: true,
-					search: true,
-					searchSelector: "#global-search",
-					showMultiSort: true,
-					showMultiSortButton: true,
-					sortPriority: [
-						{ sortName: TrdFormatters.getFieldName("Record Date"), sortOrder: "desc" },
-						{ sortName: TrdFormatters.getFieldName("Sale Price"), sortOrder: "desc" },
-					],
-				},
-			});
+			// Init Table without common-table wrapper to avoid conflicts
+			(async function initTable(){
+				const tableEl = document.getElementById('table');
+				const COUNTY_FIELD = TrdFormatters.getFieldName('County');
 
-			// Table filter buttons logic
-			let allRowsCache = [];
-			let recent5mRowsCache = [];
-			const RECORD_DATE_FIELD = TrdFormatters.getFieldName("Record Date");
-			const SALE_PRICE_FIELD = TrdFormatters.getFieldName("Sale Price");
+				const fetchFile = (path, county) => fetch(path)
+					.then(r => r.json())
+					.then(data => {
+						const features = data.features.map(f => ({
+							...f,
+							properties: {
+								...f.properties,
+								County: county,
+								__coords: (f.geometry && f.geometry.coordinates) || null
+							}
+						}));
+						return tableFilterCallback({ features });
+					});
 
-			function refreshAllRowsCache() {
-				const rows = $("#table").bootstrapTable("getData", false) || [];
-				allRowsCache = rows.slice();
-				recent5mRowsCache = [];
+				const results = await Promise.all([
+					fetchFile(filePaths[0], 'Miami-Dade'),
+					fetchFile(filePaths[1], 'Palm Beach'),
+					fetchFile(filePaths[2], 'Broward')
+				]);
+				{
+					// results are arrays of raw property objects; normalize keys to match column field names
+					const rows = ([]).concat(...results).map((item) => {
+						const row = {};
+						// include County for filtering
+						row[TrdFormatters.getFieldName('County')] = item['County'];
+						// include coordinates for map zooming on search
+						row['__coords'] = item['__coords'] || null;
+						displayColumns.forEach((dc) => {
+							const sourceKey = dc.dataField;
+							const fieldName = TrdFormatters.getFieldName(sourceKey);
+							row[fieldName] = item[sourceKey];
+						});
+						return row;
+					});
+					// persist original full dataset for county filtering
+					window.originalRows = rows.slice();
+					const columns = displayColumns.map(dc => ({
+						field: TrdFormatters.getFieldName(dc.dataField),
+						title: dc.name || dc.dataField,
+						visible: dc.visible ? true : false,
+						sortable: dc.sortable === true,
+						formatter: dc.formatter || TrdFormatters.formatterValue,
+						sorter: dc.sorter,
+					}));
+
+					$(tableEl).bootstrapTable({
+						toolbar: '#table-toolbar',
+						columns,
+						data: rows,
+						sortable: true,
+						multipleSort: true,
+						search: true,
+						searchSelector: '#global-search',
+						searchHighlight: true,
+						iconsPrefix: 'bi',
+						buttonsPrefix: 'btn',
+						buttonsClass: 'btn btn-sm btn-outline-secondary',
+						icons: { sortAscending: 'bi bi-arrow-up-short', sortDescending: 'bi bi-arrow-down-short', detailOpen: 'bi bi-chevron-down', detailClose: 'bi bi-chevron-up', multipleSort: 'bi bi-sliders' },
+						sortName: TrdFormatters.getFieldName('Record Date'),
+						sortOrder: 'desc',
+						sortStable: true,
+						sortResetPage: true,
+						pagination: true,
+						paginationVAlign: 'both',
+						pageList: [10, 50, 100],
+						pageSize: 10,
+						classes: 'table table-responsive',
+						theadClasses: 'header-style',
+						detailView: true,
+						detailFormatter: function(index, row){
+							const half = Math.ceil(displayColumns.length / 2);
+							const left = displayColumns.slice(0, half);
+							const right = displayColumns.slice(half);
+							const mapDetailRow = (displayColumn) => {
+								const key = TrdFormatters.getFieldName(displayColumn.dataField);
+								const value = row[key];
+								if (TrdFormatters.isEmptyValue(value)) return '';
+								const formattedValue = displayColumn.formatter ? displayColumn.formatter(value) : TrdFormatters.formatterValue(value);
+								return `<div class="row my-2 pb-2 border-bottom"><div class="text-capitalize col-4"><strong>${displayColumn.name}:</strong></div><div class="col-8">${formattedValue}</div></div>`;
+							};
+							return `<div class="container"><div class="row my-5"><div class="col-12 col-md-6"><table class="table table-sm"><tbody>${left.map(mapDetailRow).join('')}</tbody></table></div><div class="col-12 col-md-6"><table class="table table-sm"><tbody>${right.map(mapDetailRow).join('')}</tbody></table></div></div></div>`;
+						},
+						icons: { detailOpen: 'bi bi-chevron-down', detailClose: 'bi bi-chevron-up' },
+						showColumns: true,
+						showColumnsToggleAll: true,
+						minimumCountColumns: 2,
+						stickyHeader: true,
+						stickyHeaderOffsetY: 56,
+						stickyHeaderOffsetLeft: parseInt($('body').css('padding-left'), 10),
+						stickyHeaderOffsetRight: parseInt($('body').css('padding-right'), 10),
+						onSort: (name, order) => {
+							document.querySelectorAll('.header-style .sorted').forEach((h)=>h.classList.remove('sorted'));
+							const header = document.querySelector(`[data-field="${name}"]`);
+							if (header) header.classList.add('sorted');
+						},
+						onPostHeader: () => {
+							document.querySelectorAll('.header-style .sortable.desc, .header-style .sortable.asc').forEach((h)=>{ h.parentNode.classList.add('sorted'); });
+						},
+						showMultiSort: true,
+						showMultiSortButton: true,
+						sortPriority: [
+							{ sortName: TrdFormatters.getFieldName('Record Date'), sortOrder: 'desc' },
+							{ sortName: TrdFormatters.getFieldName('Sale Price'), sortOrder: 'desc' },
+						],
+						onLoadSuccess: function(){ ensureMultiSortButtonInPagination(true); },
+						onPageChange: function(){ ensureMultiSortButtonInPagination(); },
+						onPostBody: function(){ ensureMultiSortButtonInPagination(); }
+					});
+				}
+
+					function ensureMultiSortButtonInPagination(withRetry){
+						// Target within the Bootstrap Table wrapper to be robust
+						const wrapper = document.querySelector('#table').closest('.bootstrap-table');
+						if (!wrapper) return;
+						const host = wrapper.querySelector('.fixed-table-pagination .pagination-detail')
+							|| wrapper.querySelector('.fixed-table-pagination .page-list')
+							|| wrapper.querySelector('.fixed-table-pagination .pagination');
+						if (!host) return;
+						let btn = host.querySelector('.multi-sort-inline-btn');
+						if (!btn){
+							btn = document.createElement('button');
+							btn.type = 'button';
+							btn.className = 'btn btn-sm btn-primary multi-sort-inline-btn ms-3';
+							btn.innerHTML = '<i class="bi bi-sliders"></i> Multi Sort';
+							btn.addEventListener('click', function(){
+								openMultiSortModal();
+							});
+							host.appendChild(btn);
+						}
+						// Optional retry to catch late-rendered pagination on initial load
+						if (withRetry){
+							let attempts = 0;
+							const timer = setInterval(()=>{
+								attempts++;
+								const wrap2 = document.querySelector('#table').closest('.bootstrap-table');
+								const host2 = wrap2 && (wrap2.querySelector('.fixed-table-pagination .pagination-detail')
+									|| wrap2.querySelector('.fixed-table-pagination .page-list')
+									|| wrap2.querySelector('.fixed-table-pagination .pagination'));
+								if (host2 && !host2.querySelector('.multi-sort-inline-btn')){
+									const btn2 = btn.cloneNode(true);
+									btn2.addEventListener('click', function(){
+										openMultiSortModal();
+									});
+									host2.appendChild(btn2);
+									clearInterval(timer);
+								}
+								if (attempts >= 10) clearInterval(timer);
+							}, 100);
+						}
+					}
+			// Multi Sort modal logic for Bootstrap 5
+			function openMultiSortModal(){
+				const modalEl = document.getElementById('multiSortModal');
+				if (!modalEl) return;
+				buildMultiSortRows();
+				const modal = new bootstrap.Modal(modalEl);
+				modal.show();
 			}
 
-			$("#table").on("load-success.bs.table", function () {
-				refreshAllRowsCache();
-			});
+			function buildMultiSortRows(){
+				const container = document.getElementById('multi-sort-rows');
+				if (!container) return;
+				container.innerHTML = '';
+				const options = displayColumns
+					.filter(dc => dc.visible !== false) // allow hidden? keep simple
+					.map(dc => ({ label: dc.name || dc.dataField, value: TrdFormatters.getFieldName(dc.dataField) }));
+				const existing = $('#table').bootstrapTable('getOptions').sortPriority || [];
+				const rows = existing.length ? existing : [{ sortName: TrdFormatters.getFieldName('Record Date'), sortOrder: 'desc' }];
+				rows.forEach(rule => container.appendChild(createSortRow(options, rule)));
+			}
 
-			function computeRecent5mRows() {
-				if (!allRowsCache || !allRowsCache.length) return [];
-				const dateStrings = Array.from(new Set(allRowsCache.map((row) => row[RECORD_DATE_FIELD]).filter((d) => d != null && d !== "")));
-				if (dateStrings.length === 0) return [];
-				dateStrings.sort((a, b) => new Date(b) - new Date(a));
-				const cutoffDates = new Set(dateStrings.slice(0, 2));
-				const filtered = allRowsCache.filter((row) => {
-					const price = Number(row[SALE_PRICE_FIELD]) || 0;
-					const recordDate = row[RECORD_DATE_FIELD];
-					return price >= 5000000 && cutoffDates.has(recordDate);
+			function createSortRow(options, rule){
+				const row = document.createElement('div');
+				row.className = 'd-flex align-items-center gap-2';
+				const colSel = document.createElement('select');
+				colSel.className = 'form-select form-select-sm';
+				options.forEach(opt => {
+					const o = document.createElement('option');
+					o.value = opt.value; o.textContent = opt.label; colSel.appendChild(o);
 				});
-				filtered.sort((a, b) => (Number(b[SALE_PRICE_FIELD]) || 0) - (Number(a[SALE_PRICE_FIELD]) || 0));
-				return filtered;
+				colSel.value = rule && rule.sortName ? rule.sortName : options[0]?.value;
+				const orderSel = document.createElement('select');
+				orderSel.className = 'form-select form-select-sm';
+				['asc','desc'].forEach(ord => { const o=document.createElement('option'); o.value=ord; o.textContent=ord.toUpperCase(); orderSel.appendChild(o); });
+				orderSel.value = rule && rule.sortOrder ? rule.sortOrder : 'asc';
+				const removeBtn = document.createElement('button');
+				removeBtn.type = 'button'; removeBtn.className = 'btn btn-sm btn-outline-danger';
+				removeBtn.innerHTML = '<i class="bi bi-x-circle"></i>';
+				removeBtn.addEventListener('click', () => row.remove());
+				row.appendChild(colSel);
+				row.appendChild(orderSel);
+				row.appendChild(removeBtn);
+				return row;
 			}
 
-			$("#btn-recent-5m").on("click", function () {
-				if (!allRowsCache.length) { refreshAllRowsCache(); }
-				if (!recent5mRowsCache.length) { recent5mRowsCache = computeRecent5mRows(); }
-				$("#table").bootstrapTable("load", recent5mRowsCache);
-				$(this).addClass("active");
-				$("#btn-all-sales").removeClass("active");
+			document.getElementById('add-sort-row').addEventListener('click', () => {
+				const container = document.getElementById('multi-sort-rows');
+				const options = displayColumns.map(dc => ({ label: dc.name || dc.dataField, value: TrdFormatters.getFieldName(dc.dataField) }));
+				container.appendChild(createSortRow(options, { sortName: options[0]?.value, sortOrder: 'asc' }));
 			});
 
-			$("#btn-all-sales").on("click", function () {
-				if (!allRowsCache.length) { refreshAllRowsCache(); }
-				$("#table").bootstrapTable("load", allRowsCache);
-				$(this).addClass("active");
-				$("#btn-recent-5m").removeClass("active");
+			document.getElementById('apply-multi-sort').addEventListener('click', () => {
+				const container = document.getElementById('multi-sort-rows');
+				const rules = Array.from(container.querySelectorAll('.d-flex')).map(row => {
+					const selects = row.querySelectorAll('select');
+					return { sortName: selects[0].value, sortOrder: selects[1].value };
+				}).filter(r => r.sortName);
+				$('#table').bootstrapTable('refreshOptions', { sortPriority: rules });
+				// Close modal
+				const modalEl = document.getElementById('multiSortModal');
+				bootstrap.Modal.getInstance(modalEl)?.hide();
 			});
+
+			})();
+
+			// Removed $5M toggle handlers and caches; county filter controls visible data
 
 			// Global search -> table and map (if supported)
 			const globalSearch = document.getElementById("global-search");
+			let searchHighlightMarker = null;
 			globalSearch.addEventListener("input", (e) => {
-				const text = e.target.value || "";
+				const text = (e.target.value || "").trim();
 				// Table search via built-in support
 				$("#table").bootstrapTable("resetSearch", text);
-				// Try to forward to map search if API exists
+				// Highlight matching rows
+				const $tbodyRows = $("#table").find("tbody tr");
+				$tbodyRows.removeClass("table-row-highlight");
+				if (text.length > 0) {
+					$tbodyRows.each(function(){
+						const rowText = $(this).text().toLowerCase();
+						if (rowText.includes(text.toLowerCase())) {
+							$(this).addClass("table-row-highlight");
+						}
+					});
+				}
+				// Map search: prefer library API; otherwise fly to first matching row coordinates
 				if (window.map && typeof window.map.search === "function") {
 					try { window.map.search(text); } catch (err) {}
+				} else if (window.map && (typeof window.map.flyTo === "function" || (window.map.map && typeof window.map.map.flyTo === "function"))) {
+					// find first matching row with coordinates
+					const rows = $("#table").bootstrapTable("getData", false) || [];
+					const match = rows.find(r => {
+						const values = Object.values(r).filter(v => typeof v === 'string' || typeof v === 'number');
+						return values.join(' ').toLowerCase().includes(text.toLowerCase());
+					});
+					if (match && match.__coords && Array.isArray(match.__coords)) {
+						const center = [match.__coords[0], match.__coords[1]];
+						try {
+							if (typeof window.map.flyTo === "function") {
+								window.map.flyTo({ center, zoom: 13, essential: true });
+							} else if (window.map.map && typeof window.map.map.flyTo === "function") {
+								window.map.map.flyTo({ center, zoom: 13, essential: true });
+							}
+						} catch (_) {}
+						// Add a temporary highlight marker at the matched location
+						try {
+							if (searchHighlightMarker) { searchHighlightMarker.remove(); searchHighlightMarker = null; }
+							const el = document.createElement('div');
+							el.className = 'search-highlight-marker';
+							const mapInstance = (window.map && window.map._map) ? window.map._map : (window.map.map || window.map);
+							searchHighlightMarker = new mapboxgl.Marker({ element: el, anchor: 'center' }).setLngLat(center).addTo(mapInstance);
+							setTimeout(() => { if (searchHighlightMarker) { searchHighlightMarker.remove(); searchHighlightMarker = null; } }, 5000);
+						} catch (_) {}
+					}
 				}
 			});
 
@@ -380,10 +614,26 @@
 			const countySelect = document.getElementById("county-filter");
 			countySelect.addEventListener("change", () => {
 				const selected = countySelect.value;
-				// Table: filter cache by County
-				if (!allRowsCache.length) { refreshAllRowsCache(); }
-				const countyFiltered = selected === "All" ? allRowsCache : allRowsCache.filter((row) => row[TrdFormatters.getFieldName("County")] === selected);
+				// Capture current table state to persist
+				const opts = $("#table").bootstrapTable('getOptions') || {};
+				const currentSearch = (document.getElementById('global-search')?.value || '').trim();
+				const currentSortName = opts.sortName;
+				const currentSortOrder = opts.sortOrder;
+				const currentSortPriority = opts.sortPriority || [];
+
+				// Table: filter by County from original full dataset
+				const sourceRows = Array.isArray(window.originalRows) ? window.originalRows : ([]);
+				const countyFiltered = selected === "All" ? sourceRows : sourceRows.filter((row) => row[TrdFormatters.getFieldName("County")] === selected);
+				// Reload data, then restore search and sort
 				$("#table").bootstrapTable("load", countyFiltered);
+				// Reapply sort priority and primary sort
+				$("#table").bootstrapTable('refreshOptions', {
+					sortPriority: currentSortPriority,
+					sortName: currentSortName,
+					sortOrder: currentSortOrder
+				});
+				// Reapply search text
+				$("#table").bootstrapTable("resetSearch", currentSearch);
 
 				// Map: update filter field programmatically if supported by map UI
 				// Fallback: trigger internal filters via custom event if library supports it
