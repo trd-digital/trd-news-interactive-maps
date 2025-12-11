@@ -259,7 +259,15 @@
 							"Sale Price": TrdFormatters.getNumberValue(
 								feature.properties["Sale Price"] || feature.properties["Consideration"] || null
 							),
-							"Loan Amount": TrdFormatters.getNumberValue(feature.properties["Loan Amount"] || null),
+							// Normalize loan/mortgage field across counties
+							"Loan Amount": TrdFormatters.getNumberValue(
+								feature.properties["Loan Amount"]
+								|| feature.properties["Mortgage Amount"]
+								|| feature.properties["Mortgage"]
+								|| feature.properties["LoanAmount"]
+								|| feature.properties["MortgageAmount"]
+								|| null
+							),
 							"Previous Sale Date": feature.properties["Previous Sale Date"] || feature.properties["Date of Previous Sale"] || null,
 						},
 					})),
@@ -294,7 +302,10 @@
 				mapLayerPaint: {
 					'circle-stroke-width': [
 						"case",
-						[">", ["to-number", ["get", "Loan Amount"], 0], 0],
+						[">",
+							["coalesce", ["to-number", ["get", "Loan Amount"]], 0],
+							0
+						],
 						2,
 						0
 					],
@@ -347,7 +358,15 @@
 						"Sale Price": TrdFormatters.getNumberValue(
 							item.properties["Sale Price"] || item.properties["Consideration"] || null
 						),
-						"Loan Amount": TrdFormatters.getNumberValue(item.properties["Loan Amount"] || null),
+						// Normalize loan/mortgage field across counties
+						"Loan Amount": TrdFormatters.getNumberValue(
+							item.properties["Loan Amount"]
+							|| item.properties["Mortgage Amount"]
+							|| item.properties["Mortgage"]
+							|| item.properties["LoanAmount"]
+							|| item.properties["MortgageAmount"]
+							|| null
+						),
 						"Previous Sale Date": item.properties["Previous Sale Date"] || item.properties["Date of Previous Sale"] || null,
 					}));
 					resolve(filteredData);
