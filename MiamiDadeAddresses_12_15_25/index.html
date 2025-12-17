@@ -2,107 +2,143 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Affected Streets Checker</title>
+  <title>Affected Streets Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
-  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.1/mapbox-gl-geocoder.min.js"></script>
-  <link
-    rel="stylesheet"
-    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.1/mapbox-gl-geocoder.css"
-  />
-  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
   <style>
     body { margin: 0; padding: 0; }
     #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-    #geocoder {
-      position: fixed;
-      top: 12px;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: center;
-      z-index: 1000;
-    }
-    #geocoder .mapboxgl-ctrl-geocoder {
-      width: min(720px, 90%);
-      border-radius: 8px;
-      background: #fff;
-    }
-    /* Ensure geocoder input renders full width and above the map */
-    .mapboxgl-ctrl-geocoder, .mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder--input {
-      width: 100%;
-    }
-    .mapboxgl-ctrl-geocoder {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
-    }
-    .mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder--input {
-      font-size: 16px;
-      line-height: 22px;
-      padding: 10px 12px 10px 40px; /* space for icon */
-    }
-    .mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder--icon {
-      left: 12px;
-    }
-    /* Hide any default bottom-left geocoder control if present */
-    .mapboxgl-ctrl-bottom-left .mapboxgl-ctrl-geocoder { display: none !important; }
-    .result {
-      position: fixed;
-      top: 74px; /* just below geocoder */
-      left: 0;
-      right: 0;
-      margin: 0 auto;
-      width: min(720px, 90%);
+    .search-container {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1;
       background: white;
-      padding: 10px 14px;
-      font-family: sans-serif;
-      font-size: 14px;
+      padding: 10px;
+      border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-      z-index: 900;
+      width: 300px;
     }
-    .result .badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-weight: 600;
-      margin-right: 8px;
+    .search-container input {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
     }
-    .badge-ok { background: #dcfce7; color: #166534; }
-    .badge-alert { background: #fee2e2; color: #b91c1c; }
+    .search-container input:focus {
+      outline: none;
+      border-color: #be123c;
+    }
+    .search-container button {
+      width: 100%;
+      margin-top: 8px;
+      padding: 10px;
+      background: #be123c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .search-container button:hover {
+      background: #9f1239;
+    }
   </style>
 </head>
 <body>
 
 <div id="map"></div>
-<div id="geocoder"></div>
-<div id="result" class="result">Select an address to check</div>
+<div class="search-container">
+  <input type="text" id="address-input" placeholder="Enter an address in Miami-Dade..." />
+  <button onclick="searchAddress()">Search</button>
+</div>
 
 <script>
-// 1) Set your Mapbox token (required for geocoder and basemap)
 mapboxgl.accessToken = 'pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ';
 
-// 2) Initialize map
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/light-v11',
   center: [-80.19, 25.77],
-  zoom: 12
+  zoom: 10
 });
 
-// Keep references to loaded GeoJSON for analysis
-let bufferGeoJSON = null;
-let streetsGeoJSON = null;
+let marker = null;
+
+// Search address function
+async function searchAddress() {
+  const address = document.getElementById('address-input').value.trim();
+  if (!address) return;
+
+  try {
+    // Bbox for Miami-Dade County: [west, south, east, north]
+    const miamiDadeBbox = [-80.87, 25.13, -80.12, 25.98];
+    
+    const response = await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxgl.accessToken}&country=us&bbox=${miamiDadeBbox.join(',')}&limit=5`
+    );
+    const data = await response.json();
+
+    if (data.features && data.features.length > 0) {
+      // Filter results to only include those in Miami-Dade County
+      const miamiDadeResults = data.features.filter(feature => {
+        const context = feature.context || [];
+        return context.some(item => 
+          item.id && item.id.includes('district') && 
+          (item.text === 'Miami-Dade County' || item.text === 'Miami-Dade')
+        );
+      });
+
+      if (miamiDadeResults.length > 0) {
+        const [lng, lat] = miamiDadeResults[0].center;
+
+        // Remove existing marker if present
+        if (marker) marker.remove();
+
+        // Add new marker
+        marker = new mapboxgl.Marker({ color: '#e11d48' })
+          .setLngLat([lng, lat])
+          .addTo(map);
+
+        // Zoom to location
+        map.flyTo({
+          center: [lng, lat],
+          zoom: 16,
+          duration: 1500
+        });
+      } else {
+        alert('Address not found in Miami-Dade County. Please try again.');
+      }
+    } else {
+      alert('Address not found. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error geocoding address:', error);
+    alert('Error searching address. Please try again.');
+  }
+}
+
+// Allow Enter key to trigger search
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('address-input').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') searchAddress();
+  });
+});
 
 map.on('load', async () => {
-  // 3) Load local GeoJSON files and add as sources
+  // Load GeoJSON files
   const [bufferResp, streetsResp] = await Promise.all([
     fetch('affected_50ft_buffer.geojson'),
     fetch('affected_streets_lines.geojson')
   ]);
 
-  bufferGeoJSON = await bufferResp.json();
-  streetsGeoJSON = await streetsResp.json();
+  const bufferGeoJSON = await bufferResp.json();
+  const streetsGeoJSON = await streetsResp.json();
 
+  // Add affected buffer
   map.addSource('affected-buffer', {
     type: 'geojson',
     data: bufferGeoJSON
@@ -118,6 +154,7 @@ map.on('load', async () => {
     }
   });
 
+  // Add affected streets
   map.addSource('affected-streets', {
     type: 'geojson',
     data: streetsGeoJSON
@@ -131,49 +168,6 @@ map.on('load', async () => {
       'line-color': '#be123c',
       'line-width': 3
     }
-  });
-
-  // Add top padding so map interactions avoid the geocoder/result overlay
-  map.setPadding({ top: 110, right: 0, bottom: 0, left: 0 });
-});
-
-// 4) Address search (initialize after map load)
-
-map.on('load', () => {
-  const geocoder = new MapboxGeocoder({
-    accessToken: mapboxgl.accessToken,
-    mapboxgl: mapboxgl,
-    marker: true,
-    placeholder: 'Search an address in Miami-Dade…',
-    countries: 'us',
-    types: 'address,poi',
-    zoom: 16
-  });
-
-  // Mount geocoder into top-centered container
-  geocoder.addTo('#geocoder');
-
-  // Point-in-polygon check using Turf
-  geocoder.on('result', (e) => {
-    const pt = e.result.geometry; // GeoJSON Point
-
-    if (!bufferGeoJSON || !bufferGeoJSON.features) {
-      document.getElementById('result').innerHTML =
-        '<b>Data not loaded yet. Please try again.</b>';
-      return;
-    }
-
-    const isInside = bufferGeoJSON.features.some((poly) => {
-      try {
-        return turf.booleanPointInPolygon(pt, poly);
-      } catch (err) {
-        return false;
-      }
-    });
-
-    document.getElementById('result').innerHTML = isInside
-      ? '<span class="badge badge-alert">Affected</span><b style="color:#b91c1c">This property IS affected</b>'
-      : '<span class="badge badge-ok">Not affected</span><b style="color:#166534">This property is NOT affected</b>';
   });
 });
 </script>
