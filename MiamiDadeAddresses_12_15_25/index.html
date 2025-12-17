@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Affected Streets Checker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.1/mapbox-gl-geocoder.min.js"></script>
+  <link
+    rel="stylesheet"
+    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.1/mapbox-gl-geocoder.css"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+  <style>
+    body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    #geocoder {
+      position: fixed;
+      top: 12px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      z-index: 1000;
+    }
+    #geocoder .mapboxgl-ctrl-geocoder {
+      width: min(720px, 90%);
+      border-radius: 8px;
+      background: #fff;
+    }
+    /* Ensure geocoder input renders full width and above the map */
+    .mapboxgl-ctrl-geocoder, .mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder--input {
+      width: 100%;
+    }
+    .mapboxgl-ctrl-geocoder {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    }
+    .mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder--input {
+      font-size: 16px;
+      line-height: 22px;
+      padding: 10px 12px 10px 40px; /* space for icon */
+    }
+    .mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder--icon {
+      left: 12px;
+    }
+    /* Hide any default bottom-left geocoder control if present */
+    .mapboxgl-ctrl-bottom-left .mapboxgl-ctrl-geocoder { display: none !important; }
+    .result {
+      position: fixed;
+      top: 74px; /* just below geocoder */
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      width: min(720px, 90%);
+      background: white;
+      padding: 10px 14px;
+      font-family: sans-serif;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+      z-index: 900;
+    }
+    .result .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+    .badge-ok { background: #dcfce7; color: #166534; }
+    .badge-alert { background: #fee2e2; color: #b91c1c; }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+<div id="geocoder"></div>
+<div id="result" class="result">Select an address to check</div>
+
+<script>
+// 1) Set your Mapbox token (required for geocoder and basemap)
+mapboxgl.accessToken = 'pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ';
+
+// 2) Initialize map
+const map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/light-v11',
+  center: [-80.19, 25.77],
+  zoom: 12
+});
+
+// Keep references to loaded GeoJSON for analysis
+let bufferGeoJSON = null;
+let streetsGeoJSON = null;
+
+map.on('load', async () => {
+  // 3) Load local GeoJSON files and add as sources
+  const [bufferResp, streetsResp] = await Promise.all([
+    fetch('affected_50ft_buffer.geojson'),
+    fetch('affected_streets_lines.geojson')
+  ]);
+
+  bufferGeoJSON = await bufferResp.json();
+  streetsGeoJSON = await streetsResp.json();
+
+  map.addSource('affected-buffer', {
+    type: 'geojson',
+    data: bufferGeoJSON
+  });
+
+  map.addLayer({
+    id: 'affected-buffer-fill',
+    type: 'fill',
+    source: 'affected-buffer',
+    paint: {
+      'fill-color': '#e11d48',
+      'fill-opacity': 0.25
+    }
+  });
+
+  map.addSource('affected-streets', {
+    type: 'geojson',
+    data: streetsGeoJSON
+  });
+
+  map.addLayer({
+    id: 'affected-streets-line',
+    type: 'line',
+    source: 'affected-streets',
+    paint: {
+      'line-color': '#be123c',
+      'line-width': 3
+    }
+  });
+
+  // Add top padding so map interactions avoid the geocoder/result overlay
+  map.setPadding({ top: 110, right: 0, bottom: 0, left: 0 });
+});
+
+// 4) Address search (initialize after map load)
+
+map.on('load', () => {
+  const geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    mapboxgl: mapboxgl,
+    marker: true,
+    placeholder: 'Search an address in Miami-Dade…',
+    countries: 'us',
+    types: 'address,poi',
+    zoom: 16
+  });
+
+  // Mount geocoder into top-centered container
+  geocoder.addTo('#geocoder');
+
+  // Point-in-polygon check using Turf
+  geocoder.on('result', (e) => {
+    const pt = e.result.geometry; // GeoJSON Point
+
+    if (!bufferGeoJSON || !bufferGeoJSON.features) {
+      document.getElementById('result').innerHTML =
+        '<b>Data not loaded yet. Please try again.</b>';
+      return;
+    }
+
+    const isInside = bufferGeoJSON.features.some((poly) => {
+      try {
+        return turf.booleanPointInPolygon(pt, poly);
+      } catch (err) {
+        return false;
+      }
+    });
+
+    document.getElementById('result').innerHTML = isInside
+      ? '<span class="badge badge-alert">Affected</span><b style="color:#b91c1c">This property IS affected</b>'
+      : '<span class="badge badge-ok">Not affected</span><b style="color:#166534">This property is NOT affected</b>';
+  });
+});
+</script>
+
+</body>
+</html>
