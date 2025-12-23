@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_5ad298f0fa338d5bb2e3f2163e2421b2 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_5ad298f0fa338d5bb2e3f2163e2421b2" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_5ad298f0fa338d5bb2e3f2163e2421b2 = L.map(
+                "map_5ad298f0fa338d5bb2e3f2163e2421b2",
+                {
+                    center: [40.75106098340756, -73.95256676894229],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_043013a247e0129ff69958b21572d5a8 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_043013a247e0129ff69958b21572d5a8.addTo(map_5ad298f0fa338d5bb2e3f2163e2421b2);
+        
+    
+            var marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478 = L.markerClusterGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_43001a9b05fbbb2ece8ea3425bebe1ed = L.circleMarker(
+                [40.75023918271339, -73.97049890662383],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_93ad00e00fbe79c9ececd354d929d715 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_519e6444b06eb7fdb9286ba788ad38de = $(`<div id="html_519e6444b06eb7fdb9286ba788ad38de" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>321 EAST 43RD STREET Unit 511, NEW YORK, NY</b><br>       <b>Sale:</b> $280,000<br>       <b>Sellers:</b> FORTUNA, FIONA<br>       <b>Buyers:</b> MC CROSSIN, SEAN<br>       <b>Neighborhood:</b> Turtle Bay<br>       <a href="https://zola.planning.nyc.gov/l/lot/1/133/60010" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_93ad00e00fbe79c9ececd354d929d715.setContent(html_519e6444b06eb7fdb9286ba788ad38de);
+            
+        
+
+        circle_marker_43001a9b05fbbb2ece8ea3425bebe1ed.bindPopup(popup_93ad00e00fbe79c9ececd354d929d715)
+        ;
+
+        
+    
+    
+            circle_marker_43001a9b05fbbb2ece8ea3425bebe1ed.bindTooltip(
+                `<div>
+                     321 EAST 43RD STREET Unit 511, NEW YORK, NY — $280,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a0b7e6b05aa777ebfeb823c37b6685b2 = L.circleMarker(
+                [40.756064985230346, -73.96259555482251],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_130d67c86af21e06841159f1033c464f = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_f887405ff9632d9450e38c7d6d1c9944 = $(`<div id="html_f887405ff9632d9450e38c7d6d1c9944" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>420 EAST 55TH STREET Unit 6P, NEW YORK, NY</b><br>       <b>Sale:</b> $623,678<br>       <b>Sellers:</b> SUTTON ASSOCIATES<br>       <b>Buyers:</b> RUFFIN, CLAUDIA MARIA PEREZ<br>       <b>Neighborhood:</b> Sutton Place<br>       <a href="https://zola.planning.nyc.gov/l/lot/1/1366/16" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_130d67c86af21e06841159f1033c464f.setContent(html_f887405ff9632d9450e38c7d6d1c9944);
+            
+        
+
+        circle_marker_a0b7e6b05aa777ebfeb823c37b6685b2.bindPopup(popup_130d67c86af21e06841159f1033c464f)
+        ;
+
+        
+    
+    
+            circle_marker_a0b7e6b05aa777ebfeb823c37b6685b2.bindTooltip(
+                `<div>
+                     420 EAST 55TH STREET Unit 6P, NEW YORK, NY — $623,678
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b233b623c41f0013a647d0d0fddc5ba3 = L.circleMarker(
+                [40.74744413109959, -74.00249777543556],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_c24b3c64e85cdfe8d4da77c1d7e869aa = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_87a39361a3bd88f442fda77f63307e3b = $(`<div id="html_87a39361a3bd88f442fda77f63307e3b" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>470 WEST 24TH STREET Unit 19B, NEW YORK, NY</b><br>       <b>Sale:</b> $2,500,000<br>       <b>Sellers:</b> SCHEUER, DANIEL<br>       <b>Buyers:</b> SUSAN E. DREW TRUST; SUSAN E. DREW TRUSTEE<br>       <b>Neighborhood:</b> Chelsea<br>       <a href="https://zola.planning.nyc.gov/l/lot/1/72/11008" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_c24b3c64e85cdfe8d4da77c1d7e869aa.setContent(html_87a39361a3bd88f442fda77f63307e3b);
+            
+        
+
+        circle_marker_b233b623c41f0013a647d0d0fddc5ba3.bindPopup(popup_c24b3c64e85cdfe8d4da77c1d7e869aa)
+        ;
+
+        
+    
+    
+            circle_marker_b233b623c41f0013a647d0d0fddc5ba3.bindTooltip(
+                `<div>
+                     470 WEST 24TH STREET Unit 19B, NEW YORK, NY — $2,500,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4b01684e209d031f046f2cc074ea8e4a = L.circleMarker(
+                [40.87346877681252, -73.86914388493106],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_62dd199f2cd4d3d70fc62e18f8b34b57 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_5ba1ca40c0c31ddcb922a162c8627eb2 = $(`<div id="html_5ba1ca40c0c31ddcb922a162c8627eb2" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>651 ROSEWOOD STREET, BRONX, NY</b><br>       <b>Sale:</b> $560,000<br>       <b>Sellers:</b> DEEN, FAZILA; DEEN, MEER<br>       <b>Buyers:</b> HUSSAIN, JAMAL<br>       <b>Neighborhood:</b> Williamsbridge<br>       <a href="https://zola.planning.nyc.gov/l/lot/2/4623/1" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_62dd199f2cd4d3d70fc62e18f8b34b57.setContent(html_5ba1ca40c0c31ddcb922a162c8627eb2);
+            
+        
+
+        circle_marker_4b01684e209d031f046f2cc074ea8e4a.bindPopup(popup_62dd199f2cd4d3d70fc62e18f8b34b57)
+        ;
+
+        
+    
+    
+            circle_marker_4b01684e209d031f046f2cc074ea8e4a.bindTooltip(
+                `<div>
+                     651 ROSEWOOD STREET, BRONX, NY — $560,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_456e749fa0f09fc1f58a72f733505977 = L.circleMarker(
+                [40.80757629221522, -73.96636466172879],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_98e51ee24d08acccf5b3c2653bbe2166 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_89d0cdd7373b47e60f7207ac6ce1b258 = $(`<div id="html_89d0cdd7373b47e60f7207ac6ce1b258" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>420 RIVERSIDE DRIVE Unit 12HI, NEW YORK, NY</b><br>       <b>Sale:</b> $2,025,000<br>       <b>Sellers:</b> ESTATE OF MILENA JELINEK; HANNAH JELINEK SARBIN AS CO-EXECUTOR; WILLIAM JELINEK AS CO-EXECUTOR<br>       <b>Buyers:</b> CHASE, DAVID; CHASE, PAULA LEGGETT<br>       <b>Neighborhood:</b> Morningside Heights<br>       <a href="https://zola.planning.nyc.gov/l/lot/1/1896/1" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_98e51ee24d08acccf5b3c2653bbe2166.setContent(html_89d0cdd7373b47e60f7207ac6ce1b258);
+            
+        
+
+        circle_marker_456e749fa0f09fc1f58a72f733505977.bindPopup(popup_98e51ee24d08acccf5b3c2653bbe2166)
+        ;
+
+        
+    
+    
+            circle_marker_456e749fa0f09fc1f58a72f733505977.bindTooltip(
+                `<div>
+                     420 RIVERSIDE DRIVE Unit 12HI, NEW YORK, NY — $2,025,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a6ca6ba91d2680453687aafb476beec8 = L.circleMarker(
+                [40.73535735474135, -74.00630782435361],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_a17081d60958748285b02bd8584dd5eb = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_7a1d93eb07f690301f6ce9bdda7fc4ef = $(`<div id="html_7a1d93eb07f690301f6ce9bdda7fc4ef" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>555 HUDSON STREET, NEW YORK, NY</b><br>       <b>Sale:</b> $5,100,000<br>       <b>Sellers:</b> SPEHAR, SUSAN<br>       <b>Buyers:</b> 555 HUDSON STREET, LLC<br>       <b>Neighborhood:</b> West Village<br>       <a href="https://zola.planning.nyc.gov/l/lot/1/633/56" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_a17081d60958748285b02bd8584dd5eb.setContent(html_7a1d93eb07f690301f6ce9bdda7fc4ef);
+            
+        
+
+        circle_marker_a6ca6ba91d2680453687aafb476beec8.bindPopup(popup_a17081d60958748285b02bd8584dd5eb)
+        ;
+
+        
+    
+    
+            circle_marker_a6ca6ba91d2680453687aafb476beec8.bindTooltip(
+                `<div>
+                     555 HUDSON STREET, NEW YORK, NY — $5,100,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a964365faa188926617db6acdb14d5aa = L.circleMarker(
+                [40.75142707624708, -73.98517310955897],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_16d940f93d70728fadfd94c1ed96e712 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_e2d48e64ef257aea5f927c08c80eb4c1 = $(`<div id="html_e2d48e64ef257aea5f927c08c80eb4c1" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>39 W 37 ST, NEW YORK, NY</b><br>       <b>Sale:</b> $26,500,000<br>       <b>Sellers:</b> DAVAL 37 ASSOCIATES, LLC<br>       <b>Buyers:</b> 39W37 ASSOCIATES LLC<br>       <b>Neighborhood:</b> Garment District<br>       <a href="https://zola.planning.nyc.gov/l/lot/1/839/16" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_16d940f93d70728fadfd94c1ed96e712.setContent(html_e2d48e64ef257aea5f927c08c80eb4c1);
+            
+        
+
+        circle_marker_a964365faa188926617db6acdb14d5aa.bindPopup(popup_16d940f93d70728fadfd94c1ed96e712)
+        ;
+
+        
+    
+    
+            circle_marker_a964365faa188926617db6acdb14d5aa.bindTooltip(
+                `<div>
+                     39 W 37 ST, NEW YORK, NY — $26,500,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_42d2626781e430613032faf963f14047 = L.circleMarker(
+                [40.90084005000188, -73.8623833287779],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_bba92733c87215401dd707ef48c01676 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_479f230e6f108908de4c2c87ae31b995 = $(`<div id="html_479f230e6f108908de4c2c87ae31b995" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>4380 VIREO AVENUE Unit 5D, BRONX, NY</b><br>       <b>Sale:</b> $140,000<br>       <b>Sellers:</b> ANNE MCCARTHY; MCCARTHY, EXECUTOR, MICHAEL<br>       <b>Buyers:</b> SPELLEN, YVETTE<br>       <b>Neighborhood:</b> Woodlawn<br>       <a href="https://zola.planning.nyc.gov/l/lot/2/3398/44" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_bba92733c87215401dd707ef48c01676.setContent(html_479f230e6f108908de4c2c87ae31b995);
+            
+        
+
+        circle_marker_42d2626781e430613032faf963f14047.bindPopup(popup_bba92733c87215401dd707ef48c01676)
+        ;
+
+        
+    
+    
+            circle_marker_42d2626781e430613032faf963f14047.bindTooltip(
+                `<div>
+                     4380 VIREO AVENUE Unit 5D, BRONX, NY — $140,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1e332e8eb755412cd08e7ad96a1b9466 = L.circleMarker(
+                [40.899131094659154, -73.86255354346521],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_906e95b0d660e6e317ab09ff934bfde4 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_1d17d067a145f5b8e2560bf0c83f5604 = $(`<div id="html_1d17d067a145f5b8e2560bf0c83f5604" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>4295 WEBSTER AVENUE Unit 5J, BRONX, NY</b><br>       <b>Sale:</b> $160,000<br>       <b>Sellers:</b> MCKENNA, DECLAN<br>       <b>Buyers:</b> GARCIA, DEANNA<br>       <b>Neighborhood:</b> Woodlawn<br>       <a href="https://zola.planning.nyc.gov/l/lot/2/3398/97" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_906e95b0d660e6e317ab09ff934bfde4.setContent(html_1d17d067a145f5b8e2560bf0c83f5604);
+            
+        
+
+        circle_marker_1e332e8eb755412cd08e7ad96a1b9466.bindPopup(popup_906e95b0d660e6e317ab09ff934bfde4)
+        ;
+
+        
+    
+    
+            circle_marker_1e332e8eb755412cd08e7ad96a1b9466.bindTooltip(
+                `<div>
+                     4295 WEBSTER AVENUE Unit 5J, BRONX, NY — $160,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_02050c9e6a360e65b66c6bb3b816ba1b = L.circleMarker(
+                [40.88546731801527, -73.91453707216056],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_3d6f640cf273b68f6725f15d16ff8a99 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_aa549d19ae92213ad89f523855e5a35f = $(`<div id="html_aa549d19ae92213ad89f523855e5a35f" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>3333 HENRY HUDSON PARKWAY Unit 23H, BRONX, NY</b><br>       <b>Sale:</b> $650,000<br>       <b>Sellers:</b> 155 WEST 68TH STREET ASSOC LLC; WHITEHALL REALTY CO.<br>       <b>Buyers:</b> ZAPPI, MARCELA I; ZAPPI, MARCELO E<br>       <b>Neighborhood:</b> Riverdale<br>       <a href="https://zola.planning.nyc.gov/l/lot/2/5901/1" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_3d6f640cf273b68f6725f15d16ff8a99.setContent(html_aa549d19ae92213ad89f523855e5a35f);
+            
+        
+
+        circle_marker_02050c9e6a360e65b66c6bb3b816ba1b.bindPopup(popup_3d6f640cf273b68f6725f15d16ff8a99)
+        ;
+
+        
+    
+    
+            circle_marker_02050c9e6a360e65b66c6bb3b816ba1b.bindTooltip(
+                `<div>
+                     3333 HENRY HUDSON PARKWAY Unit 23H, BRONX, NY — $650,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b41c2b322cde5ed12be0d04ca20e5c34 = L.circleMarker(
+                [40.78703114288732, -73.9808793301352],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_3e07bcf3d27c008ae846701a8d6e5409 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_571f09c43d07d43a17bb074cd930a68c = $(`<div id="html_571f09c43d07d43a17bb074cd930a68c" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>100 RIVERSIDE DRIVE Unit 13D, NEW YORK, NY</b><br>       <b>Sale:</b> $1,900,000<br>       <b>Sellers:</b> ESTATE OF ANTHONY SACCOMANO A/K/A ANTHONY ROBERT; MARY KATHRYN RYAN, AS EXECUTOR<br>       <b>Buyers:</b> MARDON, LESLEY; MIHELAKIS, CHRISSOULA<br>       <b>Neighborhood:</b> Upper West Side<br>       <a href="https://zola.planning.nyc.gov/l/lot/1/1245/3" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_3e07bcf3d27c008ae846701a8d6e5409.setContent(html_571f09c43d07d43a17bb074cd930a68c);
+            
+        
+
+        circle_marker_b41c2b322cde5ed12be0d04ca20e5c34.bindPopup(popup_3e07bcf3d27c008ae846701a8d6e5409)
+        ;
+
+        
+    
+    
+            circle_marker_b41c2b322cde5ed12be0d04ca20e5c34.bindTooltip(
+                `<div>
+                     100 RIVERSIDE DRIVE Unit 13D, NEW YORK, NY — $1,900,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6be0e764dcf2b42d7ad2b2264bf40051 = L.circleMarker(
+                [40.7564821, -73.97341329999999],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_53fd1ef04f40c93c7f850a645151f353 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_c0e05d184c2a0483439009905b45592f = $(`<div id="html_c0e05d184c2a0483439009905b45592f" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>301 PARK AVENUE Unit 3006, NEW YORK, NY</b><br>       <b>Sale:</b> $10,207,500<br>       <b>Sellers:</b> AB STABLE LLC<br>       <b>Buyers:</b> REGENT PROPERTY USA NY LP<br>       <b>Neighborhood:</b> Park Avenue<br>       <a href="https://zola.planning.nyc.gov/l/lot/1/1304/1407" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_53fd1ef04f40c93c7f850a645151f353.setContent(html_c0e05d184c2a0483439009905b45592f);
+            
+        
+
+        circle_marker_6be0e764dcf2b42d7ad2b2264bf40051.bindPopup(popup_53fd1ef04f40c93c7f850a645151f353)
+        ;
+
+        
+    
+    
+            circle_marker_6be0e764dcf2b42d7ad2b2264bf40051.bindTooltip(
+                `<div>
+                     301 PARK AVENUE Unit 3006, NEW YORK, NY — $10,207,500
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_209ef104fe30dded8d851eb0ab63012d = L.circleMarker(
+                [40.53996240358581, -74.15818404340978],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_c8897567f61dccb9a1dc06a5a7cf35ba = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_be58bfcbd080c0028e475170e2d0b7f7 = $(`<div id="html_be58bfcbd080c0028e475170e2d0b7f7" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>331 WINCHESTER AVENUE, STATEN ISLAND, NY</b><br>       <b>Sale:</b> $1,100,000<br>       <b>Sellers:</b> ASV DEVELOPERS LLC<br>       <b>Buyers:</b> ALASSARI, TAHA<br>       <b>Neighborhood:</b> Eltingville<br>       <a href="https://zola.planning.nyc.gov/l/lot/5/5267/90" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_c8897567f61dccb9a1dc06a5a7cf35ba.setContent(html_be58bfcbd080c0028e475170e2d0b7f7);
+            
+        
+
+        circle_marker_209ef104fe30dded8d851eb0ab63012d.bindPopup(popup_c8897567f61dccb9a1dc06a5a7cf35ba)
+        ;
+
+        
+    
+    
+            circle_marker_209ef104fe30dded8d851eb0ab63012d.bindTooltip(
+                `<div>
+                     331 WINCHESTER AVENUE, STATEN ISLAND, NY — $1,100,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7a46045879d5469e9a62f2dcc8bc6c7b = L.circleMarker(
+                [40.59481734987184, -74.0745066622235],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_f8b66d07f7602b56346ee2c0875f202c = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_09cc45c19107ee1228adc71cb28cd036 = $(`<div id="html_09cc45c19107ee1228adc71cb28cd036" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>116 BIONIA AVENUE, STATEN ISLAND, NY</b><br>       <b>Sale:</b> $645,000<br>       <b>Sellers:</b> CARUSELLE, PATRICIA<br>       <b>Buyers:</b> RAMADANI, AGONA; RAMADANI, ARBEN<br>       <b>Neighborhood:</b> South Beach<br>       <a href="https://zola.planning.nyc.gov/l/lot/5/3277/49" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_f8b66d07f7602b56346ee2c0875f202c.setContent(html_09cc45c19107ee1228adc71cb28cd036);
+            
+        
+
+        circle_marker_7a46045879d5469e9a62f2dcc8bc6c7b.bindPopup(popup_f8b66d07f7602b56346ee2c0875f202c)
+        ;
+
+        
+    
+    
+            circle_marker_7a46045879d5469e9a62f2dcc8bc6c7b.bindTooltip(
+                `<div>
+                     116 BIONIA AVENUE, STATEN ISLAND, NY — $645,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3afd5e711f58cf9322653b5e74036c67 = L.circleMarker(
+                [40.66078144710885, -73.76010595955273],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_0be19327f38ff1553aa8a27786854516 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_9bc4b1bff01f4498e80e3710de2cdb6f = $(`<div id="html_9bc4b1bff01f4498e80e3710de2cdb6f" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>146-31 220 STREET, QUEENS, NY</b><br>       <b>Sale:</b> $800,000<br>       <b>Sellers:</b> LECADRE, SHONON G; MATTOCKS, GARY D<br>       <b>Buyers:</b> FLOWERS, ROHAN MARTIN<br>       <b>Neighborhood:</b> Brookville<br>       <a href="https://zola.planning.nyc.gov/l/lot/4/13454/114" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_0be19327f38ff1553aa8a27786854516.setContent(html_9bc4b1bff01f4498e80e3710de2cdb6f);
+            
+        
+
+        circle_marker_3afd5e711f58cf9322653b5e74036c67.bindPopup(popup_0be19327f38ff1553aa8a27786854516)
+        ;
+
+        
+    
+    
+            circle_marker_3afd5e711f58cf9322653b5e74036c67.bindTooltip(
+                `<div>
+                     146-31 220 STREET, QUEENS, NY — $800,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_80fbdf501109e4843bf7a26d30213fef = L.circleMarker(
+                [40.69498548455533, -73.86467621007326],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_22fb035330db5ea92456cc01dab36767 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_bf8271217e7d89711fd2ca1638326b08 = $(`<div id="html_bf8271217e7d89711fd2ca1638326b08" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>76-53 85TH ROAD, QUEENS, NY</b><br>       <b>Sale:</b> $1,270,000<br>       <b>Sellers:</b> CHEN, LI FANG; LI, LINGSI<br>       <b>Buyers:</b> GOMEZCOELLO, VERONICA; GOMEZCOELLO, WILLIAM<br>       <b>Neighborhood:</b> Woodhaven<br>       <a href="https://zola.planning.nyc.gov/l/lot/4/884/60026" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_22fb035330db5ea92456cc01dab36767.setContent(html_bf8271217e7d89711fd2ca1638326b08);
+            
+        
+
+        circle_marker_80fbdf501109e4843bf7a26d30213fef.bindPopup(popup_22fb035330db5ea92456cc01dab36767)
+        ;
+
+        
+    
+    
+            circle_marker_80fbdf501109e4843bf7a26d30213fef.bindTooltip(
+                `<div>
+                     76-53 85TH ROAD, QUEENS, NY — $1,270,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_646ef1fc7b11dfc8a76965db263b84b6 = L.circleMarker(
+                [40.74402092656212, -74.00252929687113],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_c6b9330ef5271fecc842f7acbac96353 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_8fb9cd3993ebf30ff4b8f282ff201896 = $(`<div id="html_8fb9cd3993ebf30ff4b8f282ff201896" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>365 WEST 19 STREET Unit 2R, NEW YORK, NY</b><br>       <b>Sale:</b> $725,000<br>       <b>Sellers:</b> ROSEN, MICHAEL HSU<br>       <b>Buyers:</b> HIGGINS, KELTON; SHERRY, GEMMA<br>       <b>Neighborhood:</b> Chelsea<br>       <a href="https://zola.planning.nyc.gov/l/lot/1/743/6" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_c6b9330ef5271fecc842f7acbac96353.setContent(html_8fb9cd3993ebf30ff4b8f282ff201896);
+            
+        
+
+        circle_marker_646ef1fc7b11dfc8a76965db263b84b6.bindPopup(popup_c6b9330ef5271fecc842f7acbac96353)
+        ;
+
+        
+    
+    
+            circle_marker_646ef1fc7b11dfc8a76965db263b84b6.bindTooltip(
+                `<div>
+                     365 WEST 19 STREET Unit 2R, NEW YORK, NY — $725,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4216df418fb649de9c133eb2034c0440 = L.circleMarker(
+                [40.75285698755384, -73.97042962235822],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_3fa675dc93d68b1fe7069c2c0313e8d7 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_451bf9a8e198f4a423f8377ea09bf6e1 = $(`<div id="html_451bf9a8e198f4a423f8377ea09bf6e1" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>240 EAST 47TH STREET Unit 9B, NEW YORK, NY</b><br>       <b>Sale:</b> $1,350,000<br>       <b>Sellers:</b> BRUNSON, TRUSTEE, LANI; THE AMOL PAWAR REVOCABLE TRUST<br>       <b>Buyers:</b> WHITEHEAD, KRISTINA JENKINS; WHITEHEAD, MARC STANLEY<br>       <b>Neighborhood:</b> Turtle Bay<br>       <a href="https://zola.planning.nyc.gov/l/lot/1/1320/1051" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_3fa675dc93d68b1fe7069c2c0313e8d7.setContent(html_451bf9a8e198f4a423f8377ea09bf6e1);
+            
+        
+
+        circle_marker_4216df418fb649de9c133eb2034c0440.bindPopup(popup_3fa675dc93d68b1fe7069c2c0313e8d7)
+        ;
+
+        
+    
+    
+            circle_marker_4216df418fb649de9c133eb2034c0440.bindTooltip(
+                `<div>
+                     240 EAST 47TH STREET Unit 9B, NEW YORK, NY — $1,350,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6b9f75c8c182e983fd088c400bb68a8c = L.circleMarker(
+                [40.7713906, -73.95893579999999],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_5fae1bb11cb6f451ba1c064328decd69 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_b7e8b77f786f943215d3ebe7f4d9828a = $(`<div id="html_b7e8b77f786f943215d3ebe7f4d9828a" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>200 EAST 75TH STREET Unit PH-5, NEW YORK, NY</b><br>       <b>Sale:</b> $21,200,000<br>       <b>Sellers:</b> EJS 1303 THIRD LLC<br>       <b>Buyers:</b> 200 E 75TH PH5 LLC<br>       <b>Neighborhood:</b> Upper East Side<br>       <a href="https://zola.planning.nyc.gov/l/lot/1/1429/1332" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_5fae1bb11cb6f451ba1c064328decd69.setContent(html_b7e8b77f786f943215d3ebe7f4d9828a);
+            
+        
+
+        circle_marker_6b9f75c8c182e983fd088c400bb68a8c.bindPopup(popup_5fae1bb11cb6f451ba1c064328decd69)
+        ;
+
+        
+    
+    
+            circle_marker_6b9f75c8c182e983fd088c400bb68a8c.bindTooltip(
+                `<div>
+                     200 EAST 75TH STREET Unit PH-5, NEW YORK, NY — $21,200,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c6f5f29173417b16b0a3346bb3a0043d = L.circleMarker(
+                [40.611874964290365, -73.90561949236384],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478);
+        
+    
+        var popup_aceb547edc389b4fc6988ee6054804f6 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_d865280db28c637240a8f23cd9d1f07d = $(`<div id="html_d865280db28c637240a8f23cd9d1f07d" style="width: 100.0%; height: 100.0%;">     <div style="font-size: 13px; line-height: 1.25;">       <b>225 MAYFAIR DRIVE NORTH, BROOKLYN, NY</b><br>       <b>Sale:</b> $1,185,000<br>       <b>Sellers:</b> YEVDAYEV, LEONID; YEVDAYEV, SAMIRA<br>       <b>Buyers:</b> LEVIN, BORIS; ROFMAN, NATALYA<br>       <b>Neighborhood:</b> Mill Basin<br>       <a href="https://zola.planning.nyc.gov/l/lot/3/8627/51" target="_blank" rel="noopener noreferrer">Open Zola / Lot</a>     </div>     </div>`)[0];
+                popup_aceb547edc389b4fc6988ee6054804f6.setContent(html_d865280db28c637240a8f23cd9d1f07d);
+            
+        
+
+        circle_marker_c6f5f29173417b16b0a3346bb3a0043d.bindPopup(popup_aceb547edc389b4fc6988ee6054804f6)
+        ;
+
+        
+    
+    
+            circle_marker_c6f5f29173417b16b0a3346bb3a0043d.bindTooltip(
+                `<div>
+                     225 MAYFAIR DRIVE NORTH, BROOKLYN, NY — $1,185,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478.addTo(map_5ad298f0fa338d5bb2e3f2163e2421b2);
+        
+    
+            var layer_control_9904672cb42c7b539cab3f7a02530d2a_layers = {
+                base_layers : {
+                    "cartodbpositron" : tile_layer_043013a247e0129ff69958b21572d5a8,
+                },
+                overlays :  {
+                    "Sales" : marker_cluster_3c61f6c2a51254ff0621b0aa79ea1478,
+                },
+            };
+            let layer_control_9904672cb42c7b539cab3f7a02530d2a = L.control.layers(
+                layer_control_9904672cb42c7b539cab3f7a02530d2a_layers.base_layers,
+                layer_control_9904672cb42c7b539cab3f7a02530d2a_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_5ad298f0fa338d5bb2e3f2163e2421b2);
+
+        
+</script>
+</html>
