@@ -1,0 +1,3433 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_af4e1932bde19281b44a7c9702755da3 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_af4e1932bde19281b44a7c9702755da3" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_af4e1932bde19281b44a7c9702755da3 = L.map(
+                "map_af4e1932bde19281b44a7c9702755da3",
+                {
+                    center: [40.672415232999995, -73.98135584100001],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_238d2d2c4b34c75b145091919d1be0b8 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_238d2d2c4b34c75b145091919d1be0b8.addTo(map_af4e1932bde19281b44a7c9702755da3);
+        
+    
+            var marker_cluster_4b726963e65aa1e07774825f2d28e763 = L.markerClusterGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_7c4e48bb87c926caf4431f8c2195089e = L.circleMarker(
+                [40.598396, -73.96821],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_96f30c1f5efb2f40214820ec43e37b89 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b370dab13b9e712ebda0dc06b435d232 = $(`<div id="html_b370dab13b9e712ebda0dc06b435d232" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">2126 EAST 4TH STREET, BROOKLYN, NY</h4>         <b>Price:</b> $32,000,000<br>         <b>Neighborhood:</b> Gravesend<br>         <b>BBL:</b> 3071060023<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3071060023" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_96f30c1f5efb2f40214820ec43e37b89.setContent(html_b370dab13b9e712ebda0dc06b435d232);
+            
+        
+
+        circle_marker_7c4e48bb87c926caf4431f8c2195089e.bindPopup(popup_96f30c1f5efb2f40214820ec43e37b89)
+        ;
+
+        
+    
+    
+            circle_marker_7c4e48bb87c926caf4431f8c2195089e.bindTooltip(
+                `<div>
+                     2126 EAST 4TH STREET, BROOKLYN, NY: $32,000,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c693ef76fcca2c914f2203b391ec7930 = L.circleMarker(
+                [40.6950096, -73.997097],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_0fb711d47221885aa2e5188e9bd8001c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3d815d4e3bd0aa6a244724a87dc80bac = $(`<div id="html_3d815d4e3bd0aa6a244724a87dc80bac" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">35 REMSEN STREET, BROOKLYN, NY</h4>         <b>Price:</b> $18,440,000<br>         <b>Neighborhood:</b> Brooklyn Heights<br>         <b>BBL:</b> 3002470012<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002470012" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_0fb711d47221885aa2e5188e9bd8001c.setContent(html_3d815d4e3bd0aa6a244724a87dc80bac);
+            
+        
+
+        circle_marker_c693ef76fcca2c914f2203b391ec7930.bindPopup(popup_0fb711d47221885aa2e5188e9bd8001c)
+        ;
+
+        
+    
+    
+            circle_marker_c693ef76fcca2c914f2203b391ec7930.bindTooltip(
+                `<div>
+                     35 REMSEN STREET, BROOKLYN, NY: $18,440,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d58bdb2a8a48a02afc1cd973d93319ad = L.circleMarker(
+                [40.624681, -73.9675639],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_43c57d1f33fbb20d0ac0e6ddf43cd985 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_97ef581b455ef79ade8658006b25144e = $(`<div id="html_97ef581b455ef79ade8658006b25144e" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">815 AVENUE J, BROOKLYN, NY</h4>         <b>Price:</b> $15,500,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3065210044<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3065210044" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_43c57d1f33fbb20d0ac0e6ddf43cd985.setContent(html_97ef581b455ef79ade8658006b25144e);
+            
+        
+
+        circle_marker_d58bdb2a8a48a02afc1cd973d93319ad.bindPopup(popup_43c57d1f33fbb20d0ac0e6ddf43cd985)
+        ;
+
+        
+    
+    
+            circle_marker_d58bdb2a8a48a02afc1cd973d93319ad.bindTooltip(
+                `<div>
+                     815 AVENUE J, BROOKLYN, NY: $15,500,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f8057b716e65e70cd4f19b191442c886 = L.circleMarker(
+                [40.62473749999999, -73.9676416],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_1fec4d91fbca55cb27fd763870ed5f15 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_08b7a2948177efb3b70325ef88a7b010 = $(`<div id="html_08b7a2948177efb3b70325ef88a7b010" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">809 AVENUE J, BROOKLYN, NY</h4>         <b>Price:</b> $15,500,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3065210046<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3065210046" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_1fec4d91fbca55cb27fd763870ed5f15.setContent(html_08b7a2948177efb3b70325ef88a7b010);
+            
+        
+
+        circle_marker_f8057b716e65e70cd4f19b191442c886.bindPopup(popup_1fec4d91fbca55cb27fd763870ed5f15)
+        ;
+
+        
+    
+    
+            circle_marker_f8057b716e65e70cd4f19b191442c886.bindTooltip(
+                `<div>
+                     809 AVENUE J, BROOKLYN, NY: $15,500,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8d7a4401f13fbcfd9b891c598e7f8f1a = L.circleMarker(
+                [40.6703458, -73.9743841],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_b5bfe71e55419e5a70f6f0f72af87794 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f04ee322efd8555a1607bb7e39d39e53 = $(`<div id="html_f04ee322efd8555a1607bb7e39d39e53" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">535 1ST STREET, BROOKLYN, NY</h4>         <b>Price:</b> $13,900,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3010750062<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3010750062" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_b5bfe71e55419e5a70f6f0f72af87794.setContent(html_f04ee322efd8555a1607bb7e39d39e53);
+            
+        
+
+        circle_marker_8d7a4401f13fbcfd9b891c598e7f8f1a.bindPopup(popup_b5bfe71e55419e5a70f6f0f72af87794)
+        ;
+
+        
+    
+    
+            circle_marker_8d7a4401f13fbcfd9b891c598e7f8f1a.bindTooltip(
+                `<div>
+                     535 1ST STREET, BROOKLYN, NY: $13,900,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_50f545c411212c16de25ac9eb90537fa = L.circleMarker(
+                [40.70043560000001, -73.996404],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_27c1088913e5fbbd51f7c5c35cf34c3c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_bb25c7662ab3935fba526addfd8ddd70 = $(`<div id="html_bb25c7662ab3935fba526addfd8ddd70" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">130 FURMAN STREET Unit S-407, BROOKLYN, NY</h4>         <b>Price:</b> $11,920,000<br>         <b>Neighborhood:</b> DUMBO<br>         <b>BBL:</b> 3001991109<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3001991109" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_27c1088913e5fbbd51f7c5c35cf34c3c.setContent(html_bb25c7662ab3935fba526addfd8ddd70);
+            
+        
+
+        circle_marker_50f545c411212c16de25ac9eb90537fa.bindPopup(popup_27c1088913e5fbbd51f7c5c35cf34c3c)
+        ;
+
+        
+    
+    
+            circle_marker_50f545c411212c16de25ac9eb90537fa.bindTooltip(
+                `<div>
+                     130 FURMAN STREET Unit S-407, BROOKLYN, NY: $11,920,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e4236cabc82994709cbe37755a484f5b = L.circleMarker(
+                [40.6842653, -73.99588109999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_c1032c8260ed426648b9a5b12ccad388 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_dd8ca3c607ba2d8da52d9f0809635f63 = $(`<div id="html_dd8ca3c607ba2d8da52d9f0809635f63" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">51 TOMPKINS PLACE, BROOKLYN, NY</h4>         <b>Price:</b> $11,500,000<br>         <b>Neighborhood:</b> Cobble Hill<br>         <b>BBL:</b> 3003260006<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3003260006" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_c1032c8260ed426648b9a5b12ccad388.setContent(html_dd8ca3c607ba2d8da52d9f0809635f63);
+            
+        
+
+        circle_marker_e4236cabc82994709cbe37755a484f5b.bindPopup(popup_c1032c8260ed426648b9a5b12ccad388)
+        ;
+
+        
+    
+    
+            circle_marker_e4236cabc82994709cbe37755a484f5b.bindTooltip(
+                `<div>
+                     51 TOMPKINS PLACE, BROOKLYN, NY: $11,500,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6986bdf988ba337cd770089193387014 = L.circleMarker(
+                [40.5993765, -73.9702451],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_59d9c29df536a4749b3e468446e1f550 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_bee20eb154b589b27ea2c8d2e12bb99d = $(`<div id="html_bee20eb154b589b27ea2c8d2e12bb99d" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">402 AVENUE T, BROOKLYN, NY</h4>         <b>Price:</b> $11,500,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3071040458<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3071040458" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_59d9c29df536a4749b3e468446e1f550.setContent(html_bee20eb154b589b27ea2c8d2e12bb99d);
+            
+        
+
+        circle_marker_6986bdf988ba337cd770089193387014.bindPopup(popup_59d9c29df536a4749b3e468446e1f550)
+        ;
+
+        
+    
+    
+            circle_marker_6986bdf988ba337cd770089193387014.bindTooltip(
+                `<div>
+                     402 AVENUE T, BROOKLYN, NY: $11,500,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5e9774186fd5f4eb4784fefbbaceab73 = L.circleMarker(
+                [40.6979317, -73.9958187],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_be25a78f9e01a0a51df57ab2fdd78193 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_79338982c91e957978ca9b51d4349a20 = $(`<div id="html_79338982c91e957978ca9b51d4349a20" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">104 WILLOW STREET, BROOKLYN, NY</h4>         <b>Price:</b> $11,300,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3002340046<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002340046" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_be25a78f9e01a0a51df57ab2fdd78193.setContent(html_79338982c91e957978ca9b51d4349a20);
+            
+        
+
+        circle_marker_5e9774186fd5f4eb4784fefbbaceab73.bindPopup(popup_be25a78f9e01a0a51df57ab2fdd78193)
+        ;
+
+        
+    
+    
+            circle_marker_5e9774186fd5f4eb4784fefbbaceab73.bindTooltip(
+                `<div>
+                     104 WILLOW STREET, BROOKLYN, NY: $11,300,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b6d4951f6be7855122cc77235d0d45e0 = L.circleMarker(
+                [40.6914086, -73.9925756],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_5c1bf2a7f613d83e52b9994a02cb1f70 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0a639cd5907b21f1ed2a526ec14a3085 = $(`<div id="html_0a639cd5907b21f1ed2a526ec14a3085" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">25 SCHERMERHORN STREET, BROOKLYN, NY</h4>         <b>Price:</b> $11,200,000<br>         <b>Neighborhood:</b> Brooklyn Heights<br>         <b>BBL:</b> 3002680009<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002680009" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_5c1bf2a7f613d83e52b9994a02cb1f70.setContent(html_0a639cd5907b21f1ed2a526ec14a3085);
+            
+        
+
+        circle_marker_b6d4951f6be7855122cc77235d0d45e0.bindPopup(popup_5c1bf2a7f613d83e52b9994a02cb1f70)
+        ;
+
+        
+    
+    
+            circle_marker_b6d4951f6be7855122cc77235d0d45e0.bindTooltip(
+                `<div>
+                     25 SCHERMERHORN STREET, BROOKLYN, NY: $11,200,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_15e6f7439c5f9a938b04c56e444d3978 = L.circleMarker(
+                [40.7002278, -73.9946085],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_38b21702752535909d3c46d9d4461832 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_66eef17377f28885acf27f892e6a9ada = $(`<div id="html_66eef17377f28885acf27f892e6a9ada" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">19 CRANBERRY STREET, BROOKLYN, NY</h4>         <b>Price:</b> $11,000,000<br>         <b>Neighborhood:</b> Brooklyn Heights<br>         <b>BBL:</b> 3002140022<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002140022" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_38b21702752535909d3c46d9d4461832.setContent(html_66eef17377f28885acf27f892e6a9ada);
+            
+        
+
+        circle_marker_15e6f7439c5f9a938b04c56e444d3978.bindPopup(popup_38b21702752535909d3c46d9d4461832)
+        ;
+
+        
+    
+    
+            circle_marker_15e6f7439c5f9a938b04c56e444d3978.bindTooltip(
+                `<div>
+                     19 CRANBERRY STREET, BROOKLYN, NY: $11,000,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_024347645d08b01cba6001c4bb323a59 = L.circleMarker(
+                [40.6930906, -73.9976257],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_6e687fb818ddb2c6cbcea6bdc7909788 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_bf31670d6d90cd2ca1c36d4314547372 = $(`<div id="html_bf31670d6d90cd2ca1c36d4314547372" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">17 WILLOW PLACE, BROOKLYN, NY</h4>         <b>Price:</b> $11,000,000<br>         <b>Neighborhood:</b> Brooklyn Heights<br>         <b>BBL:</b> 3002600018<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002600018" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_6e687fb818ddb2c6cbcea6bdc7909788.setContent(html_bf31670d6d90cd2ca1c36d4314547372);
+            
+        
+
+        circle_marker_024347645d08b01cba6001c4bb323a59.bindPopup(popup_6e687fb818ddb2c6cbcea6bdc7909788)
+        ;
+
+        
+    
+    
+            circle_marker_024347645d08b01cba6001c4bb323a59.bindTooltip(
+                `<div>
+                     17 WILLOW PLACE, BROOKLYN, NY: $11,000,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ae98c0a6c92e877b80e1753f4ed0ac8e = L.circleMarker(
+                [40.6864816, -73.9914258],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_828e1c28bc94952185115aca271559bd = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d166a9f55082c6f13c10640422503983 = $(`<div id="html_d166a9f55082c6f13c10640422503983" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">57 WYCKOFF ST, BROOKLYN, NY</h4>         <b>Price:</b> $10,450,000<br>         <b>Neighborhood:</b> Cobble Hill<br>         <b>BBL:</b> 3003840054<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3003840054" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_828e1c28bc94952185115aca271559bd.setContent(html_d166a9f55082c6f13c10640422503983);
+            
+        
+
+        circle_marker_ae98c0a6c92e877b80e1753f4ed0ac8e.bindPopup(popup_828e1c28bc94952185115aca271559bd)
+        ;
+
+        
+    
+    
+            circle_marker_ae98c0a6c92e877b80e1753f4ed0ac8e.bindTooltip(
+                `<div>
+                     57 WYCKOFF ST, BROOKLYN, NY: $10,450,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7d9ba2cb8204fea3c988351dd03ec743 = L.circleMarker(
+                [40.7023166, -73.9908998],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_6585d9ca82c108cda1a41ae478a80360 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_638c38df7b20885429b2542eaadfc77a = $(`<div id="html_638c38df7b20885429b2542eaadfc77a" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">60 FRONT STREET Unit 27A, BROOKLYN, NY</h4>         <b>Price:</b> $9,995,000<br>         <b>Neighborhood:</b> DUMBO<br>         <b>BBL:</b> 3000451363<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3000451363" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_6585d9ca82c108cda1a41ae478a80360.setContent(html_638c38df7b20885429b2542eaadfc77a);
+            
+        
+
+        circle_marker_7d9ba2cb8204fea3c988351dd03ec743.bindPopup(popup_6585d9ca82c108cda1a41ae478a80360)
+        ;
+
+        
+    
+    
+            circle_marker_7d9ba2cb8204fea3c988351dd03ec743.bindTooltip(
+                `<div>
+                     60 FRONT STREET Unit 27A, BROOKLYN, NY: $9,995,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e5a2fa5dc7c9b3aa13cb122576f73e6a = L.circleMarker(
+                [40.6860987, -73.9958736],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_932772eb9753ff864661ae262bbc1962 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_9551376f0551fe0a8dca9781edcc460f = $(`<div id="html_9551376f0551fe0a8dca9781edcc460f" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">219 KANE STREET, BROOKLYN, NY</h4>         <b>Price:</b> $9,300,000<br>         <b>Neighborhood:</b> Cobble Hill<br>         <b>BBL:</b> 3003120055<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3003120055" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_932772eb9753ff864661ae262bbc1962.setContent(html_9551376f0551fe0a8dca9781edcc460f);
+            
+        
+
+        circle_marker_e5a2fa5dc7c9b3aa13cb122576f73e6a.bindPopup(popup_932772eb9753ff864661ae262bbc1962)
+        ;
+
+        
+    
+    
+            circle_marker_e5a2fa5dc7c9b3aa13cb122576f73e6a.bindTooltip(
+                `<div>
+                     219 KANE STREET, BROOKLYN, NY: $9,300,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_90b8a913d74f071d5e93f653def97efe = L.circleMarker(
+                [40.6861415, -73.9959398],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_dd5e412ff17b3d6cce58629cdcb9b540 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_484c26e0d31effa32112aabfbbb9b05c = $(`<div id="html_484c26e0d31effa32112aabfbbb9b05c" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">217 KANE STREET, BROOKLYN, NY</h4>         <b>Price:</b> $9,300,000<br>         <b>Neighborhood:</b> Cobble Hill<br>         <b>BBL:</b> 3003120056<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3003120056" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_dd5e412ff17b3d6cce58629cdcb9b540.setContent(html_484c26e0d31effa32112aabfbbb9b05c);
+            
+        
+
+        circle_marker_90b8a913d74f071d5e93f653def97efe.bindPopup(popup_dd5e412ff17b3d6cce58629cdcb9b540)
+        ;
+
+        
+    
+    
+            circle_marker_90b8a913d74f071d5e93f653def97efe.bindTooltip(
+                `<div>
+                     217 KANE STREET, BROOKLYN, NY: $9,300,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d4390f885ebebead325b9d234c607b3a = L.circleMarker(
+                [40.6963642, -73.9943211],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_023f1c936d98077bfe417f59ab657a95 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1c69daec51f23706852d363f8bf9cd95 = $(`<div id="html_1c69daec51f23706852d363f8bf9cd95" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">12 COLLEGE PLACE, BROOKLYN, NY</h4>         <b>Price:</b> $9,300,000<br>         <b>Neighborhood:</b> Brooklyn Heights<br>         <b>BBL:</b> 3002360043<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002360043" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_023f1c936d98077bfe417f59ab657a95.setContent(html_1c69daec51f23706852d363f8bf9cd95);
+            
+        
+
+        circle_marker_d4390f885ebebead325b9d234c607b3a.bindPopup(popup_023f1c936d98077bfe417f59ab657a95)
+        ;
+
+        
+    
+    
+            circle_marker_d4390f885ebebead325b9d234c607b3a.bindTooltip(
+                `<div>
+                     12 COLLEGE PLACE, BROOKLYN, NY: $9,300,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8717a6cdd06baa2ab3d64dd841deaf47 = L.circleMarker(
+                [40.671355, -73.972167],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_35ec181cde2029e834b31f1c435b3f97 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_63b09c5e09b613b6f85d148cbc23d013 = $(`<div id="html_63b09c5e09b613b6f85d148cbc23d013" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">882 CARROLL STREET, BROOKLYN, NY</h4>         <b>Price:</b> $8,750,000<br>         <b>Neighborhood:</b> Park Slope<br>         <b>BBL:</b> 3010720029<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3010720029" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_35ec181cde2029e834b31f1c435b3f97.setContent(html_63b09c5e09b613b6f85d148cbc23d013);
+            
+        
+
+        circle_marker_8717a6cdd06baa2ab3d64dd841deaf47.bindPopup(popup_35ec181cde2029e834b31f1c435b3f97)
+        ;
+
+        
+    
+    
+            circle_marker_8717a6cdd06baa2ab3d64dd841deaf47.bindTooltip(
+                `<div>
+                     882 CARROLL STREET, BROOKLYN, NY: $8,750,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7328e2bc54cecd4aa79e276cd7a83d7c = L.circleMarker(
+                [40.6969938, -73.9951832],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_1f2603b5fe8e377f78b1d93f5af3a9ed = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_6fa567647fa1e0a21b78e6ad33a7fbd6 = $(`<div id="html_6fa567647fa1e0a21b78e6ad33a7fbd6" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">154 HICKS STREET, BROOKLYN, NY</h4>         <b>Price:</b> $8,625,000<br>         <b>Neighborhood:</b> Brooklyn Heights<br>         <b>BBL:</b> 3002350058<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002350058" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_1f2603b5fe8e377f78b1d93f5af3a9ed.setContent(html_6fa567647fa1e0a21b78e6ad33a7fbd6);
+            
+        
+
+        circle_marker_7328e2bc54cecd4aa79e276cd7a83d7c.bindPopup(popup_1f2603b5fe8e377f78b1d93f5af3a9ed)
+        ;
+
+        
+    
+    
+            circle_marker_7328e2bc54cecd4aa79e276cd7a83d7c.bindTooltip(
+                `<div>
+                     154 HICKS STREET, BROOKLYN, NY: $8,625,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1094760c9bfa870e5e48325a10ca7fd0 = L.circleMarker(
+                [40.7140202, -73.96372629999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_bcd7ed57676d5c541f6aa33f3c5c5dfa = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e14f6666c5aebf14e26437859a8dbb46 = $(`<div id="html_e14f6666c5aebf14e26437859a8dbb46" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">101 SOUTH 2ND STREET, BROOKLYN, NY</h4>         <b>Price:</b> $8,500,000<br>         <b>Neighborhood:</b> South Williamsburg<br>         <b>BBL:</b> 3024040031<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3024040031" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_bcd7ed57676d5c541f6aa33f3c5c5dfa.setContent(html_e14f6666c5aebf14e26437859a8dbb46);
+            
+        
+
+        circle_marker_1094760c9bfa870e5e48325a10ca7fd0.bindPopup(popup_bcd7ed57676d5c541f6aa33f3c5c5dfa)
+        ;
+
+        
+    
+    
+            circle_marker_1094760c9bfa870e5e48325a10ca7fd0.bindTooltip(
+                `<div>
+                     101 SOUTH 2ND STREET, BROOKLYN, NY: $8,500,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1f3edd44057d5eda23622747da959165 = L.circleMarker(
+                [40.6014019, -73.967277],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_595ff2b8f0fb9ed4b707e8f1b619c845 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4a73fc117a5147b81989fba4a6d98e2a = $(`<div id="html_4a73fc117a5147b81989fba4a6d98e2a" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">2011 EAST 5 STREET, BROOKLYN, NY</h4>         <b>Price:</b> $8,500,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3071080118<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3071080118" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_595ff2b8f0fb9ed4b707e8f1b619c845.setContent(html_4a73fc117a5147b81989fba4a6d98e2a);
+            
+        
+
+        circle_marker_1f3edd44057d5eda23622747da959165.bindPopup(popup_595ff2b8f0fb9ed4b707e8f1b619c845)
+        ;
+
+        
+    
+    
+            circle_marker_1f3edd44057d5eda23622747da959165.bindTooltip(
+                `<div>
+                     2011 EAST 5 STREET, BROOKLYN, NY: $8,500,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9f3567b4e82aaecef7b4e412431396b0 = L.circleMarker(
+                [40.69451309999999, -73.99535089999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_ac68fffe472efe38818dec7728dfa140 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e4028c16e70eab5f400090e8dca78ca2 = $(`<div id="html_e4028c16e70eab5f400090e8dca78ca2" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">77 REMSEN STREET, BROOKLYN, NY</h4>         <b>Price:</b> $8,250,000<br>         <b>Neighborhood:</b> Brooklyn Heights<br>         <b>BBL:</b> 3002480009<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002480009" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_ac68fffe472efe38818dec7728dfa140.setContent(html_e4028c16e70eab5f400090e8dca78ca2);
+            
+        
+
+        circle_marker_9f3567b4e82aaecef7b4e412431396b0.bindPopup(popup_ac68fffe472efe38818dec7728dfa140)
+        ;
+
+        
+    
+    
+            circle_marker_9f3567b4e82aaecef7b4e412431396b0.bindTooltip(
+                `<div>
+                     77 REMSEN STREET, BROOKLYN, NY: $8,250,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_dc77a58a984876335524fb721e4b78ba = L.circleMarker(
+                [40.6875511, -73.9967075],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_dd9baff9cb9dcac9b1980d11e57f426a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_482a0b57a2568e3d7fcf9217b67e97c6 = $(`<div id="html_482a0b57a2568e3d7fcf9217b67e97c6" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">192 WARREN STREET, BROOKLYN, NY</h4>         <b>Price:</b> $8,100,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3003060013<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3003060013" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_dd9baff9cb9dcac9b1980d11e57f426a.setContent(html_482a0b57a2568e3d7fcf9217b67e97c6);
+            
+        
+
+        circle_marker_dc77a58a984876335524fb721e4b78ba.bindPopup(popup_dd9baff9cb9dcac9b1980d11e57f426a)
+        ;
+
+        
+    
+    
+            circle_marker_dc77a58a984876335524fb721e4b78ba.bindTooltip(
+                `<div>
+                     192 WARREN STREET, BROOKLYN, NY: $8,100,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f5943a5da6690d664a4cd3bd271e4456 = L.circleMarker(
+                [40.6246794, -73.96828719999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_fd8b97103b99794124bf4fc5022bb484 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_180da5e20a96b40ad2beea717b0cfbbd = $(`<div id="html_180da5e20a96b40ad2beea717b0cfbbd" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">1010 EAST 8 STREET, BROOKLYN, NY</h4>         <b>Price:</b> $8,000,000<br>         <b>Neighborhood:</b> Ocean Parkway<br>         <b>BBL:</b> 3065200043<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3065200043" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_fd8b97103b99794124bf4fc5022bb484.setContent(html_180da5e20a96b40ad2beea717b0cfbbd);
+            
+        
+
+        circle_marker_f5943a5da6690d664a4cd3bd271e4456.bindPopup(popup_fd8b97103b99794124bf4fc5022bb484)
+        ;
+
+        
+    
+    
+            circle_marker_f5943a5da6690d664a4cd3bd271e4456.bindTooltip(
+                `<div>
+                     1010 EAST 8 STREET, BROOKLYN, NY: $8,000,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6d318d88d4ae6dd96cadf55d7a5a2575 = L.circleMarker(
+                [40.6878417, -73.9886306],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_7bda21ba134d283164cc7e3d76a1be1a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_475247a7d563ff9c3da92f827b594384 = $(`<div id="html_475247a7d563ff9c3da92f827b594384" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">297 PACIFIC STREET, BROOKLYN, NY</h4>         <b>Price:</b> $8,000,000<br>         <b>Neighborhood:</b> Boerum Hill<br>         <b>BBL:</b> 3001820049<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3001820049" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_7bda21ba134d283164cc7e3d76a1be1a.setContent(html_475247a7d563ff9c3da92f827b594384);
+            
+        
+
+        circle_marker_6d318d88d4ae6dd96cadf55d7a5a2575.bindPopup(popup_7bda21ba134d283164cc7e3d76a1be1a)
+        ;
+
+        
+    
+    
+            circle_marker_6d318d88d4ae6dd96cadf55d7a5a2575.bindTooltip(
+                `<div>
+                     297 PACIFIC STREET, BROOKLYN, NY: $8,000,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_258d28ebf54d331fd7c744d7e158ef19 = L.circleMarker(
+                [40.6793428, -73.9756319],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_499af079905255bf975b3b050cb1dd28 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_6881f67139297778bdf52e01fd200ab0 = $(`<div id="html_6881f67139297778bdf52e01fd200ab0" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">98 6TH AVENUE, BROOKLYN, NY</h4>         <b>Price:</b> $7,900,000<br>         <b>Neighborhood:</b> Park Slope<br>         <b>BBL:</b> 3009380040<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3009380040" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_499af079905255bf975b3b050cb1dd28.setContent(html_6881f67139297778bdf52e01fd200ab0);
+            
+        
+
+        circle_marker_258d28ebf54d331fd7c744d7e158ef19.bindPopup(popup_499af079905255bf975b3b050cb1dd28)
+        ;
+
+        
+    
+    
+            circle_marker_258d28ebf54d331fd7c744d7e158ef19.bindTooltip(
+                `<div>
+                     98 6TH AVENUE, BROOKLYN, NY: $7,900,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_99c2fc83bc8c08b633fce2bf416ba199 = L.circleMarker(
+                [40.68174030000001, -73.99164480000002],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_46dfd05210f10c96928ce7285f34c5d2 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3c2fc76d329790b3e5a9c29d3496a4ef = $(`<div id="html_3c2fc76d329790b3e5a9c29d3496a4ef" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">405 SACKETT STREET, BROOKLYN, NY</h4>         <b>Price:</b> $7,700,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3004220050<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3004220050" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_46dfd05210f10c96928ce7285f34c5d2.setContent(html_3c2fc76d329790b3e5a9c29d3496a4ef);
+            
+        
+
+        circle_marker_99c2fc83bc8c08b633fce2bf416ba199.bindPopup(popup_46dfd05210f10c96928ce7285f34c5d2)
+        ;
+
+        
+    
+    
+            circle_marker_99c2fc83bc8c08b633fce2bf416ba199.bindTooltip(
+                `<div>
+                     405 SACKETT STREET, BROOKLYN, NY: $7,700,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_29e29ecb3d281e4d7307b390f6d434e6 = L.circleMarker(
+                [40.66951, -73.97516310000002],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_ca7809aef8d1740b7ba02f60f320a424 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b613963e6b2d3d75fcc2bdc45be3b9b2 = $(`<div id="html_b613963e6b2d3d75fcc2bdc45be3b9b2" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">600 2 STREET, BROOKLYN, NY</h4>         <b>Price:</b> $7,600,000<br>         <b>Neighborhood:</b> Park Slope<br>         <b>BBL:</b> 3010790015<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3010790015" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_ca7809aef8d1740b7ba02f60f320a424.setContent(html_b613963e6b2d3d75fcc2bdc45be3b9b2);
+            
+        
+
+        circle_marker_29e29ecb3d281e4d7307b390f6d434e6.bindPopup(popup_ca7809aef8d1740b7ba02f60f320a424)
+        ;
+
+        
+    
+    
+            circle_marker_29e29ecb3d281e4d7307b390f6d434e6.bindTooltip(
+                `<div>
+                     600 2 STREET, BROOKLYN, NY: $7,600,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_256ee35d6a93bd4f5d98907a27a4f049 = L.circleMarker(
+                [40.6885878, -73.99537939999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_0a846dd6d89670bfefbd9e15af2e331a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ea705db4f237f75fe0ef71539344a4b6 = $(`<div id="html_ea705db4f237f75fe0ef71539344a4b6" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">246 CLINTON STREET, BROOKLYN, NY</h4>         <b>Price:</b> $7,500,000<br>         <b>Neighborhood:</b> Cobble Hill<br>         <b>BBL:</b> 3002960027<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002960027" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_0a846dd6d89670bfefbd9e15af2e331a.setContent(html_ea705db4f237f75fe0ef71539344a4b6);
+            
+        
+
+        circle_marker_256ee35d6a93bd4f5d98907a27a4f049.bindPopup(popup_0a846dd6d89670bfefbd9e15af2e331a)
+        ;
+
+        
+    
+    
+            circle_marker_256ee35d6a93bd4f5d98907a27a4f049.bindTooltip(
+                `<div>
+                     246 CLINTON STREET, BROOKLYN, NY: $7,500,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_942d0a74ee832b9613d1cb73cb2061bb = L.circleMarker(
+                [40.71303, -73.96769359999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_a5f3f4e94a8a2cb3b86e344434e55044 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ac9cdbb0099892d2fa0961f199ca407b = $(`<div id="html_ac9cdbb0099892d2fa0961f199ca407b" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">346 KENT AVENUE Unit PH1A, BROOKLYN, NY</h4>         <b>Price:</b> $7,450,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3024141356<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3024141356" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_a5f3f4e94a8a2cb3b86e344434e55044.setContent(html_ac9cdbb0099892d2fa0961f199ca407b);
+            
+        
+
+        circle_marker_942d0a74ee832b9613d1cb73cb2061bb.bindPopup(popup_a5f3f4e94a8a2cb3b86e344434e55044)
+        ;
+
+        
+    
+    
+            circle_marker_942d0a74ee832b9613d1cb73cb2061bb.bindTooltip(
+                `<div>
+                     346 KENT AVENUE Unit PH1A, BROOKLYN, NY: $7,450,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_de151a4bf00a154ea135894d635b0563 = L.circleMarker(
+                [40.6843675, -73.98000119999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_b82e589a3190477076ed6497c4722e37 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_56a9b9caa629a19cc51f08a6a2047f91 = $(`<div id="html_56a9b9caa629a19cc51f08a6a2047f91" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">535 PACIFIC STREET, BROOKLYN, NY</h4>         <b>Price:</b> $7,362,159<br>         <b>Neighborhood:</b> Boerum Hill<br>         <b>BBL:</b> 3001860060<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3001860060" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_b82e589a3190477076ed6497c4722e37.setContent(html_56a9b9caa629a19cc51f08a6a2047f91);
+            
+        
+
+        circle_marker_de151a4bf00a154ea135894d635b0563.bindPopup(popup_b82e589a3190477076ed6497c4722e37)
+        ;
+
+        
+    
+    
+            circle_marker_de151a4bf00a154ea135894d635b0563.bindTooltip(
+                `<div>
+                     535 PACIFIC STREET, BROOKLYN, NY: $7,362,159
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2f2cd9a90b055a5b74f235b43879eb74 = L.circleMarker(
+                [40.6864013, -73.99600459999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_e1485ab6cb378761110b76e5f498e341 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_9ec90ef8d7652cca99a2143ed0e083ff = $(`<div id="html_9ec90ef8d7652cca99a2143ed0e083ff" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">289 CLINTON STREET, BROOKLYN, NY</h4>         <b>Price:</b> $7,300,000<br>         <b>Neighborhood:</b> Cobble Hill<br>         <b>BBL:</b> 3003120006<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3003120006" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_e1485ab6cb378761110b76e5f498e341.setContent(html_9ec90ef8d7652cca99a2143ed0e083ff);
+            
+        
+
+        circle_marker_2f2cd9a90b055a5b74f235b43879eb74.bindPopup(popup_e1485ab6cb378761110b76e5f498e341)
+        ;
+
+        
+    
+    
+            circle_marker_2f2cd9a90b055a5b74f235b43879eb74.bindTooltip(
+                `<div>
+                     289 CLINTON STREET, BROOKLYN, NY: $7,300,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7cd52bfde47a8f437aeaebdf305c3492 = L.circleMarker(
+                [40.6843562, -73.9798323],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_c7cc52a96545a4b66ae8f7490a17fb03 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_48c5a445253b59d57ee45af8b43edfb5 = $(`<div id="html_48c5a445253b59d57ee45af8b43edfb5" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">537 PACIFIC STREET, BROOKLYN, NY</h4>         <b>Price:</b> $7,250,000<br>         <b>Neighborhood:</b> Boerum Hill<br>         <b>BBL:</b> 3001860058<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3001860058" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_c7cc52a96545a4b66ae8f7490a17fb03.setContent(html_48c5a445253b59d57ee45af8b43edfb5);
+            
+        
+
+        circle_marker_7cd52bfde47a8f437aeaebdf305c3492.bindPopup(popup_c7cc52a96545a4b66ae8f7490a17fb03)
+        ;
+
+        
+    
+    
+            circle_marker_7cd52bfde47a8f437aeaebdf305c3492.bindTooltip(
+                `<div>
+                     537 PACIFIC STREET, BROOKLYN, NY: $7,250,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8312e0e73fbdefd83bda574e479cc0f0 = L.circleMarker(
+                [40.7076484, -73.969019],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_eae0668cb4c8d7516dc2e0d97e8a59a6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_632837ff865fb22ff5013c87814f162d = $(`<div id="html_632837ff865fb22ff5013c87814f162d" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">480 KENT AVENUE Unit PH2A, BROOKLYN, NY</h4>         <b>Price:</b> $7,200,000<br>         <b>Neighborhood:</b> South Williamsburg<br>         <b>BBL:</b> 3021341495<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3021341495" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_eae0668cb4c8d7516dc2e0d97e8a59a6.setContent(html_632837ff865fb22ff5013c87814f162d);
+            
+        
+
+        circle_marker_8312e0e73fbdefd83bda574e479cc0f0.bindPopup(popup_eae0668cb4c8d7516dc2e0d97e8a59a6)
+        ;
+
+        
+    
+    
+            circle_marker_8312e0e73fbdefd83bda574e479cc0f0.bindTooltip(
+                `<div>
+                     480 KENT AVENUE Unit PH2A, BROOKLYN, NY: $7,200,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_26efa3727f078a02b87bb9955ead947f = L.circleMarker(
+                [40.6716242, -73.9735001],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_ab259ef84a13f3404c37d9968fb5fd14 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_69c5da0ea0046750aa359797a58382e5 = $(`<div id="html_69c5da0ea0046750aa359797a58382e5" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">17 MONTGOMERY PLACE, BROOKLYN, NY</h4>         <b>Price:</b> $7,200,000<br>         <b>Neighborhood:</b> Park Slope<br>         <b>BBL:</b> 3010720065<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3010720065" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_ab259ef84a13f3404c37d9968fb5fd14.setContent(html_69c5da0ea0046750aa359797a58382e5);
+            
+        
+
+        circle_marker_26efa3727f078a02b87bb9955ead947f.bindPopup(popup_ab259ef84a13f3404c37d9968fb5fd14)
+        ;
+
+        
+    
+    
+            circle_marker_26efa3727f078a02b87bb9955ead947f.bindTooltip(
+                `<div>
+                     17 MONTGOMERY PLACE, BROOKLYN, NY: $7,200,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b25008bc6400a8283a7937563d9c83a2 = L.circleMarker(
+                [40.67863029999999, -73.9750914],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_844c301415107879cda2b59f3b49fc92 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_eb02fd24b346c387b638a372be56707d = $(`<div id="html_eb02fd24b346c387b638a372be56707d" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">101 PARK PLACE, BROOKLYN, NY</h4>         <b>Price:</b> $7,150,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3009390068<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3009390068" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_844c301415107879cda2b59f3b49fc92.setContent(html_eb02fd24b346c387b638a372be56707d);
+            
+        
+
+        circle_marker_b25008bc6400a8283a7937563d9c83a2.bindPopup(popup_844c301415107879cda2b59f3b49fc92)
+        ;
+
+        
+    
+    
+            circle_marker_b25008bc6400a8283a7937563d9c83a2.bindTooltip(
+                `<div>
+                     101 PARK PLACE, BROOKLYN, NY: $7,150,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_57f5ffc1260d96692b9f8e4e5a0b606a = L.circleMarker(
+                [40.69774659999999, -73.99536359999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_87686625d94d187dd8163564fc95cfcc = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_cf689b2e7599204aa1b88730b324f300 = $(`<div id="html_cf689b2e7599204aa1b88730b324f300" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">109 WILLOW STREET Unit 1, BROOKLYN, NY</h4>         <b>Price:</b> $7,150,000<br>         <b>Neighborhood:</b> Brooklyn Heights<br>         <b>BBL:</b> 3002351101<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002351101" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_87686625d94d187dd8163564fc95cfcc.setContent(html_cf689b2e7599204aa1b88730b324f300);
+            
+        
+
+        circle_marker_57f5ffc1260d96692b9f8e4e5a0b606a.bindPopup(popup_87686625d94d187dd8163564fc95cfcc)
+        ;
+
+        
+    
+    
+            circle_marker_57f5ffc1260d96692b9f8e4e5a0b606a.bindTooltip(
+                `<div>
+                     109 WILLOW STREET Unit 1, BROOKLYN, NY: $7,150,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c905bdfdd5d6c8b3e3ef228a9d30965d = L.circleMarker(
+                [40.693729, -73.9940122],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_8fa031c7573e57e42ae5101c37771f4b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a1ee5003a3445833178a78871eccd633 = $(`<div id="html_a1ee5003a3445833178a78871eccd633" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">118 REMSEN STREET Unit 1, BROOKLYN, NY</h4>         <b>Price:</b> $7,075,000<br>         <b>Neighborhood:</b> Brooklyn Heights<br>         <b>BBL:</b> 3002541201<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002541201" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_8fa031c7573e57e42ae5101c37771f4b.setContent(html_a1ee5003a3445833178a78871eccd633);
+            
+        
+
+        circle_marker_c905bdfdd5d6c8b3e3ef228a9d30965d.bindPopup(popup_8fa031c7573e57e42ae5101c37771f4b)
+        ;
+
+        
+    
+    
+            circle_marker_c905bdfdd5d6c8b3e3ef228a9d30965d.bindTooltip(
+                `<div>
+                     118 REMSEN STREET Unit 1, BROOKLYN, NY: $7,075,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c6ac045f20ff524482cea76ed5fa978c = L.circleMarker(
+                [40.6853555, -73.9964656],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_189704810c7147299c70ddeb307fefe9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_768a9a5980cc9bad37c2598cf83dd783 = $(`<div id="html_768a9a5980cc9bad37c2598cf83dd783" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">323 CLINTON STREET Unit 1, BROOKLYN, NY</h4>         <b>Price:</b> $7,029,000<br>         <b>Neighborhood:</b> Cobble Hill<br>         <b>BBL:</b> 3003251101<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3003251101" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_189704810c7147299c70ddeb307fefe9.setContent(html_768a9a5980cc9bad37c2598cf83dd783);
+            
+        
+
+        circle_marker_c6ac045f20ff524482cea76ed5fa978c.bindPopup(popup_189704810c7147299c70ddeb307fefe9)
+        ;
+
+        
+    
+    
+            circle_marker_c6ac045f20ff524482cea76ed5fa978c.bindTooltip(
+                `<div>
+                     323 CLINTON STREET Unit 1, BROOKLYN, NY: $7,029,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_984f78064b533036f2068a969bf91875 = L.circleMarker(
+                [40.69353419999999, -74.00026179999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_7e2871a36218fd56679e02d4f29bb7a5 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0d378a7914ec6a0b1c986c1d017c6e8f = $(`<div id="html_0d378a7914ec6a0b1c986c1d017c6e8f" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">360 FURMAN STREET Unit 1401, BROOKLYN, NY</h4>         <b>Price:</b> $7,025,000<br>         <b>Neighborhood:</b> Brooklyn Heights<br>         <b>BBL:</b> 3002451441<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002451441" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_7e2871a36218fd56679e02d4f29bb7a5.setContent(html_0d378a7914ec6a0b1c986c1d017c6e8f);
+            
+        
+
+        circle_marker_984f78064b533036f2068a969bf91875.bindPopup(popup_7e2871a36218fd56679e02d4f29bb7a5)
+        ;
+
+        
+    
+    
+            circle_marker_984f78064b533036f2068a969bf91875.bindTooltip(
+                `<div>
+                     360 FURMAN STREET Unit 1401, BROOKLYN, NY: $7,025,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1fc182320487e7fc7c11d409a5107f2c = L.circleMarker(
+                [40.6935343, -74.00026179999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_b6a925693906f32cdd36c95b5dec829f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_983eaca20c6568284db108a17927e4d1 = $(`<div id="html_983eaca20c6568284db108a17927e4d1" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">360 FURMAN STREET Unit P41, BROOKLYN, NY</h4>         <b>Price:</b> $7,025,000<br>         <b>Neighborhood:</b> Brooklyn Heights<br>         <b>BBL:</b> 3002451503<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002451503" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_b6a925693906f32cdd36c95b5dec829f.setContent(html_983eaca20c6568284db108a17927e4d1);
+            
+        
+
+        circle_marker_1fc182320487e7fc7c11d409a5107f2c.bindPopup(popup_b6a925693906f32cdd36c95b5dec829f)
+        ;
+
+        
+    
+    
+            circle_marker_1fc182320487e7fc7c11d409a5107f2c.bindTooltip(
+                `<div>
+                     360 FURMAN STREET Unit P41, BROOKLYN, NY: $7,025,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4f68eb26d0d9ff1ead8469135c5dac49 = L.circleMarker(
+                [40.5970394, -73.9679534],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_127a9e2a752b55b0c7eef1a2af3595cb = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c308f6f19031bd30f829d15b8737ee59 = $(`<div id="html_c308f6f19031bd30f829d15b8737ee59" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">2174 EAST 4 STREET, BROOKLYN, NY</h4>         <b>Price:</b> $7,000,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3071300012<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3071300012" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_127a9e2a752b55b0c7eef1a2af3595cb.setContent(html_c308f6f19031bd30f829d15b8737ee59);
+            
+        
+
+        circle_marker_4f68eb26d0d9ff1ead8469135c5dac49.bindPopup(popup_127a9e2a752b55b0c7eef1a2af3595cb)
+        ;
+
+        
+    
+    
+            circle_marker_4f68eb26d0d9ff1ead8469135c5dac49.bindTooltip(
+                `<div>
+                     2174 EAST 4 STREET, BROOKLYN, NY: $7,000,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3fa9b741514d0833e6395bd48896e6f3 = L.circleMarker(
+                [40.70043560000001, -73.996404],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_44496f37c572eac5261cfc91c3c93325 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c715a64361e01a069559f814d5cbb788 = $(`<div id="html_c715a64361e01a069559f814d5cbb788" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">130 FURMAN STREET Unit S-113, BROOKLYN, NY</h4>         <b>Price:</b> $7,000,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3001991102<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3001991102" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_44496f37c572eac5261cfc91c3c93325.setContent(html_c715a64361e01a069559f814d5cbb788);
+            
+        
+
+        circle_marker_3fa9b741514d0833e6395bd48896e6f3.bindPopup(popup_44496f37c572eac5261cfc91c3c93325)
+        ;
+
+        
+    
+    
+            circle_marker_3fa9b741514d0833e6395bd48896e6f3.bindTooltip(
+                `<div>
+                     130 FURMAN STREET Unit S-113, BROOKLYN, NY: $7,000,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a049ef232a9faa774c04b6914b2e6ebb = L.circleMarker(
+                [40.599268, -73.96875510000001],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_bf6145c5760f9b6ae4ee679cc306de3a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_5dbb6b502a95bb91982e379df28d1f6a = $(`<div id="html_5dbb6b502a95bb91982e379df28d1f6a" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">2085 EAST 3 STREET, BROOKLYN, NY</h4>         <b>Price:</b> $7,000,000<br>         <b>Neighborhood:</b> Gravesend<br>         <b>BBL:</b> 3071060064<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3071060064" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_bf6145c5760f9b6ae4ee679cc306de3a.setContent(html_5dbb6b502a95bb91982e379df28d1f6a);
+            
+        
+
+        circle_marker_a049ef232a9faa774c04b6914b2e6ebb.bindPopup(popup_bf6145c5760f9b6ae4ee679cc306de3a)
+        ;
+
+        
+    
+    
+            circle_marker_a049ef232a9faa774c04b6914b2e6ebb.bindTooltip(
+                `<div>
+                     2085 EAST 3 STREET, BROOKLYN, NY: $7,000,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a112d27f7b44782b114deeeb73ee2d98 = L.circleMarker(
+                [40.5969483, -73.9712029],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_2e652aa0f1b943a93fd1a25a5af7d4ad = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f6ca9ded4eb969b9bb42b36bc00cd71a = $(`<div id="html_f6ca9ded4eb969b9bb42b36bc00cd71a" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">346 AVENUE U Unit 5A, BROOKLYN, NY</h4>         <b>Price:</b> $6,971,588<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3071271010<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3071271010" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_2e652aa0f1b943a93fd1a25a5af7d4ad.setContent(html_f6ca9ded4eb969b9bb42b36bc00cd71a);
+            
+        
+
+        circle_marker_a112d27f7b44782b114deeeb73ee2d98.bindPopup(popup_2e652aa0f1b943a93fd1a25a5af7d4ad)
+        ;
+
+        
+    
+    
+            circle_marker_a112d27f7b44782b114deeeb73ee2d98.bindTooltip(
+                `<div>
+                     346 AVENUE U Unit 5A, BROOKLYN, NY: $6,971,588
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_973f406f6ee4f8055026b6560629bf4e = L.circleMarker(
+                [40.698799, -73.9956516],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_f6df9b36b64e35c7f82dcdbd57460091 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_76646322ffb0c93cccbb84c7d4b67842 = $(`<div id="html_76646322ffb0c93cccbb84c7d4b67842" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">10 PINEAPPLE STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,960,000<br>         <b>Neighborhood:</b> Brooklyn Heights<br>         <b>BBL:</b> 3002290017<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002290017" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_f6df9b36b64e35c7f82dcdbd57460091.setContent(html_76646322ffb0c93cccbb84c7d4b67842);
+            
+        
+
+        circle_marker_973f406f6ee4f8055026b6560629bf4e.bindPopup(popup_f6df9b36b64e35c7f82dcdbd57460091)
+        ;
+
+        
+    
+    
+            circle_marker_973f406f6ee4f8055026b6560629bf4e.bindTooltip(
+                `<div>
+                     10 PINEAPPLE STREET, BROOKLYN, NY: $6,960,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_70597fbeead19c09d592d48f6f0d25be = L.circleMarker(
+                [40.7287583, -73.9561796],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_e791da30e7fa174e030a0fc9769a133f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_766450beeae9ae513df12b97642f1e2d = $(`<div id="html_766450beeae9ae513df12b97642f1e2d" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">111 NOBLE ST, BROOKLYN, NY</h4>         <b>Price:</b> $6,941,100<br>         <b>Neighborhood:</b> Greenpoint<br>         <b>BBL:</b> 3025660074<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3025660074" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_e791da30e7fa174e030a0fc9769a133f.setContent(html_766450beeae9ae513df12b97642f1e2d);
+            
+        
+
+        circle_marker_70597fbeead19c09d592d48f6f0d25be.bindPopup(popup_e791da30e7fa174e030a0fc9769a133f)
+        ;
+
+        
+    
+    
+            circle_marker_70597fbeead19c09d592d48f6f0d25be.bindTooltip(
+                `<div>
+                     111 NOBLE ST, BROOKLYN, NY: $6,941,100
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c7d72aacf84e96dc9305f1dff34c9f83 = L.circleMarker(
+                [40.6989336, -73.99523839999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_a4f06e14ddf8e51c169d099d5f87bb46 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_6a753655763ea9910827b5bcf2caba9c = $(`<div id="html_6a753655763ea9910827b5bcf2caba9c" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">76 WILLOW STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,880,000<br>         <b>Neighborhood:</b> Brooklyn Heights<br>         <b>BBL:</b> 3002240020<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002240020" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_a4f06e14ddf8e51c169d099d5f87bb46.setContent(html_6a753655763ea9910827b5bcf2caba9c);
+            
+        
+
+        circle_marker_c7d72aacf84e96dc9305f1dff34c9f83.bindPopup(popup_a4f06e14ddf8e51c169d099d5f87bb46)
+        ;
+
+        
+    
+    
+            circle_marker_c7d72aacf84e96dc9305f1dff34c9f83.bindTooltip(
+                `<div>
+                     76 WILLOW STREET, BROOKLYN, NY: $6,880,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_032dd4ff04104184600fad3e57f0e264 = L.circleMarker(
+                [40.6852884, -73.9995539],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_b8712d99c7ebf74d8e765e50ead7671e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_96557c6d7351591747ea417ee3599ea4 = $(`<div id="html_96557c6d7351591747ea417ee3599ea4" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">59 CHEEVER PLACE, BROOKLYN, NY</h4>         <b>Price:</b> $6,850,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3003220001<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3003220001" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_b8712d99c7ebf74d8e765e50ead7671e.setContent(html_96557c6d7351591747ea417ee3599ea4);
+            
+        
+
+        circle_marker_032dd4ff04104184600fad3e57f0e264.bindPopup(popup_b8712d99c7ebf74d8e765e50ead7671e)
+        ;
+
+        
+    
+    
+            circle_marker_032dd4ff04104184600fad3e57f0e264.bindTooltip(
+                `<div>
+                     59 CHEEVER PLACE, BROOKLYN, NY: $6,850,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_84b4381e644d50bf106f0176f1669180 = L.circleMarker(
+                [40.6237849, -73.96822039999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_acc52a838011ef306a4ff0d578d41296 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_dad31c1856e1f97f3a1c727f0845fbd1 = $(`<div id="html_dad31c1856e1f97f3a1c727f0845fbd1" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">1042 EAST 8TH STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,800,000<br>         <b>Neighborhood:</b> Ocean Parkway<br>         <b>BBL:</b> 3065280017<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3065280017" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_acc52a838011ef306a4ff0d578d41296.setContent(html_dad31c1856e1f97f3a1c727f0845fbd1);
+            
+        
+
+        circle_marker_84b4381e644d50bf106f0176f1669180.bindPopup(popup_acc52a838011ef306a4ff0d578d41296)
+        ;
+
+        
+    
+    
+            circle_marker_84b4381e644d50bf106f0176f1669180.bindTooltip(
+                `<div>
+                     1042 EAST 8TH STREET, BROOKLYN, NY: $6,800,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_185b64af79227b21e0310b9cfae7355c = L.circleMarker(
+                [40.6706116, -73.9765797],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_586753b6390b68f30c32284aa4fd95c6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1707a5301a620fb92a78f3f9f9502874 = $(`<div id="html_1707a5301a620fb92a78f3f9f9502874" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">535 2ND STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,750,000<br>         <b>Neighborhood:</b> Park Slope<br>         <b>BBL:</b> 3010760057<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3010760057" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_586753b6390b68f30c32284aa4fd95c6.setContent(html_1707a5301a620fb92a78f3f9f9502874);
+            
+        
+
+        circle_marker_185b64af79227b21e0310b9cfae7355c.bindPopup(popup_586753b6390b68f30c32284aa4fd95c6)
+        ;
+
+        
+    
+    
+            circle_marker_185b64af79227b21e0310b9cfae7355c.bindTooltip(
+                `<div>
+                     535 2ND STREET, BROOKLYN, NY: $6,750,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0a1cb06083345e44db22ae3abb2d1700 = L.circleMarker(
+                [40.6859614, -73.9899658],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_b798cc77dba93e92be45fecda1688b88 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_41f713cef3cf60449a45a474fa2ddeac = $(`<div id="html_41f713cef3cf60449a45a474fa2ddeac" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">93 WYCKOFF STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,750,000<br>         <b>Neighborhood:</b> Boerum Hill<br>         <b>BBL:</b> 3003850062<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3003850062" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_b798cc77dba93e92be45fecda1688b88.setContent(html_41f713cef3cf60449a45a474fa2ddeac);
+            
+        
+
+        circle_marker_0a1cb06083345e44db22ae3abb2d1700.bindPopup(popup_b798cc77dba93e92be45fecda1688b88)
+        ;
+
+        
+    
+    
+            circle_marker_0a1cb06083345e44db22ae3abb2d1700.bindTooltip(
+                `<div>
+                     93 WYCKOFF STREET, BROOKLYN, NY: $6,750,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cc4fee3b6119cb8de51a4ac72aa1b7be = L.circleMarker(
+                [40.5992893, -73.96781760000002],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_963d136c25df494d01ff6ae48e9445f7 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4d933d422f23eae0c3abe327a923cfa5 = $(`<div id="html_4d933d422f23eae0c3abe327a923cfa5" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">2089 EAST 4 STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,700,000<br>         <b>Neighborhood:</b> Gravesend<br>         <b>BBL:</b> 3071070071<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3071070071" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_963d136c25df494d01ff6ae48e9445f7.setContent(html_4d933d422f23eae0c3abe327a923cfa5);
+            
+        
+
+        circle_marker_cc4fee3b6119cb8de51a4ac72aa1b7be.bindPopup(popup_963d136c25df494d01ff6ae48e9445f7)
+        ;
+
+        
+    
+    
+            circle_marker_cc4fee3b6119cb8de51a4ac72aa1b7be.bindTooltip(
+                `<div>
+                     2089 EAST 4 STREET, BROOKLYN, NY: $6,700,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e6080463d0957dc05099c30692843719 = L.circleMarker(
+                [40.6746182, -73.9742624],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_b3abe3704d10f9598090ef16a9f7fe11 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d245dcfed1a519d8a08fbcc6a818a363 = $(`<div id="html_d245dcfed1a519d8a08fbcc6a818a363" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">196 BERKELEY PLACE, BROOKLYN, NY</h4>         <b>Price:</b> $6,650,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3010630016<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3010630016" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_b3abe3704d10f9598090ef16a9f7fe11.setContent(html_d245dcfed1a519d8a08fbcc6a818a363);
+            
+        
+
+        circle_marker_e6080463d0957dc05099c30692843719.bindPopup(popup_b3abe3704d10f9598090ef16a9f7fe11)
+        ;
+
+        
+    
+    
+            circle_marker_e6080463d0957dc05099c30692843719.bindTooltip(
+                `<div>
+                     196 BERKELEY PLACE, BROOKLYN, NY: $6,650,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7fa86dfce68f26139bf9126eaef599e4 = L.circleMarker(
+                [40.69103, -73.9924264],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_86e5e980cd57cb6f12143ccdcc444cf0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3b372bf487aaed0ba9ce7d770fb1ae65 = $(`<div id="html_3b372bf487aaed0ba9ce7d770fb1ae65" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">36 SCHERMERHORN STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,650,000<br>         <b>Neighborhood:</b> Brooklyn Heights<br>         <b>BBL:</b> 3002700044<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002700044" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_86e5e980cd57cb6f12143ccdcc444cf0.setContent(html_3b372bf487aaed0ba9ce7d770fb1ae65);
+            
+        
+
+        circle_marker_7fa86dfce68f26139bf9126eaef599e4.bindPopup(popup_86e5e980cd57cb6f12143ccdcc444cf0)
+        ;
+
+        
+    
+    
+            circle_marker_7fa86dfce68f26139bf9126eaef599e4.bindTooltip(
+                `<div>
+                     36 SCHERMERHORN STREET, BROOKLYN, NY: $6,650,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_784c4d1c5f264234f4de933b5e63aef4 = L.circleMarker(
+                [40.7023166, -73.9908998],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_bcc2a9ea153f95dd9860337f61c2db1e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_71495e885a1f499d60dca580362d3fb5 = $(`<div id="html_71495e885a1f499d60dca580362d3fb5" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">60 FRONT STREET Unit 27B, BROOKLYN, NY</h4>         <b>Price:</b> $6,600,000<br>         <b>Neighborhood:</b> DUMBO<br>         <b>BBL:</b> 3000451364<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3000451364" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_bcc2a9ea153f95dd9860337f61c2db1e.setContent(html_71495e885a1f499d60dca580362d3fb5);
+            
+        
+
+        circle_marker_784c4d1c5f264234f4de933b5e63aef4.bindPopup(popup_bcc2a9ea153f95dd9860337f61c2db1e)
+        ;
+
+        
+    
+    
+            circle_marker_784c4d1c5f264234f4de933b5e63aef4.bindTooltip(
+                `<div>
+                     60 FRONT STREET Unit 27B, BROOKLYN, NY: $6,600,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_980f9cda934a0f57bc094228f2f9114a = L.circleMarker(
+                [40.6792994, -73.9767756],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_83261a7d70502847bd7c691d9500c8c2 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_068bc29d0aabf4a52cae6a4e2303449c = $(`<div id="html_068bc29d0aabf4a52cae6a4e2303449c" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">45 PARK PLACE, BROOKLYN, NY</h4>         <b>Price:</b> $6,500,000<br>         <b>Neighborhood:</b> Park Slope<br>         <b>BBL:</b> 3009380061<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3009380061" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_83261a7d70502847bd7c691d9500c8c2.setContent(html_068bc29d0aabf4a52cae6a4e2303449c);
+            
+        
+
+        circle_marker_980f9cda934a0f57bc094228f2f9114a.bindPopup(popup_83261a7d70502847bd7c691d9500c8c2)
+        ;
+
+        
+    
+    
+            circle_marker_980f9cda934a0f57bc094228f2f9114a.bindTooltip(
+                `<div>
+                     45 PARK PLACE, BROOKLYN, NY: $6,500,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_be1ff59c7dac996ccc4c425cfbaa8173 = L.circleMarker(
+                [40.678263, -73.970733],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_b4f6d94235be0cf022f68a796afa5f1a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7e11c21dc0b7a2d994bde911620cd566 = $(`<div id="html_7e11c21dc0b7a2d994bde911620cd566" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">177 PROSPECT PLACE, BROOKLYN, NY</h4>         <b>Price:</b> $6,500,000<br>         <b>Neighborhood:</b> Prospect Heights<br>         <b>BBL:</b> 3011510079<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3011510079" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_b4f6d94235be0cf022f68a796afa5f1a.setContent(html_7e11c21dc0b7a2d994bde911620cd566);
+            
+        
+
+        circle_marker_be1ff59c7dac996ccc4c425cfbaa8173.bindPopup(popup_b4f6d94235be0cf022f68a796afa5f1a)
+        ;
+
+        
+    
+    
+            circle_marker_be1ff59c7dac996ccc4c425cfbaa8173.bindTooltip(
+                `<div>
+                     177 PROSPECT PLACE, BROOKLYN, NY: $6,500,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d2c74511df8d21123f9584d470bcae38 = L.circleMarker(
+                [40.5993313, -73.9711161],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_71b5f38a58da9664046474b69642ae8a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_5f4417df98bc64db2782400e9ce3d9af = $(`<div id="html_5f4417df98bc64db2782400e9ce3d9af" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">384 AVENUE T, BROOKLYN, NY</h4>         <b>Price:</b> $6,500,000<br>         <b>Neighborhood:</b> Gravesend<br>         <b>BBL:</b> 3071040379<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3071040379" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_71b5f38a58da9664046474b69642ae8a.setContent(html_5f4417df98bc64db2782400e9ce3d9af);
+            
+        
+
+        circle_marker_d2c74511df8d21123f9584d470bcae38.bindPopup(popup_71b5f38a58da9664046474b69642ae8a)
+        ;
+
+        
+    
+    
+            circle_marker_d2c74511df8d21123f9584d470bcae38.bindTooltip(
+                `<div>
+                     384 AVENUE T, BROOKLYN, NY: $6,500,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5373de9e6471d6fe04dd473b345faf2e = L.circleMarker(
+                [40.69201, -73.9975917],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_5e373a76c03fc83e1a414dafbc776648 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_22682ff62b6fe677dd55996dab78a3a8 = $(`<div id="html_22682ff62b6fe677dd55996dab78a3a8" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">314 HICKS STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,500,000<br>         <b>Neighborhood:</b> Brooklyn Heights<br>         <b>BBL:</b> 3002600057<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002600057" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_5e373a76c03fc83e1a414dafbc776648.setContent(html_22682ff62b6fe677dd55996dab78a3a8);
+            
+        
+
+        circle_marker_5373de9e6471d6fe04dd473b345faf2e.bindPopup(popup_5e373a76c03fc83e1a414dafbc776648)
+        ;
+
+        
+    
+    
+            circle_marker_5373de9e6471d6fe04dd473b345faf2e.bindTooltip(
+                `<div>
+                     314 HICKS STREET, BROOKLYN, NY: $6,500,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_12cd663233dabf5d3690bd312c3aa7e6 = L.circleMarker(
+                [40.6665418, -73.97603550000001],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_9f889f23078221c719e247ada5c97cb8 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_31dd353202449883b7bd3281a04f6554 = $(`<div id="html_31dd353202449883b7bd3281a04f6554" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">624 6 STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,500,000<br>         <b>Neighborhood:</b> Park Slope<br>         <b>BBL:</b> 3010870034<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3010870034" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_9f889f23078221c719e247ada5c97cb8.setContent(html_31dd353202449883b7bd3281a04f6554);
+            
+        
+
+        circle_marker_12cd663233dabf5d3690bd312c3aa7e6.bindPopup(popup_9f889f23078221c719e247ada5c97cb8)
+        ;
+
+        
+    
+    
+            circle_marker_12cd663233dabf5d3690bd312c3aa7e6.bindTooltip(
+                `<div>
+                     624 6 STREET, BROOKLYN, NY: $6,500,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0fa5919f9dccee14c51f853068f58b5b = L.circleMarker(
+                [40.6694632, -73.974153],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_5fa639203f4bca55cabfbdbe78e893e3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_42a935085a09f102eed3f47ab92eafef = $(`<div id="html_42a935085a09f102eed3f47ab92eafef" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">619 2ND STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,500,000<br>         <b>Neighborhood:</b> Park Slope<br>         <b>BBL:</b> 3010770051<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3010770051" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_5fa639203f4bca55cabfbdbe78e893e3.setContent(html_42a935085a09f102eed3f47ab92eafef);
+            
+        
+
+        circle_marker_0fa5919f9dccee14c51f853068f58b5b.bindPopup(popup_5fa639203f4bca55cabfbdbe78e893e3)
+        ;
+
+        
+    
+    
+            circle_marker_0fa5919f9dccee14c51f853068f58b5b.bindTooltip(
+                `<div>
+                     619 2ND STREET, BROOKLYN, NY: $6,500,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a90193aa046482e2cbe38a20efe49c7b = L.circleMarker(
+                [40.6892126, -73.9967075],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_773689eb0fbea61692844f2ff14f27c8 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f3fcc1ee14fd8e7b2a5224faa8f9f56a = $(`<div id="html_f3fcc1ee14fd8e7b2a5224faa8f9f56a" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">355 HENRY STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,488,333<br>         <b>Neighborhood:</b> Cobble Hill<br>         <b>BBL:</b> 3002960115<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002960115" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_773689eb0fbea61692844f2ff14f27c8.setContent(html_f3fcc1ee14fd8e7b2a5224faa8f9f56a);
+            
+        
+
+        circle_marker_a90193aa046482e2cbe38a20efe49c7b.bindPopup(popup_773689eb0fbea61692844f2ff14f27c8)
+        ;
+
+        
+    
+    
+            circle_marker_a90193aa046482e2cbe38a20efe49c7b.bindTooltip(
+                `<div>
+                     355 HENRY STREET, BROOKLYN, NY: $6,488,333
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c3c1b28b272f76678e3331443aa73037 = L.circleMarker(
+                [40.7149189, -73.9563026],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_af25e948452462c4d5a9c96964bb454a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e35b1a445b1ff64b79d5c0cd02151f7c = $(`<div id="html_e35b1a445b1ff64b79d5c0cd02151f7c" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">121 ROEBLING STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,451,000<br>         <b>Neighborhood:</b> North Williamsburg<br>         <b>BBL:</b> 3023460009<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3023460009" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_af25e948452462c4d5a9c96964bb454a.setContent(html_e35b1a445b1ff64b79d5c0cd02151f7c);
+            
+        
+
+        circle_marker_c3c1b28b272f76678e3331443aa73037.bindPopup(popup_af25e948452462c4d5a9c96964bb454a)
+        ;
+
+        
+    
+    
+            circle_marker_c3c1b28b272f76678e3331443aa73037.bindTooltip(
+                `<div>
+                     121 ROEBLING STREET, BROOKLYN, NY: $6,451,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8621ba1be685a79ed723f222ccf59ba1 = L.circleMarker(
+                [40.6012558, -73.9700946],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_7e2187f1e1ecefef46943c5434c99592 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1060c0315d8d8d90ef57341db8751122 = $(`<div id="html_1060c0315d8d8d90ef57341db8751122" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">1977 EAST 2ND STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,450,000<br>         <b>Neighborhood:</b> Gravesend<br>         <b>BBL:</b> 3071050131<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3071050131" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_7e2187f1e1ecefef46943c5434c99592.setContent(html_1060c0315d8d8d90ef57341db8751122);
+            
+        
+
+        circle_marker_8621ba1be685a79ed723f222ccf59ba1.bindPopup(popup_7e2187f1e1ecefef46943c5434c99592)
+        ;
+
+        
+    
+    
+            circle_marker_8621ba1be685a79ed723f222ccf59ba1.bindTooltip(
+                `<div>
+                     1977 EAST 2ND STREET, BROOKLYN, NY: $6,450,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_05b2e4f4a6277e0f5e8dd65a9fc9f255 = L.circleMarker(
+                [40.6826966, -74.00311119999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_7b06183bed3a3e7f77103d876980fcfe = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_9eb86a42d52f2908309378708739d6fe = $(`<div id="html_9eb86a42d52f2908309378708739d6fe" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">74 CARROLL STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,417,114<br>         <b>Neighborhood:</b> Columbia Waterfront<br>         <b>BBL:</b> 3003530015<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3003530015" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_7b06183bed3a3e7f77103d876980fcfe.setContent(html_9eb86a42d52f2908309378708739d6fe);
+            
+        
+
+        circle_marker_05b2e4f4a6277e0f5e8dd65a9fc9f255.bindPopup(popup_7b06183bed3a3e7f77103d876980fcfe)
+        ;
+
+        
+    
+    
+            circle_marker_05b2e4f4a6277e0f5e8dd65a9fc9f255.bindTooltip(
+                `<div>
+                     74 CARROLL STREET, BROOKLYN, NY: $6,417,114
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4fe475d237cde418db0f86aa7ca153b1 = L.circleMarker(
+                [40.6912314, -73.9726895],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_7b59b199e895fbbdef2295f196fa2731 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_00f32e01514910dc332bbf8b5dd51857 = $(`<div id="html_00f32e01514910dc332bbf8b5dd51857" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">216 CARLTON AVE, BROOKLYN, NY</h4>         <b>Price:</b> $6,300,000<br>         <b>Neighborhood:</b> Fort Greene<br>         <b>BBL:</b> 3020890042<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3020890042" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_7b59b199e895fbbdef2295f196fa2731.setContent(html_00f32e01514910dc332bbf8b5dd51857);
+            
+        
+
+        circle_marker_4fe475d237cde418db0f86aa7ca153b1.bindPopup(popup_7b59b199e895fbbdef2295f196fa2731)
+        ;
+
+        
+    
+    
+            circle_marker_4fe475d237cde418db0f86aa7ca153b1.bindTooltip(
+                `<div>
+                     216 CARLTON AVE, BROOKLYN, NY: $6,300,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_68f8c0e6b934b78cf0cca4e5a0c986ec = L.circleMarker(
+                [40.6676492, -73.9845873],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_9749b046b5794493b0b0f9c25edf36b3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_36566ad1caab844809a5971c31ce3a54 = $(`<div id="html_36566ad1caab844809a5971c31ce3a54" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">448 6TH AVENUE, BROOKLYN, NY</h4>         <b>Price:</b> $6,300,000<br>         <b>Neighborhood:</b> Park Slope<br>         <b>BBL:</b> 3010110049<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3010110049" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_9749b046b5794493b0b0f9c25edf36b3.setContent(html_36566ad1caab844809a5971c31ce3a54);
+            
+        
+
+        circle_marker_68f8c0e6b934b78cf0cca4e5a0c986ec.bindPopup(popup_9749b046b5794493b0b0f9c25edf36b3)
+        ;
+
+        
+    
+    
+            circle_marker_68f8c0e6b934b78cf0cca4e5a0c986ec.bindTooltip(
+                `<div>
+                     448 6TH AVENUE, BROOKLYN, NY: $6,300,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_45c0eaf001a69995e6912cbcea310daf = L.circleMarker(
+                [40.674152, -73.97321699999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_de480a37a3c4908f2be49ff9ee6042c9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3df628d374d32563ce1dfa2e9703f5bc = $(`<div id="html_3df628d374d32563ce1dfa2e9703f5bc" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">240 BERKELEY PLACE, BROOKLYN, NY</h4>         <b>Price:</b> $6,262,800<br>         <b>Neighborhood:</b> Park Slope<br>         <b>BBL:</b> 3010630035<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3010630035" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_de480a37a3c4908f2be49ff9ee6042c9.setContent(html_3df628d374d32563ce1dfa2e9703f5bc);
+            
+        
+
+        circle_marker_45c0eaf001a69995e6912cbcea310daf.bindPopup(popup_de480a37a3c4908f2be49ff9ee6042c9)
+        ;
+
+        
+    
+    
+            circle_marker_45c0eaf001a69995e6912cbcea310daf.bindTooltip(
+                `<div>
+                     240 BERKELEY PLACE, BROOKLYN, NY: $6,262,800
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0757777a7c4784e9640c034381cb90da = L.circleMarker(
+                [40.672287, -73.97095399999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_de031ee63f9abbf29490df96f8a8b702 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_af580b3a13ee16bf48e20d6fd3aa356c = $(`<div id="html_af580b3a13ee16bf48e20d6fd3aa356c" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">1 PROSPECT PARK WEST Unit 3A, BROOKLYN, NY</h4>         <b>Price:</b> $6,262,500<br>         <b>Neighborhood:</b> Park Slope<br>         <b>BBL:</b> 3010661312<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3010661312" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_de031ee63f9abbf29490df96f8a8b702.setContent(html_af580b3a13ee16bf48e20d6fd3aa356c);
+            
+        
+
+        circle_marker_0757777a7c4784e9640c034381cb90da.bindPopup(popup_de031ee63f9abbf29490df96f8a8b702)
+        ;
+
+        
+    
+    
+            circle_marker_0757777a7c4784e9640c034381cb90da.bindTooltip(
+                `<div>
+                     1 PROSPECT PARK WEST Unit 3A, BROOKLYN, NY: $6,262,500
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5a0e34325c583459d14cf57041dba691 = L.circleMarker(
+                [40.6858552, -73.9640452],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_6b4479d4a2439d124b924ec1316d4c2c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1ef486ad6fdeb168b87ff08e33ab29ef = $(`<div id="html_1ef486ad6fdeb168b87ff08e33ab29ef" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">121 SAINT JAMES PLACE, BROOKLYN, NY</h4>         <b>Price:</b> $6,250,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3019640015<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3019640015" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_6b4479d4a2439d124b924ec1316d4c2c.setContent(html_1ef486ad6fdeb168b87ff08e33ab29ef);
+            
+        
+
+        circle_marker_5a0e34325c583459d14cf57041dba691.bindPopup(popup_6b4479d4a2439d124b924ec1316d4c2c)
+        ;
+
+        
+    
+    
+            circle_marker_5a0e34325c583459d14cf57041dba691.bindTooltip(
+                `<div>
+                     121 SAINT JAMES PLACE, BROOKLYN, NY: $6,250,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_dab8410c466b52b9b0b6b10ee9ae73b0 = L.circleMarker(
+                [40.7035465, -73.99024109999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_ff7a84cce75fc49424bd4f6b0e0ecca4 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_68c26d421d10308c69b1786953149003 = $(`<div id="html_68c26d421d10308c69b1786953149003" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">1 MAIN STREET Unit 9B, BROOKLYN, NY</h4>         <b>Price:</b> $6,225,000<br>         <b>Neighborhood:</b> DUMBO<br>         <b>BBL:</b> 3000271081<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3000271081" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_ff7a84cce75fc49424bd4f6b0e0ecca4.setContent(html_68c26d421d10308c69b1786953149003);
+            
+        
+
+        circle_marker_dab8410c466b52b9b0b6b10ee9ae73b0.bindPopup(popup_ff7a84cce75fc49424bd4f6b0e0ecca4)
+        ;
+
+        
+    
+    
+            circle_marker_dab8410c466b52b9b0b6b10ee9ae73b0.bindTooltip(
+                `<div>
+                     1 MAIN STREET Unit 9B, BROOKLYN, NY: $6,225,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_aefd070f8d2c16a34ab0283278d557fc = L.circleMarker(
+                [40.7023166, -73.9908998],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_62fbf6bd53d9a92fd405b368057a9f4b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_79575ddd89e062199145afcb2c395d61 = $(`<div id="html_79575ddd89e062199145afcb2c395d61" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">60 FRONT STREET Unit 28B, BROOKLYN, NY</h4>         <b>Price:</b> $6,200,000<br>         <b>Neighborhood:</b> DUMBO<br>         <b>BBL:</b> 3000451367<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3000451367" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_62fbf6bd53d9a92fd405b368057a9f4b.setContent(html_79575ddd89e062199145afcb2c395d61);
+            
+        
+
+        circle_marker_aefd070f8d2c16a34ab0283278d557fc.bindPopup(popup_62fbf6bd53d9a92fd405b368057a9f4b)
+        ;
+
+        
+    
+    
+            circle_marker_aefd070f8d2c16a34ab0283278d557fc.bindTooltip(
+                `<div>
+                     60 FRONT STREET Unit 28B, BROOKLYN, NY: $6,200,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_29cd8f6937a5501c6e016674389b8511 = L.circleMarker(
+                [40.7023166, -73.9908998],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_398f1792ffaaacc4370a1e5d9a134cc1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0375e08baa206b3c7fc439cefacb1ac5 = $(`<div id="html_0375e08baa206b3c7fc439cefacb1ac5" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">60 FRONT STREET Unit P38, BROOKLYN, NY</h4>         <b>Price:</b> $6,200,000<br>         <b>Neighborhood:</b> DUMBO<br>         <b>BBL:</b> 3000451417<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3000451417" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_398f1792ffaaacc4370a1e5d9a134cc1.setContent(html_0375e08baa206b3c7fc439cefacb1ac5);
+            
+        
+
+        circle_marker_29cd8f6937a5501c6e016674389b8511.bindPopup(popup_398f1792ffaaacc4370a1e5d9a134cc1)
+        ;
+
+        
+    
+    
+            circle_marker_29cd8f6937a5501c6e016674389b8511.bindTooltip(
+                `<div>
+                     60 FRONT STREET Unit P38, BROOKLYN, NY: $6,200,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_757ff1b09ad750e05e455f2ee115bdb8 = L.circleMarker(
+                [40.6216204, -73.96911589999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_832792b2004c834e889eff7c7f6d6df5 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a33eede657e3e4253559fee2d3065459 = $(`<div id="html_a33eede657e3e4253559fee2d3065459" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">618 AVENUE K, BROOKLYN, NY</h4>         <b>Price:</b> $6,200,000<br>         <b>Neighborhood:</b> Ocean Parkway<br>         <b>BBL:</b> 3065320005<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3065320005" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_832792b2004c834e889eff7c7f6d6df5.setContent(html_a33eede657e3e4253559fee2d3065459);
+            
+        
+
+        circle_marker_757ff1b09ad750e05e455f2ee115bdb8.bindPopup(popup_832792b2004c834e889eff7c7f6d6df5)
+        ;
+
+        
+    
+    
+            circle_marker_757ff1b09ad750e05e455f2ee115bdb8.bindTooltip(
+                `<div>
+                     618 AVENUE K, BROOKLYN, NY: $6,200,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0672d13a3db756750f5762516a6704be = L.circleMarker(
+                [40.6698543, -73.9750024],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_356367e71b6c7cd958a38181f2cd0886 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3fcfe6c3b9d8481ac5d17a93f354365d = $(`<div id="html_3fcfe6c3b9d8481ac5d17a93f354365d" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">591 2ND STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,200,000<br>         <b>Neighborhood:</b> Park Slope<br>         <b>BBL:</b> 3010770065<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3010770065" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_356367e71b6c7cd958a38181f2cd0886.setContent(html_3fcfe6c3b9d8481ac5d17a93f354365d);
+            
+        
+
+        circle_marker_0672d13a3db756750f5762516a6704be.bindPopup(popup_356367e71b6c7cd958a38181f2cd0886)
+        ;
+
+        
+    
+    
+            circle_marker_0672d13a3db756750f5762516a6704be.bindTooltip(
+                `<div>
+                     591 2ND STREET, BROOKLYN, NY: $6,200,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_899dcf90cec7a9afd1af24f75f50a86e = L.circleMarker(
+                [40.684475, -73.9935859],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_0ca14d8c3968b519ee731815ecb8a622 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_76647cde13be3f520b770f84b65205df = $(`<div id="html_76647cde13be3f520b770f84b65205df" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">32 BUTLER STREET Unit 1, BROOKLYN, NY</h4>         <b>Price:</b> $6,200,000<br>         <b>Neighborhood:</b> Cobble Hill<br>         <b>BBL:</b> 3004081401<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3004081401" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_0ca14d8c3968b519ee731815ecb8a622.setContent(html_76647cde13be3f520b770f84b65205df);
+            
+        
+
+        circle_marker_899dcf90cec7a9afd1af24f75f50a86e.bindPopup(popup_0ca14d8c3968b519ee731815ecb8a622)
+        ;
+
+        
+    
+    
+            circle_marker_899dcf90cec7a9afd1af24f75f50a86e.bindTooltip(
+                `<div>
+                     32 BUTLER STREET Unit 1, BROOKLYN, NY: $6,200,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c53c4354b76c232635fe91f4fb15cbd7 = L.circleMarker(
+                [40.5950575, -73.9643213],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_549cbb3794f3cfa5693b4b0dd12ba198 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4cd56c3b944e6b025d79a0e6ce3540ef = $(`<div id="html_4cd56c3b944e6b025d79a0e6ce3540ef" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">2229 OCEAN PARKWAY, BROOKLYN, NY</h4>         <b>Price:</b> $6,200,000<br>         <b>Neighborhood:</b> Sheepshead Bay<br>         <b>BBL:</b> 3071580082<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3071580082" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_549cbb3794f3cfa5693b4b0dd12ba198.setContent(html_4cd56c3b944e6b025d79a0e6ce3540ef);
+            
+        
+
+        circle_marker_c53c4354b76c232635fe91f4fb15cbd7.bindPopup(popup_549cbb3794f3cfa5693b4b0dd12ba198)
+        ;
+
+        
+    
+    
+            circle_marker_c53c4354b76c232635fe91f4fb15cbd7.bindTooltip(
+                `<div>
+                     2229 OCEAN PARKWAY, BROOKLYN, NY: $6,200,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c33f82513eb79744d3e896b56d81e885 = L.circleMarker(
+                [40.7015519, -73.99586699999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_eff3e90be8b44a8daa36ced665ceb96b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ceed773a387b24f71ac67239529d3ba5 = $(`<div id="html_ceed773a387b24f71ac67239529d3ba5" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">90 FURMAN STREET Unit N-411, BROOKLYN, NY</h4>         <b>Price:</b> $6,150,000<br>         <b>Neighborhood:</b> DUMBO<br>         <b>BBL:</b> 3001991026<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3001991026" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_eff3e90be8b44a8daa36ced665ceb96b.setContent(html_ceed773a387b24f71ac67239529d3ba5);
+            
+        
+
+        circle_marker_c33f82513eb79744d3e896b56d81e885.bindPopup(popup_eff3e90be8b44a8daa36ced665ceb96b)
+        ;
+
+        
+    
+    
+            circle_marker_c33f82513eb79744d3e896b56d81e885.bindTooltip(
+                `<div>
+                     90 FURMAN STREET Unit N-411, BROOKLYN, NY: $6,150,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4eb46f65ba6633114e9deea2b29d2420 = L.circleMarker(
+                [40.6237374, -73.9675882],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_9d8a9707f9362f84e7bd406781cae24d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_de681df6c9aa1e156dabb7f85e0506c8 = $(`<div id="html_de681df6c9aa1e156dabb7f85e0506c8" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">1043 EAST 8 STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,125,000<br>         <b>Neighborhood:</b> Ocean Parkway<br>         <b>BBL:</b> 3065290073<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3065290073" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_9d8a9707f9362f84e7bd406781cae24d.setContent(html_de681df6c9aa1e156dabb7f85e0506c8);
+            
+        
+
+        circle_marker_4eb46f65ba6633114e9deea2b29d2420.bindPopup(popup_9d8a9707f9362f84e7bd406781cae24d)
+        ;
+
+        
+    
+    
+            circle_marker_4eb46f65ba6633114e9deea2b29d2420.bindTooltip(
+                `<div>
+                     1043 EAST 8 STREET, BROOKLYN, NY: $6,125,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_72d6477e6f611836512f540ef69d48e3 = L.circleMarker(
+                [40.6387614, -73.976288],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_1be10a43d302a604a77b4f6fa16dfdc2 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_63efc65758b303008a2078834b9881d2 = $(`<div id="html_63efc65758b303008a2078834b9881d2" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">545 THIRD STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,125,000<br>         <b>Neighborhood:</b> Park Slope<br>         <b>BBL:</b> 3010780054<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3010780054" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_1be10a43d302a604a77b4f6fa16dfdc2.setContent(html_63efc65758b303008a2078834b9881d2);
+            
+        
+
+        circle_marker_72d6477e6f611836512f540ef69d48e3.bindPopup(popup_1be10a43d302a604a77b4f6fa16dfdc2)
+        ;
+
+        
+    
+    
+            circle_marker_72d6477e6f611836512f540ef69d48e3.bindTooltip(
+                `<div>
+                     545 THIRD STREET, BROOKLYN, NY: $6,125,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_59e8230bb987b35d70894c3c33d1c16d = L.circleMarker(
+                [40.6704601, -73.9729022],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_0d6d7481a1152bd8eb148888d7600c01 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_666ba777a4b357e5f67dc78625820069 = $(`<div id="html_666ba777a4b357e5f67dc78625820069" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">323 GARFIELD PLACE, BROOKLYN, NY</h4>         <b>Price:</b> $6,100,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3010730049<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3010730049" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_0d6d7481a1152bd8eb148888d7600c01.setContent(html_666ba777a4b357e5f67dc78625820069);
+            
+        
+
+        circle_marker_59e8230bb987b35d70894c3c33d1c16d.bindPopup(popup_0d6d7481a1152bd8eb148888d7600c01)
+        ;
+
+        
+    
+    
+            circle_marker_59e8230bb987b35d70894c3c33d1c16d.bindTooltip(
+                `<div>
+                     323 GARFIELD PLACE, BROOKLYN, NY: $6,100,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_345c6a0eb08be7e66a6d1e8cd857b3ef = L.circleMarker(
+                [40.69705740000001, -73.99522619999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_e89dda32c36dc88b8e42cb5dc09bd7c6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a9457a75ed1e91cec23b3bbb8cde9e7f = $(`<div id="html_a9457a75ed1e91cec23b3bbb8cde9e7f" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">152 HICKS STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,000,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3002350057<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3002350057" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_e89dda32c36dc88b8e42cb5dc09bd7c6.setContent(html_a9457a75ed1e91cec23b3bbb8cde9e7f);
+            
+        
+
+        circle_marker_345c6a0eb08be7e66a6d1e8cd857b3ef.bindPopup(popup_e89dda32c36dc88b8e42cb5dc09bd7c6)
+        ;
+
+        
+    
+    
+            circle_marker_345c6a0eb08be7e66a6d1e8cd857b3ef.bindTooltip(
+                `<div>
+                     152 HICKS STREET, BROOKLYN, NY: $6,000,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9b36a6d9330313a205528aa7b457a82f = L.circleMarker(
+                [40.5936871, -73.9663587],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_1cfcaad79c15526922e401d7ea7468ff = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_99798c9c40adc1c93174c77693ebeb8b = $(`<div id="html_99798c9c40adc1c93174c77693ebeb8b" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">2320 EAST 5TH STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,000,000<br>         <b>Neighborhood:</b> Gravesend<br>         <b>BBL:</b> 3071560038<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3071560038" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_1cfcaad79c15526922e401d7ea7468ff.setContent(html_99798c9c40adc1c93174c77693ebeb8b);
+            
+        
+
+        circle_marker_9b36a6d9330313a205528aa7b457a82f.bindPopup(popup_1cfcaad79c15526922e401d7ea7468ff)
+        ;
+
+        
+    
+    
+            circle_marker_9b36a6d9330313a205528aa7b457a82f.bindTooltip(
+                `<div>
+                     2320 EAST 5TH STREET, BROOKLYN, NY: $6,000,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_88cff7f1241da5fc9c7d1a806ac28566 = L.circleMarker(
+                [40.62634920000001, -73.96710089999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_c92d7afca6216aa8cbd5487e69e99a6d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1b32a269e4e3cb55295dcf0f9bef9d45 = $(`<div id="html_1b32a269e4e3cb55295dcf0f9bef9d45" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">927 EAST 9 STREET, BROOKLYN, NY</h4>         <b>Price:</b> $6,000,000<br>         <b>Neighborhood:</b> Ocean Parkway<br>         <b>BBL:</b> 3065220078<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3065220078" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_c92d7afca6216aa8cbd5487e69e99a6d.setContent(html_1b32a269e4e3cb55295dcf0f9bef9d45);
+            
+        
+
+        circle_marker_88cff7f1241da5fc9c7d1a806ac28566.bindPopup(popup_c92d7afca6216aa8cbd5487e69e99a6d)
+        ;
+
+        
+    
+    
+            circle_marker_88cff7f1241da5fc9c7d1a806ac28566.bindTooltip(
+                `<div>
+                     927 EAST 9 STREET, BROOKLYN, NY: $6,000,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_806f6e39c0284c9c27f1f36022b2e788 = L.circleMarker(
+                [40.7218005, -73.94918109999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_8fa9cca81fcc3298fa6f240d5c10e2d8 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8b9884cc3696b0822db8825fb8f2745a = $(`<div id="html_8b9884cc3696b0822db8825fb8f2745a" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">524 MANHATTAN AVENUE Unit 8A, BROOKLYN, NY</h4>         <b>Price:</b> $5,975,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3026971214<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3026971214" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_8fa9cca81fcc3298fa6f240d5c10e2d8.setContent(html_8b9884cc3696b0822db8825fb8f2745a);
+            
+        
+
+        circle_marker_806f6e39c0284c9c27f1f36022b2e788.bindPopup(popup_8fa9cca81fcc3298fa6f240d5c10e2d8)
+        ;
+
+        
+    
+    
+            circle_marker_806f6e39c0284c9c27f1f36022b2e788.bindTooltip(
+                `<div>
+                     524 MANHATTAN AVENUE Unit 8A, BROOKLYN, NY: $5,975,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c61890070957f97ae1ae907e50cd3415 = L.circleMarker(
+                [40.7218005, -73.94918109999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_b7b3f1aade463b77b40da6fa92a75efb = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b20022fb37a6529fd9480376a19b5896 = $(`<div id="html_b20022fb37a6529fd9480376a19b5896" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">524 MANHATTAN AVENUE Unit P7, BROOKLYN, NY</h4>         <b>Price:</b> $5,975,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3026971220<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3026971220" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_b7b3f1aade463b77b40da6fa92a75efb.setContent(html_b20022fb37a6529fd9480376a19b5896);
+            
+        
+
+        circle_marker_c61890070957f97ae1ae907e50cd3415.bindPopup(popup_b7b3f1aade463b77b40da6fa92a75efb)
+        ;
+
+        
+    
+    
+            circle_marker_c61890070957f97ae1ae907e50cd3415.bindTooltip(
+                `<div>
+                     524 MANHATTAN AVENUE Unit P7, BROOKLYN, NY: $5,975,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_541f4a6072bbf40df927c9bd700d7ae2 = L.circleMarker(
+                [40.6261662, -73.96770459999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_74694c9a4cf9f0e8ab0539d36142b737 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b3a997c6e8a8700a7793e40f8eb82c0e = $(`<div id="html_b3a997c6e8a8700a7793e40f8eb82c0e" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">930 EAST 9 STREET, BROOKLYN, NY</h4>         <b>Price:</b> $5,900,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3065210017<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3065210017" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_74694c9a4cf9f0e8ab0539d36142b737.setContent(html_b3a997c6e8a8700a7793e40f8eb82c0e);
+            
+        
+
+        circle_marker_541f4a6072bbf40df927c9bd700d7ae2.bindPopup(popup_74694c9a4cf9f0e8ab0539d36142b737)
+        ;
+
+        
+    
+    
+            circle_marker_541f4a6072bbf40df927c9bd700d7ae2.bindTooltip(
+                `<div>
+                     930 EAST 9 STREET, BROOKLYN, NY: $5,900,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_29bb78b487fb6ab2b8337545e00731d9 = L.circleMarker(
+                [40.7256961, -73.9531769],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_77eb41a65df0c315b27965c4b3888b80 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ba17b9185d00fed96f4b6c1429f9d849 = $(`<div id="html_ba17b9185d00fed96f4b6c1429f9d849" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">1001 LORIMER STREET, BROOKLYN, NY</h4>         <b>Price:</b> $5,900,000<br>         <b>Neighborhood:</b> Greenpoint<br>         <b>BBL:</b> 3026180023<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3026180023" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_77eb41a65df0c315b27965c4b3888b80.setContent(html_ba17b9185d00fed96f4b6c1429f9d849);
+            
+        
+
+        circle_marker_29bb78b487fb6ab2b8337545e00731d9.bindPopup(popup_77eb41a65df0c315b27965c4b3888b80)
+        ;
+
+        
+    
+    
+            circle_marker_29bb78b487fb6ab2b8337545e00731d9.bindTooltip(
+                `<div>
+                     1001 LORIMER STREET, BROOKLYN, NY: $5,900,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f1d0cc62e80ed39d556289ab3544f98a = L.circleMarker(
+                [40.674733, -73.9824175],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_b26871d0c0f5396edcf9edea19f596f8 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c862cd352d87d13f8757ad85c04bfd2e = $(`<div id="html_c862cd352d87d13f8757ad85c04bfd2e" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">56 GARFIELD PLACE, BROOKLYN, NY</h4>         <b>Price:</b> $5,900,000<br>         <b>Neighborhood:</b> Park Slope<br>         <b>BBL:</b> 3009640033<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3009640033" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_b26871d0c0f5396edcf9edea19f596f8.setContent(html_c862cd352d87d13f8757ad85c04bfd2e);
+            
+        
+
+        circle_marker_f1d0cc62e80ed39d556289ab3544f98a.bindPopup(popup_b26871d0c0f5396edcf9edea19f596f8)
+        ;
+
+        
+    
+    
+            circle_marker_f1d0cc62e80ed39d556289ab3544f98a.bindTooltip(
+                `<div>
+                     56 GARFIELD PLACE, BROOKLYN, NY: $5,900,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1ad7f73f2cf042a5522f60ff6d43775e = L.circleMarker(
+                [40.6289319, -74.03844529999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_18f255ce5bc26e30d7fc3311e6ea8a80 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_24f88f9f57c55232286ce60592e1af0c = $(`<div id="html_24f88f9f57c55232286ce60592e1af0c" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">8053 HARBOR VIEW TERRACE, BROOKLYN, NY</h4>         <b>Price:</b> $5,850,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3059750170<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3059750170" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_18f255ce5bc26e30d7fc3311e6ea8a80.setContent(html_24f88f9f57c55232286ce60592e1af0c);
+            
+        
+
+        circle_marker_1ad7f73f2cf042a5522f60ff6d43775e.bindPopup(popup_18f255ce5bc26e30d7fc3311e6ea8a80)
+        ;
+
+        
+    
+    
+            circle_marker_1ad7f73f2cf042a5522f60ff6d43775e.bindTooltip(
+                `<div>
+                     8053 HARBOR VIEW TERRACE, BROOKLYN, NY: $5,850,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4c56086b82ae2e9a245b5b796edf80f8 = L.circleMarker(
+                [40.6845355, -73.9843688],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_f74f115636335ee9d66195772f6fa934 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3d2f361ae90241a3076ac721e65d3f23 = $(`<div id="html_3d2f361ae90241a3076ac721e65d3f23" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">233 BERGEN STREET, BROOKLYN, NY</h4>         <b>Price:</b> $5,850,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3001960045<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3001960045" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_f74f115636335ee9d66195772f6fa934.setContent(html_3d2f361ae90241a3076ac721e65d3f23);
+            
+        
+
+        circle_marker_4c56086b82ae2e9a245b5b796edf80f8.bindPopup(popup_f74f115636335ee9d66195772f6fa934)
+        ;
+
+        
+    
+    
+            circle_marker_4c56086b82ae2e9a245b5b796edf80f8.bindTooltip(
+                `<div>
+                     233 BERGEN STREET, BROOKLYN, NY: $5,850,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_02f741ecb75e5eacd770885e1d3b0e1b = L.circleMarker(
+                [40.67402149999999, -73.9729133],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_e7b4ac53b5066d9f1ae4dcb53f9dc4f1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_57f050752eab9f9572d5a55c506dc782 = $(`<div id="html_57f050752eab9f9572d5a55c506dc782" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">56 EIGHTH AVE, BROOKLYN, NY</h4>         <b>Price:</b> $5,850,000<br>         <b>Neighborhood:</b> Park Slope<br>         <b>BBL:</b> 3010630039<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3010630039" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_e7b4ac53b5066d9f1ae4dcb53f9dc4f1.setContent(html_57f050752eab9f9572d5a55c506dc782);
+            
+        
+
+        circle_marker_02f741ecb75e5eacd770885e1d3b0e1b.bindPopup(popup_e7b4ac53b5066d9f1ae4dcb53f9dc4f1)
+        ;
+
+        
+    
+    
+            circle_marker_02f741ecb75e5eacd770885e1d3b0e1b.bindTooltip(
+                `<div>
+                     56 EIGHTH AVE, BROOKLYN, NY: $5,850,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_18c6e2f6ac7fb4592c445b8350eb2d42 = L.circleMarker(
+                [40.6919778, -73.97240839999999],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_fad879b67389c8e10cfd89f33e689ecb = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_5a0c3d8aa59eeb59bb2e57a65587adc6 = $(`<div id="html_5a0c3d8aa59eeb59bb2e57a65587adc6" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">193 CARLTON AVENUE, BROOKLYN, NY</h4>         <b>Price:</b> $5,850,000<br>         <b>Neighborhood:</b> Fort Greene<br>         <b>BBL:</b> 3020730004<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3020730004" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_fad879b67389c8e10cfd89f33e689ecb.setContent(html_5a0c3d8aa59eeb59bb2e57a65587adc6);
+            
+        
+
+        circle_marker_18c6e2f6ac7fb4592c445b8350eb2d42.bindPopup(popup_fad879b67389c8e10cfd89f33e689ecb)
+        ;
+
+        
+    
+    
+            circle_marker_18c6e2f6ac7fb4592c445b8350eb2d42.bindTooltip(
+                `<div>
+                     193 CARLTON AVENUE, BROOKLYN, NY: $5,850,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fdb8bfa6a5fcac9e81a7d96726e50fb3 = L.circleMarker(
+                [40.6750531, -73.9829448],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_b1047bb5f7dbc0a57b99a649b5637df4 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a0b9868f56054360175e23294efda4ed = $(`<div id="html_a0b9868f56054360175e23294efda4ed" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">38 GARFIELD PLACE, BROOKLYN, NY</h4>         <b>Price:</b> $5,820,000<br>         <b>Neighborhood:</b> Park Slope<br>         <b>BBL:</b> 3009640024<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3009640024" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_b1047bb5f7dbc0a57b99a649b5637df4.setContent(html_a0b9868f56054360175e23294efda4ed);
+            
+        
+
+        circle_marker_fdb8bfa6a5fcac9e81a7d96726e50fb3.bindPopup(popup_b1047bb5f7dbc0a57b99a649b5637df4)
+        ;
+
+        
+    
+    
+            circle_marker_fdb8bfa6a5fcac9e81a7d96726e50fb3.bindTooltip(
+                `<div>
+                     38 GARFIELD PLACE, BROOKLYN, NY: $5,820,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_469c27afe94cc2a8aae64b68b7684d2a = L.circleMarker(
+                [40.6859313, -73.986836],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_5ddf41c216c9e606bc63e0e717460391 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_08ee42b1dedb7c9bfbd637da69266d82 = $(`<div id="html_08ee42b1dedb7c9bfbd637da69266d82" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">162 DEAN STREET, BROOKLYN, NY</h4>         <b>Price:</b> $5,814,000<br>         <b>Neighborhood:</b> Boerum Hill<br>         <b>BBL:</b> 3001950018<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3001950018" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_5ddf41c216c9e606bc63e0e717460391.setContent(html_08ee42b1dedb7c9bfbd637da69266d82);
+            
+        
+
+        circle_marker_469c27afe94cc2a8aae64b68b7684d2a.bindPopup(popup_5ddf41c216c9e606bc63e0e717460391)
+        ;
+
+        
+    
+    
+            circle_marker_469c27afe94cc2a8aae64b68b7684d2a.bindTooltip(
+                `<div>
+                     162 DEAN STREET, BROOKLYN, NY: $5,814,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6b953bb4b99e407939a58be502c7823f = L.circleMarker(
+                [40.6830656, -73.9808141],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_af6e7d42d1b5b80f66adfad1097d245a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_05929db9e305e5c7d7ae21056c1256a7 = $(`<div id="html_05929db9e305e5c7d7ae21056c1256a7" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">323 BERGEN STREET Unit P703W, BROOKLYN, NY</h4>         <b>Price:</b> $5,800,750<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3001981417<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3001981417" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_af6e7d42d1b5b80f66adfad1097d245a.setContent(html_05929db9e305e5c7d7ae21056c1256a7);
+            
+        
+
+        circle_marker_6b953bb4b99e407939a58be502c7823f.bindPopup(popup_af6e7d42d1b5b80f66adfad1097d245a)
+        ;
+
+        
+    
+    
+            circle_marker_6b953bb4b99e407939a58be502c7823f.bindTooltip(
+                `<div>
+                     323 BERGEN STREET Unit P703W, BROOKLYN, NY: $5,800,750
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cb3718f42c0dd23428efdf5e969305e0 = L.circleMarker(
+                [40.6875018, -73.9965661],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_df3f149335c3c998158412501e8b6580 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_cf8ac0c387ae6c8f2854f69dc96339b9 = $(`<div id="html_cf8ac0c387ae6c8f2854f69dc96339b9" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">196 WARREN STREET, BROOKLYN, NY</h4>         <b>Price:</b> $5,800,000<br>         <b>Neighborhood:</b> Cobble Hill<br>         <b>BBL:</b> 3003060015<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3003060015" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_df3f149335c3c998158412501e8b6580.setContent(html_cf8ac0c387ae6c8f2854f69dc96339b9);
+            
+        
+
+        circle_marker_cb3718f42c0dd23428efdf5e969305e0.bindPopup(popup_df3f149335c3c998158412501e8b6580)
+        ;
+
+        
+    
+    
+            circle_marker_cb3718f42c0dd23428efdf5e969305e0.bindTooltip(
+                `<div>
+                     196 WARREN STREET, BROOKLYN, NY: $5,800,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c2f1520ef5f389bda4b7179c4487be8b = L.circleMarker(
+                [40.6894242, -73.96578620000001],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_939e8186c266b2afe5511839a3204d15 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_56fe987a0eab6e90dedfb7830f9b2402 = $(`<div id="html_56fe987a0eab6e90dedfb7830f9b2402" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">315 WASHINGTON AVENUE, BROOKLYN, NY</h4>         <b>Price:</b> $5,800,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3019320020<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3019320020" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_939e8186c266b2afe5511839a3204d15.setContent(html_56fe987a0eab6e90dedfb7830f9b2402);
+            
+        
+
+        circle_marker_c2f1520ef5f389bda4b7179c4487be8b.bindPopup(popup_939e8186c266b2afe5511839a3204d15)
+        ;
+
+        
+    
+    
+            circle_marker_c2f1520ef5f389bda4b7179c4487be8b.bindTooltip(
+                `<div>
+                     315 WASHINGTON AVENUE, BROOKLYN, NY: $5,800,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_72abccfdcc22499954c63d92e1510310 = L.circleMarker(
+                [40.5980397, -73.9690462],
+                {"bubblingMouseEvents": true, "color": "#2980b9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2980b9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4b726963e65aa1e07774825f2d28e763);
+        
+    
+        var popup_368f844ab1e7cf465451b70aa3f25b84 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d8305b80d32aaaab3f9adc1a2132eb3e = $(`<div id="html_d8305b80d32aaaab3f9adc1a2132eb3e" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; font-size: 12px; width: 220px;">         <h4 style="margin-bottom: 5px; color: #2c3e50;">2136 EAST 3 STREET, BROOKLYN, NY</h4>         <b>Price:</b> $5,800,000<br>         <b>Neighborhood:</b> N/A<br>         <b>BBL:</b> 3071050090<br>         <hr style="border: 0; border-top: 1px solid #eee;">         <a href="https://zola.planning.nyc.gov/l/lot/Brooklyn/3071050090" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold;">             View on NYC ZoLa ↗         </a>     </div>     </div>`)[0];
+                popup_368f844ab1e7cf465451b70aa3f25b84.setContent(html_d8305b80d32aaaab3f9adc1a2132eb3e);
+            
+        
+
+        circle_marker_72abccfdcc22499954c63d92e1510310.bindPopup(popup_368f844ab1e7cf465451b70aa3f25b84)
+        ;
+
+        
+    
+    
+            circle_marker_72abccfdcc22499954c63d92e1510310.bindTooltip(
+                `<div>
+                     2136 EAST 3 STREET, BROOKLYN, NY: $5,800,000
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            marker_cluster_4b726963e65aa1e07774825f2d28e763.addTo(map_af4e1932bde19281b44a7c9702755da3);
+        
+    
+            var layer_control_c7de57b399bb44e074f6675cc7ee21a5_layers = {
+                base_layers : {
+                    "cartodbpositron" : tile_layer_238d2d2c4b34c75b145091919d1be0b8,
+                },
+                overlays :  {
+                    "Sales" : marker_cluster_4b726963e65aa1e07774825f2d28e763,
+                },
+            };
+            let layer_control_c7de57b399bb44e074f6675cc7ee21a5 = L.control.layers(
+                layer_control_c7de57b399bb44e074f6675cc7ee21a5_layers.base_layers,
+                layer_control_c7de57b399bb44e074f6675cc7ee21a5_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_af4e1932bde19281b44a7c9702755da3);
+
+        
+</script>
+</html>
