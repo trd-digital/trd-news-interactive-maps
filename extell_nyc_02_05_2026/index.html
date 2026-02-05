@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Extell</title>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_b0c67f2b6142a1553b386e1fafb838e7 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+<div style="
+  position: fixed;
+  top: 12px; left: 50%; transform: translateX(-50%);
+  z-index: 9999;
+  background: rgba(255,255,255,0.92);
+  padding: 8px 12px;
+  border: 1px solid #bbb; border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+  font: 600 16px/1.25 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  max-width: 92%;
+  text-align: center;
+">
+  Extell
+</div>
+    
+            <div class="folium-map" id="map_b0c67f2b6142a1553b386e1fafb838e7" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_b0c67f2b6142a1553b386e1fafb838e7 = L.map(
+                "map_b0c67f2b6142a1553b386e1fafb838e7",
+                {
+                    center: [40.763434225000005, -73.97617400833332],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12.5,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_b0c67f2b6142a1553b386e1fafb838e7);
+
+            
+
+        
+    
+            var tile_layer_37c42efd34b0bff1bd8097b13899bcc9 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_37c42efd34b0bff1bd8097b13899bcc9.addTo(map_b0c67f2b6142a1553b386e1fafb838e7);
+        
+    
+            var circle_marker_9724faa6b7d7aff04994871d7f884813 = L.circleMarker(
+                [40.7566623, -73.97894509999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_b0c67f2b6142a1553b386e1fafb838e7);
+        
+    
+        var popup_8b88064c120aae761df23798edc9cfaa = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_da0cbb28c7581c6667744c63cdb40351 = $(`<div id="html_da0cbb28c7581c6667744c63cdb40351" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>576 5 AVENUE, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/new-york/2025/09/12/extell-finds-anchor-tenant-for-midtown-office-tower/" target="_blank" rel="noopener">https://therealdeal.com/new-york/2025/09/12/extell-finds-anchor-tenant-for-midtown-office-tower/</a></td></tr><tr><th style='text-align:left;padding-right:8px'>BBL(s)</th><td>1012620041</td></tr><tr><th style='text-align:left;padding-right:8px'>Price</th><td>$175,000,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Recorded_Date</th><td>4/4/2025</td></tr><tr><th style='text-align:left;padding-right:8px'>DOB_Notes</th><td>M01093960-P7</td></tr><tr><th style='text-align:left;padding-right:8px'>ACRIS_Link</th><td><a href="https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=2025032100507003" target="_blank" rel="noopener">https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=2025032100507003</a></td></tr></table></div>`)[0];
+                popup_8b88064c120aae761df23798edc9cfaa.setContent(html_da0cbb28c7581c6667744c63cdb40351);
+            
+        
+
+        circle_marker_9724faa6b7d7aff04994871d7f884813.bindPopup(popup_8b88064c120aae761df23798edc9cfaa)
+        ;
+
+        
+    
+    
+            var circle_marker_60c1100aa046f2d68212194858ef1991 = L.circleMarker(
+                [40.764176, -73.970286],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_b0c67f2b6142a1553b386e1fafb838e7);
+        
+    
+        var popup_8bdb275c1528d4f7411678385b7f56eb = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_bc30b2edec018036a5fb4c8b484d1330 = $(`<div id="html_bc30b2edec018036a5fb4c8b484d1330" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>35-39 EAST 60 STREET, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/new-york/2025/03/12/extell-buys-midtown-east-properties-from-solil-management/" target="_blank" rel="noopener">https://therealdeal.com/new-york/2025/03/12/extell-buys-midtown-east-properties-from-solil-management/</a></td></tr><tr><th style='text-align:left;padding-right:8px'>BBL(s)</th><td>1013750026, 1013750027, 1013750127</td></tr><tr><th style='text-align:left;padding-right:8px'>Price</th><td>$103,275,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Recorded_Date</th><td>3/11/2025</td></tr><tr><th style='text-align:left;padding-right:8px'>DOB_Notes</th><td>M01134353-P1, demo filed 11/26/2025</td></tr><tr><th style='text-align:left;padding-right:8px'>ACRIS_Link</th><td><a href="https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=2025030700891001" target="_blank" rel="noopener">https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=2025030700891001</a></td></tr></table></div>`)[0];
+                popup_8bdb275c1528d4f7411678385b7f56eb.setContent(html_bc30b2edec018036a5fb4c8b484d1330);
+            
+        
+
+        circle_marker_60c1100aa046f2d68212194858ef1991.bindPopup(popup_8bdb275c1528d4f7411678385b7f56eb)
+        ;
+
+        
+    
+    
+            var circle_marker_afdc3094435174086708857b70b14cd7 = L.circleMarker(
+                [40.7642648, -73.9705422],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_b0c67f2b6142a1553b386e1fafb838e7);
+        
+    
+        var popup_753d732b7291cb696ae274309b796214 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_787c4a7493d80b1d09bf15a931046726 = $(`<div id="html_787c4a7493d80b1d09bf15a931046726" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>653-655 MADISON AVENUE, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://newyorkyimby.com/2025/12/demolition-continues-for-1162-foot-supertall-at-655-madison-avenue-on-manhattans-upper-east-side.html" target="_blank" rel="noopener">https://newyorkyimby.com/2025/12/demolition-continues-for-1162-foot-supertall-at-655-madison-avenue-on-manhattans-upper-east-side.html</a></td></tr><tr><th style='text-align:left;padding-right:8px'>BBL(s)</th><td>1013750021</td></tr><tr><th style='text-align:left;padding-right:8px'>Price</th><td>$159,433,333</td></tr><tr><th style='text-align:left;padding-right:8px'>Recorded_Date</th><td>10/16/2024</td></tr><tr><th style='text-align:left;padding-right:8px'>DOB_Notes</th><td>M01089781-P9, Demo filed 1/15/2026</td></tr><tr><th style='text-align:left;padding-right:8px'>ACRIS_Link</th><td><a href="https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=2024101400339001" target="_blank" rel="noopener">https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=2024101400339001</a></td></tr></table></div>`)[0];
+                popup_753d732b7291cb696ae274309b796214.setContent(html_787c4a7493d80b1d09bf15a931046726);
+            
+        
+
+        circle_marker_afdc3094435174086708857b70b14cd7.bindPopup(popup_753d732b7291cb696ae274309b796214)
+        ;
+
+        
+    
+    
+            var circle_marker_06b626e9fb6c54874be3bae29285a774 = L.circleMarker(
+                [40.77360609999999, -73.98157909999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_b0c67f2b6142a1553b386e1fafb838e7);
+        
+    
+        var popup_20856186c5d31cca962cd81c5e95b94b = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_4ea6c6d74e675ff8b8c35cc54deb67f1 = $(`<div id="html_4ea6c6d74e675ff8b8c35cc54deb67f1" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>141-149 COLUMBUS AVE, 30 WEST 67 ST, 47-77 WEST 66 ST, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/new-york/2025/11/19/extell-unveils-more-plans-for-former-disney-campus/" target="_blank" rel="noopener">https://therealdeal.com/new-york/2025/11/19/extell-unveils-more-plans-for-former-disney-campus/</a></td></tr><tr><th style='text-align:left;padding-right:8px'>BBL(s)</th><td>1011190001</td></tr><tr><th style='text-align:left;padding-right:8px'>Price</th><td>$931,000,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Recorded_Date</th><td>3/29/2022</td></tr><tr><th style='text-align:left;padding-right:8px'>DOB_Notes</th><td>M01179112-P3, demo filed 10/21/2025</td></tr><tr><th style='text-align:left;padding-right:8px'>ACRIS_Link</th><td><a href="https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=2022032401285004" target="_blank" rel="noopener">https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=2022032401285004</a></td></tr></table></div>`)[0];
+                popup_20856186c5d31cca962cd81c5e95b94b.setContent(html_4ea6c6d74e675ff8b8c35cc54deb67f1);
+            
+        
+
+        circle_marker_06b626e9fb6c54874be3bae29285a774.bindPopup(popup_20856186c5d31cca962cd81c5e95b94b)
+        ;
+
+        
+    
+    
+            var circle_marker_7637c60d28e986eed46d6a08d1dd34bc = L.circleMarker(
+                [40.7644555, -73.9805688],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_b0c67f2b6142a1553b386e1fafb838e7);
+        
+    
+        var popup_28ce03dfce3855789c78b315271c395c = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_6c0ecc609980d6de3df1f592bf980c17 = $(`<div id="html_6c0ecc609980d6de3df1f592bf980c17" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>871 7 AVENUE, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/new-york/2025/10/24/gary-barnett-supersizes-another-midtown-project/" target="_blank" rel="noopener">https://therealdeal.com/new-york/2025/10/24/gary-barnett-supersizes-another-midtown-project/</a></td></tr><tr><th style='text-align:left;padding-right:8px'>BBL(s)</th><td>1010080001</td></tr><tr><th style='text-align:left;padding-right:8px'>DOB_Notes</th><td>M00847788-P1, new bldg filed 1/23/2026</td></tr></table></div>`)[0];
+                popup_28ce03dfce3855789c78b315271c395c.setContent(html_6c0ecc609980d6de3df1f592bf980c17);
+            
+        
+
+        circle_marker_7637c60d28e986eed46d6a08d1dd34bc.bindPopup(popup_28ce03dfce3855789c78b315271c395c)
+        ;
+
+        
+    
+    
+            var circle_marker_be69bc42baa08769a8daa04aa482fc32 = L.circleMarker(
+                [40.7577789, -73.9798407],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_b0c67f2b6142a1553b386e1fafb838e7);
+        
+    
+        var popup_923d7f0aa1ad8e5b45439f7b8e49481c = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_7590df8af3bd808844746d527c537206 = $(`<div id="html_7590df8af3bd808844746d527c537206" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>32 WEST 48TH STREET, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://newyorkyimby.com/2025/08/kimpton-hotel-tower-nears-completion-at-32-west-48th-street-in-midtown-manhattan.html" target="_blank" rel="noopener">https://newyorkyimby.com/2025/08/kimpton-hotel-tower-nears-completion-at-32-west-48th-street-in-midtown-manhattan.html</a></td></tr><tr><th style='text-align:left;padding-right:8px'>BBL(s)</th><td>1012630056</td></tr><tr><th style='text-align:left;padding-right:8px'>DOB_Notes</th><td>121208987, new bldg filed 12/03/2025</td></tr></table></div>`)[0];
+                popup_923d7f0aa1ad8e5b45439f7b8e49481c.setContent(html_7590df8af3bd808844746d527c537206);
+            
+        
+
+        circle_marker_be69bc42baa08769a8daa04aa482fc32.bindPopup(popup_923d7f0aa1ad8e5b45439f7b8e49481c)
+        ;
+
+        
+    
+    
+            var circle_marker_60e676e83c913e44386d58de58de9c2d = L.circleMarker(
+                [40.77264, -73.9521529],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_b0c67f2b6142a1553b386e1fafb838e7);
+        
+    
+        var popup_86282c0de04c0a5ee26dfa34e43d2c40 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_952c5cb7ab7a5ecd5da63f45233d098e = $(`<div id="html_952c5cb7ab7a5ecd5da63f45233d098e" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>1522 1 AVENUE, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://newyorkyimby.com/2025/06/1522-first-avenue-wraps-up-construction-on-manhattans-upper-east-side.html" target="_blank" rel="noopener">https://newyorkyimby.com/2025/06/1522-first-avenue-wraps-up-construction-on-manhattans-upper-east-side.html</a></td></tr><tr><th style='text-align:left;padding-right:8px'>BBL(s)</th><td>1015590050</td></tr><tr><th style='text-align:left;padding-right:8px'>DOB_Notes</th><td>M00623712-C5, new bldg filed 11/5/2025</td></tr></table></div>`)[0];
+                popup_86282c0de04c0a5ee26dfa34e43d2c40.setContent(html_952c5cb7ab7a5ecd5da63f45233d098e);
+            
+        
+
+        circle_marker_60e676e83c913e44386d58de58de9c2d.bindPopup(popup_86282c0de04c0a5ee26dfa34e43d2c40)
+        ;
+
+        
+    
+    
+            var circle_marker_a6c0f949f3262fe454b46a3654ff45ed = L.circleMarker(
+                [40.7566057, -73.97982569999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_b0c67f2b6142a1553b386e1fafb838e7);
+        
+    
+        var popup_ef47369e7bd43726d003d191a720a5ac = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_62175270d35488a13161c2c2610f6f9c = $(`<div id="html_62175270d35488a13161c2c2610f6f9c" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>15 WEST 46 STREET, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://commercialobserver.com/2025/02/extell-buys-midtown-15-west-46th-street/" target="_blank" rel="noopener">https://commercialobserver.com/2025/02/extell-buys-midtown-15-west-46th-street/</a></td></tr><tr><th style='text-align:left;padding-right:8px'>BBL(s)</th><td>1012620027</td></tr><tr><th style='text-align:left;padding-right:8px'>Price</th><td>$24,750,000</td></tr><tr><th style='text-align:left;padding-right:8px'>Recorded_Date</th><td>2/18/2025</td></tr><tr><th style='text-align:left;padding-right:8px'>DOB_Notes</th><td>M01088612-P5, demo filed 9/25/2025</td></tr><tr><th style='text-align:left;padding-right:8px'>ACRIS_Link</th><td><a href="https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=2025021100674003" target="_blank" rel="noopener">https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=2025021100674003</a></td></tr></table></div>`)[0];
+                popup_ef47369e7bd43726d003d191a720a5ac.setContent(html_62175270d35488a13161c2c2610f6f9c);
+            
+        
+
+        circle_marker_a6c0f949f3262fe454b46a3654ff45ed.bindPopup(popup_ef47369e7bd43726d003d191a720a5ac)
+        ;
+
+        
+    
+    
+            var circle_marker_c1e2221f00ee090b712d94fa8d3e033f = L.circleMarker(
+                [40.7638693, -73.9817094],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_b0c67f2b6142a1553b386e1fafb838e7);
+        
+    
+        var popup_6da5f986e4e84eb19d83eefe9103878d = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_18f4911247985d598e07ab8d7d656a47 = $(`<div id="html_18f4911247985d598e07ab8d7d656a47" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>201 WEST 54TH STREET (Kimpton Hotel), New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/new-york/2023/09/27/extell-adds-30-more-rooms-at-midtown-hotel-project/" target="_blank" rel="noopener">https://therealdeal.com/new-york/2023/09/27/extell-adds-30-more-rooms-at-midtown-hotel-project/</a></td></tr><tr><th style='text-align:left;padding-right:8px'>BBL(s)</th><td>1010260029</td></tr><tr><th style='text-align:left;padding-right:8px'>Price</th><td>$62,390,625</td></tr><tr><th style='text-align:left;padding-right:8px'>Recorded_Date</th><td>1/11/2017</td></tr><tr><th style='text-align:left;padding-right:8px'>DOB_Notes</th><td>M00907580-S5</td></tr><tr><th style='text-align:left;padding-right:8px'>ACRIS_Link</th><td><a href="https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=2017011000308001" target="_blank" rel="noopener">https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=2017011000308001</a></td></tr></table></div>`)[0];
+                popup_6da5f986e4e84eb19d83eefe9103878d.setContent(html_18f4911247985d598e07ab8d7d656a47);
+            
+        
+
+        circle_marker_c1e2221f00ee090b712d94fa8d3e033f.bindPopup(popup_6da5f986e4e84eb19d83eefe9103878d)
+        ;
+
+        
+    
+    
+            var circle_marker_54bae78c7e7a8b433e063a7bfd9948c3 = L.circleMarker(
+                [40.76295100000001, -73.99698149999999],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_b0c67f2b6142a1553b386e1fafb838e7);
+        
+    
+        var popup_8079ddae98e783f7649c988b3f6ac382 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_b7af82e3c3882b735cbd15b60bec4681 = $(`<div id="html_b7af82e3c3882b735cbd15b60bec4681" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>609-623 11 AVENUE, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://edc.nyc/sites/default/files/2025-11/Clinton%20PB%20Associates%20LLC%20PHP_Redacted_.pdf" target="_blank" rel="noopener">https://edc.nyc/sites/default/files/2025-11/Clinton%20PB%20Associates%20LLC%20PHP_Redacted_.pdf</a></td></tr><tr><th style='text-align:left;padding-right:8px'>BBL(s)</th><td>1010930036, 1010930033, 1010930129</td></tr><tr><th style='text-align:left;padding-right:8px'>DOB_Notes</th><td>M01325794-I1, M01325796-I1, M01325791-I1</td></tr></table></div>`)[0];
+                popup_8079ddae98e783f7649c988b3f6ac382.setContent(html_b7af82e3c3882b735cbd15b60bec4681);
+            
+        
+
+        circle_marker_54bae78c7e7a8b433e063a7bfd9948c3.bindPopup(popup_8079ddae98e783f7649c988b3f6ac382)
+        ;
+
+        
+    
+    
+            var circle_marker_e1597872d66ee4097cc71b3bc559c506 = L.circleMarker(
+                [40.764494, -73.96998880000001],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_b0c67f2b6142a1553b386e1fafb838e7);
+        
+    
+        var popup_1ccc2dbfbad5eca18db62f6ee575cd04 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_862f5e59a2afa8d8723abd72ed349a52 = $(`<div id="html_862f5e59a2afa8d8723abd72ed349a52" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>34 EAST 61 STREET, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://www.crainsnewyork.com/real-estate/extell-development-plans-several-major-real-estate-projects-manhattan" target="_blank" rel="noopener">https://www.crainsnewyork.com/real-estate/extell-development-plans-several-major-real-estate-projects-manhattan</a></td></tr><tr><th style='text-align:left;padding-right:8px'>BBL(s)</th><td>1013750147</td></tr><tr><th style='text-align:left;padding-right:8px'>DOB_Notes</th><td>M01203849-P2</td></tr></table></div>`)[0];
+                popup_1ccc2dbfbad5eca18db62f6ee575cd04.setContent(html_862f5e59a2afa8d8723abd72ed349a52);
+            
+        
+
+        circle_marker_e1597872d66ee4097cc71b3bc559c506.bindPopup(popup_1ccc2dbfbad5eca18db62f6ee575cd04)
+        ;
+
+        
+    
+    
+            var circle_marker_f30ebf92db91993b117de49498f6cbaf = L.circleMarker(
+                [40.7597071, -73.9716679],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(map_b0c67f2b6142a1553b386e1fafb838e7);
+        
+    
+        var popup_91912936eb52772e19186d9493356da7 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_15248f3038a5c11856338c30c7b3ad6c = $(`<div id="html_15248f3038a5c11856338c30c7b3ad6c" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>405-417 Park Avenue, New York, NY</td></tr><tr><th style='text-align:left;padding-right:8px'>Link</th><td><a href="https://therealdeal.com/new-york/2026/01/25/gary-barnetts-extell-in-contract-to-buy-midtown-assemblage/?itm_source=parsely-api&utm_source=parsely-top-posts&utm_medium=top-article&utm_campaign=recommended-content" target="_blank" rel="noopener">https://therealdeal.com/new-york/2026/01/25/gary-barnetts-extell-in-contract-to-buy-midtown-assemblage/?itm_source=parsely-api&amp;utm_source=parsely-top-posts&amp;utm_medium=top-article&amp;utm_campaign=recommended-content</a></td></tr><tr><th style='text-align:left;padding-right:8px'>Price</th><td>In Contract</td></tr></table></div>`)[0];
+                popup_91912936eb52772e19186d9493356da7.setContent(html_15248f3038a5c11856338c30c7b3ad6c);
+            
+        
+
+        circle_marker_f30ebf92db91993b117de49498f6cbaf.bindPopup(popup_91912936eb52772e19186d9493356da7)
+        ;
+
+        
+    
+</script>
+</html>
