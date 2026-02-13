@@ -92,14 +92,21 @@ function setCard(mode) {
 document.querySelectorAll(".step").forEach(step => {
   ScrollTrigger.create({
     trigger: step,
-    start: "top 60%",
-    end: "bottom 40%",
-    onEnter: () => handleStep(step.dataset.step),
-    onEnterBack: () => handleStep(step.dataset.step),
+    start: "top center",
+    end: "bottom center",
+    onToggle: (self) => {
+      if (self.isActive) {
+        handleStep(step.dataset.step, step);
+      }
+    },
   });
 });
 
-function handleStep(stepKey) {
+function handleStep(stepKey, stepElement) {
+  // Highlight active step
+  document.querySelectorAll(".step").forEach(s => s.classList.remove("is-active"));
+  if (stepElement) stepElement.classList.add("is-active");
+  
   switch (stepKey) {
     case "hero":
       setActivePanel("hero");
