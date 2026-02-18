@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Cook County — New Single Family Residences</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    #wrap { position: relative; height: 100%; width: 100%; }
+    #map { position:absolute; inset:0; }
+    .leaflet-tile { filter: grayscale(40%) brightness(1.05); }
+
+    #panel {
+      position: absolute; top: 18px; right: 18px; z-index: 1000;
+      width: 360px; max-width: calc(100vw - 36px);
+      background: rgba(255,255,255,0.95);
+      border: 1px solid #d6d6d6; border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+      overflow: hidden;
+    }
+    #panel header {
+      padding: 12px 14px;
+      border-bottom: 1px solid #e6e6e6;
+    }
+    #panel header .h1 { font-weight: 900; font-size: 18px; letter-spacing: .02em; }
+    #panel header .hint { font-size: 12px; color:#666; margin-top: 3px; }
+    #list { max-height: calc(100vh - 64px); overflow: auto; }
+    .row {
+      display: grid; grid-template-columns: 34px 1fr;
+      gap: 10px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #efefef;
+      cursor: pointer;
+      background: transparent;
+    }
+    .row:hover { background: #f6f7f8; }
+    .badge {
+      width: 28px; height: 28px; border-radius: 999px;
+      display: grid; place-items: center;
+      color: white; font-weight: 900; font-size: 13px;
+      border: 2px solid rgba(0,0,0,0.15);
+      margin-top: 2px;
+      background:#2d6cff;
+    }
+    .row .name { font-weight: 900; font-size: 14px; line-height: 1.2; }
+    .row .meta { font-size: 12px; color: #555; margin-top: 4px; line-height: 1.25; }
+
+    .num-marker {
+      width: 32px; height: 32px; border-radius: 999px;
+      color: #fff;
+      display: grid; place-items: center;
+      font-weight: 900; font-size: 14px;
+      border: 2px solid rgba(0,0,0,0.35);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+      background:#2d6cff;
+    }
+    .leaflet-control-zoom a { border-radius: 10px; }
+  </style>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="map"></div>
+
+  <aside id="panel">
+    <header>
+      <div class="h1">COOK COUNTY — NEW SINGLE FAMILY RESIDENCES</div>
+      <div class="hint">Click a property to zoom & open details</div>
+    </header>
+    <div id="list"></div>
+  </aside>
+</div>
+
+<script>
+  const geo = {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.714536, 42.0963925]}, "properties": {"Parcel ID": "05-21-412-021-0000", "Street Address": "195 SHERIDAN RD", "City, State Zip": "WINNETKA, IL 60093", "Construction cost": "$43,740,160.00", "Owner": "Justin Ishbia (Orchard 2020)", "Year permitted": 2022, "Notes": "The house's address is 205 Sheridan, but the parcel is 195 Sheridan in the Cook County map system", "id": 1}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.6924056, 42.0815412]}, "properties": {"Parcel ID": "05-27-414-003-0000", "Street Address": "1006 MICHIGAN AVE", "City, State Zip": "WILMETTE, IL 60091", "Construction cost": "$11,090,550.00", "Owner": "Tom Ricketts (1006 MICHIGAN AVE LLC)", "Year permitted": 2015, "id": 2}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7217517, 42.102993]}, "properties": {"Parcel ID": "05-21-202-001-0000", "Street Address": "445 SHERIDAN RD", "City, State Zip": "WINNETKA, IL 60093", "Construction cost": "$10,000,000.00", "Owner": "Vijay Kotte (445 Sheridan LLC)", "Year permitted": 2024, "id": 3}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7018068, 42.0881531]}, "properties": {"Parcel ID": "05-35-200-018-0000", "Street Address": "500 SHERIDAN RD", "City, State Zip": "WILMETTE,  60091", "Construction cost": "$9,000,000.00", "Owner": "Frank Nicholas", "Year permitted": 2015, "id": 4}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.6947717, 42.0825988]}, "properties": {"Parcel ID": "05-27-404-011-0000", "Street Address": "1126 MICHIGAN AVE", "City, State Zip": "WILMETTE, IL 60091", "Construction cost": "$7,500,000.00", "Owner": "Mark Thierer / Narsin Thierer", "Year permitted": 2022, "id": 5}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7279724, 42.1088491]}, "properties": {"Parcel ID": "05-16-106-072-0000", "Street Address": "657 SHERIDAN RD", "City, State Zip": "WINNETKA, IL 60093", "Construction cost": "$7,100,000.00", "Owner": "LAKE MICHIGAN LLC", "Year permitted": 2016, "id": 6}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7201826, 42.101425]}, "properties": {"Parcel ID": "05-16-106-074-0000", "Street Address": "735 N SHERIDAN RD", "City, State Zip": "WINNETKA, IL 60094", "Construction cost": "$5,433,000.00", "Owner": "Janice and Philip Beck", "Year permitted": 2018, "id": 7}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7488958, 42.1349168]}, "properties": {"Parcel ID": "05-08-101-006-0000", "Street Address": "595 LONGWOOD AVE", "City, State Zip": "GLENCOE, IL 60022", "Construction cost": "$5,000,000.00", "Year permitted": 2025, "id": 8}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.6948505, 42.0826604]}, "properties": {"Parcel ID": "05-27-404-010-0000", "Street Address": "1132 MICHIGAN AVE", "City, State Zip": "WILMETTE, IL 60091", "Construction cost": "$4,600,000.00", "Year permitted": 2016, "id": 9}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7277677, 42.1085956]}, "properties": {"Parcel ID": "05-16-106-031-0000", "Street Address": "645 SHERIDAN RD", "City, State Zip": "WINNETKA, IL 60093", "Construction cost": "$3,950,000.00", "Owner": "Michael Rauchman", "Year permitted": 2024, "id": 10}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.6949556, 42.0827425]}, "properties": {"Parcel ID": "05-27-404-009-0000", "Street Address": "1140 MICHIGAN AVE", "City, State Zip": "WILMETTE, IL 60091", "Construction cost": "$3,800,000.00", "Owner": "Edward & Dina Levine", "Year permitted": 2015, "id": 11}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.6926849, 42.0816207]}, "properties": {"Parcel ID": "05-27-414-002-0000", "Street Address": "1020 MICHIGAN AVE", "City, State Zip": "WILMETTE, IL 60091", "Construction cost": "$3,500,000.00", "Owner": "NA ", "Year permitted": 2016, "id": 12}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.6952185, 42.0829478]}, "properties": {"Parcel ID": "05-27-404-017-0000", "Street Address": "1160 MICHIGAN AVE", "City, State Zip": "WILMETTE, IL 60091", "Construction cost": "$3,200,000.00", "Owner": "Richard & Dara Levy", "Year permitted": 2018, "id": 13}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7365006, 42.1180218]}, "properties": {"Parcel ID": "05-17-203-039-0000", "Street Address": "973 SHERIDAN RD", "City, State Zip": "WINNETKA, IL 60111", "Construction cost": "$3,000,000.00", "Owner": "Luke Kelly", "Year permitted": 2023, "id": 14}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7114542, 42.0937198]}, "properties": {"Parcel ID": "05-22-100-055-0000", "Street Address": "513 SHERIDAN RD", "City, State Zip": "KENILWORTH, IL 60043", "Construction cost": "$2,697,800.00", "Owner": "Heritage Luxury Homes", "Year permitted": 2018, "id": 15}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7438082, 42.1299598]}, "properties": {"Parcel ID": "05-08-303-005-0000", "Street Address": "333 SURFSIDE PL", "City, State Zip": "GLENCOE, IL 60022", "Construction cost": "$2,625,000.00", "Year permitted": 2025, "id": 16}}]};
+  const map = L.map('map', { zoomControl: true });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd',
+    maxZoom: 20,
+    attribution: '&copy; OpenStreetMap &copy; CARTO'
+  }).addTo(map);
+
+  const latlngs = geo.features.map(f => [f.geometry.coordinates[1], f.geometry.coordinates[0]]);
+  const bounds = L.latLngBounds(latlngs);
+  map.fitBounds(bounds.pad(0.15));
+
+  const list = document.getElementById('list');
+
+  function esc(s) {
+    return String(s)
+      .replaceAll('&','&amp;')
+      .replaceAll('<','&lt;')
+      .replaceAll('>','&gt;');
+  }
+
+  function popupHtml(p) {
+    const rows = [];
+    const showOrder = [
+      "Street Address","City, State Zip","Parcel ID","Owner",
+      "Construction cost","Year permitted","Notes"
+    ];
+    for (const k of showOrder) {
+      const v = p[k];
+      if (v === null || v === undefined || v === '') continue;
+      rows.push(`<tr>
+        <th style="text-align:left;vertical-align:top;padding:4px 10px 4px 0;color:#444;white-space:nowrap;">${esc(k)}</th>
+        <td style="padding:4px 0;color:#111;">${esc(v)}</td>
+      </tr>`);
+    }
+    const title = p["Street Address"] || "Property";
+    return `<div style="min-width:260px">
+      <div style="font-weight:900;font-size:16px;margin-bottom:6px;">${esc(title)} <span style="color:#666;font-weight:800;">#${p.id}</span></div>
+      <table style="border-collapse:collapse;font-size:12px;line-height:1.25;">${rows.join('')}</table>
+    </div>`;
+  }
+
+  geo.features.forEach((f) => {
+    const p = f.properties;
+    const lat = f.geometry.coordinates[1];
+    const lon = f.geometry.coordinates[0];
+
+    const icon = L.divIcon({
+      className: '',
+      html: `<div class="num-marker">${p.id}</div>`,
+      iconSize: [32, 32],
+      iconAnchor: [16, 16]
+    });
+
+    const marker = L.marker([lat, lon], { icon }).addTo(map);
+    marker.bindPopup(popupHtml(p), { maxWidth: 460 });
+
+    const addrLine = [p["Street Address"], p["City, State Zip"]].filter(Boolean).join(", ");
+    const notes = p["Notes"] ? String(p["Notes"]) : "";
+
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = `
+      <div class="badge">${p.id}</div>
+      <div>
+        <div class="name">${esc(p["Street Address"] || "Property")}</div>
+        <div class="meta">${esc(addrLine)}${notes ? `<br/>${esc(notes)}` : ''}</div>
+      </div>
+    `;
+    row.addEventListener('click', () => {
+      map.flyTo([lat, lon], Math.max(map.getZoom(), 16), { duration: 0.8 });
+      marker.openPopup();
+    });
+    list.appendChild(row);
+  });
+</script>
+</body>
+</html>
