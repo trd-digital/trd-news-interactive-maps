@@ -1,0 +1,268 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Cook County — New Single Family Residences</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    :root{
+      --panel-w: 380px;
+      --panel-pad: 16px;
+      --panel-radius: 14px;
+      --panel-bg: rgba(255,255,255,0.96);
+      --panel-border: #d8d8d8;
+      --shadow: 0 10px 26px rgba(0,0,0,.14);
+      --text: #111;
+      --muted: #666;
+      --row-hover: #f4f6f8;
+      --blue: #2d6cff;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    #wrap { position: relative; height: 100%; width: 100%; }
+    #map  { position: absolute; inset: 0; }
+
+    .leaflet-tile { filter: grayscale(35%) brightness(1.06); }
+
+    #panel{
+      position: absolute;
+      top: var(--panel-pad);
+      right: var(--panel-pad);
+      z-index: 1000;
+
+      width: var(--panel-w);
+      max-width: calc(100vw - (var(--panel-pad) * 2));
+
+      max-height: calc(100svh - (var(--panel-pad) * 2));
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--panel-radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(6px);
+    }
+
+    #panel header{
+      padding: 12px 14px 10px 14px;
+      border-bottom: 1px solid #ececec;
+      background: linear-gradient(to bottom, rgba(255,255,255,.98), rgba(255,255,255,.92));
+    }
+
+    #panel header .h1{
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing: .03em;
+      line-height: 1.15;
+    }
+
+    #panel header .hint{
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+
+    #list{
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+
+    .row{
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+      background: transparent;
+    }
+    .row:hover{ background: var(--row-hover); }
+
+    .badge{
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 900;
+      font-size: 13px;
+      border: 2px solid rgba(0,0,0,0.15);
+      margin-top: 2px;
+      background: var(--blue);
+      box-shadow: 0 2px 8px rgba(0,0,0,.12);
+    }
+
+    .row .name{
+      font-weight: 900;
+      font-size: 14px;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+    .row .meta{
+      margin-top: 4px;
+      font-size: 12px;
+      color: #555;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .num-marker{
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 14px;
+      border: 2px solid rgba(0,0,0,0.35);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+      background: var(--blue);
+    }
+
+    .leaflet-popup-content{
+      margin: 10px 12px;
+      font-family: inherit;
+    }
+    .leaflet-popup-content-wrapper{
+      border-radius: 12px;
+    }
+    .leaflet-popup-close-button{
+      padding: 8px 8px 0 0;
+    }
+
+    .leaflet-control-zoom a{
+      border-radius: 10px;
+    }
+
+    @media (max-width: 720px){
+      #panel{
+        left: var(--panel-pad);
+        right: var(--panel-pad);
+        top: auto;
+        bottom: var(--panel-pad);
+        width: auto;
+        max-height: 44svh;
+      }
+      #panel header .h1{
+        font-size: 14px;
+        letter-spacing: .02em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="map"></div>
+
+  <aside id="panel">
+    <header>
+      <div class="h1">COOK COUNTY — NEW SINGLE FAMILY RESIDENCES</div>
+      <div class="hint">Click a property to zoom & open details</div>
+    </header>
+    <div id="list"></div>
+  </aside>
+</div>
+
+<script>
+  const geo = {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.71360399999999, 42.0965231]}, "properties": {"Unnamed: 0": 0, "Parcel ID": "05-21-412-021-0000", "Address": "195 SHERIDAN RD WINNETKA, IL 60093", "Address_2": "WINNETKA, IL 60093", "Construction cost": "$43,740,160.00", "Owner": "Justin Ishbia (Orchard 2020)", "Year permitted": 2022, "Notes": "The house's address is 205 Sheridan, but the parcel is 195 Sheridan in the Cook County map system", "id": 1}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.69314740000002, 42.0820668]}, "properties": {"Unnamed: 0": 1, "Parcel ID": "05-27-414-003-0000", "Address": "1006 MICHIGAN AVE WILMETTE, IL 60091", "Address_2": "WILMETTE, IL 60091", "Construction cost": "$11,090,550.00", "Owner": "Tom Ricketts (1006 MICHIGAN AVE LLC)", "Year permitted": 2015, "id": 2}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7211351, 42.10361940000001]}, "properties": {"Unnamed: 0": 2, "Parcel ID": "05-21-202-001-0000", "Address": "445 SHERIDAN RD WINNETKA, IL 60093", "Address_2": "WINNETKA, IL 60093", "Construction cost": "$10,000,000.00", "Owner": "Vijay Kotte (445 Sheridan LLC)", "Year permitted": 2024, "id": 3}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.6824374, 42.0740748]}, "properties": {"Unnamed: 0": 3, "Parcel ID": "05-35-200-018-0000", "Address": "500 SHERIDAN RD WILMETTE,  60091", "Address_2": "WILMETTE,  60091", "Construction cost": "$9,000,000.00", "Owner": "Frank Nicholas", "Year permitted": 2015, "id": 4}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.69487869999999, 42.08335779999999]}, "properties": {"Unnamed: 0": 4, "Parcel ID": "05-27-404-011-0000", "Address": "1126 MICHIGAN AVE WILMETTE, IL 60091", "Address_2": "WILMETTE, IL 60091", "Construction cost": "$7,500,000.00", "Owner": "Mark Thierer / Narsin Thierer", "Year permitted": 2022, "id": 5}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.72722979999999, 42.109748]}, "properties": {"Unnamed: 0": 5, "Parcel ID": "05-16-106-072-0000", "Address": "657 SHERIDAN RD WINNETKA, IL 60093", "Address_2": "WINNETKA, IL 60093", "Construction cost": "$7,100,000.00", "Owner": "LAKE MICHIGAN LLC", "Year permitted": 2016, "id": 6}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.72886830000002, 42.1120758]}, "properties": {"Unnamed: 0": 6, "Parcel ID": "05-16-106-074-0000", "Address": "735 N SHERIDAN RD WINNETKA, IL 60094", "Address_2": "WINNETKA, IL 60094", "Construction cost": "$5,433,000.00", "Owner": "Janice and Philip Beck", "Year permitted": 2018, "id": 7}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.74857879999999, 42.1359364]}, "properties": {"Unnamed: 0": 7, "Parcel ID": "05-08-101-006-0000", "Address": "595 LONGWOOD AVE GLENCOE, IL 60022", "Address_2": "GLENCOE, IL 60022", "Construction cost": "$5,000,000.00", "Year permitted": 2025, "id": 8}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.6950681, 42.0835556]}, "properties": {"Unnamed: 0": 8, "Parcel ID": "05-27-404-010-0000", "Address": "1132 MICHIGAN AVE WILMETTE, IL 60091", "Address_2": "WILMETTE, IL 60091", "Construction cost": "$4,600,000.00", "Year permitted": 2016, "id": 9}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.72786599999999, 42.108953]}, "properties": {"Unnamed: 0": 9, "Parcel ID": "05-16-106-031-0000", "Address": "645 SHERIDAN RD WINNETKA, IL 60093", "Address_2": "WINNETKA, IL 60093", "Construction cost": "$3,950,000.00", "Owner": "Michael Rauchman", "Year permitted": 2024, "id": 10}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.69540620000001, 42.0837581]}, "properties": {"Unnamed: 0": 10, "Parcel ID": "05-27-404-009-0000", "Address": "1140 MICHIGAN AVE WILMETTE, IL 60091", "Address_2": "WILMETTE, IL 60091", "Construction cost": "$3,800,000.00", "Owner": "Edward & Dina Levine", "Year permitted": 2015, "id": 11}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.69333859999999, 42.0822785]}, "properties": {"Unnamed: 0": 11, "Parcel ID": "05-27-414-002-0000", "Address": "1020 MICHIGAN AVE WILMETTE, IL 60091", "Address_2": "WILMETTE, IL 60091", "Construction cost": "$3,500,000.00", "Owner": "NA ", "Year permitted": 2016, "id": 12}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.69589839999999, 42.0842213]}, "properties": {"Unnamed: 0": 12, "Parcel ID": "05-27-404-017-0000", "Address": "1160 MICHIGAN AVE WILMETTE, IL 60091", "Address_2": "WILMETTE, IL 60091", "Construction cost": "$3,200,000.00", "Owner": "Richard & Dara Levy", "Year permitted": 2018, "id": 13}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7355079, 42.1186512]}, "properties": {"Unnamed: 0": 13, "Parcel ID": "05-17-203-039-0000", "Address": "973 SHERIDAN RD WINNETKA, IL 60111", "Address_2": "WINNETKA, IL 60111", "Construction cost": "$3,000,000.00", "Owner": "Luke Kelly", "Year permitted": 2023, "id": 14}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.71098909999999, 42.0946922]}, "properties": {"Unnamed: 0": 14, "Parcel ID": "05-22-100-055-0000", "Address": "513 SHERIDAN RD KENILWORTH, IL 60043", "Address_2": "KENILWORTH, IL 60043", "Construction cost": "$2,697,800.00", "Owner": "Heritage Luxury Homes", "Year permitted": 2018, "id": 15}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.74334569999999, 42.1296749]}, "properties": {"Unnamed: 0": 15, "Parcel ID": "05-08-303-005-0000", "Address": "333 SURFSIDE PL GLENCOE, IL 60022", "Address_2": "GLENCOE, IL 60022", "Construction cost": "$2,625,000.00", "Year permitted": 2025, "id": 16}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7813561, 42.1792922]}, "properties": {"Unnamed: 0": 0, "Parcel ID": "16-25-102-039", "Address": "1419 WAVERLY RD HIGHLAND PARK, IL 60035", "Address_2": "HIGHLAND PARK, IL 60035", "Owner": "LYNNE B WEISS TTEE UTD 8/14/97", "Year permitted": 2023, "id": 17}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.768434, 42.1645958]}, "properties": {"Unnamed: 0": 1, "Parcel ID": "17-31-102-077", "Address": "12 ROGER WILLIAMS AVE HIGHLAND PARK, IL 60035", "Address_2": "HIGHLAND PARK, IL 60035", "Owner": "COREY D & ELIZABETH (BENJAMIN) FOX TTEES", "Year permitted": 2022, "id": 18}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7685178, 42.1650316]}, "properties": {"Unnamed: 0": 2, "Parcel ID": "17-31-102-007", "Address": "2 ROGER WILLIAMS AVE HIGHLAND PARK, IL 60035", "Address_2": "HIGHLAND PARK, IL 60035", "Owner": "CHICAGO TITLE LAND TRUST CO., TTEE", "Year permitted": 2021, "id": 19}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7635292, 42.1576717]}, "properties": {"Unnamed: 0": 3, "Parcel ID": "17-31-302-018", "Address": "285 DEERE PARK DR E HIGHLAND PARK, IL 60035", "Address_2": "HIGHLAND PARK, IL 60035", "Owner": "CULLIS, PAUL ANTHONY", "Year permitted": 2019, "id": 20}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7785536, 42.1766243]}, "properties": {"Unnamed: 0": 4, "Parcel ID": "16-25-201-003", "Address": "60 RAVINOAKS LN HIGHLAND PARK, IL 60035", "Address_2": "HIGHLAND PARK, IL 60035", "Owner": "60 RAVINOAKS LLC", "Year permitted": 2018, "id": 21}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7729873, 42.1702001]}, "properties": {"Unnamed: 0": 5, "Parcel ID": "16-25-405-005", "Address": "975 SHERIDAN RD HIGHLAND PARK, IL 60035", "Address_2": "HIGHLAND PARK, IL 60035", "Owner": "SHAPIRO, STEVEN A", "Year permitted": 2017, "id": 22}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7716919, 42.1689797]}, "properties": {"Unnamed: 0": 6, "Parcel ID": "16-25-405-010", "Address": "909 SHERIDAN RD HIGHLAND PARK, IL 60035", "Address_2": "HIGHLAND PARK, IL 60035", "Owner": "CTLTC", "Year permitted": 2017, "id": 23}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7923933, 42.1946935]}, "properties": {"Unnamed: 0": 7, "Parcel ID": "16-23-203-022", "Address": "65 VINE AVE HIGHLAND PARK, IL 60035", "Address_2": "HIGHLAND PARK, IL 60035", "Owner": "CHICAGO TITLE LAND TRUST COMPANY", "Year permitted": 2018, "id": 24}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7732724, 42.1705221]}, "properties": {"Unnamed: 0": 8, "Parcel ID": "16-25-405-017", "Address": "985 SHERIDAN RD HIGHLAND PARK, IL 60035", "Address_2": "HIGHLAND PARK, IL 60035", "Owner": "GLIKIN, SUSAN L", "Year permitted": 2018, "id": 25}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7961644, 42.1995754]}, "properties": {"Unnamed: 0": 9, "Parcel ID": "16-14-403-008", "Address": "2589 SHERIDAN RD HIGHLAND PARK, IL 60035", "Address_2": "HIGHLAND PARK, IL 60035", "Owner": "DAVIDSON, MARTHA W", "Year permitted": 2017, "id": 26}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7879906, 42.1885151]}, "properties": {"Unnamed: 0": 10, "Parcel ID": "16-24-301-005", "Address": "67 LAUREL AVE HIGHLAND PARK, IL 60035", "Address_2": "HIGHLAND PARK, IL 60035", "Owner": "PAUL M CHERNAWSKY REV TRUST UTD 8-4-15", "Year permitted": 2023, "id": 27}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.772025, 42.1693068]}, "properties": {"Unnamed: 0": 11, "Parcel ID": "16-25-405-009", "Address": "919 SHERIDAN RD HIGHLAND PARK, IL 60035", "Address_2": "HIGHLAND PARK, IL 60035", "Construction cost": "$4,000,000.00", "Owner": "OOL HOLDINGS, LLC", "Year permitted": 2025, "id": 28}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7724418, 42.1698501]}, "properties": {"Unnamed: 0": 12, "Parcel ID": "16-25-405-007", "Address": "943 SHERIDAN RD HIGHLAND PARK, IL 60035", "Address_2": "HIGHLAND PARK, IL 60035", "Owner": "KESSEL, ANDREW & SAMANTHA", "Year permitted": 2022, "id": 29}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.7863926, 42.1862451]}, "properties": {"Unnamed: 0": 13, "Parcel ID": "16-24-302-032", "Address": "1869 CRESCENT CT HIGHLAND PARK, IL 60035", "Address_2": "HIGHLAND PARK, IL 60035", "Owner": "CRESCENT LANE ENTERPRISES LLC", "Year permitted": 2022, "id": 30}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.8297585, 42.2754029]}, "properties": {"Unnamed: 0": 14, "Parcel ID": "12-21-402-013", "Address": "733 RAVINE AVE LAKE BLUFF, IL 60044", "Address_2": "LAKE BLUFF, IL 60044", "Construction cost": "$2,743,761.67", "Owner": "CHICAGO TITLE LAND TRUST COMPANY", "Year permitted": 2015, "id": 31}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.82993139999999, 42.2700416]}, "properties": {"Unnamed: 0": 15, "Parcel ID": "12-21-402-106", "Address": "611 LANSDOWNE LN LAKE BLUFF, IL 60044", "Address_2": "LAKE BLUFF, IL 60044", "Construction cost": "$3,594,006.33", "Owner": "BIG SKY ADVISORS LLC", "Year permitted": 2015, "id": 32}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.8292536, 42.2693509]}, "properties": {"Unnamed: 0": 16, "Parcel ID": "12-21-402-052", "Address": "1 MOFFETT RD LAKE BLUFF, IL 60044", "Address_2": "LAKE BLUFF, IL 60044", "Construction cost": "$2,552,833.33", "Owner": "CTLTC TTEE TR#8002389745 DTD 8/22/22", "Year permitted": 2023, "id": 33}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.8348541, 42.2956147]}, "properties": {"Unnamed: 0": 17, "Parcel ID": "12-16-101-009", "Address": "425 SHORE ACRES DR LAKE BLUFF, IL 60044", "Address_2": "LAKE BLUFF, IL 60044", "Construction cost": "$5,031,666.67", "Owner": "ARDEN SHORE LAKE BLUFF LLC", "Year permitted": 2022, "id": 34}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.81325199999999, 42.2290628]}, "properties": {"Unnamed: 0": 18, "Parcel ID": "16-03-402-013", "Address": "633 CIRCLE LN LAKE FOREST, IL 60045", "Address_2": "LAKE FOREST, IL 60045", "Construction cost": "$2,095,000.00", "Owner": "RICHMOND, TIM & HEATHER", "Year permitted": 2020, "id": 35}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.81409699999999, 42.2333479]}, "properties": {"Unnamed: 0": 19, "Parcel ID": "16-03-201-019", "Address": "347 BLUFFS EDGE DR LAKE FOREST, IL 60045", "Address_2": "LAKE FOREST, IL 60045", "Construction cost": "$5,590,000.00", "Owner": "THOMAS F FULLER, TRUSTEE", "Year permitted": 2018, "id": 36}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-87.8134879, 42.2299727]}, "properties": {"Unnamed: 0": 20, "Parcel ID": "16-03-402-011", "Address": "595 CIRCLE LN LAKE FOREST, IL 60045", "Address_2": "LAKE FOREST, IL 60045", "Construction cost": "$5,400,000.00", "Owner": "TERRY M ROZDOLSKY TR UD 08/2/01", "Year permitted": 2017, "id": 37}}]};
+  const map = L.map('map', { zoomControl: true });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd',
+    maxZoom: 20,
+    attribution: '&copy; OpenStreetMap &copy; CARTO'
+  }).addTo(map);
+
+  const list = document.getElementById('list');
+
+  function esc(s) {
+    return String(s)
+      .replaceAll('&','&amp;')
+      .replaceAll('<','&lt;')
+      .replaceAll('>','&gt;');
+  }
+
+  function popupHtml(p) {
+    const rows = [];
+    const showOrder = [
+      "Parcel ID","Address","Address_2","Owner",
+      "Construction cost","Year permitted","Notes"
+    ];
+    for (const k of showOrder) {
+      const v = p[k];
+      if (v === null || v === undefined || v === '') continue;
+      rows.push(`<tr>
+        <th style="text-align:left;vertical-align:top;padding:4px 10px 4px 0;color:#444;white-space:nowrap;">${esc(k)}</th>
+        <td style="padding:4px 0;color:#111;">${esc(v)}</td>
+      </tr>`);
+    }
+    const title = p["Address"] || "Property";
+    return `<div style="min-width:260px">
+      <div style="font-weight:900;font-size:16px;margin-bottom:6px;">${esc(title)} <span style="color:#666;font-weight:800;">#${p.id}</span></div>
+      <table style="border-collapse:collapse;font-size:12px;line-height:1.25;">${rows.join('')}</table>
+    </div>`;
+  }
+
+  // Fit bounds safely
+  if (geo.features && geo.features.length) {
+    const latlngs = geo.features.map(f => [f.geometry.coordinates[1], f.geometry.coordinates[0]]);
+    const bounds = L.latLngBounds(latlngs);
+    map.fitBounds(bounds.pad(0.15));
+  } else {
+    map.setView([41.88, -87.63], 10);
+  }
+
+  geo.features.forEach((f) => {
+    const p = f.properties;
+    const lat = f.geometry.coordinates[1];
+    const lon = f.geometry.coordinates[0];
+
+    const icon = L.divIcon({
+      className: '',
+      html: `<div class="num-marker">${p.id}</div>`,
+      iconSize: [32, 32],
+      iconAnchor: [16, 16]
+    });
+
+    const marker = L.marker([lat, lon], { icon }).addTo(map);
+    marker.bindPopup(popupHtml(p), { maxWidth: 460 });
+
+    const addrLine = [p["Address"], p["Address_2"]].filter(Boolean).join(" ");
+    const notes = p["Notes"] ? String(p["Notes"]) : "";
+
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = `
+      <div class="badge">${p.id}</div>
+      <div>
+        <div class="name">${esc(p["Address"] || "Property")}</div>
+        <div class="meta">${esc(addrLine)}${notes ? `<br/>${esc(notes)}` : ''}</div>
+      </div>
+    `;
+    row.addEventListener('click', () => {
+      map.flyTo([lat, lon], Math.max(map.getZoom(), 16), { duration: 0.8 });
+      marker.openPopup();
+    });
+    list.appendChild(row);
+  });
+</script>
+</body>
+</html>

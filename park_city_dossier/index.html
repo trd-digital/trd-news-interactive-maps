@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Luxury Dossier: Park City</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="scrolly" id="scrolly">
+    <header class="masthead">
+      <h1>Park City</h1>
+      <p>Luxury ski communities buoy the Colorado destination as Sundance Film Festival winds down</p>
+    </header>
+
+    <section class="scrolly-body">
+      <div class="stage" aria-hidden="true">
+        <div class="stage-inner">
+          <!-- HERO -->
+          <div class="panel is-active" data-panel="hero">
+            <img src="./assets/hero.webp" alt="" />
+            <div class="panel-overlay">
+              <div class="kicker">Luxury Dossier</div>
+              <div class="big-title">Park City</div>
+            </div>
+          </div>
+
+          <!-- METRICS -->
+          <div class="panel" data-panel="metrics">
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="label">Average sale price</div>
+                <div class="value" data-count-to="2700000" data-prefix="$" data-suffix="">0</div>
+                <div class="sub">Single-family homes</div>
+              </div>
+              <div class="metric">
+                <div class="label">Average sale price</div>
+                <div class="value" data-count-to="2100000" data-prefix="$" data-suffix="">0</div>
+                <div class="sub">Condos</div>
+              </div>
+              <div class="metric">
+                <div class="label">Average time on market</div>
+                <div class="value" data-count-to="107" data-prefix="" data-suffix=" days">0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD SLOT (condo/home/listing/etc.) -->
+          <div class="panel" data-panel="card">
+            <div class="card">
+              <img class="card-img" src="./assets/condo.webp" alt="" />
+              <div class="card-content">
+                <div class="card-eyebrow" id="cardEyebrow">Record condo sale</div>
+                <div class="card-value" id="cardValue">$18.9M</div>
+                <div class="card-meta" id="cardMeta">Montage Deer Valley Penthouse</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BROKERS -->
+          <div class="panel" data-panel="brokers">
+            <h3>Top five brokers (2025 deal volume)</h3>
+            <ol class="broker-list" id="brokerList"></ol>
+          </div>
+
+          <!-- MAP -->
+          <div class="panel" data-panel="map">
+            <img src="./assets/map.webp" alt="" />
+            <svg class="map-ink" viewBox="0 0 1000 600" preserveAspectRatio="none">
+              <!-- You’ll replace with real path/pins -->
+              <path id="route" d="M 120 90 C 260 120, 380 180, 540 260 S 820 420, 900 520"
+                    fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+              <circle class="pin" cx="540" cy="260" r="14"/>
+              <circle class="pin" cx="900" cy="520" r="14"/>
+            </svg>
+            <div class="map-label">White Pine Canyon Road</div>
+          </div>
+
+          <!-- CONTROVERSY -->
+          <div class="panel panel-dark" data-panel="controversy">
+            <div class="stamp">GOES PRIVATE</div>
+            <div class="callout">
+              <div class="callout-title">Powder Mountain</div>
+              <div class="callout-value">$75.9M</div>
+              <div class="callout-sub">lawsuit claim</div>
+            </div>
+          </div>
+
+          <!-- OUTRO -->
+          <div class="panel" data-panel="outro">
+            <h3>The local mountains</h3>
+            <ul class="mountains">
+              <li>Park City Mountain Resort</li>
+              <li>Deer Valley Resort</li>
+              <li>Alta Ski Area</li>
+              <li>Solitude Mountain Resort</li>
+              <li>Snowbird</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps" id="steps">
+        <article class="step" data-step="hero">
+          <h2>Park City</h2>
+          <p>Intro/context from the story.</p>
+        </article>
+
+        <article class="step" data-step="metrics">
+          <h2>Market snapshot</h2>
+          <p>$2.7M single-family, $2.1M condos, 107 days on market.</p>
+        </article>
+
+        <article class="step" data-step="condo">
+          <h2>Record condo sale</h2>
+          <p>Montage Deer Valley penthouse: $18.9M.</p>
+        </article>
+
+        <article class="step" data-step="home">
+          <h2>Record home sale</h2>
+          <p>3566 West Crestwood Court sold for north of $50M.</p>
+        </article>
+
+        <article class="step" data-step="listing">
+          <h2>Most expensive listing</h2>
+          <p>$60M on White Pine Road; “not-so-close second” at $39M.</p>
+        </article>
+
+        <article class="step" data-step="brokers">
+          <h2>Top brokers</h2>
+          <p>Animate ranked deal volumes.</p>
+        </article>
+
+        <article class="step" data-step="map">
+          <h2>The coveted address</h2>
+          <p>White Pine Canyon Road (highlight + pins).</p>
+        </article>
+
+        <article class="step" data-step="controversy">
+          <h2>The controversy</h2>
+          <p>Powder Mountain goes private + lawsuit callout.</p>
+        </article>
+
+        <article class="step" data-step="outro">
+          <h2>Wrap</h2>
+          <p>Local mountains + closing beat.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <script type="module" src="./scrolly.js"></script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Harwood District — Neighborhood</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    #wrap { position: relative; height: 100%; width: 100%; }
+    #map { position:absolute; inset:0; }
+
+    /* Soft brochure feel on tiles */
+    .leaflet-tile {
+      filter: grayscale(40%) brightness(1.05);
+    }
+
+    /* Right panel */
+    #panel {
+      position: absolute; top: 18px; right: 18px; z-index: 1000;
+      width: 360px; max-width: calc(100vw - 36px);
+      background: rgba(255,255,255,0.95);
+      border: 1px solid #d6d6d6; border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+      overflow: hidden;
+    }
+    #panel header {
+      padding: 12px 14px;
+      border-bottom: 1px solid #e6e6e6;
+    }
+    #panel header .h1 { font-weight: 900; font-size: 20px; letter-spacing: .04em; }
+    #panel header .hint { font-size: 12px; color:#666; margin-top: 3px; }
+    #list {
+      max-height: calc(100vh - 64px);
+      overflow: auto;
+    }
+    .row {
+      display: grid; grid-template-columns: 34px 1fr;
+      gap: 10px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #efefef;
+      cursor: pointer;
+      background: transparent;
+    }
+    .row:hover { background: #f6f7f8; }
+    .badge {
+      width: 28px; height: 28px; border-radius: 999px;
+      display: grid; place-items: center;
+      color: white; font-weight: 900; font-size: 13px;
+      border: 2px solid rgba(0,0,0,0.15);
+      margin-top: 2px;
+    }
+    .row .name { font-weight: 900; font-size: 14px; line-height: 1.2; }
+    .row .meta { font-size: 12px; color: #555; margin-top: 4px; line-height: 1.25; }
+
+    /* Numbered marker */
+    .num-marker {
+      width: 32px; height: 32px; border-radius: 999px;
+      color: #fff;
+      display: grid; place-items: center;
+      font-weight: 900; font-size: 14px;
+      border: 2px solid rgba(0,0,0,0.35);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    }
+
+    /* Slightly softer controls */
+    .leaflet-control-zoom a { border-radius: 10px; }
+  </style>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="map"></div>
+
+  <aside id="panel">
+    <header>
+      <div class="h1">HARWOOD DISTRICT</div>
+      <div class="hint">Click a property to zoom & open details</div>
+    </header>
+    <div id="list"></div>
+  </aside>
+</div>
+
+<script>
+  const geo = {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [-96.8065058, 32.7931023]}, "properties": {"Property": "Harwood No. 1", "AKA": "The Rolex Building", "Address": "2651 N. Harwood St., Dallas, TX", "Description": "106K-sf office", "History": "Developed by Harwood in 1984", "Recent transactions": "Lost to lender in foreclosure auction", "Current owner": "Cawley Partners", "SOLD?": false, "id": 1}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-96.8074433, 32.79419]}, "properties": {"Property": "Harwood No. 2", "Address": "2728 N. Harwood St., Dallas, TX", "Description": "178K-sf office", "History": "Developed by Harwood in 1996", "Recent transactions": "Sold in Sept. 2025", "Current owner": "TPG", "SOLD?": true, "id": 2}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-96.8083102, 32.7934672]}, "properties": {"Property": "Harwood No. 3", "Address": "2727 N. Harwood St., Dallas, TX", "Description": "210K-sf office", "History": "Developed by Harwood in 1999", "Recent transactions": "Sold in Dec. 2025", "Current owner": "TPG", "SOLD?": true, "id": 3}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-96.8081051, 32.794421]}, "properties": {"Property": "Harwood No. 4", "Address": "2828 N. Harwood St., Dallas, TX", "Description": "239K-sf office", "History": "Developed by Harwood in 2000", "Recent transactions": "Lost to lender in foreclosure auction", "Current owner": "Spear Street Capital", "SOLD?": false, "id": 4}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-96.808917, 32.7960003]}, "properties": {"Property": "Harwood No. 5", "AKA": "Azure", "Address": "2900 McKinnon St., Dallas, TX", "Description": "156-unit condo", "History": "Developed by Harwood in 2007", "Current owner": "Condo residents", "SOLD?": false, "id": 5}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-96.8066793, 32.7918623]}, "properties": {"Property": "Harwood No. 6", "AKA": "Saint Ann Court", "Address": "2501 N. Harwood St., Dallas, TX", "Description": "314K-sf office", "History": "Developed by Harwood in 2009", "Recent transactions": "Faced foreclosure in 2025, recapped then sold", "Current owner": "TPG", "SOLD?": true, "id": 6}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-96.809446, 32.7957301]}, "properties": {"Property": "Harwood No. 7", "AKA": "Frost Tower", "Address": "2950 N. Harwood St., Dallas, TX", "Description": "167K-sf office", "History": "Developed by Harwood in 2015", "Recent transactions": "Sold in 2025", "Current owner": "TPG", "SOLD?": true, "id": 7}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-96.8071656, 32.7923046]}, "properties": {"Property": "Harwood No. 8", "AKA": "New Rolex Building", "Address": "2601 N. Harwood St., Dallas, TX", "Description": "137K-sf office", "History": "Developed by Harwood in 2018", "Current owner": "Rolex", "SOLD?": false, "id": 8}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-96.811679, 32.7972511]}, "properties": {"Property": "Harwood No. 9", "AKA": "Bleu Ciel", "Address": "3130 N. Harwood St., Dallas, TX", "Description": "158-unit condo", "History": "Developed by Harwood in 2018", "Current owner": "Condo residents", "SOLD?": false, "id": 9}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-96.808802, 32.7950299]}, "properties": {"Property": "Harwood No. 10", "Address": "2850 N. Harwood St., Dallas, TX", "Description": "221K-sf office ", "History": "Developed by Harwood in 2019", "Recent transactions": "Sold to TPG in Sept. 25", "Current owner": "TPG", "SOLD?": true, "id": 10}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-96.8059218, 32.7924548]}, "properties": {"Property": "Harwood No. 11", "AKA": "Hotel Swexan", "Address": "2575 McKinnon St., Dallas, TX", "Description": "134-key hotel", "History": "Developed by Harwood in 2023", "Current owner": "Harwood", "SOLD?": false, "id": 11}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-96.8073768, 32.7920885]}, "properties": {"Property": "Harwood No. 12", "Address": "at Caroline St., Field St. & Harry Hines Blvd., Dallas, TX", "Description": "Not yet built", "History": "40-story, 500K-sf office proposed in 2019", "Current owner": "Not yet built", "SOLD?": false, "id": 12}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-96.8115573, 32.7984282]}, "properties": {"Property": "3100 McKinnon on the Katy Trail", "AKA": "Citymark", "Address": "3100 McKinnon St., Dallas, TX", "Description": "270K-sf office", "History": "Built in 1985, bought by Harwood in 2019", "Recent transactions": "Sold in 2025", "Current owner": "KBC", "SOLD?": true, "id": 13}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-96.8088959, 32.7937115]}, "properties": {"Property": "Harwood No. 14", "Address": "2801 N. Harwood St., Dallas, TX", "Description": "360K-sf office", "History": "Developed by Harwood in 2023", "Current owner": "Harwood", "SOLD?": false, "id": 14}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-96.8101805, 32.796016]}, "properties": {"Property": "Harwood No. 15", "Address": "3008 N. Harwood St., Dallas, TX", "Description": "Not yet built", "History": "23-story, 340K-sf office proposed in 2023", "Current owner": "Not yet built", "SOLD?": false, "id": 15}}]};
+  const map = L.map('map', { zoomControl: true });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd',
+    maxZoom: 20,
+    attribution: '&copy; OpenStreetMap &copy; CARTO'
+  }).addTo(map);
+
+  // Fit bounds to all points
+  const latlngs = geo.features.map(f => [f.geometry.coordinates[1], f.geometry.coordinates[0]]);
+  const bounds = L.latLngBounds(latlngs);
+  map.fitBounds(bounds.pad(0.15));
+
+  const list = document.getElementById('list');
+
+  function esc(s) {
+    return String(s)
+      .replaceAll('&','&amp;')
+      .replaceAll('<','&lt;')
+      .replaceAll('>','&gt;');
+  }
+
+  function markerColor(p) {
+    // SOLD? expected to be boolean (true/false). Fallback handles strings too.
+    const v = p["SOLD?"];
+    if (v === true || String(v).toUpperCase() === "TRUE") return "#2d6cff";  // sold = blue
+    if (v === false || String(v).toUpperCase() === "FALSE") return "#ff4aa2"; // active = pink
+    return "#999999";
+  }
+
+  function popupHtml(p) {
+    const rows = [];
+    for (const [k,v] of Object.entries(p)) {
+      if (v === null || v === undefined || v === '' || k === 'id' || k === 'SOLD?') continue;
+      rows.push(`<tr>
+        <th style="text-align:left;vertical-align:top;padding:4px 10px 4px 0;color:#444;white-space:nowrap;">${esc(k)}</th>
+        <td style="padding:4px 0;color:#111;">${esc(v)}</td>
+      </tr>`);
+    }
+    const title = p.Property ? p.Property : 'Property';
+    const aka = p.AKA ? ` — ${p.AKA}` : '';
+    return `<div style="min-width:260px">
+      <div style="font-weight:900;font-size:16px;margin-bottom:6px;">${esc(title + aka)} <span style="color:#666;font-weight:800;">#${p.id}</span></div>
+      <table style="border-collapse:collapse;font-size:12px;line-height:1.25;">${rows.join('')}</table>
+    </div>`;
+  }
+
+  geo.features.forEach((f) => {
+    const p = f.properties;
+    const lat = f.geometry.coordinates[1];
+    const lon = f.geometry.coordinates[0];
+    const color = markerColor(p);
+
+    const icon = L.divIcon({
+      className: '',
+      html: `<div class="num-marker" style="background:${color}">${p.id}</div>`,
+      iconSize: [32, 32],
+      iconAnchor: [16, 16]
+    });
+
+    const marker = L.marker([lat, lon], { icon }).addTo(map);
+    marker.bindPopup(popupHtml(p), { maxWidth: 460 });
+
+    const aka = p.AKA ? ` — ${p.AKA}` : '';
+    const addr = p.Address ? p.Address : '';
+    const desc = p.Description ? p.Description : '';
+
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = `
+      <div class="badge" style="background:${color}">${p.id}</div>
+      <div>
+        <div class="name">${esc((p.Property || 'Property') + aka)}</div>
+        <div class="meta">${esc(addr)}${desc ? `<br/>${esc(desc)}` : ''}</div>
+      </div>
+    `;
+    row.addEventListener('click', () => {
+      map.flyTo([lat, lon], Math.max(map.getZoom(), 16), { duration: 0.8 });
+      marker.openPopup();
+    });
+    list.appendChild(row);
+  });
+</script>
+</body>
+</html>
