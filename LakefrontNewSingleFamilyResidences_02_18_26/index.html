@@ -174,7 +174,7 @@
 
   <aside id="panel">
     <header>
-      <div class="h1">North Shore - New Single Family Constructions over $2 million</div>
+      <div class="h1">COOK COUNTY — NEW SINGLE FAMILY RESIDENCES</div>
       <div class="hint">Click a property to zoom & open details</div>
     </header>
     <div id="list"></div>
@@ -200,6 +200,21 @@
       .replaceAll('>','&gt;');
   }
 
+  // Tolerant property getter: handles weird spaces / NBSP / case
+  function getProp(p, wanted) {
+    if (p[wanted] !== undefined) return p[wanted];
+    const norm = (x) => String(x)
+      .replace(/\u00a0/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
+    const w = norm(wanted);
+    for (const k of Object.keys(p)) {
+      if (norm(k) === w) return p[k];
+    }
+    return undefined;
+  }
+
   function popupHtml(p) {
     const rows = [];
     const showOrder = [
@@ -207,14 +222,14 @@
       "Construction cost","Year permitted","Notes"
     ];
     for (const k of showOrder) {
-      const v = p[k];
-      if (v === null || v === undefined || v === '') continue;
+      const v = getProp(p, k);
+      if (v === null || v === undefined || String(v).trim() === '') continue;
       rows.push(`<tr>
         <th style="text-align:left;vertical-align:top;padding:4px 10px 4px 0;color:#444;white-space:nowrap;">${esc(k)}</th>
         <td style="padding:4px 0;color:#111;">${esc(v)}</td>
       </tr>`);
     }
-    const title = p["Address"] || "Property";
+    const title = getProp(p, "Address") || "Property";
     return `<div style="min-width:260px">
       <div style="font-weight:900;font-size:16px;margin-bottom:6px;">${esc(title)} <span style="color:#666;font-weight:800;">#${p.id}</span></div>
       <table style="border-collapse:collapse;font-size:12px;line-height:1.25;">${rows.join('')}</table>
@@ -245,18 +260,34 @@
     const marker = L.marker([lat, lon], { icon }).addTo(map);
     marker.bindPopup(popupHtml(p), { maxWidth: 460 });
 
-    const addrLine = [p["Address"], p["Address_2"]].filter(Boolean).join(" ");
-    const notes = p["Notes"] ? String(p["Notes"]) : "";
+    // ----- RIGHT PANEL: Address + Construction cost (fallback Address_2) -----
+    const address1 = (getProp(p, "Address") ?? "").toString().trim();
+
+    let costRaw = getProp(p, "Construction cost");
+    let costStr = (costRaw ?? "").toString().trim();
+
+    if (!costStr || ["nan","null","none","undefined"].includes(costStr.toLowerCase())) {
+      costStr = "";
+    }
+
+    const fallbackLine = (getProp(p, "Address_2") ?? "").toString().trim();
+    const line2 = costStr ? `Construction cost: ${costStr}` : fallbackLine;
+
+    const notes = (getProp(p, "Notes") ?? "").toString().trim();
 
     const row = document.createElement('div');
     row.className = 'row';
     row.innerHTML = `
       <div class="badge">${p.id}</div>
       <div>
-        <div class="name">${esc(p["Address"] || "Property")}</div>
-        <div class="meta">${esc(addrLine)}${notes ? `<br/>${esc(notes)}` : ''}</div>
+        <div class="name">${esc(address1 || "Property")}</div>
+        <div class="meta">
+          ${line2 ? esc(line2) : ""}
+          ${notes ? `<br/>${esc(notes)}` : ""}
+        </div>
       </div>
     `;
+
     row.addEventListener('click', () => {
       map.flyTo([lat, lon], Math.max(map.getZoom(), 16), { duration: 0.8 });
       marker.openPopup();
