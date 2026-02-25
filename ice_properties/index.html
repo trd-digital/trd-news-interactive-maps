@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_8b52697e1cf9fc1efa093a0c7174f50d {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+<div style="
+    position: fixed;
+    top: 80px;
+    left: 20px;
+    width: 220px;
+    background-color: white;
+    border:2px solid grey;
+    z-index:9999;
+    font-size:14px;
+    padding: 12px;
+    border-radius: 6px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+">
+<b>Legend</b><br><br>
+<span style="color:#2084FE;">●</span> Active Deal<br>
+<span style="color:red;">●</span> Canceled Deal
+</div>
+    
+<div style="
+    position: fixed; 
+    top: 10px; left: 50%; transform: translateX(-50%);
+    background-color: white;
+    border: 2px solid grey; 
+    padding: 10px;
+    z-index: 9999;
+    font-size: 20px;
+    border-radius: 5px;
+    font-family: Arial;
+    font-weight: bold;">
+    Recent U.S. Industrial Property Transactions with ICE
+</div>
+    
+            <div class="folium-map" id="map_8b52697e1cf9fc1efa093a0c7174f50d" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_8b52697e1cf9fc1efa093a0c7174f50d = L.map(
+                "map_8b52697e1cf9fc1efa093a0c7174f50d",
+                {
+                    center: [38.01779936875, -89.3705838125],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_4fc848f894bd0d0033caf2ba7a7b2e97 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_4fc848f894bd0d0033caf2ba7a7b2e97.addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            var circle_marker_b7c0ea7b15912558f3f80251465f3dda = L.circleMarker(
+                [33.648988, -83.6906994],
+                {"bubblingMouseEvents": true, "color": "#2084FE", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2084FE", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 1}
+            ).addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            circle_marker_b7c0ea7b15912558f3f80251465f3dda.bindTooltip(
+                `<div>
+                     
+    <b>Address:</b> 1365 East Hightower Trail, Social Circle, GA, USA<br>
+    <b>Legal Owner:</b> PNK S1 LLC<br>
+    <b>Associated Owner:</b> PNK Group<br>
+    <b>Price/Status:</b> 129000000
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f888e662c0f472369619d37cb3eaa2f9 = L.circleMarker(
+                [31.654557, -106.3033145],
+                {"bubblingMouseEvents": true, "color": "#2084FE", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2084FE", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 1}
+            ).addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            circle_marker_f888e662c0f472369619d37cb3eaa2f9.bindTooltip(
+                `<div>
+                     
+    <b>Address:</b> 1465-1485 Eastwind Avenue, Socorro, TX, USA<br>
+    <b>Legal Owner:</b> El Paso Logistics II LLC<br>
+    <b>Associated Owner:</b> Flint Development<br>
+    <b>Price/Status:</b> 123000000
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_36c9140b522a1e3d3f6614eac00994c7 = L.circleMarker(
+                [40.61547700000001, -76.4195771],
+                {"bubblingMouseEvents": true, "color": "#2084FE", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2084FE", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 1}
+            ).addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            circle_marker_36c9140b522a1e3d3f6614eac00994c7.bindTooltip(
+                `<div>
+                     
+    <b>Address:</b> 50 Rausch Creek Road, Tremont, PA, USA<br>
+    <b>Legal Owner:</b> BIGTRPA 001 LLC<br>
+    <b>Associated Owner:</b> Big Lots<br>
+    <b>Price/Status:</b> 119500000
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_901180f482fce9d4a07ed19ff0691cdd = L.circleMarker(
+                [39.6130826, -77.8014484],
+                {"bubblingMouseEvents": true, "color": "#2084FE", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2084FE", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 1}
+            ).addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            circle_marker_901180f482fce9d4a07ed19ff0691cdd.bindTooltip(
+                `<div>
+                     
+    <b>Address:</b> 10900 Hopewell Road, Hagerstown, MD, USA<br>
+    <b>Legal Owner:</b> FRIND-Hopewell LLC<br>
+    <b>Associated Owner:</b> RSE Capital - Fundrise<br>
+    <b>Price/Status:</b> 102400000
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_570cb159bc82bbe1692d2168739a9724 = L.circleMarker(
+                [40.5266848, -76.0997806],
+                {"bubblingMouseEvents": true, "color": "#2084FE", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2084FE", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 1}
+            ).addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            circle_marker_570cb159bc82bbe1692d2168739a9724.bindTooltip(
+                `<div>
+                     
+    <b>Address:</b> 3501 Mountain Road, Hamburg, PA, USA<br>
+    <b>Legal Owner:</b> PCCP<br>
+    <b>Associated Owner:</b> PCCP<br>
+    <b>Price/Status:</b> 87400000
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_28bd0efcdc4db658a46fdacad619f8e4 = L.circleMarker(
+                [33.6023716, -112.3461996],
+                {"bubblingMouseEvents": true, "color": "#2084FE", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2084FE", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 1}
+            ).addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            circle_marker_28bd0efcdc4db658a46fdacad619f8e4.bindTooltip(
+                `<div>
+                     
+    <b>Address:</b> 13290 West Sweetwater Avenue, Surprise, AZ, USA<br>
+    <b>Legal Owner:</b> Rockefeller Group<br>
+    <b>Associated Owner:</b> Rockefeller Group<br>
+    <b>Price/Status:</b> 70000000
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_98f392010d6725a8562fca88ec655130 = L.circleMarker(
+                [29.417322, -98.3883795],
+                {"bubblingMouseEvents": true, "color": "#2084FE", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2084FE", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 1}
+            ).addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            circle_marker_98f392010d6725a8562fca88ec655130.bindTooltip(
+                `<div>
+                     
+    <b>Address:</b> 542 SE Loop 410, San Antonio, TX, USA<br>
+    <b>Legal Owner:</b> Oakmont Industrial Group<br>
+    <b>Associated Owner:</b> Oakmont Industrial Group<br>
+    <b>Price/Status:</b> 66112500
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1a39e3cffba39f78ec1f9ca4dac820ca = L.circleMarker(
+                [40.8924595, -74.6849713],
+                {"bubblingMouseEvents": true, "color": "#2084FE", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2084FE", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 1}
+            ).addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            circle_marker_1a39e3cffba39f78ec1f9ca4dac820ca.bindTooltip(
+                `<div>
+                     
+    <b>Address:</b> 1879 Route 46, Roxbury Township, NJ, USA<br>
+    <b>Legal Owner:</b> DG Roxbury Property Owner LP<br>
+    <b>Associated Owner:</b> Dalfen Industrial<br>
+    <b>Price/Status:</b> Price not disclosed.
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_203ba6ae2b1bd01a2d32d4bc9f5978b1 = L.circleMarker(
+                [42.2490202, -83.41367340000001],
+                {"bubblingMouseEvents": true, "color": "#2084FE", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2084FE", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 1}
+            ).addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            circle_marker_203ba6ae2b1bd01a2d32d4bc9f5978b1.bindTooltip(
+                `<div>
+                     
+    <b>Address:</b> 7525 Cogswell Street, Romulus, MI, USA<br>
+    <b>Legal Owner:</b> 7525 Cogswell Propco LLC<br>
+    <b>Associated Owner:</b> Crestlight Capital<br>
+    <b>Price/Status:</b> Price not disclosed.
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_efbd6fb50a66227fac0c665cb2512469 = L.circleMarker(
+                [41.4582422, -87.3153252],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 1}
+            ).addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            circle_marker_efbd6fb50a66227fac0c665cb2512469.bindTooltip(
+                `<div>
+                     
+    <b>Address:</b> 8719 Mississippi Street, Merrillville, IN, USA<br>
+    <b>Legal Owner:</b> Opus Development Company LLC<br>
+    <b>Associated Owner:</b> Opus Development Company<br>
+    <b>Price/Status:</b> CANCELED
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ba4b4375de452c3f2e022a73c656aace = L.circleMarker(
+                [35.4373051, -97.6534353],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 1}
+            ).addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            circle_marker_ba4b4375de452c3f2e022a73c656aace.bindTooltip(
+                `<div>
+                     
+    <b>Address:</b> 2800 S Council Road, Oklahoma City, OK, USA<br>
+    <b>Legal Owner:</b> OKC Logistic Park LLC<br>
+    <b>Associated Owner:</b> Flint Development<br>
+    <b>Price/Status:</b> CANCELED
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_13f19c8156df55325dc280339d7b5e57 = L.circleMarker(
+                [39.1936263, -94.5294371],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 1}
+            ).addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            circle_marker_13f19c8156df55325dc280339d7b5e57.bindTooltip(
+                `<div>
+                     
+    <b>Address:</b> 280 Mt. Carmel Road, Kansas City, MO, USA<br>
+    <b>Legal Owner:</b> Platform Ventures<br>
+    <b>Associated Owner:</b> Platform Ventures<br>
+    <b>Price/Status:</b> CANCELED
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fe57acb1e11e253d64671e0bd306770e = L.circleMarker(
+                [32.6492999, -96.7130521],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 1}
+            ).addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            circle_marker_fe57acb1e11e253d64671e0bd306770e.bindTooltip(
+                `<div>
+                     
+    <b>Address:</b> 4001 East 149th Street, Hutchins, TX, USA<br>
+    <b>Legal Owner:</b> PS Hutchins Phase Two LLC<br>
+    <b>Associated Owner:</b> Majestic Realty<br>
+    <b>Price/Status:</b> CANCELED
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ad93dd3707ce9d8c6e4ff63575a559a2 = L.circleMarker(
+                [44.7973962, -93.5272861],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 1}
+            ).addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            circle_marker_ad93dd3707ce9d8c6e4ff63575a559a2.bindTooltip(
+                `<div>
+                     
+    <b>Address:</b> 950 North IH-45, Shakopee, MN, USA<br>
+    <b>Legal Owner:</b> Opus Development Company LLC<br>
+    <b>Associated Owner:</b> Opus Development Company<br>
+    <b>Price/Status:</b> CANCELED
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9479d488ffaf5dbfb93d5446f6f0c695 = L.circleMarker(
+                [44.76992569999999, -93.5627777],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 1}
+            ).addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            circle_marker_9479d488ffaf5dbfb93d5446f6f0c695.bindTooltip(
+                `<div>
+                     
+    <b>Address:</b> 3000 Emery Way, Woodbury, MN, USA<br>
+    <b>Legal Owner:</b> Woodbury Logistics Center Owner LLC<br>
+    <b>Associated Owner:</b> Stotan Industrial<br>
+    <b>Price/Status:</b> CANCELED
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6933282ff9eac64d85828f234faeac7d = L.circleMarker(
+                [37.7590318, -77.47998369999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 1}
+            ).addTo(map_8b52697e1cf9fc1efa093a0c7174f50d);
+        
+    
+            circle_marker_6933282ff9eac64d85828f234faeac7d.bindTooltip(
+                `<div>
+                     
+    <b>Address:</b> 11435 Hudson Road, Ashland, VA, USA<br>
+    <b>Legal Owner:</b> Jim Pattison Developments<br>
+    <b>Associated Owner:</b> Jim Pattison Developments<br>
+    <b>Price/Status:</b> CANCELED
+    
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            map_8b52697e1cf9fc1efa093a0c7174f50d.fitBounds(
+                [[29.417322, -112.3461996], [44.7973962, -74.6849713]],
+                {}
+            );
+        
+</script>
+</html>
