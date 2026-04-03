@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_54e63d1f712920bef9bc2d968856c6ea {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_54e63d1f712920bef9bc2d968856c6ea" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_54e63d1f712920bef9bc2d968856c6ea = L.map(
+                "map_54e63d1f712920bef9bc2d968856c6ea",
+                {
+                    center: [25.8126688, -80.19122664],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 16,
+  "zoomControl": true,
+  "preferCanvas": false,
+  "name": "Base",
+}
+
+                }
+            );
+            L.control.scale().addTo(map_54e63d1f712920bef9bc2d968856c6ea);
+
+            
+
+        
+    
+            var tile_layer_eb19ec9e998ccb11ca35b07571f1ed68 = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "\u00a9 Mapbox \u00a9 OpenStreetMap",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_eb19ec9e998ccb11ca35b07571f1ed68.addTo(map_54e63d1f712920bef9bc2d968856c6ea);
+        
+    
+            var circle_marker_0ca6c620430eee87f16c7bb667fdf8a0 = L.circleMarker(
+                [25.8144406, -80.19107],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_54e63d1f712920bef9bc2d968856c6ea);
+        
+    
+        var popup_88bd1f8b221ccdce05c2466470211efc = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_7f3c1834799ccadb21d4698fdca0016c = $(`<div id="html_7f3c1834799ccadb21d4698fdca0016c" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>30 Northeast 39th Street, Miami, FL</td></tr><tr><th style='text-align:left;padding-right:8px'>Project name</th><td>Miami Design Residences</td></tr><tr><th style='text-align:left;padding-right:8px'>Developer</th><td>DACRA, Fort Partners, Raycliff Capital and Constellation Hotels Holding</td></tr><tr><th style='text-align:left;padding-right:8px'>URL</th><td><a href="https://therealdeal.com/miami/2026/03/13/dacra-partners-pick-fouquets-as-design-district-hotel-flag/" target="_blank" rel="noopener">https://therealdeal.com/miami/2026/03/13/dacra-partners-pick-fouquets-as-design-district-hotel-flag/</a></td></tr><tr><th style='text-align:left;padding-right:8px'>Unit Count</th><td>143</td></tr><tr><th style='text-align:left;padding-right:8px'>Stories</th><td>26</td></tr></table></div>`)[0];
+                popup_88bd1f8b221ccdce05c2466470211efc.setContent(html_7f3c1834799ccadb21d4698fdca0016c);
+            
+        
+
+        circle_marker_0ca6c620430eee87f16c7bb667fdf8a0.bindPopup(popup_88bd1f8b221ccdce05c2466470211efc)
+        ;
+
+        
+    
+    
+            circle_marker_0ca6c620430eee87f16c7bb667fdf8a0.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>30 Northeast 39th Street, Miami, FL</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Project name</th><td>Miami Design Residences</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Developer</th><td>DACRA, Fort Partners, Raycliff Capital and Constellation Hotels Holding</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Unit Count</th><td>143</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Stories</th><td>26</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c1ada53c8049f53851d4677a2d7aa10b = L.circleMarker(
+                [25.8101209, -80.19167329999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_54e63d1f712920bef9bc2d968856c6ea);
+        
+    
+        var popup_4203703ee09537fa8608d009be011c70 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_2ccceec80ae1d10048eeac5af2717ed1 = $(`<div id="html_2ccceec80ae1d10048eeac5af2717ed1" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>3501 Northeast First Avenue, Miami, FL</td></tr><tr><th style='text-align:left;padding-right:8px'>Project name</th><td>Jean-Georges Miami Tropic</td></tr><tr><th style='text-align:left;padding-right:8px'>Developer</th><td>Terra and Lion Development</td></tr><tr><th style='text-align:left;padding-right:8px'>URL</th><td><a href="https://therealdeal.com/miami/2024/10/21/jean-georges-vongerichten-joint-venture-launch-miami-condo-tower/" target="_blank" rel="noopener">https://therealdeal.com/miami/2024/10/21/jean-georges-vongerichten-joint-venture-launch-miami-condo-tower/</a></td></tr><tr><th style='text-align:left;padding-right:8px'>Unit Count</th><td>320</td></tr><tr><th style='text-align:left;padding-right:8px'>Stories</th><td>49</td></tr></table></div>`)[0];
+                popup_4203703ee09537fa8608d009be011c70.setContent(html_2ccceec80ae1d10048eeac5af2717ed1);
+            
+        
+
+        circle_marker_c1ada53c8049f53851d4677a2d7aa10b.bindPopup(popup_4203703ee09537fa8608d009be011c70)
+        ;
+
+        
+    
+    
+            circle_marker_c1ada53c8049f53851d4677a2d7aa10b.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>3501 Northeast First Avenue, Miami, FL</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Project name</th><td>Jean-Georges Miami Tropic</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Developer</th><td>Terra and Lion Development</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Unit Count</th><td>320</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Stories</th><td>49</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6d116517cdc681afa2ac8ef01fa5da92 = L.circleMarker(
+                [25.8130876, -80.18885490000001],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_54e63d1f712920bef9bc2d968856c6ea);
+        
+    
+        var popup_149b15cfa1c264c336ae46e3c8a8a470 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_6f7a052e83760a5c5075a98512f044de = $(`<div id="html_6f7a052e83760a5c5075a98512f044de" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>3801 and 3883 Biscayne Boulevard, Miami, FL</td></tr><tr><th style='text-align:left;padding-right:8px'>Project name</th><td>Kempinski Residences Miami Design District</td></tr><tr><th style='text-align:left;padding-right:8px'>Developer</th><td>DaGrosa Capital Development Partners</td></tr><tr><th style='text-align:left;padding-right:8px'>Unit Count</th><td>132</td></tr><tr><th style='text-align:left;padding-right:8px'>Stories</th><td>20</td></tr></table></div>`)[0];
+                popup_149b15cfa1c264c336ae46e3c8a8a470.setContent(html_6f7a052e83760a5c5075a98512f044de);
+            
+        
+
+        circle_marker_6d116517cdc681afa2ac8ef01fa5da92.bindPopup(popup_149b15cfa1c264c336ae46e3c8a8a470)
+        ;
+
+        
+    
+    
+            circle_marker_6d116517cdc681afa2ac8ef01fa5da92.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>3801 and 3883 Biscayne Boulevard, Miami, FL</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Project name</th><td>Kempinski Residences Miami Design District</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Developer</th><td>DaGrosa Capital Development Partners</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Unit Count</th><td>132</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Stories</th><td>20</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8b2092cf58df5f7cddf532c4b54e0a08 = L.circleMarker(
+                [25.8150732, -80.19112439999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_54e63d1f712920bef9bc2d968856c6ea);
+        
+    
+        var popup_efdc03f5add4a65956b00e813c4415eb = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_6ce3e2cfe064f06767a63cc22b57e0aa = $(`<div id="html_6ce3e2cfe064f06767a63cc22b57e0aa" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>4201 Northeast Second Avenue, Miami, FL</td></tr><tr><th style='text-align:left;padding-right:8px'>Project name</th><td>The Helm</td></tr><tr><th style='text-align:left;padding-right:8px'>Developer</th><td>Helm Equities</td></tr><tr><th style='text-align:left;padding-right:8px'>URL</th><td><a href="https://therealdeal.com/miami/2024/12/20/helm-equities-plans-mixed-use-miami-design-district-project/" target="_blank" rel="noopener">https://therealdeal.com/miami/2024/12/20/helm-equities-plans-mixed-use-miami-design-district-project/</a></td></tr><tr><th style='text-align:left;padding-right:8px'>Unit Count</th><td>278</td></tr><tr><th style='text-align:left;padding-right:8px'>Stories</th><td>36</td></tr></table></div>`)[0];
+                popup_efdc03f5add4a65956b00e813c4415eb.setContent(html_6ce3e2cfe064f06767a63cc22b57e0aa);
+            
+        
+
+        circle_marker_8b2092cf58df5f7cddf532c4b54e0a08.bindPopup(popup_efdc03f5add4a65956b00e813c4415eb)
+        ;
+
+        
+    
+    
+            circle_marker_8b2092cf58df5f7cddf532c4b54e0a08.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>4201 Northeast Second Avenue, Miami, FL</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Project name</th><td>The Helm</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Developer</th><td>Helm Equities</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Unit Count</th><td>278</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Stories</th><td>36</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_001152b035ad948da27d18c0f24bb1b8 = L.circleMarker(
+                [25.8106217, -80.19341059999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_54e63d1f712920bef9bc2d968856c6ea);
+        
+    
+        var popup_53d7bb0f810af213b9cc218680529a23 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_0ea382e633bb1c07fbb1931002cda596 = $(`<div id="html_0ea382e633bb1c07fbb1931002cda596" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>Address</th><td>91-93 Northeast 36th Street, Miami, FL</td></tr><tr><th style='text-align:left;padding-right:8px'>Project name</th><td>Cassi</td></tr><tr><th style='text-align:left;padding-right:8px'>Developer</th><td>DACRA, L Catterton, Hunter Pasteur and The Forbes Company</td></tr><tr><th style='text-align:left;padding-right:8px'>URL</th><td><a href="https://therealdeal.com/miami/2025/06/18/dacra-led-venture-secures-125-million-construction-loan-for-miami-rentals/" target="_blank" rel="noopener">https://therealdeal.com/miami/2025/06/18/dacra-led-venture-secures-125-million-construction-loan-for-miami-rentals/</a></td></tr><tr><th style='text-align:left;padding-right:8px'>Unit Count</th><td>107</td></tr><tr><th style='text-align:left;padding-right:8px'>Stories</th><td>20</td></tr><tr><th style='text-align:left;padding-right:8px'>Loan</th><td>$125M</td></tr></table></div>`)[0];
+                popup_53d7bb0f810af213b9cc218680529a23.setContent(html_0ea382e633bb1c07fbb1931002cda596);
+            
+        
+
+        circle_marker_001152b035ad948da27d18c0f24bb1b8.bindPopup(popup_53d7bb0f810af213b9cc218680529a23)
+        ;
+
+        
+    
+    
+            circle_marker_001152b035ad948da27d18c0f24bb1b8.bindTooltip(
+                `<div>
+                     <div style='font:12px/1.2 Arial, sans-serif'><table style='border-collapse:collapse'><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Address</th><td>91-93 Northeast 36th Street, Miami, FL</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Project name</th><td>Cassi</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Developer</th><td>DACRA, L Catterton, Hunter Pasteur and The Forbes Company</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Unit Count</th><td>107</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Stories</th><td>20</td></tr><tr><th style='text-align:left;padding-right:6px;white-space:nowrap'>Loan</th><td>$125M</td></tr></table></div>
+                 </div>`,
+                {
+  "direction": "top",
+  "sticky": true,
+}
+            );
+        
+</script>
+</html>
