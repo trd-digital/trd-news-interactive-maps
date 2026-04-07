@@ -201,7 +201,7 @@ el.guessForm.addEventListener("submit", (event) => {
 
   const guessValue = parseGuess(el.guessInput.value);
   if (!guessValue) {
-    setError("Enter a valid dollar amount (numbers only). ");
+    setError("Enter a valid dollar amount (numbers only).");
     el.guessInput.focus();
     return;
   }
