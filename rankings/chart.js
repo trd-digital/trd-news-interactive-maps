@@ -95,10 +95,11 @@ function createBumpChart(data, title) {
       trigger: "item",
     },
     grid: {
-      left: 80,
+      left: 50,
       right: 300,
-      bottom: 30,
-      containLabel: false,
+      bottom: 50,
+      top: 50,
+      containLabel: true,
     },
     xAxis: {
       type: "category",
@@ -106,8 +107,9 @@ function createBumpChart(data, title) {
         show: true,
       },
       axisLabel: {
-        margin: 30,
-        fontSize: 16,
+        show: true,
+        margin: 10,
+        fontSize: 14,
       },
       boundaryGap: false,
       data: years,
