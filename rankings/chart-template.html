@@ -1,0 +1,36 @@
+<!-- 
+  Reusable Bump Chart Template
+  
+  To create a new chart:
+  1. Copy this file to a new name (e.g., my_chart.html)
+  2. Update the title in <title> and window.chartConfig.title
+  3. Update window.chartConfig.csvFile to point to your CSV file
+  4. Open in browser
+-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NYC's Top Broker Ranking</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div id="chart" class="chart-container"></div>
+    </div>
+
+    <!-- Configuration for the chart -->
+    <script>
+      window.chartConfig = {
+        csvFile: "data/top_brokers_rank.csv",
+        title: "NYC's Top Broker Ranking",
+        containerId: "chart",
+      };
+    </script>
+
+    <!-- Load the reusable chart library -->
+    <script src="chart.js"></script>
+  </body>
+</html>

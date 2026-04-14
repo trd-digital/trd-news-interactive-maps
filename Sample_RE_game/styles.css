@@ -1,0 +1,286 @@
+:root {
+  --bg: #0b1020;
+  --panel: #111a33;
+  --panel2: #0f1730;
+  --text: #e8ecf7;
+  --muted: #aab3d4;
+  --border: rgba(232, 236, 247, 0.12);
+  --accent: #6aa9ff;
+  --good: #59d39a;
+  --bad: #ff6a6a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    "Apple Color Emoji", "Segoe UI Emoji";
+  background: radial-gradient(1200px 600px at 20% 0%, #111a33 0%, var(--bg) 60%);
+  color: var(--text);
+}
+
+.container {
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.header {
+  padding: 28px 0 12px;
+}
+
+.header__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.header__title {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: 0.2px;
+}
+
+.header__subtitle {
+  margin: 0;
+  color: var(--muted);
+}
+
+.card {
+  background: linear-gradient(180deg, var(--panel), var(--panel2));
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.card__top {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 16px;
+  padding: 16px;
+}
+
+@media (max-width: 900px) {
+  .card__top {
+    grid-template-columns: 1fr;
+  }
+}
+
+.photo {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.15);
+  min-height: 320px;
+  display: grid;
+  place-items: center;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.facts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.facts__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.label {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.value {
+  font-size: 16px;
+}
+
+.value--big {
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: 0.2px;
+}
+
+.facts__grid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 14px;
+}
+
+.facts__grid > div {
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.facts__grid dt {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0 0 4px;
+}
+
+.facts__grid dd {
+  margin: 0;
+  font-size: 15px;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+}
+
+.guess {
+  padding: 16px;
+}
+
+.guess__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+
+@media (max-width: 600px) {
+  .guess__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.guess__label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+}
+
+.guess__inputWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.guess__prefix {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 16px;
+}
+
+.hint {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.btn {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  border-color: rgba(232, 236, 247, 0.22);
+}
+
+.btn--primary {
+  background: rgba(106, 169, 255, 0.16);
+  border-color: rgba(106, 169, 255, 0.35);
+}
+
+.btn--ghost {
+  background: transparent;
+}
+
+.result {
+  padding: 16px;
+}
+
+.result__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .result__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.result__grid > div {
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.result__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.stats {
+  margin-top: 14px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.error {
+  padding: 12px 16px 16px;
+  color: var(--bad);
+}
+
+.footer {
+  padding: 16px 0 30px;
+}
+
+.footer__text {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 10px 0 0;
+}
+
+code {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
