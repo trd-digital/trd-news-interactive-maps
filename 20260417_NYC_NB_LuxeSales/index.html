@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Manhattan Neighborhood Median Sale Price Choropleth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link
+    href="https://api.mapbox.com/mapbox-gl-js/v3.20.0/mapbox-gl.css"
+    rel="stylesheet"/>
+
+  <!-- Stylesheet -->
+<link href="style.css" rel="stylesheet">
+
+</head>
+  
+<body>
+  <div class="map-wrapper">
+  <h3><b>Billionaires' Row continues to command top dollar among luxury enclaves</b></h3>
+  
+  <div id="map"></div>
+
+  <div class=""map-credit">Map by Joseph Jungermann</div>
+
+  <div class="legend">
+    <div><strong>Median sale price</strong></div>
+    <div class="legend-scale">
+      <span style="background:#f7fbff"></span>
+      <span style="background:#deebf7"></span>
+      <span style="background:#c6dbef"></span>
+      <span style="background:#9ecae1"></span>
+      <span style="background:#6baed6"></span>
+      <span style="background:#3182bd"></span>
+      <span style="background:#08519c"></span>
+    </div>
+    <div>$10m &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $25M+</div>
+  </div>
+
+  <div class="controls">
+  <div class="controls-row">
+    <label for="year-slider"><strong>Year</strong></label>
+
+    <input
+      id="year-slider"
+      type="range"
+      min="2021"
+      max="2025"
+      step="1"
+      value="2021"
+    />
+
+    <!-- <div id="year-label">2021</div> -->
+  </div>
+
+  <div class="year-ticks">
+    <span>2021</span>
+    <span>2022</span>
+    <span>2023</span>
+    <span>2024</span>
+    <span>2025</span>
+  </div>
+</div>
+</div>
+
+<!-- Script for mapbox style-->  
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.20.0/mapbox-gl.js"></script>
+
+<!-- Script for geoJSON mapbox boundaries and data-->
+   <script src="data/nyc_luxe_nb_median_price.js"></script>
+
+<!-- Script for mapbox map js build -->
+    <script src="map.js"></script>  
+
+</body>
+</html>
