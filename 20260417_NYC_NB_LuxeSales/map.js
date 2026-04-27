@@ -55,16 +55,6 @@ map.on('load', () => {
   });
 
   map.addLayer({
-    id: 'neighborhood-fills',
-    type: 'fill',
-    source: 'neighborhoods',
-    paint: {
-      'fill-color': 'red',
-      'fill-opacity': 0.8
-    }
-  });
-
-  map.addLayer({
     id: 'neighborhood-hover',
     type: 'line',
     source: 'neighborhoods',
