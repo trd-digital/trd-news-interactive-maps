@@ -118,11 +118,11 @@ if (Array.isArray(geojson) && geojson[0]?.geojson) {
 });
 
 const firms = [
-  { name:'Compass'},
-  { name:'Corcoran Group'},
-  { name:'Douglas Elliman'},
-  { name:"Sotheby's International Realty"},
-  { name:'Brown Harris Stevens'}
+  { name: 'Compass', color: '#2084FE' },
+  { name: 'Corcoran Group', color: '#F58220' },
+  { name: 'Douglas Elliman', color: '#1FA187' },
+  { name: "Sotheby's International Realty", color: '#D93A49' },
+  { name: 'Brown Harris Stevens', color: '#E3B505' }
 ];
 
 let selectedFirms = firms.map(f => f.name);
