@@ -12,7 +12,6 @@ Promise.all([
   fetch('data/brokerage_nb_market_share.csv').then(res => res.text())
 ])
 .then(([geojson, csvText]) => {
-    console.log("Raw GeoJSON:", geojson);
 
 // Navicat exported the GeoJSON as a string inside [{ geojson: "..." }]
 if (Array.isArray(geojson) && geojson[0]?.geojson) {
