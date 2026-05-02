@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Manhattan Neighborhood Median Sale Price Choropleth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link
+    href="https://api.mapbox.com/mapbox-gl-js/v3.20.0/mapbox-gl.css"
+    rel="stylesheet"/>
+
+  <!-- Stylesheet -->
+<link href="style.css" rel="stylesheet">
+
+</head>
+  
+<body>
+  <div class="map-wrapper">
+    <h3><b>Which firms have strongest market share across NYC neighborhoods?</b></h3>
+    <h4>Use the legend on the top right of the map to filter brokerages</h4>
+
+    <div class="map-container">
+      <div id="map"></div>
+      <div id="legend" class="legend"></div>
+      <div class="source-note"><i>Source Note: TRD analysis of residential sales. For each neighborhood, total transaction volume is aggregated and assigned to the brokerage with the largest share. Darker shading indicates a greater share of that volume. Map includes neighborhoods with greater than 10 deals.</i></div>
+      <div class="map-credit">Map by Joseph Jungermann</div>
+    </div>
+  </div>
+
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.20.0/mapbox-gl.js"></script>
+  <script src="map.js"></script>
+</body>
+</html>
