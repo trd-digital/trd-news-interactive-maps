@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_327e6c3f1377255be6feb11adbc25066 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_327e6c3f1377255be6feb11adbc25066" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_327e6c3f1377255be6feb11adbc25066 = L.map(
+                "map_327e6c3f1377255be6feb11adbc25066",
+                {
+                    center: [40.73573872142857, -74.18858066428571],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 13,
+  "zoomControl": true,
+  "preferCanvas": false,
+  "name": "Base",
+}
+
+                }
+            );
+            L.control.scale().addTo(map_327e6c3f1377255be6feb11adbc25066);
+
+            
+
+        
+    
+            var tile_layer_5e46577c628eaac4773266e0b2b5df3a = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "\u00a9 Mapbox \u00a9 OpenStreetMap",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_5e46577c628eaac4773266e0b2b5df3a.addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+            var circle_marker_eb3582cdf968c7b083a39d784e37aa2a = L.circleMarker(
+                [40.760879, -74.18435099999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_1099203a9130c8367a4db7ac696a7786 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_44cb1df75e7e4792a85aa13b379393e6 = $(`<div id="html_44cb1df75e7e4792a85aa13b379393e6" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>377-387 5th Street, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_1099203a9130c8367a4db7ac696a7786.setContent(html_44cb1df75e7e4792a85aa13b379393e6);
+            
+        
+
+        circle_marker_eb3582cdf968c7b083a39d784e37aa2a.bindPopup(popup_1099203a9130c8367a4db7ac696a7786)
+        ;
+
+        
+    
+    
+            var circle_marker_296cfe0f868d930eaf4af6afd24906a7 = L.circleMarker(
+                [40.735523, -74.17480599999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_21e1886b47631f113a8a4afbcf2e439c = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_14dc9451e3ba8e3f69bdb0146aa3e61b = $(`<div id="html_14dc9451e3ba8e3f69bdb0146aa3e61b" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>37-57 Branford Place, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_21e1886b47631f113a8a4afbcf2e439c.setContent(html_14dc9451e3ba8e3f69bdb0146aa3e61b);
+            
+        
+
+        circle_marker_296cfe0f868d930eaf4af6afd24906a7.bindPopup(popup_21e1886b47631f113a8a4afbcf2e439c)
+        ;
+
+        
+    
+    
+            var circle_marker_869ba74130b78c3972490370cd96e386 = L.circleMarker(
+                [40.735585, -74.17424199999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_52f914dd24b00f2db67823f0aba3ecac = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_2910507c0f710a19bd376e96def50a27 = $(`<div id="html_2910507c0f710a19bd376e96def50a27" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>193-197 Halsey Street, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_52f914dd24b00f2db67823f0aba3ecac.setContent(html_2910507c0f710a19bd376e96def50a27);
+            
+        
+
+        circle_marker_869ba74130b78c3972490370cd96e386.bindPopup(popup_52f914dd24b00f2db67823f0aba3ecac)
+        ;
+
+        
+    
+    
+            var circle_marker_ad900c448ddcd4b2431956b58b39b006 = L.circleMarker(
+                [40.7360549, -74.1755494],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_92a72c992152e7b342ff1ae3e6bb0072 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_e6ae0ed767f4500299a4260b60fe79da = $(`<div id="html_e6ae0ed767f4500299a4260b60fe79da" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>Camfield Court, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_92a72c992152e7b342ff1ae3e6bb0072.setContent(html_e6ae0ed767f4500299a4260b60fe79da);
+            
+        
+
+        circle_marker_ad900c448ddcd4b2431956b58b39b006.bindPopup(popup_92a72c992152e7b342ff1ae3e6bb0072)
+        ;
+
+        
+    
+    
+            var circle_marker_04735d5faaf346c88df3a93f506fdeb0 = L.circleMarker(
+                [40.7406581, -74.1698325],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_6bb9d433a4ae1a43f80909840df765b3 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_51f99aee6483bcd05be3f12d59712cf6 = $(`<div id="html_51f99aee6483bcd05be3f12d59712cf6" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>605-607 Broad Street, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_6bb9d433a4ae1a43f80909840df765b3.setContent(html_51f99aee6483bcd05be3f12d59712cf6);
+            
+        
+
+        circle_marker_04735d5faaf346c88df3a93f506fdeb0.bindPopup(popup_6bb9d433a4ae1a43f80909840df765b3)
+        ;
+
+        
+    
+    
+            var circle_marker_b303e751258e2ecb9d4ca31f673f62d4 = L.circleMarker(
+                [40.7303553, -74.20566079999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_b976d6b4c0d00016ef8f6502b9afd1a3 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_6aa09a574509b8360ad63ead5518979b = $(`<div id="html_6aa09a574509b8360ad63ead5518979b" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>655, 657, 659 South 11th Street, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_b976d6b4c0d00016ef8f6502b9afd1a3.setContent(html_6aa09a574509b8360ad63ead5518979b);
+            
+        
+
+        circle_marker_b303e751258e2ecb9d4ca31f673f62d4.bindPopup(popup_b976d6b4c0d00016ef8f6502b9afd1a3)
+        ;
+
+        
+    
+    
+            var circle_marker_2d336a6db0e1db57ccbb21e54e9bf6b2 = L.circleMarker(
+                [40.7244081, -74.1992334],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_2bf703903b0ba445dffee623e6094684 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_29ab12128180628625a9619ae40feb62 = $(`<div id="html_29ab12128180628625a9619ae40feb62" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>581, 583 Bergen Street, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_2bf703903b0ba445dffee623e6094684.setContent(html_29ab12128180628625a9619ae40feb62);
+            
+        
+
+        circle_marker_2d336a6db0e1db57ccbb21e54e9bf6b2.bindPopup(popup_2bf703903b0ba445dffee623e6094684)
+        ;
+
+        
+    
+    
+            var circle_marker_8eeabe8b21d9e774b275ebb71794c090 = L.circleMarker(
+                [40.7268742, -74.2076119],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_db6735c58c77ae436316aabf82d23e89 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_1c44efa680e3e492abbcaec687d98ce1 = $(`<div id="html_1c44efa680e3e492abbcaec687d98ce1" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>372, 374, 376 Avon Ave, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_db6735c58c77ae436316aabf82d23e89.setContent(html_1c44efa680e3e492abbcaec687d98ce1);
+            
+        
+
+        circle_marker_8eeabe8b21d9e774b275ebb71794c090.bindPopup(popup_db6735c58c77ae436316aabf82d23e89)
+        ;
+
+        
+    
+    
+            var circle_marker_f82abbe9fe4e5d17589c43b1745d3037 = L.circleMarker(
+                [40.72739199999999, -74.207914],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_c08fa14411162b08e7b17461c788a181 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_6e133bab2b5c7481251f0ece2bdebaed = $(`<div id="html_6e133bab2b5c7481251f0ece2bdebaed" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>383-385 Avon Avenue, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_c08fa14411162b08e7b17461c788a181.setContent(html_6e133bab2b5c7481251f0ece2bdebaed);
+            
+        
+
+        circle_marker_f82abbe9fe4e5d17589c43b1745d3037.bindPopup(popup_c08fa14411162b08e7b17461c788a181)
+        ;
+
+        
+    
+    
+            var circle_marker_08168be3f752b3262778983588f6ce8a = L.circleMarker(
+                [40.74527579999999, -74.19502609999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_b9dd65e1e4c93ffa756d1d3be1362cc7 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_6264c97688dcd5cf4cb289dee3c07466 = $(`<div id="html_6264c97688dcd5cf4cb289dee3c07466" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>108 South 7th Street, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_b9dd65e1e4c93ffa756d1d3be1362cc7.setContent(html_6264c97688dcd5cf4cb289dee3c07466);
+            
+        
+
+        circle_marker_08168be3f752b3262778983588f6ce8a.bindPopup(popup_b9dd65e1e4c93ffa756d1d3be1362cc7)
+        ;
+
+        
+    
+    
+            var circle_marker_37847da01ecf07872cf0f172fa3227b4 = L.circleMarker(
+                [40.7458847, -74.2358356],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_07f29d7e467b58882d029c65b025db33 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_6f38ec5c4bbcf2faff31d6cdf780ca7c = $(`<div id="html_6f38ec5c4bbcf2faff31d6cdf780ca7c" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>1129-1135 South Orange Avenue, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_07f29d7e467b58882d029c65b025db33.setContent(html_6f38ec5c4bbcf2faff31d6cdf780ca7c);
+            
+        
+
+        circle_marker_37847da01ecf07872cf0f172fa3227b4.bindPopup(popup_07f29d7e467b58882d029c65b025db33)
+        ;
+
+        
+    
+    
+            var circle_marker_1900e80f1253e228ec03d86205e1f304 = L.circleMarker(
+                [40.721466, -74.19520299999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_b28e35b7d2ac6dfbc4501daf29ed3541 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_4ed1b4636baa61265e7a8aa1a75edef6 = $(`<div id="html_4ed1b4636baa61265e7a8aa1a75edef6" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>395-397 Clinton Avenue, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_b28e35b7d2ac6dfbc4501daf29ed3541.setContent(html_4ed1b4636baa61265e7a8aa1a75edef6);
+            
+        
+
+        circle_marker_1900e80f1253e228ec03d86205e1f304.bindPopup(popup_b28e35b7d2ac6dfbc4501daf29ed3541)
+        ;
+
+        
+    
+    
+            var circle_marker_97d7ff68e4fea1e9907bed07075ac7ea = L.circleMarker(
+                [40.734318, -74.18872999999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_ebcf935d311ae3a03214c753920626c7 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_e2709fad5b58a91b52d05da465f36ce8 = $(`<div id="html_e2709fad5b58a91b52d05da465f36ce8" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>241-243 Springfield Avenue, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_ebcf935d311ae3a03214c753920626c7.setContent(html_e2709fad5b58a91b52d05da465f36ce8);
+            
+        
+
+        circle_marker_97d7ff68e4fea1e9907bed07075ac7ea.bindPopup(popup_ebcf935d311ae3a03214c753920626c7)
+        ;
+
+        
+    
+    
+            var circle_marker_6d1c777ceb2ca6285057b17f0dc5923a = L.circleMarker(
+                [40.7344221, -74.18892389999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_b10e092203c9f1646881b8b29db114a8 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_f4cd8ec557f3454b5732ae6ccc9eeabe = $(`<div id="html_f4cd8ec557f3454b5732ae6ccc9eeabe" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>245 Springfield Avenue, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_b10e092203c9f1646881b8b29db114a8.setContent(html_f4cd8ec557f3454b5732ae6ccc9eeabe);
+            
+        
+
+        circle_marker_6d1c777ceb2ca6285057b17f0dc5923a.bindPopup(popup_b10e092203c9f1646881b8b29db114a8)
+        ;
+
+        
+    
+    
+            var circle_marker_4f34abde2a5bd168be775afcffa0c3d9 = L.circleMarker(
+                [40.7341773, -74.1891808],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_26032a6cdec6d5e30b58aa281b53c817 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_9a1ff5f1958ec3d5fa84495106605ece = $(`<div id="html_9a1ff5f1958ec3d5fa84495106605ece" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>6 Livingston Street, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_26032a6cdec6d5e30b58aa281b53c817.setContent(html_9a1ff5f1958ec3d5fa84495106605ece);
+            
+        
+
+        circle_marker_4f34abde2a5bd168be775afcffa0c3d9.bindPopup(popup_26032a6cdec6d5e30b58aa281b53c817)
+        ;
+
+        
+    
+    
+            var circle_marker_e94121127018d3b09826c7cb48769c5c = L.circleMarker(
+                [40.7341107, -74.1887769],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_4c63ec101579b0624c2a42e761de62d1 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_cdb1600fd6581bcd57faa0c480b8555b = $(`<div id="html_cdb1600fd6581bcd57faa0c480b8555b" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>14 Irvine Turner Boulevard, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_4c63ec101579b0624c2a42e761de62d1.setContent(html_cdb1600fd6581bcd57faa0c480b8555b);
+            
+        
+
+        circle_marker_e94121127018d3b09826c7cb48769c5c.bindPopup(popup_4c63ec101579b0624c2a42e761de62d1)
+        ;
+
+        
+    
+    
+            var circle_marker_1fb01ba2cd99e06314339c99f92366d0 = L.circleMarker(
+                [40.7341121, -74.18920709999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_6bf2846d5bf8497cae9aa20784aab9cb = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_af896cd8902cb95bb7d96784f7b218d2 = $(`<div id="html_af896cd8902cb95bb7d96784f7b218d2" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>8 Livingston Street, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_6bf2846d5bf8497cae9aa20784aab9cb.setContent(html_af896cd8902cb95bb7d96784f7b218d2);
+            
+        
+
+        circle_marker_1fb01ba2cd99e06314339c99f92366d0.bindPopup(popup_6bf2846d5bf8497cae9aa20784aab9cb)
+        ;
+
+        
+    
+    
+            var circle_marker_46f242b41f0e7d09aff3e37dc12647ad = L.circleMarker(
+                [40.7342694, -74.1890461],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_55ed007280753ca084cca3949c888b7f = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_f970713d5159a6092a305d657b4e4f5a = $(`<div id="html_f970713d5159a6092a305d657b4e4f5a" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>247-251 Springfield Avenue, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_55ed007280753ca084cca3949c888b7f.setContent(html_f970713d5159a6092a305d657b4e4f5a);
+            
+        
+
+        circle_marker_46f242b41f0e7d09aff3e37dc12647ad.bindPopup(popup_55ed007280753ca084cca3949c888b7f)
+        ;
+
+        
+    
+    
+            var circle_marker_38a9dfd56a1dbba9475cf82193c239b0 = L.circleMarker(
+                [40.7285362, -74.1687824],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_91fbcacaf46765377e323b8f95abe7a1 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_a77f84a8a96518d2cc18db53c773b477 = $(`<div id="html_a77f84a8a96518d2cc18db53c773b477" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>132 Walnut Street, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_91fbcacaf46765377e323b8f95abe7a1.setContent(html_a77f84a8a96518d2cc18db53c773b477);
+            
+        
+
+        circle_marker_38a9dfd56a1dbba9475cf82193c239b0.bindPopup(popup_91fbcacaf46765377e323b8f95abe7a1)
+        ;
+
+        
+    
+    
+            var circle_marker_017fb277e7f9ca2f18000752e37c9621 = L.circleMarker(
+                [40.7282067, -74.1688747],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_4bebdcfae588f23ab3bbc63e4e4670ca = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_b00f8753d9709d44d45c06b466405960 = $(`<div id="html_b00f8753d9709d44d45c06b466405960" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>25-31 New York Avenue, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_4bebdcfae588f23ab3bbc63e4e4670ca.setContent(html_b00f8753d9709d44d45c06b466405960);
+            
+        
+
+        circle_marker_017fb277e7f9ca2f18000752e37c9621.bindPopup(popup_4bebdcfae588f23ab3bbc63e4e4670ca)
+        ;
+
+        
+    
+    
+            var circle_marker_2c479dd8e1ee15d513228d51b1b383fb = L.circleMarker(
+                [40.7283583, -74.1691554],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_d9eaca04842c62040e086cdab9d216d0 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_0d47c5b3257b02d95f1b3c45189070b5 = $(`<div id="html_0d47c5b3257b02d95f1b3c45189070b5" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>13-23 New York Avenue, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_d9eaca04842c62040e086cdab9d216d0.setContent(html_0d47c5b3257b02d95f1b3c45189070b5);
+            
+        
+
+        circle_marker_2c479dd8e1ee15d513228d51b1b383fb.bindPopup(popup_d9eaca04842c62040e086cdab9d216d0)
+        ;
+
+        
+    
+    
+            var circle_marker_20d23e113e74fdcd9477680510558bd1 = L.circleMarker(
+                [40.7455977, -74.19596829999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_eec9339eb1d4a9f209b46c5c07364b6d = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_c63bfa471d4297807eef9662e86544cc = $(`<div id="html_c63bfa471d4297807eef9662e86544cc" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>134-136 South 8th Street, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_eec9339eb1d4a9f209b46c5c07364b6d.setContent(html_c63bfa471d4297807eef9662e86544cc);
+            
+        
+
+        circle_marker_20d23e113e74fdcd9477680510558bd1.bindPopup(popup_eec9339eb1d4a9f209b46c5c07364b6d)
+        ;
+
+        
+    
+    
+            var circle_marker_3959de97bca4fea40a812eae708685ed = L.circleMarker(
+                [40.7456167, -74.1958058],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_2e2b08597dd1fdc1c17a729501a139be = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_c0ef1c3403fdbe69318c9c8a63b3c967 = $(`<div id="html_c0ef1c3403fdbe69318c9c8a63b3c967" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>132 South 8th Street, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_2e2b08597dd1fdc1c17a729501a139be.setContent(html_c0ef1c3403fdbe69318c9c8a63b3c967);
+            
+        
+
+        circle_marker_3959de97bca4fea40a812eae708685ed.bindPopup(popup_2e2b08597dd1fdc1c17a729501a139be)
+        ;
+
+        
+    
+    
+            var circle_marker_0c3e0cb998fac8cf3b15f0db1128c6a8 = L.circleMarker(
+                [40.7478311, -74.198724],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_8b38d47c76a1964bd9c94b64583b3287 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_b17b831fd99820e27ad46cc107c4d8a8 = $(`<div id="html_b17b831fd99820e27ad46cc107c4d8a8" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>186-188 South 12th Street, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_8b38d47c76a1964bd9c94b64583b3287.setContent(html_b17b831fd99820e27ad46cc107c4d8a8);
+            
+        
+
+        circle_marker_0c3e0cb998fac8cf3b15f0db1128c6a8.bindPopup(popup_8b38d47c76a1964bd9c94b64583b3287)
+        ;
+
+        
+    
+    
+            var circle_marker_a42e89770b14964300ee7f666df3941e = L.circleMarker(
+                [40.7390695, -74.20668069999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_d0f5296aba0446f53cbd66ebe465e8bf = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_d0c3aacfec227b0ab7f13ff1773ed45e = $(`<div id="html_d0c3aacfec227b0ab7f13ff1773ed45e" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>486-490 South 16th Street, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_d0f5296aba0446f53cbd66ebe465e8bf.setContent(html_d0c3aacfec227b0ab7f13ff1773ed45e);
+            
+        
+
+        circle_marker_a42e89770b14964300ee7f666df3941e.bindPopup(popup_d0f5296aba0446f53cbd66ebe465e8bf)
+        ;
+
+        
+    
+    
+            var circle_marker_1a41bad7508558f7200256390b35c244 = L.circleMarker(
+                [40.7325656, -74.1734668],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_9cbec1e70d420cbfd3d77d719908d17f = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_58f3b17114c9c506896c96364f3e6ebf = $(`<div id="html_58f3b17114c9c506896c96364f3e6ebf" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>892 Broad Street, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_9cbec1e70d420cbfd3d77d719908d17f.setContent(html_58f3b17114c9c506896c96364f3e6ebf);
+            
+        
+
+        circle_marker_1a41bad7508558f7200256390b35c244.bindPopup(popup_9cbec1e70d420cbfd3d77d719908d17f)
+        ;
+
+        
+    
+    
+            var circle_marker_eff31f3ee81de5ee1b2006355c3af10b = L.circleMarker(
+                [40.7324837, -74.17362469999999],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_4a0b4f5b3ff4102dcc95b5756f0d4997 = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_6dae5acfff3bcf1fde21b6482310062f = $(`<div id="html_6dae5acfff3bcf1fde21b6482310062f" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>894-900 Broad Street, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_4a0b4f5b3ff4102dcc95b5756f0d4997.setContent(html_6dae5acfff3bcf1fde21b6482310062f);
+            
+        
+
+        circle_marker_eff31f3ee81de5ee1b2006355c3af10b.bindPopup(popup_4a0b4f5b3ff4102dcc95b5756f0d4997)
+        ;
+
+        
+    
+    
+            var circle_marker_24c57f2d206ed51f53f0bb69ba25e7f9 = L.circleMarker(
+                [40.736653, -74.1700453],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 2}
+            ).addTo(map_327e6c3f1377255be6feb11adbc25066);
+        
+    
+        var popup_f3eb97cd04327da6f8d17613d88695be = L.popup({
+  "maxWidth": 450,
+});
+
+        
+            
+                var html_97cb199ca816d7538f948c76149dd405 = $(`<div id="html_97cb199ca816d7538f948c76149dd405" style="width: 100.0%; height: 100.0%;"><table><tr><th style='text-align:left;padding-right:8px'>address</th><td>24 Commerce Street, Newark, New Jersey</td></tr></table></div>`)[0];
+                popup_f3eb97cd04327da6f8d17613d88695be.setContent(html_97cb199ca816d7538f948c76149dd405);
+            
+        
+
+        circle_marker_24c57f2d206ed51f53f0bb69ba25e7f9.bindPopup(popup_f3eb97cd04327da6f8d17613d88695be)
+        ;
+
+        
+    
+</script>
+</html>
