@@ -70,11 +70,13 @@ function buildGeoJSON(rawNeighborhoods, csvRows) {
   });
 
   return {
-    type: 'FeatureCollection',
-    features: rawNeighborhoods
-      .filter(n => dataMap.has(n.name_?.trim()))
-      .map(n => {
-        const name = n.name_.trim();
+  type: 'FeatureCollection',
+  features: rawNeighborhoods
+    .filter(n => dataMap.has(n.name_?.trim()))
+    .map(n => {
+      const name = n.name_?.trim();
+
+      try {
         const geometry = JSON.parse(n.geom);
         const metrics = dataMap.get(name);
 
@@ -87,9 +89,17 @@ function buildGeoJSON(rawNeighborhoods, csvRows) {
             ...metrics
           }
         };
-      })
-  };
-}
+      } catch (e) {
+        console.warn(
+          `Could not parse geometry for neighborhood: ${name}`
+        );
+
+        return null;
+      }
+    })
+    .filter(Boolean)
+   } // remove nulls from failed parses
+};
 
 function getFillColorExpression(year) {
   const prop = `volume_${year}`;
@@ -102,7 +112,8 @@ function getFillColorExpression(year) {
     volumeStops[1][0], volumeStops[1][1],
     volumeStops[2][0], volumeStops[2][1],
     volumeStops[3][0], volumeStops[3][1],
-    volumeStops[4][0], volumeStops[4][1]
+    volumeStops[4][0], volumeStops[4][1],
+    volumeStops[5][0], volumeStops[5][1]
   ];
 }
 
@@ -143,16 +154,24 @@ function renderLegend() {
 `;
 
   legend.querySelectorAll('button').forEach(button => {
-    button.addEventListener('click', () => {
-      currentYear = button.dataset.year;
-      map.setPaintProperty(
-        'neighborhood-fill',
-        'fill-color',
-        getFillColorExpression(currentYear)
-      );
-      renderLegend();
-    });
+  button.addEventListener('click', () => {
+    currentYear = button.dataset.year;
+
+    // Update active button
+    legend
+      .querySelector('button.active')
+      .classList.remove('active');
+
+    button.classList.add('active');
+
+    // Update map
+    map.setPaintProperty(
+      'neighborhood-fill',
+      'fill-color',
+      getFillColorExpression(currentYear)
+    );
   });
+});
 }
 
 Promise.all([
