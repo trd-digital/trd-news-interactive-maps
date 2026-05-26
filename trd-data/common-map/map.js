@@ -410,10 +410,13 @@ const trdDataCommonMap = (options) => {
     eventListeners: () => {
       const filterEl = filters.getElement();
       const closeButtonEl = filterEl.querySelector(".map-filters-close");
+      const clearButtonEl = filterEl.querySelector(".map-filters-clear");
 
       closeButtonEl.addEventListener("click", filters.onClose);
+      if (clearButtonEl) {
+        clearButtonEl.addEventListener("click", filters.onReset);
+      }
       filterEl.addEventListener("submit", filters.onSubmit);
-      filterEl.addEventListener("reset", filters.onReset);
     },
 
     createFilterElement: () => {
@@ -432,7 +435,7 @@ const trdDataCommonMap = (options) => {
         </div>
         <div class="map-filters-body"></div>
         <div class="map-filters-footer">
-          <button type="reset" class="btn btn-secondary">Clear</button>
+          <button type="button" class="btn btn-secondary map-filters-clear">Clear</button>
           <button type="submit" class="btn btn-primary">Apply</button>
         </div>
       </form>`
@@ -538,6 +541,8 @@ const trdDataCommonMap = (options) => {
       minInput.name = `${filterField.name}`;
       minInput.id = `${filterField.name}-min`;
       minInput.value = filterField.defaultValue[0] || filterField.minValue;
+      minInput.defaultValue =
+        filterField.defaultValue[0] || filterField.minValue;
       minInput.placeholder = `Min ${filterField.name}`;
       minInput.setAttribute("min", filterField.minValue);
       minInput.setAttribute("max", filterField.maxValue);
@@ -548,6 +553,8 @@ const trdDataCommonMap = (options) => {
       maxInput.name = `${filterField.name}`;
       maxInput.id = `${filterField.name}-max`;
       maxInput.value = filterField.defaultValue[1] || filterField.maxValue;
+      maxInput.defaultValue =
+        filterField.defaultValue[1] || filterField.maxValue;
       maxInput.placeholder = `Max ${filterField.name}`;
       maxInput.setAttribute("min", filterField.minValue);
       maxInput.setAttribute("max", filterField.maxValue);
@@ -602,6 +609,7 @@ const trdDataCommonMap = (options) => {
           minSlider.style.left = `${percentage * 100}%`;
           progress.style.left = `${percentage * 100}%`;
           updateLabel();
+          updatePresetButtonState();
           minInput.dispatchEvent(new Event("input"));
         };
         const mouseUpHandler = () => {
@@ -645,6 +653,7 @@ const trdDataCommonMap = (options) => {
           maxSlider.style.left = `${percentage * 100 - 7}%`;
           progress.style.right = `${(1 - percentage) * 100}%`;
           updateLabel();
+          updatePresetButtonState();
           maxInput.dispatchEvent(new Event("input"));
         };
 
@@ -670,7 +679,97 @@ const trdDataCommonMap = (options) => {
         }
       };
 
-      updateLabel();
+      const presetsWrapper =
+        Array.isArray(filterField.presets) && filterField.presets.length
+          ? document.createElement("div")
+          : null;
+
+      const updatePresetButtonState = () => {
+        if (!presetsWrapper) return;
+        const minValue = Number(minInput.value || filterField.minValue);
+        const maxValue = Number(maxInput.value || filterField.maxValue);
+
+        presetsWrapper
+          .querySelectorAll("button[data-preset-min]")
+          .forEach((btn) => {
+            const presetMin = Number(btn.getAttribute("data-preset-min"));
+            const presetMax = Number(btn.getAttribute("data-preset-max"));
+            const isActive = presetMin === minValue && presetMax === maxValue;
+
+            btn.classList.toggle("btn-primary", isActive);
+            btn.classList.toggle("btn-outline-secondary", !isActive);
+          });
+      };
+
+      const syncRangeUi = () => {
+        if (minInput.value === "") {
+          minInput.value =
+            typeof filterField.defaultValue?.[0] !== "undefined"
+              ? filterField.defaultValue[0]
+              : filterField.minValue;
+        }
+        if (maxInput.value === "") {
+          maxInput.value =
+            typeof filterField.defaultValue?.[1] !== "undefined"
+              ? filterField.defaultValue[1]
+              : filterField.maxValue;
+        }
+
+        const minValue = Number(minInput.value || filterField.minValue);
+        const maxValue = Number(maxInput.value || filterField.maxValue);
+        const minPercent =
+          ((minValue - filterField.minValue) /
+            (filterField.maxValue - filterField.minValue)) *
+          100;
+        const maxPercent =
+          ((maxValue - filterField.minValue) /
+            (filterField.maxValue - filterField.minValue)) *
+          100;
+
+        minSlider.style.left = `${minPercent}%`;
+        maxSlider.style.left = `${maxPercent - 7}%`;
+        progress.style.left = `${minPercent}%`;
+        progress.style.right = `${100 - maxPercent}%`;
+        updateLabel();
+        updatePresetButtonState();
+      };
+
+      const applyPresetRange = (minValue, maxValue) => {
+        const safeMin = Math.max(filterField.minValue, Number(minValue));
+        const safeMax = Math.min(filterField.maxValue, Number(maxValue));
+
+        minInput.value = safeMin;
+        maxInput.value = safeMax;
+        syncRangeUi();
+      };
+
+      if (presetsWrapper) {
+        presetsWrapper.classList.add("d-flex", "flex-wrap", "gap-2", "mb-2");
+
+        filterField.presets.forEach((preset) => {
+          if (
+            !preset ||
+            typeof preset.minValue === "undefined" ||
+            typeof preset.maxValue === "undefined"
+          ) {
+            return;
+          }
+
+          const presetBtn = document.createElement("button");
+          presetBtn.type = "button";
+          presetBtn.className = "btn btn-sm btn-outline-secondary";
+          presetBtn.innerText = preset.label || "Preset";
+          presetBtn.setAttribute("data-preset-min", String(preset.minValue));
+          presetBtn.setAttribute("data-preset-max", String(preset.maxValue));
+          presetBtn.addEventListener("click", () => {
+            applyPresetRange(preset.minValue, preset.maxValue);
+          });
+
+          presetsWrapper.appendChild(presetBtn);
+        });
+      }
+
+      syncRangeUi();
 
       const slider = document.createElement("div");
       slider.classList.add("range-slider");
@@ -678,10 +777,27 @@ const trdDataCommonMap = (options) => {
       slider.appendChild(minSlider);
       slider.appendChild(maxSlider);
 
+      if (presetsWrapper) {
+        field.appendChild(presetsWrapper);
+      }
       field.appendChild(label);
       field.appendChild(slider);
       field.appendChild(minInput);
       field.appendChild(maxInput);
+
+      // Allow centralized reset logic to refresh this slider's UI.
+      minInput.__syncRangeUi = syncRangeUi;
+      maxInput.__syncRangeUi = syncRangeUi;
+
+      setTimeout(() => {
+        const formEl = field.closest("form");
+        if (!formEl) return;
+        formEl.addEventListener("reset", () => {
+          setTimeout(() => {
+            syncRangeUi();
+          }, 0);
+        });
+      }, 0);
     },
 
     isOpen: () => {
@@ -735,16 +851,114 @@ const trdDataCommonMap = (options) => {
       tracking.trackEvent("filters", "submit");
     },
 
-    onReset: () => {
+    onReset: (e) => {
       if (!settings?.filterFields?.length) return;
 
+      if (e && typeof e.preventDefault === "function") {
+        e.preventDefault();
+      }
+
+      filters.resetFilterInputs();
       const filterData = filters.getFilterFeatures(mapData);
       mapObj.getSource(settings.sourceId).setData({
         type: "FeatureCollection",
         features: filterData,
       });
-      document.querySelector("button.map-filters").classList.remove("applied");
+      document
+        .querySelector("button.map-filters")
+        .classList.remove("applied");
       tracking.trackEvent("filters", "reset");
+    },
+
+    resetFilterInputs: () => {
+      settings.filterFields.forEach((filterField) => {
+        if (filterField.fieldType === "multi-range") {
+          const minEl = document.getElementById(`${filterField.name}-min`);
+          const maxEl = document.getElementById(`${filterField.name}-max`);
+
+          if (minEl) {
+            minEl.value =
+              typeof filterField.defaultValue?.[0] !== "undefined"
+                ? filterField.defaultValue[0]
+                : filterField.minValue;
+          }
+
+          if (maxEl) {
+            maxEl.value =
+              typeof filterField.defaultValue?.[1] !== "undefined"
+                ? filterField.defaultValue[1]
+                : filterField.maxValue;
+          }
+
+          const syncRangeUi =
+            minEl && typeof minEl.__syncRangeUi === "function"
+              ? minEl.__syncRangeUi
+              : maxEl && typeof maxEl.__syncRangeUi === "function"
+                ? maxEl.__syncRangeUi
+                : null;
+
+          if (syncRangeUi) {
+            syncRangeUi();
+          }
+          return;
+        }
+
+        if (filterField.fieldType === "select") {
+          const selectEl = document.getElementById(filterField.name);
+          if (!selectEl) return;
+
+          if (typeof filterField.defaultValue !== "undefined") {
+            selectEl.value = filterField.defaultValue;
+          } else if (Array.isArray(filterField.options) && filterField.options.length) {
+            selectEl.value = filterField.options[0].value;
+          }
+          return;
+        }
+
+        const optionEls = document.querySelectorAll(
+          `input[name="${filterField.name}"]`
+        );
+
+        optionEls.forEach((inputEl) => {
+          if (filterField.fieldType === "radio") {
+            inputEl.checked = String(inputEl.value) === String(filterField.defaultValue);
+            return;
+          }
+
+          if (filterField.fieldType === "checkbox") {
+            if (Array.isArray(filterField.defaultValue)) {
+              inputEl.checked = filterField.defaultValue
+                .map((value) => String(value))
+                .includes(String(inputEl.value));
+            } else {
+              inputEl.checked = String(inputEl.value) === String(filterField.defaultValue);
+            }
+          }
+        });
+      });
+    },
+
+    normalizeMultiRangeValues: () => {
+      settings.filterFields
+        .filter((item) => item.fieldType === "multi-range")
+        .forEach((filterField) => {
+          const minEl = document.getElementById(`${filterField.name}-min`);
+          const maxEl = document.getElementById(`${filterField.name}-max`);
+
+          if (minEl && minEl.value === "") {
+            minEl.value =
+              typeof filterField.defaultValue?.[0] !== "undefined"
+                ? filterField.defaultValue[0]
+                : filterField.minValue;
+          }
+
+          if (maxEl && maxEl.value === "") {
+            maxEl.value =
+              typeof filterField.defaultValue?.[1] !== "undefined"
+                ? filterField.defaultValue[1]
+                : filterField.maxValue;
+          }
+        });
     },
 
     getFilterFeatures: (data) => {
@@ -760,7 +974,11 @@ const trdDataCommonMap = (options) => {
         filterData[key].push(value);
       });
 
-      let features = data && data.length ? data : mapData.features;
+      let features = Array.isArray(data)
+        ? data
+        : data && Array.isArray(data.features)
+          ? data.features
+          : mapData.features;
 
       for (const field in filterData) {
         if (!filterData[field].length) continue;
