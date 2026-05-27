@@ -12,20 +12,29 @@ let geojsonData;
 function parseCSV(text) {
   const lines = text.trim().split(/\r?\n/);
   const delimiter = lines[0].includes('\t') ? '\t' : ',';
-
   const headers = lines[0].split(delimiter).map(h => h.trim());
 
   return lines.slice(1).map(line => {
-    const cols = delimiter === '\t'
-      ? line.split('\t')
-      : line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
+    const cols = [];
+    let insideQuote = false;
+    let entry = '';
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      if (char === '"') {
+        insideQuote = !insideQuote;
+      } else if (char === delimiter && !insideQuote) {
+        cols.push(entry.trim());
+        entry = '';
+      } else {
+        entry += char;
+      }
+    }
+    cols.push(entry.trim());
 
     const row = {};
-
     headers.forEach((header, i) => {
-      row[header] = cols[i]?.replaceAll('"', '').trim();
+      row[header] = cols[i] || '';
     });
-
     return row;
   });
 }
