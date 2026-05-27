@@ -125,14 +125,18 @@ function renderBubbleLegend() {
 }
 
 Promise.all([
-  fetch('data/all_nabes.json').then(res => res.json()),
-  fetch('data/NYC_redev_neighborhoods.csv').then(res => res.text())
+  fetch('data/all_nabes.json').then(res => {
+    if (!res.ok) throw new Error('Failed to load neighborhoods data');
+    return res.json();
+  }),
+  fetch('data/NYC_redev_neighborhoods.csv').then(res => {
+    if (!res.ok) throw new Error('Failed to load redevelopment CSV data');
+    return res.text();
+  })
 ])
 .then(([rawNeighborhoods, csvText]) => {
   const csvRows = parseCSV(csvText);
   geojsonData = buildGeoJSON(rawNeighborhoods, csvRows);
-
-  console.log('Bubble features:', geojsonData.features.length, geojsonData.features);
 
   map.on('load', () => {
     map.addSource('neighborhoods', {
