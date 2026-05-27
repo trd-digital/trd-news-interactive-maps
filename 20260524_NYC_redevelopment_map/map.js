@@ -88,12 +88,16 @@ function buildGeoJSON(rawNeighborhoods, csvRows) {
 function getCentroid(geometry) {
   let coords = [];
 
-  if (geometry.type === 'Polygon') {
-    coords = geometry.coordinates[0];
+  if (geometry && geometry.type === 'Polygon' && geometry.coordinates) {
+    coords = geometry.coordinates[0] || [];
   }
 
-  if (geometry.type === 'MultiPolygon') {
+  if (geometry && geometry.type === 'MultiPolygon' && geometry.coordinates) {
     coords = geometry.coordinates.flat(2);
+  }
+
+  if (!coords || coords.length === 0) {
+    throw new Error('Invalid or empty coordinates');
   }
 
   const lng = coords.reduce((sum, c) => sum + c[0], 0) / coords.length;
