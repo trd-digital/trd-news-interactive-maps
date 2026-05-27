@@ -190,6 +190,14 @@ Promise.all([
     closeOnClick: false
   });
 
+    const escapeHTML = str => String(str).replace(/[&<>\"']/g, m => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '\"': '&quot;',
+    "'": '&#039;'
+  })[m]);
+
   map.on('mousemove', 'redevelopment-bubbles', e => {
     map.getCanvas().style.cursor = 'pointer';
 
@@ -199,7 +207,7 @@ Promise.all([
       .setLngLat(e.lngLat)
       .setHTML(`
         <div class="tooltip">
-          <strong>${props.neighborhood}</strong><br/>
+          <strong>${escapeHTML(props.neighborhood)}</strong><br/>
           Added dwelling units: <strong>${Number(props.added_units).toLocaleString()}</strong><br/>
           Permits: <strong>${Number(props.permits).toLocaleString()}</strong><br/>
           Dwellings per permit: <strong>${props.units_per_permit}</strong>
