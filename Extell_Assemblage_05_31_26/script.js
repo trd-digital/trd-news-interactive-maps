@@ -325,6 +325,7 @@ function getStepIdFromHash() {
 
 function setupStoryEvents() {
   storyEl.addEventListener("click", async (event) => {
+    if (!(event.target instanceof Element)) return;
     const shareLink = event.target.closest(".step-share");
     if (!shareLink) return;
 
@@ -332,15 +333,27 @@ function setupStoryEvents() {
     const stepId = shareLink.dataset.stepId;
     if (!stepId) return;
 
-    const url = `${window.location.origin}${window.location.pathname}#step=${encodeURIComponent(stepId)}`;
-    try {
-      await navigator.clipboard.writeText(url);
+    const hashHref = shareLink.getAttribute("href") || `#step=${encodeURIComponent(stepId)}`;
+    const url = new URL(hashHref, window.location.href).href;
+
+    const showCopied = () => {
       shareLink.textContent = "Copied";
       setTimeout(() => {
         shareLink.textContent = "Share this step";
       }, 900);
+    };
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+        showCopied();
+        return;
+      }
+      throw new Error("Clipboard API unavailable");
     } catch {
+      // Fallback: set hash and expose the URL for manual copy.
       window.location.hash = `step=${encodeURIComponent(stepId)}`;
+      window.prompt("Copy this link:", url);
     }
   });
 
