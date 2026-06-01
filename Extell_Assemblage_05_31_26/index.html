@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Extell Assemblage Scrollytelling Map</title>
+    <meta
+      name="description"
+      content="Scrollytelling map of Extell property acquisitions with purchase amounts."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-bg" aria-hidden="true"></div>
+
+    <header class="hero">
+      <h1>Extell's Acquisition Trail</h1>
+      <p>
+        Scroll to step through each acquisition and see where it happened and how much was paid.
+      </p>
+    </header>
+
+    <main class="layout">
+      <section class="map-wrap" aria-label="Map section">
+        <div id="map" role="application" aria-label="Map of Extell acquisitions"></div>
+        <div class="map-overlay" id="mapOverlay">
+          <p class="overlay-label">TOTAL PURCHASE VOLUME</p>
+          <p class="overlay-value" id="totalSpend">$0</p>
+          <p class="overlay-sub" id="progressLabel">Loading data...</p>
+          <p class="overlay-label overlay-spaced">LARGEST DEAL SO FAR</p>
+          <p class="overlay-sub overlay-strong" id="largestSoFar">$0</p>
+          <p class="overlay-sub" id="largestDealLabel">Waiting for first step...</p>
+        </div>
+        <div class="map-legend" aria-label="Map legend">
+          <p class="legend-title">Dot Colors</p>
+          <p class="legend-row"><span class="legend-swatch land"></span>Land</p>
+          <p class="legend-row"><span class="legend-swatch office"></span>Office</p>
+          <p class="legend-row"><span class="legend-swatch other"></span>Other</p>
+          <p class="legend-row"><span class="legend-swatch multifamily"></span>Multi-Family</p>
+          <p class="legend-row"><span class="legend-swatch fallback"></span>Uncategorized</p>
+        </div>
+      </section>
+
+      <section class="story-wrap" aria-label="Story">
+        <section class="story" id="story" aria-label="Story steps">
+        </section>
+      </section>
+    </main>
+
+    <template id="stepTemplate">
+      <article class="step" data-step="record">
+        <p class="step-kicker"></p>
+        <h3 class="step-title"></h3>
+        <p class="step-meta"></p>
+        <p class="step-amount"></p>
+        <details class="step-details">
+          <summary>More detail</summary>
+          <p class="step-detail"></p>
+        </details>
+        <a class="step-link" target="_blank" rel="noopener noreferrer">Source document</a>
+        <a class="step-share" href="#">Share this step</a>
+      </article>
+    </template>
+
+    <div class="token-warning" id="tokenWarning" hidden>
+      <h2>Mapbox token required</h2>
+      <p>
+        Open script.js and set MAPBOX_ACCESS_TOKEN so the interactive map can load.
+      </p>
+    </div>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
