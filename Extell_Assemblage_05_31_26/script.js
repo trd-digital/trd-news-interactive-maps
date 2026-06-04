@@ -8,36 +8,21 @@ const progressLabelEl = document.getElementById("progressLabel");
 const largestSoFarEl = document.getElementById("largestSoFar");
 const largestDealLabelEl = document.getElementById("largestDealLabel");
 const tokenWarningEl = document.getElementById("tokenWarning");
+const mapLegendEl = document.getElementById("mapLegend");
 
-const CHAPTERS = [
-  {
-    id: "chapter-2018-2019",
-    label: "EARLY POSITIONING",
-    title: "2018 to 2019: Building the Footprint",
-    description:
-      "Early deals cluster around retail-heavy corridors and Upper East Side parcels, establishing optionality.",
-    years: [2018, 2019],
-    camera: { center: [-73.9797, 40.7616], zoom: 11.8, pitch: 24, bearing: -8 },
-  },
-  {
-    id: "chapter-2020-2023",
-    label: "SITE CONSOLIDATION",
-    title: "2020 to 2023: Strategic Assembles",
-    description:
-      "Fewer but more strategic purchases emphasize multi-parcel potential in key Manhattan submarkets.",
-    years: [2020, 2021, 2022, 2023],
-    camera: { center: [-73.975, 40.768], zoom: 11.4, pitch: 22, bearing: -12 },
-  },
-  {
-    id: "chapter-2024-2026",
-    label: "ACCELERATION",
-    title: "2024 to 2026: Bigger Checks, Faster Pace",
-    description:
-      "Acquisition velocity and dollar volume ramp up sharply, concentrated in high-value Midtown and Park Avenue targets.",
-    years: [2024, 2025, 2026],
-    camera: { center: [-73.9736, 40.761], zoom: 12, pitch: 25, bearing: -15 },
-  },
-];
+const GROUP_COLORS = {
+  Prospect: "#d08f22",
+  Land: "#124784",
+  Office: "#148a64",
+  Other: "#bf3f2f",
+  "Multi-Family Dwelling": "#6b4ea2",
+};
+
+const GROUP_LABELS = {
+  "Multi-Family Dwelling": "Multi-Family",
+};
+
+const GROUP_ORDER = ["Prospect", "Land", "Office", "Other", "Multi-Family Dwelling"];
 
 const STATE = {
   map: null,
@@ -79,6 +64,61 @@ function formatDate(dateText) {
   }).format(d);
 }
 
+function formatHeadlineFromUrl(urlText) {
+  if (!urlText) return null;
+
+  try {
+    const url = new URL(urlText);
+    const segments = url.pathname.split("/").filter(Boolean);
+    const slug = segments[segments.length - 1] || "";
+    if (!slug) return null;
+
+    return slug
+      .replace(/[-_]+/g, " ")
+      .replace(/\b\w/g, (char) => char.toUpperCase())
+      .trim();
+  } catch {
+    return null;
+  }
+}
+
+function getPropertyGroupColor(group) {
+  return GROUP_COLORS[group] || "#7f8ba0";
+}
+
+function getPropertyGroupLabel(group) {
+  return GROUP_LABELS[group] || group || "Uncategorized";
+}
+
+function buildLegend(features) {
+  if (!mapLegendEl) return;
+
+  mapLegendEl.querySelectorAll(".legend-row").forEach((row) => row.remove());
+  const groups = [...new Set(features.map((feature) => feature.propertyGroup || "Uncategorized"))];
+
+  groups.sort((a, b) => {
+    const indexA = GROUP_ORDER.indexOf(a);
+    const indexB = GROUP_ORDER.indexOf(b);
+    const rankA = indexA === -1 ? Number.MAX_SAFE_INTEGER : indexA;
+    const rankB = indexB === -1 ? Number.MAX_SAFE_INTEGER : indexB;
+    if (rankA !== rankB) return rankA - rankB;
+    return getPropertyGroupLabel(a).localeCompare(getPropertyGroupLabel(b));
+  });
+
+  groups.forEach((group) => {
+    const row = document.createElement("p");
+    row.className = "legend-row";
+
+    const swatch = document.createElement("span");
+    swatch.className = "legend-swatch";
+    swatch.style.backgroundColor = getPropertyGroupColor(group);
+
+    row.appendChild(swatch);
+    row.append(document.createTextNode(getPropertyGroupLabel(group)));
+    mapLegendEl.appendChild(row);
+  });
+}
+
 function normalizeFeatures(rawFeatures) {
   return rawFeatures
     .filter((f) => f && f.geometry && Array.isArray(f.geometry.coordinates))
@@ -86,29 +126,38 @@ function normalizeFeatures(rawFeatures) {
       const props = feature.properties || {};
       const recordedDate = props.recorded_date || "";
       const recordedDateValue = parseDate(recordedDate)?.getTime() || 0;
-      const year = parseDate(recordedDate)?.getFullYear() || null;
-      const chapter = CHAPTERS.find((item) => year && item.years.includes(year)) || CHAPTERS[0];
+      const recordStatus = (props.record_status || "").toLowerCase() === "prospect"
+        ? "prospect"
+        : "confirmed";
       return {
         id: props.source_doc_id || `record-${idx}`,
         title: props.address || "Address unavailable",
-        amountText: props.doc_amount || "$0",
+        storyUrl: props.Clip_Notes || "",
+        storyTitle: formatHeadlineFromUrl(props.Clip_Notes || "") || "",
+        amountText: props.doc_amount || "Amount undisclosed",
         amountValue: parseAmount(props.doc_amount),
         recordedDate,
         recordedDateValue,
-        year,
+        recordStatus,
         borough: props.borough || "",
         neighborhood: props.neighborhood || "",
         classification: props.classification || "",
-        propertyGroup: props.property_group || "Other",
+        propertyGroup: props.property_group || (recordStatus === "prospect" ? "Prospect" : "Other"),
         docType: props.doc_type || "",
         sourceUrl: props.link_url || "",
         clipNotes: props.Clip_Notes || "",
-        sourceConfidence: props.Clip_Notes ? "Record + reporting" : "Record only",
-        chapterId: chapter.id,
         coordinates: feature.geometry.coordinates,
       };
     })
-    .sort((a, b) => a.recordedDateValue - b.recordedDateValue);
+    .sort((a, b) => {
+      if (a.recordStatus !== b.recordStatus) {
+        return a.recordStatus === "confirmed" ? -1 : 1;
+      }
+      if (a.recordStatus === "prospect") {
+        return a.title.localeCompare(b.title);
+      }
+      return a.recordedDateValue - b.recordedDateValue;
+    });
 }
 
 function buildSteps(features) {
@@ -135,23 +184,40 @@ function buildStoryCards(steps) {
 
     article.dataset.stepId = step.id;
 
-    fragment.querySelector(".step-kicker").textContent = `Deal ${step.statsIndex + 1} of ${STATE.features.length}`;
-    fragment.querySelector(".step-title").textContent = feature.title;
+    fragment.querySelector(".step-kicker").textContent =
+      feature.recordStatus === "prospect"
+        ? "Future prospect"
+        : `Deal ${step.statsIndex + 1} of ${STATE.features.length}`;
+
+    const titleEl = fragment.querySelector(".step-title");
+    if (feature.storyUrl) {
+      const storyLink = document.createElement("a");
+      storyLink.href = feature.storyUrl;
+      storyLink.target = "_blank";
+      storyLink.rel = "noopener noreferrer";
+      storyLink.className = "step-title-link";
+      storyLink.textContent = feature.storyTitle || "Linked story";
+      titleEl.replaceChildren(storyLink);
+    } else {
+      titleEl.textContent = feature.title;
+    }
 
     const metaParts = [
-      formatDate(feature.recordedDate),
+      feature.recordStatus === "prospect" ? "Prospect" : formatDate(feature.recordedDate),
       feature.borough,
       feature.neighborhood,
       feature.docType,
     ].filter(Boolean);
     fragment.querySelector(".step-meta").textContent = metaParts.join(" • ");
 
-    fragment.querySelector(".step-amount").textContent = `Paid: ${feature.amountText}`;
+    fragment.querySelector(".step-amount").textContent =
+      feature.recordStatus === "prospect" ? "Status: Prospect" : `Paid: ${feature.amountText}`;
 
     const detailParts = [
+      `Address: ${feature.title}`,
       `Property group: ${feature.propertyGroup}`,
       feature.classification,
-      feature.clipNotes ? "Includes linked reporting context" : "No linked external reporting",
+      feature.sourceUrl ? "Includes source document" : "No source document link",
     ]
       .filter(Boolean)
       .join(" • ");
@@ -163,7 +229,6 @@ function buildStoryCards(steps) {
     } else {
       link.remove();
     }
-
 
     storyEl.appendChild(fragment);
   });
@@ -178,8 +243,12 @@ function getVisibleFeatures(statsIndex) {
   return STATE.features.slice(0, statsIndex + 1);
 }
 
+function getVisibleConfirmedFeatures(statsIndex) {
+  return getVisibleFeatures(statsIndex).filter((feature) => feature.recordStatus === "confirmed");
+}
+
 function updateRunningMetrics(statsIndex) {
-  const visibleFeatures = getVisibleFeatures(statsIndex);
+  const visibleFeatures = getVisibleConfirmedFeatures(statsIndex);
   const runningTotal = visibleFeatures.reduce((sum, f) => sum + f.amountValue, 0);
 
   totalSpendEl.textContent = formatCurrency(runningTotal);
@@ -256,7 +325,11 @@ function activateStep(stepId, options = {}) {
   updateRunningMetrics(step.statsIndex);
 
   const feature = step.feature;
-  progressLabelEl.textContent = `${step.statsIndex + 1} of ${STATE.features.length}: ${feature.amountText} at ${feature.title}`;
+  if (feature.recordStatus === "prospect") {
+    progressLabelEl.textContent = `Prospect: ${feature.title}`;
+  } else {
+    progressLabelEl.textContent = `${step.statsIndex + 1} of ${STATE.features.length}: ${feature.amountText} at ${feature.title}`;
+  }
   flyToRecord(feature);
   updateActivePoint(feature);
 
@@ -385,14 +458,16 @@ function initMap() {
         "circle-color": [
           "match",
           ["get", "propertyGroup"],
+          "Prospect",
+          GROUP_COLORS.Prospect,
           "Land",
-          "#124784",
+          GROUP_COLORS.Land,
           "Office",
-          "#148a64",
+          GROUP_COLORS.Office,
           "Other",
-          "#bf3f2f",
+          GROUP_COLORS.Other,
           "Multi-Family Dwelling",
-          "#6b4ea2",
+          GROUP_COLORS["Multi-Family Dwelling"],
           "#7f8ba0",
         ],
         "circle-stroke-color": "#ffffff",
@@ -474,6 +549,7 @@ async function init() {
   STATE.features = features;
   STATE.steps = buildSteps(features);
 
+  buildLegend(STATE.features);
   buildStoryCards(STATE.steps);
   setupScrollObserver();
   setupStoryEvents();
