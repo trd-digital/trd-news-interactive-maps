@@ -1,17 +1,11 @@
 const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
 const GEOJSON_PATH = "Extell_Assemblage_geocoded.geojson";
+const PARCELS_PATH = "Extell_Assemblage_parcels.geojson";
 
 const storyEl = document.getElementById("story");
 const stepTemplate = document.getElementById("stepTemplate");
-const totalSpendEl = document.getElementById("totalSpend");
-const progressLabelEl = document.getElementById("progressLabel");
-const largestSoFarEl = document.getElementById("largestSoFar");
-const largestDealLabelEl = document.getElementById("largestDealLabel");
 const tokenWarningEl = document.getElementById("tokenWarning");
 const mapLegendEl = document.getElementById("mapLegend");
-const mapOverlayEl = document.getElementById("mapOverlay");
-const overlayToggleEl = document.getElementById("overlayToggle");
-const overlaySummaryEl = document.getElementById("overlaySummary");
 const legendToggleEl = document.getElementById("legendToggle");
 
 const MOBILE_MEDIA = window.matchMedia("(max-width: 820px)");
@@ -33,13 +27,22 @@ const GROUP_LABELS = {
 
 const GROUP_ORDER = ["Prospect", "Land", "Office", "Other", "Multi-Family Dwelling"];
 
+const GROUP_FALLBACK_COLOR = "#7f8ba0";
+
+function groupColorMatchExpression(getter) {
+  const stops = [];
+  Object.entries(GROUP_COLORS).forEach(([group, color]) => {
+    stops.push(group, color);
+  });
+  return ["match", getter, ...stops, GROUP_FALLBACK_COLOR];
+}
+
 const STATE = {
   map: null,
   mapLoaded: false,
   features: [],
   steps: [],
   activeStepId: null,
-  observer: null,
 };
 
 function parseAmount(amountText) {
@@ -92,7 +95,7 @@ function formatHeadlineFromUrl(urlText) {
 }
 
 function getPropertyGroupColor(group) {
-  return GROUP_COLORS[group] || "#7f8ba0";
+  return GROUP_COLORS[group] || GROUP_FALLBACK_COLOR;
 }
 
 function getPropertyGroupLabel(group) {
@@ -130,6 +133,7 @@ function buildLegend(features) {
 }
 
 function normalizeFeatures(rawFeatures) {
+  const idCounts = {};
   return rawFeatures
     .filter((f) => f && f.geometry && Array.isArray(f.geometry.coordinates))
     .map((feature, idx) => {
@@ -139,10 +143,13 @@ function normalizeFeatures(rawFeatures) {
       const recordStatus = (props.record_status || "").toLowerCase() === "prospect"
         ? "prospect"
         : "confirmed";
+      const baseId = props.source_doc_id || `record-${idx}`;
+      idCounts[baseId] = (idCounts[baseId] || 0) + 1;
+      const id = idCounts[baseId] > 1 ? `${baseId}-${idCounts[baseId]}` : baseId;
       return {
-        id: props.source_doc_id || `record-${idx}`,
-        title: props.address || "Address unavailable",
-        storyUrl: props.Clip_Notes || "",
+        id,
+        sourceDocId: baseId,
+        title: props.address || "Address unavailable",        storyUrl: props.Clip_Notes || "",
         storyTitle: formatHeadlineFromUrl(props.Clip_Notes || "") || "",
         amountText: props.doc_amount || "Amount undisclosed",
         amountValue: parseAmount(props.doc_amount),
@@ -205,16 +212,21 @@ function buildStoryCards(steps) {
         : `Deal ${step.statsIndex + 1} of ${STATE.features.length}`;
 
     const titleEl = fragment.querySelector(".step-title");
+    const isFutureProspect =
+      (feature.sourceDocId || "").toLowerCase() === "future prospect";
+    const displayTitle = isFutureProspect
+      ? "Future Prospect"
+      : feature.storyTitle || "Linked story";
     if (feature.storyUrl) {
       const storyLink = document.createElement("a");
-      storyLink.href = feature.storyUrl;
+      storyLink.dataset.href = feature.storyUrl;
       storyLink.target = "_blank";
       storyLink.rel = "noopener noreferrer";
       storyLink.className = "step-title-link";
-      storyLink.textContent = feature.storyTitle || "Linked story";
+      storyLink.textContent = displayTitle;
       titleEl.replaceChildren(storyLink);
     } else {
-      titleEl.textContent = feature.title;
+      titleEl.textContent = isFutureProspect ? "Future Prospect" : feature.title;
     }
 
     const metaParts = [
@@ -240,10 +252,16 @@ function buildStoryCards(steps) {
 
     const link = fragment.querySelector(".step-link");
     if (feature.sourceUrl) {
-      link.href = feature.sourceUrl;
+      link.dataset.href = feature.sourceUrl;
     } else {
       link.remove();
     }
+
+    article.addEventListener("click", (event) => {
+      // Let internal links/buttons/disclosure widgets keep their native behavior.
+      if (event.target.closest("a, button, summary")) return;
+      activateStep(step.id, { scrollIntoView: true });
+    });
 
     storyEl.appendChild(fragment);
   });
@@ -262,39 +280,13 @@ function getVisibleConfirmedFeatures(statsIndex) {
   return getVisibleFeatures(statsIndex).filter((feature) => feature.recordStatus === "confirmed");
 }
 
-function updateRunningMetrics(statsIndex) {
-  const visibleFeatures = getVisibleConfirmedFeatures(statsIndex);
-  const runningTotal = visibleFeatures.reduce((sum, f) => sum + f.amountValue, 0);
-
-  totalSpendEl.textContent = formatCurrency(runningTotal);
-
-  if (!visibleFeatures.length) {
-    largestSoFarEl.textContent = "$0";
-    largestDealLabelEl.textContent = "Waiting for first step...";
-  } else {
-    const largest = visibleFeatures.reduce((max, feature) =>
-      feature.amountValue > max.amountValue ? feature : max
-    );
-    largestSoFarEl.textContent = formatCurrency(largest.amountValue);
-    largestDealLabelEl.textContent = largest.title;
-  }
-
-  if (overlaySummaryEl) {
-    const totalConfirmed = STATE.features.filter((f) => f.recordStatus === "confirmed").length;
-    const dealNumber = Math.min(visibleFeatures.length, totalConfirmed);
-    overlaySummaryEl.textContent = totalConfirmed
-      ? `${formatCurrency(runningTotal)} \u00b7 Deal ${dealNumber}/${totalConfirmed}`
-      : formatCurrency(runningTotal);
-  }
-}
-
 function flyToRecord(feature) {
   if (!STATE.map) return;
 
   const mobile = isMobileViewport();
   const cameraOptions = {
     center: feature.coordinates,
-    zoom: mobile ? 13.8 : 14.8,
+    zoom: mobile ? 16.4 : 17,
     pitch: mobile ? 0 : 38,
     bearing: mobile ? 0 : -15,
   };
@@ -306,8 +298,8 @@ function flyToRecord(feature) {
 
   STATE.map.flyTo({
     ...cameraOptions,
-    speed: mobile ? 0.9 : 0.72,
-    curve: 1.15,
+    speed: mobile ? 0.75 : 0.6,
+    curve: 1.3,
     essential: true,
   });
 }
@@ -327,6 +319,7 @@ function updateActivePoint(feature) {
               title: feature.title,
               amount: feature.amountText,
               date: formatDate(feature.recordedDate),
+              propertyGroup: feature.propertyGroup,
             },
             geometry: {
               type: "Point",
@@ -336,6 +329,20 @@ function updateActivePoint(feature) {
         ]
       : [],
   });
+}
+
+function updateActiveParcel(feature) {
+  if (!STATE.map || !STATE.mapLoaded) return;
+  const sourceDocId = feature && feature.sourceDocId;
+  const filter = sourceDocId
+    ? ["==", ["get", "source_doc_id"], sourceDocId]
+    : ["==", ["get", "source_doc_id"], "__none__"];
+  if (STATE.map.getLayer("parcels-fill-active")) {
+    STATE.map.setFilter("parcels-fill-active", filter);
+  }
+  if (STATE.map.getLayer("parcels-outline-active")) {
+    STATE.map.setFilter("parcels-outline-active", filter);
+  }
 }
 
 function activateStep(stepId, options = {}) {
@@ -350,6 +357,17 @@ function activateStep(stepId, options = {}) {
   document.querySelectorAll(".step").forEach((el) => {
     const isActive = el.dataset.stepId === stepId;
     el.classList.toggle("active", isActive);
+    el.querySelectorAll("a[data-href]").forEach((a) => {
+      if (isActive) {
+        a.setAttribute("href", a.dataset.href);
+        a.removeAttribute("tabindex");
+        a.removeAttribute("aria-disabled");
+      } else {
+        a.removeAttribute("href");
+        a.setAttribute("tabindex", "-1");
+        a.setAttribute("aria-disabled", "true");
+      }
+    });
     if (isActive && scrollIntoView) {
       el.scrollIntoView({
         behavior: prefersReducedMotion() ? "auto" : "smooth",
@@ -358,16 +376,10 @@ function activateStep(stepId, options = {}) {
     }
   });
 
-  updateRunningMetrics(step.statsIndex);
-
   const feature = step.feature;
-  if (feature.recordStatus === "prospect") {
-    progressLabelEl.textContent = `Prospect: ${feature.title}`;
-  } else {
-    progressLabelEl.textContent = `${step.statsIndex + 1} of ${STATE.features.length}: ${feature.amountText} at ${feature.title}`;
-  }
   flyToRecord(feature);
   updateActivePoint(feature);
+  updateActiveParcel(feature);
 
   if (updateHash) {
     history.replaceState(null, "", `#step=${encodeURIComponent(step.id)}`);
@@ -386,42 +398,6 @@ function syncMobileMapHeightVar() {
     document.documentElement.style.setProperty("--map-height", `${height}px`);
   }
   return height;
-}
-
-function setupScrollObserver() {
-  if (STATE.observer) {
-    STATE.observer.disconnect();
-  }
-
-  const mobile = isMobileViewport();
-  let rootMargin;
-  if (mobile) {
-    const mapHeight = syncMobileMapHeightVar();
-    const viewportH = window.innerHeight || 1;
-    const topPct = Math.max(30, Math.min(85, Math.round((mapHeight / viewportH) * 100)));
-    rootMargin = `-${topPct}% 0px -10% 0px`;
-  } else {
-    rootMargin = "-18% 0px -55% 0px";
-  }
-  const options = {
-    root: null,
-    rootMargin,
-    threshold: 0.01,
-  };
-
-  STATE.observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      const stepId = entry.target.dataset.stepId;
-      if (stepId) {
-        activateStep(stepId);
-      }
-    });
-  }, options);
-
-  document.querySelectorAll(".step[data-step-id]").forEach((stepEl) => {
-    STATE.observer.observe(stepEl);
-  });
 }
 
 function updateAllPointsSource() {
@@ -464,15 +440,11 @@ function setupStoryEvents() {
 }
 
 function setupOverlayToggles() {
-  const bindToggle = (toggleEl, containerEl) => {
-    if (!toggleEl || !containerEl) return;
-    toggleEl.addEventListener("click", () => {
-      const open = containerEl.classList.toggle("is-open");
-      toggleEl.setAttribute("aria-expanded", String(open));
-    });
-  };
-  bindToggle(overlayToggleEl, mapOverlayEl);
-  bindToggle(legendToggleEl, mapLegendEl);
+  if (!legendToggleEl || !mapLegendEl) return;
+  legendToggleEl.addEventListener("click", () => {
+    const open = mapLegendEl.classList.toggle("is-open");
+    legendToggleEl.setAttribute("aria-expanded", String(open));
+  });
 }
 
 function setupResponsiveRefresh() {
@@ -480,7 +452,7 @@ function setupResponsiveRefresh() {
   const refresh = () => {
     pending = null;
     syncMobileMapHeightVar();
-    setupScrollObserver();
+    if (STATE.map) STATE.map.resize();
   };
   const schedule = () => {
     if (pending) return;
@@ -497,7 +469,6 @@ function setupResponsiveRefresh() {
 
 function showTokenWarning() {
   tokenWarningEl.hidden = false;
-  progressLabelEl.textContent = "Map unavailable until token is set";
 }
 
 function initMap() {
@@ -530,6 +501,55 @@ function initMap() {
   map.on("load", () => {
     STATE.mapLoaded = true;
 
+    map.addSource("parcels", {
+      type: "geojson",
+      data: STATE.parcels || { type: "FeatureCollection", features: [] },
+    });
+
+    map.addLayer({
+      id: "parcels-fill",
+      type: "fill",
+      source: "parcels",
+      paint: {
+        "fill-color": groupColorMatchExpression(["get", "property_group"]),
+        "fill-opacity": 0.2,
+      },
+    });
+
+    map.addLayer({
+      id: "parcels-outline",
+      type: "line",
+      source: "parcels",
+      paint: {
+        "line-color": groupColorMatchExpression(["get", "property_group"]),
+        "line-width": 1,
+        "line-opacity": 0.6,
+      },
+    });
+
+    map.addLayer({
+      id: "parcels-fill-active",
+      type: "fill",
+      source: "parcels",
+      filter: ["==", ["get", "source_doc_id"], "__none__"],
+      paint: {
+        "fill-color": groupColorMatchExpression(["get", "property_group"]),
+        "fill-opacity": 0.45,
+      },
+    });
+
+    map.addLayer({
+      id: "parcels-outline-active",
+      type: "line",
+      source: "parcels",
+      filter: ["==", ["get", "source_doc_id"], "__none__"],
+      paint: {
+        "line-color": groupColorMatchExpression(["get", "property_group"]),
+        "line-width": 2.4,
+        "line-opacity": 0.95,
+      },
+    });
+
     map.addSource("all-points", {
       type: "geojson",
       data: {
@@ -558,21 +578,7 @@ function initMap() {
           1000000000,
           18,
         ],
-        "circle-color": [
-          "match",
-          ["get", "propertyGroup"],
-          "Prospect",
-          GROUP_COLORS.Prospect,
-          "Land",
-          GROUP_COLORS.Land,
-          "Office",
-          GROUP_COLORS.Office,
-          "Other",
-          GROUP_COLORS.Other,
-          "Multi-Family Dwelling",
-          GROUP_COLORS["Multi-Family Dwelling"],
-          "#7f8ba0",
-        ],
+        "circle-color": groupColorMatchExpression(["get", "propertyGroup"]),
         "circle-stroke-color": "#ffffff",
         "circle-stroke-width": 1.3,
         "circle-opacity": 0.5,
@@ -592,8 +598,8 @@ function initMap() {
       type: "circle",
       source: "active-point",
       paint: {
-        "circle-radius": 19,
-        "circle-color": "#bf3f2f",
+        "circle-radius": 22,
+        "circle-color": groupColorMatchExpression(["get", "propertyGroup"]),
         "circle-opacity": 0.22,
       },
     });
@@ -603,10 +609,10 @@ function initMap() {
       type: "circle",
       source: "active-point",
       paint: {
-        "circle-radius": 8,
-        "circle-color": "#bf3f2f",
-        "circle-stroke-color": "#fff6f0",
-        "circle-stroke-width": 2.5,
+        "circle-radius": 10,
+        "circle-color": groupColorMatchExpression(["get", "propertyGroup"]),
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-width": 3,
       },
     });
 
@@ -614,6 +620,12 @@ function initMap() {
     if (STATE.activeStepId) {
       activateStep(STATE.activeStepId, { updateHash: false, force: true });
     }
+
+    // Belt-and-suspenders: if the container's height settled after Mapbox
+    // measured it (e.g. svh recalculation, late font load), force a resize
+    // so the canvas fills the visible map area.
+    map.resize();
+    requestAnimationFrame(() => map.resize());
 
     if (mobile) {
       const activateFromMapFeature = (mapFeature) => {
@@ -650,36 +662,47 @@ async function init() {
     }
     data = await response.json();
   } catch (err) {
-    progressLabelEl.textContent = "Could not load GeoJSON. Serve this folder with a local web server.";
-    console.error(err);
+    console.error("Could not load GeoJSON. Serve this folder with a local web server.", err);
     return;
   }
 
   const rawFeatures = Array.isArray(data.features) ? data.features : [];
   const features = normalizeFeatures(rawFeatures);
   if (!features.length) {
-    progressLabelEl.textContent = "No valid map points found in GeoJSON.";
+    console.error("No valid map points found in GeoJSON.");
     return;
   }
 
+  let parcelsData = { type: "FeatureCollection", features: [] };
+  try {
+    const parcelsResponse = await fetch(PARCELS_PATH);
+    if (parcelsResponse.ok) {
+      parcelsData = await parcelsResponse.json();
+    }
+  } catch (err) {
+    console.warn("Parcel overlay unavailable", err);
+  }
+
   STATE.features = features;
+  STATE.parcels = parcelsData;
   STATE.steps = buildSteps(features);
 
   buildLegend(STATE.features);
   buildStoryCards(STATE.steps);
-  setupScrollObserver();
   setupStoryEvents();
   setupOverlayToggles();
   setupResponsiveRefresh();
+  syncMobileMapHeightVar();
 
   if (!STATE.steps.length) {
-    progressLabelEl.textContent = "No steps available to render.";
+    console.error("No steps available to render.");
     return;
   }
 
-  const hashStepId = getStepIdFromHash();
-  const targetStepId = hashStepId && getStepById(hashStepId) ? hashStepId : STATE.steps[0].id;
-  activateStep(targetStepId, { updateHash: !hashStepId });
+  if (window.location.hash) {
+    history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
+  activateStep(STATE.steps[0].id, { updateHash: false });
 
   initMap();
 }
