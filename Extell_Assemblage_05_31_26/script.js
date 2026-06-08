@@ -132,6 +132,21 @@ function buildLegend(features) {
   });
 }
 
+function formatAddress(rawAddress) {
+  if (!rawAddress) return "";
+  // Strip a trailing city/state suffix (", NEW YORK, NY", ", NY", etc.) and
+  // title-case all-caps addresses so cards read like prose rather than ACRIS labels.
+  let cleaned = String(rawAddress)
+    .replace(/,\s*new york\s*,\s*ny\s*$/i, "")
+    .replace(/,\s*new york\s*$/i, "")
+    .replace(/,\s*ny\s*$/i, "")
+    .trim();
+  if (cleaned === cleaned.toUpperCase()) {
+    cleaned = cleaned.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+  return cleaned;
+}
+
 function normalizeFeatures(rawFeatures) {
   const idCounts = {};
   return rawFeatures
@@ -140,16 +155,18 @@ function normalizeFeatures(rawFeatures) {
       const props = feature.properties || {};
       const recordedDate = props.recorded_date || "";
       const recordedDateValue = parseDate(recordedDate)?.getTime() || 0;
-      const recordStatus = (props.record_status || "").toLowerCase() === "prospect"
-        ? "prospect"
-        : "confirmed";
+      const recordStatus =
+        (props.record_status || "").toLowerCase() === "prospect" ||
+        (props.source_doc_id || "").toLowerCase() === "future prospect"
+          ? "prospect"
+          : "confirmed";
       const baseId = props.source_doc_id || `record-${idx}`;
       idCounts[baseId] = (idCounts[baseId] || 0) + 1;
       const id = idCounts[baseId] > 1 ? `${baseId}-${idCounts[baseId]}` : baseId;
       return {
         id,
         sourceDocId: baseId,
-        title: props.address || "Address unavailable",        storyUrl: props.Clip_Notes || "",
+        title: formatAddress(props.address) || "Address unavailable",        storyUrl: props.Clip_Notes || "",
         storyTitle: formatHeadlineFromUrl(props.Clip_Notes || "") || "",
         amountText: props.doc_amount || "Amount undisclosed",
         amountValue: parseAmount(props.doc_amount),
@@ -212,42 +229,28 @@ function buildStoryCards(steps) {
         : `Deal ${step.statsIndex + 1} of ${STATE.features.length}`;
 
     const titleEl = fragment.querySelector(".step-title");
-    const isFutureProspect =
-      (feature.sourceDocId || "").toLowerCase() === "future prospect";
-    const displayTitle = isFutureProspect
-      ? "Future Prospect"
-      : feature.storyTitle || "Linked story";
+    const addressTitle = feature.title;
     if (feature.storyUrl) {
       const storyLink = document.createElement("a");
       storyLink.dataset.href = feature.storyUrl;
       storyLink.target = "_blank";
       storyLink.rel = "noopener noreferrer";
       storyLink.className = "step-title-link";
-      storyLink.textContent = displayTitle;
+      storyLink.textContent = addressTitle;
       titleEl.replaceChildren(storyLink);
     } else {
-      titleEl.textContent = isFutureProspect ? "Future Prospect" : feature.title;
+      titleEl.textContent = addressTitle;
     }
 
-    const metaParts = [
-      feature.recordStatus === "prospect" ? "Prospect" : formatDate(feature.recordedDate),
-      feature.borough,
-      feature.neighborhood,
-    ].filter(Boolean);
-    fragment.querySelector(".step-meta").textContent = metaParts.join(" • ");
+    fragment.querySelector(".step-meta").textContent =
+      feature.recordStatus === "prospect"
+        ? "Future prospect, date unknown"
+        : formatDate(feature.recordedDate);
 
     fragment.querySelector(".step-amount").textContent =
-      feature.recordStatus === "prospect" ? "Status: Prospect" : `Paid: ${feature.amountText}`;
-
-    const detailParts = [
-      `Address: ${feature.title}`,
-      `Property group: ${feature.propertyGroup}`,
-      feature.classification,
-      feature.sourceUrl ? "Includes source document" : "No source document link",
-    ]
-      .filter(Boolean)
-      .join(" • ");
-    fragment.querySelector(".step-detail").textContent = detailParts || "Acquisition record";
+      feature.recordStatus === "prospect"
+        ? "Price: Undisclosed"
+        : `Price: ${feature.amountText}`;
 
     const link = fragment.querySelector(".step-link");
     if (feature.sourceUrl) {
@@ -257,8 +260,9 @@ function buildStoryCards(steps) {
     }
 
     article.addEventListener("click", (event) => {
-      // Let internal links/buttons/disclosure widgets keep their native behavior.
-      if (event.target.closest("a, button, summary")) return;
+      // Let active, real links keep their native behavior so users can
+      // open the source document or story.
+      if (event.target.closest("a, button")) return;
       activateStep(step.id, { scrollIntoView: true });
     });
 
@@ -483,7 +487,7 @@ function initMap() {
     pitch: mobile ? 0 : 34,
     bearing: mobile ? 0 : -15,
     antialias: true,
-    interactive: mobile,
+    interactive: true,
   });
 
   STATE.map = map;
@@ -500,6 +504,16 @@ function initMap() {
     map.dragRotate.disable();
     if (map.touchPitch) map.touchPitch.disable();
     if (map.touchZoomRotate) map.touchZoomRotate.disableRotation();
+  } else {
+    // Desktop: keep the map visually static; navigation is driven by card
+    // clicks, pin/parcel clicks, and the +/- zoom buttons.
+    map.scrollZoom.disable();
+    map.boxZoom.disable();
+    map.dragPan.disable();
+    map.dragRotate.disable();
+    map.keyboard.disable();
+    map.doubleClickZoom.disable();
+    if (map.touchZoomRotate) map.touchZoomRotate.disable();
   }
 
   map.on("load", () => {
@@ -631,18 +645,31 @@ function initMap() {
     map.resize();
     requestAnimationFrame(() => map.resize());
 
-    if (mobile) {
-      const activateFromMapFeature = (mapFeature) => {
-        if (!mapFeature) return;
-        const featureId = mapFeature.properties && mapFeature.properties.id;
-        if (!featureId) return;
-        const step = STATE.steps.find((s) => s.feature.id === featureId);
-        if (step) activateStep(step.id, { scrollIntoView: true });
-      };
-      map.on("click", "all-points-layer", (e) => {
+    const activateFromMapFeature = (mapFeature) => {
+      if (!mapFeature) return;
+      const props = mapFeature.properties || {};
+      let step = null;
+      if (props.id) {
+        step = STATE.steps.find((s) => s.feature.id === props.id);
+      }
+      if (!step && props.source_doc_id) {
+        step = STATE.steps.find((s) => s.feature.sourceDocId === props.source_doc_id);
+      }
+      if (step) activateStep(step.id, { scrollIntoView: true });
+    };
+
+    const clickableLayers = ["all-points-layer", "parcels-fill"];
+    clickableLayers.forEach((layerId) => {
+      map.on("click", layerId, (e) => {
         activateFromMapFeature(e.features && e.features[0]);
       });
-    }
+      map.on("mouseenter", layerId, () => {
+        map.getCanvas().style.cursor = "pointer";
+      });
+      map.on("mouseleave", layerId, () => {
+        map.getCanvas().style.cursor = "";
+      });
+    });
   });
 }
 
