@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Extell Assemblage Scrollytelling Map</title>
     <meta
       name="description"
@@ -34,15 +34,40 @@
       <section class="map-wrap" aria-label="Map section">
         <div id="map" role="application" aria-label="Map of Extell acquisitions"></div>
         <div class="map-overlay" id="mapOverlay">
-          <p class="overlay-label">TOTAL PURCHASE VOLUME</p>
-          <p class="overlay-value" id="totalSpend">$0</p>
-          <p class="overlay-sub" id="progressLabel">Loading data...</p>
-          <p class="overlay-label overlay-spaced">LARGEST DEAL SO FAR</p>
-          <p class="overlay-sub overlay-strong" id="largestSoFar">$0</p>
-          <p class="overlay-sub" id="largestDealLabel">Waiting for first step...</p>
+          <button
+            type="button"
+            class="overlay-toggle"
+            id="overlayToggle"
+            aria-expanded="false"
+            aria-controls="overlayBody"
+          >
+            <span class="overlay-toggle-label">Stats</span>
+            <span class="overlay-toggle-summary" id="overlaySummary">Loading...</span>
+            <span class="overlay-toggle-icon" aria-hidden="true">▾</span>
+          </button>
+          <div class="overlay-body" id="overlayBody">
+            <p class="overlay-label">TOTAL PURCHASE VOLUME</p>
+            <p class="overlay-value" id="totalSpend">$0</p>
+            <p class="overlay-sub" id="progressLabel">Loading data...</p>
+            <p class="overlay-label overlay-spaced">LARGEST DEAL SO FAR</p>
+            <p class="overlay-sub overlay-strong" id="largestSoFar">$0</p>
+            <p class="overlay-sub" id="largestDealLabel">Waiting for first step...</p>
+          </div>
         </div>
         <div class="map-legend" id="mapLegend" aria-label="Map legend">
-          <p class="legend-title">Legend</p>
+          <button
+            type="button"
+            class="legend-toggle"
+            id="legendToggle"
+            aria-expanded="false"
+            aria-controls="legendBody"
+          >
+            <span>Legend</span>
+            <span aria-hidden="true">▾</span>
+          </button>
+          <div class="legend-body" id="legendBody">
+            <p class="legend-title">Legend</p>
+          </div>
         </div>
       </section>
 

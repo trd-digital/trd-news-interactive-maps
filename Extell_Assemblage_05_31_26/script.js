@@ -9,6 +9,15 @@ const largestSoFarEl = document.getElementById("largestSoFar");
 const largestDealLabelEl = document.getElementById("largestDealLabel");
 const tokenWarningEl = document.getElementById("tokenWarning");
 const mapLegendEl = document.getElementById("mapLegend");
+const mapOverlayEl = document.getElementById("mapOverlay");
+const overlayToggleEl = document.getElementById("overlayToggle");
+const overlaySummaryEl = document.getElementById("overlaySummary");
+const legendToggleEl = document.getElementById("legendToggle");
+
+const MOBILE_MEDIA = window.matchMedia("(max-width: 820px)");
+const REDUCED_MOTION_MEDIA = window.matchMedia("(prefers-reduced-motion: reduce)");
+const isMobileViewport = () => MOBILE_MEDIA.matches;
+const prefersReducedMotion = () => REDUCED_MOTION_MEDIA.matches;
 
 const GROUP_COLORS = {
   Prospect: "#d08f22",
@@ -93,7 +102,8 @@ function getPropertyGroupLabel(group) {
 function buildLegend(features) {
   if (!mapLegendEl) return;
 
-  mapLegendEl.querySelectorAll(".legend-row").forEach((row) => row.remove());
+  const legendBody = mapLegendEl.querySelector(".legend-body") || mapLegendEl;
+  legendBody.querySelectorAll(".legend-row").forEach((row) => row.remove());
   const groups = [...new Set(features.map((feature) => feature.propertyGroup || "Uncategorized"))];
 
   groups.sort((a, b) => {
@@ -115,7 +125,7 @@ function buildLegend(features) {
 
     row.appendChild(swatch);
     row.append(document.createTextNode(getPropertyGroupLabel(group)));
-    mapLegendEl.appendChild(row);
+    legendBody.appendChild(row);
   });
 }
 
@@ -156,6 +166,11 @@ function normalizeFeatures(rawFeatures) {
       if (a.recordStatus === "prospect") {
         return a.title.localeCompare(b.title);
       }
+      // Push confirmed records that lack both a recorded date and an amount
+      // to the end of the confirmed group so the timeline doesn't open on them.
+      const aHasData = a.recordedDateValue > 0 || a.amountValue > 0;
+      const bHasData = b.recordedDateValue > 0 || b.amountValue > 0;
+      if (aHasData !== bHasData) return aHasData ? -1 : 1;
       return a.recordedDateValue - b.recordedDateValue;
     });
 }
@@ -263,17 +278,35 @@ function updateRunningMetrics(statsIndex) {
     largestSoFarEl.textContent = formatCurrency(largest.amountValue);
     largestDealLabelEl.textContent = largest.title;
   }
+
+  if (overlaySummaryEl) {
+    const totalConfirmed = STATE.features.filter((f) => f.recordStatus === "confirmed").length;
+    const dealNumber = Math.min(visibleFeatures.length, totalConfirmed);
+    overlaySummaryEl.textContent = totalConfirmed
+      ? `${formatCurrency(runningTotal)} \u00b7 Deal ${dealNumber}/${totalConfirmed}`
+      : formatCurrency(runningTotal);
+  }
 }
 
 function flyToRecord(feature) {
   if (!STATE.map) return;
 
-  STATE.map.flyTo({
+  const mobile = isMobileViewport();
+  const cameraOptions = {
     center: feature.coordinates,
-    zoom: 14.8,
-    pitch: 38,
-    bearing: -15,
-    speed: 0.72,
+    zoom: mobile ? 13.8 : 14.8,
+    pitch: mobile ? 0 : 38,
+    bearing: mobile ? 0 : -15,
+  };
+
+  if (prefersReducedMotion()) {
+    STATE.map.jumpTo(cameraOptions);
+    return;
+  }
+
+  STATE.map.flyTo({
+    ...cameraOptions,
+    speed: mobile ? 0.9 : 0.72,
     curve: 1.15,
     essential: true,
   });
@@ -318,7 +351,10 @@ function activateStep(stepId, options = {}) {
     const isActive = el.dataset.stepId === stepId;
     el.classList.toggle("active", isActive);
     if (isActive && scrollIntoView) {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.scrollIntoView({
+        behavior: prefersReducedMotion() ? "auto" : "smooth",
+        block: isMobileViewport() ? "start" : "center",
+      });
     }
   });
 
@@ -338,14 +374,38 @@ function activateStep(stepId, options = {}) {
   }
 }
 
+function syncMobileMapHeightVar() {
+  if (!isMobileViewport()) {
+    document.documentElement.style.removeProperty("--map-height");
+    return 0;
+  }
+  const mapEl = document.querySelector(".map-wrap");
+  if (!mapEl) return 0;
+  const height = Math.round(mapEl.getBoundingClientRect().height);
+  if (height > 0) {
+    document.documentElement.style.setProperty("--map-height", `${height}px`);
+  }
+  return height;
+}
+
 function setupScrollObserver() {
   if (STATE.observer) {
     STATE.observer.disconnect();
   }
 
+  const mobile = isMobileViewport();
+  let rootMargin;
+  if (mobile) {
+    const mapHeight = syncMobileMapHeightVar();
+    const viewportH = window.innerHeight || 1;
+    const topPct = Math.max(30, Math.min(85, Math.round((mapHeight / viewportH) * 100)));
+    rootMargin = `-${topPct}% 0px -10% 0px`;
+  } else {
+    rootMargin = "-18% 0px -55% 0px";
+  }
   const options = {
     root: null,
-    rootMargin: "-18% 0px -55% 0px",
+    rootMargin,
     threshold: 0.01,
   };
 
@@ -374,6 +434,7 @@ function updateAllPointsSource() {
     features: STATE.features.map((f) => ({
       type: "Feature",
       properties: {
+        id: f.id,
         amount: f.amountText,
         amountValue: f.amountValue,
         title: f.title,
@@ -402,6 +463,38 @@ function setupStoryEvents() {
   });
 }
 
+function setupOverlayToggles() {
+  const bindToggle = (toggleEl, containerEl) => {
+    if (!toggleEl || !containerEl) return;
+    toggleEl.addEventListener("click", () => {
+      const open = containerEl.classList.toggle("is-open");
+      toggleEl.setAttribute("aria-expanded", String(open));
+    });
+  };
+  bindToggle(overlayToggleEl, mapOverlayEl);
+  bindToggle(legendToggleEl, mapLegendEl);
+}
+
+function setupResponsiveRefresh() {
+  let pending = null;
+  const refresh = () => {
+    pending = null;
+    syncMobileMapHeightVar();
+    setupScrollObserver();
+  };
+  const schedule = () => {
+    if (pending) return;
+    pending = window.requestAnimationFrame(refresh);
+  };
+  window.addEventListener("resize", schedule);
+  window.addEventListener("orientationchange", schedule);
+  if (typeof MOBILE_MEDIA.addEventListener === "function") {
+    MOBILE_MEDIA.addEventListener("change", schedule);
+  } else if (typeof MOBILE_MEDIA.addListener === "function") {
+    MOBILE_MEDIA.addListener(schedule);
+  }
+}
+
 function showTokenWarning() {
   tokenWarningEl.hidden = false;
   progressLabelEl.textContent = "Map unavailable until token is set";
@@ -410,19 +503,29 @@ function showTokenWarning() {
 function initMap() {
   const firstFeature = STATE.features[0];
   const [startLng, startLat] = firstFeature.coordinates;
+  const mobile = isMobileViewport();
 
   const map = new mapboxgl.Map({
     container: "map",
     style: "mapbox://styles/mapbox/light-v11",
     center: [startLng, startLat],
-    zoom: 11.5,
-    pitch: 34,
-    bearing: -15,
+    zoom: mobile ? 10.8 : 11.5,
+    pitch: mobile ? 0 : 34,
+    bearing: mobile ? 0 : -15,
     antialias: true,
-    interactive: false,
+    interactive: mobile,
   });
 
   STATE.map = map;
+
+  if (mobile) {
+    // Allow pinch/drag for exploration, but keep page scroll working and
+    // prevent accidental rotation/pitch gestures on touch.
+    map.scrollZoom.disable();
+    map.dragRotate.disable();
+    if (map.touchPitch) map.touchPitch.disable();
+    if (map.touchZoomRotate) map.touchZoomRotate.disableRotation();
+  }
 
   map.on("load", () => {
     STATE.mapLoaded = true;
@@ -511,6 +614,19 @@ function initMap() {
     if (STATE.activeStepId) {
       activateStep(STATE.activeStepId, { updateHash: false, force: true });
     }
+
+    if (mobile) {
+      const activateFromMapFeature = (mapFeature) => {
+        if (!mapFeature) return;
+        const featureId = mapFeature.properties && mapFeature.properties.id;
+        if (!featureId) return;
+        const step = STATE.steps.find((s) => s.feature.id === featureId);
+        if (step) activateStep(step.id, { scrollIntoView: true });
+      };
+      map.on("click", "all-points-layer", (e) => {
+        activateFromMapFeature(e.features && e.features[0]);
+      });
+    }
   });
 }
 
@@ -553,6 +669,8 @@ async function init() {
   buildStoryCards(STATE.steps);
   setupScrollObserver();
   setupStoryEvents();
+  setupOverlayToggles();
+  setupResponsiveRefresh();
 
   if (!STATE.steps.length) {
     progressLabelEl.textContent = "No steps available to render.";
