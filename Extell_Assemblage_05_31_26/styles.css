@@ -94,6 +94,19 @@ h1 {
   height: 100%;
 }
 
+/* Mapbox sets a grab/grabbing cursor on the interactive canvas; the map is
+   only clickable on pins and parcels, so default to a plain arrow and let
+   the layer hover handlers swap in a pointer where appropriate. */
+#map .mapboxgl-canvas-container.mapboxgl-interactive,
+#map .mapboxgl-canvas-container.mapboxgl-interactive .mapboxgl-canvas {
+  cursor: default;
+}
+
+#map .mapboxgl-canvas-container.mapboxgl-interactive:active,
+#map .mapboxgl-canvas-container.mapboxgl-interactive:active .mapboxgl-canvas {
+  cursor: default;
+}
+
 .map-legend {
   position: absolute;
   right: 1rem;
