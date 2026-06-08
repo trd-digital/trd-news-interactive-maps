@@ -233,7 +233,6 @@ function buildStoryCards(steps) {
       feature.recordStatus === "prospect" ? "Prospect" : formatDate(feature.recordedDate),
       feature.borough,
       feature.neighborhood,
-      feature.docType,
     ].filter(Boolean);
     fragment.querySelector(".step-meta").textContent = metaParts.join(" • ");
 
@@ -488,6 +487,11 @@ function initMap() {
   });
 
   STATE.map = map;
+
+  map.addControl(
+    new mapboxgl.NavigationControl({ showCompass: false, visualizePitch: false }),
+    "top-right"
+  );
 
   if (mobile) {
     // Allow pinch/drag for exploration, but keep page scroll working and

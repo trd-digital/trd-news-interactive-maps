@@ -246,6 +246,40 @@ h1 {
   margin-bottom: 0.32rem;
 }
 
+.step-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+  padding: 0.32rem 0.7rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: rgba(18, 71, 132, 0.06);
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.step-link::after {
+  content: "\2197";
+  font-size: 0.95em;
+  line-height: 1;
+}
+
+.step-link:hover,
+.step-link:focus-visible {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.step:not(.active) .step-link {
+  opacity: 0.55;
+}
+
 .step-share {
   margin-left: 0.7rem;
   color: #6d5f16;
