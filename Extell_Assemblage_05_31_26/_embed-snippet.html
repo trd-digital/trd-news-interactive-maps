@@ -1,0 +1,108 @@
+<!--
+  =============================================================================
+  Extell Assemblage map — embed snippet for The Real Deal
+  =============================================================================
+
+  Goal: fill the empty <figure class="AllowedContent_wrapper... defaultWidth">
+  slot in the article body with the interactive map iframe, hook the parent
+  page up to (a) auto-size the iframe to the embedded content's height and
+  (b) mirror the site's light/dark theme toggle into the iframe.
+
+  The iframe content lives in this repo (index.html / styles.css / script.js)
+  and is served from wherever it's deployed (replace EMBED_URL below).
+
+  Two postMessage event types come back from the iframe (sent to window.parent
+  with origin "*", so the listener below is whitelisted by message type, not
+  origin):
+
+      { type: "extell-map:ready"  }
+      { type: "extell-map:loaded" }            // first map "idle" event
+      { type: "extell-map:resize", height: N } // CSS pixels of body.scrollHeight
+
+  Two postMessage event types are accepted from the parent (sent to the
+  iframe's contentWindow):
+
+      { type: "extell-map:set-theme",     value: "light" | "dark" }
+      { type: "extell-map:request-resize" }
+
+  Notes:
+    - The iframe already detects framing via window.self !== window.top, so
+      ?layout=embed is redundant but harmless; pass it anyway so embed-mode
+      styles also apply when previewing the URL directly in a tab.
+    - The iframe never writes to localStorage when embedded; the parent page
+      owns the theme. Mirror your existing dark/light toggle into the
+      "extell-map:set-theme" message and the iframe will follow.
+    - The initial height (560 below) is a fallback for the brief moment
+      before the iframe sends its first resize. After that, the listener
+      keeps the height in sync.
+    - `loading="lazy"` defers iframe load until it's near the viewport;
+      combined with the IntersectionObserver inside the iframe, Mapbox
+      doesn't even construct until the user scrolls to it.
+  =============================================================================
+-->
+<figure class="AllowedContent_wrapper__lxthX AllowedContent_defaultWidth__8uyfz">
+  <iframe
+    id="extell-map-embed"
+    src="EMBED_URL?layout=embed"
+    title="Extell Park Avenue assemblage: interactive map"
+    loading="lazy"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allow="geolocation; fullscreen"
+    style="width: 100%; height: 560px; border: 0; display: block;"
+  ></iframe>
+</figure>
+
+<script>
+  (function () {
+    var iframe = document.getElementById("extell-map-embed");
+    if (!iframe) return;
+
+    // ---------------------------------------------------------------------
+    // 1) Auto-size the iframe to the embedded content's reported height.
+    // ---------------------------------------------------------------------
+    window.addEventListener("message", function (event) {
+      var data = event && event.data;
+      if (!data || typeof data !== "object") return;
+      if (data.type === "extell-map:resize" && typeof data.height === "number") {
+        // Guard against bogus heights from cross-origin sibling iframes.
+        if (data.height > 100 && data.height < 5000) {
+          iframe.style.height = data.height + "px";
+        }
+      }
+    });
+
+    // ---------------------------------------------------------------------
+    // 2) Mirror the site's theme toggle into the iframe. Replace the
+    //    detector below with whatever TRD uses (a class on <html>, a
+    //    localStorage key, a global event, etc.). The example reads a
+    //    `theme-dark` class on <html>.
+    // ---------------------------------------------------------------------
+    function currentSiteTheme() {
+      return document.documentElement.classList.contains("theme-dark")
+        ? "dark"
+        : "light";
+    }
+
+    function pushTheme() {
+      if (!iframe.contentWindow) return;
+      iframe.contentWindow.postMessage(
+        { type: "extell-map:set-theme", value: currentSiteTheme() },
+        "*"
+      );
+    }
+
+    // Push the initial theme once the iframe announces it's ready.
+    window.addEventListener("message", function (event) {
+      var data = event && event.data;
+      if (data && data.type === "extell-map:ready") pushTheme();
+    });
+
+    // Re-push whenever the site theme changes.
+    if ("MutationObserver" in window) {
+      new MutationObserver(pushTheme).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+    }
+  })();
+</script>

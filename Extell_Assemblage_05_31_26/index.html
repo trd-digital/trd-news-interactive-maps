@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>Extell Assemblage Scrollytelling Map</title>
     <meta
       name="description"
@@ -10,6 +11,14 @@
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://api.mapbox.com" crossorigin />
+    <link rel="preconnect" href="https://events.mapbox.com" crossorigin />
+    <link
+      rel="preload"
+      as="fetch"
+      href="Extell_Assemblage_geocoded.geojson"
+      crossorigin="anonymous"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&display=swap"
       rel="stylesheet"
@@ -21,20 +30,43 @@
     <link rel="stylesheet" href="styles.css" />
     <script>
       // Apply the saved or system-preferred color theme before first paint
-      // so the page doesn't flash the wrong palette on load.
+      // so the page doesn't flash the wrong palette on load. Also detect
+      // embed mode early so layout-affecting CSS can read it before paint.
       (function () {
+        var root = document.documentElement;
+        var params;
         try {
-          var stored = localStorage.getItem("extell-assemblage-theme");
-          var theme =
-            stored === "dark" || stored === "light"
-              ? stored
-              : window.matchMedia &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches
-              ? "dark"
-              : "light";
-          document.documentElement.setAttribute("data-theme", theme);
+          params = new URLSearchParams(window.location.search);
         } catch (e) {
-          document.documentElement.setAttribute("data-theme", "light");
+          params = null;
+        }
+
+        var queryTheme = params && params.get("theme");
+        var queryLayout = params && params.get("layout");
+
+        var theme = "light";
+        try {
+          if (queryTheme === "dark" || queryTheme === "light") {
+            theme = queryTheme;
+          } else {
+            var stored = localStorage.getItem("extell-assemblage-theme");
+            if (stored === "dark" || stored === "light") {
+              theme = stored;
+            } else if (
+              window.matchMedia &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches
+            ) {
+              theme = "dark";
+            }
+          }
+        } catch (e) {
+          /* localStorage unavailable */
+        }
+
+        root.setAttribute("data-theme", theme);
+
+        if (queryLayout === "embed" || window.self !== window.top) {
+          root.setAttribute("data-layout", "embed");
         }
       })();
     </script>
@@ -81,10 +113,22 @@
       </section>
 
       <section class="story-wrap" aria-label="Story">
-        <section class="story" id="story" aria-label="Story steps">
+        <section
+          class="story"
+          id="story"
+          aria-label="Story steps"
+          role="list"
+        >
         </section>
       </section>
     </main>
+
+    <div
+      id="liveRegion"
+      class="visually-hidden"
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
 
     <template id="stepTemplate">
       <article class="step" data-step="record">

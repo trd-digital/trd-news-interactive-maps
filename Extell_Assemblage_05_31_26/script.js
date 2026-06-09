@@ -65,6 +65,8 @@ const STATE = {
   steps: [],
   activeStepId: null,
   theme: "light",
+  embedMode: false,
+  queryTheme: null,
 };
 
 const THEME_STORAGE_KEY = "extell-assemblage-theme";
@@ -72,6 +74,33 @@ const MAPBOX_STYLES = {
   light: "mapbox://styles/mapbox/light-v11",
   dark: "mapbox://styles/mapbox/dark-v11",
 };
+
+const PARENT_MESSAGE_TYPES = {
+  RESIZE: "extell-map:resize",
+  SET_THEME: "extell-map:set-theme",
+  REQUEST_RESIZE: "extell-map:request-resize",
+  READY: "extell-map:ready",
+  LOADED: "extell-map:loaded",
+};
+
+function readEmbedConfig() {
+  let params = null;
+  try {
+    params = new URLSearchParams(window.location.search);
+  } catch (e) {
+    /* malformed location.search */
+  }
+  const queryTheme = params && params.get("theme");
+  const queryLayout = params && params.get("layout");
+  let framed = false;
+  try {
+    framed = window.self !== window.top;
+  } catch (e) {
+    framed = true; // cross-origin parent: assume embedded
+  }
+  STATE.embedMode = queryLayout === "embed" || framed;
+  STATE.queryTheme = queryTheme === "dark" || queryTheme === "light" ? queryTheme : null;
+}
 
 function getStoredTheme() {
   try {
@@ -90,6 +119,8 @@ function getSystemTheme() {
 }
 
 function getInitialTheme() {
+  // Query-string takes precedence so an embedding page can force a theme.
+  if (STATE.queryTheme) return STATE.queryTheme;
   // The inline boot script in <head> has already applied the right theme,
   // so trust that attribute as the source of truth for first paint.
   const attr = document.documentElement.getAttribute("data-theme");
@@ -113,7 +144,9 @@ function applyTheme(theme, { persist = true, updateMap = true } = {}) {
   STATE.theme = theme;
   document.documentElement.setAttribute("data-theme", theme);
   syncThemeToggleButton(theme);
-  if (persist) {
+  // Never write to localStorage from inside an embedded iframe; the host
+  // page owns the user's theme preference there.
+  if (persist && !STATE.embedMode) {
     try {
       localStorage.setItem(THEME_STORAGE_KEY, theme);
     } catch (e) {
@@ -126,16 +159,23 @@ function applyTheme(theme, { persist = true, updateMap = true } = {}) {
   if (updateMap && STATE.map) {
     STATE.map.setStyle(MAPBOX_STYLES[theme]);
   }
+  postParentResize();
 }
 
 function setupThemeToggle() {
   const btn = document.getElementById("themeToggle");
-  if (!btn) return;
-  btn.addEventListener("click", () => {
-    applyTheme(STATE.theme === "dark" ? "light" : "dark");
-  });
-  // Follow OS-level changes as long as the user has not explicitly chosen.
-  if (window.matchMedia) {
+  if (btn && STATE.embedMode) {
+    // The host page (e.g. TRD's footer switcher) owns the theme; remove
+    // our control so users only see one source of truth.
+    btn.remove();
+  } else if (btn) {
+    btn.addEventListener("click", () => {
+      applyTheme(STATE.theme === "dark" ? "light" : "dark");
+    });
+  }
+  // Follow OS-level changes as long as the user has not explicitly chosen,
+  // and as long as we're not embedded (the host controls theme then).
+  if (window.matchMedia && !STATE.embedMode) {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     const handler = (event) => {
       if (getStoredTheme()) return;
@@ -144,6 +184,77 @@ function setupThemeToggle() {
     if (mq.addEventListener) mq.addEventListener("change", handler);
     else if (mq.addListener) mq.addListener(handler);
   }
+}
+
+// ---------------------------------------------------------------------------
+// Parent-frame messaging: lets the host page (a) push a theme into the iframe
+// and (b) auto-size the iframe to the embedded map's content height.
+// ---------------------------------------------------------------------------
+
+function postParentResize() {
+  if (!STATE.embedMode || !window.parent || window.parent === window) return;
+  if (postParentResize._scheduled) return;
+  postParentResize._scheduled = true;
+  requestAnimationFrame(() => {
+    postParentResize._scheduled = false;
+    const height = Math.max(
+      document.documentElement.scrollHeight,
+      document.body ? document.body.scrollHeight : 0
+    );
+    // Suppress no-op / sub-pixel reports to avoid feedback loops with parents
+    // that size the iframe back from our reported height.
+    if (Math.abs(height - (postParentResize._lastHeight || 0)) < 2) return;
+    postParentResize._lastHeight = height;
+    try {
+      window.parent.postMessage(
+        { type: PARENT_MESSAGE_TYPES.RESIZE, height },
+        "*"
+      );
+    } catch (e) {
+      /* parent unreachable */
+    }
+  });
+}
+
+function postParentLoaded() {
+  if (!STATE.embedMode || !window.parent || window.parent === window) return;
+  if (postParentLoaded._sent) return;
+  postParentLoaded._sent = true;
+  try {
+    window.parent.postMessage({ type: PARENT_MESSAGE_TYPES.LOADED }, "*");
+  } catch (e) {
+    /* parent unreachable */
+  }
+}
+
+function setupParentMessaging() {
+  if (!STATE.embedMode) return;
+
+  window.addEventListener("message", (event) => {
+    const data = event && event.data;
+    if (!data || typeof data !== "object") return;
+    if (data.type === PARENT_MESSAGE_TYPES.SET_THEME) {
+      if (data.value === "dark" || data.value === "light") {
+        applyTheme(data.value, { persist: false });
+      }
+    } else if (data.type === PARENT_MESSAGE_TYPES.REQUEST_RESIZE) {
+      postParentResize();
+    }
+  });
+
+  if (typeof ResizeObserver === "function") {
+    const ro = new ResizeObserver(() => postParentResize());
+    if (document.body) ro.observe(document.body);
+  } else {
+    window.addEventListener("resize", postParentResize);
+  }
+
+  try {
+    window.parent.postMessage({ type: PARENT_MESSAGE_TYPES.READY }, "*");
+  } catch (e) {
+    /* parent unreachable */
+  }
+  postParentResize();
 }
 
 function parseAmount(amountText) {
@@ -324,6 +435,9 @@ function buildStoryCards(steps) {
     const article = fragment.querySelector(".step");
 
     article.dataset.stepId = step.id;
+    article.setAttribute("role", "listitem");
+    article.setAttribute("tabindex", "0");
+    article.setAttribute("aria-current", "false");
 
     fragment.querySelector(".step-kicker").textContent =
       feature.recordStatus === "prospect"
@@ -368,6 +482,14 @@ function buildStoryCards(steps) {
       activateStep(step.id, { scrollIntoView: true });
     });
 
+    article.addEventListener("keydown", (event) => {
+      if (event.target !== article) return;
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        activateStep(step.id, { scrollIntoView: true });
+      }
+    });
+
     storyEl.appendChild(fragment);
   });
 }
@@ -396,7 +518,10 @@ function flyToRecord(feature) {
     bearing: mobile ? 0 : -15,
   };
 
-  if (prefersReducedMotion()) {
+  // Skip the camera animation entirely in embed mode (cheaper, less jank
+  // when paired with TRD's article ads + lazy iframes) and whenever the
+  // visitor has asked for reduced motion.
+  if (STATE.embedMode || prefersReducedMotion()) {
     STATE.map.jumpTo(cameraOptions);
     return;
   }
@@ -462,6 +587,7 @@ function activateStep(stepId, options = {}) {
   document.querySelectorAll(".step").forEach((el) => {
     const isActive = el.dataset.stepId === stepId;
     el.classList.toggle("active", isActive);
+    el.setAttribute("aria-current", isActive ? "true" : "false");
     el.querySelectorAll("a[data-href]").forEach((a) => {
       if (isActive) {
         a.setAttribute("href", a.dataset.href);
@@ -485,10 +611,26 @@ function activateStep(stepId, options = {}) {
   flyToRecord(feature);
   updateActivePoint(feature);
   updateActiveParcel(feature);
+  announceActiveStep(step);
 
   if (updateHash) {
     history.replaceState(null, "", `#step=${encodeURIComponent(step.id)}`);
   }
+}
+
+function announceActiveStep(step) {
+  const region = document.getElementById("liveRegion");
+  if (!region || !step || !step.feature) return;
+  const f = step.feature;
+  const kicker =
+    f.recordStatus === "prospect"
+      ? "Future prospect"
+      : `Deal ${step.statsIndex + 1} of ${STATE.features.length}`;
+  const date =
+    f.recordStatus === "prospect" ? "date unknown" : formatDate(f.recordedDate);
+  const price =
+    f.recordStatus === "prospect" ? "price undisclosed" : f.amountText;
+  region.textContent = `${kicker}: ${f.title}. ${date}. ${price}.`;
 }
 
 function syncMobileMapHeightVar() {
@@ -576,12 +718,38 @@ function showTokenWarning() {
   tokenWarningEl.hidden = false;
 }
 
+// Mapbox light-v11 / dark-v11 ship with restaurant, transit and POI labels
+// that fight the editorial aesthetic and add visual noise around the
+// assemblage parcels. Hide them once the style is ready, preserving roads,
+// water, parks and neighbourhood/place labels for orientation. At narrow
+// embed widths (<500px), also strip road and minor place labels so the
+// short sticky map reads cleanly.
+function declutterBasemap(map) {
+  const style = map.getStyle && map.getStyle();
+  if (!style || !Array.isArray(style.layers)) return;
+  const isNarrowEmbed =
+    STATE.embedMode && document.documentElement.clientWidth < 500;
+  const noisePattern = isNarrowEmbed
+    ? /^(poi|transit|road-label|natural-line-label|natural-point-label|water-point-label)(-|$)/i
+    : /^(poi|transit)(-|$)/i;
+  style.layers.forEach((layer) => {
+    if (!layer || !layer.id || !noisePattern.test(layer.id)) return;
+    try {
+      map.setLayoutProperty(layer.id, "visibility", "none");
+    } catch (e) {
+      /* layer may have been removed mid-iteration */
+    }
+  });
+}
+
 function addMapDataLayers(map) {
   // The style (and therefore any sources we add now) is ready as soon as
   // style.load fires — flip the flag here so updateActivePoint /
   // updateActiveParcel don't early-return when activateStep is replayed
   // below for the initial card.
   STATE.mapLoaded = true;
+
+  declutterBasemap(map);
 
   if (!map.getSource("parcels")) {
     map.addSource("parcels", {
@@ -775,6 +943,8 @@ function initMap() {
     map.resize();
     requestAnimationFrame(() => map.resize());
 
+    map.once("idle", () => postParentLoaded());
+
     const activateFromMapFeature = (mapFeature) => {
       if (!mapFeature) return;
       const props = mapFeature.properties || {};
@@ -803,11 +973,50 @@ function initMap() {
   });
 }
 
+// Defer Mapbox construction until the #map container is about to enter the
+// viewport. Article pages (especially TRD's) load a lot of below-the-fold
+// content; spinning up a WebGL map immediately wastes CPU and hurts LCP for
+// users who never scroll to the embed.
+function initMapWhenVisible() {
+  const container = document.getElementById("map");
+  if (!container || typeof IntersectionObserver !== "function") {
+    initMap();
+    return;
+  }
+
+  const rect = container.getBoundingClientRect();
+  const alreadyVisible =
+    rect.top < window.innerHeight && rect.bottom > 0 && rect.width > 0;
+  if (alreadyVisible) {
+    initMap();
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          observer.disconnect();
+          initMap();
+          break;
+        }
+      }
+    },
+    { rootMargin: "200px" }
+  );
+  observer.observe(container);
+}
+
 async function init() {
+  // Detect ?layout=embed / ?theme= and whether we're inside an iframe before
+  // any UI wiring so theme + chrome decisions can read STATE.embedMode.
+  readEmbedConfig();
+
   // Pick the initial theme before anything else paints map chrome, then wire
   // the toggle so it works whether or not the map ever loads.
   applyTheme(getInitialTheme(), { persist: false, updateMap: false });
   setupThemeToggle();
+  setupParentMessaging();
 
   const token = (MAPBOX_ACCESS_TOKEN || "").trim();
   const isPlaceholder = token.includes("YOUR_MAPBOX_ACCESS_TOKEN");
@@ -870,7 +1079,7 @@ async function init() {
   }
   activateStep(STATE.steps[0].id, { updateHash: false });
 
-  initMap();
+  initMapWhenVisible();
 }
 
 init();
