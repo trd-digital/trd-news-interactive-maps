@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Embed harness — 1040px TRD column</title>
+  <style>
+    body { margin: 0; background: #ccc; font-family: system-ui; }
+    .col { width: 1040px; margin: 1rem auto; background: #0b0d12; }
+    iframe { width: 100%; border: 0; display: block; height: 760px; }
+    p { padding: 0.5rem 1rem; margin: 0; color: #333; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <p>Parent harness mimicking TRD's ~1040px article column.</p>
+  <div class="col">
+    <iframe id="frame" src="index.html?layout=embed&t=h1" title="map embed"></iframe>
+  </div>
+  <script>
+    var f = document.getElementById("frame");
+    window.addEventListener("message", function(e) {
+      var d = e.data;
+      if (d && d.type === "extell-map:resize" && typeof d.height === "number") {
+        if (d.height > 100 && d.height < 5000) f.style.height = d.height + "px";
+      }
+    });
+  </script>
+</body>
+</html>

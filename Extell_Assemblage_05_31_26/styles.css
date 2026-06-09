@@ -15,6 +15,8 @@
   --stroke: #d4d4d4;
   --stroke-strong: #ababab;
   --shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  --overlay-card: rgba(255, 255, 255, 0.94);
+  --overlay-shadow: 0 6px 18px rgba(20, 22, 28, 0.18);
   --serif: "Merriweather", Georgia, "Times New Roman", serif;
   --sans: "Proxima Nova", "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
 }
@@ -35,6 +37,8 @@
   --stroke: #353b45;
   --stroke-strong: #4d5562;
   --shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+  --overlay-card: rgba(18, 22, 28, 0.86);
+  --overlay-shadow: 0 6px 22px rgba(0, 0, 0, 0.55);
 }
 
 * {
@@ -618,10 +622,13 @@ h1 {
    live inside an article column without duplicating page furniture, and tells
    the parent how tall to size the iframe.
 
-   The TRD article column maxes at 910px wide, so the side-by-side desktop
-   layout doesn't fit. Inside the iframe we always stack: a short sticky map
-   on top, story cards underneath. Content is capped at 880px so we never
-   trigger a horizontal scrollbar inside the host's 910px slot.
+   Layout strategy:
+     - Wide embeds (>= 780px iframe width, typical TRD desktop column ~1040px):
+       full-width sticky map, story cards float on the RIGHT edge of the map
+       as a translucent overlay column. True scrollytelling — no wasted column
+       width below the sticky area.
+     - Narrow embeds (< 780px): stacked single column. Sticky short map on
+       top, cards beneath.
 
    IMPORTANT: avoid any vh / svh units here. The parent iframe sizes itself
    to body.scrollHeight, which would make the iframe taller and grow `vh`
@@ -636,13 +643,14 @@ h1 {
   display: none;
 }
 
+/* -------- Shared embed defaults (the < 780px stacked fallback) -------- */
 :root[data-layout="embed"] .layout {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   padding: 0;
   gap: 0;
-  max-width: 880px;
+  max-width: none;
   margin: 0 auto;
 }
 
@@ -679,8 +687,7 @@ h1 {
   font-size: 1.18rem;
 }
 
-/* Inline, compact legend in embed mode so it doesn't float over a short
-   sticky map and crowd the active pin. */
+/* Compact, bottom-right legend in embed mode. */
 :root[data-layout="embed"] .map-legend {
   left: auto;
   right: calc(0.55rem + env(safe-area-inset-right));
@@ -739,5 +746,74 @@ h1 {
 
   :root[data-layout="embed"] .story-wrap {
     padding: 0.7rem 0.75rem 0;
+  }
+}
+
+/* -------- Wide embed (>= 780px): scrollytelling overlay -------- */
+@media (min-width: 780px) {
+  :root[data-layout="embed"] .layout {
+    display: block;
+    position: relative;
+    padding: 0;
+  }
+
+  :root[data-layout="embed"] .map-wrap {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 560px;
+    border-bottom: 0;
+    z-index: 1;
+  }
+
+  :root[data-layout="embed"] .story-wrap {
+    position: relative;
+    z-index: 2;
+    /* Lift the card column up so the first cards float over the sticky map.
+       Matches .map-wrap height above (560) plus the story-wrap top padding. */
+    margin-top: -560px;
+    padding: 1rem 1rem 1.25rem 0;
+    /* Keep the column tight against the right edge of the map. */
+    max-width: 380px;
+    margin-left: auto;
+    margin-right: 0;
+  }
+
+  :root[data-layout="embed"] .story {
+    padding-bottom: 1rem;
+    gap: 0.55rem;
+  }
+
+  :root[data-layout="embed"] .step {
+    background: var(--overlay-card);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid var(--stroke);
+    box-shadow: var(--overlay-shadow);
+    padding: 0.8rem 0.95rem 0.85rem 1rem;
+    scroll-margin-top: 0.6rem;
+  }
+
+  :root[data-layout="embed"] .step h3 {
+    font-size: 1.12rem;
+    margin-top: 0.3rem;
+  }
+
+  :root[data-layout="embed"] .step p {
+    margin: 0.35rem 0;
+  }
+
+  :root[data-layout="embed"] .step-link {
+    margin-top: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.72rem;
+  }
+
+  /* Move the legend to the bottom-LEFT so it doesn't collide with the
+     overlay card column on the right. */
+  :root[data-layout="embed"] .map-legend {
+    left: calc(0.6rem + env(safe-area-inset-left));
+    right: auto;
+    bottom: calc(2.4rem + env(safe-area-inset-bottom));
   }
 }

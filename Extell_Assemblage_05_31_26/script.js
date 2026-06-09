@@ -518,6 +518,14 @@ function flyToRecord(feature) {
     bearing: mobile ? 0 : -15,
   };
 
+  // In the wide-embed overlay layout, the card column floats over the right
+  // edge of the map. Tell Mapbox to keep the active feature visible in the
+  // remaining left area so the pin isn't permanently obscured by a card.
+  const overlayWidth = getOverlayPadding();
+  if (overlayWidth > 0) {
+    cameraOptions.padding = { top: 0, bottom: 0, left: 0, right: overlayWidth };
+  }
+
   // Skip the camera animation entirely in embed mode (cheaper, less jank
   // when paired with TRD's article ads + lazy iframes) and whenever the
   // visitor has asked for reduced motion.
@@ -532,6 +540,15 @@ function flyToRecord(feature) {
     curve: 1.3,
     essential: true,
   });
+}
+
+// Returns the right-edge padding (in CSS pixels) the camera should reserve
+// for the overlay card column. Matches the @media (min-width: 780px) embed
+// rule that pins .story-wrap to a 380px-wide column on the right.
+function getOverlayPadding() {
+  if (!STATE.embedMode) return 0;
+  if (document.documentElement.clientWidth < 780) return 0;
+  return 380;
 }
 
 function updateActivePoint(feature) {
