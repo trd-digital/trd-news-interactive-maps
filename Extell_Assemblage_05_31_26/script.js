@@ -910,6 +910,40 @@ function addMapDataLayers(map) {
   }
 }
 
+// Touch-device opt-in: shows a "Tap to interact" veil over the map. One tap
+// re-enables drag/pinch handlers for the rest of the session and fades the
+// veil out. Mouse/trackpad users never see it (the map already has the +/-
+// zoom buttons + clickable pins for them).
+function initMapTapVeil(map) {
+  const veil = document.getElementById("mapTapVeil");
+  if (!veil) return;
+
+  const isTouchOnly =
+    window.matchMedia &&
+    window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+  if (!isTouchOnly) return;
+
+  veil.hidden = false;
+
+  const unlock = () => {
+    veil.classList.add("is-hidden");
+    map.dragPan.enable();
+    map.doubleClickZoom.enable();
+    if (map.touchZoomRotate) {
+      map.touchZoomRotate.enable();
+      // Keep rotation locked so two-finger gestures only pan/zoom.
+      map.touchZoomRotate.disableRotation();
+    }
+    // Remove from the layout once the fade is done so it can't intercept
+    // taps on pins or the legend.
+    setTimeout(() => {
+      veil.hidden = true;
+    }, 260);
+  };
+
+  veil.addEventListener("click", unlock, { once: true });
+}
+
 function initMap() {
   const firstFeature = STATE.features[0];
   const [startLng, startLat] = firstFeature.coordinates;
@@ -939,7 +973,10 @@ function initMap() {
   // down on every viewport. On mobile this is critical — if dragPan/touch
   // gestures stay enabled, a finger trying to scroll the article past the
   // sticky map ends up panning the map instead, trapping the reader.
-  // Pin/parcel taps and the +/- nav buttons still work.
+  // Pin/parcel taps and the +/- nav buttons still work. Touch users can
+  // re-enable gestures by tapping the "Tap to interact" veil (see
+  // initMapTapVeil) — a per-session opt-in that mirrors the Google Maps
+  // embed pattern.
   map.scrollZoom.disable();
   map.boxZoom.disable();
   map.dragPan.disable();
@@ -948,6 +985,8 @@ function initMap() {
   map.doubleClickZoom.disable();
   if (map.touchPitch) map.touchPitch.disable();
   if (map.touchZoomRotate) map.touchZoomRotate.disable();
+
+  initMapTapVeil(map);
 
   map.on("style.load", () => {
     // Fires on the initial style load and every time setStyle() finishes,
