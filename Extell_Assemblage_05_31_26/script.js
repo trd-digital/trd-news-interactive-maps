@@ -910,11 +910,22 @@ function addMapDataLayers(map) {
   }
 }
 
-// Tap/click to interact: shows a "Tap to interact" veil over the map. One
-// tap (or click) re-enables drag + pinch + double-click-zoom handlers for
-// the rest of the session and fades the veil out. Active on all devices —
-// touch and mouse — so the map never accidentally captures a swipe / wheel
-// before the reader explicitly opts in.
+// Tap/click to interact: shows a "Tap to interact" veil over the map for a
+// few seconds on first paint. Active on all devices — touch and mouse — so
+// the map never accidentally captures a swipe / wheel before the reader
+// explicitly opts in.
+//
+// Two outcomes:
+//   • Reader taps/clicks the pill within the visible window → map becomes
+//     fully interactive (drag-pan, pinch-zoom, double-click-zoom, AND
+//     wheel/trackpad scroll-zoom) for the rest of the session.
+//   • Reader ignores the pill → after the auto-dismiss timer the veil
+//     fades and removes itself. The map stays in its safe locked-down
+//     editorial state (pin clicks + the +/- nav buttons), but the reader
+//     can no longer trigger free pan/zoom from this session.
+const TAP_VEIL_AUTO_DISMISS_MS = 4500;
+const TAP_VEIL_FADE_MS = 260;
+
 function initMapTapVeil(map) {
   const veil = document.getElementById("mapTapVeil");
   if (!veil) return;
@@ -928,23 +939,32 @@ function initMapTapVeil(map) {
 
   veil.hidden = false;
 
-  const unlock = () => {
+  let dismissed = false;
+
+  const dismiss = (didUnlock) => {
+    if (dismissed) return;
+    dismissed = true;
+    clearTimeout(autoDismissTimer);
     veil.classList.add("is-hidden");
-    map.dragPan.enable();
-    map.doubleClickZoom.enable();
-    if (map.touchZoomRotate) {
-      map.touchZoomRotate.enable();
-      // Keep rotation locked so two-finger gestures only pan/zoom.
-      map.touchZoomRotate.disableRotation();
+    if (didUnlock) {
+      map.dragPan.enable();
+      map.doubleClickZoom.enable();
+      map.scrollZoom.enable();
+      if (map.touchZoomRotate) {
+        map.touchZoomRotate.enable();
+        // Keep rotation locked so two-finger gestures only pan/zoom.
+        map.touchZoomRotate.disableRotation();
+      }
     }
     // Remove from the layout once the fade is done so it can't intercept
     // clicks on pins or the legend.
     setTimeout(() => {
       veil.hidden = true;
-    }, 260);
+    }, TAP_VEIL_FADE_MS);
   };
 
-  veil.addEventListener("click", unlock, { once: true });
+  veil.addEventListener("click", () => dismiss(true), { once: true });
+  const autoDismissTimer = setTimeout(() => dismiss(false), TAP_VEIL_AUTO_DISMISS_MS);
 }
 
 function initMap() {
