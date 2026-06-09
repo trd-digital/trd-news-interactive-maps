@@ -643,7 +643,19 @@ h1 {
   display: none;
 }
 
-/* -------- Shared embed defaults (the < 780px stacked fallback) -------- */
+/* -------- Shared embed defaults (the < 780px stacked widget) --------
+
+   On narrow iframes we use a fixed-height widget too: a 640px column with
+   the map pinned on top (280px) and cards scrolling internally below.
+   This stops the iframe from growing to ~1500px tall on phones and matches
+   the desktop "self-contained widget" pattern. */
+:root[data-layout="embed"],
+:root[data-layout="embed"] body {
+  height: 640px;
+  min-height: 0;
+  overflow: hidden;
+}
+
 :root[data-layout="embed"] .layout {
   display: flex;
   flex-direction: column;
@@ -652,12 +664,15 @@ h1 {
   gap: 0;
   max-width: none;
   margin: 0 auto;
+  height: 640px;
+  overflow: hidden;
 }
 
 :root[data-layout="embed"] .map-wrap {
-  position: sticky;
-  top: 0;
-  height: 420px;
+  position: relative;
+  top: auto;
+  height: 280px;
+  flex: 0 0 280px;
   min-height: 0;
   max-height: none;
   border: 0;
@@ -669,8 +684,45 @@ h1 {
 }
 
 :root[data-layout="embed"] .story-wrap {
-  padding: 0.85rem 0.95rem 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0.85rem 0.95rem 0.85rem;
+  margin: 0;
   order: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 120, 120, 0.45) transparent;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black 0,
+    black calc(100% - 24px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    black 0,
+    black calc(100% - 24px),
+    transparent 100%
+  );
+}
+
+:root[data-layout="embed"] .story-wrap::-webkit-scrollbar {
+  width: 6px;
+}
+
+:root[data-layout="embed"] .story-wrap::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+:root[data-layout="embed"] .story-wrap::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 120, 0.45);
+  border-radius: 3px;
+}
+
+:root[data-layout="embed"] .story-wrap::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 120, 120, 0.7);
 }
 
 :root[data-layout="embed"] .story {
@@ -679,7 +731,8 @@ h1 {
 }
 
 :root[data-layout="embed"] .step {
-  scroll-margin-top: calc(420px + 0.6rem);
+  scroll-margin-top: 0.5rem;
+  scroll-margin-bottom: 1rem;
   padding: 0.85rem 0.95rem;
 }
 
@@ -729,14 +782,23 @@ h1 {
 }
 
 @media (max-width: 560px) {
-  /* Narrow iframe (mobile-width article column): smaller sticky map and
-     tighter card padding so the first card is visible at first paint. */
+  /* Narrow iframe (mobile-width article column): shorter map gives the
+     card list more breathing room within the same fixed widget height. */
+  :root[data-layout="embed"],
+  :root[data-layout="embed"] body {
+    height: 620px;
+  }
+
+  :root[data-layout="embed"] .layout {
+    height: 620px;
+  }
+
   :root[data-layout="embed"] .map-wrap {
-    height: 360px;
+    height: 240px;
+    flex: 0 0 240px;
   }
 
   :root[data-layout="embed"] .step {
-    scroll-margin-top: calc(360px + 0.6rem);
     padding: 0.75rem 0.85rem;
   }
 
@@ -745,7 +807,7 @@ h1 {
   }
 
   :root[data-layout="embed"] .story-wrap {
-    padding: 0.7rem 0.75rem 0;
+    padding: 0.7rem 0.75rem 0.75rem;
   }
 }
 
