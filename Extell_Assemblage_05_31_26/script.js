@@ -13,12 +13,26 @@ const REDUCED_MOTION_MEDIA = window.matchMedia("(prefers-reduced-motion: reduce)
 const isMobileViewport = () => MOBILE_MEDIA.matches;
 const prefersReducedMotion = () => REDUCED_MOTION_MEDIA.matches;
 
-const GROUP_COLORS = {
-  Prospect: "#d08f22",
-  Land: "#124784",
-  Office: "#148a64",
-  Other: "#bf3f2f",
-  "Multi-Family Dwelling": "#6b4ea2",
+const GROUP_PALETTES = {
+  light: {
+    Prospect: "#eaa31a",
+    Land: "#0b4cb8",
+    Office: "#0fa073",
+    Other: "#4a5160",
+    "Multi-Family Dwelling": "#7a4fc7",
+  },
+  dark: {
+    Prospect: "#f5b13a",
+    Land: "#5a8fe6",
+    Office: "#22b886",
+    Other: "#a3acbf",
+    "Multi-Family Dwelling": "#a17be0",
+  },
+};
+
+const GROUP_FALLBACKS = {
+  light: "#7f8ba0",
+  dark: "#aab3c4",
 };
 
 const GROUP_LABELS = {
@@ -27,14 +41,21 @@ const GROUP_LABELS = {
 
 const GROUP_ORDER = ["Prospect", "Land", "Office", "Other", "Multi-Family Dwelling"];
 
-const GROUP_FALLBACK_COLOR = "#7f8ba0";
+function getActivePalette() {
+  return GROUP_PALETTES[STATE.theme] || GROUP_PALETTES.light;
+}
+
+function getActiveFallbackColor() {
+  return GROUP_FALLBACKS[STATE.theme] || GROUP_FALLBACKS.light;
+}
 
 function groupColorMatchExpression(getter) {
+  const palette = getActivePalette();
   const stops = [];
-  Object.entries(GROUP_COLORS).forEach(([group, color]) => {
+  Object.entries(palette).forEach(([group, color]) => {
     stops.push(group, color);
   });
-  return ["match", getter, ...stops, GROUP_FALLBACK_COLOR];
+  return ["match", getter, ...stops, getActiveFallbackColor()];
 }
 
 const STATE = {
@@ -43,7 +64,87 @@ const STATE = {
   features: [],
   steps: [],
   activeStepId: null,
+  theme: "light",
 };
+
+const THEME_STORAGE_KEY = "extell-assemblage-theme";
+const MAPBOX_STYLES = {
+  light: "mapbox://styles/mapbox/light-v11",
+  dark: "mapbox://styles/mapbox/dark-v11",
+};
+
+function getStoredTheme() {
+  try {
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    if (stored === "dark" || stored === "light") return stored;
+  } catch (e) {
+    /* localStorage may be unavailable (private mode, etc.) */
+  }
+  return null;
+}
+
+function getSystemTheme() {
+  return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+}
+
+function getInitialTheme() {
+  // The inline boot script in <head> has already applied the right theme,
+  // so trust that attribute as the source of truth for first paint.
+  const attr = document.documentElement.getAttribute("data-theme");
+  if (attr === "dark" || attr === "light") return attr;
+  return getStoredTheme() || getSystemTheme();
+}
+
+function syncThemeToggleButton(theme) {
+  const btn = document.getElementById("themeToggle");
+  if (!btn) return;
+  const isDark = theme === "dark";
+  btn.setAttribute("aria-pressed", String(isDark));
+  const icon = btn.querySelector(".theme-toggle-icon");
+  const label = btn.querySelector(".theme-toggle-label");
+  // When in dark mode, the button switches you back to light, and vice versa.
+  if (icon) icon.textContent = isDark ? "☀" : "☾";
+  if (label) label.textContent = isDark ? "Light" : "Dark";
+}
+
+function applyTheme(theme, { persist = true, updateMap = true } = {}) {
+  STATE.theme = theme;
+  document.documentElement.setAttribute("data-theme", theme);
+  syncThemeToggleButton(theme);
+  if (persist) {
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch (e) {
+      /* ignore */
+    }
+  }
+  if (STATE.features && STATE.features.length) {
+    buildLegend(STATE.features);
+  }
+  if (updateMap && STATE.map) {
+    STATE.map.setStyle(MAPBOX_STYLES[theme]);
+  }
+}
+
+function setupThemeToggle() {
+  const btn = document.getElementById("themeToggle");
+  if (!btn) return;
+  btn.addEventListener("click", () => {
+    applyTheme(STATE.theme === "dark" ? "light" : "dark");
+  });
+  // Follow OS-level changes as long as the user has not explicitly chosen.
+  if (window.matchMedia) {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = (event) => {
+      if (getStoredTheme()) return;
+      applyTheme(event.matches ? "dark" : "light", { persist: false });
+    };
+    if (mq.addEventListener) mq.addEventListener("change", handler);
+    else if (mq.addListener) mq.addListener(handler);
+  }
+}
 
 function parseAmount(amountText) {
   if (!amountText) return 0;
@@ -95,7 +196,8 @@ function formatHeadlineFromUrl(urlText) {
 }
 
 function getPropertyGroupColor(group) {
-  return GROUP_COLORS[group] || GROUP_FALLBACK_COLOR;
+  const palette = getActivePalette();
+  return palette[group] || getActiveFallbackColor();
 }
 
 function getPropertyGroupLabel(group) {
@@ -474,6 +576,148 @@ function showTokenWarning() {
   tokenWarningEl.hidden = false;
 }
 
+function addMapDataLayers(map) {
+  // The style (and therefore any sources we add now) is ready as soon as
+  // style.load fires — flip the flag here so updateActivePoint /
+  // updateActiveParcel don't early-return when activateStep is replayed
+  // below for the initial card.
+  STATE.mapLoaded = true;
+
+  if (!map.getSource("parcels")) {
+    map.addSource("parcels", {
+      type: "geojson",
+      data: STATE.parcels || { type: "FeatureCollection", features: [] },
+    });
+  }
+
+  if (!map.getLayer("parcels-fill")) {
+    map.addLayer({
+      id: "parcels-fill",
+      type: "fill",
+      source: "parcels",
+      paint: {
+        "fill-color": groupColorMatchExpression(["get", "property_group"]),
+        "fill-opacity": 0.2,
+      },
+    });
+  }
+
+  if (!map.getLayer("parcels-outline")) {
+    map.addLayer({
+      id: "parcels-outline",
+      type: "line",
+      source: "parcels",
+      paint: {
+        "line-color": groupColorMatchExpression(["get", "property_group"]),
+        "line-width": 1,
+        "line-opacity": 0.6,
+      },
+    });
+  }
+
+  if (!map.getLayer("parcels-fill-active")) {
+    map.addLayer({
+      id: "parcels-fill-active",
+      type: "fill",
+      source: "parcels",
+      filter: ["==", ["get", "source_doc_id"], "__none__"],
+      paint: {
+        "fill-color": groupColorMatchExpression(["get", "property_group"]),
+        "fill-opacity": 0.45,
+      },
+    });
+  }
+
+  if (!map.getLayer("parcels-outline-active")) {
+    map.addLayer({
+      id: "parcels-outline-active",
+      type: "line",
+      source: "parcels",
+      filter: ["==", ["get", "source_doc_id"], "__none__"],
+      paint: {
+        "line-color": groupColorMatchExpression(["get", "property_group"]),
+        "line-width": 2.4,
+        "line-opacity": 0.95,
+      },
+    });
+  }
+
+  if (!map.getSource("all-points")) {
+    map.addSource("all-points", {
+      type: "geojson",
+      data: { type: "FeatureCollection", features: [] },
+    });
+  }
+
+  if (!map.getLayer("all-points-layer")) {
+    map.addLayer({
+      id: "all-points-layer",
+      type: "circle",
+      source: "all-points",
+      paint: {
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["get", "amountValue"],
+          0,
+          4,
+          10000000,
+          7,
+          100000000,
+          11,
+          500000000,
+          15,
+          1000000000,
+          18,
+        ],
+        "circle-color": groupColorMatchExpression(["get", "propertyGroup"]),
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-width": 1.3,
+        "circle-opacity": 0.5,
+      },
+    });
+  }
+
+  if (!map.getSource("active-point")) {
+    map.addSource("active-point", {
+      type: "geojson",
+      data: { type: "FeatureCollection", features: [] },
+    });
+  }
+
+  if (!map.getLayer("active-point-glow")) {
+    map.addLayer({
+      id: "active-point-glow",
+      type: "circle",
+      source: "active-point",
+      paint: {
+        "circle-radius": 22,
+        "circle-color": groupColorMatchExpression(["get", "propertyGroup"]),
+        "circle-opacity": 0.22,
+      },
+    });
+  }
+
+  if (!map.getLayer("active-point-core")) {
+    map.addLayer({
+      id: "active-point-core",
+      type: "circle",
+      source: "active-point",
+      paint: {
+        "circle-radius": 10,
+        "circle-color": groupColorMatchExpression(["get", "propertyGroup"]),
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-width": 3,
+      },
+    });
+  }
+
+  updateAllPointsSource();
+  if (STATE.activeStepId) {
+    activateStep(STATE.activeStepId, { updateHash: false, force: true });
+  }
+}
+
 function initMap() {
   const firstFeature = STATE.features[0];
   const [startLng, startLat] = firstFeature.coordinates;
@@ -481,7 +725,7 @@ function initMap() {
 
   const map = new mapboxgl.Map({
     container: "map",
-    style: "mapbox://styles/mapbox/light-v11",
+    style: MAPBOX_STYLES[STATE.theme] || MAPBOX_STYLES.light,
     center: [startLng, startLat],
     zoom: mobile ? 10.8 : 11.5,
     pitch: mobile ? 0 : 34,
@@ -516,128 +760,14 @@ function initMap() {
     if (map.touchZoomRotate) map.touchZoomRotate.disable();
   }
 
+  map.on("style.load", () => {
+    // Fires on the initial style load and every time setStyle() finishes,
+    // so the parcels/points layers get re-added whenever the basemap swaps.
+    addMapDataLayers(map);
+  });
+
   map.on("load", () => {
     STATE.mapLoaded = true;
-
-    map.addSource("parcels", {
-      type: "geojson",
-      data: STATE.parcels || { type: "FeatureCollection", features: [] },
-    });
-
-    map.addLayer({
-      id: "parcels-fill",
-      type: "fill",
-      source: "parcels",
-      paint: {
-        "fill-color": groupColorMatchExpression(["get", "property_group"]),
-        "fill-opacity": 0.2,
-      },
-    });
-
-    map.addLayer({
-      id: "parcels-outline",
-      type: "line",
-      source: "parcels",
-      paint: {
-        "line-color": groupColorMatchExpression(["get", "property_group"]),
-        "line-width": 1,
-        "line-opacity": 0.6,
-      },
-    });
-
-    map.addLayer({
-      id: "parcels-fill-active",
-      type: "fill",
-      source: "parcels",
-      filter: ["==", ["get", "source_doc_id"], "__none__"],
-      paint: {
-        "fill-color": groupColorMatchExpression(["get", "property_group"]),
-        "fill-opacity": 0.45,
-      },
-    });
-
-    map.addLayer({
-      id: "parcels-outline-active",
-      type: "line",
-      source: "parcels",
-      filter: ["==", ["get", "source_doc_id"], "__none__"],
-      paint: {
-        "line-color": groupColorMatchExpression(["get", "property_group"]),
-        "line-width": 2.4,
-        "line-opacity": 0.95,
-      },
-    });
-
-    map.addSource("all-points", {
-      type: "geojson",
-      data: {
-        type: "FeatureCollection",
-        features: [],
-      },
-    });
-
-    map.addLayer({
-      id: "all-points-layer",
-      type: "circle",
-      source: "all-points",
-      paint: {
-        "circle-radius": [
-          "interpolate",
-          ["linear"],
-          ["get", "amountValue"],
-          0,
-          4,
-          10000000,
-          7,
-          100000000,
-          11,
-          500000000,
-          15,
-          1000000000,
-          18,
-        ],
-        "circle-color": groupColorMatchExpression(["get", "propertyGroup"]),
-        "circle-stroke-color": "#ffffff",
-        "circle-stroke-width": 1.3,
-        "circle-opacity": 0.5,
-      },
-    });
-
-    map.addSource("active-point", {
-      type: "geojson",
-      data: {
-        type: "FeatureCollection",
-        features: [],
-      },
-    });
-
-    map.addLayer({
-      id: "active-point-glow",
-      type: "circle",
-      source: "active-point",
-      paint: {
-        "circle-radius": 22,
-        "circle-color": groupColorMatchExpression(["get", "propertyGroup"]),
-        "circle-opacity": 0.22,
-      },
-    });
-
-    map.addLayer({
-      id: "active-point-core",
-      type: "circle",
-      source: "active-point",
-      paint: {
-        "circle-radius": 10,
-        "circle-color": groupColorMatchExpression(["get", "propertyGroup"]),
-        "circle-stroke-color": "#ffffff",
-        "circle-stroke-width": 3,
-      },
-    });
-
-    updateAllPointsSource();
-    if (STATE.activeStepId) {
-      activateStep(STATE.activeStepId, { updateHash: false, force: true });
-    }
 
     // Belt-and-suspenders: if the container's height settled after Mapbox
     // measured it (e.g. svh recalculation, late font load), force a resize
@@ -674,6 +804,11 @@ function initMap() {
 }
 
 async function init() {
+  // Pick the initial theme before anything else paints map chrome, then wire
+  // the toggle so it works whether or not the map ever loads.
+  applyTheme(getInitialTheme(), { persist: false, updateMap: false });
+  setupThemeToggle();
+
   const token = (MAPBOX_ACCESS_TOKEN || "").trim();
   const isPlaceholder = token.includes("YOUR_MAPBOX_ACCESS_TOKEN");
   const isPublicToken = token.startsWith("pk.");

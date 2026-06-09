@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Syne:wght@600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&display=swap"
       rel="stylesheet"
     />
     <link
@@ -19,13 +19,43 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <script>
+      // Apply the saved or system-preferred color theme before first paint
+      // so the page doesn't flash the wrong palette on load.
+      (function () {
+        try {
+          var stored = localStorage.getItem("extell-assemblage-theme");
+          var theme =
+            stored === "dark" || stored === "light"
+              ? stored
+              : window.matchMedia &&
+                window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (e) {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      })();
+    </script>
   </head>
   <body>
     <div class="page-bg" aria-hidden="true"></div>
 
     <header class="hero">
+      <button
+        type="button"
+        class="theme-toggle"
+        id="themeToggle"
+        aria-label="Switch color theme"
+        aria-pressed="false"
+      >
+        <span class="theme-toggle-icon" aria-hidden="true">☾</span>
+        <span class="theme-toggle-label">Dark</span>
+      </button>
+      <p class="hero-kicker">The Real Deal Interactive</p>
       <h1>Extell's Acquisition Trail</h1>
-      <p>
+      <p class="hero-lede">
         Click a card to see the location of each acquisition on the map, along with details about the purchase. Scroll down to see all acquisitions in chronological order.
       </p>
     </header>
