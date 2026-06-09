@@ -910,18 +910,21 @@ function addMapDataLayers(map) {
   }
 }
 
-// Touch-device opt-in: shows a "Tap to interact" veil over the map. One tap
-// re-enables drag/pinch handlers for the rest of the session and fades the
-// veil out. Mouse/trackpad users never see it (the map already has the +/-
-// zoom buttons + clickable pins for them).
+// Tap/click to interact: shows a "Tap to interact" veil over the map. One
+// tap (or click) re-enables drag + pinch + double-click-zoom handlers for
+// the rest of the session and fades the veil out. Active on all devices —
+// touch and mouse — so the map never accidentally captures a swipe / wheel
+// before the reader explicitly opts in.
 function initMapTapVeil(map) {
   const veil = document.getElementById("mapTapVeil");
   if (!veil) return;
 
+  // Tailor the pill copy to the input device (touch → "Tap", mouse → "Click").
   const isTouchOnly =
     window.matchMedia &&
     window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-  if (!isTouchOnly) return;
+  const label = veil.querySelector(".map-tap-veil-label");
+  if (label) label.textContent = isTouchOnly ? "Tap to interact" : "Click to interact";
 
   veil.hidden = false;
 
@@ -935,7 +938,7 @@ function initMapTapVeil(map) {
       map.touchZoomRotate.disableRotation();
     }
     // Remove from the layout once the fade is done so it can't intercept
-    // taps on pins or the legend.
+    // clicks on pins or the legend.
     setTimeout(() => {
       veil.hidden = true;
     }, 260);
