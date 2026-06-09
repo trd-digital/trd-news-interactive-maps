@@ -621,10 +621,12 @@ function activateStep(stepId, options = {}) {
     if (isActive && scrollIntoView) {
       // "nearest" only scrolls when the card is outside the visible scroll
       // area; when the user clicks a card that's already on-screen, the
-      // panel's scroll position is preserved.
+      // panel's scroll position is preserved (no jump). On mobile this
+      // also prevents the page from re-centering an already-visible card
+      // under the sticky map.
       el.scrollIntoView({
         behavior: prefersReducedMotion() ? "auto" : "smooth",
-        block: isMobileViewport() ? "start" : "nearest",
+        block: "nearest",
       });
     }
   });
@@ -933,24 +935,19 @@ function initMap() {
     STATE.embedMode ? "top-left" : "top-right"
   );
 
-  if (mobile) {
-    // Allow pinch/drag for exploration, but keep page scroll working and
-    // prevent accidental rotation/pitch gestures on touch.
-    map.scrollZoom.disable();
-    map.dragRotate.disable();
-    if (map.touchPitch) map.touchPitch.disable();
-    if (map.touchZoomRotate) map.touchZoomRotate.disableRotation();
-  } else {
-    // Desktop: keep the map visually static; navigation is driven by card
-    // clicks, pin/parcel clicks, and the +/- zoom buttons.
-    map.scrollZoom.disable();
-    map.boxZoom.disable();
-    map.dragPan.disable();
-    map.dragRotate.disable();
-    map.keyboard.disable();
-    map.doubleClickZoom.disable();
-    if (map.touchZoomRotate) map.touchZoomRotate.disable();
-  }
+  // The map is a presentation surface, not an exploration tool: lock it
+  // down on every viewport. On mobile this is critical — if dragPan/touch
+  // gestures stay enabled, a finger trying to scroll the article past the
+  // sticky map ends up panning the map instead, trapping the reader.
+  // Pin/parcel taps and the +/- nav buttons still work.
+  map.scrollZoom.disable();
+  map.boxZoom.disable();
+  map.dragPan.disable();
+  map.dragRotate.disable();
+  map.keyboard.disable();
+  map.doubleClickZoom.disable();
+  if (map.touchPitch) map.touchPitch.disable();
+  if (map.touchZoomRotate) map.touchZoomRotate.disable();
 
   map.on("style.load", () => {
     // Fires on the initial style load and every time setStyle() finishes,

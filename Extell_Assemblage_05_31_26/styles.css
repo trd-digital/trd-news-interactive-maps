@@ -193,6 +193,10 @@ h1 {
 #map {
   width: 100%;
   height: 100%;
+  /* Map is non-interactive on touch (pan/pinch are disabled in JS). Let
+     vertical scrolls and pinch-zooms on the page pass through the map
+     instead of being captured by the canvas. */
+  touch-action: pan-y pinch-zoom;
 }
 
 /* Mapbox sets a grab/grabbing cursor on the interactive canvas; the map is
