@@ -751,36 +751,82 @@ h1 {
 
 /* -------- Wide embed (>= 780px): scrollytelling overlay -------- */
 @media (min-width: 780px) {
+  /* Fixed-height widget: the iframe stays at .layout's height (560px), the
+     map fills the full area, and only the right-side card column scrolls.
+     This stops cards from spilling into black space below the map and turns
+     the whole embed into a self-contained "panel" inside the article. */
+  :root[data-layout="embed"],
+  :root[data-layout="embed"] body {
+    height: 560px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
   :root[data-layout="embed"] .layout {
     display: block;
     position: relative;
     padding: 0;
+    height: 560px;
+    overflow: hidden;
   }
 
   :root[data-layout="embed"] .map-wrap {
-    position: sticky;
-    top: 0;
+    position: absolute;
+    inset: 0;
     width: 100%;
-    height: 560px;
+    height: 100%;
     border-bottom: 0;
     z-index: 1;
   }
 
   :root[data-layout="embed"] .story-wrap {
-    position: relative;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 380px;
+    margin: 0;
+    padding: 0.75rem 0.75rem 0.75rem 0;
     z-index: 2;
-    /* Lift the card column up so the first cards float over the sticky map.
-       Matches .map-wrap height above (560) plus the story-wrap top padding. */
-    margin-top: -560px;
-    padding: 1rem 1rem 1.25rem 0;
-    /* Keep the column tight against the right edge of the map. */
-    max-width: 380px;
-    margin-left: auto;
-    margin-right: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(120, 120, 120, 0.45) transparent;
+    /* Subtle fade at the bottom hints there's more to scroll. */
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      black 0,
+      black calc(100% - 28px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      black 0,
+      black calc(100% - 28px),
+      transparent 100%
+    );
+  }
+
+  :root[data-layout="embed"] .story-wrap::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  :root[data-layout="embed"] .story-wrap::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  :root[data-layout="embed"] .story-wrap::-webkit-scrollbar-thumb {
+    background: rgba(120, 120, 120, 0.45);
+    border-radius: 3px;
+  }
+
+  :root[data-layout="embed"] .story-wrap::-webkit-scrollbar-thumb:hover {
+    background: rgba(120, 120, 120, 0.7);
   }
 
   :root[data-layout="embed"] .story {
-    padding-bottom: 1rem;
+    padding-bottom: 1.75rem;
     gap: 0.55rem;
   }
 
@@ -792,6 +838,7 @@ h1 {
     box-shadow: var(--overlay-shadow);
     padding: 0.8rem 0.95rem 0.85rem 1rem;
     scroll-margin-top: 0.6rem;
+    scroll-margin-bottom: 1.25rem;
   }
 
   :root[data-layout="embed"] .step h3 {
@@ -810,7 +857,7 @@ h1 {
   }
 
   /* Move the legend to the bottom-LEFT so it doesn't collide with the
-     overlay card column on the right. */
+     overlay card column on the right. Sits above the Mapbox attribution. */
   :root[data-layout="embed"] .map-legend {
     left: calc(0.6rem + env(safe-area-inset-left));
     right: auto;

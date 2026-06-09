@@ -197,10 +197,13 @@ function postParentResize() {
   postParentResize._scheduled = true;
   requestAnimationFrame(() => {
     postParentResize._scheduled = false;
-    const height = Math.max(
-      document.documentElement.scrollHeight,
-      document.body ? document.body.scrollHeight : 0
-    );
+    // Use body.scrollHeight only: documentElement.scrollHeight returns the
+    // VIEWPORT (iframe) height when content is smaller, which would peg the
+    // reported height at the current iframe size and stop the parent from
+    // ever shrinking us back down (the fixed-height overlay layout needs to
+    // shrink from the initial iframe height down to .layout's 560px).
+    const height = document.body ? document.body.scrollHeight : 0;
+    if (!height) return;
     // Suppress no-op / sub-pixel reports to avoid feedback loops with parents
     // that size the iframe back from our reported height.
     if (Math.abs(height - (postParentResize._lastHeight || 0)) < 2) return;
@@ -921,9 +924,11 @@ function initMap() {
 
   STATE.map = map;
 
+  // In embed mode the right edge of the map is covered by the overlay card
+  // column, so put the zoom controls at top-left where they stay tappable.
   map.addControl(
     new mapboxgl.NavigationControl({ showCompass: false, visualizePitch: false }),
-    "top-right"
+    STATE.embedMode ? "top-left" : "top-right"
   );
 
   if (mobile) {
