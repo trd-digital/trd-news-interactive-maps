@@ -529,18 +529,17 @@ function flyToRecord(feature) {
     cameraOptions.padding = { top: 0, bottom: 0, left: 0, right: overlayWidth };
   }
 
-  // Skip the camera animation entirely in embed mode (cheaper, less jank
-  // when paired with TRD's article ads + lazy iframes) and whenever the
-  // visitor has asked for reduced motion.
-  if (STATE.embedMode || prefersReducedMotion()) {
+  if (prefersReducedMotion()) {
     STATE.map.jumpTo(cameraOptions);
     return;
   }
 
-  STATE.map.flyTo({
+  // Use easeTo for short hops between Midtown pins — keeps zoom level constant,
+  // glides instead of the flyTo zoom-out-and-back-in. Shorter duration in embed.
+  STATE.map.easeTo({
     ...cameraOptions,
-    speed: mobile ? 0.75 : 0.6,
-    curve: 1.3,
+    duration: STATE.embedMode ? 700 : 900,
+    easing: (t) => 1 - Math.pow(1 - t, 3),
     essential: true,
   });
 }
@@ -620,9 +619,12 @@ function activateStep(stepId, options = {}) {
       }
     });
     if (isActive && scrollIntoView) {
+      // "nearest" only scrolls when the card is outside the visible scroll
+      // area; when the user clicks a card that's already on-screen, the
+      // panel's scroll position is preserved.
       el.scrollIntoView({
         behavior: prefersReducedMotion() ? "auto" : "smooth",
-        block: isMobileViewport() ? "start" : "center",
+        block: isMobileViewport() ? "start" : "nearest",
       });
     }
   });

@@ -40,6 +40,18 @@
       doesn't even construct until the user scrolls to it.
   =============================================================================
 -->
+<!--
+  Recommended iframe dimensions:
+    width:  100% of the slot (TRD's AllowedContent_defaultWidth renders ~1040px
+            on desktop, ~546px on phones)
+    height: 560px initial. This matches the desktop "fixed-height widget"
+            (overlay cards floating over a full-bleed map). On narrow
+            viewports (<780px CSS), the embed re-flows into a stacked map +
+            scrolling card list and the listener below grows the iframe
+            automatically (typically ~1300-1500px tall on mobile).
+    Always set background + color-scheme so there is no black/dark flash
+    while the iframe is still loading its stylesheet.
+-->
 <figure class="AllowedContent_wrapper__lxthX AllowedContent_defaultWidth__8uyfz">
   <iframe
     id="extell-map-embed"
@@ -48,7 +60,15 @@
     loading="lazy"
     referrerpolicy="strict-origin-when-cross-origin"
     allow="geolocation; fullscreen"
-    style="width: 100%; height: 560px; border: 0; display: block;"
+    style="
+      width: 100%;
+      height: 560px;
+      min-height: 360px;
+      border: 0;
+      display: block;
+      background: #f4ede3;
+      color-scheme: light;
+    "
   ></iframe>
 </figure>
 
