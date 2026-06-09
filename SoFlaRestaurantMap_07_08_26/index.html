@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>South Florida's Michelin-Starred Restaurants | The Real Deal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet" />
+  <link href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap" rel="stylesheet" />
+
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+  <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
+
+  <style>
+    :root {
+      --trd-red: #d6242e;
+      --trd-red-deep: #9c1a22;
+      --trd-gold: #f3c64d;
+      --bg: #ffffff;
+      --bg-soft: #f6f5f1;
+      --panel: #ffffff;
+      --text: #1a1a1a;
+      --muted: #6b6b6b;
+      --border: #e3e3e0;
+      --chip: #ffffff;
+      --chip-text: #1a1a1a;
+      --shadow: 0 6px 24px rgba(0,0,0,0.10);
+      --header-h: 64px;
+    }
+    body[data-bs-theme="dark"] {
+      --bg: #111111;
+      --bg-soft: #1a1a1a;
+      --panel: #1d1d1d;
+      --text: #f4f4f4;
+      --muted: #a8a8a8;
+      --border: #2c2c2c;
+      --chip: #1d1d1d;
+      --chip-text: #f4f4f4;
+      --shadow: 0 6px 24px rgba(0,0,0,0.5);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; height: 100%; width: 100%;
+      font-family: "Proxima Nova", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    /* ------- Header ------- */
+    .trd-header {
+      position: absolute; top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      display: flex; align-items: center; gap: 14px;
+      padding: 0 18px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      z-index: 5;
+    }
+    .trd-bar {
+      width: 6px; height: 36px; background: var(--trd-red); border-radius: 2px;
+    }
+    .trd-title {
+      font-family: "Merriweather", Georgia, serif;
+      font-weight: 900;
+      font-size: 18px;
+      line-height: 1.15;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+    .trd-sub {
+      font-size: 12px; color: var(--muted); margin-top: 2px;
+      text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;
+    }
+    .trd-brand {
+      margin-left: auto; display: flex; align-items: center; gap: 10px;
+    }
+    .trd-brand .pill {
+      background: var(--trd-red); color: #fff;
+      font-family: "Merriweather", serif; font-weight: 900;
+      padding: 4px 10px; font-size: 11px; letter-spacing: 0.12em;
+      border-radius: 2px;
+    }
+    .theme-toggle {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border); border-radius: 999px;
+      width: 34px; height: 34px; cursor: pointer; display: inline-flex;
+      align-items: center; justify-content: center; font-size: 14px;
+    }
+    .theme-toggle:hover { background: var(--bg-soft); }
+
+    /* ------- Map container ------- */
+    .map-wrap {
+      position: absolute; top: var(--header-h); left: 0; right: 0; bottom: 0;
+    }
+    #map { position: absolute; inset: 0; }
+
+    /* ------- Filter chips ------- */
+    .filters {
+      position: absolute; top: 14px; left: 14px; right: 14px;
+      display: flex; gap: 8px; flex-wrap: wrap;
+      z-index: 4; pointer-events: none;
+    }
+    .chip {
+      pointer-events: auto;
+      background: var(--chip); color: var(--chip-text);
+      border: 1px solid var(--border); border-radius: 999px;
+      padding: 7px 14px; font-size: 13px; font-weight: 700;
+      cursor: pointer; box-shadow: var(--shadow);
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: all .15s ease;
+      white-space: nowrap;
+    }
+    .chip:hover { transform: translateY(-1px); }
+    .chip.active {
+      background: var(--trd-red); color: #fff; border-color: var(--trd-red);
+    }
+    .chip .count {
+      font-size: 11px; padding: 1px 7px; border-radius: 999px;
+      background: rgba(0,0,0,0.08); font-weight: 700;
+    }
+    .chip.active .count { background: rgba(255,255,255,0.22); color: #fff; }
+
+    /* ------- Sidebar (desktop) ------- */
+    .sidebar {
+      position: absolute; top: 14px; right: 14px; bottom: 14px;
+      width: 340px;
+      background: var(--panel); color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      z-index: 3;
+    }
+    .sidebar-head {
+      padding: 14px 16px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: baseline; justify-content: space-between;
+    }
+    .sidebar-head h2 {
+      margin: 0; font-family: "Merriweather", serif; font-size: 14px; font-weight: 900;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .sidebar-head .count-pill {
+      font-size: 11px; color: var(--muted); font-weight: 700;
+    }
+    .sidebar-list { overflow-y: auto; flex: 1; }
+    .list-item {
+      padding: 14px 16px; border-bottom: 1px solid var(--border);
+      cursor: pointer; display: grid; grid-template-columns: 36px 1fr; gap: 12px;
+      align-items: start;
+      transition: background .12s ease;
+    }
+    .list-item:hover, .list-item.active { background: var(--bg-soft); }
+    .list-item:last-child { border-bottom: none; }
+    .list-item .name {
+      font-weight: 700; font-size: 15px; line-height: 1.2; margin: 0 0 3px 0;
+      font-family: "Merriweather", serif;
+    }
+    .list-item .addr {
+      font-size: 12px; color: var(--muted); line-height: 1.35;
+    }
+    .list-item .meta {
+      display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap;
+    }
+    .tag {
+      display: inline-block; font-size: 10px; font-weight: 800;
+      padding: 2px 7px; border-radius: 3px; letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .tag.new { background: var(--trd-red); color: #fff; }
+    .tag.stars { background: #1a1a1a; color: var(--trd-gold); }
+    body[data-bs-theme="dark"] .tag.stars { background: #000; }
+
+    /* ------- Marker (custom DOM) -------
+       Note: don't set `transform` on .pin itself — Mapbox writes an inline
+       transform on the marker element for positioning. Scale via inner wrapper. */
+    .pin {
+      width: 38px; height: 46px;
+      cursor: pointer;
+      will-change: transform;
+    }
+    .pin-inner {
+      position: relative;
+      width: 100%; height: 100%;
+      transform-origin: 50% 100%;
+      transition: transform .15s ease;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+    }
+    .pin:hover .pin-inner { transform: scale(1.1); }
+    .pin.active .pin-inner { transform: scale(1.15); }
+    .pin svg { width: 100%; height: 100%; display: block; }
+    .pin .stars {
+      position: absolute; top: 7px; left: 0; right: 0;
+      text-align: center; color: var(--trd-gold);
+      font-size: 14px; letter-spacing: -1px; line-height: 1;
+      pointer-events: none; text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+    }
+    .pin.two-star { width: 44px; height: 54px; }
+    .pin.two-star .stars { font-size: 16px; top: 9px; }
+    .pin .new-flag {
+      position: absolute; top: -4px; right: -6px;
+      background: #000; color: var(--trd-gold);
+      font-size: 8.5px; font-weight: 900;
+      padding: 2px 5px; border-radius: 2px;
+      letter-spacing: 0.1em;
+      border: 1.5px solid #fff;
+    }
+
+    /* ------- Popup ------- */
+    .mapboxgl-popup-content {
+      padding: 0; border-radius: 6px; overflow: hidden;
+      background: var(--panel); color: var(--text);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      font-family: "Proxima Nova", sans-serif;
+      min-width: 240px; max-width: 280px;
+    }
+    .mapboxgl-popup-close-button {
+      color: var(--text); font-size: 20px; padding: 4px 8px;
+    }
+    .mapboxgl-popup-tip { border-top-color: var(--panel) !important; border-bottom-color: var(--panel) !important; }
+    body[data-bs-theme="dark"] .mapboxgl-popup-tip {
+      border-top-color: var(--panel) !important; border-bottom-color: var(--panel) !important;
+    }
+    .popup-top {
+      background: var(--trd-red); color: #fff; padding: 10px 14px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .popup-top .stars-line { color: var(--trd-gold); font-size: 14px; letter-spacing: 1px; }
+    .popup-top .new-tag {
+      background: #000; color: var(--trd-gold); font-size: 9px; font-weight: 900;
+      padding: 2px 6px; border-radius: 2px; letter-spacing: 0.1em;
+    }
+    .popup-body { padding: 12px 14px 14px; }
+    .popup-body h3 {
+      margin: 0 0 4px; font-family: "Merriweather", serif;
+      font-size: 16px; font-weight: 900; line-height: 1.2;
+    }
+    .popup-body .addr {
+      font-size: 12px; color: var(--muted); margin-bottom: 8px; line-height: 1.35;
+    }
+    .popup-body .desc {
+      font-size: 13px; line-height: 1.45;
+    }
+
+    /* ------- Legend ------- */
+    .legend {
+      position: absolute; bottom: 14px; left: 14px;
+      background: var(--panel); color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px; padding: 10px 12px;
+      font-size: 12px; box-shadow: var(--shadow);
+      z-index: 3; max-width: 220px;
+    }
+    .legend h4 {
+      margin: 0 0 8px; font-family: "Merriweather", serif;
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .legend .row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+    .legend .swatch {
+      width: 18px; height: 22px; display: inline-block; position: relative;
+    }
+    .legend .swatch.small { width: 14px; height: 18px; }
+    .legend .new-mini {
+      background: #000; color: var(--trd-gold);
+      font-size: 8px; font-weight: 900; padding: 2px 5px;
+      border-radius: 2px; letter-spacing: 0.1em;
+    }
+
+    /* ------- Source line ------- */
+    .credit {
+      position: absolute; bottom: 14px; right: 14px;
+      font-size: 10px; color: var(--muted);
+      background: var(--panel); padding: 4px 8px;
+      border: 1px solid var(--border); border-radius: 4px;
+      z-index: 3; letter-spacing: 0.04em;
+    }
+
+    /* ------- Mapbox controls themed ------- */
+    .mapboxgl-ctrl-group { background: var(--panel); border: 1px solid var(--border); }
+    body[data-bs-theme="dark"] .mapboxgl-ctrl-group button { filter: invert(1); }
+
+    /* ------- Mobile ------- */
+    @media (max-width: 768px) {
+      :root { --header-h: 56px; }
+      .trd-title { font-size: 15px; }
+      .trd-sub { font-size: 10px; }
+      .trd-brand .pill { font-size: 10px; padding: 3px 8px; }
+      .filters {
+        top: 10px; left: 10px; right: 10px;
+        overflow-x: auto; flex-wrap: nowrap;
+        padding-bottom: 4px; -webkit-overflow-scrolling: touch;
+      }
+      .filters::-webkit-scrollbar { display: none; }
+      .legend { display: none; }
+      .credit { bottom: auto; top: calc(var(--header-h) + 56px); right: 10px; }
+      .sidebar {
+        top: auto; left: 0; right: 0; bottom: 0;
+        width: 100%; height: 42vh; max-height: 42vh;
+        border-radius: 14px 14px 0 0;
+        border-bottom: none; border-left: none; border-right: none;
+      }
+      .sidebar.collapsed { height: 56px; }
+      .sidebar-head {
+        cursor: pointer;
+        position: relative;
+      }
+      .sidebar-head::before {
+        content: ""; position: absolute; top: 6px; left: 50%;
+        transform: translateX(-50%); width: 40px; height: 4px;
+        background: var(--border); border-radius: 2px;
+      }
+      .sidebar-head h2 { padding-top: 4px; }
+    }
+  </style>
+</head>
+<body data-bs-theme="light">
+  <script>
+    // Set theme BEFORE first paint so CSS variables and Mapbox style match.
+    (function () {
+      const saved = null; // no persistence: defer to OS preference
+      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.body.setAttribute("data-bs-theme", saved || (prefersDark ? "dark" : "light"));
+    })();
+  </script>
+
+  <header class="trd-header">
+    <span class="trd-bar"></span>
+    <div>
+      <h1 class="trd-title">South Florida's Michelin-Starred Restaurants</h1>
+      <div class="trd-sub">2026 Guide &middot; <span id="totalCount">16</span> Restaurants</div>
+    </div>
+    <div class="trd-brand">
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">&#9788;</button>
+      <span class="pill">The Real Deal</span>
+    </div>
+  </header>
+
+  <div class="map-wrap">
+    <div id="map"></div>
+
+    <div class="filters" id="filters">
+      <button class="chip active" data-filter="all">All <span class="count" id="c-all">0</span></button>
+      <button class="chip" data-filter="new">New This Year <span class="count" id="c-new">0</span></button>
+      <button class="chip" data-filter="2">Two Stars <span class="count" id="c-2">0</span></button>
+      <button class="chip" data-filter="1">One Star <span class="count" id="c-1">0</span></button>
+    </div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head" id="sidebarHead">
+        <h2>Restaurants</h2>
+        <span class="count-pill"><span id="visibleCount">0</span> shown</span>
+      </div>
+      <div class="sidebar-list" id="sidebarList"></div>
+    </aside>
+
+    <div class="legend">
+      <h4>Legend</h4>
+      <div class="row"><span class="swatch"><svg viewBox="0 0 38 46"><path d="M19 1C9.6 1 2 8.5 2 18c0 12 17 27 17 27s17-15 17-27C36 8.5 28.4 1 19 1z" fill="#d6242e" stroke="#fff" stroke-width="2"/></svg></span> One Michelin star</div>
+      <div class="row"><span class="swatch"><svg viewBox="0 0 44 54"><path d="M22 1C11 1 2 9.5 2 20c0 14 20 33 20 33s20-19 20-33C42 9.5 33 1 22 1z" fill="#9c1a22" stroke="#fff" stroke-width="2"/></svg></span> Two Michelin stars</div>
+      <div class="row"><span class="new-mini">NEW</span> New on the 2026 guide</div>
+    </div>
+
+    <div class="credit">Source: Michelin Guide &middot; Map: The Real Deal</div>
+  </div>
+
+  <script>
+    // ----- Embedded data -----
+    const DATA = {"type":"FeatureCollection","features":[
+      {"type":"Feature","properties":{"full_address":"112 Alhambra Cir, Coral Gables, FL 33134","restaurants":"Shingo","description":"A 14-seat omakase restaurant serving Edomae-style sushi and seasonal Japanese seafood.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.2566214,25.7530311]}},
+      {"type":"Feature","properties":{"full_address":"31 SE 5th St, Miami, FL 33131","restaurants":"Elcielo Miami","description":"A tasting-menu restaurant from Colombian chef Juan Manuel Barrientos focused on modern Colombian cuisine.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1916039,25.7696808]}},
+      {"type":"Feature","properties":{"full_address":"6801 Collins Ave, Miami Beach, FL 33141","restaurants":"Tambourine Room by Tristan Brandt","description":"A fine-dining restaurant offering French cuisine with Asian influences through a tasting-menu format.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1197746,25.8530369]}},
+      {"type":"Feature","properties":{"full_address":"424 Park Place, Suite 101, West Palm Beach, FL 33401","restaurants":"Emelina","description":"A contemporary restaurant serving Mediterranean-inspired dishes in a neighborhood setting.","new_this_year?":"TRUE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.0551569,26.6975792]}},
+      {"type":"Feature","properties":{"full_address":"525 N Fort Lauderdale Beach Blvd, Fort Lauderdale, FL 33304","restaurants":"Chef\u2019s Counter at MAASS","description":"An intimate chef's-counter experience centered on a multi-course tasting menu.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1041065,26.1301495]}},
+      {"type":"Feature","properties":{"full_address":"5205 NE 2nd Ave, Miami, FL 33137","restaurants":"Boia De","description":"A small restaurant known for Italian-influenced dishes and a frequently changing menu.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1913428,25.8241012]}},
+      {"type":"Feature","properties":{"full_address":"2188 NE 123rd St, North Miami, FL 33181","restaurants":"Mutra","description":"A restaurant focused on modern Middle Eastern cooking and locally sourced ingredients.","new_this_year?":"TRUE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1540444,25.8891789]}},
+      {"type":"Feature","properties":{"full_address":"3413 Main Hwy, Miami, FL 33133","restaurants":"Los F\u00e9lix","description":"A Mexican restaurant emphasizing heirloom corn and wood-fired preparations.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.2425107,25.7275321]}},
+      {"type":"Feature","properties":{"full_address":"151 NE 41st St, Miami, FL 33137","restaurants":"L\u2019Atelier de Jo\u00ebl Robuchon Miami","description":"South Florida's only two-star Michelin restaurant serving French fine-dining with tasting menus and classic French cuisine.","new_this_year?":"FALSE","num_michelin_stars":"2"},"geometry":{"type":"Point","coordinates":[-80.1920993,25.8144884]}},
+      {"type":"Feature","properties":{"full_address":"3900 NE 2nd Ave, Miami, FL 33137","restaurants":"Cote Miami","description":"A Korean steakhouse combining tabletop grilling with dry-aged beef and a full-service dining experience.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1914914,25.8128901]}},
+      {"type":"Feature","properties":{"full_address":"151 NE 41st St, Miami, FL 33137","restaurants":"Le Jardinier Miami","description":"A French restaurant with a menu built around vegetables, seafood and seasonal ingredients.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1920993,25.8144884]}},
+      {"type":"Feature","properties":{"full_address":"101 Washington Ave, Miami Beach, FL 33139","restaurants":"Stubborn Seed","description":"A tasting-menu restaurant serving contemporary American cuisine.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1354438,25.770626]}},
+      {"type":"Feature","properties":{"full_address":"3540 Main Hwy, Miami, FL 33133","restaurants":"Ariete","description":"A restaurant blending Cuban, French and American influences through both tasting and \u00e0 la carte menus.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.2450712,25.7252503]}},
+      {"type":"Feature","properties":{"full_address":"313 NW 25th St, Miami, FL 33127","restaurants":"Hiden","description":"A hidden omakase restaurant serving a multi-course sushi-focused tasting menu.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.2013535,25.8008165]}},
+      {"type":"Feature","properties":{"full_address":"7223 NW 2nd Ave, Miami, FL 33150","restaurants":"Ogawa","description":"A sushi counter specializing in traditional Edomae-style omakase.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.2006421,25.8415286]}},
+      {"type":"Feature","properties":{"full_address":"9011 Collins Ave, Surfside, FL 33154","restaurants":"The Surf Club Restaurant","description":"A fine-dining restaurant from Thomas Keller focused on Continental and American cuisine.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1215331,25.8774848]}}
+    ]};
+
+    // ----- Mapbox setup -----
+    mapboxgl.accessToken = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
+
+    const STYLES = {
+      light: "mapbox://styles/mapbox/light-v11",
+      dark:  "mapbox://styles/mapbox/dark-v11"
+    };
+
+    // Compute bounds to fit data
+    const lons = DATA.features.map(f => f.geometry.coordinates[0]);
+    const lats = DATA.features.map(f => f.geometry.coordinates[1]);
+    const bounds = [
+      [Math.min(...lons), Math.min(...lats)],
+      [Math.max(...lons), Math.max(...lats)]
+    ];
+
+    const map = new mapboxgl.Map({
+      container: "map",
+      style: STYLES[document.body.getAttribute("data-bs-theme") === "dark" ? "dark" : "light"],
+      bounds: bounds,
+      fitBoundsOptions: { padding: { top: 120, bottom: 60, left: 60, right: window.innerWidth > 768 ? 380 : 30 } },
+      minZoom: 8, maxZoom: 17,
+      attributionControl: false
+    });
+
+    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
+    map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
+
+    // ----- Build markers -----
+    const markers = [];   // {marker, feature, el}
+    const popups  = [];
+    let activeFilter = "all";
+
+    function pinSvg(color) {
+      return `<svg viewBox="0 0 38 46" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 1C9.6 1 2 8.5 2 18c0 12 17 27 17 27s17-15 17-27C36 8.5 28.4 1 19 1z"
+              fill="${color}" stroke="#ffffff" stroke-width="2"/>
+      </svg>`;
+    }
+
+    function buildMarkerEl(feature) {
+      const stars = parseInt(feature.properties.num_michelin_stars || "1", 10);
+      const isNew = (feature.properties["new_this_year?"] || "").toUpperCase() === "TRUE";
+      const el = document.createElement("div");
+      el.className = "pin" + (stars === 2 ? " two-star" : "");
+      const color = stars === 2 ? "#9c1a22" : "#d6242e";
+      const starGlyphs = stars === 2 ? "★★" : "★";
+      el.innerHTML = `<div class="pin-inner">`
+        + pinSvg(color)
+        + `<div class="stars">${starGlyphs}</div>`
+        + (isNew ? `<div class="new-flag">NEW</div>` : "")
+        + `</div>`;
+      return el;
+    }
+
+    function popupHtml(props) {
+      const stars = parseInt(props.num_michelin_stars || "1", 10);
+      const isNew = (props["new_this_year?"] || "").toUpperCase() === "TRUE";
+      const starGlyphs = "★".repeat(stars);
+      return `
+        <div class="popup-top">
+          <span class="stars-line">${starGlyphs} MICHELIN</span>
+          ${isNew ? `<span class="new-tag">NEW '26</span>` : ""}
+        </div>
+        <div class="popup-body">
+          <h3>${escapeHtml(props.restaurants)}</h3>
+          <div class="addr">${escapeHtml(props.full_address)}</div>
+          <div class="desc">${escapeHtml(props.description || "")}</div>
+        </div>`;
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+    }
+
+    // Spider out markers that share the exact same lng/lat so they don't stack.
+    function spreadDuplicates(features) {
+      const buckets = new Map();
+      features.forEach((f, i) => {
+        const key = f.geometry.coordinates.join(",");
+        if (!buckets.has(key)) buckets.set(key, []);
+        buckets.get(key).push(i);
+      });
+      const offsets = new Array(features.length).fill(null);
+      buckets.forEach(idxs => {
+        if (idxs.length < 2) return;
+        // Spread roughly 18m apart (~0.00018° at this latitude).
+        const r = 0.00018;
+        idxs.forEach((idx, k) => {
+          const angle = (2 * Math.PI * k) / idxs.length;
+          offsets[idx] = [Math.cos(angle) * r, Math.sin(angle) * r];
+        });
+      });
+      return offsets;
+    }
+    const dupOffsets = spreadDuplicates(DATA.features);
+
+    DATA.features.forEach((f, i) => {
+      const el = buildMarkerEl(f);
+      const popup = new mapboxgl.Popup({ offset: 28, closeButton: true, maxWidth: "280px" })
+        .setHTML(popupHtml(f.properties));
+      let coords = f.geometry.coordinates.slice();
+      if (dupOffsets[i]) { coords[0] += dupOffsets[i][0]; coords[1] += dupOffsets[i][1]; }
+      const marker = new mapboxgl.Marker({ element: el, anchor: "bottom" })
+        .setLngLat(coords)
+        .addTo(map);
+      // Manage popup manually (avoid Mapbox's auto-toggle racing with our handler).
+      popup.setLngLat(coords);
+      popup.on("close", () => setActivePin(-1));
+      el.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const m = markers[i];
+        if (m) flyToFeature(m);
+        setActiveListItem(i);
+      });
+      markers.push({ marker, feature: f, el, popup, index: i, coords });
+    });
+
+    function setActivePin(idx) {
+      markers.forEach(m => m.el.classList.toggle("active", m.index === idx));
+    }
+    map.on("click", () => {
+      setActivePin(-1);
+      markers.forEach(m => { if (m.popup.isOpen()) m.popup.remove(); });
+    });
+
+    // ----- Sidebar list -----
+    const sidebarList = document.getElementById("sidebarList");
+
+    function renderList() {
+      sidebarList.innerHTML = "";
+      const visible = markers.filter(m => matchesFilter(m.feature));
+      visible.sort((a, b) => {
+        const sa = parseInt(a.feature.properties.num_michelin_stars, 10);
+        const sb = parseInt(b.feature.properties.num_michelin_stars, 10);
+        if (sa !== sb) return sb - sa;
+        return a.feature.properties.restaurants.localeCompare(b.feature.properties.restaurants);
+      });
+      visible.forEach(m => {
+        const p = m.feature.properties;
+        const stars = parseInt(p.num_michelin_stars, 10);
+        const isNew = (p["new_this_year?"] || "").toUpperCase() === "TRUE";
+        const item = document.createElement("div");
+        item.className = "list-item";
+        item.dataset.idx = m.index;
+        item.innerHTML = `
+          <div style="font-size:22px; line-height:1; color: ${stars===2?'#9c1a22':'#d6242e'}; text-align:center;">
+            <div style="font-size:18px;">${stars===2?'★★':'★'}</div>
+          </div>
+          <div>
+            <div class="name">${escapeHtml(p.restaurants)}</div>
+            <div class="addr">${escapeHtml(p.full_address)}</div>
+            <div class="meta">
+              <span class="tag stars">${stars} STAR${stars>1?'S':''}</span>
+              ${isNew ? '<span class="tag new">NEW</span>' : ''}
+            </div>
+          </div>`;
+        item.addEventListener("click", () => {
+          flyToFeature(m);
+          setActiveListItem(m.index);
+        });
+        sidebarList.appendChild(item);
+      });
+      document.getElementById("visibleCount").textContent = visible.length;
+    }
+
+    function setActiveListItem(idx) {
+      document.querySelectorAll(".list-item").forEach(el => {
+        el.classList.toggle("active", parseInt(el.dataset.idx,10) === idx);
+        if (parseInt(el.dataset.idx,10) === idx) {
+          el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      });
+    }
+
+    // Reserve room for the header + sidebar / bottom sheet so the flown-to point
+    // lands in the visible portion of the map, not under UI chrome.
+    function viewportPadding() {
+      const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 64;
+      const isMobile = window.innerWidth <= 768;
+      const sidebar = document.getElementById("sidebar");
+      const sidebarH = isMobile && sidebar && !sidebar.classList.contains("collapsed")
+        ? Math.round(window.innerHeight * 0.42)
+        : 0;
+      return {
+        top: headerH + 60,
+        bottom: isMobile ? sidebarH + 20 : 60,
+        left: 30,
+        right: isMobile ? 30 : 360
+      };
+    }
+
+    function flyToFeature(m) {
+      map.flyTo({
+        center: m.coords,
+        zoom: Math.max(map.getZoom(), 14),
+        speed: 1.2,
+        essential: true,
+        padding: viewportPadding()
+      });
+      setActivePin(m.index);
+      // Close any other open popups, then open this one.
+      markers.forEach(x => { if (x !== m && x.popup.isOpen()) x.popup.remove(); });
+      if (!m.popup.isOpen()) m.popup.setLngLat(m.coords).addTo(map);
+    }
+
+    // ----- Filters -----
+    function matchesFilter(f) {
+      const stars = parseInt(f.properties.num_michelin_stars, 10);
+      const isNew = (f.properties["new_this_year?"] || "").toUpperCase() === "TRUE";
+      switch (activeFilter) {
+        case "new": return isNew;
+        case "1":   return stars === 1;
+        case "2":   return stars === 2;
+        default:    return true;
+      }
+    }
+
+    function applyFilter() {
+      markers.forEach(m => {
+        const show = matchesFilter(m.feature);
+        m.el.style.display = show ? "" : "none";
+        if (!show && m.popup.isOpen()) m.popup.remove();
+      });
+      renderList();
+    }
+
+    function updateChipCounts() {
+      const all = markers.length;
+      const newCount = markers.filter(m => (m.feature.properties["new_this_year?"]||"").toUpperCase()==="TRUE").length;
+      const oneCount = markers.filter(m => parseInt(m.feature.properties.num_michelin_stars,10)===1).length;
+      const twoCount = markers.filter(m => parseInt(m.feature.properties.num_michelin_stars,10)===2).length;
+      document.getElementById("c-all").textContent = all;
+      document.getElementById("c-new").textContent = newCount;
+      document.getElementById("c-1").textContent = oneCount;
+      document.getElementById("c-2").textContent = twoCount;
+      document.getElementById("totalCount").textContent = all;
+    }
+
+    document.getElementById("filters").addEventListener("click", e => {
+      const btn = e.target.closest(".chip");
+      if (!btn) return;
+      document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+      btn.classList.add("active");
+      activeFilter = btn.dataset.filter;
+      applyFilter();
+    });
+
+    // ----- Theme toggle (TRD theme.js integration) -----
+    // data-bs-theme is already set inline before map init, so init() reads the
+    // same OS preference and keeps it; updateCallback only fires on user toggle.
+    const trdTheme = TrdTheme({
+      updateCallback: (theme) => { map.setStyle(STYLES[theme]); }
+    });
+    trdTheme.init();
+    document.getElementById("themeToggle").addEventListener("click", () => trdTheme.toggle());
+
+    // ----- Mobile sidebar collapse on header tap -----
+    document.getElementById("sidebarHead").addEventListener("click", () => {
+      if (window.innerWidth <= 768) {
+        document.getElementById("sidebar").classList.toggle("collapsed");
+      }
+    });
+
+    // ----- Init -----
+    map.on("load", () => {
+      updateChipCounts();
+      renderList();
+    });
+  </script>
+</body>
+</html>
