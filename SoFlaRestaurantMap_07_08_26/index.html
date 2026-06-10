@@ -5,6 +5,29 @@
   <title>South Florida's Michelin-Starred Restaurants | The Real Deal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
+  <script>
+    // Pre-paint layout + theme detection. Must run inline in <head> before any
+    // stylesheet applies, otherwise the iframe flashes the standalone hero
+    // before flipping into embed mode. See TRD_MAP_INTEGRATION_GUIDE.md §6.
+    (function () {
+      var html = document.documentElement;
+      var params = new URLSearchParams(window.location.search);
+      var isFramed = (function () { try { return window.self !== window.top; } catch (e) { return true; } })();
+      var embed = params.get("layout") === "embed" || isFramed;
+      if (embed) html.setAttribute("data-layout", "embed");
+
+      var THEME_KEY = "soflaRestaurantMap.theme";
+      var themeParam = params.get("theme");
+      var saved = null;
+      if (!embed) { try { saved = window.localStorage.getItem(THEME_KEY); } catch (e) {} }
+      var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var theme = (themeParam === "dark" || themeParam === "light") ? themeParam
+                : (saved === "dark" || saved === "light") ? saved
+                : (prefersDark ? "dark" : "light");
+      html.setAttribute("data-bs-theme", theme);
+    })();
+  </script>
+
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet" />
   <link href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap" rel="stylesheet" />
@@ -14,30 +37,39 @@
 
   <style>
     :root {
-      --trd-red: #d6242e;
-      --trd-red-deep: #9c1a22;
-      --trd-gold: #f3c64d;
+      /* Brand palette built around #27509B (navy). Light defaults. */
+      --brand: #27509B;
+      --brand-deep: #1A3A75;
+      --brand-soft: #EAF0FA;
+      --brand-on: #ffffff;
+      --accent: #C9A038;
       --bg: #ffffff;
-      --bg-soft: #f6f5f1;
+      --bg-soft: #F4F6FB;
       --panel: #ffffff;
-      --text: #1a1a1a;
-      --muted: #6b6b6b;
-      --border: #e3e3e0;
+      --text: #16181F;
+      --muted: #6B6F7E;
+      --border: #E2E6EF;
       --chip: #ffffff;
-      --chip-text: #1a1a1a;
-      --shadow: 0 6px 24px rgba(0,0,0,0.10);
+      --chip-text: #16181F;
+      --shadow: 0 6px 24px rgba(20, 30, 55, 0.10);
       --header-h: 64px;
     }
+    :root[data-bs-theme="dark"],
     body[data-bs-theme="dark"] {
-      --bg: #111111;
-      --bg-soft: #1a1a1a;
-      --panel: #1d1d1d;
-      --text: #f4f4f4;
-      --muted: #a8a8a8;
-      --border: #2c2c2c;
-      --chip: #1d1d1d;
-      --chip-text: #f4f4f4;
-      --shadow: 0 6px 24px rgba(0,0,0,0.5);
+      --brand: #6E92D8;
+      --brand-deep: #27509B;
+      --brand-soft: rgba(110, 146, 216, 0.16);
+      --brand-on: #0F1218;
+      --accent: #E2B856;
+      --bg: #0F1218;
+      --bg-soft: #181C25;
+      --panel: #1B202B;
+      --text: #EEF1F7;
+      --muted: #97A0B4;
+      --border: #2A2F3C;
+      --chip: #1B202B;
+      --chip-text: #EEF1F7;
+      --shadow: 0 6px 24px rgba(0, 0, 0, 0.55);
     }
 
     * { box-sizing: border-box; }
@@ -61,7 +93,7 @@
       z-index: 5;
     }
     .trd-bar {
-      width: 6px; height: 36px; background: var(--trd-red); border-radius: 2px;
+      width: 6px; height: 36px; background: var(--brand); border-radius: 2px;
     }
     .trd-title {
       font-family: "Merriweather", Georgia, serif;
@@ -79,7 +111,7 @@
       margin-left: auto; display: flex; align-items: center; gap: 10px;
     }
     .trd-brand .pill {
-      background: var(--trd-red); color: #fff;
+      background: var(--brand); color: #fff;
       font-family: "Merriweather", serif; font-weight: 900;
       padding: 4px 10px; font-size: 11px; letter-spacing: 0.12em;
       border-radius: 2px;
@@ -97,6 +129,28 @@
       position: absolute; top: var(--header-h); left: 0; right: 0; bottom: 0;
     }
     #map { position: absolute; inset: 0; }
+
+    /* ------- Tap-to-interact veil (embed) ------- */
+    .map-veil {
+      position: absolute; inset: 0; z-index: 4;
+      display: none; align-items: flex-start; justify-content: center;
+      pointer-events: auto;
+      /* Let single-finger vertical scroll pass through to the article. */
+      touch-action: pan-y pinch-zoom;
+      background: transparent;
+    }
+    .map-veil.is-active { display: flex; }
+    .map-veil .pill {
+      margin-top: 14px;
+      background: rgba(22, 24, 31, 0.78);
+      color: #fff;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 12px; font-weight: 800;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+      pointer-events: none;
+    }
 
     /* ------- Filter chips ------- */
     .filters {
@@ -116,12 +170,13 @@
     }
     .chip:hover { transform: translateY(-1px); }
     .chip.active {
-      background: var(--trd-red); color: #fff; border-color: var(--trd-red);
+      background: var(--brand); color: #fff; border-color: var(--brand);
     }
     .chip .count {
       font-size: 11px; padding: 1px 7px; border-radius: 999px;
       background: rgba(0,0,0,0.08); font-weight: 700;
     }
+    body[data-bs-theme="dark"] .chip .count { background: rgba(255,255,255,0.10); }
     .chip.active .count { background: rgba(255,255,255,0.22); color: #fff; }
 
     /* ------- Sidebar (desktop) ------- */
@@ -155,6 +210,7 @@
       transition: background .12s ease;
     }
     .list-item:hover, .list-item.active { background: var(--bg-soft); }
+    .list-item.active { box-shadow: inset 3px 0 0 var(--brand); }
     .list-item:last-child { border-bottom: none; }
     .list-item .name {
       font-weight: 700; font-size: 15px; line-height: 1.2; margin: 0 0 3px 0;
@@ -171,9 +227,8 @@
       padding: 2px 7px; border-radius: 3px; letter-spacing: 0.08em;
       text-transform: uppercase;
     }
-    .tag.new { background: var(--trd-red); color: #fff; }
-    .tag.stars { background: #1a1a1a; color: var(--trd-gold); }
-    body[data-bs-theme="dark"] .tag.stars { background: #000; }
+    .tag.new { background: var(--accent); color: #1a1a1a; }
+    .tag.stars { background: var(--brand-deep); color: var(--accent); }
 
     /* ------- Marker (custom DOM) -------
        Note: don't set `transform` on .pin itself — Mapbox writes an inline
@@ -195,7 +250,7 @@
     .pin svg { width: 100%; height: 100%; display: block; }
     .pin .stars {
       position: absolute; top: 7px; left: 0; right: 0;
-      text-align: center; color: var(--trd-gold);
+      text-align: center; color: var(--accent);
       font-size: 14px; letter-spacing: -1px; line-height: 1;
       pointer-events: none; text-shadow: 0 1px 2px rgba(0,0,0,0.35);
     }
@@ -203,7 +258,7 @@
     .pin.two-star .stars { font-size: 16px; top: 9px; }
     .pin .new-flag {
       position: absolute; top: -4px; right: -6px;
-      background: #000; color: var(--trd-gold);
+      background: var(--accent); color: #1a1a1a;
       font-size: 8.5px; font-weight: 900;
       padding: 2px 5px; border-radius: 2px;
       letter-spacing: 0.1em;
@@ -227,12 +282,12 @@
       border-top-color: var(--panel) !important; border-bottom-color: var(--panel) !important;
     }
     .popup-top {
-      background: var(--trd-red); color: #fff; padding: 10px 14px;
+      background: var(--brand); color: #fff; padding: 10px 14px;
       display: flex; align-items: center; justify-content: space-between;
     }
-    .popup-top .stars-line { color: var(--trd-gold); font-size: 14px; letter-spacing: 1px; }
+    .popup-top .stars-line { color: var(--accent); font-size: 14px; letter-spacing: 1px; }
     .popup-top .new-tag {
-      background: #000; color: var(--trd-gold); font-size: 9px; font-weight: 900;
+      background: var(--accent); color: #1a1a1a; font-size: 9px; font-weight: 900;
       padding: 2px 6px; border-radius: 2px; letter-spacing: 0.1em;
     }
     .popup-body { padding: 12px 14px 14px; }
@@ -266,7 +321,7 @@
     }
     .legend .swatch.small { width: 14px; height: 18px; }
     .legend .new-mini {
-      background: #000; color: var(--trd-gold);
+      background: var(--accent); color: #1a1a1a;
       font-size: 8px; font-weight: 900; padding: 2px 5px;
       border-radius: 2px; letter-spacing: 0.1em;
     }
@@ -284,7 +339,7 @@
     .mapboxgl-ctrl-group { background: var(--panel); border: 1px solid var(--border); }
     body[data-bs-theme="dark"] .mapboxgl-ctrl-group button { filter: invert(1); }
 
-    /* ------- Mobile ------- */
+    /* ------- Mobile (standalone) ------- */
     @media (max-width: 768px) {
       :root { --header-h: 56px; }
       .trd-title { font-size: 15px; }
@@ -316,16 +371,101 @@
       }
       .sidebar-head h2 { padding-top: 4px; }
     }
+
+    /* =====================================================================
+       EMBED MODE (TRD article iframe). Read TRD_MAP_INTEGRATION_GUIDE.md §4,
+       §7 before editing. FIXED PIXEL HEIGHTS ONLY — never `vh` / `svh` here.
+       ===================================================================== */
+    :root[data-layout="embed"] {
+      --header-h: 0px;
+    }
+    :root[data-layout="embed"], :root[data-layout="embed"] body {
+      /* Decouple body.scrollHeight from the iframe's outer height so the
+         parent-frame auto-sizer can settle. Default = narrow stacked layout. */
+      height: 640px;
+      min-height: 0;
+      overflow: hidden;
+    }
+    :root[data-layout="embed"] .trd-header { display: none; }
+    :root[data-layout="embed"] .legend { display: none; }
+    :root[data-layout="embed"] .credit { display: none; }
+    :root[data-layout="embed"] .map-wrap {
+      top: 0; left: 0; right: 0; bottom: 0;
+      height: 640px;
+    }
+    /* Narrow stacked: map on top (280px), cards scroll below. */
+    :root[data-layout="embed"] #map {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: auto;
+      height: 280px;
+    }
+    :root[data-layout="embed"] .sidebar {
+      position: absolute;
+      top: 280px; left: 0; right: 0; bottom: 0;
+      width: 100%; height: auto; max-height: none;
+      border-radius: 0;
+      border-left: none; border-right: none; border-bottom: none;
+      border-top: 1px solid var(--border);
+      box-shadow: none;
+    }
+    :root[data-layout="embed"] .sidebar.collapsed { height: auto; }
+    :root[data-layout="embed"] .sidebar-head { cursor: default; }
+    :root[data-layout="embed"] .sidebar-head::before { content: none; }
+    :root[data-layout="embed"] .filters {
+      top: 10px; left: 10px; right: 10px;
+      overflow-x: auto; flex-wrap: nowrap;
+      padding-bottom: 4px; -webkit-overflow-scrolling: touch;
+    }
+    :root[data-layout="embed"] .filters::-webkit-scrollbar { display: none; }
+
+    /* Phone-width article column. */
+    @media (max-width: 560px) {
+      :root[data-layout="embed"], :root[data-layout="embed"] body {
+        height: 620px;
+      }
+      :root[data-layout="embed"] .map-wrap { height: 620px; }
+      :root[data-layout="embed"] #map { height: 240px; }
+      :root[data-layout="embed"] .sidebar { top: 240px; }
+    }
+
+    /* Wide overlay: full-bleed sticky map + 380px floating card column right.
+       If you change this width, also update getOverlayPadding() in JS. */
+    @media (min-width: 780px) {
+      :root[data-layout="embed"], :root[data-layout="embed"] body {
+        height: 560px;
+      }
+      :root[data-layout="embed"] .map-wrap { height: 560px; }
+      :root[data-layout="embed"] #map {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        height: 560px;
+      }
+      :root[data-layout="embed"] .sidebar {
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: auto;
+        width: 380px; height: auto; max-height: none;
+        border-radius: 0;
+        border-top: none; border-right: none; border-bottom: none;
+        border-left: 1px solid var(--border);
+        background: var(--panel);
+        box-shadow: -6px 0 20px rgba(20, 30, 55, 0.10);
+      }
+      :root[data-layout="embed"] .filters {
+        /* Keep chips on the map side, clear of the overlay card column. */
+        right: 394px;
+      }
+    }
   </style>
 </head>
 <body data-bs-theme="light">
   <script>
-    // Set theme BEFORE first paint so CSS variables and Mapbox style match.
-    (function () {
-      const saved = null; // no persistence: defer to OS preference
-      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-      document.body.setAttribute("data-bs-theme", saved || (prefersDark ? "dark" : "light"));
-    })();
+    // The <head> script set <html data-bs-theme="…"> pre-paint. Mirror the
+    // same value onto <body> so existing body[data-bs-theme] selectors and
+    // the TRD theme.js library both see a consistent state.
+    document.body.setAttribute(
+      "data-bs-theme",
+      document.documentElement.getAttribute("data-bs-theme") || "light"
+    );
   </script>
 
   <header class="trd-header">
@@ -342,6 +482,9 @@
 
   <div class="map-wrap">
     <div id="map"></div>
+    <div class="map-veil" id="mapVeil" aria-hidden="true">
+      <div class="pill" id="mapVeilPill">Tap to interact</div>
+    </div>
 
     <div class="filters" id="filters">
       <button class="chip active" data-filter="all">All <span class="count" id="c-all">0</span></button>
@@ -360,8 +503,8 @@
 
     <div class="legend">
       <h4>Legend</h4>
-      <div class="row"><span class="swatch"><svg viewBox="0 0 38 46"><path d="M19 1C9.6 1 2 8.5 2 18c0 12 17 27 17 27s17-15 17-27C36 8.5 28.4 1 19 1z" fill="#d6242e" stroke="#fff" stroke-width="2"/></svg></span> One Michelin star</div>
-      <div class="row"><span class="swatch"><svg viewBox="0 0 44 54"><path d="M22 1C11 1 2 9.5 2 20c0 14 20 33 20 33s20-19 20-33C42 9.5 33 1 22 1z" fill="#9c1a22" stroke="#fff" stroke-width="2"/></svg></span> Two Michelin stars</div>
+      <div class="row"><span class="swatch"><svg viewBox="0 0 38 46"><path d="M19 1C9.6 1 2 8.5 2 18c0 12 17 27 17 27s17-15 17-27C36 8.5 28.4 1 19 1z" fill="#27509B" stroke="#fff" stroke-width="2"/></svg></span> One Michelin star</div>
+      <div class="row"><span class="swatch"><svg viewBox="0 0 44 54"><path d="M22 1C11 1 2 9.5 2 20c0 14 20 33 20 33s20-19 20-33C42 9.5 33 1 22 1z" fill="#1A3A75" stroke="#fff" stroke-width="2"/></svg></span> Two Michelin stars</div>
       <div class="row"><span class="new-mini">NEW</span> New on the 2026 guide</div>
     </div>
 
@@ -397,7 +540,27 @@
       dark:  "mapbox://styles/mapbox/dark-v11"
     };
 
-    // Compute bounds to fit data
+    // ----- Environment -----
+    const IS_EMBED = document.documentElement.getAttribute("data-layout") === "embed";
+    const THEME_STORAGE_KEY = "soflaRestaurantMap.theme";
+
+    // Per-project postMessage namespace. If multiple TRD map embeds share an
+    // article, identical prefixes will cross-talk because listeners whitelist
+    // by `type` only. See TRD_MAP_INTEGRATION_GUIDE.md §3.
+    const MSG = {
+      READY:   "soflarestaurant-map:ready",
+      LOADED:  "soflarestaurant-map:loaded",
+      RESIZE:  "soflarestaurant-map:resize",
+      SET_THEME:      "soflarestaurant-map:set-theme",
+      REQUEST_RESIZE: "soflarestaurant-map:request-resize"
+    };
+
+    const PIN_COLORS = {
+      one: { fill: "#27509B", deep: "#1A3A75" },
+      two: { fill: "#1A3A75", deep: "#0F2654" }
+    };
+
+    // ----- Bounds / camera -----
     const lons = DATA.features.map(f => f.geometry.coordinates[0]);
     const lats = DATA.features.map(f => f.geometry.coordinates[1]);
     const bounds = [
@@ -405,22 +568,17 @@
       [Math.max(...lons), Math.max(...lats)]
     ];
 
-    const map = new mapboxgl.Map({
-      container: "map",
-      style: STYLES[document.body.getAttribute("data-bs-theme") === "dark" ? "dark" : "light"],
-      bounds: bounds,
-      fitBoundsOptions: { padding: { top: 120, bottom: 60, left: 60, right: window.innerWidth > 768 ? 380 : 30 } },
-      minZoom: 8, maxZoom: 17,
-      attributionControl: false
-    });
-
-    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
-    map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
-
-    // ----- Build markers -----
-    const markers = [];   // {marker, feature, el}
-    const popups  = [];
+    // ----- State -----
+    let map = null;
+    let mapLoaded = false;
+    const markers = [];  // {marker, feature, el, popup, index, coords}
     let activeFilter = "all";
+    let activeIndex = -1;
+
+    // ----- Helpers -----
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+    }
 
     function pinSvg(color) {
       return `<svg viewBox="0 0 38 46" xmlns="http://www.w3.org/2000/svg">
@@ -434,7 +592,7 @@
       const isNew = (feature.properties["new_this_year?"] || "").toUpperCase() === "TRUE";
       const el = document.createElement("div");
       el.className = "pin" + (stars === 2 ? " two-star" : "");
-      const color = stars === 2 ? "#9c1a22" : "#d6242e";
+      const color = stars === 2 ? PIN_COLORS.two.fill : PIN_COLORS.one.fill;
       const starGlyphs = stars === 2 ? "★★" : "★";
       el.innerHTML = `<div class="pin-inner">`
         + pinSvg(color)
@@ -460,10 +618,6 @@
         </div>`;
     }
 
-    function escapeHtml(s) {
-      return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
-    }
-
     // Spider out markers that share the exact same lng/lat so they don't stack.
     function spreadDuplicates(features) {
       const buckets = new Map();
@@ -475,7 +629,6 @@
       const offsets = new Array(features.length).fill(null);
       buckets.forEach(idxs => {
         if (idxs.length < 2) return;
-        // Spread roughly 18m apart (~0.00018° at this latitude).
         const r = 0.00018;
         idxs.forEach((idx, k) => {
           const angle = (2 * Math.PI * k) / idxs.length;
@@ -486,116 +639,17 @@
     }
     const dupOffsets = spreadDuplicates(DATA.features);
 
-    DATA.features.forEach((f, i) => {
-      const el = buildMarkerEl(f);
-      const popup = new mapboxgl.Popup({ offset: 28, closeButton: true, maxWidth: "280px" })
-        .setHTML(popupHtml(f.properties));
-      let coords = f.geometry.coordinates.slice();
-      if (dupOffsets[i]) { coords[0] += dupOffsets[i][0]; coords[1] += dupOffsets[i][1]; }
-      const marker = new mapboxgl.Marker({ element: el, anchor: "bottom" })
-        .setLngLat(coords)
-        .addTo(map);
-      // Manage popup manually (avoid Mapbox's auto-toggle racing with our handler).
-      popup.setLngLat(coords);
-      popup.on("close", () => setActivePin(-1));
-      el.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const m = markers[i];
-        if (m) flyToFeature(m);
-        setActiveListItem(i);
-      });
-      markers.push({ marker, feature: f, el, popup, index: i, coords });
+    // Pre-compute per-feature display coords (with dup offsets) so the sidebar
+    // list and filters can work before the map is constructed.
+    const FEATURE_COORDS = DATA.features.map((f, i) => {
+      const c = f.geometry.coordinates.slice();
+      if (dupOffsets[i]) { c[0] += dupOffsets[i][0]; c[1] += dupOffsets[i][1]; }
+      return c;
     });
 
-    function setActivePin(idx) {
-      markers.forEach(m => m.el.classList.toggle("active", m.index === idx));
-    }
-    map.on("click", () => {
-      setActivePin(-1);
-      markers.forEach(m => { if (m.popup.isOpen()) m.popup.remove(); });
-    });
-
-    // ----- Sidebar list -----
+    // ----- Sidebar list / filters (work without the map) -----
     const sidebarList = document.getElementById("sidebarList");
 
-    function renderList() {
-      sidebarList.innerHTML = "";
-      const visible = markers.filter(m => matchesFilter(m.feature));
-      visible.sort((a, b) => {
-        const sa = parseInt(a.feature.properties.num_michelin_stars, 10);
-        const sb = parseInt(b.feature.properties.num_michelin_stars, 10);
-        if (sa !== sb) return sb - sa;
-        return a.feature.properties.restaurants.localeCompare(b.feature.properties.restaurants);
-      });
-      visible.forEach(m => {
-        const p = m.feature.properties;
-        const stars = parseInt(p.num_michelin_stars, 10);
-        const isNew = (p["new_this_year?"] || "").toUpperCase() === "TRUE";
-        const item = document.createElement("div");
-        item.className = "list-item";
-        item.dataset.idx = m.index;
-        item.innerHTML = `
-          <div style="font-size:22px; line-height:1; color: ${stars===2?'#9c1a22':'#d6242e'}; text-align:center;">
-            <div style="font-size:18px;">${stars===2?'★★':'★'}</div>
-          </div>
-          <div>
-            <div class="name">${escapeHtml(p.restaurants)}</div>
-            <div class="addr">${escapeHtml(p.full_address)}</div>
-            <div class="meta">
-              <span class="tag stars">${stars} STAR${stars>1?'S':''}</span>
-              ${isNew ? '<span class="tag new">NEW</span>' : ''}
-            </div>
-          </div>`;
-        item.addEventListener("click", () => {
-          flyToFeature(m);
-          setActiveListItem(m.index);
-        });
-        sidebarList.appendChild(item);
-      });
-      document.getElementById("visibleCount").textContent = visible.length;
-    }
-
-    function setActiveListItem(idx) {
-      document.querySelectorAll(".list-item").forEach(el => {
-        el.classList.toggle("active", parseInt(el.dataset.idx,10) === idx);
-        if (parseInt(el.dataset.idx,10) === idx) {
-          el.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }
-      });
-    }
-
-    // Reserve room for the header + sidebar / bottom sheet so the flown-to point
-    // lands in the visible portion of the map, not under UI chrome.
-    function viewportPadding() {
-      const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 64;
-      const isMobile = window.innerWidth <= 768;
-      const sidebar = document.getElementById("sidebar");
-      const sidebarH = isMobile && sidebar && !sidebar.classList.contains("collapsed")
-        ? Math.round(window.innerHeight * 0.42)
-        : 0;
-      return {
-        top: headerH + 60,
-        bottom: isMobile ? sidebarH + 20 : 60,
-        left: 30,
-        right: isMobile ? 30 : 360
-      };
-    }
-
-    function flyToFeature(m) {
-      map.flyTo({
-        center: m.coords,
-        zoom: Math.max(map.getZoom(), 14),
-        speed: 1.2,
-        essential: true,
-        padding: viewportPadding()
-      });
-      setActivePin(m.index);
-      // Close any other open popups, then open this one.
-      markers.forEach(x => { if (x !== m && x.popup.isOpen()) x.popup.remove(); });
-      if (!m.popup.isOpen()) m.popup.setLngLat(m.coords).addTo(map);
-    }
-
-    // ----- Filters -----
     function matchesFilter(f) {
       const stars = parseInt(f.properties.num_michelin_stars, 10);
       const isNew = (f.properties["new_this_year?"] || "").toUpperCase() === "TRUE";
@@ -607,20 +661,74 @@
       }
     }
 
+    function visibleFeaturesSorted() {
+      return DATA.features
+        .map((f, i) => ({ f, i }))
+        .filter(({ f }) => matchesFilter(f))
+        .sort((a, b) => {
+          const sa = parseInt(a.f.properties.num_michelin_stars, 10);
+          const sb = parseInt(b.f.properties.num_michelin_stars, 10);
+          if (sa !== sb) return sb - sa;
+          return a.f.properties.restaurants.localeCompare(b.f.properties.restaurants);
+        });
+    }
+
+    function renderList() {
+      sidebarList.innerHTML = "";
+      const visible = visibleFeaturesSorted();
+      visible.forEach(({ f, i }) => {
+        const p = f.properties;
+        const stars = parseInt(p.num_michelin_stars, 10);
+        const isNew = (p["new_this_year?"] || "").toUpperCase() === "TRUE";
+        const iconColor = stars === 2 ? "var(--brand-deep)" : "var(--brand)";
+        const item = document.createElement("div");
+        item.className = "list-item" + (i === activeIndex ? " active" : "");
+        item.dataset.idx = i;
+        item.innerHTML = `
+          <div style="font-size:22px; line-height:1; color: ${iconColor}; text-align:center;">
+            <div style="font-size:18px;">${stars===2?'★★':'★'}</div>
+          </div>
+          <div>
+            <div class="name">${escapeHtml(p.restaurants)}</div>
+            <div class="addr">${escapeHtml(p.full_address)}</div>
+            <div class="meta">
+              <span class="tag stars">${stars} STAR${stars>1?'S':''}</span>
+              ${isNew ? '<span class="tag new">NEW</span>' : ''}
+            </div>
+          </div>`;
+        item.addEventListener("click", () => {
+          ensureMap();
+          flyToIndex(i);
+          setActiveListItem(i);
+        });
+        sidebarList.appendChild(item);
+      });
+      document.getElementById("visibleCount").textContent = visible.length;
+    }
+
+    function setActiveListItem(idx) {
+      activeIndex = idx;
+      document.querySelectorAll(".list-item").forEach(el => {
+        const match = parseInt(el.dataset.idx,10) === idx;
+        el.classList.toggle("active", match);
+        if (match) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+    }
+
     function applyFilter() {
       markers.forEach(m => {
         const show = matchesFilter(m.feature);
         m.el.style.display = show ? "" : "none";
-        if (!show && m.popup.isOpen()) m.popup.remove();
+        if (!show && m.popup && m.popup.isOpen()) m.popup.remove();
       });
       renderList();
     }
 
     function updateChipCounts() {
-      const all = markers.length;
-      const newCount = markers.filter(m => (m.feature.properties["new_this_year?"]||"").toUpperCase()==="TRUE").length;
-      const oneCount = markers.filter(m => parseInt(m.feature.properties.num_michelin_stars,10)===1).length;
-      const twoCount = markers.filter(m => parseInt(m.feature.properties.num_michelin_stars,10)===2).length;
+      const all = DATA.features.length;
+      const newCount = DATA.features.filter(f => (f.properties["new_this_year?"]||"").toUpperCase()==="TRUE").length;
+      const oneCount = DATA.features.filter(f => parseInt(f.properties.num_michelin_stars,10)===1).length;
+      const twoCount = DATA.features.filter(f => parseInt(f.properties.num_michelin_stars,10)===2).length;
       document.getElementById("c-all").textContent = all;
       document.getElementById("c-new").textContent = newCount;
       document.getElementById("c-1").textContent = oneCount;
@@ -637,27 +745,315 @@
       applyFilter();
     });
 
-    // ----- Theme toggle (TRD theme.js integration) -----
-    // data-bs-theme is already set inline before map init, so init() reads the
-    // same OS preference and keeps it; updateCallback only fires on user toggle.
-    const trdTheme = TrdTheme({
-      updateCallback: (theme) => { map.setStyle(STYLES[theme]); }
-    });
-    trdTheme.init();
-    document.getElementById("themeToggle").addEventListener("click", () => trdTheme.toggle());
-
-    // ----- Mobile sidebar collapse on header tap -----
+    // Mobile sidebar collapse on header tap (standalone only).
     document.getElementById("sidebarHead").addEventListener("click", () => {
+      if (IS_EMBED) return;
       if (window.innerWidth <= 768) {
         document.getElementById("sidebar").classList.toggle("collapsed");
       }
     });
 
-    // ----- Init -----
-    map.on("load", () => {
-      updateChipCounts();
-      renderList();
-    });
+    updateChipCounts();
+    renderList();
+
+    // =====================================================================
+    // Map construction (deferred in embed mode via IntersectionObserver).
+    // =====================================================================
+    function getOverlayPadding() {
+      // Wide embed overlays a 380px card column on the right. Keep flown-to
+      // pins clear of it. If you change this, update the wide-embed CSS too.
+      if (IS_EMBED && window.matchMedia("(min-width: 780px)").matches) {
+        return { top: 40, bottom: 30, left: 30, right: 400 };
+      }
+      if (IS_EMBED) {
+        // Narrow stacked embed: only the 280/240px map slice is visible.
+        return { top: 30, bottom: 20, left: 20, right: 20 };
+      }
+      const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 64;
+      const isMobile = window.innerWidth <= 768;
+      const sidebar = document.getElementById("sidebar");
+      const sidebarH = isMobile && sidebar && !sidebar.classList.contains("collapsed")
+        ? Math.round(window.innerHeight * 0.42)
+        : 0;
+      return {
+        top: headerH + 60,
+        bottom: isMobile ? sidebarH + 20 : 60,
+        left: 30,
+        right: isMobile ? 30 : 360
+      };
+    }
+
+    function currentTheme() {
+      return document.documentElement.getAttribute("data-bs-theme") === "dark" ? "dark" : "light";
+    }
+
+    // Hide POI/transit labels and (on tiny embeds) road/water labels for a
+    // cleaner editorial basemap. Re-run on every style.load — setStyle() blows
+    // away custom layer state. See guide §8.5.
+    function declutterBasemap() {
+      if (!map) return;
+      const style = map.getStyle();
+      if (!style || !style.layers) return;
+      const noisePattern = /^(poi|transit)(-|$)/;
+      const tinyExtras = ["road-label", "natural-line-label", "natural-point-label", "water-point-label"];
+      const tiny = IS_EMBED && window.innerWidth < 500;
+      style.layers.forEach(layer => {
+        if (noisePattern.test(layer.id) || (tiny && tinyExtras.includes(layer.id))) {
+          try { map.setLayoutProperty(layer.id, "visibility", "none"); } catch (e) {}
+        }
+      });
+    }
+
+    function buildMap() {
+      if (map) return;
+      const wide = IS_EMBED && window.matchMedia("(min-width: 780px)").matches;
+      map = new mapboxgl.Map({
+        container: "map",
+        style: STYLES[currentTheme()],
+        bounds: bounds,
+        fitBoundsOptions: {
+          padding: IS_EMBED
+            ? (wide ? { top: 40, bottom: 30, left: 30, right: 400 }
+                    : { top: 30, bottom: 30, left: 24, right: 24 })
+            : { top: 120, bottom: 60, left: 60, right: window.innerWidth > 768 ? 380 : 30 }
+        },
+        minZoom: 8, maxZoom: 17,
+        attributionControl: false,
+        // Lock down interactions in embed mode so readers don't get trapped
+        // on mobile or zoom the map when wheel-scrolling on desktop. Pin
+        // clicks + nav buttons still work. See guide §8.3.
+        scrollZoom:       !IS_EMBED,
+        boxZoom:          !IS_EMBED,
+        dragPan:          !IS_EMBED,
+        dragRotate:       false,
+        keyboard:         !IS_EMBED,
+        doubleClickZoom:  !IS_EMBED,
+        touchPitch:       false,
+        touchZoomRotate:  !IS_EMBED
+      });
+
+      map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
+      map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
+
+      map.on("style.load", () => {
+        // style.load fires BEFORE load. Flip mapLoaded here so anything
+        // wired to style.load can immediately re-add markers/state after
+        // setStyle() — see memory: mapLoaded must flip on style.load.
+        mapLoaded = true;
+        declutterBasemap();
+      });
+
+      map.on("load", () => {
+        mapLoaded = true;
+        addMarkersToMap();
+        postParentMessage(MSG.LOADED);
+      });
+
+      map.on("click", () => {
+        setActivePin(-1);
+        markers.forEach(m => { if (m.popup && m.popup.isOpen()) m.popup.remove(); });
+      });
+    }
+
+    function ensureMap() {
+      if (!map) buildMap();
+    }
+
+    function addMarkersToMap() {
+      if (!map || markers.length) return;
+      DATA.features.forEach((f, i) => {
+        const el = buildMarkerEl(f);
+        const popup = new mapboxgl.Popup({ offset: 28, closeButton: true, maxWidth: "280px" })
+          .setHTML(popupHtml(f.properties));
+        const coords = FEATURE_COORDS[i];
+        const marker = new mapboxgl.Marker({ element: el, anchor: "bottom" })
+          .setLngLat(coords)
+          .addTo(map);
+        popup.setLngLat(coords);
+        popup.on("close", () => setActivePin(-1));
+        el.addEventListener("click", (e) => {
+          e.stopPropagation();
+          flyToIndex(i);
+          setActiveListItem(i);
+        });
+        markers.push({ marker, feature: f, el, popup, index: i, coords });
+      });
+      // Re-apply current filter (markers were added with default display).
+      applyFilter();
+    }
+
+    function setActivePin(idx) {
+      activeIndex = idx;
+      markers.forEach(m => m.el.classList.toggle("active", m.index === idx));
+    }
+
+    function flyToIndex(i) {
+      ensureMap();
+      const coords = FEATURE_COORDS[i];
+      const m = markers[i];
+      const zoom = map.getZoom ? Math.max(map.getZoom(), 14) : 14;
+      map.flyTo({
+        center: coords,
+        zoom: zoom,
+        speed: 1.2,
+        essential: true,
+        padding: getOverlayPadding()
+      });
+      setActivePin(i);
+      if (m) {
+        markers.forEach(x => { if (x !== m && x.popup && x.popup.isOpen()) x.popup.remove(); });
+        if (!m.popup.isOpen()) m.popup.setLngLat(coords).addTo(map);
+      }
+    }
+
+    // =====================================================================
+    // Tap-to-interact veil (embed only). Lets readers vertical-scroll past
+    // the sticky map; a stationary tap unlocks pan/zoom for the session.
+    // =====================================================================
+    const TAP_VEIL_AUTO_DISMISS_MS = 4500;
+    function initMapTapVeil() {
+      if (!IS_EMBED) return;
+      const veil = document.getElementById("mapVeil");
+      const pill = document.getElementById("mapVeilPill");
+      if (!veil) return;
+      pill.textContent = (window.matchMedia("(hover: none)").matches) ? "Tap to interact" : "Click to interact";
+      veil.classList.add("is-active");
+      let dismissed = false;
+      const unlock = () => {
+        if (!dismissed) {
+          dismissed = true;
+          ensureMap();
+          if (map) {
+            map.scrollZoom.enable();
+            map.dragPan.enable();
+            map.doubleClickZoom.enable();
+            map.touchZoomRotate.enable();
+            map.touchZoomRotate.disableRotation();
+          }
+        }
+        veil.classList.remove("is-active");
+      };
+      const dismissOnly = () => { veil.classList.remove("is-active"); };
+      // Treat a touch that moves vertically as a scroll, not an unlock.
+      let touchStartY = null;
+      veil.addEventListener("touchstart", e => { touchStartY = e.touches[0] ? e.touches[0].clientY : null; }, { passive: true });
+      veil.addEventListener("touchend", e => {
+        const t = e.changedTouches[0];
+        if (touchStartY != null && t && Math.abs(t.clientY - touchStartY) > 8) { dismissOnly(); return; }
+        unlock();
+      });
+      veil.addEventListener("click", unlock);
+      setTimeout(dismissOnly, TAP_VEIL_AUTO_DISMISS_MS);
+    }
+
+    // =====================================================================
+    // Theme handling
+    // =====================================================================
+    function applyTheme(theme, opts) {
+      theme = theme === "dark" ? "dark" : "light";
+      opts = opts || {};
+      document.documentElement.setAttribute("data-bs-theme", theme);
+      document.body.setAttribute("data-bs-theme", theme);
+      if (map) map.setStyle(STYLES[theme]);
+      if (opts.persist && !IS_EMBED) {
+        try { localStorage.setItem(THEME_STORAGE_KEY, theme); } catch (e) {}
+      }
+    }
+
+    function setupThemeToggle() {
+      const btn = document.getElementById("themeToggle");
+      if (!btn) return;
+      if (IS_EMBED) {
+        // The parent (TRD site) owns the theme in embed mode. Hide the
+        // in-iframe toggle so the user only sees one source of truth.
+        btn.remove();
+        return;
+      }
+      // Standalone: integrate with TRD theme.js if present, else manual.
+      if (typeof TrdTheme === "function") {
+        const trd = TrdTheme({ updateCallback: (t) => applyTheme(t, { persist: true }) });
+        trd.init();
+        btn.addEventListener("click", () => trd.toggle());
+      } else {
+        btn.addEventListener("click", () => {
+          applyTheme(currentTheme() === "dark" ? "light" : "dark", { persist: true });
+        });
+      }
+    }
+
+    // =====================================================================
+    // Parent-frame postMessage protocol (embed only)
+    // =====================================================================
+    function postParentMessage(type, payload) {
+      if (!IS_EMBED) return;
+      try {
+        const msg = Object.assign({ type: type }, payload || {});
+        window.parent.postMessage(msg, "*");
+      } catch (e) {}
+    }
+
+    function postParentResize() {
+      if (!IS_EMBED) return;
+      if (postParentResize._raf) return;
+      postParentResize._raf = requestAnimationFrame(() => {
+        postParentResize._raf = null;
+        // Use body.scrollHeight ONLY. documentElement.scrollHeight returns the
+        // iframe's viewport height when content is shorter, which pegs the
+        // height. See guide §4.
+        const height = document.body.scrollHeight;
+        // Drop sub-pixel oscillation as a safety net.
+        if (Math.abs(height - (postParentResize._lastHeight || 0)) < 2) return;
+        postParentResize._lastHeight = height;
+        postParentMessage(MSG.RESIZE, { height: height });
+      });
+    }
+
+    function setupParentBridge() {
+      if (!IS_EMBED) return;
+      window.addEventListener("message", (ev) => {
+        const data = ev.data;
+        if (!data || typeof data !== "object") return;
+        if (data.type === MSG.SET_THEME && (data.value === "light" || data.value === "dark")) {
+          applyTheme(data.value, { persist: false });
+        } else if (data.type === MSG.REQUEST_RESIZE) {
+          postParentResize();
+        }
+      });
+
+      // Re-post height on viewport changes and content reflows.
+      window.addEventListener("resize", postParentResize);
+      if ("ResizeObserver" in window) {
+        const ro = new ResizeObserver(postParentResize);
+        ro.observe(document.body);
+      }
+
+      postParentMessage(MSG.READY);
+      postParentResize();
+    }
+
+    // =====================================================================
+    // Lazy map init (embed only). Wait until the container is near the
+    // viewport so deeply-buried embeds don't pay the Mapbox cost upfront.
+    // =====================================================================
+    function initMapWhenVisible() {
+      if (!IS_EMBED) { buildMap(); return; }
+      const container = document.getElementById("map");
+      if (!("IntersectionObserver" in window)) { buildMap(); return; }
+      const obs = new IntersectionObserver((entries) => {
+        if (entries.some(e => e.isIntersecting)) {
+          obs.disconnect();
+          buildMap();
+        }
+      }, { rootMargin: "200px" });
+      obs.observe(container);
+    }
+
+    // ----- Bootstrap -----
+    setupThemeToggle();
+    setupParentBridge();
+    initMapTapVeil();
+    initMapWhenVisible();
   </script>
 </body>
 </html>
+
