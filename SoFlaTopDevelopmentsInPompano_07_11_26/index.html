@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pompano Beach's Top Developments | The Real Deal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="An interactive map of the largest residential, hospitality and civic projects reshaping Pompano Beach." />
+
+  <script>
+    // Pre-paint layout + theme detection. Must run inline in <head> before any
+    // stylesheet applies, otherwise the iframe flashes the standalone hero
+    // before flipping into embed mode. See TRD_MAP_INTEGRATION_GUIDE.md §6.
+    (function () {
+      var html = document.documentElement;
+      var params = new URLSearchParams(window.location.search);
+      var isFramed = (function () { try { return window.self !== window.top; } catch (e) { return true; } })();
+      var embed = params.get("layout") === "embed" || isFramed;
+      if (embed) html.setAttribute("data-layout", "embed");
+
+      var THEME_KEY = "pompanoDevMap.theme";
+      var themeParam = params.get("theme");
+      var saved = null;
+      if (!embed) { try { saved = window.localStorage.getItem(THEME_KEY); } catch (e) {} }
+      var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var theme = (themeParam === "dark" || themeParam === "light") ? themeParam
+                : (saved === "dark" || saved === "light") ? saved
+                : (prefersDark ? "dark" : "light");
+      html.setAttribute("data-bs-theme", theme);
+    })();
+  </script>
+
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet" />
+  <link href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap" rel="stylesheet" />
+
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+  <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
+
+  <style>
+    :root {
+      /* Brand palette built around #27509B (navy). Light defaults. */
+      --brand: #27509B;
+      --brand-deep: #1A3A75;
+      --brand-soft: #EAF0FA;
+      --brand-on: #ffffff;
+      --accent: #C9A038;
+      --bg: #ffffff;
+      --bg-soft: #F4F6FB;
+      --panel: #ffffff;
+      --text: #16181F;
+      --muted: #6B6F7E;
+      --border: #E2E6EF;
+      --chip: #ffffff;
+      --chip-text: #16181F;
+      --shadow: 0 6px 24px rgba(20, 30, 55, 0.10);
+      --header-h: 64px;
+
+      /* Category palette (light). */
+      --cat-condo:      #27509B;
+      --cat-apartment:  #2E8C8A;
+      --cat-mixed:      #C9A038;
+      --cat-civic:      #2F7A4A;
+      --cat-commercial: #B5453E;
+    }
+    :root[data-bs-theme="dark"],
+    body[data-bs-theme="dark"] {
+      --brand: #6E92D8;
+      --brand-deep: #27509B;
+      --brand-soft: rgba(110, 146, 216, 0.16);
+      --brand-on: #0F1218;
+      --accent: #E2B856;
+      --bg: #0F1218;
+      --bg-soft: #181C25;
+      --panel: #1B202B;
+      --text: #EEF1F7;
+      --muted: #97A0B4;
+      --border: #2A2F3C;
+      --chip: #1B202B;
+      --chip-text: #EEF1F7;
+      --shadow: 0 6px 24px rgba(0, 0, 0, 0.55);
+
+      --cat-condo:      #6E92D8;
+      --cat-apartment:  #4FB5B2;
+      --cat-mixed:      #E2B856;
+      --cat-civic:      #5BB37B;
+      --cat-commercial: #D86B62;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; height: 100%; width: 100%;
+      font-family: "Proxima Nova", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    /* ------- Header ------- */
+    .trd-header {
+      position: absolute; top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      display: flex; align-items: center; gap: 14px;
+      padding: 0 18px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      z-index: 5;
+    }
+    .trd-bar {
+      width: 6px; height: 36px; background: var(--brand); border-radius: 2px;
+    }
+    .trd-title {
+      font-family: "Merriweather", Georgia, serif;
+      font-weight: 900;
+      font-size: 18px;
+      line-height: 1.15;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+    .trd-sub {
+      font-size: 12px; color: var(--muted); margin-top: 2px;
+      text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;
+    }
+    .trd-brand {
+      margin-left: auto; display: flex; align-items: center; gap: 10px;
+    }
+    .trd-brand .pill {
+      background: var(--brand); color: #fff;
+      font-family: "Merriweather", serif; font-weight: 900;
+      padding: 4px 10px; font-size: 11px; letter-spacing: 0.12em;
+      border-radius: 2px;
+    }
+    .theme-toggle {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border); border-radius: 999px;
+      width: 34px; height: 34px; cursor: pointer; display: inline-flex;
+      align-items: center; justify-content: center; font-size: 14px;
+    }
+    .theme-toggle:hover { background: var(--bg-soft); }
+
+    /* ------- Map container ------- */
+    .map-wrap {
+      position: absolute; top: var(--header-h); left: 0; right: 0; bottom: 0;
+    }
+    #map { position: absolute; inset: 0; }
+
+    /* ------- Tap-to-interact veil (embed) ------- */
+    .map-veil {
+      position: absolute; inset: 0; z-index: 4;
+      display: none; align-items: flex-start; justify-content: center;
+      pointer-events: auto;
+      touch-action: pan-y pinch-zoom;
+      background: transparent;
+    }
+    .map-veil.is-active { display: flex; }
+    .map-veil .pill {
+      margin-top: 14px;
+      background: rgba(22, 24, 31, 0.78);
+      color: #fff;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 12px; font-weight: 800;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+      pointer-events: none;
+    }
+
+    /* ------- Filter chips ------- */
+    .filters {
+      position: absolute; top: 14px; left: 14px; right: 14px;
+      display: flex; gap: 8px; flex-wrap: wrap;
+      z-index: 4; pointer-events: none;
+    }
+    .chip {
+      pointer-events: auto;
+      background: var(--chip); color: var(--chip-text);
+      border: 1px solid var(--border); border-radius: 999px;
+      padding: 7px 14px; font-size: 13px; font-weight: 700;
+      cursor: pointer; box-shadow: var(--shadow);
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all .15s ease;
+      white-space: nowrap;
+    }
+    .chip:hover { transform: translateY(-1px); }
+    .chip .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--brand); display: inline-block;
+    }
+    .chip.active {
+      background: var(--brand); color: #fff; border-color: var(--brand);
+    }
+    .chip.active .dot { background: #fff; }
+    .chip[data-filter="condo"]      .dot { background: var(--cat-condo); }
+    .chip[data-filter="apartment"]  .dot { background: var(--cat-apartment); }
+    .chip[data-filter="mixed"]      .dot { background: var(--cat-mixed); }
+    .chip[data-filter="civic"]      .dot { background: var(--cat-civic); }
+    .chip[data-filter="commercial"] .dot { background: var(--cat-commercial); }
+    .chip[data-filter="condo"].active      { background: var(--cat-condo);      border-color: var(--cat-condo); }
+    .chip[data-filter="apartment"].active  { background: var(--cat-apartment);  border-color: var(--cat-apartment); }
+    .chip[data-filter="mixed"].active      { background: var(--cat-mixed);      border-color: var(--cat-mixed); color: #1a1a1a; }
+    .chip[data-filter="civic"].active      { background: var(--cat-civic);      border-color: var(--cat-civic); }
+    .chip[data-filter="commercial"].active { background: var(--cat-commercial); border-color: var(--cat-commercial); }
+    .chip .count {
+      font-size: 11px; padding: 1px 7px; border-radius: 999px;
+      background: rgba(0,0,0,0.08); font-weight: 700;
+    }
+    body[data-bs-theme="dark"] .chip .count { background: rgba(255,255,255,0.10); }
+    .chip.active .count { background: rgba(255,255,255,0.22); color: #fff; }
+    .chip[data-filter="mixed"].active .count { background: rgba(0,0,0,0.18); color: #1a1a1a; }
+
+    /* ------- Sidebar (desktop) ------- */
+    .sidebar {
+      position: absolute; top: 14px; right: 14px; bottom: 14px;
+      width: 360px;
+      background: var(--panel); color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      z-index: 3;
+    }
+    .sidebar-head {
+      padding: 14px 16px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: baseline; justify-content: space-between;
+    }
+    .sidebar-head h2 {
+      margin: 0; font-family: "Merriweather", serif; font-size: 14px; font-weight: 900;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .sidebar-head .count-pill {
+      font-size: 11px; color: var(--muted); font-weight: 700;
+    }
+    .sidebar-list { overflow-y: auto; flex: 1; }
+    .list-item {
+      padding: 14px 16px; border-bottom: 1px solid var(--border);
+      cursor: pointer; display: grid; grid-template-columns: 6px 1fr; gap: 12px;
+      align-items: stretch;
+      transition: background .12s ease;
+      position: relative;
+    }
+    .list-item:hover, .list-item.active { background: var(--bg-soft); }
+    .list-item.active { box-shadow: inset 3px 0 0 var(--brand); }
+    .list-item:last-child { border-bottom: none; }
+    .list-item .accent {
+      width: 6px; border-radius: 3px; align-self: stretch;
+    }
+    .list-item .name {
+      font-weight: 800; font-size: 15px; line-height: 1.2; margin: 0 0 3px 0;
+      font-family: "Merriweather", serif;
+    }
+    .list-item .dev {
+      font-size: 12px; color: var(--muted); line-height: 1.4; margin: 0 0 4px;
+      font-style: italic;
+    }
+    .list-item .addr {
+      font-size: 12px; color: var(--muted); line-height: 1.35;
+    }
+    .list-item .meta {
+      display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;
+    }
+    .tag {
+      display: inline-block; font-size: 10px; font-weight: 800;
+      padding: 2px 7px; border-radius: 3px; letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .tag.cat-condo      { background: var(--cat-condo); }
+    .tag.cat-apartment  { background: var(--cat-apartment); }
+    .tag.cat-mixed      { background: var(--cat-mixed); color: #1a1a1a; }
+    .tag.cat-civic      { background: var(--cat-civic); }
+    .tag.cat-commercial { background: var(--cat-commercial); }
+
+    /* ------- Marker (custom DOM) -------
+       Note: don't set `transform` on .pin itself — Mapbox writes an inline
+       transform on the marker element for positioning. Scale via inner wrapper. */
+    .pin {
+      width: 34px; height: 42px;
+      cursor: pointer;
+      will-change: transform;
+    }
+    .pin-inner {
+      position: relative;
+      width: 100%; height: 100%;
+      transform-origin: 50% 100%;
+      transition: transform .15s ease;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.28));
+    }
+    .pin:hover .pin-inner { transform: scale(1.1); }
+    .pin.active .pin-inner { transform: scale(1.2); }
+    .pin svg { width: 100%; height: 100%; display: block; }
+    .pin .glyph {
+      position: absolute; top: 8px; left: 0; right: 0;
+      text-align: center; color: #fff;
+      font-size: 16px; line-height: 1; font-weight: 900;
+      pointer-events: none;
+      font-family: "Merriweather", Georgia, serif;
+    }
+
+    /* ------- Popup ------- */
+    .mapboxgl-popup-content {
+      padding: 0; border-radius: 6px; overflow: hidden;
+      background: var(--panel); color: var(--text);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      font-family: "Proxima Nova", sans-serif;
+      min-width: 260px; max-width: 320px;
+    }
+    .mapboxgl-popup-close-button {
+      color: #fff; font-size: 22px; padding: 4px 8px;
+      right: 4px; top: 2px;
+    }
+    .mapboxgl-popup-tip { border-top-color: var(--panel) !important; border-bottom-color: var(--panel) !important; }
+    body[data-bs-theme="dark"] .mapboxgl-popup-tip {
+      border-top-color: var(--panel) !important; border-bottom-color: var(--panel) !important;
+    }
+    .popup-top {
+      padding: 10px 14px;
+      color: #fff;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .popup-top.cat-mixed { color: #1a1a1a; }
+    .popup-body { padding: 12px 14px 14px; }
+    .popup-body h3 {
+      margin: 0 0 4px; font-family: "Merriweather", serif;
+      font-size: 16px; font-weight: 900; line-height: 1.2;
+    }
+    .popup-body .addr {
+      font-size: 12px; color: var(--muted); margin-bottom: 8px; line-height: 1.35;
+    }
+    .popup-body .dev {
+      font-size: 12px; color: var(--text); margin-bottom: 8px; line-height: 1.4;
+      font-weight: 700;
+    }
+    .popup-body .desc {
+      font-size: 13px; line-height: 1.45;
+    }
+
+    /* ------- Legend ------- */
+    .legend {
+      position: absolute; bottom: 14px; left: 14px;
+      background: var(--panel); color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px; padding: 10px 12px;
+      font-size: 12px; box-shadow: var(--shadow);
+      z-index: 3; max-width: 230px;
+    }
+    .legend h4 {
+      margin: 0 0 8px; font-family: "Merriweather", serif;
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .legend .row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+    .legend .sw {
+      width: 12px; height: 12px; border-radius: 50%; display: inline-block;
+    }
+
+    /* ------- Source line ------- */
+    .credit {
+      position: absolute; bottom: 14px; right: 14px;
+      font-size: 10px; color: var(--muted);
+      background: var(--panel); padding: 4px 8px;
+      border: 1px solid var(--border); border-radius: 4px;
+      z-index: 3; letter-spacing: 0.04em;
+    }
+
+    /* ------- Mapbox controls themed ------- */
+    .mapboxgl-ctrl-group { background: var(--panel); border: 1px solid var(--border); }
+    body[data-bs-theme="dark"] .mapboxgl-ctrl-group button { filter: invert(1); }
+
+    /* ------- Mobile (standalone) ------- */
+    @media (max-width: 768px) {
+      :root { --header-h: 56px; }
+      .trd-title { font-size: 15px; }
+      .trd-sub { font-size: 10px; }
+      .trd-brand .pill { font-size: 10px; padding: 3px 8px; }
+      .filters {
+        top: 10px; left: 10px; right: 10px;
+        overflow-x: auto; flex-wrap: nowrap;
+        padding-bottom: 4px; -webkit-overflow-scrolling: touch;
+      }
+      .filters::-webkit-scrollbar { display: none; }
+      .legend { display: none; }
+      .credit { bottom: auto; top: calc(var(--header-h) + 56px); right: 10px; }
+      .sidebar {
+        top: auto; left: 0; right: 0; bottom: 0;
+        width: 100%; height: 42vh; max-height: 42vh;
+        border-radius: 14px 14px 0 0;
+        border-bottom: none; border-left: none; border-right: none;
+      }
+      .sidebar.collapsed { height: 56px; }
+      .sidebar-head {
+        cursor: pointer;
+        position: relative;
+      }
+      .sidebar-head::before {
+        content: ""; position: absolute; top: 6px; left: 50%;
+        transform: translateX(-50%); width: 40px; height: 4px;
+        background: var(--border); border-radius: 2px;
+      }
+      .sidebar-head h2 { padding-top: 4px; }
+    }
+
+    /* =====================================================================
+       EMBED MODE (TRD article iframe). Read TRD_MAP_INTEGRATION_GUIDE.md §4,
+       §7 before editing. FIXED PIXEL HEIGHTS ONLY — never `vh` / `svh` here.
+       ===================================================================== */
+    :root[data-layout="embed"] {
+      --header-h: 0px;
+    }
+    :root[data-layout="embed"], :root[data-layout="embed"] body {
+      height: 640px;
+      min-height: 0;
+      overflow: hidden;
+    }
+    :root[data-layout="embed"] .trd-header { display: none; }
+    :root[data-layout="embed"] .legend { display: none; }
+    :root[data-layout="embed"] .credit { display: none; }
+    :root[data-layout="embed"] .map-wrap {
+      top: 0; left: 0; right: 0; bottom: 0;
+      height: 640px;
+    }
+    /* Narrow stacked: map on top (280px), cards scroll below. */
+    :root[data-layout="embed"] #map {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: auto;
+      height: 280px;
+    }
+    :root[data-layout="embed"] .sidebar {
+      position: absolute;
+      top: 280px; left: 0; right: 0; bottom: 0;
+      width: 100%; height: auto; max-height: none;
+      border-radius: 0;
+      border-left: none; border-right: none; border-bottom: none;
+      border-top: 1px solid var(--border);
+      box-shadow: none;
+    }
+    :root[data-layout="embed"] .sidebar.collapsed { height: auto; }
+    :root[data-layout="embed"] .sidebar-head { cursor: default; }
+    :root[data-layout="embed"] .sidebar-head::before { content: none; }
+    :root[data-layout="embed"] .filters {
+      top: 10px; left: 10px; right: 10px;
+      overflow-x: auto; flex-wrap: nowrap;
+      padding-bottom: 4px; -webkit-overflow-scrolling: touch;
+    }
+    :root[data-layout="embed"] .filters::-webkit-scrollbar { display: none; }
+
+    /* Phone-width article column. */
+    @media (max-width: 560px) {
+      :root[data-layout="embed"], :root[data-layout="embed"] body {
+        height: 620px;
+      }
+      :root[data-layout="embed"] .map-wrap { height: 620px; }
+      :root[data-layout="embed"] #map { height: 240px; }
+      :root[data-layout="embed"] .sidebar { top: 240px; }
+    }
+
+    /* Wide overlay: full-bleed sticky map + 380px floating card column right.
+       If you change this width, also update getOverlayPadding() in JS. */
+    @media (min-width: 780px) {
+      :root[data-layout="embed"], :root[data-layout="embed"] body {
+        height: 560px;
+      }
+      :root[data-layout="embed"] .map-wrap { height: 560px; }
+      :root[data-layout="embed"] #map {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        height: 560px;
+      }
+      :root[data-layout="embed"] .sidebar {
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: auto;
+        width: 380px; height: auto; max-height: none;
+        border-radius: 0;
+        border-top: none; border-right: none; border-bottom: none;
+        border-left: 1px solid var(--border);
+        background: var(--panel);
+        box-shadow: -6px 0 20px rgba(20, 30, 55, 0.10);
+      }
+      :root[data-layout="embed"] .filters {
+        /* Keep chips on the map side, clear of the overlay card column. */
+        right: 394px;
+      }
+    }
+  </style>
+</head>
+<body data-bs-theme="light">
+  <script>
+    // Mirror <html data-bs-theme="…"> onto <body> so existing body[data-bs-theme]
+    // selectors and TRD theme.js both see a consistent state pre-paint.
+    document.body.setAttribute(
+      "data-bs-theme",
+      document.documentElement.getAttribute("data-bs-theme") || "light"
+    );
+  </script>
+
+  <header class="trd-header">
+    <span class="trd-bar"></span>
+    <div>
+      <h1 class="trd-title">Pompano Beach's Top Developments</h1>
+      <div class="trd-sub">2026 Pipeline &middot; <span id="totalCount">15</span> Projects</div>
+    </div>
+    <div class="trd-brand">
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">&#9788;</button>
+      <span class="pill">The Real Deal</span>
+    </div>
+  </header>
+
+  <div class="map-wrap">
+    <div id="map"></div>
+    <div class="map-veil" id="mapVeil" aria-hidden="true">
+      <div class="pill" id="mapVeilPill">Tap to interact</div>
+    </div>
+
+    <div class="filters" id="filters">
+      <button class="chip active" data-filter="all"><span class="dot"></span>All <span class="count" id="c-all">0</span></button>
+      <button class="chip" data-filter="condo"><span class="dot"></span>Condos <span class="count" id="c-condo">0</span></button>
+      <button class="chip" data-filter="apartment"><span class="dot"></span>Apartments <span class="count" id="c-apartment">0</span></button>
+      <button class="chip" data-filter="mixed"><span class="dot"></span>Mixed-Use &amp; Hotel <span class="count" id="c-mixed">0</span></button>
+      <button class="chip" data-filter="civic"><span class="dot"></span>Civic <span class="count" id="c-civic">0</span></button>
+      <button class="chip" data-filter="commercial"><span class="dot"></span>Commercial <span class="count" id="c-commercial">0</span></button>
+    </div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head" id="sidebarHead">
+        <h2>Projects</h2>
+        <span class="count-pill"><span id="visibleCount">0</span> shown</span>
+      </div>
+      <div class="sidebar-list" id="sidebarList"></div>
+    </aside>
+
+    <div class="legend">
+      <h4>Project Type</h4>
+      <div class="row"><span class="sw" style="background:var(--cat-condo)"></span> Luxury condos / residences</div>
+      <div class="row"><span class="sw" style="background:var(--cat-apartment)"></span> Apartments / multifamily</div>
+      <div class="row"><span class="sw" style="background:var(--cat-mixed)"></span> Mixed-use &amp; hospitality</div>
+      <div class="row"><span class="sw" style="background:var(--cat-civic)"></span> Civic &amp; cultural</div>
+      <div class="row"><span class="sw" style="background:var(--cat-commercial)"></span> Commercial / retail</div>
+    </div>
+
+    <div class="credit">Source: City filings &amp; developer announcements &middot; Map: The Real Deal</div>
+  </div>
+
+  <script>
+    // =====================================================================
+    // Embedded data. Sourced from TopDevelopments_geocoded.geojson.
+    // NOTE: the "Emergency Center operations" row geocoded to Oregon
+    // (-122.99, 45.53) because the source address omits the city. We
+    // filter it out below so the bounds don't blow up; fix the geocoding
+    // upstream if you want that pin to appear.
+    // =====================================================================
+    const RAW_DATA = {"type":"FeatureCollection","features":[
+      {"type":"Feature","properties":{"full_address":"777 Isle of Capri Boulevard, Pompano Beach, FL 33069","project name":"The Pomp","developers":"The Cordish Companies and Caesars Entertainment, Inc.","description":"The 223-acre development is bringing a mixed-use hospitality destination to Pompano Beach, anchored by a Live! dining and entertainment district.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1498362,26.2207153]}},
+      {"type":"Feature","properties":{"full_address":"100 W Atlantic Blvd, Pompano Beach, FL 33060","project name":"New Downtown Pompano","developers":"RocaPoint Partners","description":"Pompano Beach is revitalizing its downtown with a $2 billion 75-acre redevelopment, which will include four million square feet of residential and commercial space and a new City Hall.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.126336,26.231486]}},
+      {"type":"Feature","properties":{"full_address":"1350 S Ocean, Pompano Beach, FL 33062","project name":"Waldorf Astoria Residences, Pompano Beach","developers":"Related Group and Merrimac Ventures in collaboration with Hilton","description":"The two-acre beachfront site will house 92 luxury residences, over 85 percent of which are under contract. Completion is slated for summer 2027.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.090686,26.220078]}},
+      {"type":"Feature","properties":{"full_address":"1380 S. Ocean Boulevard, Pompano Beach, Florida 33062","project name":"The Ritz-Carlton Residences, Pompano Beach","developers":"Fortune International Group and Oak Capital","description":"The exclusively residential project features two towers with 205 luxury residences ranging from 1,100 to 6,500 square feet. Only three units are remaining for sale, a source said.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.0913795,26.2179588]}},
+      {"type":"Feature","properties":{"full_address":"20 N. Ocean Boulevard, Pompano Beach, FL 33062","project name":"W Pompano Hotel & Residences","developers":"Related Group and BH Group, in collaboration with Marriott International","description":"The 24-story tower includes 77 private residences and 296 condo-hotel units. It's expected to open in 2029.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.0903867,26.2334944]}},
+      {"type":"Feature","properties":{"full_address":"1590 N Federal Hwy, Pompano Beach, FL 33062","project name":"Haborside at Hidden Harbour","developers":"AMP IV-HIDDEN HARBOUR, LLC AND HTG AMP HARBOURSIDE, LLC, affiliate of Aqua Marine Partners","description":"The proposed development will add two eight-story buildings with 285 residential units, 11,800 square feet of commercial space and a waterfront promenade to the existing marina.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1004121,26.2526069]}},
+      {"type":"Feature","properties":{"full_address":"1200 NE 23rd Street Pompano Beach, FL 33062","project name":"Caroline @ Pompano Beach","developers":"The Morgan Group","description":"The 12-acre 356-unit apartment community includes eight four-story apartment buildings that has replaced the Macy's at Pompano Citi Centre, which shuttered in 2020.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1046448,26.2575956]}},
+      {"type":"Feature","properties":{"full_address":"305 Briny Ave, Pompano Beach, FL 33062","project name":"Salato Pompano Beach","developers":"U.S. Development","description":"Asking prices for the 43 residences at Salato range from $2 million to $5.3 million, U.S. Development CEO John Farina said. They are nearly 70% sold.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.0905011,26.2292258]}},
+      {"type":"Feature","properties":{"full_address":"55-909 S Federal Highway, Pompano Beach, Florida, 33004","project name":"Modera Pompano Beach","developers":"MCRT Investments, LLC","description":"The proposed mixed-use development would redevelop part of a car dealership to make way for residential and retail space.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1031007,26.2308168]}},
+      {"type":"Feature","properties":{"full_address":"1550 North Ocean Boulevard","project name":"Armani Casa Pompano Beach","developers":"Joint venture by Vertical Developments, WellDuo, GCF Development, and SP Developments","description":"Prices for condos at the two-tower complex start at $5 million, according to Bogatov Realty. Completion is slated for 2028.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.085965,26.25197]}},
+      {"type":"Feature","properties":{"full_address":"2121 NW 3rd Avenue","project name":"Emergency Center operations","developers":"City of Pompano Beach","description":"The city plans to construct a 35,700-square-feet Emergency Operations Center complex to include Fire Administration, Logistics, and Emergency Center departments.","story_link":null},"geometry":{"type":"Point","coordinates":[-122.9981294,45.5398438]}},
+      {"type":"Feature","properties":{"full_address":"300 NW 24th Ct, Pompano Beach, FL 33064","project name":"Champion Porsche Center","developers":"Copans Motors, Inc.","description":"Construction of Broward County's first Generation V Porsche dealership, which spans 313,000 square feet, is ongoing.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1274347,26.2608938]}},
+      {"type":"Feature","properties":{"full_address":"900 N Ocean Blvd, Pompano Beach, FL 33062","project name":"Casamar Pompano Beach","developers":"Related Group","description":"Completed last year, the Casamar tower includes 118 units. Recorded sales ranged from $1.6 million to $6.4 million, according to property records.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.0868409,26.2461355]}},
+      {"type":"Feature","properties":{"full_address":"2250 East Atlantic Boulevard","project name":"McNab House and Botanical Gardens","developers":"City of Pompano Beach","description":"The McNab House and Botanical Gardens is being redeveloped to include themed gardens, an event pavilion, education space and a restaurant. Construction is slated to begin later this year.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1011203,26.2314551]}},
+      {"type":"Feature","properties":{"full_address":"580 Briny Avenue Pompano Beach, FL 33062","project name":"Ocean580","developers":"Claridge Homes","description":"The 10-story 17-unit boutique project will bring another beachfront luxury apartment to Briny Avenue.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.0899673,26.2276149]}}
+    ]};
+
+    // Hand-coded category per project name (no category field in source).
+    const CATEGORY_BY_NAME = {
+      "The Pomp": "mixed",
+      "New Downtown Pompano": "mixed",
+      "Waldorf Astoria Residences, Pompano Beach": "condo",
+      "The Ritz-Carlton Residences, Pompano Beach": "condo",
+      "W Pompano Hotel & Residences": "mixed",
+      "Haborside at Hidden Harbour": "apartment",
+      "Caroline @ Pompano Beach": "apartment",
+      "Salato Pompano Beach": "condo",
+      "Modera Pompano Beach": "apartment",
+      "Armani Casa Pompano Beach": "condo",
+      "Emergency Center operations": "civic",
+      "Champion Porsche Center": "commercial",
+      "Casamar Pompano Beach": "condo",
+      "McNab House and Botanical Gardens": "civic",
+      "Ocean580": "condo"
+    };
+    const CATEGORY_LABELS = {
+      condo:      "Luxury Condo",
+      apartment:  "Apartments",
+      mixed:      "Mixed-Use",
+      civic:      "Civic",
+      commercial: "Commercial"
+    };
+    const CATEGORY_COLORS = {
+      condo:      { fill: "#27509B", text: "#fff" },
+      apartment:  { fill: "#2E8C8A", text: "#fff" },
+      mixed:      { fill: "#C9A038", text: "#1a1a1a" },
+      civic:      { fill: "#2F7A4A", text: "#fff" },
+      commercial: { fill: "#B5453E", text: "#fff" }
+    };
+
+    // Annotate every feature with its category + drop any whose coordinates
+    // fall outside a generous Broward / SoFla bounding box (catches the bad
+    // Oregon geocode for the Emergency Center).
+    const SOFLA_BOUNDS = { minLon: -80.6, maxLon: -79.8, minLat: 25.5, maxLat: 26.9 };
+    const DATA = {
+      type: "FeatureCollection",
+      features: RAW_DATA.features.reduce(function (acc, f) {
+        var c = f.geometry.coordinates;
+        var inside = c[0] >= SOFLA_BOUNDS.minLon && c[0] <= SOFLA_BOUNDS.maxLon
+                  && c[1] >= SOFLA_BOUNDS.minLat && c[1] <= SOFLA_BOUNDS.maxLat;
+        if (!inside) {
+          console.warn("[pompano-dev-map] dropping feature with out-of-region coords:",
+            f.properties["project name"], c);
+          return acc;
+        }
+        var name = f.properties["project name"];
+        f.properties.category = CATEGORY_BY_NAME[name] || "mixed";
+        acc.push(f);
+        return acc;
+      }, [])
+    };
+
+    // ----- Mapbox setup -----
+    mapboxgl.accessToken = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
+
+    const STYLES = {
+      light: "mapbox://styles/mapbox/light-v11",
+      dark:  "mapbox://styles/mapbox/dark-v11"
+    };
+
+    // ----- Environment -----
+    const IS_EMBED = document.documentElement.getAttribute("data-layout") === "embed";
+    const THEME_STORAGE_KEY = "pompanoDevMap.theme";
+
+    // Per-project postMessage namespace. If multiple TRD map embeds share an
+    // article, identical prefixes will cross-talk because listeners whitelist
+    // by `type` only. See TRD_MAP_INTEGRATION_GUIDE.md §3.
+    const MSG = {
+      READY:          "pompano-dev-map:ready",
+      LOADED:         "pompano-dev-map:loaded",
+      RESIZE:         "pompano-dev-map:resize",
+      SET_THEME:      "pompano-dev-map:set-theme",
+      REQUEST_RESIZE: "pompano-dev-map:request-resize"
+    };
+
+    // ----- Bounds / camera -----
+    const lons = DATA.features.map(f => f.geometry.coordinates[0]);
+    const lats = DATA.features.map(f => f.geometry.coordinates[1]);
+    const bounds = [
+      [Math.min(...lons), Math.min(...lats)],
+      [Math.max(...lons), Math.max(...lats)]
+    ];
+
+    // ----- State -----
+    let map = null;
+    let mapLoaded = false;
+    const markers = [];  // {marker, feature, el, popup, index, coords}
+    let activeFilter = "all";
+    let activeIndex = -1;
+
+    // ----- Helpers -----
+    function escapeHtml(s) {
+      return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+    }
+
+    function pinSvg(color) {
+      return `<svg viewBox="0 0 34 42" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17 1C8.7 1 2 7.6 2 16c0 11 15 25 15 25s15-14 15-25C32 7.6 25.3 1 17 1z"
+              fill="${color}" stroke="#ffffff" stroke-width="2"/>
+        <circle cx="17" cy="16" r="5.5" fill="#ffffff" fill-opacity="0.95"/>
+      </svg>`;
+    }
+
+    function categoryGlyph(cat) {
+      // Single-letter glyph riding inside the pin's white dot.
+      return ({ condo: "C", apartment: "A", mixed: "M", civic: "V", commercial: "R" })[cat] || "•";
+    }
+
+    function buildMarkerEl(feature) {
+      const cat = feature.properties.category;
+      const color = (CATEGORY_COLORS[cat] || CATEGORY_COLORS.mixed).fill;
+      const el = document.createElement("div");
+      el.className = "pin pin-" + cat;
+      el.innerHTML = `<div class="pin-inner">`
+        + pinSvg(color)
+        + `<div class="glyph" style="color:${color}; top:9px; font-size:13px;">${categoryGlyph(cat)}</div>`
+        + `</div>`;
+      return el;
+    }
+
+    function popupHtml(props) {
+      const cat = props.category;
+      const colors = CATEGORY_COLORS[cat] || CATEGORY_COLORS.mixed;
+      const label = CATEGORY_LABELS[cat] || "Project";
+      return `
+        <div class="popup-top ${cat === "mixed" ? "cat-mixed" : ""}" style="background:${colors.fill}; color:${colors.text};">
+          <span>${escapeHtml(label)}</span>
+        </div>
+        <div class="popup-body">
+          <h3>${escapeHtml(props["project name"])}</h3>
+          <div class="addr">${escapeHtml(props.full_address)}</div>
+          <div class="dev">${escapeHtml(props.developers || "")}</div>
+          <div class="desc">${escapeHtml(props.description || "")}</div>
+        </div>`;
+    }
+
+    // Spider out markers that share the exact same lng/lat so they don't stack.
+    function spreadDuplicates(features) {
+      const buckets = new Map();
+      features.forEach((f, i) => {
+        const key = f.geometry.coordinates.join(",");
+        if (!buckets.has(key)) buckets.set(key, []);
+        buckets.get(key).push(i);
+      });
+      const offsets = new Array(features.length).fill(null);
+      buckets.forEach(idxs => {
+        if (idxs.length < 2) return;
+        const r = 0.00018;
+        idxs.forEach((idx, k) => {
+          const angle = (2 * Math.PI * k) / idxs.length;
+          offsets[idx] = [Math.cos(angle) * r, Math.sin(angle) * r];
+        });
+      });
+      return offsets;
+    }
+    const dupOffsets = spreadDuplicates(DATA.features);
+
+    const FEATURE_COORDS = DATA.features.map((f, i) => {
+      const c = f.geometry.coordinates.slice();
+      if (dupOffsets[i]) { c[0] += dupOffsets[i][0]; c[1] += dupOffsets[i][1]; }
+      return c;
+    });
+
+    // ----- Sidebar list / filters -----
+    const sidebarList = document.getElementById("sidebarList");
+
+    function matchesFilter(f) {
+      if (activeFilter === "all") return true;
+      return f.properties.category === activeFilter;
+    }
+
+    function visibleFeaturesSorted() {
+      // Sort: category bucket order, then project name.
+      const order = ["condo", "apartment", "mixed", "civic", "commercial"];
+      return DATA.features
+        .map((f, i) => ({ f, i }))
+        .filter(({ f }) => matchesFilter(f))
+        .sort((a, b) => {
+          const oa = order.indexOf(a.f.properties.category);
+          const ob = order.indexOf(b.f.properties.category);
+          if (oa !== ob) return oa - ob;
+          return a.f.properties["project name"].localeCompare(b.f.properties["project name"]);
+        });
+    }
+
+    function renderList() {
+      sidebarList.innerHTML = "";
+      const visible = visibleFeaturesSorted();
+      visible.forEach(({ f, i }) => {
+        const p = f.properties;
+        const cat = p.category;
+        const colors = CATEGORY_COLORS[cat] || CATEGORY_COLORS.mixed;
+        const label = CATEGORY_LABELS[cat] || "Project";
+        const item = document.createElement("div");
+        item.className = "list-item" + (i === activeIndex ? " active" : "");
+        item.dataset.idx = i;
+        item.innerHTML = `
+          <div class="accent" style="background:${colors.fill};"></div>
+          <div>
+            <div class="name">${escapeHtml(p["project name"])}</div>
+            <div class="dev">${escapeHtml(p.developers || "")}</div>
+            <div class="addr">${escapeHtml(p.full_address)}</div>
+            <div class="meta">
+              <span class="tag cat-${cat}">${escapeHtml(label)}</span>
+            </div>
+          </div>`;
+        item.addEventListener("click", () => {
+          ensureMap();
+          flyToIndex(i);
+          setActiveListItem(i);
+        });
+        sidebarList.appendChild(item);
+      });
+      document.getElementById("visibleCount").textContent = visible.length;
+    }
+
+    function setActiveListItem(idx) {
+      activeIndex = idx;
+      document.querySelectorAll(".list-item").forEach(el => {
+        const match = parseInt(el.dataset.idx,10) === idx;
+        el.classList.toggle("active", match);
+        if (match) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+    }
+
+    function applyFilter() {
+      markers.forEach(m => {
+        const show = matchesFilter(m.feature);
+        m.el.style.display = show ? "" : "none";
+        if (!show && m.popup && m.popup.isOpen()) m.popup.remove();
+      });
+      renderList();
+    }
+
+    function updateChipCounts() {
+      const counts = { all: DATA.features.length, condo: 0, apartment: 0, mixed: 0, civic: 0, commercial: 0 };
+      DATA.features.forEach(f => {
+        const c = f.properties.category;
+        if (counts[c] !== undefined) counts[c] += 1;
+      });
+      Object.keys(counts).forEach(k => {
+        const el = document.getElementById("c-" + k);
+        if (el) el.textContent = counts[k];
+      });
+      document.getElementById("totalCount").textContent = counts.all;
+    }
+
+    document.getElementById("filters").addEventListener("click", e => {
+      const btn = e.target.closest(".chip");
+      if (!btn) return;
+      document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+      btn.classList.add("active");
+      activeFilter = btn.dataset.filter;
+      applyFilter();
+    });
+
+    // Mobile sidebar collapse on header tap (standalone only).
+    document.getElementById("sidebarHead").addEventListener("click", () => {
+      if (IS_EMBED) return;
+      if (window.innerWidth <= 768) {
+        document.getElementById("sidebar").classList.toggle("collapsed");
+      }
+    });
+
+    updateChipCounts();
+    renderList();
+
+    // =====================================================================
+    // Map construction (deferred in embed mode via IntersectionObserver).
+    // =====================================================================
+    function getOverlayPadding() {
+      if (IS_EMBED && window.matchMedia("(min-width: 780px)").matches) {
+        return { top: 40, bottom: 30, left: 30, right: 400 };
+      }
+      if (IS_EMBED) {
+        return { top: 30, bottom: 20, left: 20, right: 20 };
+      }
+      const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 64;
+      const isMobile = window.innerWidth <= 768;
+      const sidebar = document.getElementById("sidebar");
+      const sidebarH = isMobile && sidebar && !sidebar.classList.contains("collapsed")
+        ? Math.round(window.innerHeight * 0.42)
+        : 0;
+      return {
+        top: headerH + 60,
+        bottom: isMobile ? sidebarH + 20 : 60,
+        left: 30,
+        right: isMobile ? 30 : 380
+      };
+    }
+
+    function currentTheme() {
+      return document.documentElement.getAttribute("data-bs-theme") === "dark" ? "dark" : "light";
+    }
+
+    function declutterBasemap() {
+      if (!map) return;
+      const style = map.getStyle();
+      if (!style || !style.layers) return;
+      const noisePattern = /^(poi|transit)(-|$)/;
+      const tinyExtras = ["road-label", "natural-line-label", "natural-point-label", "water-point-label"];
+      const tiny = IS_EMBED && window.innerWidth < 500;
+      style.layers.forEach(layer => {
+        if (noisePattern.test(layer.id) || (tiny && tinyExtras.includes(layer.id))) {
+          try { map.setLayoutProperty(layer.id, "visibility", "none"); } catch (e) {}
+        }
+      });
+    }
+
+    function buildMap() {
+      if (map) return;
+      const wide = IS_EMBED && window.matchMedia("(min-width: 780px)").matches;
+      map = new mapboxgl.Map({
+        container: "map",
+        style: STYLES[currentTheme()],
+        bounds: bounds,
+        fitBoundsOptions: {
+          padding: IS_EMBED
+            ? (wide ? { top: 40, bottom: 30, left: 30, right: 400 }
+                    : { top: 30, bottom: 30, left: 24, right: 24 })
+            : { top: 120, bottom: 60, left: 60, right: window.innerWidth > 768 ? 400 : 30 }
+        },
+        minZoom: 9, maxZoom: 18,
+        attributionControl: false,
+        // Lock down interactions in embed mode so readers don't get trapped
+        // on mobile or zoom the map when wheel-scrolling on desktop. Pin
+        // clicks + nav buttons still work. See guide §8.3.
+        scrollZoom:       !IS_EMBED,
+        boxZoom:          !IS_EMBED,
+        dragPan:          !IS_EMBED,
+        dragRotate:       false,
+        keyboard:         !IS_EMBED,
+        doubleClickZoom:  !IS_EMBED,
+        touchPitch:       false,
+        touchZoomRotate:  !IS_EMBED
+      });
+
+      map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
+      map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
+
+      map.on("style.load", () => {
+        // style.load fires BEFORE load. Flip mapLoaded here so anything
+        // wired to style.load can immediately re-add markers/state after
+        // setStyle().
+        mapLoaded = true;
+        declutterBasemap();
+      });
+
+      map.on("load", () => {
+        mapLoaded = true;
+        addMarkersToMap();
+        postParentMessage(MSG.LOADED);
+      });
+
+      map.on("click", () => {
+        setActivePin(-1);
+        markers.forEach(m => { if (m.popup && m.popup.isOpen()) m.popup.remove(); });
+      });
+    }
+
+    function ensureMap() {
+      if (!map) buildMap();
+    }
+
+    function addMarkersToMap() {
+      if (!map || markers.length) return;
+      DATA.features.forEach((f, i) => {
+        const el = buildMarkerEl(f);
+        const popup = new mapboxgl.Popup({ offset: 24, closeButton: true, maxWidth: "320px" })
+          .setHTML(popupHtml(f.properties));
+        const coords = FEATURE_COORDS[i];
+        const marker = new mapboxgl.Marker({ element: el, anchor: "bottom" })
+          .setLngLat(coords)
+          .addTo(map);
+        popup.setLngLat(coords);
+        popup.on("close", () => setActivePin(-1));
+        el.addEventListener("click", (e) => {
+          e.stopPropagation();
+          flyToIndex(i);
+          setActiveListItem(i);
+        });
+        markers.push({ marker, feature: f, el, popup, index: i, coords });
+      });
+      applyFilter();
+    }
+
+    function setActivePin(idx) {
+      activeIndex = idx;
+      markers.forEach(m => m.el.classList.toggle("active", m.index === idx));
+    }
+
+    function flyToIndex(i) {
+      ensureMap();
+      const coords = FEATURE_COORDS[i];
+      const m = markers[i];
+      const zoom = map.getZoom ? Math.max(map.getZoom(), 15) : 15;
+      map.flyTo({
+        center: coords,
+        zoom: zoom,
+        speed: 1.2,
+        essential: true,
+        padding: getOverlayPadding()
+      });
+      setActivePin(i);
+      if (m) {
+        markers.forEach(x => { if (x !== m && x.popup && x.popup.isOpen()) x.popup.remove(); });
+        if (!m.popup.isOpen()) m.popup.setLngLat(coords).addTo(map);
+      }
+    }
+
+    // =====================================================================
+    // Tap-to-interact veil (embed only). Lets readers vertical-scroll past
+    // the sticky map; a stationary tap unlocks pan/zoom for the session.
+    // =====================================================================
+    const TAP_VEIL_AUTO_DISMISS_MS = 4500;
+    function initMapTapVeil() {
+      if (!IS_EMBED) return;
+      const veil = document.getElementById("mapVeil");
+      const pill = document.getElementById("mapVeilPill");
+      if (!veil) return;
+      pill.textContent = (window.matchMedia("(hover: none)").matches) ? "Tap to interact" : "Click to interact";
+      veil.classList.add("is-active");
+      let dismissed = false;
+      const unlock = () => {
+        if (!dismissed) {
+          dismissed = true;
+          ensureMap();
+          if (map) {
+            map.scrollZoom.enable();
+            map.dragPan.enable();
+            map.doubleClickZoom.enable();
+            map.touchZoomRotate.enable();
+            map.touchZoomRotate.disableRotation();
+          }
+        }
+        veil.classList.remove("is-active");
+      };
+      const dismissOnly = () => { veil.classList.remove("is-active"); };
+      let touchStartY = null;
+      veil.addEventListener("touchstart", e => { touchStartY = e.touches[0] ? e.touches[0].clientY : null; }, { passive: true });
+      veil.addEventListener("touchend", e => {
+        const t = e.changedTouches[0];
+        if (touchStartY != null && t && Math.abs(t.clientY - touchStartY) > 8) { dismissOnly(); return; }
+        unlock();
+      });
+      veil.addEventListener("click", unlock);
+      setTimeout(dismissOnly, TAP_VEIL_AUTO_DISMISS_MS);
+    }
+
+    // =====================================================================
+    // Theme handling
+    // =====================================================================
+    function applyTheme(theme, opts) {
+      theme = theme === "dark" ? "dark" : "light";
+      opts = opts || {};
+      document.documentElement.setAttribute("data-bs-theme", theme);
+      document.body.setAttribute("data-bs-theme", theme);
+      if (map) map.setStyle(STYLES[theme]);
+      if (opts.persist && !IS_EMBED) {
+        try { localStorage.setItem(THEME_STORAGE_KEY, theme); } catch (e) {}
+      }
+    }
+
+    function setupThemeToggle() {
+      const btn = document.getElementById("themeToggle");
+      if (!btn) return;
+      if (IS_EMBED) {
+        btn.remove();
+        return;
+      }
+      if (typeof TrdTheme === "function") {
+        const trd = TrdTheme({ updateCallback: (t) => applyTheme(t, { persist: true }) });
+        trd.init();
+        btn.addEventListener("click", () => trd.toggle());
+      } else {
+        btn.addEventListener("click", () => {
+          applyTheme(currentTheme() === "dark" ? "light" : "dark", { persist: true });
+        });
+      }
+    }
+
+    // =====================================================================
+    // Parent-frame postMessage protocol (embed only)
+    // =====================================================================
+    function postParentMessage(type, payload) {
+      if (!IS_EMBED) return;
+      try {
+        const msg = Object.assign({ type: type }, payload || {});
+        window.parent.postMessage(msg, "*");
+      } catch (e) {}
+    }
+
+    function postParentResize() {
+      if (!IS_EMBED) return;
+      if (postParentResize._raf) return;
+      postParentResize._raf = requestAnimationFrame(() => {
+        postParentResize._raf = null;
+        // body.scrollHeight ONLY. documentElement.scrollHeight returns the
+        // iframe's viewport height when content is shorter, which pegs the
+        // height. See guide §4.
+        const height = document.body.scrollHeight;
+        if (Math.abs(height - (postParentResize._lastHeight || 0)) < 2) return;
+        postParentResize._lastHeight = height;
+        postParentMessage(MSG.RESIZE, { height: height });
+      });
+    }
+
+    function setupParentBridge() {
+      if (!IS_EMBED) return;
+      window.addEventListener("message", (ev) => {
+        const data = ev.data;
+        if (!data || typeof data !== "object") return;
+        if (data.type === MSG.SET_THEME && (data.value === "light" || data.value === "dark")) {
+          applyTheme(data.value, { persist: false });
+        } else if (data.type === MSG.REQUEST_RESIZE) {
+          postParentResize();
+        }
+      });
+
+      window.addEventListener("resize", postParentResize);
+      if ("ResizeObserver" in window) {
+        const ro = new ResizeObserver(postParentResize);
+        ro.observe(document.body);
+      }
+
+      postParentMessage(MSG.READY);
+      postParentResize();
+    }
+
+    // =====================================================================
+    // Lazy map init (embed only).
+    // =====================================================================
+    function initMapWhenVisible() {
+      if (!IS_EMBED) { buildMap(); return; }
+      const container = document.getElementById("map");
+      if (!("IntersectionObserver" in window)) { buildMap(); return; }
+      const obs = new IntersectionObserver((entries) => {
+        if (entries.some(e => e.isIntersecting)) {
+          obs.disconnect();
+          buildMap();
+        }
+      }, { rootMargin: "200px" });
+      obs.observe(container);
+    }
+
+    // ----- Bootstrap -----
+    setupThemeToggle();
+    setupParentBridge();
+    initMapTapVeil();
+    initMapWhenVisible();
+  </script>
+</body>
+</html>
