@@ -374,6 +374,7 @@
       .trd-title { font-size: 15px; }
       .trd-sub { font-size: 10px; }
       .trd-brand .pill { font-size: 10px; padding: 3px 8px; }
+      .mapboxgl-ctrl-top-right { display: none; }
       .filters {
         top: 10px; left: 10px; right: 10px;
         overflow-x: auto; flex-wrap: nowrap;
@@ -544,26 +545,22 @@
   <script>
     // =====================================================================
     // Embedded data. Sourced from TopDevelopments_geocoded.geojson.
-    // NOTE: the "Emergency Center operations" row geocoded to Oregon
-    // (-122.99, 45.53) because the source address omits the city. We
-    // filter it out below so the bounds don't blow up; fix the geocoding
-    // upstream if you want that pin to appear.
     // =====================================================================
     const RAW_DATA = {"type":"FeatureCollection","features":[
-      {"type":"Feature","properties":{"full_address":"777 Isle of Capri Boulevard, Pompano Beach, FL 33069","project name":"The Pomp","developers":"The Cordish Companies and Caesars Entertainment, Inc.","description":"The 223-acre development is bringing a mixed-use hospitality destination to Pompano Beach, anchored by a Live! dining and entertainment district.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1498362,26.2207153]}},
-      {"type":"Feature","properties":{"full_address":"100 W Atlantic Blvd, Pompano Beach, FL 33060","project name":"New Downtown Pompano","developers":"RocaPoint Partners","description":"Pompano Beach is revitalizing its downtown with a $2 billion 75-acre redevelopment, which will include four million square feet of residential and commercial space and a new City Hall.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.126336,26.231486]}},
-      {"type":"Feature","properties":{"full_address":"1350 S Ocean, Pompano Beach, FL 33062","project name":"Waldorf Astoria Residences, Pompano Beach","developers":"Related Group and Merrimac Ventures in collaboration with Hilton","description":"The two-acre beachfront site will house 92 luxury residences, over 85 percent of which are under contract. Completion is slated for summer 2027.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.090686,26.220078]}},
-      {"type":"Feature","properties":{"full_address":"1380 S. Ocean Boulevard, Pompano Beach, Florida 33062","project name":"The Ritz-Carlton Residences, Pompano Beach","developers":"Fortune International Group and Oak Capital","description":"The exclusively residential project features two towers with 205 luxury residences ranging from 1,100 to 6,500 square feet. Only three units are remaining for sale, a source said.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.0913795,26.2179588]}},
-      {"type":"Feature","properties":{"full_address":"20 N. Ocean Boulevard, Pompano Beach, FL 33062","project name":"W Pompano Hotel & Residences","developers":"Related Group and BH Group, in collaboration with Marriott International","description":"The 24-story tower includes 77 private residences and 296 condo-hotel units. It's expected to open in 2029.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.0903867,26.2334944]}},
-      {"type":"Feature","properties":{"full_address":"1590 N Federal Hwy, Pompano Beach, FL 33062","project name":"Haborside at Hidden Harbour","developers":"AMP IV-HIDDEN HARBOUR, LLC AND HTG AMP HARBOURSIDE, LLC, affiliate of Aqua Marine Partners","description":"The proposed development will add two eight-story buildings with 285 residential units, 11,800 square feet of commercial space and a waterfront promenade to the existing marina.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1004121,26.2526069]}},
-      {"type":"Feature","properties":{"full_address":"1200 NE 23rd Street Pompano Beach, FL 33062","project name":"Caroline @ Pompano Beach","developers":"The Morgan Group","description":"The 12-acre 356-unit apartment community includes eight four-story apartment buildings that has replaced the Macy's at Pompano Citi Centre, which shuttered in 2020.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1046448,26.2575956]}},
+      {"type":"Feature","properties":{"full_address":"777 Isle of Capri Boulevard, Pompano Beach, FL 33069","project name":"The Pomp","developers":"The Cordish Companies and Caesars Entertainment","description":"The 223-acre development is bringing a mixed-use hospitality destination to Pompano Beach, anchored by a Live! dining and entertainment district.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1498362,26.2207153]}},
+      {"type":"Feature","properties":{"full_address":"100 West Atlantic Boulevard, Pompano Beach, FL 33060","project name":"New Downtown Pompano","developers":"RocaPoint Partners","description":"Pompano Beach is revitalizing its downtown with a $2 billion 75-acre redevelopment, which will include 4 million square feet of residential and commercial space and a new City Hall.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.126336,26.231486]}},
+      {"type":"Feature","properties":{"full_address":"1350 South Ocean Boulevard, Pompano Beach, FL 33062","project name":"Waldorf Astoria Residences, Pompano Beach","developers":"Related Group and Merrimac Ventures in collaboration with Hilton","description":"The 2-acre beachfront site will house 92 luxury residences, over 85 percent of which are under contract. Completion is slated for summer 2027.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.090686,26.220078]}},
+      {"type":"Feature","properties":{"full_address":"1380 South Ocean Boulevard, Pompano Beach, Florida 33062","project name":"The Ritz-Carlton Residences, Pompano Beach","developers":"Fortune International Group and Oak Capital","description":"The residential project features two towers with 205 luxury residences ranging from 1,100 to 6,500 square feet. Only three units remain for sale, a source said.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.0913795,26.2179588]}},
+      {"type":"Feature","properties":{"full_address":"20 North Ocean Boulevard, Pompano Beach, FL 33062","project name":"W Pompano Hotel & Residences","developers":"Related Group and BH Group, in collaboration with Marriott International","description":"The 24-story tower includes 77 private residences and 296 condo-hotel units. It's expected to open in 2029.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.0903867,26.2334944]}},
+      {"type":"Feature","properties":{"full_address":"1590 North Federal Highway, Pompano Beach, FL 33062","project name":"Harborside at Hidden Harbour","developers":"Affiliates of Aqua Marine Partners and Housing Trust Group","description":"The proposed development will add two eight-story buildings with 285 residential units, 11,800 square feet of commercial space and a waterfront promenade to the existing marina.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1004121,26.2526069]}},
+      {"type":"Feature","properties":{"full_address":"1200 Northeast 23rd Street Pompano Beach, FL 33062","project name":"Caroline @ Pompano Beach","developers":"The Morgan Group","description":"The 12-acre 356-unit apartment community includes six four-story apartment buildings replaced the Macy's at Pompano Citi Centre, which shuttered in 2020.","story_link":"The Real Deal"},"geometry":{"type":"Point","coordinates":[-80.1046448,26.2575956]}},
       {"type":"Feature","properties":{"full_address":"305 Briny Ave, Pompano Beach, FL 33062","project name":"Salato Pompano Beach","developers":"U.S. Development","description":"Asking prices for the 43 residences at Salato range from $2 million to $5.3 million, U.S. Development CEO John Farina said. They are nearly 70% sold.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.0905011,26.2292258]}},
-      {"type":"Feature","properties":{"full_address":"55-909 S Federal Highway, Pompano Beach, Florida, 33004","project name":"Modera Pompano Beach","developers":"MCRT Investments, LLC","description":"The proposed mixed-use development would redevelop part of a car dealership to make way for residential and retail space.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1031007,26.2308168]}},
-      {"type":"Feature","properties":{"full_address":"1550 North Ocean Boulevard","project name":"Armani Casa Pompano Beach","developers":"Joint venture by Vertical Developments, WellDuo, GCF Development, and SP Developments","description":"Prices for condos at the two-tower complex start at $5 million, according to Bogatov Realty. Completion is slated for 2028.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.085965,26.25197]}},
-      {"type":"Feature","properties":{"full_address":"2121 NW 3rd Avenue","project name":"Emergency Center operations","developers":"City of Pompano Beach","description":"The city plans to construct a 35,700-square-feet Emergency Operations Center complex to include Fire Administration, Logistics, and Emergency Center departments.","story_link":null},"geometry":{"type":"Point","coordinates":[-122.9981294,45.5398438]}},
-      {"type":"Feature","properties":{"full_address":"300 NW 24th Ct, Pompano Beach, FL 33064","project name":"Champion Porsche Center","developers":"Copans Motors, Inc.","description":"Construction of Broward County's first Generation V Porsche dealership, which spans 313,000 square feet, is ongoing.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1274347,26.2608938]}},
-      {"type":"Feature","properties":{"full_address":"900 N Ocean Blvd, Pompano Beach, FL 33062","project name":"Casamar Pompano Beach","developers":"Related Group","description":"Completed last year, the Casamar tower includes 118 units. Recorded sales ranged from $1.6 million to $6.4 million, according to property records.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.0868409,26.2461355]}},
-      {"type":"Feature","properties":{"full_address":"2250 East Atlantic Boulevard","project name":"McNab House and Botanical Gardens","developers":"City of Pompano Beach","description":"The McNab House and Botanical Gardens is being redeveloped to include themed gardens, an event pavilion, education space and a restaurant. Construction is slated to begin later this year.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1011203,26.2314551]}},
+      {"type":"Feature","properties":{"full_address":"855-909 South Federal Highway, Pompano Beach, Florida, 33004","project name":"Modera Pompano Beach","developers":"MCRT Investments","description":"The proposed mixed-use development would redevelop part of a car dealership to make way for residential and retail space.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.105658,26.219194]}},
+      {"type":"Feature","properties":{"full_address":"1550 North Ocean Boulevard, Pompano Beach, FL","project name":"Armani Casa Pompano Beach","developers":"Joint venture by Vertical Developments, WellDuo, GCF Development, and SP Developments","description":"Prices for condos at the two-tower complex start at $5 million, according to Bogatov Realty. Completion is slated for 2028.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.085965,26.25197]}},
+      {"type":"Feature","properties":{"full_address":"2121 Northwest 3rd Avenue, Pompano Beach, FL","project name":"Emergency Center operations","developers":"City of Pompano Beach","description":"The city plans to construct a 35,700-square-feet Emergency Operations Center complex to include Fire Administration, Logistics, and Emergency Center departments.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1276883,26.2575679]}},
+      {"type":"Feature","properties":{"full_address":"300 Northwest 24th Court, Pompano Beach, FL 33064","project name":"Champion Porsche Center","developers":"Copans Motors","description":"Construction of Broward County's first Generation V Porsche dealership, which spans 313,000 square feet, is ongoing.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1274347,26.2608938]}},
+      {"type":"Feature","properties":{"full_address":"900 North Ocean Blvd, Pompano Beach, FL 33062","project name":"Casamar Pompano Beach","developers":"Related Group","description":"Completed last year, the Casamar tower includes 118 units. Recorded sales ranged from $1.6 million to $6.4 million, according to property records.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.0868409,26.2461355]}},
+      {"type":"Feature","properties":{"full_address":"2250 East Atlantic Boulevard, Pompano Beach, FL","project name":"McNab House and Botanical Gardens","developers":"City of Pompano Beach","description":"The McNab House and Botanical Gardens is being redeveloped to include themed gardens, an event pavilion, education space and a restaurant. Construction is slated to begin later this year.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.1011203,26.2314551]}},
       {"type":"Feature","properties":{"full_address":"580 Briny Avenue Pompano Beach, FL 33062","project name":"Ocean580","developers":"Claridge Homes","description":"The 10-story 17-unit boutique project will bring another beachfront luxury apartment to Briny Avenue.","story_link":null},"geometry":{"type":"Point","coordinates":[-80.0899673,26.2276149]}}
     ]};
 
@@ -574,7 +571,7 @@
       "Waldorf Astoria Residences, Pompano Beach": "condo",
       "The Ritz-Carlton Residences, Pompano Beach": "condo",
       "W Pompano Hotel & Residences": "mixed",
-      "Haborside at Hidden Harbour": "apartment",
+      "Harborside at Hidden Harbour": "apartment",
       "Caroline @ Pompano Beach": "apartment",
       "Salato Pompano Beach": "condo",
       "Modera Pompano Beach": "apartment",
@@ -600,9 +597,7 @@
       commercial: { fill: "#B5453E", text: "#fff" }
     };
 
-    // Annotate every feature with its category + drop any whose coordinates
-    // fall outside a generous Broward / SoFla bounding box (catches the bad
-    // Oregon geocode for the Emergency Center).
+    // Annotate every feature with its category.
     const SOFLA_BOUNDS = { minLon: -80.6, maxLon: -79.8, minLat: 25.5, maxLat: 26.9 };
     const DATA = {
       type: "FeatureCollection",
@@ -610,11 +605,7 @@
         var c = f.geometry.coordinates;
         var inside = c[0] >= SOFLA_BOUNDS.minLon && c[0] <= SOFLA_BOUNDS.maxLon
                   && c[1] >= SOFLA_BOUNDS.minLat && c[1] <= SOFLA_BOUNDS.maxLat;
-        if (!inside) {
-          console.warn("[pompano-dev-map] dropping feature with out-of-region coords:",
-            f.properties["project name"], c);
-          return acc;
-        }
+        if (!inside) return acc;
         var name = f.properties["project name"];
         f.properties.category = CATEGORY_BY_NAME[name] || "mixed";
         acc.push(f);
@@ -885,6 +876,7 @@
       map = new mapboxgl.Map({
         container: "map",
         style: STYLES[currentTheme()],
+        cooperativeGestures: !!IS_EMBED,
         bounds: bounds,
         fitBoundsOptions: {
           padding: IS_EMBED
@@ -894,18 +886,22 @@
         },
         minZoom: 9, maxZoom: 18,
         attributionControl: false,
-        // Lock down interactions in embed mode so readers don't get trapped
-        // on mobile or zoom the map when wheel-scrolling on desktop. Pin
-        // clicks + nav buttons still work. See guide §8.3.
-        scrollZoom:       !IS_EMBED,
+        // In embed mode rely on Mapbox cooperative gestures: wheel zoom
+        // requires Ctrl/Cmd and touch pan uses two fingers, preserving
+        // one-finger article scroll on mobile while still allowing unlock.
+        scrollZoom:       true,
         boxZoom:          !IS_EMBED,
-        dragPan:          !IS_EMBED,
+        dragPan:          true,
         dragRotate:       false,
         keyboard:         !IS_EMBED,
-        doubleClickZoom:  !IS_EMBED,
+        doubleClickZoom:  true,
         touchPitch:       false,
-        touchZoomRotate:  !IS_EMBED
+        touchZoomRotate:  true
       });
+
+      if (IS_EMBED) {
+        map.touchZoomRotate.disableRotation();
+      }
 
       map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
       map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
@@ -980,43 +976,11 @@
       }
     }
 
-    // =====================================================================
-    // Tap-to-interact veil (embed only). Lets readers vertical-scroll past
-    // the sticky map; a stationary tap unlocks pan/zoom for the session.
-    // =====================================================================
-    const TAP_VEIL_AUTO_DISMISS_MS = 4500;
+    // Cooperative gestures handles unlock hints natively; keep the custom veil
+    // hidden so it never blocks article scroll in embed mode.
     function initMapTapVeil() {
-      if (!IS_EMBED) return;
       const veil = document.getElementById("mapVeil");
-      const pill = document.getElementById("mapVeilPill");
-      if (!veil) return;
-      pill.textContent = (window.matchMedia("(hover: none)").matches) ? "Tap to interact" : "Click to interact";
-      veil.classList.add("is-active");
-      let dismissed = false;
-      const unlock = () => {
-        if (!dismissed) {
-          dismissed = true;
-          ensureMap();
-          if (map) {
-            map.scrollZoom.enable();
-            map.dragPan.enable();
-            map.doubleClickZoom.enable();
-            map.touchZoomRotate.enable();
-            map.touchZoomRotate.disableRotation();
-          }
-        }
-        veil.classList.remove("is-active");
-      };
-      const dismissOnly = () => { veil.classList.remove("is-active"); };
-      let touchStartY = null;
-      veil.addEventListener("touchstart", e => { touchStartY = e.touches[0] ? e.touches[0].clientY : null; }, { passive: true });
-      veil.addEventListener("touchend", e => {
-        const t = e.changedTouches[0];
-        if (touchStartY != null && t && Math.abs(t.clientY - touchStartY) > 8) { dismissOnly(); return; }
-        unlock();
-      });
-      veil.addEventListener("click", unlock);
-      setTimeout(dismissOnly, TAP_VEIL_AUTO_DISMISS_MS);
+      if (veil) veil.remove();
     }
 
     // =====================================================================
