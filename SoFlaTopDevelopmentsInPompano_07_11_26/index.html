@@ -306,6 +306,7 @@
       font-family: "Proxima Nova", sans-serif;
       min-width: 260px; max-width: 320px;
     }
+    .mapboxgl-popup { z-index: 6; }
     .mapboxgl-popup-close-button {
       color: #fff; font-size: 22px; padding: 4px 8px;
       right: 4px; top: 2px;
@@ -335,6 +336,18 @@
     }
     .popup-body .desc {
       font-size: 13px; line-height: 1.45;
+    }
+
+    @media (max-width: 768px) {
+      .mapboxgl-popup-content {
+        min-width: 0;
+        max-width: min(250px, calc(100vw - 16px));
+      }
+      .popup-body {
+        max-height: 132px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
     }
 
     /* ------- Legend ------- */
@@ -445,6 +458,12 @@
       padding-bottom: 4px; -webkit-overflow-scrolling: touch;
     }
     :root[data-layout="embed"] .filters::-webkit-scrollbar { display: none; }
+    :root[data-layout="embed"] .map-wrap.popup-open .filters {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity .15s ease, transform .15s ease;
+    }
 
     /* Phone-width article column. */
     @media (max-width: 560px) {
@@ -452,8 +471,9 @@
         height: 620px;
       }
       :root[data-layout="embed"] .map-wrap { height: 620px; }
-      :root[data-layout="embed"] #map { height: 240px; }
-      :root[data-layout="embed"] .sidebar { top: 240px; }
+      /* Give the popup more vertical room and keep only ~2 cards visible. */
+      :root[data-layout="embed"] #map { height: 320px; }
+      :root[data-layout="embed"] .sidebar { top: 320px; }
     }
 
     /* Wide overlay: full-bleed sticky map + 380px floating card column right.
@@ -623,6 +643,7 @@
 
     // ----- Environment -----
     const IS_EMBED = document.documentElement.getAttribute("data-layout") === "embed";
+    const IS_MOBILE_EMBED = IS_EMBED && window.matchMedia("(max-width: 779px)").matches;
     const THEME_STORAGE_KEY = "pompanoDevMap.theme";
 
     // Per-project postMessage namespace. If multiple TRD map embeds share an
@@ -651,6 +672,14 @@
     let activeFilter = "all";
     let activeIndex = -1;
 
+    function syncPopupUiState() {
+      if (!IS_EMBED || !window.matchMedia("(max-width: 779px)").matches) return;
+      const wrap = document.querySelector(".map-wrap");
+      if (!wrap) return;
+      const hasOpen = markers.some(m => m.popup && m.popup.isOpen());
+      wrap.classList.toggle("popup-open", hasOpen);
+    }
+
     // ----- Helpers -----
     function escapeHtml(s) {
       return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
@@ -660,13 +689,7 @@
       return `<svg viewBox="0 0 34 42" xmlns="http://www.w3.org/2000/svg">
         <path d="M17 1C8.7 1 2 7.6 2 16c0 11 15 25 15 25s15-14 15-25C32 7.6 25.3 1 17 1z"
               fill="${color}" stroke="#ffffff" stroke-width="2"/>
-        <circle cx="17" cy="16" r="5.5" fill="#ffffff" fill-opacity="0.95"/>
       </svg>`;
-    }
-
-    function categoryGlyph(cat) {
-      // Single-letter glyph riding inside the pin's white dot.
-      return ({ condo: "C", apartment: "A", mixed: "M", civic: "V", commercial: "R" })[cat] || "•";
     }
 
     function buildMarkerEl(feature) {
@@ -676,7 +699,6 @@
       el.className = "pin pin-" + cat;
       el.innerHTML = `<div class="pin-inner">`
         + pinSvg(color)
-        + `<div class="glyph" style="color:${color}; top:9px; font-size:13px;">${categoryGlyph(cat)}</div>`
         + `</div>`;
       return el;
     }
@@ -792,6 +814,7 @@
         m.el.style.display = show ? "" : "none";
         if (!show && m.popup && m.popup.isOpen()) m.popup.remove();
       });
+      syncPopupUiState();
       renderList();
     }
 
@@ -836,7 +859,9 @@
         return { top: 40, bottom: 30, left: 30, right: 400 };
       }
       if (IS_EMBED) {
-        return { top: 30, bottom: 20, left: 20, right: 20 };
+        // Narrow embed has a short map strip above the story list. Bias the
+        // target point lower so popups have vertical room to open upward.
+        return { top: 178, bottom: 10, left: 18, right: 18 };
       }
       const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 64;
       const isMobile = window.innerWidth <= 768;
@@ -870,13 +895,52 @@
       });
     }
 
+    function setupMobileTwoFingerMapInteraction() {
+      if (!IS_MOBILE_EMBED || !map) return;
+      const canvasContainer = map.getCanvasContainer();
+      let twoFingerActive = false;
+
+      const enableTwoFingerControls = () => {
+        if (twoFingerActive) return;
+        twoFingerActive = true;
+        map.dragPan.enable();
+        map.touchZoomRotate.enable();
+        map.touchZoomRotate.disableRotation();
+      };
+
+      const disableTwoFingerControls = () => {
+        if (!twoFingerActive) return;
+        twoFingerActive = false;
+        map.dragPan.disable();
+        map.touchZoomRotate.disable();
+      };
+
+      const touchCount = (e) => (e && e.touches ? e.touches.length : 0);
+
+      const onTouchStartOrMove = (e) => {
+        if (touchCount(e) >= 2) enableTwoFingerControls();
+        else disableTwoFingerControls();
+      };
+
+      const onTouchEnd = (e) => {
+        if (touchCount(e) < 2) disableTwoFingerControls();
+      };
+
+      // Capture phase runs before Mapbox handlers so control state is ready
+      // for the current gesture frame.
+      canvasContainer.addEventListener("touchstart", onTouchStartOrMove, { capture: true, passive: true });
+      canvasContainer.addEventListener("touchmove", onTouchStartOrMove, { capture: true, passive: true });
+      canvasContainer.addEventListener("touchend", onTouchEnd, { capture: true, passive: true });
+      canvasContainer.addEventListener("touchcancel", onTouchEnd, { capture: true, passive: true });
+    }
+
     function buildMap() {
       if (map) return;
       const wide = IS_EMBED && window.matchMedia("(min-width: 780px)").matches;
       map = new mapboxgl.Map({
         container: "map",
         style: STYLES[currentTheme()],
-        cooperativeGestures: !!IS_EMBED,
+        cooperativeGestures: IS_EMBED && !IS_MOBILE_EMBED,
         bounds: bounds,
         fitBoundsOptions: {
           padding: IS_EMBED
@@ -886,21 +950,21 @@
         },
         minZoom: 9, maxZoom: 18,
         attributionControl: false,
-        // In embed mode rely on Mapbox cooperative gestures: wheel zoom
-        // requires Ctrl/Cmd and touch pan uses two fingers, preserving
-        // one-finger article scroll on mobile while still allowing unlock.
-        scrollZoom:       true,
+        // Mobile embed uses explicit two-finger-only controls (wired below)
+        // so one-finger story scroll is never trapped.
+        scrollZoom:       IS_MOBILE_EMBED ? false : true,
         boxZoom:          !IS_EMBED,
-        dragPan:          true,
+        dragPan:          IS_MOBILE_EMBED ? false : true,
         dragRotate:       false,
         keyboard:         !IS_EMBED,
-        doubleClickZoom:  true,
+        doubleClickZoom:  IS_MOBILE_EMBED ? false : true,
         touchPitch:       false,
-        touchZoomRotate:  true
+        touchZoomRotate:  IS_MOBILE_EMBED ? false : true
       });
 
       if (IS_EMBED) {
-        map.touchZoomRotate.disableRotation();
+        if (!IS_MOBILE_EMBED) map.touchZoomRotate.disableRotation();
+        setupMobileTwoFingerMapInteraction();
       }
 
       map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
@@ -923,6 +987,7 @@
       map.on("click", () => {
         setActivePin(-1);
         markers.forEach(m => { if (m.popup && m.popup.isOpen()) m.popup.remove(); });
+        syncPopupUiState();
       });
     }
 
@@ -932,16 +997,26 @@
 
     function addMarkersToMap() {
       if (!map || markers.length) return;
+      const mobileEmbedPopup = IS_EMBED && window.matchMedia("(max-width: 779px)").matches;
       DATA.features.forEach((f, i) => {
         const el = buildMarkerEl(f);
-        const popup = new mapboxgl.Popup({ offset: 24, closeButton: true, maxWidth: "320px" })
+        const popup = new mapboxgl.Popup({
+          offset: 24,
+          closeButton: true,
+          maxWidth: "320px",
+          anchor: mobileEmbedPopup ? "bottom" : undefined
+        })
           .setHTML(popupHtml(f.properties));
         const coords = FEATURE_COORDS[i];
         const marker = new mapboxgl.Marker({ element: el, anchor: "bottom" })
           .setLngLat(coords)
           .addTo(map);
         popup.setLngLat(coords);
-        popup.on("close", () => setActivePin(-1));
+        popup.on("open", () => syncPopupUiState());
+        popup.on("close", () => {
+          setActivePin(-1);
+          syncPopupUiState();
+        });
         el.addEventListener("click", (e) => {
           e.stopPropagation();
           flyToIndex(i);
@@ -973,14 +1048,23 @@
       if (m) {
         markers.forEach(x => { if (x !== m && x.popup && x.popup.isOpen()) x.popup.remove(); });
         if (!m.popup.isOpen()) m.popup.setLngLat(coords).addTo(map);
+        syncPopupUiState();
       }
     }
 
-    // Cooperative gestures handles unlock hints natively; keep the custom veil
-    // hidden so it never blocks article scroll in embed mode.
+    // Mobile embed keeps a single non-blocking two-finger hint.
     function initMapTapVeil() {
       const veil = document.getElementById("mapVeil");
-      if (veil) veil.remove();
+      const pill = document.getElementById("mapVeilPill");
+      if (!veil) return;
+      if (!IS_MOBILE_EMBED) {
+        veil.remove();
+        return;
+      }
+      if (pill) pill.textContent = "Use two fingers to move the map";
+      veil.classList.add("is-active");
+      veil.style.pointerEvents = "none";
+      setTimeout(() => veil.classList.remove("is-active"), 2600);
     }
 
     // =====================================================================
