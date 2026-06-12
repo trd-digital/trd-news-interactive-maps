@@ -897,41 +897,12 @@
 
     function setupMobileTwoFingerMapInteraction() {
       if (!IS_MOBILE_EMBED || !map) return;
-      const canvasContainer = map.getCanvasContainer();
-      let twoFingerActive = false;
-
-      const enableTwoFingerControls = () => {
-        if (twoFingerActive) return;
-        twoFingerActive = true;
-        map.dragPan.enable();
-        map.touchZoomRotate.enable();
-        map.touchZoomRotate.disableRotation();
-      };
-
-      const disableTwoFingerControls = () => {
-        if (!twoFingerActive) return;
-        twoFingerActive = false;
-        map.dragPan.disable();
-        map.touchZoomRotate.disable();
-      };
-
-      const touchCount = (e) => (e && e.touches ? e.touches.length : 0);
-
-      const onTouchStartOrMove = (e) => {
-        if (touchCount(e) >= 2) enableTwoFingerControls();
-        else disableTwoFingerControls();
-      };
-
-      const onTouchEnd = (e) => {
-        if (touchCount(e) < 2) disableTwoFingerControls();
-      };
-
-      // Capture phase runs before Mapbox handlers so control state is ready
-      // for the current gesture frame.
-      canvasContainer.addEventListener("touchstart", onTouchStartOrMove, { capture: true, passive: true });
-      canvasContainer.addEventListener("touchmove", onTouchStartOrMove, { capture: true, passive: true });
-      canvasContainer.addEventListener("touchend", onTouchEnd, { capture: true, passive: true });
-      canvasContainer.addEventListener("touchcancel", onTouchEnd, { capture: true, passive: true });
+      // Force the canvas container to `touch-action: pan-y` so the browser
+      // natively claims single-finger vertical scrolls (Mapbox never sees
+      // those events). Two-finger gestures (pinch/pan) are NOT handled by
+      // the browser when touch-action is pan-y, so they reach Mapbox.
+      const cc = map.getCanvasContainer();
+      cc.style.touchAction = "pan-y";
     }
 
     function buildMap() {
@@ -950,20 +921,21 @@
         },
         minZoom: 9, maxZoom: 18,
         attributionControl: false,
-        // Mobile embed uses explicit two-finger-only controls (wired below)
-        // so one-finger story scroll is never trapped.
+        // Mobile embed: touch-action:pan-y on canvas lets single-finger
+        // vertical scroll pass to browser while two-finger pan/zoom reaches
+        // Mapbox. scrollZoom disabled so trackpad/mouse wheel doesn't zoom.
         scrollZoom:       IS_MOBILE_EMBED ? false : true,
         boxZoom:          !IS_EMBED,
-        dragPan:          IS_MOBILE_EMBED ? false : true,
+        dragPan:          true,
         dragRotate:       false,
         keyboard:         !IS_EMBED,
         doubleClickZoom:  IS_MOBILE_EMBED ? false : true,
         touchPitch:       false,
-        touchZoomRotate:  IS_MOBILE_EMBED ? false : true
+        touchZoomRotate:  true
       });
 
       if (IS_EMBED) {
-        if (!IS_MOBILE_EMBED) map.touchZoomRotate.disableRotation();
+        map.touchZoomRotate.disableRotation();
         setupMobileTwoFingerMapInteraction();
       }
 
@@ -1052,7 +1024,7 @@
       }
     }
 
-    // Mobile embed keeps a single non-blocking two-finger hint.
+    // Mobile embed shows a brief non-blocking hint, then fades out.
     function initMapTapVeil() {
       const veil = document.getElementById("mapVeil");
       const pill = document.getElementById("mapVeilPill");
@@ -1062,9 +1034,10 @@
         return;
       }
       if (pill) pill.textContent = "Use two fingers to move the map";
-      veil.classList.add("is-active");
       veil.style.pointerEvents = "none";
-      setTimeout(() => veil.classList.remove("is-active"), 2600);
+      veil.style.zIndex = "8";
+      veil.classList.add("is-active");
+      setTimeout(() => veil.classList.remove("is-active"), 4000);
     }
 
     // =====================================================================
