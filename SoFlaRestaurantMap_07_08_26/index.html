@@ -512,25 +512,8 @@
   </div>
 
   <script>
-    // ----- Embedded data -----
-    const DATA = {"type":"FeatureCollection","features":[
-      {"type":"Feature","properties":{"full_address":"112 Alhambra Cir, Coral Gables, FL 33134","restaurants":"Shingo","description":"A 14-seat omakase restaurant serving Edomae-style sushi and seasonal Japanese seafood.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.2566214,25.7530311]}},
-      {"type":"Feature","properties":{"full_address":"31 SE 5th St, Miami, FL 33131","restaurants":"Elcielo Miami","description":"A tasting-menu restaurant from Colombian chef Juan Manuel Barrientos focused on modern Colombian cuisine.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1916039,25.7696808]}},
-      {"type":"Feature","properties":{"full_address":"6801 Collins Ave, Miami Beach, FL 33141","restaurants":"Tambourine Room by Tristan Brandt","description":"A fine-dining restaurant offering French cuisine with Asian influences through a tasting-menu format.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1197746,25.8530369]}},
-      {"type":"Feature","properties":{"full_address":"424 Park Place, Suite 101, West Palm Beach, FL 33401","restaurants":"Emelina","description":"A contemporary restaurant serving Mediterranean-inspired dishes in a neighborhood setting.","new_this_year?":"TRUE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.0551569,26.6975792]}},
-      {"type":"Feature","properties":{"full_address":"525 N Fort Lauderdale Beach Blvd, Fort Lauderdale, FL 33304","restaurants":"Chef\u2019s Counter at MAASS","description":"An intimate chef's-counter experience centered on a multi-course tasting menu.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1041065,26.1301495]}},
-      {"type":"Feature","properties":{"full_address":"5205 NE 2nd Ave, Miami, FL 33137","restaurants":"Boia De","description":"A small restaurant known for Italian-influenced dishes and a frequently changing menu.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1913428,25.8241012]}},
-      {"type":"Feature","properties":{"full_address":"2188 NE 123rd St, North Miami, FL 33181","restaurants":"Mutra","description":"A restaurant focused on modern Middle Eastern cooking and locally sourced ingredients.","new_this_year?":"TRUE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1540444,25.8891789]}},
-      {"type":"Feature","properties":{"full_address":"3413 Main Hwy, Miami, FL 33133","restaurants":"Los F\u00e9lix","description":"A Mexican restaurant emphasizing heirloom corn and wood-fired preparations.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.2425107,25.7275321]}},
-      {"type":"Feature","properties":{"full_address":"151 NE 41st St, Miami, FL 33137","restaurants":"L\u2019Atelier de Jo\u00ebl Robuchon Miami","description":"South Florida's only two-star Michelin restaurant serving French fine-dining with tasting menus and classic French cuisine.","new_this_year?":"FALSE","num_michelin_stars":"2"},"geometry":{"type":"Point","coordinates":[-80.1920993,25.8144884]}},
-      {"type":"Feature","properties":{"full_address":"3900 NE 2nd Ave, Miami, FL 33137","restaurants":"Cote Miami","description":"A Korean steakhouse combining tabletop grilling with dry-aged beef and a full-service dining experience.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1914914,25.8128901]}},
-      {"type":"Feature","properties":{"full_address":"151 NE 41st St, Miami, FL 33137","restaurants":"Le Jardinier Miami","description":"A French restaurant with a menu built around vegetables, seafood and seasonal ingredients.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1920993,25.8144884]}},
-      {"type":"Feature","properties":{"full_address":"101 Washington Ave, Miami Beach, FL 33139","restaurants":"Stubborn Seed","description":"A tasting-menu restaurant serving contemporary American cuisine.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1354438,25.770626]}},
-      {"type":"Feature","properties":{"full_address":"3540 Main Hwy, Miami, FL 33133","restaurants":"Ariete","description":"A restaurant blending Cuban, French and American influences through both tasting and \u00e0 la carte menus.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.2450712,25.7252503]}},
-      {"type":"Feature","properties":{"full_address":"313 NW 25th St, Miami, FL 33127","restaurants":"Hiden","description":"A hidden omakase restaurant serving a multi-course sushi-focused tasting menu.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.2013535,25.8008165]}},
-      {"type":"Feature","properties":{"full_address":"7223 NW 2nd Ave, Miami, FL 33150","restaurants":"Ogawa","description":"A sushi counter specializing in traditional Edomae-style omakase.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.2006421,25.8415286]}},
-      {"type":"Feature","properties":{"full_address":"9011 Collins Ave, Surfside, FL 33154","restaurants":"The Surf Club Restaurant","description":"A fine-dining restaurant from Thomas Keller focused on Continental and American cuisine.","new_this_year?":"FALSE","num_michelin_stars":"1"},"geometry":{"type":"Point","coordinates":[-80.1215331,25.8774848]}}
-    ]};
+    // ----- External data -----
+    let DATA = null;
 
     // ----- Mapbox setup -----
     mapboxgl.accessToken = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
@@ -561,12 +544,7 @@
     };
 
     // ----- Bounds / camera -----
-    const lons = DATA.features.map(f => f.geometry.coordinates[0]);
-    const lats = DATA.features.map(f => f.geometry.coordinates[1]);
-    const bounds = [
-      [Math.min(...lons), Math.min(...lats)],
-      [Math.max(...lons), Math.max(...lats)]
-    ];
+    let bounds = null;
 
     // ----- State -----
     let map = null;
@@ -574,6 +552,8 @@
     const markers = [];  // {marker, feature, el, popup, index, coords}
     let activeFilter = "all";
     let activeIndex = -1;
+    let dupOffsets = [];
+    let FEATURE_COORDS = [];
 
     // ----- Helpers -----
     function escapeHtml(s) {
@@ -637,15 +617,52 @@
       });
       return offsets;
     }
-    const dupOffsets = spreadDuplicates(DATA.features);
+    function prepareDataDerivedState() {
+      if (!DATA || !Array.isArray(DATA.features) || DATA.features.length === 0) {
+        throw new Error("GeoJSON must be a FeatureCollection with at least one feature.");
+      }
 
-    // Pre-compute per-feature display coords (with dup offsets) so the sidebar
-    // list and filters can work before the map is constructed.
-    const FEATURE_COORDS = DATA.features.map((f, i) => {
-      const c = f.geometry.coordinates.slice();
-      if (dupOffsets[i]) { c[0] += dupOffsets[i][0]; c[1] += dupOffsets[i][1]; }
-      return c;
-    });
+      const lons = DATA.features.map(f => f.geometry.coordinates[0]);
+      const lats = DATA.features.map(f => f.geometry.coordinates[1]);
+      bounds = [
+        [Math.min(...lons), Math.min(...lats)],
+        [Math.max(...lons), Math.max(...lats)]
+      ];
+
+      dupOffsets = spreadDuplicates(DATA.features);
+
+      // Pre-compute per-feature display coords (with duplicate offsets) so the
+      // sidebar list and filters can work before the map is constructed.
+      FEATURE_COORDS = DATA.features.map((f, i) => {
+        const c = f.geometry.coordinates.slice();
+        if (dupOffsets[i]) { c[0] += dupOffsets[i][0]; c[1] += dupOffsets[i][1]; }
+        return c;
+      });
+    }
+
+    async function loadGeoJsonData() {
+      const response = await fetch("Restaurants_geocoded.geojson");
+      if (!response.ok) {
+        throw new Error(`Failed to load Restaurants_geocoded.geojson (${response.status})`);
+      }
+      DATA = await response.json();
+      prepareDataDerivedState();
+    }
+
+    function renderDataLoadError(err) {
+      console.error("Unable to initialize map data:", err);
+      sidebarList.innerHTML = ""
+        + '<div class="list-item" style="grid-template-columns:1fr; cursor:default;">'
+        + '<div><div class="name">Data failed to load</div>'
+        + '<div class="addr">Please check Restaurants_geocoded.geojson.</div></div>'
+        + '</div>';
+      document.getElementById("visibleCount").textContent = "0";
+      document.getElementById("totalCount").textContent = "0";
+      ["c-all", "c-new", "c-1", "c-2"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = "0";
+      });
+    }
 
     // ----- Sidebar list / filters (work without the map) -----
     const sidebarList = document.getElementById("sidebarList");
@@ -662,6 +679,7 @@
     }
 
     function visibleFeaturesSorted() {
+      if (!DATA || !Array.isArray(DATA.features)) return [];
       return DATA.features
         .map((f, i) => ({ f, i }))
         .filter(({ f }) => matchesFilter(f))
@@ -725,6 +743,14 @@
     }
 
     function updateChipCounts() {
+      if (!DATA || !Array.isArray(DATA.features)) {
+        document.getElementById("c-all").textContent = "0";
+        document.getElementById("c-new").textContent = "0";
+        document.getElementById("c-1").textContent = "0";
+        document.getElementById("c-2").textContent = "0";
+        document.getElementById("totalCount").textContent = "0";
+        return;
+      }
       const all = DATA.features.length;
       const newCount = DATA.features.filter(f => (f.properties["new_this_year?"]||"").toUpperCase()==="TRUE").length;
       const oneCount = DATA.features.filter(f => parseInt(f.properties.num_michelin_stars,10)===1).length;
@@ -752,9 +778,6 @@
         document.getElementById("sidebar").classList.toggle("collapsed");
       }
     });
-
-    updateChipCounts();
-    renderList();
 
     // =====================================================================
     // Map construction (deferred in embed mode via IntersectionObserver).
@@ -806,6 +829,7 @@
 
     function buildMap() {
       if (map) return;
+      if (!DATA || !bounds) return;
       const wide = IS_EMBED && window.matchMedia("(min-width: 780px)").matches;
       map = new mapboxgl.Map({
         container: "map",
@@ -856,11 +880,13 @@
     }
 
     function ensureMap() {
+      if (!DATA) return;
       if (!map) buildMap();
     }
 
     function addMarkersToMap() {
       if (!map || markers.length) return;
+      if (!DATA || !Array.isArray(DATA.features)) return;
       DATA.features.forEach((f, i) => {
         const el = buildMarkerEl(f);
         const popup = new mapboxgl.Popup({ offset: 28, closeButton: true, maxWidth: "280px" })
@@ -1049,10 +1075,21 @@
     }
 
     // ----- Bootstrap -----
-    setupThemeToggle();
-    setupParentBridge();
-    initMapTapVeil();
-    initMapWhenVisible();
+    async function bootstrap() {
+      setupThemeToggle();
+      setupParentBridge();
+      initMapTapVeil();
+      try {
+        await loadGeoJsonData();
+        updateChipCounts();
+        renderList();
+        initMapWhenVisible();
+      } catch (err) {
+        renderDataLoadError(err);
+      }
+    }
+
+    bootstrap();
   </script>
 </body>
 </html>
