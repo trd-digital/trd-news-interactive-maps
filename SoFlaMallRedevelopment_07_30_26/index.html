@@ -152,9 +152,9 @@
       }
       .step .owner b { color: var(--trd-text); font-weight: 700; }
 
-      /* ---------- Legend + credit ---------- */
+      /* ---------- Legend ---------- */
       .legend {
-        position: absolute; bottom: 12px; left: 12px; z-index: 3;
+        position: absolute; top: 12px; left: 12px; z-index: 3;
         background: var(--trd-panel); color: var(--trd-text);
         border: 1px solid var(--trd-border); border-radius: 8px;
         padding: 10px 12px; font-size: 12px; box-shadow: var(--trd-shadow);
@@ -165,12 +165,8 @@
       }
       .legend .row { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
       .legend .sw { width: 13px; height: 13px; border-radius: 50%; border: 1.5px solid #fff; box-shadow: 0 0 0 1px var(--trd-border); }
-      .credit {
-        position: absolute; bottom: 12px; right: 12px; z-index: 3;
-        background: var(--trd-panel); color: var(--trd-muted);
-        border: 1px solid var(--trd-border); border-radius: 6px;
-        padding: 4px 8px; font-size: 10px; letter-spacing: 0.03em;
-      }
+      /* In embed mode the zoom control sits top-left, so drop the legend below it. */
+      :root[data-layout="embed"] .legend { top: 76px; }
 
       /* ---------- Responsive (standalone) ---------- */
       @media (max-width: 900px) {
@@ -178,9 +174,9 @@
         .map-wrap { position: sticky; top: 0; height: 52vh; border-radius: 0; margin: 0 -16px; width: calc(100% + 32px); }
         .story-wrap { flex: 1 1 auto; width: 100%; }
         .hero { padding: 34px 18px 18px; }
-        /* The short sticky map overlaps scrolling cards; the county is already
-           on every card (colored dot + kicker), so drop the floating overlays. */
-        .legend, .credit { display: none; }
+        /* The county is already on every card (colored dot + kicker), so drop
+           the floating legend on the short mobile map. */
+        .legend { display: none; }
       }
 
       /* =====================================================================
@@ -241,7 +237,6 @@
       <section class="map-wrap trd-map" aria-label="Map of South Florida mall redevelopments">
         <div id="map" role="application" aria-label="Map"></div>
         <div class="legend" id="legend" aria-hidden="true"><h4>County</h4></div>
-        <div class="credit">Source: The Real Deal reporting</div>
       </section>
       <section class="story-wrap" aria-label="Redevelopments">
         <div class="story" id="story" role="list"></div>
