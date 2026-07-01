@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Map module example | The Real Deal</title>
+    <meta name="description" content="Minimal map built on the TRD embed toolkit." />
+
+    <!-- Pre-paint boot snippet (core/boot-snippet.html) with this map's key. -->
+    <script>
+      (function () {
+        var r = document.documentElement, p = null;
+        try { p = new URLSearchParams(location.search); } catch (e) {}
+        var framed;
+        try { framed = window.self !== window.top; } catch (e) { framed = true; }
+        if ((p && p.get("layout") === "embed") || framed) r.setAttribute("data-layout", "embed");
+        var q = p && p.get("theme"), saved = null;
+        if (r.getAttribute("data-layout") !== "embed") {
+          try { saved = localStorage.getItem("trd-map-example:theme"); } catch (e) {}
+        }
+        var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        r.setAttribute("data-theme", (q === "dark" || q === "light") ? q
+          : (saved === "dark" || saved === "light") ? saved : (dark ? "dark" : "light"));
+      })();
+    </script>
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../../core/trd-embed.css" />
+    <link rel="stylesheet" href="../trd-map.css" />
+    <style>
+      :root { --trd-embed-h: 560px; --trd-embed-h-phone: 600px; --trd-embed-h-wide: 520px; }
+      html, body { height: 100%; }
+      .stage { position: relative; width: 100%; height: 100%; }
+      .theme-toggle {
+        position: absolute; top: 12px; right: 12px; z-index: 4;
+        background: var(--trd-panel); color: var(--trd-text);
+        border: 1px solid var(--trd-border); border-radius: 999px; cursor: pointer;
+        padding: 6px 12px; font-size: 12px; font-weight: 700;
+      }
+      .legend {
+        position: absolute; bottom: 12px; left: 12px; z-index: 3;
+        background: var(--trd-panel); color: var(--trd-text);
+        border: 1px solid var(--trd-border); border-radius: 6px;
+        padding: 9px 11px; font-size: 12px; box-shadow: var(--trd-shadow);
+      }
+      .legend .row { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+      .legend .dot { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid #fff; }
+      .trd-standalone-only .stage { }
+    </style>
+  </head>
+  <body>
+    <header class="trd-header trd-standalone-only">
+      <h1>Map module example</h1>
+    </header>
+
+    <!-- .trd-embed-fill makes .stage adopt the fixed embed height. -->
+    <div class="trd-map stage trd-embed-fill">
+      <div id="map"></div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">Dark</button>
+      <div class="legend">
+        <div class="row"><span class="dot" style="background:#27509b"></span> Office</div>
+        <div class="row"><span class="dot" style="background:#0fa073"></span> Retail</div>
+        <div class="row"><span class="dot" style="background:#eaa31a"></span> Land</div>
+      </div>
+    </div>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+    <script src="../../../core/trd-embed.js"></script>
+    <script src="../trd-map.js"></script>
+    <script>
+      // Presentation config (edit per project). Colors keyed by a feature
+      // property; the module builds the Mapbox match expression for you.
+      var PALETTE = { Office: "#27509b", Retail: "#0fa073", Land: "#eaa31a" };
+      // Public pk.* token — URL-restrict it in the Mapbox dashboard.
+      var TOKEN = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
+
+      var mapApi = null;
+
+      var controller = TRDEmbed({
+        prefix: "trd-map-example",
+        themeKey: "trd-map-example:theme",
+        toggle: "#themeToggle",
+        mountTarget: "#map",
+        onMount: function (ctx) {
+          // Real projects ship a geocoded FeatureCollection as data.geojson
+          // (the scaffolder writes it for you when you pass a CSV).
+          TRDMap.loadGeoJSON("data.geojson").then(function (GEO) {
+            mapApi = TRDMap.create({
+              container: "map",
+              token: TOKEN,
+              theme: ctx.theme,
+              embed: ctx.isEmbed,
+              data: GEO,
+              bounds: TRDMap.boundsOf(GEO),
+              fitBoundsOptions: { padding: ctx.isEmbed ? 50 : 90, maxZoom: 14 },
+              overlayWidth: 380,
+              interactiveLayers: ["points"],
+              // Idempotent: re-runs on every style.load (incl. theme swaps).
+              addLayers: function (map, c) {
+              if (!map.getSource("pts")) {
+                map.addSource("pts", { type: "geojson", data: c.data });
+              }
+              if (!map.getLayer("points")) {
+                map.addLayer({
+                  id: "points",
+                  type: "circle",
+                  source: "pts",
+                  paint: {
+                    "circle-radius": 9,
+                    "circle-color": c.matchColor(["get", "group"], PALETTE),
+                    "circle-stroke-color": "#ffffff",
+                    "circle-stroke-width": 2,
+                  },
+                });
+              }
+            },
+            onFeatureClick: function (feature) {
+              if (!feature) return;
+              var p = feature.properties || {};
+              mapApi.flyTo(feature.geometry.coordinates, { zoom: 15 });
+              new mapboxgl.Popup({ offset: 14, closeButton: true })
+                .setLngLat(feature.geometry.coordinates)
+                .setHTML(
+                  '<div class="trd-popup-body"><h3>' + p.name + "</h3>" +
+                  '<div class="trd-popup-addr">' + p.group + "</div>" +
+                  '<div class="trd-popup-desc">Price: ' + p.price + "</div></div>"
+                )
+                .addTo(mapApi.map);
+            },
+          });
+            mapApi.on("loaded", function () { ctx.postLoaded(); });
+          }).catch(function (e) {
+            console.error("[example] Could not load data.geojson", e);
+          });
+        },
+        onTheme: function (theme, ctx) {
+          if (mapApi) mapApi.setTheme(theme);
+          ctx.requestResize();
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,103 @@
+<!--
+  =============================================================================
+  TRD article-slot embed snippet  (parent-page side)
+  =============================================================================
+  Paste into the placeholder <figure class="AllowedContent_wrapper__…
+  AllowedContent_defaultWidth__…"> in the article body.
+
+  Replace the three placeholders:
+    __EMBED_URL__   the deployed URL of the graphic's index.html
+    __PREFIX__      the graphic's postMessage namespace (must match the
+                    `prefix` passed to TRDEmbed(); e.g. "extell-assemblage")
+    __IFRAME_ID__   a unique id for this iframe on the page
+
+  The listener whitelists by message TYPE (not origin), so the graphic can be
+  hosted on any domain. If an article carries two TRD embeds, they MUST use
+  distinct prefixes or they will cross-talk.
+  =============================================================================
+-->
+<figure class="AllowedContent_wrapper__lxthX AllowedContent_defaultWidth__8uyfz">
+  <iframe
+    id="__IFRAME_ID__"
+    src="__EMBED_URL__?layout=embed"
+    title="The Real Deal interactive graphic"
+    loading="lazy"
+    scrolling="no"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allow="fullscreen"
+    style="
+      width: 100%;
+      height: 560px;
+      min-height: 360px;
+      border: 0;
+      display: block;
+      background: #ffffff;
+      color-scheme: light;
+    "
+  ></iframe>
+</figure>
+
+<script>
+  (function () {
+    var iframe = document.getElementById("__IFRAME_ID__");
+    if (!iframe) return;
+
+    var PREFIX = "__PREFIX__";
+    var T = {
+      READY: PREFIX + ":ready",
+      LOADED: PREFIX + ":loaded",
+      RESIZE: PREFIX + ":resize",
+      SET_THEME: PREFIX + ":set-theme",
+      REQUEST_RESIZE: PREFIX + ":request-resize",
+    };
+
+    // Replace with however TRD's live site exposes theme (a class on <html>, a
+    // data-attribute, a global, a localStorage key, an emitted event, …).
+    function currentSiteTheme() {
+      return document.documentElement.classList.contains("theme-dark")
+        ? "dark"
+        : "light";
+    }
+
+    function send(type, payload) {
+      try {
+        var msg = { type: type };
+        if (payload) for (var k in payload) msg[k] = payload[k];
+        iframe.contentWindow && iframe.contentWindow.postMessage(msg, "*");
+      } catch (e) {}
+    }
+
+    function pushTheme() {
+      send(T.SET_THEME, { value: currentSiteTheme() });
+    }
+
+    window.addEventListener("message", function (ev) {
+      var data = ev && ev.data;
+      if (!data || typeof data !== "object" || !data.type) return;
+      switch (data.type) {
+        case T.READY:
+          pushTheme();
+          send(T.REQUEST_RESIZE);
+          break;
+        case T.RESIZE:
+          // Sanity-bound against bogus heights from sibling iframes.
+          if (
+            typeof data.height === "number" &&
+            data.height > 100 &&
+            data.height < 5000
+          ) {
+            iframe.style.height = data.height + "px";
+          }
+          break;
+      }
+    });
+
+    // Mirror live site theme changes into the iframe.
+    if ("MutationObserver" in window) {
+      new MutationObserver(pushTheme).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+    }
+  })();
+</script>

@@ -1,0 +1,260 @@
+/*!
+ * trd-dossier.css — styling for the "Luxury Dossier" interactive template.
+ *
+ * A magazine-style, map-centered editorial package: hero, intro + stats, an
+ * interactive regions-and-places map, and a stack of modules (brokers, names,
+ * quotes, developments, an explainer). Loads AFTER trd-embed.css (and
+ * trd-map.css) and overrides the core design tokens with a green editorial
+ * palette. Content is rendered by trd-dossier.js from a content model.
+ *
+ * Unlike the map widget, a dossier is a TALL, content-driven page: in embed
+ * mode the iframe auto-sizes to the full body height, and only the map band
+ * itself is a fixed pixel height (never vh/svh in embed — see toolkit README).
+ */
+
+/* ---- Green editorial palette (overrides trd-embed.css tokens) ---- */
+:root {
+  --trd-brand: #2f7d5b;
+  --trd-brand-deep: #14512f;
+  --trd-accent: #c1922b;
+  --trd-bg: #f5f2ea;         /* warm cream */
+  --trd-bg-soft: #ece7d8;
+  --trd-panel: #ffffff;
+  --trd-text: #1b2a22;
+  --trd-muted: #667469;
+  --trd-border: #e0dccf;
+  --trd-shadow: 0 8px 30px rgba(20, 45, 32, 0.10);
+
+  /* Pin category colors (contrast against the green regions). */
+  --cat-record: #c0392b;
+  --cat-development: #7b4fbf;
+  --cat-hospitality: #d98324;
+
+  --d-maxw: 1180px;
+}
+:root[data-theme="dark"] {
+  --trd-brand: #5fb389;
+  --trd-brand-deep: #2f7d5b;
+  --trd-accent: #e0b955;
+  --trd-bg: #10201a;
+  --trd-bg-soft: #16271f;
+  --trd-panel: #17281f;
+  --trd-text: #eaf1ec;
+  --trd-muted: #9fb3a6;
+  --trd-border: #27362e;
+  --trd-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+
+  --cat-record: #e8695b;
+  --cat-development: #a985e0;
+  --cat-hospitality: #e8a54e;
+}
+
+html, body { background: var(--trd-bg); color: var(--trd-text); }
+
+.dossier { max-width: var(--d-maxw); margin: 0 auto; padding: 0 22px 64px; }
+.dossier a { color: var(--trd-brand); }
+
+/* ---------- Hero ---------- */
+.d-hero {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 34px;
+  align-items: center;
+  padding: 40px 0 30px;
+}
+.d-hero-kicker {
+  font-family: var(--trd-font-serif);
+  font-weight: 700; font-style: italic;
+  color: var(--trd-brand);
+  font-size: 18px; margin: 0 0 6px;
+}
+.d-hero h1 {
+  font-family: var(--trd-font-serif);
+  font-weight: 900;
+  font-size: clamp(40px, 7vw, 78px);
+  line-height: 0.98; letter-spacing: -0.02em;
+  margin: 0 0 16px; color: var(--trd-brand-deep);
+}
+:root[data-theme="dark"] .d-hero h1 { color: var(--trd-text); }
+.d-hero-dek { font-size: 19px; line-height: 1.5; color: var(--trd-muted); margin: 0 0 12px; max-width: 34ch; }
+.d-hero-byline { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--trd-muted); font-weight: 700; }
+.d-hero-figure { margin: 0; border-radius: 14px; overflow: hidden; box-shadow: var(--trd-shadow); border: 1px solid var(--trd-border); }
+.d-hero-figure img { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 5 / 4; filter: saturate(0.85); }
+
+/* ---------- Intro + stats ---------- */
+.d-intro { display: grid; grid-template-columns: 1.4fr 1fr; gap: 30px; padding: 18px 0 26px; border-top: 2px solid var(--trd-brand); }
+.d-intro-prose p { font-size: 16.5px; line-height: 1.62; margin: 0 0 12px; }
+.d-intro-prose p:first-child::first-letter {
+  font-family: var(--trd-font-serif); font-weight: 900; float: left;
+  font-size: 58px; line-height: 0.8; padding: 6px 10px 0 0; color: var(--trd-brand);
+}
+.d-stats { display: flex; flex-direction: column; gap: 12px; }
+.d-stat { background: var(--trd-panel); border: 1px solid var(--trd-border); border-radius: 12px; padding: 14px 16px; box-shadow: var(--trd-shadow); }
+.d-stat .v { font-family: var(--trd-font-serif); font-weight: 900; font-size: 34px; line-height: 1; color: var(--trd-brand); }
+.d-stat .l { font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 6px; }
+.d-stat .n { font-size: 12px; color: var(--trd-muted); margin-top: 2px; }
+
+/* ---------- Map section ---------- */
+.d-map-section { margin: 10px 0 40px; }
+.d-section-head { display: flex; align-items: baseline; gap: 12px; margin: 0 0 12px; }
+.d-section-head h2 { font-family: var(--trd-font-serif); font-weight: 900; font-size: 26px; margin: 0; }
+.d-section-head .sub { color: var(--trd-muted); font-size: 14px; }
+
+.d-map-frame {
+  position: relative; width: 100%;
+  height: 62vh; min-height: 460px; max-height: 720px;
+  border-radius: 14px; overflow: hidden;
+  border: 1px solid var(--trd-border); box-shadow: var(--trd-shadow);
+}
+.trd-map .d-map, #map { position: absolute; inset: 0; }
+
+.d-filters {
+  position: absolute; top: 12px; left: 12px; right: 12px; z-index: 4;
+  display: flex; gap: 8px; flex-wrap: wrap; pointer-events: none;
+}
+.d-chip {
+  pointer-events: auto;
+  background: var(--trd-panel); color: var(--trd-text);
+  border: 1px solid var(--trd-border); border-radius: 999px;
+  padding: 7px 13px; font-size: 13px; font-weight: 700; cursor: pointer;
+  box-shadow: var(--trd-shadow); display: inline-flex; align-items: center; gap: 7px;
+  transition: transform .12s ease;
+}
+.d-chip:hover { transform: translateY(-1px); }
+.d-chip .dot { width: 9px; height: 9px; border-radius: 50%; }
+.d-chip.active { background: var(--trd-brand); color: #fff; border-color: var(--trd-brand); }
+
+.d-legend {
+  position: absolute; top: 56px; left: 12px; z-index: 3;
+  background: var(--trd-panel); border: 1px solid var(--trd-border);
+  border-radius: 10px; padding: 10px 12px; font-size: 12px; box-shadow: var(--trd-shadow);
+  max-width: 210px;
+  /* Display only — let map clicks/drags pass through to pins underneath. */
+  pointer-events: none;
+}
+/* Keep the Mapbox logo (bottom-left) and attribution visible; hide the legend
+   where the map is too small to carry it. */
+@media (max-width: 640px) { .d-legend { display: none; } }
+.d-legend h4 { margin: 0 0 7px; font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--trd-muted); }
+.d-legend .row { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+.d-legend .sw { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid #fff; box-shadow: 0 0 0 1px var(--trd-border); }
+.d-legend .sw.town { border-radius: 3px; }
+
+/* Selected-place detail card (floats over the map). */
+.d-card {
+  position: absolute; top: 58px; right: 12px; z-index: 5; width: 320px; max-width: calc(100% - 24px);
+  background: var(--trd-panel); border: 1px solid var(--trd-border); border-radius: 12px;
+  overflow: hidden; box-shadow: var(--trd-shadow);
+  opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity .18s ease, transform .18s ease;
+}
+.d-card.open { opacity: 1; transform: none; pointer-events: auto; }
+.d-card-img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; filter: saturate(0.85); background: var(--trd-bg-soft); }
+.d-card-body { padding: 13px 15px 15px; }
+.d-card .cat { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+.d-card h3 { font-family: var(--trd-font-serif); font-weight: 900; font-size: 19px; margin: 5px 0 2px; line-height: 1.15; }
+.d-card .town { font-size: 12px; color: var(--trd-muted); }
+.d-card .price { font-family: var(--trd-font-serif); font-weight: 900; color: var(--trd-brand); font-size: 22px; margin: 8px 0 4px; }
+.d-card .blurb { font-size: 13.5px; line-height: 1.5; margin: 8px 0 0; }
+.d-card .agents { font-size: 12px; color: var(--trd-muted); margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--trd-border); }
+.d-card .approx { font-size: 11px; color: var(--trd-muted); font-style: italic; margin-top: 6px; }
+.d-card-close {
+  position: absolute; top: 8px; right: 8px; z-index: 2;
+  width: 26px; height: 26px; border-radius: 50%; border: none; cursor: pointer;
+  background: rgba(0,0,0,0.55); color: #fff; font-size: 15px; line-height: 1;
+}
+
+/* ---------- Most expensive listing (marquee feature) ---------- */
+.d-listing {
+  display: grid; grid-template-columns: 1fr 1.05fr; gap: 28px; align-items: center;
+  padding: 34px 0; border-top: 1px solid var(--trd-border);
+}
+.d-listing-fig { margin: 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--trd-border); box-shadow: var(--trd-shadow); }
+.d-listing-fig img { display: block; width: 100%; aspect-ratio: 16 / 11; object-fit: cover; filter: saturate(0.85); background: var(--trd-bg-soft); }
+.d-listing-label { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--trd-muted); }
+.d-listing-price { font-family: var(--trd-font-serif); font-weight: 900; font-size: clamp(40px, 6vw, 62px); line-height: 1; color: var(--trd-brand); margin: 4px 0 2px; }
+.d-listing-addr { font-size: 15px; font-weight: 700; margin-bottom: 12px; }
+.d-listing-text { font-size: 15px; line-height: 1.6; margin: 0 0 14px; }
+.d-listing-meta { display: grid; grid-template-columns: auto 1fr; gap: 5px 14px; margin: 0; font-size: 13px; }
+.d-listing-meta dt { font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; font-size: 10.5px; color: var(--trd-muted); padding-top: 2px; }
+.d-listing-meta dd { margin: 0; line-height: 1.4; }
+
+/* ---------- Modules ---------- */
+.d-module { padding: 30px 0; border-top: 1px solid var(--trd-border); }
+.d-module > h2 { font-family: var(--trd-font-serif); font-weight: 900; font-size: 26px; margin: 0 0 4px; }
+.d-module > .sub { color: var(--trd-muted); font-size: 13px; margin: 0 0 18px; }
+
+/* Brokers leaderboard */
+.d-brokers-list { display: flex; flex-direction: column; gap: 8px; }
+.d-broker { display: grid; grid-template-columns: 34px 56px 1fr auto; gap: 14px; align-items: center;
+  background: var(--trd-panel); border: 1px solid var(--trd-border); border-radius: 12px; padding: 10px 16px; }
+/* Let the name/firm cell shrink so long firm names wrap instead of overflowing. */
+.d-broker > * { min-width: 0; }
+.d-broker .fm { overflow-wrap: anywhere; }
+.d-broker .rank { font-family: var(--trd-font-serif); font-weight: 900; font-size: 22px; color: var(--trd-brand); text-align: center; }
+.d-broker .ph { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; background: var(--trd-bg-soft); filter: saturate(0.85); }
+.d-broker .ph.blank { display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--trd-muted); }
+.d-broker .nm { font-weight: 800; font-size: 16px; }
+.d-broker .fm { font-size: 12px; color: var(--trd-muted); }
+.d-broker .vol { font-family: var(--trd-font-serif); font-weight: 900; font-size: 20px; }
+
+/* Names to know */
+.d-names-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.d-name { background: var(--trd-panel); border: 1px solid var(--trd-border); border-radius: 12px; overflow: hidden; box-shadow: var(--trd-shadow); }
+.d-name img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; filter: saturate(0.85); background: var(--trd-bg-soft); }
+.d-name .b { padding: 14px 16px 16px; }
+.d-name h3 { font-family: var(--trd-font-serif); font-weight: 900; font-size: 18px; margin: 0 0 2px; }
+.d-name .t { font-size: 12px; color: var(--trd-brand); font-weight: 700; margin: 0 0 8px; }
+.d-name p { font-size: 13.5px; line-height: 1.5; margin: 0; }
+
+/* Quotes */
+.d-quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.d-quote { border-left: 3px solid var(--trd-brand); padding: 4px 0 4px 18px; }
+.d-quote blockquote { font-family: var(--trd-font-serif); font-weight: 700; font-size: 20px; line-height: 1.3; margin: 0 0 12px; }
+.d-quote .who { font-weight: 800; font-size: 13px; }
+.d-quote .role { font-size: 12px; color: var(--trd-muted); }
+
+/* Developments + affordability (narrative blocks) */
+.d-narrative { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+.d-narrative .blk h2 { font-family: var(--trd-font-serif); font-weight: 900; font-size: 22px; margin: 0 0 10px; }
+.d-narrative .blk p { font-size: 15px; line-height: 1.6; margin: 0; }
+
+.d-footer { padding: 26px 0 0; border-top: 1px solid var(--trd-border); color: var(--trd-muted); font-size: 12px; }
+
+/* Standalone theme toggle */
+.d-toggle {
+  position: fixed; top: 14px; right: 14px; z-index: 20;
+  background: var(--trd-panel); color: var(--trd-text); border: 1px solid var(--trd-border);
+  border-radius: 999px; padding: 7px 13px; font-size: 13px; font-weight: 700; cursor: pointer;
+  box-shadow: var(--trd-shadow);
+}
+
+/* ---------- Responsive (standalone) ---------- */
+@media (max-width: 860px) {
+  .d-hero { grid-template-columns: 1fr; gap: 18px; padding: 26px 0 20px; }
+  .d-intro { grid-template-columns: 1fr; gap: 18px; }
+  .d-names-grid, .d-quotes { grid-template-columns: 1fr; }
+  .d-narrative { grid-template-columns: 1fr; }
+  .d-listing { grid-template-columns: 1fr; gap: 18px; }
+  .d-map-frame { height: 70vh; }
+  .d-card { width: 300px; }
+}
+
+@media (max-width: 640px) {
+  /* Name cards go horizontal so three don't stack into a very tall column. */
+  .d-name { display: grid; grid-template-columns: 104px 1fr; align-items: stretch; }
+  .d-name img { aspect-ratio: auto; width: 104px; height: 100%; }
+  .d-name .b { padding: 12px 14px 14px; }
+  .d-broker { grid-template-columns: 28px 46px 1fr auto; gap: 10px; padding: 9px 12px; }
+  .d-broker .vol { font-size: 17px; }
+}
+
+/* ---------- Embed mode ---------- */
+/* A dossier grows to its full content height (the iframe auto-sizes). Only the
+   map band is a fixed pixel height so it can't collapse or use vh in embed. */
+:root[data-layout="embed"] .dossier { max-width: none; padding: 0 16px 34px; }
+:root[data-layout="embed"] .d-toggle { display: none; }
+:root[data-layout="embed"] .d-map-frame { height: 520px; min-height: 0; max-height: none; }
+@media (max-width: 560px) {
+  :root[data-layout="embed"] .d-map-frame { height: 460px; }
+  :root[data-layout="embed"] .d-hero h1 { font-size: 44px; }
+}
