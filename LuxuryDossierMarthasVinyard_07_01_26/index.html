@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Luxury Dossier: Martha's Vineyard | The Real Deal</title>
+    <meta name="description" content="Everything to know about luxury real estate on Martha's Vineyard — an interactive map of the island's towns, record sales, developments and the people driving the market." />
+
+    <!-- Pre-paint boot snippet (trd_graphics core/boot-snippet.html). -->
+    <script>
+      (function () {
+        var r = document.documentElement, p = null;
+        try { p = new URLSearchParams(location.search); } catch (e) {}
+        var framed;
+        try { framed = window.self !== window.top; } catch (e) { framed = true; }
+        if ((p && p.get("layout") === "embed") || framed) r.setAttribute("data-layout", "embed");
+        var q = p && p.get("theme"), saved = null;
+        if (r.getAttribute("data-layout") !== "embed") {
+          try { saved = localStorage.getItem("luxurydossiermarthasvinyard-07-01-26:theme"); } catch (e) {}
+        }
+        var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        r.setAttribute("data-theme", (q === "dark" || q === "light") ? q
+          : (saved === "dark" || saved === "light") ? saved : (dark ? "dark" : "light"));
+      })();
+    </script>
+
+    <link href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,700;0,900;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="trd-embed.css" />
+    <link rel="stylesheet" href="trd-dossier.css" />
+    <style>
+      /* Per-project override: white page background (light theme). Dark theme
+         keeps its own background via the more-specific [data-theme="dark"]. */
+      :root {
+        --trd-bg: #ffffff;
+        --trd-bg-soft: #f2f3f5;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="d-toggle" id="d-toggle">Theme</button>
+
+    <main class="dossier">
+      <header class="d-hero" id="d-hero"></header>
+
+      <section class="d-intro">
+        <div class="d-intro-prose" id="d-intro-prose"></div>
+        <div class="d-stats" id="d-stats"></div>
+      </section>
+
+      <section class="d-listing" id="d-listing"></section>
+
+      <section class="d-module" id="d-brokers"></section>
+      <section class="d-module" id="d-names"></section>
+      <section class="d-module" id="d-quotes-wrap"></section>
+      <section class="d-module"><div class="d-narrative" id="d-narrative"></div></section>
+      <footer class="d-footer" id="d-footer"></footer>
+    </main>
+
+    <script src="trd-embed.js"></script>
+    <script src="trd-dossier.js"></script>
+    <script>
+      window.dossier = TRDDossier({
+        prefix: "luxurydossiermarthasvinyard-07-01-26",
+        themeKey: "luxurydossiermarthasvinyard-07-01-26:theme",
+        content: "content.json",
+      });
+    </script>
+  </body>
+</html>
