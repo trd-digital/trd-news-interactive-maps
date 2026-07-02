@@ -1,34 +1,31 @@
 <!--
   =============================================================================
-  TRD article-slot embed snippet  (parent-page side)
+  Luxury Dossier: Martha's Vineyard — article embed snippet
   =============================================================================
-  Paste into the placeholder <figure class="AllowedContent_wrapper__…
-  AllowedContent_defaultWidth__…"> in the article body.
+  Paste ALL of this (the <figure> AND the <script>) into the article body.
 
-  Replace the three placeholders:
-    __EMBED_URL__   the deployed URL of the graphic's index.html
-    __PREFIX__      the graphic's postMessage namespace (must match the
-                    `prefix` passed to TRDEmbed(); e.g. "extell-assemblage")
-    __IFRAME_ID__   a unique id for this iframe on the page
+  The dossier is a tall, auto-sizing embed: the iframe grows to the content's
+  full height via postMessage. The <script> below is what does that — if only
+  the <figure>/<iframe> is pasted (without the script), the iframe stays at its
+  fallback height and the dossier gets cut off.
 
-  The listener whitelists by message TYPE (not origin), so the graphic can be
-  hosted on any domain. If an article carries two TRD embeds, they MUST use
-  distinct prefixes or they will cross-talk.
+  If TRD's theme is exposed differently than a `theme-dark` class on <html>,
+  update currentSiteTheme() below.
   =============================================================================
 -->
 <figure class="AllowedContent_wrapper__lxthX AllowedContent_defaultWidth__8uyfz">
   <iframe
-    id="__IFRAME_ID__"
-    src="__EMBED_URL__?layout=embed"
-    title="The Real Deal interactive graphic"
+    id="luxurydossiermarthasvinyard-07-01-26-iframe"
+    src="https://trd-digital.github.io/trd-news-interactive-maps/LuxuryDossierMarthasVinyard_07_01_26/index.html?layout=embed"
+    title="Luxury Dossier: Martha's Vineyard"
     loading="lazy"
     scrolling="no"
     referrerpolicy="strict-origin-when-cross-origin"
     allow="fullscreen"
     style="
       width: 100%;
-      height: 560px;
-      min-height: 360px;
+      height: 2600px;
+      min-height: 600px;
       border: 0;
       display: block;
       background: #ffffff;
@@ -39,10 +36,10 @@
 
 <script>
   (function () {
-    var iframe = document.getElementById("__IFRAME_ID__");
+    var iframe = document.getElementById("luxurydossiermarthasvinyard-07-01-26-iframe");
     if (!iframe) return;
 
-    var PREFIX = "__PREFIX__";
+    var PREFIX = "luxurydossiermarthasvinyard-07-01-26";
     var T = {
       READY: PREFIX + ":ready",
       LOADED: PREFIX + ":loaded",
@@ -52,7 +49,7 @@
     };
 
     // Replace with however TRD's live site exposes theme (a class on <html>, a
-    // data-attribute, a global, a localStorage key, an emitted event, …).
+    // data-attribute, a global, a localStorage key, etc.).
     function currentSiteTheme() {
       return document.documentElement.classList.contains("theme-dark")
         ? "dark"
@@ -66,10 +63,7 @@
         iframe.contentWindow && iframe.contentWindow.postMessage(msg, "*");
       } catch (e) {}
     }
-
-    function pushTheme() {
-      send(T.SET_THEME, { value: currentSiteTheme() });
-    }
+    function pushTheme() { send(T.SET_THEME, { value: currentSiteTheme() }); }
 
     window.addEventListener("message", function (ev) {
       var data = ev && ev.data;
@@ -80,12 +74,9 @@
           send(T.REQUEST_RESIZE);
           break;
         case T.RESIZE:
-          // Sanity-bound against bogus heights from sibling iframes.
-          if (
-            typeof data.height === "number" &&
-            data.height > 100 &&
-            data.height < 20000
-          ) {
+          // A full-text dossier is tall — allow up to 20000px (narrow columns
+          // stack everything and can exceed 10000px).
+          if (typeof data.height === "number" && data.height > 100 && data.height < 20000) {
             iframe.style.height = data.height + "px";
           }
           break;
