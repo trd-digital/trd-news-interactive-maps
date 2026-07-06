@@ -1,94 +1,32 @@
 <!--
   =============================================================================
-  Luxury Dossier: Martha's Vineyard — article embed snippet
+  Luxury Dossier: Martha's Vineyard — article embed (INTERNAL-SCROLL fallback)
   =============================================================================
-  Paste ALL of this (the <figure> AND the <script>) into the article body.
+  Paste this <figure> into the article body. No <script> needed.
 
-  The dossier is a tall, auto-sizing embed: the iframe grows to the content's
-  full height via postMessage. The <script> below is what does that — if only
-  the <figure>/<iframe> is pasted (without the script), the iframe stays at its
-  fallback height and the dossier gets cut off.
+  Why this version: TRD's article body is rendered by React
+  (dangerouslySetInnerHTML), which does NOT execute inline <script> tags, so the
+  auto-resize listener never runs and the iframe can't grow. As an interim, the
+  iframe is a fixed height with scrolling="yes" — the reader scrolls the dossier
+  inside the frame. All content is reachable (requires the dossier's embed CSS
+  fix that lets its <html>/<body> flow to full height — trd-dossier.css ≥ 1.3.1).
 
-  If TRD's theme is exposed differently than a `theme-dark` class on <html>,
-  update currentSiteTheme() below.
+  PROPER FIX (removes the inner scrollbar): add the one-time global resize
+  listener to the SITE THEME (where scripts run), then switch this iframe to
+  scrolling="no". See the message to whoever owns the theme.
+
+  Adjust height="800" to taste (or use style="height:80vh").
   =============================================================================
 -->
-<figure class="AllowedContent_wrapper__lxthX AllowedContent_defaultWidth__8uyfz">
+<figure>
   <iframe
-    id="luxurydossiermarthasvinyard-07-01-26-iframe"
     src="https://trd-digital.github.io/trd-news-interactive-maps/LuxuryDossierMarthasVinyard_07_01_26/index.html?layout=embed"
     title="Luxury Dossier: Martha's Vineyard"
+    width="100%"
+    height="800"
+    frameborder="0"
+    scrolling="yes"
     loading="lazy"
-    scrolling="no"
-    referrerpolicy="strict-origin-when-cross-origin"
-    allow="fullscreen"
-    style="
-      width: 100%;
-      height: 2600px;
-      min-height: 600px;
-      border: 0;
-      display: block;
-      background: #ffffff;
-      color-scheme: light;
-    "
+    style="display:block; width:100%; height:800px; border:0; background:#fff;"
   ></iframe>
 </figure>
-
-<script>
-  (function () {
-    var iframe = document.getElementById("luxurydossiermarthasvinyard-07-01-26-iframe");
-    if (!iframe) return;
-
-    var PREFIX = "luxurydossiermarthasvinyard-07-01-26";
-    var T = {
-      READY: PREFIX + ":ready",
-      LOADED: PREFIX + ":loaded",
-      RESIZE: PREFIX + ":resize",
-      SET_THEME: PREFIX + ":set-theme",
-      REQUEST_RESIZE: PREFIX + ":request-resize",
-    };
-
-    // Replace with however TRD's live site exposes theme (a class on <html>, a
-    // data-attribute, a global, a localStorage key, etc.).
-    function currentSiteTheme() {
-      return document.documentElement.classList.contains("theme-dark")
-        ? "dark"
-        : "light";
-    }
-
-    function send(type, payload) {
-      try {
-        var msg = { type: type };
-        if (payload) for (var k in payload) msg[k] = payload[k];
-        iframe.contentWindow && iframe.contentWindow.postMessage(msg, "*");
-      } catch (e) {}
-    }
-    function pushTheme() { send(T.SET_THEME, { value: currentSiteTheme() }); }
-
-    window.addEventListener("message", function (ev) {
-      var data = ev && ev.data;
-      if (!data || typeof data !== "object" || !data.type) return;
-      switch (data.type) {
-        case T.READY:
-          pushTheme();
-          send(T.REQUEST_RESIZE);
-          break;
-        case T.RESIZE:
-          // A full-text dossier is tall — allow up to 20000px (narrow columns
-          // stack everything and can exceed 10000px).
-          if (typeof data.height === "number" && data.height > 100 && data.height < 20000) {
-            iframe.style.height = data.height + "px";
-          }
-          break;
-      }
-    });
-
-    // Mirror live site theme changes into the iframe.
-    if ("MutationObserver" in window) {
-      new MutationObserver(pushTheme).observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ["class"],
-      });
-    }
-  })();
-</script>
