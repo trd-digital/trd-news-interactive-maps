@@ -38,6 +38,12 @@ function formatMoney(value) {
   return `$${Number(value || 0).toLocaleString()}`;
 }
 
+function formatAmount(value) {
+  return value >= 1000000000
+    ? `$${value / 1000000000}B`
+    : `$${value / 1000000}M`;
+}
+
 function renderLegend() {
   const legend = document.getElementById('legend');
 
@@ -45,26 +51,15 @@ function renderLegend() {
     <div class="legend-title">Off-Market Volume</div>
 
     <div class="year-toggle">
-  <button class="${currentYear === '2024/25' ? 'active' : ''}" data-year="2024/25">2024/25</button>
-  <button class="${currentYear === '2025/26' ? 'active' : ''}" data-year="2025/26">2025/26</button>
-</div>
+      <button class="${currentYear === '2024/25' ? 'active' : ''}" data-year="2024/25">2024/25</button>
+      <button class="${currentYear === '2025/26' ? 'active' : ''}" data-year="2025/26">2025/26</button>
+    </div>
 
     ${volumeStops.map(([value, color], i) => {
       const next = volumeStops[i + 1]?.[0];
-
-      let label;
-
-function formatAmount(value) {
-  return value >= 1000000000
-    ? `$${value / 1000000000}B`
-    : `$${value / 1000000}M`;
-}
-
-if (next) {
-  label = `${formatAmount(value)} – ${formatAmount(next)}`;
-} else {
-  label = `${formatAmount(value)}+`;
-}
+      const label = next
+        ? `${formatAmount(value)} – ${formatAmount(next)}`
+        : `${formatAmount(value)}+`;
 
       return `
         <div class="legend-item">
