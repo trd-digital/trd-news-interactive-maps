@@ -250,7 +250,18 @@ html, body { background: var(--trd-bg); color: var(--trd-text); }
 
 /* ---------- Embed mode ---------- */
 /* A dossier grows to its full content height (the iframe auto-sizes). Only the
-   map band is a fixed pixel height so it can't collapse or use vh in embed. */
+   map band is a fixed pixel height so it can't collapse or use vh in embed.
+
+   CRITICAL: override the core's fixed-height WIDGET embed rule
+   (trd-embed.css sets html/body { height: <px>; overflow: hidden } for map
+   widgets). A dossier is a tall content page — that fixed height would clip
+   everything below ~560px. Let html/body flow to the full content height. */
+:root[data-layout="embed"],
+:root[data-layout="embed"] body {
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+}
 :root[data-layout="embed"] .dossier { max-width: none; padding: 0 16px 34px; }
 :root[data-layout="embed"] .d-toggle { display: none; }
 :root[data-layout="embed"] .d-map-frame { height: 520px; min-height: 0; max-height: none; }
