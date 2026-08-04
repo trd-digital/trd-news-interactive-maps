@@ -72,10 +72,10 @@ map.on('click', 'cannabis-store-points', event => {
   );
 
   const previousCategory =
-  (properties.previous_category || '').trim() || 'N/A';
+    (properties.previous_category || '').trim() || 'N/A';
 
-const previousTenantEnd =
-  formatMonthYear(properties.previous_tenant_end) || 'N/A';
+  const previousTenantEnd =
+    formatMonthYear(properties.previous_tenant_end) || 'N/A';
 
   const popupHtml = `
     <div class="tenant-popup">
