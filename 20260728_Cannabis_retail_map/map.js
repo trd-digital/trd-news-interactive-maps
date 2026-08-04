@@ -148,7 +148,8 @@ function formatMonthYear(value) {
     return '';
   }
 
-  const date = new Date(value);
+  const dateValue = typeof value === 'string' ? value.replace(' ', 'T') : value;
+  const date = new Date(dateValue);
 
   if (Number.isNaN(date.getTime())) {
     return '';
