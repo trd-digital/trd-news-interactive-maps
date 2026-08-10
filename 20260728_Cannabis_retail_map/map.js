@@ -42,7 +42,7 @@ map.on('load', () => {
         15, 8
       ],
 
-      'circle-color': '#2f7d59',
+      'circle-color': '#2084FE',
       'circle-opacity': 0.85,
       'circle-stroke-color': '#ffffff',
       'circle-stroke-width': 1
