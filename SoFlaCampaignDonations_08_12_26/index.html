@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Vicki Lopez Campaign Donations | The Real Deal</title>
+    <meta name="description" content="Every contribution to Vicki Lopez's Common Sense Government political committee, January–July 2026." />
+
+    <!-- Pre-paint boot snippet (trd_graphics core/boot-snippet.html). MUST stay inline and first. -->
+    <script>
+      (function () {
+        var r = document.documentElement, p = null;
+        try { p = new URLSearchParams(location.search); } catch (e) {}
+        var framed;
+        try { framed = window.self !== window.top; } catch (e) { framed = true; }
+        if ((p && p.get("layout") === "embed") || framed) r.setAttribute("data-layout", "embed");
+        var q = p && p.get("theme"), saved = null;
+        if (r.getAttribute("data-layout") !== "embed") {
+          try { saved = localStorage.getItem("sofla-donations:theme"); } catch (e) {}
+        }
+        var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        r.setAttribute("data-theme", (q === "dark" || q === "light") ? q
+          : (saved === "dark" || saved === "light") ? saved : (dark ? "dark" : "light"));
+      })();
+    </script>
+
+    <link href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,700;0,900;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="trd-embed.css" />
+    <style>
+      /* ---- Chart palette (validated: dataviz slots 1–3 vs TRD surfaces) ---- */
+      :root {
+        --viz-re: #2a78d6;      /* Real estate — slot 1 blue  */
+        --viz-build: #eb6834;   /* Construction & design — slot 2 orange */
+        --viz-law: #1baf7a;     /* Attorneys & law firms — slot 3 aqua */
+        --viz-other: #8a8f9c;   /* Other — neutral de-emphasis, not a slot */
+        --viz-grid: #ebedf3;
+        --viz-axis: #c9cdd8;
+      }
+      :root[data-theme="dark"] {
+        --viz-re: #3987e5;
+        --viz-build: #d95926;
+        --viz-law: #199e70;
+        --viz-other: #737a89;
+        --viz-grid: #232836;
+        --viz-axis: #3a4050;
+      }
+
+      .page { max-width: 860px; margin: 0 auto; padding: 26px 20px 40px; }
+
+      /* ---- Hero ---- */
+      .kicker {
+        font-size: 12px; font-weight: 700; letter-spacing: 0.12em;
+        text-transform: uppercase; color: var(--trd-brand); margin: 0 0 10px;
+      }
+      .headline {
+        font-family: var(--trd-font-serif); font-weight: 900;
+        font-size: clamp(26px, 4.5vw, 38px); line-height: 1.12;
+        letter-spacing: -0.01em; margin: 0 0 12px;
+      }
+      .dek { font-size: 16px; line-height: 1.55; color: var(--trd-muted); margin: 0 0 26px; max-width: 640px; }
+
+      .kpis {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 14px; margin-bottom: 34px;
+      }
+      .kpi {
+        background: var(--trd-bg-soft); border: 1px solid var(--trd-border);
+        border-radius: 10px; padding: 14px 16px;
+      }
+      .kpi .v { font-size: 30px; font-weight: 700; line-height: 1.1; }
+      .kpi.lead { grid-column: 1 / -1; }
+      .kpi.lead .v { font-size: 48px; }
+      .kpi .l { font-size: 12.5px; color: var(--trd-muted); margin-top: 5px; line-height: 1.35; }
+
+      /* ---- Sections ---- */
+      .sec { margin: 0 0 36px; }
+      .sec-title {
+        font-family: var(--trd-font-serif); font-weight: 900;
+        font-size: 19px; margin: 0 0 4px;
+      }
+      .sec-sub { font-size: 13.5px; color: var(--trd-muted); margin: 0 0 16px; }
+
+      /* ---- Share bar ---- */
+      .share-bar { display: flex; gap: 2px; height: 22px; border-radius: 5px; overflow: hidden; }
+      .share-bar .seg { height: 100%; cursor: default; }
+      .share-bar .seg:first-child { border-radius: 4px 0 0 4px; }
+      .share-bar .seg:last-child { border-radius: 0 4px 4px 0; }
+      .legend { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 12px; }
+      .legend .item { display: flex; align-items: baseline; gap: 8px; font-size: 13px; }
+      .legend .swatch { width: 11px; height: 11px; border-radius: 3px; flex: none; align-self: center; }
+      .legend .nm { font-weight: 700; }
+      .legend .val { color: var(--trd-muted); font-variant-numeric: tabular-nums; }
+
+      /* ---- Beeswarm ---- */
+      .swarm-wrap { position: relative; }
+      .swarm-wrap svg { display: block; width: 100%; height: auto; }
+      .lane-label { font-size: 13px; font-weight: 700; fill: var(--trd-text); }
+      .lane-total { font-size: 12px; font-weight: 400; fill: var(--trd-muted); }
+      .axis-label { font-size: 11.5px; fill: var(--trd-muted); }
+      .dot { stroke: var(--trd-bg); stroke-width: 2px; }
+      .dot-hit { fill: transparent; cursor: pointer; }
+      .dot-hit:focus { outline: none; }
+      .dot.is-active { stroke: var(--trd-text); }
+      .size-legend { display: flex; align-items: center; gap: 14px; margin-top: 6px; font-size: 12px; color: var(--trd-muted); }
+      .size-legend .k { display: flex; align-items: center; gap: 6px; }
+      .size-legend .c { border: 1.5px solid var(--trd-muted); border-radius: 50%; flex: none; }
+
+      /* ---- Tooltip ---- */
+      .tip {
+        position: absolute; z-index: 30; pointer-events: none; display: none;
+        max-width: 260px; padding: 10px 12px; border-radius: 8px;
+        background: var(--trd-panel); border: 1px solid var(--trd-border);
+        box-shadow: var(--trd-shadow); font-size: 12.5px; line-height: 1.4;
+      }
+      .tip .t-amount { font-size: 16px; font-weight: 700; }
+      .tip .t-name { font-weight: 700; margin-top: 2px; }
+      .tip .t-meta { color: var(--trd-muted); margin-top: 2px; }
+
+      /* ---- Top donors ---- */
+      .donor-row {
+        display: grid; grid-template-columns: minmax(120px, 210px) 1fr;
+        gap: 12px; align-items: center; margin: 7px 0;
+      }
+      .donor-name { font-size: 13px; line-height: 1.25; text-align: right; }
+      .donor-name small { display: block; color: var(--trd-muted); font-size: 11.5px; }
+      .donor-track { display: flex; align-items: center; gap: 8px; min-width: 0; }
+      .donor-bar { height: 20px; border-radius: 0 4px 4px 0; flex: none; }
+      .donor-val { font-size: 12.5px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      @media (max-width: 560px) {
+        .donor-row { grid-template-columns: 1fr; gap: 2px; margin: 10px 0; }
+        .donor-name { text-align: left; }
+      }
+
+      /* ---- Table ---- */
+      .tbl-wrap { overflow-x: auto; }
+      table.donations { width: 100%; border-collapse: collapse; font-size: 13px; }
+      table.donations th {
+        text-align: left; font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase;
+        color: var(--trd-muted); font-weight: 700; padding: 8px 10px;
+        border-bottom: 2px solid var(--trd-border); white-space: nowrap;
+      }
+      table.donations td { padding: 8px 10px; border-bottom: 1px solid var(--trd-border); vertical-align: top; }
+      table.donations td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+      table.donations th.num { text-align: right; }
+      .grp-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; }
+      .show-all {
+        margin-top: 14px; background: transparent; color: var(--trd-text);
+        border: 1px solid var(--trd-border); border-radius: 999px; cursor: pointer;
+        padding: 8px 18px; font-size: 13px; font-weight: 700; font-family: var(--trd-font-sans);
+      }
+      .show-all:hover { background: var(--trd-bg-soft); }
+
+      .theme-toggle {
+        margin-left: auto; background: transparent; color: var(--trd-text);
+        border: 1px solid var(--trd-border); border-radius: 999px; cursor: pointer;
+        padding: 6px 12px; font-size: 12px; font-weight: 700;
+      }
+      .foot { font-size: 11px; color: var(--trd-muted); letter-spacing: 0.03em; margin-top: 8px; }
+
+      /* ---- Embed mode: tall content page, iframe auto-sizes (dossier pattern).
+             Overrides the core's fixed-height widget rule. ---- */
+      :root[data-layout="embed"],
+      :root[data-layout="embed"] body {
+        height: auto; min-height: 0; overflow: visible;
+      }
+      :root[data-layout="embed"] .page { max-width: none; padding: 8px 16px 30px; }
+    </style>
+  </head>
+  <body>
+    <header class="trd-header">
+      <h1>SoFla Campaign Donations</h1>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">Dark</button>
+    </header>
+
+    <main class="page" id="app">
+      <section class="sec">
+        <p class="kicker">Campaign finance</p>
+        <h1 class="headline">The money behind Vicki Lopez&rsquo;s Common Sense Government</h1>
+        <p class="dek">
+          From late January through July, the political committee collected 120 contributions —
+          and more than eight in every 10 dollars came from real estate firms, contractors and
+          the land-use attorneys who represent them.
+        </p>
+        <div class="kpis" id="kpis"></div>
+      </section>
+
+      <section class="sec">
+        <h2 class="sec-title">Where the money comes from</h2>
+        <p class="sec-sub">Share of total dollars by contributor industry</p>
+        <div class="share-bar" id="shareBar" role="img" aria-label="Stacked bar of donation dollars by industry group"></div>
+        <div class="legend" id="shareLegend"></div>
+      </section>
+
+      <section class="sec">
+        <h2 class="sec-title">Every check, week by week</h2>
+        <p class="sec-sub">Each circle is one contribution, sized by amount. Hover or tap a circle for details.</p>
+        <div class="swarm-wrap" id="swarmWrap"></div>
+        <div class="size-legend" id="sizeLegend"></div>
+      </section>
+
+      <section class="sec">
+        <h2 class="sec-title">The biggest donors</h2>
+        <p class="sec-sub">Contributions combined across multiple checks from the same donor</p>
+        <div id="topDonors"></div>
+        <div class="legend" id="donorLegend"></div>
+      </section>
+
+      <section class="sec">
+        <h2 class="sec-title">All 120 contributions</h2>
+        <p class="sec-sub">Sorted largest first</p>
+        <div class="tbl-wrap">
+          <table class="donations" id="tbl">
+            <thead>
+              <tr><th>Contributor</th><th>Industry</th><th>City</th><th>Date</th><th class="num">Amount</th></tr>
+            </thead>
+            <tbody id="tblBody"></tbody>
+          </table>
+        </div>
+        <button class="show-all" id="showAll" type="button"></button>
+      </section>
+
+      <p class="foot">Source: Common Sense Government contribution filings, Jan. 21&ndash;Jul. 30, 2026 &middot; The Real Deal</p>
+    </main>
+
+    <div class="tip" id="tip" role="status"></div>
+
+    <script src="trd-embed.js"></script>
+    <script src="data.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        var D = window.DONATIONS || [];
+        var GROUPS = [
+          { key: "re", name: "Real estate", cssVar: "--viz-re" },
+          { key: "build", name: "Construction & design", cssVar: "--viz-build" },
+          { key: "law", name: "Attorneys & law firms", cssVar: "--viz-law" },
+          { key: "other", name: "Other", cssVar: "--viz-other" },
+        ];
+        // AP style: Jan.–Feb. abbreviated, March–July spelled out.
+        var MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug."];
+        var controller; // set at bottom
+
+        function color(g) {
+          var grp = GROUPS.filter(function (x) { return x.key === g; })[0];
+          return getComputedStyle(document.documentElement).getPropertyValue(grp.cssVar).trim();
+        }
+        function groupName(g) {
+          return GROUPS.filter(function (x) { return x.key === g; })[0].name;
+        }
+        function money(n) {
+          var opts = n % 1 ? { minimumFractionDigits: 2, maximumFractionDigits: 2 } : {};
+          return "$" + n.toLocaleString("en-US", opts);
+        }
+        function moneyShort(n) {
+          if (n >= 1000) {
+            var k = n / 1000;
+            return "$" + (k % 1 ? k.toFixed(1).replace(/\.0$/, "") : k) + "K";
+          }
+          return "$" + Math.round(n);
+        }
+        function dateLabel(iso) {
+          var p = iso.split("-");
+          return MONTHS[+p[1] - 1] + " " + (+p[2]) + ", " + p[0];
+        }
+        function dayOfYear(iso) {
+          var p = iso.split("-");
+          return (Date.UTC(+p[0], +p[1] - 1, +p[2]) - Date.UTC(2026, 0, 1)) / 86400000;
+        }
+
+        var TOTAL = D.reduce(function (s, d) { return s + d.amount; }, 0);
+        var BY_GROUP = {};
+        D.forEach(function (d) { BY_GROUP[d.group] = (BY_GROUP[d.group] || 0) + d.amount; });
+
+        /* ---------- tooltip (textContent only — CSV strings are untrusted) ---------- */
+        var tip = document.getElementById("tip");
+        function showTip(html) {
+          tip.innerHTML = "";
+          html.forEach(function (row) {
+            var el = document.createElement("div");
+            el.className = row[0];
+            el.textContent = row[1];
+            tip.appendChild(el);
+          });
+          tip.style.display = "block";
+        }
+        function moveTip(ev) {
+          var pad = 14;
+          var x = ev.pageX + pad, y = ev.pageY + pad;
+          var w = tip.offsetWidth, h = tip.offsetHeight;
+          var maxX = document.documentElement.scrollLeft + document.documentElement.clientWidth;
+          if (x + w + 8 > maxX) x = ev.pageX - w - pad;
+          if (y + h + 8 > document.documentElement.scrollTop + document.documentElement.clientHeight + window.scrollY) {
+            y = ev.pageY - h - pad;
+          }
+          tip.style.left = x + "px";
+          tip.style.top = Math.max(0, y) + "px";
+        }
+        function hideTip() { tip.style.display = "none"; }
+        function donationTip(d) {
+          return [
+            ["t-amount", money(d.amount)],
+            ["t-name", d.name],
+            ["t-meta", d.industry + " · " + d.city],
+            ["t-meta", dateLabel(d.date)],
+          ];
+        }
+
+        /* ---------- KPIs ---------- */
+        function renderKpis() {
+          var reShare = BY_GROUP.re / TOTAL;
+          var linked = (BY_GROUP.re + BY_GROUP.build + BY_GROUP.law) / TOTAL;
+          var host = document.getElementById("kpis");
+          host.innerHTML = "";
+          [
+            ["$625,386", "raised Jan. 21 – Jul. 30, 2026", true],
+            ["120", "contributions, $200 to $25,000", false],
+            [Math.round(linked * 100) + "%", "of dollars from real estate, construction and law", false],
+            ["$82,000", "collected on the biggest day, March 30", false],
+          ].forEach(function (k) {
+            var el = document.createElement("div");
+            el.className = "kpi" + (k[2] ? " lead" : "");
+            var v = document.createElement("div"); v.className = "v"; v.textContent = k[0];
+            var l = document.createElement("div"); l.className = "l"; l.textContent = k[1];
+            el.appendChild(v); el.appendChild(l);
+            host.appendChild(el);
+          });
+        }
+
+        /* ---------- share bar ---------- */
+        function renderShare() {
+          var bar = document.getElementById("shareBar");
+          var leg = document.getElementById("shareLegend");
+          bar.innerHTML = ""; leg.innerHTML = "";
+          GROUPS.forEach(function (g) {
+            var v = BY_GROUP[g.key] || 0;
+            var seg = document.createElement("div");
+            seg.className = "seg";
+            seg.style.width = (v / TOTAL) * 100 + "%";
+            seg.style.background = color(g.key);
+            seg.setAttribute("tabindex", "0");
+            seg.setAttribute("aria-label", g.name + ": " + money(v) + ", " + Math.round((v / TOTAL) * 100) + " percent");
+            function tipRows() {
+              return [
+                ["t-amount", money(v)],
+                ["t-name", g.name],
+                ["t-meta", Math.round((v / TOTAL) * 100) + "% of all dollars"],
+              ];
+            }
+            seg.addEventListener("pointermove", function (ev) { showTip(tipRows()); moveTip(ev); });
+            seg.addEventListener("pointerleave", hideTip);
+            seg.addEventListener("focus", function () {
+              showTip(tipRows());
+              var r = seg.getBoundingClientRect();
+              tip.style.left = r.left + window.scrollX + "px";
+              tip.style.top = r.bottom + window.scrollY + 8 + "px";
+            });
+            seg.addEventListener("blur", hideTip);
+            bar.appendChild(seg);
+
+            var item = document.createElement("div");
+            item.className = "item";
+            var sw = document.createElement("span"); sw.className = "swatch"; sw.style.background = color(g.key);
+            var nm = document.createElement("span"); nm.className = "nm"; nm.textContent = g.name;
+            var val = document.createElement("span"); val.className = "val";
+            val.textContent = money(Math.round(v)) + " · " + Math.round((v / TOTAL) * 100) + "%";
+            item.appendChild(sw); item.appendChild(nm); item.appendChild(val);
+            leg.appendChild(item);
+          });
+        }
+
+        /* ---------- beeswarm timeline ---------- */
+        var R_MIN = 2.5, R_MAX = 15;
+        function radius(a) {
+          var t = (Math.sqrt(a) - Math.sqrt(200)) / (Math.sqrt(25000) - Math.sqrt(200));
+          return R_MIN + Math.max(0, Math.min(1, t)) * (R_MAX - R_MIN);
+        }
+
+        function renderSwarm() {
+          var wrap = document.getElementById("swarmWrap");
+          wrap.innerHTML = "";
+          var width = Math.max(300, wrap.getBoundingClientRect().width);
+          var mL = 8, mR = 8, axisH = 26, laneHead = 26, lanePad = 10;
+          var x0 = dayOfYear("2026-01-14"), x1 = dayOfYear("2026-08-04");
+          function X(iso) { return mL + ((dayOfYear(iso) - x0) / (x1 - x0)) * (width - mL - mR); }
+
+          // pack each lane: biggest first, greedy nearest-to-centerline placement
+          var lanes = GROUPS.map(function (g) {
+            var dots = D.filter(function (d) { return d.group === g.key; })
+              .slice().sort(function (a, b) { return b.amount - a.amount; });
+            var placed = [];
+            dots.forEach(function (d) {
+              var px = X(d.date), r = radius(d.amount), y = 0, found = false;
+              for (var k = 0; k < 200 && !found; k++) {
+                var cands = k === 0 ? [0] : [k * 2.5, -k * 2.5];
+                for (var c = 0; c < cands.length; c++) {
+                  var cy = cands[c], ok = true;
+                  for (var i = 0; i < placed.length; i++) {
+                    var dx = placed[i].x - px, dy = placed[i].y - cy;
+                    var min = placed[i].r + r + 2.5;
+                    if (dx * dx + dy * dy < min * min) { ok = false; break; }
+                  }
+                  if (ok) { y = cy; found = true; break; }
+                }
+              }
+              placed.push({ x: px, y: y, r: r, d: d });
+            });
+            var top = 0, bot = 0;
+            placed.forEach(function (p) {
+              top = Math.min(top, p.y - p.r);
+              bot = Math.max(bot, p.y + p.r);
+            });
+            return { g: g, placed: placed, ext: [top - 4, bot + 4] };
+          });
+
+          var height = 6;
+          lanes.forEach(function (ln) {
+            ln.headY = height;
+            height += laneHead;
+            ln.centerY = height - ln.ext[0];
+            height += (ln.ext[1] - ln.ext[0]) + lanePad;
+          });
+          var plotBottom = height;
+          height += axisH;
+
+          var NS = "http://www.w3.org/2000/svg";
+          var svg = document.createElementNS(NS, "svg");
+          svg.setAttribute("viewBox", "0 0 " + width + " " + height);
+          svg.setAttribute("role", "img");
+          svg.setAttribute("aria-label", "Timeline of all 120 contributions by industry group. Full details in the table below.");
+
+          // month gridlines + labels
+          for (var m = 1; m <= 7; m++) {
+            var isoStart = "2026-0" + m + "-01";
+            if (m > 1) {
+              var gl = document.createElementNS(NS, "line");
+              gl.setAttribute("x1", X(isoStart)); gl.setAttribute("x2", X(isoStart));
+              gl.setAttribute("y1", 2); gl.setAttribute("y2", plotBottom);
+              gl.setAttribute("stroke", "var(--viz-grid)");
+              gl.setAttribute("stroke-width", "1");
+              svg.appendChild(gl);
+            }
+            var lbl = document.createElementNS(NS, "text");
+            lbl.setAttribute("class", "axis-label");
+            lbl.setAttribute("x", m === 1 ? mL : X("2026-0" + m + "-15"));
+            lbl.setAttribute("y", plotBottom + 18);
+            lbl.setAttribute("text-anchor", m === 1 ? "start" : "middle");
+            lbl.textContent = MONTHS[m - 1] + (m === 1 ? " 2026" : "");
+            svg.appendChild(lbl);
+          }
+          var base = document.createElementNS(NS, "line");
+          base.setAttribute("x1", mL); base.setAttribute("x2", width - mR);
+          base.setAttribute("y1", plotBottom); base.setAttribute("y2", plotBottom);
+          base.setAttribute("stroke", "var(--viz-axis)");
+          base.setAttribute("stroke-width", "1");
+          svg.appendChild(base);
+
+          lanes.forEach(function (ln) {
+            var sw = document.createElementNS(NS, "rect");
+            sw.setAttribute("x", mL); sw.setAttribute("y", ln.headY + 6);
+            sw.setAttribute("width", 11); sw.setAttribute("height", 11);
+            sw.setAttribute("rx", 3);
+            sw.setAttribute("fill", color(ln.g.key));
+            svg.appendChild(sw);
+            var t = document.createElementNS(NS, "text");
+            t.setAttribute("class", "lane-label");
+            t.setAttribute("x", mL + 18); t.setAttribute("y", ln.headY + 16);
+            t.textContent = ln.g.name + " ";
+            var tt = document.createElementNS(NS, "tspan");
+            tt.setAttribute("class", "lane-total");
+            tt.textContent = " " + money(Math.round(BY_GROUP[ln.g.key] || 0)) + " · " + ln.placed.length + " checks";
+            t.appendChild(tt);
+            svg.appendChild(t);
+
+            ln.placed.forEach(function (p) {
+              var dot = document.createElementNS(NS, "circle");
+              dot.setAttribute("class", "dot");
+              dot.setAttribute("cx", p.x); dot.setAttribute("cy", ln.centerY + p.y);
+              dot.setAttribute("r", p.r);
+              dot.setAttribute("fill", color(ln.g.key));
+              svg.appendChild(dot);
+
+              var hit = document.createElementNS(NS, "circle");
+              hit.setAttribute("class", "dot-hit");
+              hit.setAttribute("cx", p.x); hit.setAttribute("cy", ln.centerY + p.y);
+              hit.setAttribute("r", Math.max(p.r + 5, 12));
+              hit.setAttribute("tabindex", "0");
+              hit.setAttribute("role", "img");
+              hit.setAttribute("aria-label",
+                money(p.d.amount) + " from " + p.d.name + " on " + dateLabel(p.d.date));
+              hit.addEventListener("pointermove", function (ev) {
+                dot.classList.add("is-active");
+                showTip(donationTip(p.d)); moveTip(ev);
+              });
+              hit.addEventListener("pointerleave", function () {
+                dot.classList.remove("is-active"); hideTip();
+              });
+              hit.addEventListener("focus", function () {
+                dot.classList.add("is-active");
+                showTip(donationTip(p.d));
+                var r = hit.getBoundingClientRect();
+                tip.style.left = r.left + window.scrollX + 10 + "px";
+                tip.style.top = r.bottom + window.scrollY + 6 + "px";
+              });
+              hit.addEventListener("blur", function () {
+                dot.classList.remove("is-active"); hideTip();
+              });
+              svg.appendChild(hit);
+            });
+          });
+
+          wrap.appendChild(svg);
+
+          // size key
+          var sl = document.getElementById("sizeLegend");
+          sl.innerHTML = "";
+          var cap = document.createElement("span");
+          cap.textContent = "Circle area = contribution size:";
+          sl.appendChild(cap);
+          [[500, "$500"], [5000, "$5K"], [25000, "$25K"]].forEach(function (s) {
+            var k = document.createElement("span"); k.className = "k";
+            var c = document.createElement("span"); c.className = "c";
+            var dpx = Math.round(radius(s[0]) * 2);
+            c.style.width = dpx + "px"; c.style.height = dpx + "px";
+            var lab = document.createElement("span"); lab.textContent = s[1];
+            k.appendChild(c); k.appendChild(lab);
+            sl.appendChild(k);
+          });
+        }
+
+        /* ---------- top donors ---------- */
+        function renderDonors() {
+          var agg = {};
+          D.forEach(function (d) {
+            if (!agg[d.donorKey]) agg[d.donorKey] = { total: 0, n: 0, name: d.name, group: d.group };
+            agg[d.donorKey].total += d.amount;
+            agg[d.donorKey].n += 1;
+          });
+          var top = Object.keys(agg).map(function (k) { return agg[k]; })
+            .sort(function (a, b) { return b.total - a.total; }).slice(0, 10);
+          var max = top[0].total;
+
+          var host = document.getElementById("topDonors");
+          host.innerHTML = "";
+          top.forEach(function (t) {
+            var row = document.createElement("div"); row.className = "donor-row";
+            var nm = document.createElement("div"); nm.className = "donor-name";
+            nm.textContent = t.name;
+            if (t.n > 1) {
+              var sm = document.createElement("small");
+              sm.textContent = t.n + " checks";
+              nm.appendChild(sm);
+            }
+            var track = document.createElement("div"); track.className = "donor-track";
+            var bar = document.createElement("div"); bar.className = "donor-bar";
+            bar.style.width = (t.total / max) * 72 + "%";
+            bar.style.background = color(t.group);
+            var val = document.createElement("span"); val.className = "donor-val";
+            val.textContent = money(Math.round(t.total));
+            track.appendChild(bar); track.appendChild(val);
+            row.appendChild(nm); row.appendChild(track);
+            host.appendChild(row);
+          });
+
+          var leg = document.getElementById("donorLegend");
+          leg.innerHTML = "";
+          GROUPS.forEach(function (g) {
+            if (!top.some(function (t) { return t.group === g.key; })) return;
+            var item = document.createElement("div"); item.className = "item";
+            var sw = document.createElement("span"); sw.className = "swatch"; sw.style.background = color(g.key);
+            var nmEl = document.createElement("span"); nmEl.className = "val"; nmEl.textContent = g.name;
+            item.appendChild(sw); item.appendChild(nmEl);
+            leg.appendChild(item);
+          });
+        }
+
+        /* ---------- table ---------- */
+        var tableExpanded = false;
+        var COLLAPSED_ROWS = 15;
+        function renderTable() {
+          var body = document.getElementById("tblBody");
+          body.innerHTML = "";
+          var rows = D.slice().sort(function (a, b) { return b.amount - a.amount || (a.date < b.date ? -1 : 1); });
+          var shown = tableExpanded ? rows : rows.slice(0, COLLAPSED_ROWS);
+          shown.forEach(function (d) {
+            var tr = document.createElement("tr");
+            function td(txt, cls) {
+              var el = document.createElement("td");
+              if (cls) el.className = cls;
+              el.textContent = txt;
+              return el;
+            }
+            tr.appendChild(td(d.name));
+            var ind = document.createElement("td");
+            var gd = document.createElement("span");
+            gd.className = "grp-dot"; gd.style.background = color(d.group);
+            gd.title = groupName(d.group);
+            ind.appendChild(gd);
+            ind.appendChild(document.createTextNode(d.industry));
+            tr.appendChild(ind);
+            tr.appendChild(td(d.city));
+            tr.appendChild(td(dateLabel(d.date)));
+            tr.appendChild(td(money(d.amount), "num"));
+            body.appendChild(tr);
+          });
+          var btn = document.getElementById("showAll");
+          btn.textContent = tableExpanded
+            ? "Show fewer"
+            : "Show all " + D.length + " contributions";
+        }
+        document.getElementById("showAll").addEventListener("click", function () {
+          tableExpanded = !tableExpanded;
+          renderTable();
+          if (controller) controller.requestResize();
+        });
+
+        /* ---------- render all ---------- */
+        function renderAll() {
+          renderKpis();
+          renderShare();
+          renderSwarm();
+          renderDonors();
+          renderTable();
+        }
+
+        var resizeTimer = null, lastW = 0;
+        window.addEventListener("resize", function () {
+          var w = document.getElementById("swarmWrap").getBoundingClientRect().width;
+          if (Math.abs(w - lastW) < 2) return;
+          lastW = w;
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(renderSwarm, 150);
+        });
+
+        controller = TRDEmbed({
+          prefix: "sofla-donations",
+          themeKey: "sofla-donations:theme",
+          toggle: "#themeToggle",
+          mountTarget: "#app",
+          lazy: false, // tall content page: render immediately so the iframe sizes right
+          onMount: function (ctx) {
+            lastW = document.getElementById("swarmWrap").getBoundingClientRect().width;
+            renderAll();
+            ctx.postLoaded();
+          },
+          onTheme: function (theme, ctx) {
+            var btn = document.getElementById("themeToggle");
+            if (btn) btn.textContent = theme === "dark" ? "Light" : "Dark";
+            renderAll();
+            ctx.requestResize();
+          },
+        });
+      })();
+    </script>
+  </body>
+</html>
