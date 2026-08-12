@@ -6,7 +6,7 @@ window.DONATIONS = [
   "name": "Carlos Alberto Migoya (Jackson Health System)",
   "city": "Miami",
   "industry": "Hospital executive",
-  "group": "other",
+  "group": "health",
   "donorKey": "carlos alberto migoya (jackson health system)"
  },
  {
@@ -66,7 +66,7 @@ window.DONATIONS = [
  {
   "date": "2026-01-28",
   "amount": 5000.0,
-  "name": "CTS Engineering Inc..",
+  "name": "CTS Engineering Inc.",
   "city": "Doral",
   "industry": "Engineering",
   "group": "build",
@@ -159,7 +159,7 @@ window.DONATIONS = [
   "name": "School Development HC Finance",
   "city": "Miami",
   "industry": "School developers",
-  "group": "other",
+  "group": "misc",
   "donorKey": "school development hc finance"
  },
  {
@@ -237,7 +237,7 @@ window.DONATIONS = [
  {
   "date": "2026-02-20",
   "amount": 5000.0,
-  "name": "Kendall Associates I, Lllp",
+  "name": "Kendall Associates I, LLLP",
   "city": "Sunrise",
   "industry": "Real estate development",
   "group": "re",
@@ -276,7 +276,7 @@ window.DONATIONS = [
   "name": "Boich Companies, LLC",
   "city": "South Columbus",
   "industry": "Investment/energy company",
-  "group": "other",
+  "group": "energy",
   "donorKey": "boich companies llc"
  },
  {
@@ -285,7 +285,7 @@ window.DONATIONS = [
   "name": "South Florida Stadium LLC (Miami Dolphins)",
   "city": "Miami Gardens",
   "industry": "Entertainment venue",
-  "group": "other",
+  "group": "hosp",
   "donorKey": "south florida stadium llc (miami dolphins)"
  },
  {
@@ -366,7 +366,7 @@ window.DONATIONS = [
   "name": "Independent Living Systems",
   "city": "Miami",
   "industry": "Assisted living facility",
-  "group": "other",
+  "group": "health",
   "donorKey": "independent living systems"
  },
  {
@@ -453,7 +453,7 @@ window.DONATIONS = [
  {
   "date": "2026-03-31",
   "amount": 2500.0,
-  "name": "Bertolotto Porte Inc..",
+  "name": "Bertolotto Porte Inc.",
   "city": "Miami",
   "industry": "Door manufacturer",
   "group": "build",
@@ -516,7 +516,7 @@ window.DONATIONS = [
  {
   "date": "2026-03-31",
   "amount": 2500.0,
-  "name": "South Dade Lighting, Inc..",
+  "name": "South Dade Lighting, Inc.",
   "city": "Miami",
   "industry": "Lighting company",
   "group": "build",
@@ -546,7 +546,7 @@ window.DONATIONS = [
   "name": "Fisher Island Club, Inc.",
   "city": "Fisher Island",
   "industry": "Recreation/social club",
-  "group": "other",
+  "group": "hosp",
   "donorKey": "fisher island club inc"
  },
  {
@@ -573,7 +573,7 @@ window.DONATIONS = [
   "name": "Nextera Energy Capital Holding (FPL parent company)",
   "city": "Juno Beach",
   "industry": "Energy company",
-  "group": "other",
+  "group": "energy",
   "donorKey": "nextera energy capital holding (fpl parent company)"
  },
  {
@@ -636,7 +636,7 @@ window.DONATIONS = [
   "name": "A+ Mini Storage South Miami",
   "city": "Miami",
   "industry": "Storage",
-  "group": "other",
+  "group": "storage",
   "donorKey": "a+ mini storage south miami"
  },
  {
@@ -645,7 +645,7 @@ window.DONATIONS = [
   "name": "A+ Mini Storage Kendall",
   "city": "Miami",
   "industry": "Storage",
-  "group": "other",
+  "group": "storage",
   "donorKey": "a+ mini storage kendall"
  },
  {
@@ -654,7 +654,7 @@ window.DONATIONS = [
   "name": "A+ Mini Storage West Kendall",
   "city": "Miami",
   "industry": "Storage",
-  "group": "other",
+  "group": "storage",
   "donorKey": "a+ mini storage west kendall"
  },
  {
@@ -672,7 +672,7 @@ window.DONATIONS = [
   "name": "A+ Mini Storage Business Center",
   "city": "Miami",
   "industry": "Storage",
-  "group": "other",
+  "group": "storage",
   "donorKey": "a+ mini storage business center"
  },
  {
@@ -852,7 +852,7 @@ window.DONATIONS = [
   "name": "Alex Solovey",
   "city": "Englewood Cliffs",
   "industry": "Nursing homes",
-  "group": "other",
+  "group": "health",
   "donorKey": "alex solovey"
  },
  {
@@ -861,7 +861,7 @@ window.DONATIONS = [
   "name": "Space Invaders, LLC (Factory Town operators)",
   "city": "Miami",
   "industry": "Hospitality",
-  "group": "other",
+  "group": "hosp",
   "donorKey": "space invaders llc (factory town operators)"
  },
  {
@@ -915,7 +915,7 @@ window.DONATIONS = [
   "name": "Christopher Torto",
   "city": "Miami Beach",
   "industry": "Data centers",
-  "group": "other",
+  "group": "dc",
   "donorKey": "christopher torto"
  },
  {
@@ -924,7 +924,7 @@ window.DONATIONS = [
   "name": "Florida East Coast Railway, LLC",
   "city": "Jacksonville",
   "industry": "Transportation",
-  "group": "other",
+  "group": "transport",
   "donorKey": "florida east coast railway llc"
  },
  {
@@ -996,7 +996,7 @@ window.DONATIONS = [
   "name": "Miccosukee Tribe",
   "city": "Miccosukee Tribe",
   "industry": "Native American tribe",
-  "group": "other",
+  "group": "misc",
   "donorKey": "miccosukee tribe"
  },
  {
@@ -1050,7 +1050,7 @@ window.DONATIONS = [
   "name": "Brightline Trains Florida LLC",
   "city": "Miami",
   "industry": "Transportation",
-  "group": "other",
+  "group": "transport",
   "donorKey": "brightline trains florida llc"
  },
  {
@@ -1110,11 +1110,11 @@ window.DONATIONS = [
  {
   "date": "2026-07-17",
   "amount": 5000.0,
-  "name": "Norwegian Wood Acquisitions LL",
+  "name": "Norwegian Wood Acquisitions LLC",
   "city": "Miami",
   "industry": "Real estate investment",
   "group": "re",
-  "donorKey": "norwegian wood acquisitions ll"
+  "donorKey": "norwegian wood acquisitions llc"
  },
  {
   "date": "2026-07-17",

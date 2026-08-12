@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Vicki Lopez Campaign Donations | The Real Deal</title>
-    <meta name="description" content="Every contribution to Vicki Lopez's Common Sense Government political committee, January–July 2026." />
+    <meta name="description" content="Real estate and real estate-adjacent contributions to Vicki Lopez's Common Sense Government political committee." />
 
     <!-- Pre-paint boot snippet (trd_graphics core/boot-snippet.html). MUST stay inline and first. -->
     <script>
@@ -60,20 +60,6 @@
       }
       .dek { font-size: 16px; line-height: 1.55; color: var(--trd-muted); margin: 0 0 26px; max-width: 640px; }
 
-      .kpis {
-        display: grid; grid-template-columns: repeat(3, 1fr);
-        gap: 14px; margin-bottom: 34px;
-      }
-      @media (max-width: 640px) { .kpis { grid-template-columns: 1fr; } }
-      .kpi {
-        background: var(--trd-bg-soft); border: 1px solid var(--trd-border);
-        border-radius: 10px; padding: 14px 16px;
-      }
-      .kpi .v { font-size: 30px; font-weight: 700; line-height: 1.1; }
-      .kpi.lead { grid-column: 1 / -1; }
-      .kpi.lead .v { font-size: 48px; }
-      .kpi .l { font-size: 12.5px; color: var(--trd-muted); margin-top: 5px; line-height: 1.35; }
-
       /* ---- Sections ---- */
       .sec { margin: 0 0 36px; }
       .sec-title {
@@ -82,11 +68,7 @@
       }
       .sec-sub { font-size: 13.5px; color: var(--trd-muted); margin: 0 0 16px; }
 
-      /* ---- Share bar ---- */
-      .share-bar { display: flex; gap: 2px; height: 22px; border-radius: 5px; overflow: hidden; }
-      .share-bar .seg { height: 100%; cursor: default; }
-      .share-bar .seg:first-child { border-radius: 4px 0 0 4px; }
-      .share-bar .seg:last-child { border-radius: 0 4px 4px 0; }
+      /* ---- Legend (shared by donor section) ---- */
       .legend { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 12px; }
       .legend .item { display: flex; align-items: baseline; gap: 8px; font-size: 13px; }
       .legend .swatch { width: 11px; height: 11px; border-radius: 3px; flex: none; align-self: center; }
@@ -180,20 +162,13 @@
     <main class="page" id="app">
       <section class="sec">
         <p class="kicker">Campaign finance</p>
-        <h1 class="headline">The money behind Vicki Lopez&rsquo;s Common Sense Government</h1>
+        <h1 class="headline">The real estate money behind Vicki Lopez&rsquo;s Common Sense Government PAC</h1>
         <p class="dek">
-          From late January through July, the political committee collected 134 contributions —
-          and more than eight in every 10 dollars came from real estate firms, contractors and
-          the land-use attorneys who represent them.
+          The political action committee collected 134 contributions from real estate
+          professionals, companies and related industries in the first seven months of
+          this year. More than 70% of the money came from real estate firms, contractors
+          and the land-use attorneys who represent them.
         </p>
-        <div class="kpis" id="kpis"></div>
-      </section>
-
-      <section class="sec">
-        <h2 class="sec-title">Where the money comes from</h2>
-        <p class="sec-sub">Share of total dollars by contributor industry</p>
-        <div class="share-bar" id="shareBar" role="img" aria-label="Stacked bar of donation dollars by industry group"></div>
-        <div class="legend" id="shareLegend"></div>
       </section>
 
       <section class="sec">
@@ -211,7 +186,7 @@
       </section>
 
       <section class="sec">
-        <h2 class="sec-title" id="tblTitle">All contributions</h2>
+        <h2 class="sec-title" id="tblTitle">The full list</h2>
         <p class="sec-sub">Sorted largest first</p>
         <div class="tbl-wrap">
           <table class="donations" id="tbl">
@@ -228,7 +203,7 @@
         </nav>
       </section>
 
-      <p class="foot">Source: Florida Division of Elections &middot; The Real Deal</p>
+      <p class="foot">Source: Florida Division of Elections</p>
     </main>
 
     <div class="tip" id="tip" role="status"></div>
@@ -239,11 +214,20 @@
       (function () {
         "use strict";
         var D = window.DONATIONS || [];
+        // Lane order = display order. The three colored groups lead; the
+        // broken-out smaller industries follow (largest dollars first), all in
+        // the neutral gray — the lane label, not color, carries their identity.
         var GROUPS = [
           { key: "re", name: "Real estate", cssVar: "--viz-re" },
           { key: "build", name: "Construction & design", cssVar: "--viz-build" },
           { key: "law", name: "Attorneys & law firms", cssVar: "--viz-law" },
-          { key: "other", name: "Other", cssVar: "--viz-other" },
+          { key: "dc", name: "Data centers", cssVar: "--viz-other" },
+          { key: "energy", name: "Energy", cssVar: "--viz-other" },
+          { key: "hosp", name: "Hospitality & entertainment", cssVar: "--viz-other" },
+          { key: "health", name: "Health care & senior housing", cssVar: "--viz-other" },
+          { key: "storage", name: "Storage", cssVar: "--viz-other" },
+          { key: "misc", name: "Other", cssVar: "--viz-other" },
+          { key: "transport", name: "Transportation", cssVar: "--viz-other" },
         ];
         // AP style: Jan.–Feb. abbreviated, March–July spelled out.
         var MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug."];
@@ -276,7 +260,6 @@
           return (Date.UTC(+p[0], +p[1] - 1, +p[2]) - Date.UTC(2026, 0, 1)) / 86400000;
         }
 
-        var TOTAL = D.reduce(function (s, d) { return s + d.amount; }, 0);
         var BY_GROUP = {};
         D.forEach(function (d) { BY_GROUP[d.group] = (BY_GROUP[d.group] || 0) + d.amount; });
 
@@ -314,82 +297,6 @@
           ];
         }
 
-        /* ---------- KPIs (computed from the data — no hardcoded stats) ---------- */
-        function monthDay(iso) {
-          var p = iso.split("-");
-          return MONTHS[+p[1] - 1] + " " + (+p[2]);
-        }
-        function renderKpis() {
-          var linked = (BY_GROUP.re + BY_GROUP.build + BY_GROUP.law) / TOTAL;
-          var days = {};
-          D.forEach(function (d) { days[d.date] = (days[d.date] || 0) + d.amount; });
-          var bigDate = null, bigVal = 0;
-          Object.keys(days).forEach(function (k) {
-            if (days[k] > bigVal) { bigVal = days[k]; bigDate = k; }
-          });
-          var amounts = D.map(function (d) { return d.amount; });
-          var minAmt = Math.min.apply(null, amounts), maxAmt = Math.max.apply(null, amounts);
-          // D arrives sorted by date, so first/last bound the range
-          var range = "raised " + monthDay(D[0].date) + " – " + monthDay(D[D.length - 1].date);
-          var host = document.getElementById("kpis");
-          host.innerHTML = "";
-          [
-            [money(Math.round(TOTAL)), range, true],
-            [String(D.length), "contributions, " + money(minAmt) + " to " + money(Math.round(maxAmt)), false],
-            [Math.round(linked * 100) + "%", "of dollars from real estate, construction and law", false],
-            [money(Math.round(bigVal)), "collected on the biggest day, " + monthDay(bigDate), false],
-          ].forEach(function (k) {
-            var el = document.createElement("div");
-            el.className = "kpi" + (k[2] ? " lead" : "");
-            var v = document.createElement("div"); v.className = "v"; v.textContent = k[0];
-            var l = document.createElement("div"); l.className = "l"; l.textContent = k[1];
-            el.appendChild(v); el.appendChild(l);
-            host.appendChild(el);
-          });
-        }
-
-        /* ---------- share bar ---------- */
-        function renderShare() {
-          var bar = document.getElementById("shareBar");
-          var leg = document.getElementById("shareLegend");
-          bar.innerHTML = ""; leg.innerHTML = "";
-          GROUPS.forEach(function (g) {
-            var v = BY_GROUP[g.key] || 0;
-            var seg = document.createElement("div");
-            seg.className = "seg";
-            seg.style.width = (v / TOTAL) * 100 + "%";
-            seg.style.background = color(g.key);
-            seg.setAttribute("tabindex", "0");
-            seg.setAttribute("aria-label", g.name + ": " + money(v) + ", " + Math.round((v / TOTAL) * 100) + " percent");
-            function tipRows() {
-              return [
-                ["t-amount", money(v)],
-                ["t-name", g.name],
-                ["t-meta", Math.round((v / TOTAL) * 100) + "% of all dollars"],
-              ];
-            }
-            seg.addEventListener("pointermove", function (ev) { showTip(tipRows()); moveTip(ev); });
-            seg.addEventListener("pointerleave", hideTip);
-            seg.addEventListener("focus", function () {
-              showTip(tipRows());
-              var r = seg.getBoundingClientRect();
-              tip.style.left = r.left + window.scrollX + "px";
-              tip.style.top = r.bottom + window.scrollY + 8 + "px";
-            });
-            seg.addEventListener("blur", hideTip);
-            bar.appendChild(seg);
-
-            var item = document.createElement("div");
-            item.className = "item";
-            var sw = document.createElement("span"); sw.className = "swatch"; sw.style.background = color(g.key);
-            var nm = document.createElement("span"); nm.className = "nm"; nm.textContent = g.name;
-            var val = document.createElement("span"); val.className = "val";
-            val.textContent = money(Math.round(v)) + " · " + Math.round((v / TOTAL) * 100) + "%";
-            item.appendChild(sw); item.appendChild(nm); item.appendChild(val);
-            leg.appendChild(item);
-          });
-        }
-
         /* ---------- beeswarm timeline ---------- */
         var R_MIN = 2.5, R_MAX = 15;
         function radius(a) {
@@ -406,7 +313,9 @@
           function X(iso) { return mL + ((dayOfYear(iso) - x0) / (x1 - x0)) * (width - mL - mR); }
 
           // pack each lane: biggest first, greedy nearest-to-centerline placement
-          var lanes = GROUPS.map(function (g) {
+          var lanes = GROUPS.filter(function (g) {
+            return D.some(function (d) { return d.group === g.key; });
+          }).map(function (g) {
             var dots = D.filter(function (d) { return d.group === g.key; })
               .slice().sort(function (a, b) { return b.amount - a.amount; });
             var placed = [];
@@ -448,7 +357,7 @@
           var svg = document.createElementNS(NS, "svg");
           svg.setAttribute("viewBox", "0 0 " + width + " " + height);
           svg.setAttribute("role", "img");
-          svg.setAttribute("aria-label", "Timeline of all 120 contributions by industry group. Full details in the table below.");
+          svg.setAttribute("aria-label", "Timeline of all " + D.length + " contributions by industry. Full details in the table below.");
 
           // month gridlines + labels
           for (var m = 1; m <= 7; m++) {
@@ -489,7 +398,7 @@
             t.textContent = ln.g.name + " ";
             var tt = document.createElementNS(NS, "tspan");
             tt.setAttribute("class", "lane-total");
-            tt.textContent = " " + money(Math.round(BY_GROUP[ln.g.key] || 0)) + " · " + ln.placed.length + " checks";
+            tt.textContent = " " + money(Math.round(BY_GROUP[ln.g.key] || 0)) + " · " + ln.placed.length + (ln.placed.length === 1 ? " check" : " checks");
             t.appendChild(tt);
             svg.appendChild(t);
 
@@ -599,7 +508,6 @@
         var tablePage = 0;
         var PAGE_SIZE = 15;
         function renderTable() {
-          document.getElementById("tblTitle").textContent = "All " + D.length + " contributions";
           var body = document.getElementById("tblBody");
           body.innerHTML = "";
           var rows = D.slice().sort(function (a, b) { return b.amount - a.amount || (a.date < b.date ? -1 : 1); });
@@ -643,8 +551,6 @@
 
         /* ---------- render all ---------- */
         function renderAll() {
-          renderKpis();
-          renderShare();
           renderSwarm();
           renderDonors();
           renderTable();
