@@ -61,9 +61,10 @@
       .dek { font-size: 16px; line-height: 1.55; color: var(--trd-muted); margin: 0 0 26px; max-width: 640px; }
 
       .kpis {
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        display: grid; grid-template-columns: repeat(3, 1fr);
         gap: 14px; margin-bottom: 34px;
       }
+      @media (max-width: 640px) { .kpis { grid-template-columns: 1fr; } }
       .kpi {
         background: var(--trd-bg-soft); border: 1px solid var(--trd-border);
         border-radius: 10px; padding: 14px 16px;
@@ -178,7 +179,7 @@
         <p class="kicker">Campaign finance</p>
         <h1 class="headline">The money behind Vicki Lopez&rsquo;s Common Sense Government</h1>
         <p class="dek">
-          From late January through July, the political committee collected 120 contributions —
+          From late January through July, the political committee collected 134 contributions —
           and more than eight in every 10 dollars came from real estate firms, contractors and
           the land-use attorneys who represent them.
         </p>
@@ -207,7 +208,7 @@
       </section>
 
       <section class="sec">
-        <h2 class="sec-title">All 120 contributions</h2>
+        <h2 class="sec-title" id="tblTitle">All contributions</h2>
         <p class="sec-sub">Sorted largest first</p>
         <div class="tbl-wrap">
           <table class="donations" id="tbl">
@@ -220,7 +221,7 @@
         <button class="show-all" id="showAll" type="button"></button>
       </section>
 
-      <p class="foot">Source: Common Sense Government contribution filings, Jan. 21&ndash;Jul. 30, 2026 &middot; The Real Deal</p>
+      <p class="foot">Source: Common Sense Government contribution filings, Jan. 21&ndash;July 30, 2026 &middot; The Real Deal</p>
     </main>
 
     <div class="tip" id="tip" role="status"></div>
@@ -306,17 +307,30 @@
           ];
         }
 
-        /* ---------- KPIs ---------- */
+        /* ---------- KPIs (computed from the data — no hardcoded stats) ---------- */
+        function monthDay(iso) {
+          var p = iso.split("-");
+          return MONTHS[+p[1] - 1] + " " + (+p[2]);
+        }
         function renderKpis() {
-          var reShare = BY_GROUP.re / TOTAL;
           var linked = (BY_GROUP.re + BY_GROUP.build + BY_GROUP.law) / TOTAL;
+          var days = {};
+          D.forEach(function (d) { days[d.date] = (days[d.date] || 0) + d.amount; });
+          var bigDate = null, bigVal = 0;
+          Object.keys(days).forEach(function (k) {
+            if (days[k] > bigVal) { bigVal = days[k]; bigDate = k; }
+          });
+          var amounts = D.map(function (d) { return d.amount; });
+          var minAmt = Math.min.apply(null, amounts), maxAmt = Math.max.apply(null, amounts);
+          // D arrives sorted by date, so first/last bound the range
+          var range = "raised " + monthDay(D[0].date) + " – " + monthDay(D[D.length - 1].date) + ", " + D[0].date.slice(0, 4);
           var host = document.getElementById("kpis");
           host.innerHTML = "";
           [
-            ["$625,386", "raised Jan. 21 – Jul. 30, 2026", true],
-            ["120", "contributions, $200 to $25,000", false],
+            [money(Math.round(TOTAL)), range, true],
+            [String(D.length), "contributions, " + money(minAmt) + " to " + money(Math.round(maxAmt)), false],
             [Math.round(linked * 100) + "%", "of dollars from real estate, construction and law", false],
-            ["$82,000", "collected on the biggest day, March 30", false],
+            [money(Math.round(bigVal)), "collected on the biggest day, " + monthDay(bigDate), false],
           ].forEach(function (k) {
             var el = document.createElement("div");
             el.className = "kpi" + (k[2] ? " lead" : "");
@@ -578,6 +592,7 @@
         var tableExpanded = false;
         var COLLAPSED_ROWS = 15;
         function renderTable() {
+          document.getElementById("tblTitle").textContent = "All " + D.length + " contributions";
           var body = document.getElementById("tblBody");
           body.innerHTML = "";
           var rows = D.slice().sort(function (a, b) { return b.amount - a.amount || (a.date < b.date ? -1 : 1); });

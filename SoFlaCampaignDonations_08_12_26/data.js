@@ -83,6 +83,15 @@ window.DONATIONS = [
  },
  {
   "date": "2026-02-05",
+  "amount": 5000.0,
+  "name": "Weiss Serota Helfman Cole & Bierman",
+  "city": "Coral Gables",
+  "industry": "Law firm",
+  "group": "law",
+  "donorKey": "weiss serota helfman cole & bierman"
+ },
+ {
+  "date": "2026-02-05",
   "amount": 1000.0,
   "name": "Abreu Homes Inc.",
   "city": "Miami Lakes",
@@ -111,11 +120,11 @@ window.DONATIONS = [
  {
   "date": "2026-02-09",
   "amount": 7500.0,
-  "name": "3101 Grove Trustree, LLC (Allen Morris)",
+  "name": "3101 Grove Trustee, LLC (Allen Morris)",
   "city": "Coral Gables",
   "industry": "Trustee/holding company",
   "group": "re",
-  "donorKey": "3101 grove trustree llc (allen morris)"
+  "donorKey": "3101 grove trustee llc (allen morris)"
  },
  {
   "date": "2026-02-09",
@@ -125,6 +134,15 @@ window.DONATIONS = [
   "industry": "Real estate development",
   "group": "re",
   "donorKey": "rudg llc (related group)"
+ },
+ {
+  "date": "2026-02-09",
+  "amount": 6250.0,
+  "name": "Related Urban Construction LLC",
+  "city": "Miami",
+  "industry": "Construction company",
+  "group": "build",
+  "donorKey": "related urban construction llc"
  },
  {
   "date": "2026-02-09",
@@ -152,6 +170,15 @@ window.DONATIONS = [
   "industry": "Construction company",
   "group": "build",
   "donorKey": "coastland construction inc"
+ },
+ {
+  "date": "2026-02-09",
+  "amount": 5000.0,
+  "name": "Coastland Construction Management",
+  "city": "Miami",
+  "industry": "Construction company",
+  "group": "build",
+  "donorKey": "coastland construction management"
  },
  {
   "date": "2026-02-09",
@@ -219,11 +246,11 @@ window.DONATIONS = [
  {
   "date": "2026-02-26",
   "amount": 5000.0,
-  "name": "Bailey Raposa",
+  "name": "Bailey Raposa (Terra)",
   "city": "Coconut Grove",
   "industry": "Real estate development",
   "group": "re",
-  "donorKey": "bailey raposa"
+  "donorKey": "bailey raposa (terra)"
  },
  {
   "date": "2026-03-09",
@@ -289,6 +316,15 @@ window.DONATIONS = [
   "donorKey": "alan annex (greenberg traurig)"
  },
  {
+  "date": "2026-03-28",
+  "amount": 1000.0,
+  "name": "Univista Properties Management",
+  "city": "Miami",
+  "industry": "Asset management",
+  "group": "re",
+  "donorKey": "univista properties management"
+ },
+ {
   "date": "2026-03-30",
   "amount": 25000.0,
   "name": "Michael D. Wohl (Coral Rock Development)",
@@ -317,6 +353,15 @@ window.DONATIONS = [
  },
  {
   "date": "2026-03-30",
+  "amount": 10000.0,
+  "name": "Fisher Island Community Association",
+  "city": "Miami Beach",
+  "industry": "Property management",
+  "group": "re",
+  "donorKey": "fisher island community association"
+ },
+ {
+  "date": "2026-03-30",
   "amount": 5000.0,
   "name": "Independent Living Systems",
   "city": "Miami",
@@ -332,6 +377,24 @@ window.DONATIONS = [
   "industry": "Law firm",
   "group": "law",
   "donorKey": "the ferraro law firm p a"
+ },
+ {
+  "date": "2026-03-30",
+  "amount": 5000.0,
+  "name": "Damian L. Gallo & Associates",
+  "city": "Pinecrest",
+  "industry": "Law firm",
+  "group": "law",
+  "donorKey": "damian l gallo & associates"
+ },
+ {
+  "date": "2026-03-30",
+  "amount": 5000.0,
+  "name": "Bilzin Sumberg Baena Price",
+  "city": "Miami",
+  "industry": "Law firm",
+  "group": "law",
+  "donorKey": "bilzin sumberg baena price"
  },
  {
   "date": "2026-03-30",
@@ -460,6 +523,15 @@ window.DONATIONS = [
   "donorKey": "south dade lighting inc"
  },
  {
+  "date": "2026-03-31",
+  "amount": 2500.0,
+  "name": "Therma Seal Insulation Systems",
+  "city": "West Palm Beach",
+  "industry": "Insulator",
+  "group": "build",
+  "donorKey": "therma seal insulation systems"
+ },
+ {
   "date": "2026-04-08",
   "amount": 1000.0,
   "name": "Thirteen Holdings LLC",
@@ -498,7 +570,7 @@ window.DONATIONS = [
  {
   "date": "2026-04-15",
   "amount": 10000.0,
-  "name": "Nextera Energy Capital Holding (FPL Parent Company)",
+  "name": "Nextera Energy Capital Holding (FPL parent company)",
   "city": "Juno Beach",
   "industry": "Energy company",
   "group": "other",
@@ -596,12 +668,30 @@ window.DONATIONS = [
  },
  {
   "date": "2026-04-22",
+  "amount": 2500.0,
+  "name": "A+ Mini Storage Business Center",
+  "city": "Miami",
+  "industry": "Storage",
+  "group": "other",
+  "donorKey": "a+ mini storage business center"
+ },
+ {
+  "date": "2026-04-22",
   "amount": 1350.0,
   "name": "River Rapids Partners II, LLC (Rovr)",
   "city": "Coral Gables",
   "industry": "Real estate investment",
   "group": "re",
   "donorKey": "river rapids partners ii llc (rovr)"
+ },
+ {
+  "date": "2026-04-22",
+  "amount": 1350.0,
+  "name": "Delaware Parkway Partners, LLC",
+  "city": "Coral Gables",
+  "industry": "Real estate investment",
+  "group": "re",
+  "donorKey": "delaware parkway partners llc"
  },
  {
   "date": "2026-04-22",
@@ -686,6 +776,15 @@ window.DONATIONS = [
  },
  {
   "date": "2026-04-22",
+  "amount": 1000.0,
+  "name": "Global Investments Realty Inc.",
+  "city": "Miami",
+  "industry": "Real estate investment",
+  "group": "re",
+  "donorKey": "global investments realty inc"
+ },
+ {
+  "date": "2026-04-22",
   "amount": 500.0,
   "name": "Nicole S. Wolfe (Greenberg Traurig)",
   "city": "Miami",
@@ -701,6 +800,15 @@ window.DONATIONS = [
   "industry": "Attorney",
   "group": "law",
   "donorKey": "alfredo j gonzalez (greenberg traurig)"
+ },
+ {
+  "date": "2026-04-24",
+  "amount": 10000.0,
+  "name": "New Arena Square North & South",
+  "city": "Miami",
+  "industry": "Apartment complex",
+  "group": "re",
+  "donorKey": "new arena square north & south"
  },
  {
   "date": "2026-04-27",
@@ -775,6 +883,15 @@ window.DONATIONS = [
   "donorKey": "csp mf communities i llc (terra)"
  },
  {
+  "date": "2026-04-30",
+  "amount": 1500.0,
+  "name": "Lakeview Hospitality Investments (Terra)",
+  "city": "Coconut Grove",
+  "industry": "Real estate investment",
+  "group": "re",
+  "donorKey": "lakeview hospitality investments (terra)"
+ },
+ {
   "date": "2026-05-04",
   "amount": 10000.0,
   "name": "TMC Naranja 66 Holdings LLC",
@@ -800,6 +917,15 @@ window.DONATIONS = [
   "industry": "Data centers",
   "group": "other",
   "donorKey": "christopher torto"
+ },
+ {
+  "date": "2026-05-27",
+  "amount": 5000.0,
+  "name": "Florida East Coast Railway, LLC",
+  "city": "Jacksonville",
+  "industry": "Transportation",
+  "group": "other",
+  "donorKey": "florida east coast railway llc"
  },
  {
   "date": "2026-05-28",
