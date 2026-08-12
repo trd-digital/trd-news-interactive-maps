@@ -145,12 +145,15 @@
       table.donations td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
       table.donations th.num { text-align: right; }
       .grp-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; }
-      .show-all {
-        margin-top: 14px; background: transparent; color: var(--trd-text);
+      .pager { display: flex; align-items: center; gap: 14px; margin-top: 14px; }
+      .pager button {
+        background: transparent; color: var(--trd-text);
         border: 1px solid var(--trd-border); border-radius: 999px; cursor: pointer;
         padding: 8px 18px; font-size: 13px; font-weight: 700; font-family: var(--trd-font-sans);
       }
-      .show-all:hover { background: var(--trd-bg-soft); }
+      .pager button:hover:not(:disabled) { background: var(--trd-bg-soft); }
+      .pager button:disabled { opacity: 0.4; cursor: default; }
+      .pager .status { font-size: 12.5px; color: var(--trd-muted); font-variant-numeric: tabular-nums; }
 
       .theme-toggle {
         margin-left: auto; background: transparent; color: var(--trd-text);
@@ -218,10 +221,14 @@
             <tbody id="tblBody"></tbody>
           </table>
         </div>
-        <button class="show-all" id="showAll" type="button"></button>
+        <nav class="pager" aria-label="Contributions table pages">
+          <button id="pgPrev" type="button">&lsaquo; Prev</button>
+          <span class="status" id="pgStatus"></span>
+          <button id="pgNext" type="button">Next &rsaquo;</button>
+        </nav>
       </section>
 
-      <p class="foot">Source: Common Sense Government contribution filings, Jan. 21&ndash;July 30, 2026 &middot; The Real Deal</p>
+      <p class="foot">Source: Florida Division of Elections &middot; The Real Deal</p>
     </main>
 
     <div class="tip" id="tip" role="status"></div>
@@ -262,7 +269,7 @@
         }
         function dateLabel(iso) {
           var p = iso.split("-");
-          return MONTHS[+p[1] - 1] + " " + (+p[2]) + ", " + p[0];
+          return MONTHS[+p[1] - 1] + " " + (+p[2]);
         }
         function dayOfYear(iso) {
           var p = iso.split("-");
@@ -323,7 +330,7 @@
           var amounts = D.map(function (d) { return d.amount; });
           var minAmt = Math.min.apply(null, amounts), maxAmt = Math.max.apply(null, amounts);
           // D arrives sorted by date, so first/last bound the range
-          var range = "raised " + monthDay(D[0].date) + " – " + monthDay(D[D.length - 1].date) + ", " + D[0].date.slice(0, 4);
+          var range = "raised " + monthDay(D[0].date) + " – " + monthDay(D[D.length - 1].date);
           var host = document.getElementById("kpis");
           host.innerHTML = "";
           [
@@ -459,7 +466,7 @@
             lbl.setAttribute("x", m === 1 ? mL : X("2026-0" + m + "-15"));
             lbl.setAttribute("y", plotBottom + 18);
             lbl.setAttribute("text-anchor", m === 1 ? "start" : "middle");
-            lbl.textContent = MONTHS[m - 1] + (m === 1 ? " 2026" : "");
+            lbl.textContent = MONTHS[m - 1];
             svg.appendChild(lbl);
           }
           var base = document.createElementNS(NS, "line");
@@ -588,15 +595,18 @@
           });
         }
 
-        /* ---------- table ---------- */
-        var tableExpanded = false;
-        var COLLAPSED_ROWS = 15;
+        /* ---------- table (paginated) ---------- */
+        var tablePage = 0;
+        var PAGE_SIZE = 15;
         function renderTable() {
           document.getElementById("tblTitle").textContent = "All " + D.length + " contributions";
           var body = document.getElementById("tblBody");
           body.innerHTML = "";
           var rows = D.slice().sort(function (a, b) { return b.amount - a.amount || (a.date < b.date ? -1 : 1); });
-          var shown = tableExpanded ? rows : rows.slice(0, COLLAPSED_ROWS);
+          var pages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+          tablePage = Math.max(0, Math.min(tablePage, pages - 1));
+          var start = tablePage * PAGE_SIZE;
+          var shown = rows.slice(start, start + PAGE_SIZE);
           shown.forEach(function (d) {
             var tr = document.createElement("tr");
             function td(txt, cls) {
@@ -618,16 +628,18 @@
             tr.appendChild(td(money(d.amount), "num"));
             body.appendChild(tr);
           });
-          var btn = document.getElementById("showAll");
-          btn.textContent = tableExpanded
-            ? "Show fewer"
-            : "Show all " + D.length + " contributions";
+          document.getElementById("pgStatus").textContent =
+            (start + 1) + "–" + (start + shown.length) + " of " + rows.length;
+          document.getElementById("pgPrev").disabled = tablePage === 0;
+          document.getElementById("pgNext").disabled = tablePage >= pages - 1;
         }
-        document.getElementById("showAll").addEventListener("click", function () {
-          tableExpanded = !tableExpanded;
+        function turnPage(delta) {
+          tablePage += delta;
           renderTable();
           if (controller) controller.requestResize();
-        });
+        }
+        document.getElementById("pgPrev").addEventListener("click", function () { turnPage(-1); });
+        document.getElementById("pgNext").addEventListener("click", function () { turnPage(1); });
 
         /* ---------- render all ---------- */
         function renderAll() {
