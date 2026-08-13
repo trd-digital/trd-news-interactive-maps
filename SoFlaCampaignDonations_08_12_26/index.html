@@ -78,6 +78,19 @@
       /* ---- Beeswarm ---- */
       .swarm-wrap { position: relative; }
       .swarm-wrap svg { display: block; width: 100%; height: auto; }
+      /* Month axis pinned to the top of the chart: sticks to the viewport
+         while scrolling through the lanes (standalone/preview); inside the
+         auto-sized article iframe nothing scrolls internally, so it simply
+         renders as a static header row above the first lane. */
+      .axis-sticky {
+        position: sticky; top: 0; z-index: 5; height: 24px;
+        background: var(--trd-bg); border-bottom: 1px solid var(--viz-axis);
+      }
+      .axis-sticky span {
+        position: absolute; top: 5px; font-size: 11.5px; color: var(--trd-muted);
+        transform: translateX(-50%); white-space: nowrap;
+      }
+      .axis-sticky span.first { transform: none; }
       .lane-label { font-size: 13px; font-weight: 700; fill: var(--trd-text); }
       .lane-total { font-size: 12px; font-weight: 400; fill: var(--trd-muted); }
       .axis-label { font-size: 11.5px; fill: var(--trd-muted); }
@@ -352,6 +365,23 @@
           });
           var plotBottom = height;
           height += axisH;
+
+          // sticky month axis strip above the lanes
+          var axisTop = document.createElement("div");
+          axisTop.className = "axis-sticky";
+          axisTop.setAttribute("aria-hidden", "true");
+          for (var am = 1; am <= 7; am++) {
+            var sp = document.createElement("span");
+            sp.textContent = MONTHS[am - 1];
+            if (am === 1) {
+              sp.className = "first";
+              sp.style.left = mL + "px";
+            } else {
+              sp.style.left = X("2026-0" + am + "-15") + "px";
+            }
+            axisTop.appendChild(sp);
+          }
+          wrap.appendChild(axisTop);
 
           var NS = "http://www.w3.org/2000/svg";
           var svg = document.createElementNS(NS, "svg");
