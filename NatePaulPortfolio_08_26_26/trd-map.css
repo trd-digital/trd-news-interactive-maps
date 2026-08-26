@@ -1,0 +1,85 @@
+/*!
+ * trd-map.css — map-module styling that themes Mapbox chrome with the core's
+ * design tokens (trd-embed.css must load first). Graphic-specific pins/legend
+ * belong in your project stylesheet, not here.
+ */
+
+/* The map fills whatever container it's given. Pair the container with the
+   core's .trd-embed-fill so it adopts the fixed embed height. */
+.trd-map {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.trd-map .mapboxgl-map,
+.trd-map #map,
+.trd-map > .mapboxgl-canvas-container {
+  position: absolute;
+  inset: 0;
+}
+
+/* Nav / attribution controls themed for dark. */
+.mapboxgl-ctrl-group {
+  background: var(--trd-panel);
+  border: 1px solid var(--trd-border);
+}
+:root[data-theme="dark"] .mapboxgl-ctrl-group button {
+  filter: invert(1);
+}
+:root[data-theme="dark"] .mapboxgl-ctrl-attrib {
+  background: rgba(27, 32, 43, 0.75);
+}
+:root[data-theme="dark"] .mapboxgl-ctrl-attrib a {
+  color: var(--trd-muted);
+}
+
+/* Popups on brand tokens. */
+.mapboxgl-popup-content {
+  padding: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--trd-panel);
+  color: var(--trd-text);
+  border: 1px solid var(--trd-border);
+  box-shadow: var(--trd-shadow);
+  font-family: var(--trd-font-sans);
+}
+.mapboxgl-popup-close-button {
+  color: var(--trd-text);
+  font-size: 20px;
+  padding: 2px 8px;
+}
+.mapboxgl-popup-tip {
+  border-top-color: var(--trd-panel) !important;
+  border-bottom-color: var(--trd-panel) !important;
+}
+
+/* A reusable popup body layout (optional — use in your setHTML markup). */
+.trd-popup-head {
+  background: var(--trd-brand);
+  color: #fff;
+  padding: 10px 14px;
+  font-family: var(--trd-font-serif);
+  font-weight: 900;
+  font-size: 14px;
+}
+.trd-popup-body {
+  padding: 12px 14px 14px;
+}
+.trd-popup-body h3 {
+  margin: 0 0 4px;
+  font-family: var(--trd-font-serif);
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+.trd-popup-body .trd-popup-addr {
+  font-size: 12px;
+  color: var(--trd-muted);
+  margin-bottom: 8px;
+  line-height: 1.35;
+}
+.trd-popup-body .trd-popup-desc {
+  font-size: 13px;
+  line-height: 1.45;
+}
