@@ -1,12 +1,12 @@
 """Build data.geojson for the Nate Paul Austin portfolio map.
 
-Reads the reporters' sheet (Travis CAD June 2025 assessor export + the
-8/25/26 ownership check + notes), geocodes each situs address with Google Maps
+Reads the reporters' final sheet (Travis CAD parcel export with 2026 appraised
+values + the 8/25/26 ownership check + notes), geocodes each situs address with Google Maps
 via trd_common (cached in geocode_cache.csv) and writes ONE FEATURE PER PARCEL.
 
 What ships (public-record + editorial fields only): address, TCAD prop_id,
-status bucket, appraised values (June 2025 / 2026), current owner, the
-Paul-linked entity that owned it per the June 2025 assessor roll, last deed
+status bucket, 2026 appraised value, current owner, the Paul-linked entity
+that owned it per the June 2025 assessor roll, last deed
 date, and a cleaned note. The raw "status (8.25.26 check)" text and the
 reporters' working notes (voicemail follow-ups, "(link)", "No deed history?")
 are NOT exported — see NOTE_OVERRIDES / STATUS_OVERRIDES below.
@@ -26,7 +26,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 sys.path.insert(0, str(REPO))
 
-CSV = HERE / "Nate Paul Portfolio - Open Corporates - June 2025 Assessor.csv"
+CSV = HERE / "Nate Paul Portfolio - Open Corporates - Final List.csv"
 OUT = HERE / "data.geojson"
 CACHE = HERE / "geocode_cache.csv"
 
@@ -50,10 +50,7 @@ STATUS_OVERRIDES = {
 NOTE_OVERRIDES = {
     "189103": "Bridge lender Equity Secured Investments bought it at auction in Dec. 2025 and sold it to the current owner July 1.",
     "176237": "According to ABJ, the property was scheduled for foreclosure auction on Nov. 5, 2025, but the sale was postponed.",
-    "388591": "Paradise Cove Marina on Lake Travis.",
-    "854243": None,   # "No deed history"
-    "826243": None,   # "No deed history"
-    "408130": "The house at 814 Lavaca St. — the mailing address for most of the entities on this map.",
+    "196854": "The Hirshfeld-Moore House. Congress Avenue Holdings bought it out of foreclosure in 2021; Paul bought it back through 814 Lavaca LLC in 2024.",
 }
 
 # Street-name fixes for geocoding + display (assessor abbreviations).
@@ -178,7 +175,6 @@ def main():
         if not (isinstance(lat, float) and lat == lat):
             print("  !! geocode failed:", addr, status)
             continue
-        v25 = money(row["appraised_val_June 2025"])
         v26 = money(row["appraised value 2026"])
         note = NOTE_OVERRIDES[pid] if pid in NOTE_OVERRIDES else clean(row["notes"])
         features.append({
@@ -188,7 +184,6 @@ def main():
                 "address": display_address(row),
                 "zip": clean(row["situs_zip"]),
                 "status": bucket_status(row["status (8.25.26 check)"], pid),
-                "val_2025": v25,
                 "val_2026": v26,
                 "owner": clean(row["current owner"]),
                 "np_entity": clean(row["py_owner_name"]),
@@ -202,26 +197,26 @@ def main():
         })
     geo.save_cache()
 
-    # Pin radius: sqrt scale on the June 2025 appraisal, 5–22 px at full zoom.
-    vals = [f["properties"]["val_2025"] or 0 for f in features]
+    # Pin radius: sqrt scale on the 2026 appraisal, 5–22 px at full zoom.
+    vals = [f["properties"]["val_2026"] or 0 for f in features]
     vmax = max(vals) or 1
     for f in features:
-        v = f["properties"]["val_2025"] or 0
+        v = f["properties"]["val_2026"] or 0
         f["properties"]["r"] = round(5 + 17 * math.sqrt(v / vmax), 2)
 
     spread(features)
-    features.sort(key=lambda f: -(f["properties"]["val_2025"] or 0))
+    features.sort(key=lambda f: -(f["properties"]["val_2026"] or 0))
 
     out = {"type": "FeatureCollection", "features": features}
     OUT.write_text(json.dumps(out, indent=1) + "\n")
     print("Wrote %d parcels -> %s" % (len(features), OUT.name))
     for s in STATUS_ORDER:
         fs = [f for f in features if f["properties"]["status"] == s]
-        print("  %-30s %2d parcels  $%s" % (s, len(fs), format(sum(f["properties"]["val_2025"] or 0 for f in fs), ",")))
+        print("  %-30s %2d parcels  $%s" % (s, len(fs), format(sum(f["properties"]["val_2026"] or 0 for f in fs), ",")))
     for f in features:
         p = f["properties"]
         print("  %-30s %-32s %s%s [%.5f, %.5f]" % (
-            p["status"], p["address"], format(p["val_2025"] or 0, ","),
+            p["status"], p["address"], format(p["val_2026"] or 0, ","),
             " (approx)" if p["approx"] else (" (spread)" if p["spread"] else ""),
             f["geometry"]["coordinates"][1], f["geometry"]["coordinates"][0]))
 

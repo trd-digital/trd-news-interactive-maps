@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Nate Paul's Austin Portfolio | The Real Deal</title>
-    <meta name="description" content="Thirty Austin-area parcels tied to Nate Paul's World Class entities on the June 2025 Travis County appraisal roll — which were foreclosed, which he bought back, and which he still owns." />
+    <meta name="description" content="Twenty-six Austin-area parcels tied to Nate Paul's World Class entities on the Travis County appraisal roll — which were foreclosed, which he bought back, and which he still owns." />
 
     <!-- Pre-paint boot snippet (core/boot-snippet.html) with this map's key. -->
     <script>
@@ -104,7 +104,6 @@
       .trd-popup-facts { margin: 6px 0; padding: 0; font-size: 12px; line-height: 1.45; }
       .trd-popup-facts div { margin: 2px 0; }
       .trd-popup-facts b { font-weight: 700; }
-      .trd-popup-facts .delta { color: var(--trd-muted); }
       .trd-popup-note { margin: 8px 0 0; padding-top: 6px; border-top: 1px solid var(--trd-border); font-size: 12px; line-height: 1.45; }
       .trd-popup-src { margin-top: 6px; font-size: 10.5px; color: var(--trd-muted); }
     </style>
@@ -130,9 +129,9 @@
         <div class="sub">Click a status to isolate it</div>
         <div id="legendRows"></div>
         <div class="sep"></div>
-        <div class="sub" style="margin-bottom:2px">Sized by June 2025 appraised value</div>
+        <div class="sub" style="margin-bottom:2px">Sized by 2026 appraised value</div>
         <div class="sizes" id="legendSizes"></div>
-        <div class="note">Parcels that shared a mailing address at 814 Lavaca St. — Paul's World Class headquarters — on the June 2025 Travis County appraisal roll. Ownership checked against county records Aug. 25, 2026.</div>
+        <div class="note">Parcels that shared a mailing address at 814 Lavaca St. — Paul's World Class headquarters — on the June 2025 Travis County appraisal roll. Values are 2026 TCAD appraisals; ownership checked against county records Aug. 25, 2026.</div>
       </div>
     </div>
 
@@ -190,9 +189,9 @@
         mapApi.map.setFilter("points", currentFilter());
         var vis = GEO.features.filter(function (f) { return !state.status || f.properties.status === state.status; });
         var total = GEO.features.length;
-        var sum = vis.reduce(function (a, f) { return a + (num(f.properties.val_2025) || 0); }, 0);
+        var sum = vis.reduce(function (a, f) { return a + (num(f.properties.val_2026) || 0); }, 0);
         document.getElementById("count").innerHTML =
-          "<b>" + (vis.length === total ? total : vis.length + " of " + total) + "</b> parcels · <b>" + esc(moneyShort(sum)) + "</b> appraised (June 2025)";
+          "<b>" + (vis.length === total ? total : vis.length + " of " + total) + "</b> parcels · <b>" + esc(moneyShort(sum)) + "</b> appraised (2026)";
         document.getElementById("reset").hidden = !state.status;
         Array.prototype.forEach.call(document.querySelectorAll("#legendRows .row"), function (r) {
           r.classList.toggle("dim", !!state.status && r.getAttribute("data-status") !== state.status);
@@ -206,7 +205,7 @@
         GEO.features.forEach(function (f) {
           var s = f.properties.status;
           counts[s] = (counts[s] || 0) + 1;
-          sums[s] = (sums[s] || 0) + (num(f.properties.val_2025) || 0);
+          sums[s] = (sums[s] || 0) + (num(f.properties.val_2026) || 0);
         });
         var wrap = document.getElementById("legendRows");
         STATUS_ORDER.forEach(function (s) {
@@ -231,7 +230,7 @@
         });
 
         // Size key: same sqrt scale as build_data.py (r = 5 + 17*sqrt(v/vmax)), at the z13 step.
-        var vmax = Math.max.apply(null, GEO.features.map(function (f) { return num(f.properties.val_2025) || 0; }));
+        var vmax = Math.max.apply(null, GEO.features.map(function (f) { return num(f.properties.val_2026) || 0; }));
         var sizes = document.getElementById("legendSizes");
         [1e6, 1e7, vmax].forEach(function (v) {
           var r = (5 + 17 * Math.sqrt(v / vmax)) * 0.8;
@@ -251,22 +250,12 @@
       // ---- popup ------------------------------------------------------------
       function popupHTML(p) {
         var pal = palette();
-        var v25 = num(p.val_2025), v26 = num(p.val_2026);
-        var val26 = "";
-        if (v26 != null) {
-          val26 = money(v26);
-          if (v25) {
-            var pct = (v26 - v25) / v25 * 100;
-            val26 += ' <span class="delta">(' + (Math.abs(pct) < 0.05 ? "unchanged" : (pct > 0 ? "+" : "−") + Math.abs(pct).toFixed(1) + "%") + ")</span>";
-          }
-        }
         var flag = isTrue(p.approx) ? '<span class="trd-popup-flag">Approximate location</span>' : "";
         var h = '<div class="trd-popup-body">' +
           "<h3>" + esc(p.address) + "</h3>" +
           '<div class="trd-popup-tag"><span class="dot" style="background:' + pal[p.status] + '"></span>' + esc(p.status) + flag + "</div>" +
           '<div class="trd-popup-facts">' +
-          fact("Appraised value, June 2025", esc(money(v25))) +
-          fact("Appraised value, 2026", val26) +
+          fact("Appraised value, 2026", esc(money(p.val_2026))) +
           fact("Current owner", esc(p.owner)) +
           (p.np_entity && p.np_entity !== p.owner ? fact("Paul-linked owner, June 2025", esc(p.np_entity)) : "") +
           fact("Last deed", esc(fmtDate(p.deed_date))) +
