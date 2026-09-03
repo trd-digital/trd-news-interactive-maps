@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Nate Paul's Austin Portfolio | The Real Deal</title>
-    <meta name="description" content="Twenty-six Austin-area parcels tied to Nate Paul's World Class entities on the Travis County appraisal roll — which were foreclosed, which he bought back, and which he still owns." />
+    <meta name="description" content="Twenty-six Austin-area parcels tied to Nate Paul's World Class entities on the Travis County appraisal roll — which were sold at foreclosure, which he bought back, and which his entities still own." />
 
     <!-- Pre-paint boot snippet (core/boot-snippet.html) with this map's key. -->
     <script>
@@ -125,13 +125,13 @@
       </div>
 
       <div class="legend" aria-label="Legend">
-        <div class="title">Status as of Aug. 25, 2026</div>
+        <div class="title">Status as of Sept. 1, 2026</div>
         <div class="sub">Click a status to isolate it</div>
         <div id="legendRows"></div>
         <div class="sep"></div>
         <div class="sub" style="margin-bottom:2px">Sized by 2026 appraised value</div>
         <div class="sizes" id="legendSizes"></div>
-        <div class="note">Parcels that shared a mailing address at 814 Lavaca St. — Paul's World Class headquarters — on the June 2025 Travis County appraisal roll. Values are 2026 TCAD appraisals; ownership checked against county records Aug. 25, 2026.</div>
+        <div class="note">Parcels that shared a mailing address at 814 Lavaca St. — Paul's World Class headquarters — on the June 2025 Travis County appraisal roll. Values are 2026 TCAD appraisals; ownership checked against county records Sept. 1, 2026.</div>
       </div>
     </div>
 
@@ -140,11 +140,11 @@
     <script src="trd-map.js"></script>
     <script>
       // Status buckets assigned in build_data.py. Light/dark steps are the
-      // dataviz-skill categorical slots 1–3 (validated on TRD surfaces).
-      var STATUS_ORDER = ["Still owned", "Foreclosed, then bought back", "Foreclosed"];
+      // dataviz-skill categorical slots 1, 3, 2, 7 (validated on TRD surfaces).
+      var STATUS_ORDER = ["Owned by Paul-affiliated entity", "Sold at foreclosure, then bought back", "Sold at foreclosure auction", "Sold"];
       var PALETTES = {
-        light: { "Still owned": "#2a78d6", "Foreclosed, then bought back": "#1baf7a", "Foreclosed": "#eb6834" },
-        dark:  { "Still owned": "#3987e5", "Foreclosed, then bought back": "#199e70", "Foreclosed": "#d95926" },
+        light: { "Owned by Paul-affiliated entity": "#2a78d6", "Sold at foreclosure, then bought back": "#1baf7a", "Sold at foreclosure auction": "#eb6834", "Sold": "#4a3aa7" },
+        dark:  { "Owned by Paul-affiliated entity": "#3987e5", "Sold at foreclosure, then bought back": "#199e70", "Sold at foreclosure auction": "#d95926", "Sold": "#9085e9" },
       };
       // Public pk.* token — URL-restrict it in the Mapbox dashboard.
       var TOKEN = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";

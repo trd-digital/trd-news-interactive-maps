@@ -1,15 +1,15 @@
 """Build data.geojson for the Nate Paul Austin portfolio map.
 
 Reads the reporters' final sheet (Travis CAD parcel export with 2026 appraised
-values + the 8/25/26 ownership check + notes), geocodes each situs address with Google Maps
+values in "Stat" + the 9/1/26 status + "*blurbs for the map*"), geocodes each situs address with Google Maps
 via trd_common (cached in geocode_cache.csv) and writes ONE FEATURE PER PARCEL.
 
 What ships (public-record + editorial fields only): address, TCAD prop_id,
 status bucket, 2026 appraised value, current owner, the Paul-linked entity
-that owned it per the June 2025 assessor roll, last deed
-date, and a cleaned note. The raw "status (8.25.26 check)" text and the
-reporters' working notes (voicemail follow-ups, "(link)", "No deed history?")
-are NOT exported — see NOTE_OVERRIDES / STATUS_OVERRIDES below.
+that owned it per the June 2025 assessor roll, last deed date, and the sheet's
+"*blurbs for the map*" text. The "informal notes (not for map)" column is NOT
+exported. Trailing asterisks on the sheet's status labels (undefined footnote)
+are stripped before bucketing.
 
     /Users/afarence/opt/anaconda3/bin/python build_data.py
 """
@@ -30,28 +30,14 @@ CSV = HERE / "Nate Paul Portfolio - Open Corporates - Final List.csv"
 OUT = HERE / "data.geojson"
 CACHE = HERE / "geocode_cache.csv"
 
-# Status buckets — the map's categorical color. Keyed by the sheet's raw label
-# (lower-cased prefix match, see bucket_status()).
-STATUS_FORECLOSED = "Foreclosed"
-STATUS_BOUGHT_BACK = "Foreclosed, then bought back"
-STATUS_OWNED = "Still owned"
-STATUS_ORDER = [STATUS_OWNED, STATUS_BOUGHT_BACK, STATUS_FORECLOSED]
-
-# Per-parcel bucket overrides for rows whose raw label is a question rather
-# than a status. 189103 (1808 E. Cesar Chavez): sheet says "FORECLOSED (but did
-# NP buy it back????)"; the note says a bridge lender took it at auction and
-# sold it to the current owner, so it maps to Foreclosed until confirmed.
-STATUS_OVERRIDES = {
-    "189103": STATUS_FORECLOSED,
-}
-
-# Cleaned notes for rows whose sheet note is internal (or needs a light edit).
-# None → no note shown. Everything else passes through verbatim.
-NOTE_OVERRIDES = {
-    "189103": "Bridge lender Equity Secured Investments bought it at auction in Dec. 2025 and sold it to the current owner July 1.",
-    "176237": "According to ABJ, the property was scheduled for foreclosure auction on Nov. 5, 2025, but the sale was postponed.",
-    "196854": "The Hirshfeld-Moore House. Congress Avenue Holdings bought it out of foreclosure in 2021; Paul bought it back through 814 Lavaca LLC in 2024.",
-}
+# Status buckets — the map's categorical color. The sheet's 9/1/26 labels
+# (lower-cased, trailing "*" stripped, "company"/"entity" variants merged) map
+# onto these four; see bucket_status().
+STATUS_OWNED = "Owned by Paul-affiliated entity"
+STATUS_BOUGHT_BACK = "Sold at foreclosure, then bought back"
+STATUS_AUCTION = "Sold at foreclosure auction"
+STATUS_SOLD = "Sold"
+STATUS_ORDER = [STATUS_OWNED, STATUS_BOUGHT_BACK, STATUS_AUCTION, STATUS_SOLD]
 
 # Street-name fixes for geocoding + display (assessor abbreviations).
 STREET_FIX = {
@@ -123,15 +109,15 @@ def geocode_address(row):
 
 
 def bucket_status(raw, prop_id):
-    if prop_id in STATUS_OVERRIDES:
-        return STATUS_OVERRIDES[prop_id]
-    r = clean(raw).lower()
-    if r.startswith("still owned"):
+    r = clean(raw).rstrip("*").strip().lower()
+    if r.startswith("currently owned"):
         return STATUS_OWNED
     if "bought it back" in r:
         return STATUS_BOUGHT_BACK
-    if r.startswith("foreclosed"):
-        return STATUS_FORECLOSED
+    if r.startswith("sold at foreclosure"):
+        return STATUS_AUCTION
+    if r == "sold":
+        return STATUS_SOLD
     raise ValueError("unrecognized status %r for prop_id %s" % (raw, prop_id))
 
 
@@ -175,15 +161,15 @@ def main():
         if not (isinstance(lat, float) and lat == lat):
             print("  !! geocode failed:", addr, status)
             continue
-        v26 = money(row["appraised value 2026"])
-        note = NOTE_OVERRIDES[pid] if pid in NOTE_OVERRIDES else clean(row["notes"])
+        v26 = money(row["Stat"])
+        note = clean(row["*blurbs for the map*"])
         features.append({
             "type": "Feature",
             "properties": {
                 "prop_id": pid,
                 "address": display_address(row),
                 "zip": clean(row["situs_zip"]),
-                "status": bucket_status(row["status (8.25.26 check)"], pid),
+                "status": bucket_status(row["status (as of 9/1/26)"], pid),
                 "val_2026": v26,
                 "owner": clean(row["current owner"]),
                 "np_entity": clean(row["py_owner_name"]),
