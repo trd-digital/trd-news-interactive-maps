@@ -76,11 +76,11 @@ const trdList = () => {
           const properties = feature.properties;
           const price = helpers.formatCurrency(
             properties["MaxEstimatedValue"],
-            true
+            true,
           );
           const sqft = TrdFormatters.formatNumber(
             properties["MaxSquareFootage"],
-            true
+            true,
           );
           const date = helpers.formatDate(properties["LatestPermitIssuedDate"]);
 
@@ -113,7 +113,7 @@ const trdList = () => {
       const viewMore = document.createElement("div");
       viewMore.className = "text-center";
       viewMore.innerHTML = `
-        <a href="https://therealdeal.com/data/new-york/2024/nyc-transactions/?utm_source=embed&utm_medium=widget" class="btn btn-primary" target="_parent">
+        <a href="https://therealdeal.com/data/miami/2025/south-florida-construction-pipeline/?utm_source=embed&utm_medium=widget" class="btn btn-primary" target="_parent">
           <div class="me-2 text-uppercase label">View More</div>
         </a>
         `;
@@ -130,7 +130,7 @@ const trdList = () => {
       const height = list.offsetHeight;
       window.parent.postMessage(
         { updateHeight: height + 10, src: window.location.href },
-        origin
+        origin,
       );
     },
   };
@@ -140,7 +140,7 @@ const trdList = () => {
       if (!window.frameElement || !url || url === "") return url;
 
       const clickUrlUnescaped = window.frameElement.getAttribute(
-        "data-click-url-unesc"
+        "data-click-url-unesc",
       );
       if (
         !clickUrlUnescaped ||
@@ -204,7 +204,7 @@ const trdList = () => {
       const amount = parseInt(
         // Clean string and keep only digits w/ decimal.
         helpers.cleanWhiteSpace(currency.toString()).replace(/[^0-9.]/g, ""),
-        10
+        10,
       );
 
       try {
@@ -237,12 +237,12 @@ const trdList = () => {
         month: "numeric",
         day: "numeric",
         timeZone: "GMT",
-      }
+      },
     ) => {
       try {
         const dateFormatted = new Intl.DateTimeFormat(
           "en-US",
-          dateTimeFormatOptions
+          dateTimeFormatOptions,
         ).format(Date.parse(date.toString()));
 
         return dateFormatted;
