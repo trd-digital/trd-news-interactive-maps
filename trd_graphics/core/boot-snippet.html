@@ -1,0 +1,32 @@
+<!--
+  Pre-paint boot snippet. Paste this INLINE into every graphic's <head>, BEFORE
+  any stylesheet. It runs synchronously so the iframe never flashes the
+  standalone layout or the wrong theme before trd-embed.js takes over.
+
+  Replace __THEME_KEY__ with your per-graphic localStorage key (e.g.
+  "extell-assemblage:theme"). It only needs to match the themeKey you pass to
+  TRDEmbed({ themeKey }); it is used for standalone preference only.
+
+  Do NOT move this into an external/deferred script — that reintroduces the
+  flash-of-standalone-layout bug (README §"Detecting embed before first paint").
+-->
+<script>
+  (function () {
+    var r = document.documentElement, p = null;
+    try { p = new URLSearchParams(location.search); } catch (e) {}
+    var framed;
+    try { framed = window.self !== window.top; } catch (e) { framed = true; }
+    if ((p && p.get("layout") === "embed") || framed) {
+      r.setAttribute("data-layout", "embed");
+    }
+    var q = p && p.get("theme"), saved = null;
+    if (r.getAttribute("data-layout") !== "embed") {
+      try { saved = localStorage.getItem("__THEME_KEY__"); } catch (e) {}
+    }
+    var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var theme = (q === "dark" || q === "light") ? q
+              : (saved === "dark" || saved === "light") ? saved
+              : (dark ? "dark" : "light");
+    r.setAttribute("data-theme", theme);
+  })();
+</script>

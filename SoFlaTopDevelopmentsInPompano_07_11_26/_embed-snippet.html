@@ -1,0 +1,91 @@
+<!--
+  TRD article-slot embed: Pompano Beach's Top Developments map.
+
+  Editors: paste the markup below into the article body, inside the placeholder
+  <figure class="AllowedContent_wrapper__… AllowedContent_defaultWidth__…">.
+  Update EMBED_URL to wherever the static map is hosted.
+
+  See TRD_MAP_INTEGRATION_GUIDE.md (in this folder) for the full background.
+  This map uses the postMessage namespace prefix "pompano-dev-map:" — if
+  multiple TRD map embeds share an article they must use distinct prefixes.
+-->
+
+<div class="trd-pompano-dev-map-embed"
+     style="position:relative;width:100%;margin:0 auto;">
+  <iframe
+    id="trd-pompano-dev-map-iframe"
+    src="REPLACE_ME_WITH_EMBED_URL?layout=embed"
+    title="Pompano Beach's Top Developments"
+    loading="lazy"
+    scrolling="no"
+    allow="fullscreen"
+    style="width:100%;height:640px;border:0;display:block;background:transparent;"
+  ></iframe>
+</div>
+
+<script>
+  (function () {
+    var iframe = document.getElementById("trd-pompano-dev-map-iframe");
+    if (!iframe) return;
+
+    // Per-project postMessage namespace. MUST match script.js MSG.* values in
+    // index.html. If you copy this file for another map, rename both ends.
+    var PREFIX = "pompano-dev-map:";
+    var TYPES = {
+      READY:          PREFIX + "ready",
+      LOADED:         PREFIX + "loaded",
+      RESIZE:         PREFIX + "resize",
+      SET_THEME:      PREFIX + "set-theme",
+      REQUEST_RESIZE: PREFIX + "request-resize"
+    };
+
+    // Replace with whatever TRD's live site actually uses to expose theme.
+    // Examples: a class on <html>, a data-attribute, a global, a localStorage
+    // key, an emitted event, etc.
+    function currentSiteTheme() {
+      var html = document.documentElement;
+      return html.classList.contains("theme-dark") ? "dark" : "light";
+    }
+
+    function send(type, payload) {
+      try {
+        var msg = Object.assign({ type: type }, payload || {});
+        iframe.contentWindow && iframe.contentWindow.postMessage(msg, "*");
+      } catch (e) {}
+    }
+
+    function pushTheme() { send(TYPES.SET_THEME, { value: currentSiteTheme() }); }
+
+    window.addEventListener("message", function (ev) {
+      var data = ev.data;
+      if (!data || typeof data !== "object" || !data.type) return;
+      // Whitelist by type, not origin — iframe can be hosted on any domain.
+      switch (data.type) {
+        case TYPES.READY:
+          pushTheme();
+          send(TYPES.REQUEST_RESIZE);
+          break;
+        case TYPES.LOADED:
+          // Map first idle. Nothing to do here yet, but the hook is in place.
+          break;
+        case TYPES.RESIZE:
+          // Sanity-bound: guard against bogus heights from sibling iframes
+          // that happen to share the same window.
+          if (typeof data.height === "number" && data.height > 100 && data.height < 5000) {
+            iframe.style.height = data.height + "px";
+          }
+          break;
+      }
+    }, false);
+
+    // Mirror live site theme changes into the iframe.
+    if ("MutationObserver" in window) {
+      var obs = new MutationObserver(function (muts) {
+        for (var i = 0; i < muts.length; i++) {
+          if (muts[i].attributeName === "class") { pushTheme(); break; }
+        }
+      });
+      obs.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    }
+  })();
+</script>

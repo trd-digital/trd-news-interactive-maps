@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Embed test — Pompano Top Developments</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { color-scheme: light dark; }
+    html, body {
+      margin: 0; padding: 0;
+      background: #f3f4f6;
+      color: #14171f;
+      font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    html.theme-dark, html.theme-dark body { background: #0e1014; color: #e7ebf4; }
+    .article {
+      /* Mimic TRD's AllowedContent_defaultWidth (~1040px desktop, ~546px mobile). */
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    .article h1 {
+      font-family: Georgia, "Merriweather", serif;
+      font-size: 32px; line-height: 1.15; margin: 0 0 12px;
+      letter-spacing: -0.01em;
+    }
+    .article .byline { color: #6b6f7e; font-size: 13px; margin-bottom: 24px; }
+    .article p { font-size: 17px; line-height: 1.65; margin: 0 0 18px; }
+    .toolbar {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e2e6ef;
+      padding: 10px 24px;
+      display: flex; gap: 10px; align-items: center;
+    }
+    html.theme-dark .toolbar { background: rgba(14,16,20,0.92); border-bottom-color: #2a2f3c; }
+    .toolbar button {
+      background: #27509B; color: #fff; border: 0; padding: 8px 14px;
+      border-radius: 999px; font-weight: 700; cursor: pointer;
+    }
+    .toolbar small { color: #6b6f7e; }
+    .embed-figure {
+      margin: 24px 0;
+      padding: 0;
+      border: 1px dashed #c9d0e1;
+      border-radius: 8px;
+      overflow: hidden;
+      background: transparent;
+    }
+    html.theme-dark .embed-figure { border-color: #2a2f3c; }
+    iframe { display: block; border: 0; width: 100%; height: 640px; background: transparent; }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <button id="toggle">Toggle site theme</button>
+    <small>Mirrors what TRD's CMS does: theme on &lt;html class&gt; gets mirrored into the iframe.</small>
+  </div>
+
+  <article class="article">
+    <h1>The projects reshaping Pompano Beach</h1>
+    <div class="byline">The Real Deal Staff &middot; July 11, 2026</div>
+    <p>
+      From the Cordish-Caesars hospitality complex on Isle of Capri Boulevard
+      to a string of beachfront luxury towers along South Ocean, more than a
+      dozen major developments are remaking Broward County's northern
+      coastline. The interactive map below tracks the largest residential,
+      mixed-use, civic and commercial projects in the city's pipeline.
+    </p>
+    <p>
+      Tap any pin or list item to zoom in and read the project's developer,
+      address and current status.
+    </p>
+
+    <figure class="embed-figure AllowedContent_wrapper__lxthX AllowedContent_defaultWidth__8uyfz">
+      <iframe
+        id="trd-pompano-dev-map-iframe"
+        src="./index.html?layout=embed"
+        title="Pompano Beach's Top Developments"
+        loading="lazy"
+        scrolling="no"
+        allow="fullscreen"
+      ></iframe>
+    </figure>
+
+    <p>
+      Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+      enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+      aliquip ex ea commodo consequat.
+    </p>
+    <p>
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+      dolore eu fugiat nulla pariatur.
+    </p>
+  </article>
+
+  <script>
+    // Mirror the parent-side glue from _embed-snippet.html so this harness
+    // behaves like the live TRD article page.
+    var iframe = document.getElementById("trd-pompano-dev-map-iframe");
+    var PREFIX = "pompano-dev-map:";
+    var TYPES = {
+      READY: PREFIX + "ready",
+      LOADED: PREFIX + "loaded",
+      RESIZE: PREFIX + "resize",
+      SET_THEME: PREFIX + "set-theme",
+      REQUEST_RESIZE: PREFIX + "request-resize"
+    };
+    function currentSiteTheme() {
+      return document.documentElement.classList.contains("theme-dark") ? "dark" : "light";
+    }
+    function send(type, payload) {
+      try {
+        var msg = Object.assign({ type: type }, payload || {});
+        iframe.contentWindow && iframe.contentWindow.postMessage(msg, "*");
+      } catch (e) {}
+    }
+    function pushTheme() { send(TYPES.SET_THEME, { value: currentSiteTheme() }); }
+
+    window.addEventListener("message", function (ev) {
+      var data = ev.data;
+      if (!data || typeof data !== "object" || !data.type) return;
+      if (data.type === TYPES.READY) {
+        pushTheme();
+        send(TYPES.REQUEST_RESIZE);
+      } else if (data.type === TYPES.RESIZE) {
+        if (typeof data.height === "number" && data.height > 100 && data.height < 5000) {
+          iframe.style.height = data.height + "px";
+        }
+        console.log("[embed-test] resize ->", data.height);
+      } else if (data.type === TYPES.LOADED) {
+        console.log("[embed-test] map loaded");
+      }
+    });
+
+    document.getElementById("toggle").addEventListener("click", function () {
+      document.documentElement.classList.toggle("theme-dark");
+      pushTheme();
+    });
+
+    new MutationObserver(function (muts) {
+      for (var i = 0; i < muts.length; i++) {
+        if (muts[i].attributeName === "class") { pushTheme(); break; }
+      }
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  </script>
+</body>
+</html>

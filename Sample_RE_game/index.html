@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guess the Sale Price</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container header__inner">
+        <h1 class="header__title">Guess the Sale Price</h1>
+        <p class="header__subtitle">Use the photo + facts to guess what the property sold for.</p>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="card" aria-live="polite">
+        <div class="card__top">
+          <div class="photo" role="img" aria-label="Property photo">
+            <img id="propertyImage" alt="" />
+          </div>
+
+          <div class="facts">
+            <div class="facts__row">
+              <div>
+                <div class="label">Property</div>
+                <div id="propertyTitle" class="value">—</div>
+              </div>
+              <div class="progress" aria-label="Progress">
+                <div class="label">Progress</div>
+                <div id="progressText" class="value">—</div>
+              </div>
+            </div>
+
+            <dl class="facts__grid" id="factsGrid"></dl>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <form id="guessForm" class="guess" autocomplete="off">
+          <div class="guess__row">
+            <label class="guess__label" for="guessInput">Your guess</label>
+            <div class="guess__inputWrap">
+              <span class="guess__prefix" aria-hidden="true">$</span>
+              <input
+                id="guessInput"
+                name="guess"
+                inputmode="numeric"
+                placeholder="e.g. 1250000"
+                aria-describedby="hintText"
+                required
+              />
+            </div>
+            <button id="submitBtn" class="btn btn--primary" type="submit">Reveal</button>
+          </div>
+
+          <p id="hintText" class="hint">
+            Tip: Enter numbers only (commas are okay). You can revise before revealing.
+          </p>
+        </form>
+
+        <div id="result" class="result" hidden>
+          <div class="result__grid">
+            <div>
+              <div class="label">Actual sale price</div>
+              <div id="actualPrice" class="value value--big">—</div>
+            </div>
+            <div>
+              <div class="label">Your guess</div>
+              <div id="yourGuess" class="value value--big">—</div>
+            </div>
+            <div>
+              <div class="label">Difference</div>
+              <div id="difference" class="value value--big">—</div>
+            </div>
+            <div>
+              <div class="label">Accuracy</div>
+              <div id="accuracy" class="value value--big">—</div>
+            </div>
+          </div>
+
+          <div class="result__actions">
+            <button id="nextBtn" class="btn" type="button">Next property</button>
+            <button id="restartBtn" class="btn btn--ghost" type="button">Restart</button>
+          </div>
+
+          <div class="stats">
+            <div class="label">Game stats</div>
+            <div id="statsText" class="value">—</div>
+          </div>
+        </div>
+
+        <div id="error" class="error" role="alert" hidden></div>
+      </section>
+
+      <footer class="footer">
+        <p class="footer__text">
+          Sample data + images are placeholders. Swap in your own sale records and photos in
+          <code>data/properties.json</code>.
+        </p>
+      </footer>
+    </main>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Starter Graphic | The Real Deal</title>
+    <meta name="description" content="Minimal non-map example of a TRD embed graphic." />
+
+    <!-- Pre-paint boot snippet (core/boot-snippet.html) with this graphic's
+         theme key inlined. MUST stay inline and first. -->
+    <script>
+      (function () {
+        var r = document.documentElement, p = null;
+        try { p = new URLSearchParams(location.search); } catch (e) {}
+        var framed;
+        try { framed = window.self !== window.top; } catch (e) { framed = true; }
+        if ((p && p.get("layout") === "embed") || framed) r.setAttribute("data-layout", "embed");
+        var q = p && p.get("theme"), saved = null;
+        if (r.getAttribute("data-layout") !== "embed") {
+          try { saved = localStorage.getItem("trd-starter:theme"); } catch (e) {}
+        }
+        var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        r.setAttribute("data-theme", (q === "dark" || q === "light") ? q
+          : (saved === "dark" || saved === "light") ? saved : (dark ? "dark" : "light"));
+      })();
+    </script>
+
+    <link rel="stylesheet" href="../core/trd-embed.css" />
+    <style>
+      /* This graphic sets its own embed heights; the shell consumes them. */
+      :root {
+        --trd-embed-h: 420px;
+        --trd-embed-h-phone: 460px;
+        --trd-embed-h-wide: 360px;
+      }
+      .chart-wrap {
+        padding: 20px 22px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        overflow: auto;
+      }
+      .chart-title {
+        font-family: var(--trd-font-serif);
+        font-weight: 900;
+        font-size: 17px;
+        margin: 0 0 12px;
+      }
+      .bar-row { display: grid; grid-template-columns: 130px 1fr 64px; align-items: center; gap: 10px; margin: 5px 0; }
+      .bar-label { font-size: 13px; color: var(--trd-muted); }
+      .bar-track { display: block; background: var(--trd-bg-soft); border-radius: 4px; height: 22px; overflow: hidden; }
+      .bar-fill { display: block; height: 100%; border-radius: 4px; transition: width .5s ease; }
+      .bar-value { font-size: 13px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+      .theme-toggle {
+        margin-left: auto; background: transparent; color: var(--trd-text);
+        border: 1px solid var(--trd-border); border-radius: 999px; cursor: pointer;
+        padding: 6px 12px; font-size: 12px; font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="trd-header">
+      <h1>Starter Graphic</h1>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">Dark</button>
+    </header>
+
+    <!-- .trd-embed-fill makes the container adopt the fixed embed height. -->
+    <main class="chart-wrap trd-embed-fill" id="chart">
+      <p class="chart-title">Example: top submarkets by deal volume</p>
+      <div id="bars"></div>
+    </main>
+
+    <footer class="trd-credit" style="padding:0 22px 14px;">Source: sample data · The Real Deal</footer>
+
+    <script src="../core/trd-embed.js"></script>
+    <script>
+      // A "graphic module" is just: some data + a build function + a theme
+      // reaction. It never touches embed/theme/resize plumbing — TRDEmbed owns
+      // that. Swap this out for a map, a different chart, anything.
+      var DATA = [
+        { label: "Midtown", value: 92 },
+        { label: "Brickell", value: 78 },
+        { label: "Downtown", value: 64 },
+        { label: "Wynwood", value: 41 },
+        { label: "Coral Gables", value: 29 },
+      ];
+      var max = Math.max.apply(null, DATA.map(function (d) { return d.value; }));
+
+      function render() {
+        var brand = getComputedStyle(document.documentElement)
+          .getPropertyValue("--trd-brand").trim();
+        document.getElementById("bars").innerHTML = DATA.map(function (d) {
+          var pct = Math.round((d.value / max) * 100);
+          return '<div class="bar-row">' +
+            '<span class="bar-label">' + d.label + "</span>" +
+            '<span class="bar-track"><span class="bar-fill" style="width:' + pct + "%;background:" + brand + '"></span></span>' +
+            '<span class="bar-value">$' + d.value + "M</span>" +
+          "</div>";
+        }).join("");
+      }
+
+      var controller = TRDEmbed({
+        prefix: "trd-starter",
+        themeKey: "trd-starter:theme",
+        toggle: "#themeToggle",
+        mountTarget: "#chart",
+        onMount: function (ctx) {
+          render();          // build the graphic (fires lazily, once)
+          ctx.postLoaded();  // tell the parent the graphic is ready
+        },
+        onTheme: function (theme, ctx) {
+          render();          // re-color for the new theme
+          ctx.requestResize();
+        },
+      });
+    </script>
+  </body>
+</html>

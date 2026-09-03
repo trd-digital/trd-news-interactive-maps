@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Embed preview — Martha's Vineyard dossier</title>
+    <style>
+      /* Simulates a TRD article column (~1040px) and auto-sizes the iframe to
+         the dossier's full content height — the way the real embed behaves,
+         unlike opening index.html?layout=embed directly. */
+      body { margin: 0; font-family: system-ui, sans-serif; background: #eceff4; color: #16181f; }
+      body.theme-dark { background: #0b0d12; color: #eef1f7; }
+      .article { max-width: 1040px; margin: 0 auto; padding: 32px 20px 80px; }
+      .prose { font-size: 18px; line-height: 1.7; }
+      .bar { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; }
+      .bar button { padding: 8px 14px; border: 1px solid #999; border-radius: 6px; background: #fff; cursor: pointer; }
+      figure { margin: 28px 0; }
+    </style>
+  </head>
+  <body>
+    <div class="article">
+      <div class="bar">
+        <button id="theme">Toggle site theme</button>
+        <span>Simulates TRD's light/dark switch. Resize the window to test wide vs. stacked.</span>
+      </div>
+      <p class="prose">Article copy above the dossier…</p>
+
+      <figure>
+        <iframe id="f" src="index.html?layout=embed" title="Luxury Dossier: Martha's Vineyard"
+          loading="lazy" scrolling="no" allow="fullscreen"
+          style="width:100%;height:900px;border:0;display:block;background:transparent;"></iframe>
+      </figure>
+
+      <p class="prose">Article copy below the dossier…</p>
+    </div>
+
+    <script>
+      var PREFIX = "luxurydossiermarthasvinyard-07-01-26";
+      var T = { READY: PREFIX + ":ready", RESIZE: PREFIX + ":resize", SET_THEME: PREFIX + ":set-theme", REQUEST_RESIZE: PREFIX + ":request-resize" };
+      var iframe = document.getElementById("f");
+      function siteTheme() { return document.documentElement.classList.contains("theme-dark") ? "dark" : "light"; }
+      function push() { try { iframe.contentWindow.postMessage({ type: T.SET_THEME, value: siteTheme() }, "*"); } catch (e) {} }
+      window.addEventListener("message", function (ev) {
+        var d = ev.data; if (!d || !d.type) return;
+        if (d.type === T.READY) push();
+        if (d.type === T.RESIZE && typeof d.height === "number" && d.height > 100 && d.height < 12000) iframe.style.height = d.height + "px";
+      });
+      document.getElementById("theme").addEventListener("click", function () {
+        document.documentElement.classList.toggle("theme-dark");
+        document.body.classList.toggle("theme-dark");
+        push();
+      });
+      new MutationObserver(push).observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    </script>
+  </body>
+</html>

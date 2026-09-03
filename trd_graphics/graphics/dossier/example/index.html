@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Luxury Dossier — template example | The Real Deal</title>
+    <meta name="description" content="Reference example for the TRD Luxury Dossier interactive template." />
+
+    <!-- Pre-paint boot snippet (trd_graphics core/boot-snippet.html). -->
+    <script>
+      (function () {
+        var r = document.documentElement, p = null;
+        try { p = new URLSearchParams(location.search); } catch (e) {}
+        var framed;
+        try { framed = window.self !== window.top; } catch (e) { framed = true; }
+        if ((p && p.get("layout") === "embed") || framed) r.setAttribute("data-layout", "embed");
+        var q = p && p.get("theme"), saved = null;
+        if (r.getAttribute("data-layout") !== "embed") {
+          try { saved = localStorage.getItem("trd-dossier-example:theme"); } catch (e) {}
+        }
+        var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        r.setAttribute("data-theme", (q === "dark" || q === "light") ? q
+          : (saved === "dark" || saved === "light") ? saved : (dark ? "dark" : "light"));
+      })();
+    </script>
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,700;0,900;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../../core/trd-embed.css" />
+    <link rel="stylesheet" href="../../map/trd-map.css" />
+    <link rel="stylesheet" href="../trd-dossier.css" />
+  </head>
+  <body>
+    <button class="d-toggle" id="d-toggle">Theme</button>
+
+    <main class="dossier">
+      <header class="d-hero" id="d-hero"></header>
+
+      <section class="d-intro">
+        <div class="d-intro-prose" id="d-intro-prose"></div>
+        <div class="d-stats" id="d-stats"></div>
+      </section>
+
+      <section class="d-listing" id="d-listing"></section>
+
+      <section class="d-map-section">
+        <div class="d-section-head">
+          <h2>Explore the island</h2>
+          <span class="sub" id="d-map-sub"></span>
+        </div>
+        <div class="d-map-frame trd-map" id="d-map-frame">
+          <div id="map" class="d-map"></div>
+          <div class="d-filters" id="d-filters"></div>
+          <div class="d-legend" id="d-legend"></div>
+          <div class="d-card" id="d-card"></div>
+        </div>
+      </section>
+
+      <section class="d-module" id="d-brokers"></section>
+      <section class="d-module" id="d-names"></section>
+      <section class="d-module" id="d-quotes-wrap"></section>
+      <section class="d-module"><div class="d-narrative" id="d-narrative"></div></section>
+      <footer class="d-footer" id="d-footer"></footer>
+    </main>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+    <script src="../../../core/trd-embed.js"></script>
+    <script src="../../map/trd-map.js"></script>
+    <script src="../trd-dossier.js"></script>
+    <script>
+      window.dossier = TRDDossier({
+        prefix: "trd-dossier-example",
+        themeKey: "trd-dossier-example:theme",
+        token: "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ",
+        content: "content.json",
+        regions: "regions.geojson",
+        places: "places.geojson",
+      });
+    </script>
+  </body>
+</html>

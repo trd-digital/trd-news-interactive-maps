@@ -76,7 +76,7 @@
     <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
     <script src="../trd-data/common-formatter/formatter.js"></script>
     <script src="../trd-data/common-loading/loading.js"></script>
-    <script src="../trd-data/common-map/map.js?v=1.1"></script>
+    <script src="../trd-data/common-map/map.js?v=1.2"></script>
     <script>
       const legendKeys = [
         {
@@ -217,6 +217,28 @@
           defaultValue: [100_000, 300_000_000],
           format: "formatCurrency",
           fieldLayoutClass: "range-slider-container",
+          presets: [
+            {
+              label: "Under $1M",
+              minValue: 100_000,
+              maxValue: 1_000_000,
+            },
+            {
+              label: "$1M - $5M",
+              minValue: 1_000_000,
+              maxValue: 5_000_000,
+            },
+            {
+              label: "$5M+",
+              minValue: 5_000_000,
+              maxValue: 300_000_000,
+            },
+            {
+              label: "All Prices",
+              minValue: 100_000,
+              maxValue: 300_000_000,
+            },
+          ],
           callback: (values, item) => {
             const price = item.properties["Sale Price"];
             return price >= values[0] && price <= values[1];

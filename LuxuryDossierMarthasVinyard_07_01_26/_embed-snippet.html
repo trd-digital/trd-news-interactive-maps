@@ -1,0 +1,32 @@
+<!--
+  =============================================================================
+  Luxury Dossier: Martha's Vineyard — article embed (INTERNAL-SCROLL fallback)
+  =============================================================================
+  Paste this <figure> into the article body. No <script> needed.
+
+  Why this version: TRD's article body is rendered by React
+  (dangerouslySetInnerHTML), which does NOT execute inline <script> tags, so the
+  auto-resize listener never runs and the iframe can't grow. As an interim, the
+  iframe is a fixed height with scrolling="yes" — the reader scrolls the dossier
+  inside the frame. All content is reachable (requires the dossier's embed CSS
+  fix that lets its <html>/<body> flow to full height — trd-dossier.css ≥ 1.3.1).
+
+  PROPER FIX (removes the inner scrollbar): add the one-time global resize
+  listener to the SITE THEME (where scripts run), then switch this iframe to
+  scrolling="no". See the message to whoever owns the theme.
+
+  Adjust height="800" to taste (or use style="height:80vh").
+  =============================================================================
+-->
+<figure>
+  <iframe
+    src="https://trd-digital.github.io/trd-news-interactive-maps/LuxuryDossierMarthasVinyard_07_01_26/index.html?layout=embed"
+    title="Luxury Dossier: Martha's Vineyard"
+    width="100%"
+    height="800"
+    frameborder="0"
+    scrolling="yes"
+    loading="lazy"
+    style="display:block; width:100%; height:800px; border:0; background:#fff;"
+  ></iframe>
+</figure>
