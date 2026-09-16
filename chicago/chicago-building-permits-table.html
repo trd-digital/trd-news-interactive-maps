@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Chicago Building Permits Table - The Real Deal</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://therealdeal.com/favicon.ico"
+    />
+    <link rel="canonical" href="https://therealdeal.com/data/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin="true"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@0,400;0,700;0,900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/bootstrap-table.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/extensions/sticky-header/bootstrap-table-sticky-header.css"
+    />
+    <link rel="stylesheet" href="../trd-data/common-table/table.css" />
+
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-K694XL6");
+    </script>
+    <!-- End Google Tag Manager -->
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-K694XL6"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <main>
+      <table id="table"></table>
+    </main>
+
+    <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/bootstrap-table.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/extensions/sticky-header/bootstrap-table-sticky-header.min.js"></script>
+    <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
+    <script src="../trd-data/common-formatter/formatter.js"></script>
+    <script src="../trd-data/common-table/table.js"></script>
+    <script>
+      const displayColumns = [
+        { dataField: "full_address", name: "Address", visible: true },
+        { dataField: "permit_type", name: "Permit Type", visible: true },
+        { dataField: "permit_milestone", name: "Status", visible: true },
+        {
+          dataField: "application_date",
+          name: "Application Date",
+          visible: true,
+          formatter: TrdFormatters.formatDate,
+          sorter: TrdSorters.sortDate,
+        },
+        {
+          dataField: "issue_date",
+          name: "Issue Date",
+          visible: false,
+          formatter: TrdFormatters.formatDate,
+          sorter: TrdSorters.sortDate,
+        },
+        {
+          dataField: "reported_cost",
+          name: "Reported Cost",
+          visible: true,
+          formatter: TrdFormatters.formatPrice,
+        },
+        {
+          dataField: "total_fee",
+          name: "Total Fee",
+          visible: false,
+          formatter: TrdFormatters.formatPrice,
+        },
+        {
+          dataField: "general_contractor_name",
+          name: "General Contractor",
+          visible: true,
+        },
+        { dataField: "architect_name", name: "Architect", visible: false },
+        { dataField: "owner_name", name: "Owner", visible: false },
+        { dataField: "permit_number", name: "Permit Number", visible: false },
+        { dataField: "permit_status", name: "Permit Status", visible: false },
+        { dataField: "work_type", name: "Work Type", visible: false },
+        {
+          dataField: "work_description",
+          name: "Description",
+          visible: false,
+          formatter: (value) => TrdFormatters.formatTrimWithEllipsis(value, 40),
+        },
+        { dataField: "ward", name: "Ward", visible: false },
+        {
+          dataField: "community_area",
+          name: "Community Area",
+          visible: false,
+        },
+        { dataField: "census_tract", name: "Census Tract", visible: false },
+        { dataField: "pin", name: "PIN", visible: false },
+      ];
+
+      const fetchDataFilterCallback = (data) => {
+        return new Promise((resolve) => {
+          const rows = data.features.map((item) => ({
+            ...item.properties,
+          }));
+          resolve(rows);
+        });
+      };
+
+      TrdDataCommonTable({
+        filePath:
+          "https://teststatic.therealdeal.com/interactive-maps/chicago-building-permit-map.geojson",
+        eventCategory: "chicago-building-permits-table",
+        displayColumns,
+        fetchDataFilterCallback,
+        tableConfig: {
+          sortName: TrdFormatters.getFieldName("application_date"),
+          sortOrder: "desc",
+          sortResetPage: true,
+        },
+      });
+    </script>
+  </body>
+</html>
