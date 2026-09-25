@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Chicago Building Permits Map - The Real Deal</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://therealdeal.com/favicon.ico"
+    />
+    <link rel="canonical" href="https://therealdeal.com/data/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin="true"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@0,400;0,700;0,900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css"
+    />
+    <link rel="stylesheet" href="../trd-data/common-map/map.css" />
+
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-K694XL6");
+    </script>
+    <!-- End Google Tag Manager -->
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-K694XL6"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+    <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
+    <script src="../trd-data/common-formatter/formatter.js"></script>
+    <script src="../trd-data/common-loading/loading.js"></script>
+    <script src="../trd-data/common-map/map.js?v=1.1"></script>
+    <script>
+      const legendKeys = [
+        {
+          title: "Permit Type",
+          options: [
+            {
+              text: "New Construction",
+              value: "NEW CONSTRUCTION",
+              default: false,
+              color: {
+                light: "#43A047",
+                dark: "#4CAF50",
+              },
+            },
+            {
+              text: "Renovation/Alteration",
+              value: "RENOVATION/ALTERATION",
+              default: false,
+              color: {
+                light: "#1E88E5",
+                dark: "#42A5F5",
+              },
+            },
+            {
+              text: "Demolition",
+              value: "WRECKING/DEMOLITION",
+              default: false,
+              color: {
+                light: "#FDD835",
+                dark: "#FBC02D",
+              },
+            },
+            {
+              text: "Other",
+              value: "Other",
+              default: true,
+              color: {
+                light: "#8D6E63",
+                dark: "#795548",
+              },
+            },
+          ],
+        },
+      ];
+
+      const tooltipDisplayFields = {
+        title: {
+          field: "full_address",
+          label: "Address",
+        },
+        content: [
+          {
+            field: "permit_type",
+            label: "Permit Type",
+          },
+          {
+            field: "permit_milestone",
+            label: "Status",
+          },
+          {
+            field: "application_date",
+            label: "Application Date",
+            format: "formatDate",
+          },
+          {
+            field: "reported_cost",
+            label: "Reported Cost",
+            format: "formatPrice",
+            filter: (value) => value > 0,
+          },
+        ],
+      };
+
+      const modalDisplayFields = {
+        title: {
+          field: "full_address",
+          label: "Address",
+        },
+        content: [
+          { field: "permit_number", label: "Permit Number" },
+          { field: "permit_type", label: "Permit Type" },
+          { field: "work_type", label: "Work Type" },
+          { field: "permit_status", label: "Permit Status" },
+          { field: "permit_milestone", label: "Permit Milestone" },
+          { field: "work_description", label: "Work Description" },
+          {
+            field: "application_date",
+            label: "Application Date",
+            format: "formatDate",
+          },
+          {
+            field: "issue_date",
+            label: "Issue Date",
+            format: "formatDate",
+          },
+          { field: "full_address", label: "Address" },
+          { field: "ward", label: "Ward" },
+          { field: "community_area", label: "Community Area" },
+          { field: "census_tract", label: "Census Tract" },
+          { field: "pin", label: "PIN" },
+          {
+            field: "reported_cost",
+            label: "Reported Cost",
+            format: "formatPrice",
+            filter: (value) => value > 0,
+          },
+          {
+            field: "total_fee",
+            label: "Total Fee",
+            format: "formatPrice",
+            filter: (value) => value > 0,
+          },
+          { field: "owner_name", label: "Owner" },
+          { field: "general_contractor_name", label: "General Contractor" },
+          { field: "architect_name", label: "Architect" },
+        ],
+      };
+
+      const filterFields = [
+        {
+          title: "Days",
+          name: "days",
+          dataField: "application_date",
+          fieldType: "radio",
+          fieldLayoutClass: "radio-group",
+          multiSelect: false,
+          defaultValue: "30",
+          callback: (values, item) => {
+            const days = values[0];
+            const date = new Date();
+            date.setDate(date.getDate() - days);
+            const recordDate = new Date(item.properties["application_date"]);
+            return recordDate >= date;
+          },
+          options: [
+            {
+              label: "1 Month",
+              value: "30",
+            },
+            {
+              label: "3 Months",
+              value: "90",
+            },
+            {
+              label: "6 Months",
+              value: "180",
+            },
+            {
+              label: "1 Year",
+              value: "365",
+            },
+            {
+              label: "2 Years",
+              value: "730",
+            },
+          ],
+        },
+        {
+          title: "Permit Type",
+          name: "permit_type",
+          dataField: "permit_type",
+          fieldType: "checkbox",
+          fieldLayoutClass: "checkbox-group",
+          multiSelect: true,
+          callback: (values, item) => {
+            return values.some(
+              (value) => item.properties["permit_type"] === value
+            );
+          },
+          options: [
+            {
+              label: "New Construction",
+              value: "PERMIT - NEW CONSTRUCTION",
+            },
+            {
+              label: "Renovation/Alteration",
+              value: "PERMIT - RENOVATION/ALTERATION",
+            },
+            {
+              label: "Signs",
+              value: "PERMIT - SIGNS",
+            },
+          ],
+        },
+        {
+          title: "Status",
+          name: "permit_milestone",
+          dataField: "permit_milestone",
+          fieldType: "checkbox",
+          fieldLayoutClass: "checkbox-group",
+          multiSelect: true,
+          callback: (values, item) => {
+            return values.some((value) => {
+              const milestone = item.properties["permit_milestone"];
+              return milestone && milestone.includes(value);
+            });
+          },
+          options: [
+            {
+              label: "Permit Issued",
+              value: "PERMIT ISSUED",
+            },
+            {
+              label: "Inspections",
+              value: "INSPECTIONS",
+            },
+          ],
+        },
+      ];
+
+      window.map = trdDataCommonMap({
+        fetchDataFilterCallback: undefined,
+        eventCategory: "chicago-building-permits-map",
+        filePath:
+          "https://teststatic.therealdeal.com/interactive-maps/chicago-building-permit-map-data.geojson",
+        mapElementId: "map",
+        filterElementId: "map-filters",
+        legendElementId: "legend",
+        resultElementId: "result",
+        mapCenterLat: 41.881832,
+        mapCenterLng: -87.623177,
+        zoom: 10,
+        minZoom: 9,
+        legendKeys,
+        dataPointKeys: legendKeys[0].options,
+        tooltipDisplayFields,
+        modalDisplayFields,
+        filterFields,
+        loadingEnabled: true,
+        pointSettings: {
+          clickToCenter: true,
+          clickToZoom: true,
+          colorType: "case",
+          radiusType: "ratio",
+          colorTypeDataKey: "permit_type",
+          paintSettings: {
+            hover: {
+              color: { light: "#FF9800", dark: "#F57C00" },
+            },
+            active: {
+              color: { light: "#FF5722", dark: "#D84315" },
+            },
+          },
+        },
+        searchSettings: {
+          enable: true,
+          placeholderText: "Search by address, permit number, or PIN",
+          resultTitleField: "full_address",
+          searchFields: ["full_address", "permit_number", "pin"],
+        },
+      });
+    </script>
+  </body>
+</html>
