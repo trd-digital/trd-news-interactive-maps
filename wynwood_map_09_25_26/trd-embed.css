@@ -1,0 +1,150 @@
+/*!
+ * trd-embed.css — the graphic-agnostic TRD embed shell.
+ *
+ * Provides three things every TRD graphic needs, and NOTHING graphic-specific
+ * (no map/chart rules — those live in the graphic module's own stylesheet):
+ *
+ *   1. Editorial design tokens (brand palette, fonts) with a light + dark
+ *      theme, keyed off :root[data-theme].
+ *   2. The sizing-trap-safe embed scaffolding: fixed PIXEL heights only,
+ *      driven by --trd-embed-h* variables so each graphic picks its own.
+ *   3. Base chrome (.trd-header / .trd-credit) that hides itself in embed mode.
+ *
+ * Read README §"The sizing trap" before touching the embed height rules.
+ * FIXED PIXEL HEIGHTS ONLY under [data-layout="embed"] — never vh/svh.
+ */
+
+:root {
+  /* Brand palette — TRD navy. Override per project in your config CSS. */
+  --trd-brand: #27509b;
+  --trd-brand-deep: #1a3a75;
+  --trd-accent: #c9a038;
+  --trd-bg: #ffffff;
+  --trd-bg-soft: #f4f6fb;
+  --trd-panel: #ffffff;
+  --trd-text: #16181f;
+  --trd-muted: #6b6f7e;
+  --trd-border: #e2e6ef;
+  --trd-shadow: 0 6px 24px rgba(20, 30, 55, 0.1);
+
+  --trd-header-h: 64px;
+
+  /* Embed widget heights (CSS px). A graphic may override these three in its
+     own stylesheet; the shell rules below consume them. */
+  --trd-embed-h: 640px; /* default: narrow / stacked article column */
+  --trd-embed-h-phone: 620px; /* @media (max-width: 560px) */
+  --trd-embed-h-wide: 560px; /* @media (min-width: 780px): wide overlay */
+
+  --trd-font-sans: "Proxima Nova", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --trd-font-serif: "Merriweather", Georgia, serif;
+}
+
+:root[data-theme="dark"] {
+  --trd-brand: #6e92d8;
+  --trd-brand-deep: #27509b;
+  --trd-accent: #e2b856;
+  --trd-bg: #0f1218;
+  --trd-bg-soft: #181c25;
+  --trd-panel: #1b202b;
+  --trd-text: #eef1f7;
+  --trd-muted: #97a0b4;
+  --trd-border: #2a2f3c;
+  --trd-shadow: 0 6px 24px rgba(0, 0, 0, 0.55);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--trd-font-sans);
+  background: var(--trd-bg);
+  color: var(--trd-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Standalone chrome. */
+.trd-header {
+  height: var(--trd-header-h);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 18px;
+  background: var(--trd-panel);
+  border-bottom: 1px solid var(--trd-border);
+}
+.trd-header h1 {
+  font-family: var(--trd-font-serif);
+  font-weight: 900;
+  font-size: 18px;
+  line-height: 1.15;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.trd-credit {
+  font-size: 10px;
+  color: var(--trd-muted);
+  letter-spacing: 0.04em;
+}
+
+.trd-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* =========================================================================
+   EMBED MODE — the TRD article iframe. FIXED PIXEL HEIGHTS ONLY.
+   Decouple body.scrollHeight from the iframe's outer height so the parent
+   auto-sizer can settle (and, in overlay layouts, shrink us back down).
+   ========================================================================= */
+:root[data-layout="embed"],
+:root[data-layout="embed"] body {
+  height: var(--trd-embed-h);
+  min-height: 0;
+  overflow: hidden;
+}
+:root[data-layout="embed"] .trd-header,
+:root[data-layout="embed"] .trd-credit,
+:root[data-layout="embed"] .trd-standalone-only {
+  display: none !important;
+}
+
+/* The graphic's own root container should fill the widget; expose a height var
+   the module can attach to (e.g. .my-graphic { height: var(--trd-embed-h); }). */
+:root[data-layout="embed"] .trd-embed-fill {
+  height: var(--trd-embed-h);
+}
+
+@media (max-width: 560px) {
+  :root[data-layout="embed"],
+  :root[data-layout="embed"] body {
+    height: var(--trd-embed-h-phone);
+  }
+  :root[data-layout="embed"] .trd-embed-fill {
+    height: var(--trd-embed-h-phone);
+  }
+}
+
+@media (min-width: 780px) {
+  :root[data-layout="embed"],
+  :root[data-layout="embed"] body {
+    height: var(--trd-embed-h-wide);
+  }
+  :root[data-layout="embed"] .trd-embed-fill {
+    height: var(--trd-embed-h-wide);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+  }
+}
