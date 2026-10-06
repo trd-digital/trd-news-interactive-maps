@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <title>Novak&rsquo;s Discount on Sterling Bay&rsquo;s North Branch Land | The Real Deal</title>
+    <title>Mapping Novak&rsquo;s Lincoln Yards-area Buying Spree | The Real Deal</title>
     <meta name="description" content="Sterling Bay paid $146.8 million for six sites along Chicago's North Branch in 2018 and 2019. Novak bought them for $57.9 million. An interactive map of what each side paid." />
 
     <!-- Pre-paint boot snippet (trd_graphics core/boot-snippet.html). -->
@@ -184,7 +184,7 @@
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
         <span aria-hidden="true">☾</span><span>Dark</span>
       </button>
-      <h1>Novak&rsquo;s Discount on Sterling Bay&rsquo;s North Branch Land</h1>
+      <h1>Mapping Novak&rsquo;s Lincoln Yards-area Buying Spree</h1>
       <p class="hero-lede">
         Sterling Bay spent $146.8 million in 2018 and 2019 assembling six sites along
         Elston Avenue and Chicago&rsquo;s North Branch. Novak has bought them for
@@ -240,10 +240,10 @@
       }
 
       // ---- Cards ------------------------------------------------------------
-      function barRow(cls, who, when, num, text) {
+      function barRow(cls, who, when, num, text, max, label) {
         var amt = num != null
-          ? '<span class="bar ' + cls + '" style="width:calc((100% - 64px) * ' + Math.max(0.01, Math.min(1, num / BAR_MAX)).toFixed(3) + ')"></span>' +
-            '<span class="amt">' + fmtM(num) + "</span>"
+          ? '<span class="bar ' + cls + '" style="width:calc((100% - 104px) * ' + Math.max(0.01, Math.min(1, num / (max || BAR_MAX))).toFixed(3) + ')"></span>' +
+            '<span class="amt">' + esc(label || fmtM(num)) + "</span>"
           : '<span class="amt text">' + esc(text) + "</span>";
         return '<span class="who">' + who + "<small>" + esc(span(when)) + "</small></span>" +
                '<span class="track">' + amt + "</span>";
@@ -263,7 +263,7 @@
           '<p class="note"><strong>The five outparcels</strong> (Nos. 2&ndash;6, ' + esc(o.acres) + " acres) sold for " +
             fmtM(money(o.novak_price), 1) + " against Sterling Bay&rsquo;s " + fmtM(money(o.sb_price), 1) + ", a " + o.loss_pct + "% loss. " +
             "Novak financed the purchases with " + fmtM(money(t.loan), 1) + " in loans from " + esc(t.lender) + ".</p>" +
-          '<p class="note">Sterling Bay&rsquo;s total includes its full $104.7 million IL Steel purchase, of which No. 1, 1401 W. Willow St., was a part, so the loss is an estimate.</p>';
+          '<p class="note">Sterling Bay&rsquo;s total includes its full $104.7M purchase from the city of Chicago for former vehicle fleet facilities, of which deal series No. 1, 1401 W. Willow St., was a part, so the loss is an estimate.</p>';
         storyEl.appendChild(el);
       }
 
@@ -278,10 +278,15 @@
           el.setAttribute("role", "listitem");
           el.setAttribute("tabindex", "0");
           var bars = p.sb_price_num != null && p.novak_price_num != null;   // both priced: draw to scale
-          var badge = p.loss_pct != null
+          var max = p.own_scale ? Math.max(p.sb_price_num, p.novak_price_num) : BAR_MAX;
+          var badge = p.badge_label
+            ? '<span class="badge is-loss">' + esc(p.badge_label) + "</span>"
+            : p.loss_pct != null
             ? '<span class="badge is-loss">&minus;' + p.loss_pct + "%</span>"
             : '<span class="badge is-na">Loss unallocated</span>';
-          var loss = p.loss_num != null
+          var loss = p.loss_label
+            ? '<dd class="is-loss">' + esc(p.loss_label) + "</dd>"
+            : p.loss_num != null
             ? '<dd class="is-loss">' + fmtM(p.loss_num) + " (" + p.loss_pct + "%)</dd>"
             : '<dd class="is-pending">' + esc(p.loss) + "</dd>";
           var loan = isPending(p.loan)
@@ -291,8 +296,8 @@
             '<p class="kicker"><span class="dot">' + p.n + "</span>" + esc(p.acres) + (p.acres === "1" ? " acre" : " acres") + badge + "</p>" +
             '<h3 class="proj">' + esc(p.address) + "</h3>" +
             '<div class="bars">' +
-              barRow("sb", "Sterling Bay", p.sb_date, bars ? p.sb_price_num : null, p.sb_price) +
-              barRow("nv", "Novak", p.novak_date, bars ? p.novak_price_num : null, bars ? "" : fmtM(p.novak_price_num) || p.novak_price) +
+              barRow("sb", "Sterling Bay", p.sb_date, bars ? p.sb_price_num : null, p.sb_price, max, p.sb_price_label) +
+              barRow("nv", "Novak", p.novak_date, bars ? p.novak_price_num : null, bars ? "" : fmtM(p.novak_price_num) || p.novak_price, max) +
             "</div>" +
             '<dl class="facts"><dt>Loss</dt>' + loss + "<dt>Novak loan</dt>" + loan + "</dl>";
           el.addEventListener("click", function () { activate(p.n, true); });
@@ -304,7 +309,7 @@
         var src = document.createElement("p");
         src.className = "source";
         src.innerHTML = "Source: Cook County Assessor and Clerk records. Parcel outlines: Cook County GIS. " +
-          "Bars share one scale; No. 1&rsquo;s $34M sale is shown as text.";
+          "Bars for Nos. 2&ndash;6 share one scale; No. 1 is drawn on its own scale.";
         storyEl.appendChild(src);
       }
 
@@ -478,7 +483,7 @@
             FEATURES = GEO.features.slice().sort(function (a, b) { return a.properties.n - b.properties.n; });
             FEATURES.forEach(function (f) {
               var p = f.properties;
-              if (p.sb_price_num != null && p.novak_price_num != null) BAR_MAX = Math.max(BAR_MAX, p.sb_price_num, p.novak_price_num);
+              if (!p.own_scale && p.sb_price_num != null && p.novak_price_num != null) BAR_MAX = Math.max(BAR_MAX, p.sb_price_num, p.novak_price_num);
             });
             spreadOverlaps(FEATURES);
             buildCards();
