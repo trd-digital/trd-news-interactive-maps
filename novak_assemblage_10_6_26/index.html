@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Novak&rsquo;s Discount on Sterling Bay&rsquo;s North Branch Land | The Real Deal</title>
+    <meta name="description" content="Sterling Bay paid $146.8 million for six sites along Chicago's North Branch in 2018 and 2019. Novak bought them for $57.9 million. An interactive map of what each side paid." />
+
+    <!-- Pre-paint boot snippet (trd_graphics core/boot-snippet.html). -->
+    <script>
+      (function () {
+        var r = document.documentElement, p = null;
+        try { p = new URLSearchParams(location.search); } catch (e) {}
+        var framed;
+        try { framed = window.self !== window.top; } catch (e) { framed = true; }
+        if ((p && p.get("layout") === "embed") || framed) r.setAttribute("data-layout", "embed");
+        var q = p && p.get("theme"), saved = null;
+        if (r.getAttribute("data-layout") !== "embed") {
+          try { saved = localStorage.getItem("novak-assemblage-10-06-26:theme"); } catch (e) {}
+        }
+        var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        r.setAttribute("data-theme", (q === "dark" || q === "light") ? q
+          : (saved === "dark" || saved === "light") ? saved : (dark ? "dark" : "light"));
+      })();
+    </script>
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,700;0,900;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="trd-embed.css" />
+    <link rel="stylesheet" href="trd-map.css" />
+    <style>
+      :root {
+        --trd-embed-h: 680px;
+        --trd-embed-h-phone: 680px;
+        --trd-embed-h-wide: 600px;
+        --story-w: 440px;
+        --loss: #b3261e;
+        --bar-sb: #a9afbd;
+      }
+      :root[data-theme="dark"] { --loss: #f2877e; --bar-sb: #5b6275; }
+
+      /* ---------- Hero (standalone only) ---------- */
+      .hero { max-width: 820px; margin: 0 auto; padding: 54px 24px 26px; text-align: center; position: relative; }
+      .hero h1 { font-family: var(--trd-font-serif); font-weight: 900; font-size: clamp(30px, 5vw, 46px); line-height: 1.06; letter-spacing: -0.015em; margin: 0 0 16px; }
+      .hero-lede { font-size: 18px; line-height: 1.6; color: var(--trd-muted); margin: 0 auto; max-width: 660px; }
+      .theme-toggle {
+        position: absolute; top: 20px; right: 20px;
+        display: inline-flex; align-items: center; gap: 7px;
+        background: var(--trd-panel); color: var(--trd-text);
+        border: 1px solid var(--trd-border); border-radius: 999px;
+        padding: 7px 13px; font-size: 13px; font-weight: 700; cursor: pointer;
+      }
+      .theme-toggle:hover { background: var(--trd-bg-soft); }
+
+      /* ---------- Layout ---------- */
+      .layout { display: flex; align-items: flex-start; gap: 20px; max-width: 1240px; margin: 0 auto; padding: 8px 24px 60px; }
+      .map-wrap {
+        position: sticky; top: 16px; flex: 1 1 auto; min-width: 0;
+        height: calc(100vh - 120px); min-height: 440px;
+        border-radius: 12px; overflow: hidden; border: 1px solid var(--trd-border); box-shadow: var(--trd-shadow);
+      }
+      #map { position: absolute; inset: 0; }
+
+      .story-wrap { flex: 0 0 var(--story-w); }
+      .story { display: flex; flex-direction: column; gap: 14px; }
+
+      /* ---------- Portfolio summary card ---------- */
+      .summary {
+        background: var(--trd-bg-soft); border: 1px solid var(--trd-border); border-radius: 10px;
+        padding: 16px 18px;
+      }
+      .summary .eyebrow { font-size: 11px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; color: var(--trd-muted); margin: 0 0 10px; }
+      .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0 0 12px; }
+      .stat .v { font-family: var(--trd-font-serif); font-weight: 900; font-size: 22px; line-height: 1.1; }
+      .stat .v.is-loss { color: var(--loss); }
+      .stat .l { font-size: 12px; line-height: 1.35; color: var(--trd-muted); margin-top: 3px; }
+      .summary .note { font-size: 12.5px; line-height: 1.5; color: var(--trd-muted); margin: 10px 0 0; }
+      .summary .note strong { color: var(--trd-text); }
+
+      /* ---------- Site cards ---------- */
+      .step {
+        background: var(--trd-panel); border: 1px solid var(--trd-border);
+        border-left: 4px solid var(--trd-border); border-radius: 10px;
+        padding: 16px 18px; cursor: pointer;
+        transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+      }
+      .step:hover { transform: translateY(-1px); box-shadow: var(--trd-shadow); }
+      .step.active {
+        border-left-color: var(--trd-brand);
+        box-shadow: var(--trd-shadow);
+        background: color-mix(in srgb, var(--trd-brand) 7%, var(--trd-panel));
+      }
+      .step .kicker {
+        display: flex; align-items: center; gap: 8px;
+        font-size: 11px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase;
+        color: var(--trd-muted); margin: 0 0 8px;
+      }
+      .step .kicker .dot {
+        width: 20px; height: 20px; border-radius: 50%; flex: 0 0 auto;
+        display: inline-flex; align-items: center; justify-content: center;
+        background: var(--trd-brand); color: #fff; font-size: 11px; font-weight: 800;
+      }
+      .step .kicker .badge { margin-left: auto; }
+      .step .proj { font-family: var(--trd-font-serif); font-weight: 900; font-size: 19px; line-height: 1.18; margin: 0 0 12px; }
+      .badge {
+        flex: 0 0 auto; white-space: nowrap;
+        font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;
+        padding: 3px 9px; border-radius: 999px;
+        background: color-mix(in srgb, var(--badge-c) 13%, var(--trd-panel));
+        color: var(--badge-c);
+        border: 1px solid color-mix(in srgb, var(--badge-c) 40%, var(--trd-panel));
+      }
+      .badge.is-loss { --badge-c: var(--loss); }
+      .badge.is-na { --badge-c: var(--trd-muted); }
+
+      /* Paired price bars on a shared scale across cards. */
+      .bars { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; align-items: center; margin: 0 0 12px; }
+      .bars .who { font-size: 12px; font-weight: 700; line-height: 1.2; }
+      .bars .who small { display: block; font-weight: 400; color: var(--trd-muted); font-size: 11.5px; }
+      .bars .track { display: flex; align-items: center; gap: 8px; min-width: 0; }
+      .bars .bar { height: 12px; border-radius: 3px; flex: 0 0 auto; min-width: 2px; }
+      .bars .bar.sb { background: var(--bar-sb); }
+      .bars .bar.nv { background: var(--trd-brand); }
+      .bars .amt { font-size: 13px; font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; }
+      .bars .amt.text { font-weight: 600; white-space: normal; }
+
+      .step .facts { margin: 0; padding-top: 10px; border-top: 1px dashed var(--trd-border); display: grid; grid-template-columns: auto 1fr; gap: 5px 12px; }
+      .step .facts dt { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--trd-muted); padding-top: 1px; }
+      .step .facts dd { margin: 0; font-size: 13px; line-height: 1.45; }
+      .step .facts dd.is-loss { color: var(--loss); font-weight: 700; }
+      .step .facts dd.is-pending { color: var(--trd-muted); font-style: italic; }
+
+      .source { font-size: 11.5px; line-height: 1.5; color: var(--trd-muted); margin: 2px 2px 0; }
+
+      /* ---------- Responsive (standalone) ---------- */
+      @media (max-width: 900px) {
+        .layout { flex-direction: column; padding: 8px 16px 48px; }
+        .map-wrap { position: sticky; top: 0; height: 52vh; border-radius: 0; margin: 0 -16px; width: calc(100% + 32px); }
+        .story-wrap { flex: 1 1 auto; width: 100%; }
+        .hero { padding: 34px 18px 18px; }
+      }
+      @media (max-width: 600px) {
+        .hero { padding-top: 64px; }   /* keep the theme toggle clear of the headline */
+      }
+      @media (max-width: 380px) {
+        .stats { grid-template-columns: 1fr 1fr; }
+      }
+
+      /* =====================================================================
+         EMBED MODE — fixed pixel heights only (no vh/svh). See toolkit README.
+         ===================================================================== */
+      :root[data-layout="embed"] .layout {
+        position: relative; display: block; padding: 0; max-width: none; overflow: hidden;
+      }
+      :root[data-layout="embed"] .map-wrap {
+        position: absolute; top: 0; left: 0; right: 0; bottom: auto;
+        height: 300px; min-height: 0; border-radius: 0; border: none; box-shadow: none; margin: 0; width: auto;
+      }
+      :root[data-layout="embed"] .story-wrap {
+        position: absolute; top: 300px; left: 0; right: 0; bottom: 0;
+        width: auto; overflow-y: auto; -webkit-overflow-scrolling: touch;
+        padding: 12px; border-top: 1px solid var(--trd-border);
+      }
+      @media (max-width: 560px) {
+        :root[data-layout="embed"] .map-wrap { height: 260px; }
+        :root[data-layout="embed"] .story-wrap { top: 260px; }
+      }
+      @media (min-width: 780px) {
+        :root[data-layout="embed"] .map-wrap { position: absolute; inset: 0; height: var(--trd-embed-h-wide); }
+        :root[data-layout="embed"] .story-wrap {
+          position: absolute; top: 0; right: 0; bottom: 0; left: auto;
+          width: 400px; padding: 14px; overflow-y: auto;
+          background: color-mix(in srgb, var(--trd-panel) 88%, transparent);
+          backdrop-filter: blur(6px);
+          border-top: none; border-left: 1px solid var(--trd-border);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero trd-standalone-only">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span aria-hidden="true">☾</span><span>Dark</span>
+      </button>
+      <h1>Novak&rsquo;s Discount on Sterling Bay&rsquo;s North Branch Land</h1>
+      <p class="hero-lede">
+        Sterling Bay spent $146.8 million in 2018 and 2019 assembling six sites along
+        Elston Avenue and Chicago&rsquo;s North Branch. Novak has bought them for
+        $57.9 million. Click a site to see what each side paid.
+      </p>
+    </header>
+
+    <main class="layout trd-embed-fill">
+      <section class="map-wrap trd-map" aria-label="Map of the Novak assemblage sites">
+        <div id="map" role="application" aria-label="Map"></div>
+      </section>
+      <section class="story-wrap" aria-label="Sites">
+        <div class="story" id="story" role="list"></div>
+      </section>
+    </main>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+    <script src="trd-embed.js"></script>
+    <script src="trd-map.js"></script>
+    <script>
+      var TOKEN = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
+
+      // Single brand accent for pins + parcels (matches the theme-aware --trd-brand token).
+      var ACCENT = { light: "#27509b", dark: "#6e92d8" };
+      var EMPTY = { type: "FeatureCollection", features: [] };
+
+      var mapApi = null, FEATURES = [], PARCELS = EMPTY, SUMMARY = null, activeN = null, BAR_MAX = 1;
+      var storyEl = document.getElementById("story");
+
+      // ---- Formatting -------------------------------------------------------
+      function fmtM(v, digits) {
+        if (v == null) return "";
+        v = Math.abs(v) / 1e6;
+        var s = v.toFixed(digits != null ? digits : v >= 100 ? 1 : 2);
+        return "$" + s.replace(/\.?0+$/, "") + "M";
+      }
+      function money(s) {   // "$146,810,000" / "-$88,933,000+ Est." -> dollars
+        var m = String(s || "").replace(/,/g, "").match(/\$(\d+(?:\.\d+)?)(M?)/);
+        return m ? parseFloat(m[1]) * (m[2] ? 1e6 : 1) : null;
+      }
+      function span(s) { return String(s || "").replace(/(\d{2})(\d{2})-\1(\d{2})/, "$1$2–$3"); }   // "2018-2019" -> "2018–19"
+      function fmtDate(s) {  // "03/19/2026" -> "Mar. 19, 2026"
+        var m = String(s || "").match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (!m) return s;
+        var mo = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."][+m[1] - 1];
+        return mo + " " + (+m[2]) + ", " + m[3];
+      }
+      function isPending(s) { return /pending|unrecorded/i.test(String(s || "")); }
+      function esc(s) {
+        return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+
+      // ---- Cards ------------------------------------------------------------
+      function barRow(cls, who, when, num, text) {
+        var amt = num != null
+          ? '<span class="bar ' + cls + '" style="width:calc((100% - 64px) * ' + Math.max(0.01, Math.min(1, num / BAR_MAX)).toFixed(3) + ')"></span>' +
+            '<span class="amt">' + fmtM(num) + "</span>"
+          : '<span class="amt text">' + esc(text) + "</span>";
+        return '<span class="who">' + who + "<small>" + esc(span(when)) + "</small></span>" +
+               '<span class="track">' + amt + "</span>";
+      }
+
+      function buildSummary() {
+        var t = SUMMARY.total, o = SUMMARY.outparcels;
+        var el = document.createElement("div");
+        el.className = "summary";
+        el.innerHTML =
+          '<p class="eyebrow">Full portfolio &middot; ' + esc(t.acres) + " acres</p>" +
+          '<div class="stats">' +
+            '<div class="stat"><div class="v">' + fmtM(money(t.sb_price), 1) + '</div><div class="l">Sterling Bay paid, ' + esc(span(t.sb_date)) + "</div></div>" +
+            '<div class="stat"><div class="v">' + fmtM(money(t.novak_price), 1) + '</div><div class="l">Novak paid, ' + esc(span(t.novak_date)) + "</div></div>" +
+            '<div class="stat"><div class="v is-loss">' + fmtM(money(t.loss), 1) + '+</div><div class="l">Estimated loss</div></div>' +
+          "</div>" +
+          '<p class="note"><strong>The five outparcels</strong> (Nos. 2&ndash;6, ' + esc(o.acres) + " acres) sold for " +
+            fmtM(money(o.novak_price), 1) + " against Sterling Bay&rsquo;s " + fmtM(money(o.sb_price), 1) + ", a " + o.loss_pct + "% loss. " +
+            "Novak financed the purchases with " + fmtM(money(t.loan), 1) + " in loans from " + esc(t.lender) + ".</p>" +
+          '<p class="note">Sterling Bay&rsquo;s total includes its full $104.7 million IL Steel purchase, of which No. 1, 1401 W. Willow St., was a part, so the loss is an estimate.</p>';
+        storyEl.appendChild(el);
+      }
+
+      function buildCards() {
+        storyEl.innerHTML = "";
+        buildSummary();
+        FEATURES.forEach(function (f) {
+          var p = f.properties;
+          var el = document.createElement("article");
+          el.className = "step";
+          el.dataset.n = p.n;
+          el.setAttribute("role", "listitem");
+          el.setAttribute("tabindex", "0");
+          var bars = p.sb_price_num != null && p.novak_price_num != null;   // both priced: draw to scale
+          var badge = p.loss_pct != null
+            ? '<span class="badge is-loss">&minus;' + p.loss_pct + "%</span>"
+            : '<span class="badge is-na">Loss unallocated</span>';
+          var loss = p.loss_num != null
+            ? '<dd class="is-loss">' + fmtM(p.loss_num) + " (" + p.loss_pct + "%)</dd>"
+            : '<dd class="is-pending">' + esc(p.loss) + "</dd>";
+          var loan = isPending(p.loan)
+            ? '<dd class="is-pending">Pending / unrecorded</dd>'
+            : "<dd>" + fmtM(p.loan_num) + " from " + esc(p.lender) + " (" + esc(fmtDate(p.mortgage_date)) + ")</dd>";
+          el.innerHTML =
+            '<p class="kicker"><span class="dot">' + p.n + "</span>" + esc(p.acres) + (p.acres === "1" ? " acre" : " acres") + badge + "</p>" +
+            '<h3 class="proj">' + esc(p.address) + "</h3>" +
+            '<div class="bars">' +
+              barRow("sb", "Sterling Bay", p.sb_date, bars ? p.sb_price_num : null, p.sb_price) +
+              barRow("nv", "Novak", p.novak_date, bars ? p.novak_price_num : null, bars ? "" : fmtM(p.novak_price_num) || p.novak_price) +
+            "</div>" +
+            '<dl class="facts"><dt>Loss</dt>' + loss + "<dt>Novak loan</dt>" + loan + "</dl>";
+          el.addEventListener("click", function () { activate(p.n, true); });
+          el.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activate(p.n, true); }
+          });
+          storyEl.appendChild(el);
+        });
+        var src = document.createElement("p");
+        src.className = "source";
+        src.innerHTML = "Source: Cook County Assessor and Clerk records. Parcel outlines: Cook County GIS. " +
+          "Bars share one scale; No. 1&rsquo;s $34M sale is shown as text.";
+        storyEl.appendChild(src);
+      }
+
+      function featureByN(n) {
+        for (var i = 0; i < FEATURES.length; i++)
+          if (FEATURES[i].properties.n === n) return FEATURES[i];
+        return null;
+      }
+
+      function setActive(feature) {
+        if (!mapApi || !mapApi.map) return;
+        var map = mapApi.map;
+        var src = map.getSource("active");
+        if (src) src.setData(feature ? { type: "FeatureCollection", features: [feature] } : EMPTY);
+        var n = feature ? feature.properties.n : -1;
+        if (map.getLayer("parcels-active-fill")) map.setFilter("parcels-active-fill", ["==", ["get", "n"], n]);
+        if (map.getLayer("parcels-active-line")) map.setFilter("parcels-active-line", ["==", ["get", "n"], n]);
+      }
+
+      function siteBounds(f) {
+        var b = f.properties.bbox;
+        return [[b[0], b[1]], [b[2], b[3]]];
+      }
+      function allBounds() {
+        var b = [180, 90, -180, -90];
+        FEATURES.forEach(function (f) {
+          var x = f.properties.bbox;
+          b = [Math.min(b[0], x[0]), Math.min(b[1], x[1]), Math.max(b[2], x[2]), Math.max(b[3], x[3])];
+        });
+        return [[b[0], b[1]], [b[2], b[3]]];
+      }
+
+      function activate(n, fromClick) {
+        var f = featureByN(n);
+        if (!f) return;
+        activeN = n;
+        Array.prototype.forEach.call(storyEl.querySelectorAll(".step"), function (el) {
+          var on = String(el.dataset.n) === String(n);
+          el.classList.toggle("active", on);
+          if (on && fromClick) el.scrollIntoView({ behavior: prefersReduce() ? "auto" : "smooth", block: "nearest" });
+        });
+        if (mapApi && mapApi.map) {
+          if (fromClick) mapApi.fitBounds(siteBounds(f), { padding: 70, maxZoom: 17 });
+          setActive(f);
+        }
+      }
+
+      function prefersReduce() {
+        return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      }
+
+      // ---- Overlap spreading (per-zoom pixel relaxation, from wynwood_map) ----
+      // The Elston sites sit 130-200 m apart and Nos. 5 and 6 are ~110 m apart,
+      // so at the overview zooms numbered pins collide. For each zoom stop,
+      // project pins to screen pixels, relax overlapping pairs to MIN_PX apart,
+      // and interpolate the offsets by zoom, fading to zero by z18.5.
+      var PIN_R = 13, MIN_PX = 2 * PIN_R + 3, TEXT_SIZE = 13;
+      var ZOOMS = [13, 14, 15, 16, 17];
+      function project(lon, lat, z) {
+        var s = 512 * Math.pow(2, z), rad = lat * Math.PI / 180;
+        return [(lon + 180) / 360 * s, (1 - Math.log(Math.tan(rad) + 1 / Math.cos(rad)) / Math.PI) / 2 * s];
+      }
+      function relax(features, z) {
+        var base = features.map(function (f) { return project(f.geometry.coordinates[0], f.geometry.coordinates[1], z); });
+        var pos = base.map(function (b) { return [b[0], b[1]]; });
+        for (var it = 0; it < 200; it++) {
+          var moved = false;
+          for (var i = 0; i < pos.length; i++) {
+            for (var j = i + 1; j < pos.length; j++) {
+              var dx = pos[j][0] - pos[i][0], dy = pos[j][1] - pos[i][1];
+              var d = Math.sqrt(dx * dx + dy * dy);
+              if (d >= MIN_PX) continue;
+              if (d < 0.01) { dx = 1; dy = 0; d = 1; }
+              var push = (MIN_PX - d) / 2 + 0.05, ux = dx / d, uy = dy / d;
+              pos[i][0] -= ux * push; pos[i][1] -= uy * push;
+              pos[j][0] += ux * push; pos[j][1] += uy * push;
+              moved = true;
+            }
+          }
+          if (!moved) break;
+        }
+        return pos.map(function (p, k) { return [Math.round((p[0] - base[k][0]) * 10) / 10, Math.round((p[1] - base[k][1]) * 10) / 10]; });
+      }
+      function spreadOverlaps(features) {
+        ZOOMS.forEach(function (z) {
+          var offs = relax(features, z);
+          features.forEach(function (f, k) {
+            f.properties["o" + z] = offs[k];
+            f.properties["t" + z] = [offs[k][0] / TEXT_SIZE, offs[k][1] / TEXT_SIZE];   // text-offset is in ems
+          });
+        });
+      }
+      function offsetExpr(prefix) {
+        var e = ["interpolate", ["linear"], ["zoom"]];
+        ZOOMS.forEach(function (z) { e.push(z, ["array", "number", 2, ["get", prefix + z]]); });
+        e.push(18.5, ["literal", [0, 0]]);
+        return e;
+      }
+      var ICON_OFF = offsetExpr("o"), TEXT_OFF = offsetExpr("t");
+
+      // ---- Pin images (canvas-drawn, per theme, added per style.load) ---------
+      function circleImage(r, fill, stroke, strokeW, alpha) {
+        var s = 2, size = (r + strokeW) * 2 + 4;
+        var cv = document.createElement("canvas");
+        cv.width = cv.height = size * s;
+        var g = cv.getContext("2d");
+        g.scale(s, s);
+        g.globalAlpha = alpha == null ? 1 : alpha;
+        g.beginPath(); g.arc(size / 2, size / 2, r, 0, Math.PI * 2);
+        if (fill) { g.fillStyle = fill; g.fill(); }
+        if (stroke && strokeW) { g.lineWidth = strokeW; g.strokeStyle = stroke; g.stroke(); }
+        return { img: g.getImageData(0, 0, cv.width, cv.height), pixelRatio: s };
+      }
+      function ensureImage(map, name, make) {
+        if (map.hasImage(name)) return;
+        var im = make();
+        map.addImage(name, im.img, { pixelRatio: im.pixelRatio });
+      }
+
+      function addLayers(map, c) {
+        var color = ACCENT[c.theme] || ACCENT.light;
+        var PIN = "pin-" + c.theme, GLOW = "glow-" + c.theme, RING = "ring-" + c.theme;
+        var none = ["==", ["get", "n"], activeN == null ? -1 : activeN];
+        ensureImage(map, PIN, function () { return circleImage(PIN_R, color, "#ffffff", 2.5); });
+        ensureImage(map, GLOW, function () { return circleImage(28, color, null, 0, 0.18); });
+        ensureImage(map, RING, function () { return circleImage(PIN_R + 1, null, "#ffffff", 3.5); });
+
+        if (!map.getSource("parcels")) map.addSource("parcels", { type: "geojson", data: PARCELS });
+        if (!map.getSource("sites")) map.addSource("sites", { type: "geojson", data: c.data });
+        if (!map.getSource("active")) map.addSource("active", { type: "geojson", data: EMPTY });
+
+        if (!map.getLayer("parcels-fill"))
+          map.addLayer({ id: "parcels-fill", type: "fill", source: "parcels",
+            paint: { "fill-color": color, "fill-opacity": c.theme === "dark" ? 0.22 : 0.16 } });
+        if (!map.getLayer("parcels-line"))
+          map.addLayer({ id: "parcels-line", type: "line", source: "parcels",
+            paint: { "line-color": color, "line-width": 1.5, "line-opacity": 0.85 } });
+        if (!map.getLayer("parcels-active-fill"))
+          map.addLayer({ id: "parcels-active-fill", type: "fill", source: "parcels", filter: none,
+            paint: { "fill-color": color, "fill-opacity": c.theme === "dark" ? 0.42 : 0.34 } });
+        if (!map.getLayer("parcels-active-line"))
+          map.addLayer({ id: "parcels-active-line", type: "line", source: "parcels", filter: none,
+            paint: { "line-color": color, "line-width": 3 } });
+
+        if (!map.getLayer("active-glow"))
+          map.addLayer({ id: "active-glow", type: "symbol", source: "active",
+            layout: { "icon-image": GLOW, "icon-offset": ICON_OFF, "icon-allow-overlap": true, "icon-ignore-placement": true } });
+        if (!map.getLayer("points"))
+          map.addLayer({ id: "points", type: "symbol", source: "sites",
+            layout: {
+              "icon-image": PIN, "icon-offset": ICON_OFF, "icon-allow-overlap": true, "icon-ignore-placement": true,
+              "text-field": ["to-string", ["get", "n"]], "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+              "text-size": TEXT_SIZE, "text-offset": TEXT_OFF, "text-allow-overlap": true, "text-ignore-placement": true,
+            },
+            paint: { "text-color": "#ffffff" } });
+        if (!map.getLayer("active-ring"))
+          map.addLayer({ id: "active-ring", type: "symbol", source: "active",
+            layout: { "icon-image": RING, "icon-offset": ICON_OFF, "icon-allow-overlap": true, "icon-ignore-placement": true } });
+      }
+
+      var controller = TRDEmbed({
+        prefix: "novak-assemblage-10-06-26",
+        themeKey: "novak-assemblage-10-06-26:theme",
+        toggle: "#themeToggle",
+        mountTarget: "#map",
+        onMount: function (ctx) {
+          Promise.all([TRDMap.loadGeoJSON("data.geojson"), TRDMap.loadGeoJSON("parcels.geojson")]).then(function (res) {
+            var GEO = res[0];
+            PARCELS = res[1];
+            SUMMARY = GEO.summary;
+            FEATURES = GEO.features.slice().sort(function (a, b) { return a.properties.n - b.properties.n; });
+            FEATURES.forEach(function (f) {
+              var p = f.properties;
+              if (p.sb_price_num != null && p.novak_price_num != null) BAR_MAX = Math.max(BAR_MAX, p.sb_price_num, p.novak_price_num);
+            });
+            spreadOverlaps(FEATURES);
+            buildCards();
+            ctx.requestResize();
+
+            mapApi = TRDMap.create({
+              container: "map",
+              token: TOKEN,
+              theme: ctx.theme,
+              embed: ctx.isEmbed,
+              data: GEO,
+              bounds: allBounds(),
+              fitBoundsOptions: { padding: ctx.isEmbed ? 40 : (window.innerWidth < 700 ? 28 : 70), maxZoom: 16 },
+              overlayWidth: 400,
+              cooperativeGestures: ctx.isEmbed,
+              interactiveLayers: ["points", "parcels-fill"],
+              addLayers: addLayers,
+              onFeatureClick: function (feature) {
+                if (feature && feature.properties) activate(feature.properties.n, true);
+              },
+            });
+
+            mapApi.on("style", function () {
+              if (activeN != null) setActive(featureByN(activeN));
+            });
+            mapApi.on("loaded", function () {
+              activate(FEATURES[0].properties.n, false);
+              ctx.postLoaded();
+            });
+          }).catch(function (e) {
+            console.error("Could not load map data", e);
+            storyEl.innerHTML = '<div class="step">Data failed to load.</div>';
+          });
+        },
+        onTheme: function (theme, ctx) {
+          if (mapApi) mapApi.setTheme(theme);
+          ctx.requestResize();
+        },
+      });
+    </script>
+  </body>
+</html>
