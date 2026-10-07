@@ -426,7 +426,7 @@
           var fl = rows.reduce(function (s, d) { return s + (d.state === "FL" ? d.amount : 0); }, 0);
           var tiles = [
             [rows.length.toLocaleString("en-US"), "real estate donors"],
-            [moneyShort(total), "combined contributions"],
+            [money(total), "combined contributions"],
             [money(median(rows.map(function (d) { return d.amount; }))), "median contribution per donor"],
             [Math.round((fl / total) * 100) + "%", "of the money came from Florida addresses"],
           ];
