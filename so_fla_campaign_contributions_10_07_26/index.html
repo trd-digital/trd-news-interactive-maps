@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Florida Governor's Race Money | The Real Deal</title>
+    <meta name="description" content="Real estate donors, monthly fundraising and monthly spending for Byron Donalds and David Jolly in Florida's 2026 governor's race." />
+
+    <!-- Pre-paint boot snippet (trd_graphics core/boot-snippet.html). MUST stay inline and first. -->
+    <script>
+      (function () {
+        var r = document.documentElement, p = null;
+        try { p = new URLSearchParams(location.search); } catch (e) {}
+        var framed;
+        try { framed = window.self !== window.top; } catch (e) { framed = true; }
+        if ((p && p.get("layout") === "embed") || framed) r.setAttribute("data-layout", "embed");
+        var q = p && p.get("theme"), saved = null;
+        if (r.getAttribute("data-layout") !== "embed") {
+          try { saved = localStorage.getItem("fl-gov-money:theme"); } catch (e) {}
+        }
+        var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        r.setAttribute("data-theme", (q === "dark" || q === "light") ? q
+          : (saved === "dark" || saved === "light") ? saved : (dark ? "dark" : "light"));
+      })();
+    </script>
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,700;0,900;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="trd-embed.css" />
+    <link rel="stylesheet" href="trd-map.css" />
+    <style>
+      /* ---- Chart palette (dataviz slots 1–2, validated vs TRD surfaces in
+              SoFlaCampaignDonations_08_12_26; same values) ---- */
+      :root {
+        --viz-primary: #2a78d6;   /* before the Aug. 18 primary — slot 1 blue */
+        --viz-general: #eb6834;   /* Aug. 18 onward — slot 2 orange */
+        --viz-pin: var(--trd-brand);
+        --viz-grid: #ebedf3;
+        --viz-axis: #c9cdd8;
+        --map-h: 440px;
+      }
+      :root[data-theme="dark"] {
+        --viz-primary: #3987e5;
+        --viz-general: #d95926;
+        --viz-grid: #232836;
+        --viz-axis: #3a4050;
+      }
+
+      .page { max-width: 880px; margin: 0 auto; padding: 26px 20px 40px; }
+
+      /* ---- Hero ---- */
+      .kicker {
+        font-size: 12px; font-weight: 700; letter-spacing: 0.12em;
+        text-transform: uppercase; color: var(--trd-brand); margin: 0 0 10px;
+      }
+      .headline {
+        font-family: var(--trd-font-serif); font-weight: 900;
+        font-size: clamp(26px, 4.5vw, 38px); line-height: 1.12;
+        letter-spacing: -0.01em; margin: 0 0 12px;
+      }
+      .dek { font-size: 16px; line-height: 1.55; color: var(--trd-muted); margin: 0 0 30px; max-width: 660px; }
+
+      /* ---- Sections ---- */
+      .sec { margin: 0 0 44px; }
+      .sec-title { font-family: var(--trd-font-serif); font-weight: 900; font-size: 21px; margin: 0 0 4px; }
+      .sec-sub { font-size: 14px; color: var(--trd-muted); margin: 0 0 14px; line-height: 1.45; }
+      .sub-title { font-size: 14px; font-weight: 700; margin: 18px 0 6px; }
+
+      /* ---- Candidate tabs ---- */
+      .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--trd-border); margin: 0 0 18px; }
+      .tabs button {
+        appearance: none; background: transparent; border: 0; cursor: pointer;
+        font-family: var(--trd-font-sans); font-size: 15px; font-weight: 700;
+        color: var(--trd-muted); padding: 10px 18px 9px; margin-bottom: -2px;
+        border-bottom: 3px solid transparent;
+      }
+      .tabs button[aria-selected="true"] { color: var(--trd-text); border-bottom-color: var(--trd-brand); }
+      .tabs button:hover { color: var(--trd-text); }
+      .tabs button:focus-visible { outline: 2px solid var(--trd-brand); outline-offset: 2px; }
+
+      /* ---- KPI tiles ---- */
+      .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0 0 20px; }
+      .kpi { background: var(--trd-bg-soft); border-radius: 8px; padding: 12px 14px; }
+      .kpi .v { font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
+      .kpi .l { font-size: 12.5px; color: var(--trd-muted); margin-top: 4px; line-height: 1.3; }
+      @media (max-width: 640px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+
+      /* ---- Map ---- */
+      .map-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 0 0 8px; }
+      .map-bar .note { font-size: 13px; color: var(--trd-muted); }
+      .seg { display: inline-flex; border: 1px solid var(--trd-border); border-radius: 999px; overflow: hidden; }
+      .seg button {
+        background: transparent; border: 0; cursor: pointer; color: var(--trd-text);
+        font: 700 12.5px var(--trd-font-sans); padding: 6px 13px;
+      }
+      .seg button[aria-pressed="true"] { background: var(--trd-text); color: var(--trd-bg); }
+      .map-wrap { position: relative; height: var(--map-h); border-radius: 8px; overflow: hidden; border: 1px solid var(--trd-border); }
+      #map { position: absolute; inset: 0; }
+      .map-fallback { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; color: var(--trd-muted); font-size: 14px; }
+      .size-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; margin-top: 8px; font-size: 12px; color: var(--trd-muted); }
+      .size-legend .k { display: flex; align-items: center; gap: 6px; }
+      .size-legend .c { border-radius: 50%; flex: none; background: var(--viz-pin); opacity: 0.7; border: 1px solid var(--trd-bg); }
+      .pop-list { margin: 6px 0 0; padding: 0; list-style: none; font-size: 12.5px; }
+      .pop-list li { padding: 4px 0; border-top: 1px solid var(--trd-border); }
+      .pop-list b { font-variant-numeric: tabular-nums; }
+      .pop-list .ind { color: var(--trd-muted); }
+      .pop-addr { font-size: 12px; color: var(--trd-muted); }
+      .pop-more { font-size: 12px; color: var(--trd-muted); padding-top: 4px; }
+      @media (max-width: 560px) { :root { --map-h: 340px; } }
+
+      /* ---- Table ---- */
+      .tbl-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 8px; }
+      .tbl-tools input {
+        flex: 1 1 220px; max-width: 320px; padding: 8px 12px; font: 14px var(--trd-font-sans);
+        color: var(--trd-text); background: var(--trd-bg); border: 1px solid var(--trd-border); border-radius: 999px;
+      }
+      .tbl-tools input:focus-visible { outline: 2px solid var(--trd-brand); outline-offset: 1px; }
+      .tbl-wrap { overflow-x: auto; }
+      table.data { width: 100%; border-collapse: collapse; font-size: 13px; }
+      table.data th {
+        text-align: left; font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase;
+        color: var(--trd-muted); font-weight: 700; padding: 8px 10px;
+        border-bottom: 2px solid var(--trd-border); white-space: nowrap;
+      }
+      table.data td { padding: 8px 10px; border-bottom: 1px solid var(--trd-border); vertical-align: top; }
+      table.data td.num, table.data th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      table.data td.num { font-weight: 700; }
+      table.data td.addr { color: var(--trd-muted); min-width: 180px; }
+      table.data td.name { font-weight: 600; min-width: 140px; }
+      table.data td.name small { display: none; font-weight: 400; color: var(--trd-muted); font-size: 12px; margin-top: 2px; }
+      @media (max-width: 560px) {
+        table.data th.addr, table.data td.addr { display: none; }
+        table.data td.name small { display: block; }
+        table.data td.name { min-width: 0; }
+        table.data th, table.data td { padding: 8px 6px; }
+      }
+      .pager { display: flex; align-items: center; gap: 14px; margin-top: 14px; }
+      .pager button {
+        background: transparent; color: var(--trd-text);
+        border: 1px solid var(--trd-border); border-radius: 999px; cursor: pointer;
+        padding: 8px 18px; font-size: 13px; font-weight: 700; font-family: var(--trd-font-sans);
+      }
+      .pager button:hover:not(:disabled) { background: var(--trd-bg-soft); }
+      .pager button:disabled { opacity: 0.4; cursor: default; }
+      .pager .status { font-size: 12.5px; color: var(--trd-muted); font-variant-numeric: tabular-nums; }
+
+      /* ---- Notes ---- */
+      .notes { margin: 16px 0 0; padding: 12px 14px; border-left: 3px solid var(--trd-border); font-size: 12.5px; color: var(--trd-muted); line-height: 1.5; }
+      .notes p { margin: 0 0 6px; }
+      .notes p:last-child { margin: 0; }
+
+      /* ---- Monthly bar charts ---- */
+      .legend { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 0 0 4px; font-size: 13px; }
+      .legend .item { display: flex; align-items: center; gap: 7px; }
+      .legend .swatch { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+      .chart { position: relative; }
+      .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+      .chart .grid { stroke: var(--viz-grid); stroke-width: 1; }
+      .chart .base { stroke: var(--viz-axis); stroke-width: 1; }
+      .chart .tick { font-size: 11px; fill: var(--trd-muted); font-variant-numeric: tabular-nums; }
+      .chart .mlabel { font-size: 11px; fill: var(--trd-muted); }
+      .chart .ylabel { font-size: 11px; fill: var(--trd-muted); font-weight: 700; }
+      .chart .peak { font-size: 11.5px; font-weight: 700; fill: var(--trd-text); font-variant-numeric: tabular-nums; }
+      .chart .rule { stroke: var(--trd-text); stroke-width: 1.25; stroke-dasharray: 3 3; }
+      .chart .rule-label { font-size: 11px; font-weight: 700; fill: var(--trd-text); }
+      .chart .band { fill: var(--trd-bg-soft); }
+      .chart .hit { fill: transparent; cursor: pointer; }
+      .chart .hit:focus { outline: none; }
+      .chart .col.dim rect.bar { opacity: 0.35; }
+      details.tbl { margin-top: 10px; font-size: 13px; }
+      details.tbl summary { cursor: pointer; color: var(--trd-brand); font-weight: 700; font-size: 13px; }
+      details.tbl table { margin-top: 8px; }
+
+      /* ---- Tooltip ---- */
+      .tip {
+        position: absolute; z-index: 30; pointer-events: none; display: none;
+        max-width: 260px; padding: 10px 12px; border-radius: 8px;
+        background: var(--trd-panel); border: 1px solid var(--trd-border);
+        box-shadow: var(--trd-shadow); font-size: 12.5px; line-height: 1.4;
+      }
+      .tip .t-head { font-weight: 700; margin-bottom: 4px; }
+      .tip .t-big { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
+      .tip .t-meta { color: var(--trd-muted); }
+      .tip .t-row { display: flex; align-items: center; gap: 6px; font-variant-numeric: tabular-nums; margin-top: 3px; }
+      .tip .t-row i { width: 9px; height: 9px; border-radius: 2px; flex: none; }
+
+      .theme-toggle {
+        margin-left: auto; background: transparent; color: var(--trd-text);
+        border: 1px solid var(--trd-border); border-radius: 999px; cursor: pointer;
+        padding: 6px 12px; font-size: 12px; font-weight: 700;
+      }
+      .foot { font-size: 11px; color: var(--trd-muted); letter-spacing: 0.03em; margin-top: 8px; }
+
+      /* ---- Embed mode: tall content page, iframe auto-sizes (dossier pattern).
+             Overrides the core's fixed-height widget rule. Only the map band
+             is a fixed px height (no vh — sizing trap). ---- */
+      :root[data-layout="embed"],
+      :root[data-layout="embed"] body {
+        height: auto; min-height: 0; overflow: visible;
+      }
+      :root[data-layout="embed"] .page { max-width: none; padding: 8px 16px 30px; }
+      :root[data-layout="embed"] { --map-h: 400px; }
+      @media (max-width: 560px) { :root[data-layout="embed"] { --map-h: 320px; } }
+    </style>
+  </head>
+  <body>
+    <header class="trd-header">
+      <h1>Florida Governor&rsquo;s Race</h1>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">Dark</button>
+    </header>
+
+    <main class="page" id="app">
+      <section class="sec">
+        <p class="kicker">Campaign finance</p>
+        <h1 class="headline">The money behind Florida&rsquo;s race for governor</h1>
+        <p class="dek">
+          Who in real estate is writing checks to Byron Donalds and David Jolly, where
+          that money comes from, and how each campaign&rsquo;s fundraising and spending
+          picked up month by month heading into and out of the Aug. 18 primary.
+        </p>
+      </section>
+
+      <!-- ===================== 1. Real estate donors ===================== -->
+      <section class="sec" id="reSec">
+        <h2 class="sec-title">Real estate donors</h2>
+        <p class="sec-sub">Real estate and related donors who gave $1,000 or more, Feb. 16, 2025, to Sept. 25, 2026. Amounts are each donor&rsquo;s combined total.</p>
+        <div class="tabs" role="tablist" aria-label="Candidate" data-target="re"></div>
+
+        <div class="kpis" id="reKpis"></div>
+
+        <h3 class="sub-title">Where the money came from</h3>
+        <div class="map-bar">
+          <div class="seg" role="group" aria-label="Map extent">
+            <button type="button" data-zoom="fl" aria-pressed="true">Florida</button>
+            <button type="button" data-zoom="all" aria-pressed="false">All donors</button>
+          </div>
+          <span class="note" id="mapNote"></span>
+        </div>
+        <div class="map-wrap">
+          <div id="map" role="region" aria-label="Map of real estate donor locations"></div>
+          <div class="map-fallback" id="mapFallback">Map unavailable — see the table below.</div>
+        </div>
+        <div class="size-legend" id="sizeLegend"></div>
+
+        <h3 class="sub-title">Every real estate donor</h3>
+        <div class="tbl-tools">
+          <input type="search" id="reSearch" placeholder="Search name, address or industry" aria-label="Search real estate donors" />
+        </div>
+        <div class="tbl-wrap">
+          <table class="data">
+            <thead><tr><th>Name</th><th class="addr">Address</th><th class="num">Contribution</th><th>Industry</th></tr></thead>
+            <tbody id="reBody"></tbody>
+          </table>
+        </div>
+        <nav class="pager" aria-label="Real estate donor table pages">
+          <button id="pgPrev" type="button">&lsaquo; Prev</button>
+          <span class="status" id="pgStatus"></span>
+          <button id="pgNext" type="button">Next &rsaquo;</button>
+        </nav>
+        <div class="notes">
+          <p>Amounts are the total each donor contributed from Feb. 16, 2025, to Sept. 25, 2026. A donor&rsquo;s total may combine several contributions made over multiple weeks.</p>
+          <p>Only contributions of $1,000 or more are included. Map locations are based on the address listed in campaign filings; P.O. boxes are placed at their post office.</p>
+        </div>
+      </section>
+
+      <!-- ===================== 2. Fundraising momentum ===================== -->
+      <section class="sec" id="raisedSec">
+        <h2 class="sec-title">Fundraising, month by month</h2>
+        <p class="sec-sub">All contributions, by the month they were made. Hover or tap a month for details.</p>
+        <div class="tabs" role="tablist" aria-label="Candidate" data-target="raised"></div>
+        <div class="legend" data-legend></div>
+        <h3 class="sub-title">Dollars raised</h3>
+        <div class="chart" id="raisedAmt"></div>
+        <h3 class="sub-title">Number of contributions</h3>
+        <div class="chart" id="raisedCnt"></div>
+        <details class="tbl"><summary>Show the numbers</summary><div class="tbl-wrap" id="raisedTbl"></div></details>
+        <div class="notes">
+          <p>The number of contributions is not the number of donors: a person or company may have made several contributions in a month.</p>
+          <p>Contributions dated before Aug. 18, 2026, count toward the primary. September 2026 runs through Sept. 25. Refunded contributions are excluded.</p>
+        </div>
+      </section>
+
+      <!-- ===================== 3. Spending momentum ===================== -->
+      <section class="sec" id="spentSec">
+        <h2 class="sec-title">Spending, month by month</h2>
+        <p class="sec-sub">All campaign expenditures, by the month they were made. Hover or tap a month for details.</p>
+        <div class="tabs" role="tablist" aria-label="Candidate" data-target="spent"></div>
+        <div class="legend" data-legend></div>
+        <h3 class="sub-title">Dollars spent</h3>
+        <div class="chart" id="spentAmt"></div>
+        <h3 class="sub-title">Number of expenditures</h3>
+        <div class="chart" id="spentCnt"></div>
+        <details class="tbl"><summary>Show the numbers</summary><div class="tbl-wrap" id="spentTbl"></div></details>
+        <div class="notes">
+          <p>Expenditures dated before Aug. 18, 2026, fall in the primary period. September 2026 runs through Sept. 25. Vendor refunds are excluded.</p>
+        </div>
+      </section>
+
+      <p class="foot">Source: Florida Division of Elections</p>
+    </main>
+
+    <div class="tip" id="tip" role="status"></div>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+    <script src="trd-embed.js"></script>
+    <script src="trd-map.js"></script>
+    <script src="data.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        var TOKEN = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
+        var D = window.FLGOV;
+        var CANDS = [
+          { key: "donalds", name: "Byron Donalds" },
+          { key: "jolly", name: "David Jolly" },
+        ];
+        var MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
+        var BOUNDS_FL = [[-87.7, 24.4], [-79.9, 31.1]];
+        var state = { re: "donalds", raised: "donalds", spent: "donalds", zoom: "fl", page: 0, q: "" };
+        var controller, mapApi = null;
+
+        function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+        function el(tag, cls, text) {
+          var e = document.createElement(tag);
+          if (cls) e.className = cls;
+          if (text != null) e.textContent = text;
+          return e;
+        }
+        function svgEl(tag, attrs, text) {
+          var e = document.createElementNS("http://www.w3.org/2000/svg", tag);
+          for (var k in attrs) e.setAttribute(k, attrs[k]);
+          if (text != null) e.textContent = text;
+          return e;
+        }
+        function money(n) { return "$" + Math.round(n).toLocaleString("en-US"); }
+        function moneyShort(n) {
+          if (n >= 1e6) return "$" + (n / 1e6).toFixed(n >= 1e7 ? 0 : 1).replace(/\.0$/, "") + "M";
+          if (n >= 1e3) return "$" + (n / 1e3).toFixed(n >= 1e5 ? 0 : 1).replace(/\.0$/, "") + "K";
+          return "$" + Math.round(n);
+        }
+        function monthName(m, withYear) {
+          var p = m.split("-");
+          return MONTHS[+p[1] - 1] + (withYear ? " " + p[0] : "");
+        }
+        function median(xs) {
+          var s = xs.slice().sort(function (a, b) { return a - b; });
+          var n = s.length;
+          return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : 0;
+        }
+        function resize() { if (controller) controller.requestResize(); }
+        // controller isn't assigned yet inside onMount; the boot snippet's attribute is.
+        function isEmbed() { return document.documentElement.getAttribute("data-layout") === "embed"; }
+
+        /* ---------- tabs ---------- */
+        function buildTabs() {
+          document.querySelectorAll(".tabs").forEach(function (bar) {
+            var target = bar.getAttribute("data-target");
+            CANDS.forEach(function (c) {
+              var b = el("button", null, c.name);
+              b.type = "button";
+              b.setAttribute("role", "tab");
+              b.setAttribute("data-cand", c.key);
+              b.addEventListener("click", function () { selectTab(target, c.key, b); });
+              b.addEventListener("keydown", function (ev) {
+                if (ev.key !== "ArrowLeft" && ev.key !== "ArrowRight") return;
+                var sib = ev.key === "ArrowRight" ? b.nextElementSibling || bar.firstElementChild
+                                                  : b.previousElementSibling || bar.lastElementChild;
+                sib.focus(); sib.click();
+              });
+              bar.appendChild(b);
+            });
+          });
+          syncTabs();
+        }
+        function syncTabs() {
+          document.querySelectorAll(".tabs").forEach(function (bar) {
+            var cur = state[bar.getAttribute("data-target")];
+            bar.querySelectorAll("button").forEach(function (b) {
+              var on = b.getAttribute("data-cand") === cur;
+              b.setAttribute("aria-selected", on ? "true" : "false");
+              b.tabIndex = on ? 0 : -1;
+            });
+          });
+        }
+        function selectTab(target, cand) {
+          if (state[target] === cand) return;
+          state[target] = cand;
+          syncTabs();
+          if (target === "re") { state.page = 0; renderRe(); }
+          else renderMomentum(target);
+          resize();
+        }
+
+        /* ---------- tooltip (textContent only — sheet strings are untrusted) ---------- */
+        var tip = document.getElementById("tip");
+        function showTip(nodes, ev) {
+          tip.innerHTML = "";
+          nodes.forEach(function (n) { tip.appendChild(n); });
+          tip.style.display = "block";
+          moveTip(ev);
+        }
+        function moveTip(ev) {
+          var pad = 14, x, y;
+          if (ev.type && ev.type.indexOf("focus") === 0) {
+            var r = ev.target.getBoundingClientRect();
+            x = r.left + window.scrollX + r.width / 2; y = r.top + window.scrollY;
+          } else { x = ev.pageX; y = ev.pageY; }
+          var w = tip.offsetWidth, h = tip.offsetHeight;
+          var maxX = window.scrollX + document.documentElement.clientWidth;
+          var left = x + pad;
+          if (left + w + 8 > maxX) left = x - w - pad;
+          var top = y - h - pad;
+          if (top < window.scrollY + 4) top = y + pad;
+          tip.style.left = Math.max(4, left) + "px";
+          tip.style.top = Math.max(0, top) + "px";
+        }
+        function hideTip() { tip.style.display = "none"; }
+
+        /* =================== 1. Real estate donors =================== */
+        function reRows() { return D.re[state.re]; }
+
+        function renderKpis() {
+          var rows = reRows();
+          var total = rows.reduce(function (s, d) { return s + d.amount; }, 0);
+          var fl = rows.reduce(function (s, d) { return s + (d.state === "FL" ? d.amount : 0); }, 0);
+          var tiles = [
+            [rows.length.toLocaleString("en-US"), "real estate donors"],
+            [moneyShort(total), "combined contributions"],
+            [money(median(rows.map(function (d) { return d.amount; }))), "median contribution per donor"],
+            [Math.round((fl / total) * 100) + "%", "of the money came from Florida addresses"],
+          ];
+          var box = document.getElementById("reKpis");
+          box.innerHTML = "";
+          tiles.forEach(function (t) {
+            var k = el("div", "kpi");
+            k.appendChild(el("div", "v", t[0]));
+            k.appendChild(el("div", "l", t[1]));
+            box.appendChild(k);
+          });
+        }
+
+        // Donors at the same geocoded point share one circle (e.g. a family
+        // office filing under several LLCs); its popup lists them all.
+        function reGeojson() {
+          var byPt = {};
+          reRows().forEach(function (d) {
+            if (d.lat == null) return;
+            var k = d.lon + "," + d.lat;
+            (byPt[k] = byPt[k] || { lon: d.lon, lat: d.lat, donors: [], amt: 0 }).donors.push(d);
+            byPt[k].amt += d.amount;
+          });
+          var feats = Object.keys(byPt).map(function (k, i) {
+            var p = byPt[k];
+            return {
+              type: "Feature", id: i,
+              properties: { amt: p.amt, idx: i },
+              geometry: { type: "Point", coordinates: [p.lon, p.lat] },
+            };
+          });
+          reGeojson.points = Object.keys(byPt).map(function (k) { return byPt[k]; });
+          return { type: "FeatureCollection", features: feats };
+        }
+
+        function radiusScale() {
+          var max = Math.max.apply(null, reGeojson.points.map(function (p) { return p.amt; }));
+          var lo = Math.sqrt(1000), hi = Math.sqrt(max);
+          var small = document.documentElement.clientWidth < 560;
+          var rMax = small ? 22 : 30;
+          return { lo: lo, hi: hi, rMin: 3, rMax: rMax, max: max,
+                   r: function (a) { return 3 + (Math.sqrt(a) - lo) / Math.max(1, hi - lo) * (rMax - 3); } };
+        }
+
+        function addLayers(map) {
+          var data = reGeojson();
+          var s = radiusScale();
+          if (map.getLayer("donors")) map.removeLayer("donors");
+          if (map.getSource("donors")) map.removeSource("donors");
+          map.addSource("donors", { type: "geojson", data: data });
+          map.addLayer({
+            id: "donors", type: "circle", source: "donors",
+            paint: {
+              "circle-radius": ["interpolate", ["linear"], ["sqrt", ["get", "amt"]], s.lo, s.rMin, s.hi, s.rMax],
+              "circle-color": css("--viz-pin"),
+              "circle-opacity": 0.62,
+              "circle-stroke-color": css("--trd-bg"),
+              "circle-stroke-width": 1.25,
+            },
+            // smaller circles drawn on top so they stay clickable
+            layout: { "circle-sort-key": ["-", 0, ["get", "amt"]] },
+          });
+          renderSizeLegend(s);
+        }
+
+        function renderSizeLegend(s) {
+          var box = document.getElementById("sizeLegend");
+          box.innerHTML = "";
+          box.appendChild(el("span", null, "Circle area = amount given from that address:"));
+          var steps = [1000, s.max >= 1e6 ? 100000 : 10000, s.max];
+          if (s.max >= 1e6) steps.splice(2, 0, 1000000);
+          steps.forEach(function (a) {
+            var k = el("span", "k");
+            var c = el("span", "c");
+            var r = s.r(a);
+            c.style.width = c.style.height = (2 * r) + "px";
+            k.appendChild(c);
+            k.appendChild(el("span", null, moneyShort(a)));
+            box.appendChild(k);
+          });
+        }
+
+        function renderMapNote() {
+          var rows = reRows();
+          var out = rows.filter(function (d) { return d.state !== "FL"; });
+          var amt = out.reduce(function (s, d) { return s + d.amount; }, 0);
+          document.getElementById("mapNote").textContent = out.length
+            ? out.length + " donor" + (out.length === 1 ? "" : "s") + " (" + moneyShort(amt) + ") gave from outside Florida."
+            : "Every donor gave from a Florida address.";
+        }
+
+        function allBounds() {
+          var w = 180, s = 90, e = -180, n = -90;
+          reGeojson.points.forEach(function (p) {
+            w = Math.min(w, p.lon); e = Math.max(e, p.lon); s = Math.min(s, p.lat); n = Math.max(n, p.lat);
+          });
+          w = Math.min(w, BOUNDS_FL[0][0]); s = Math.min(s, BOUNDS_FL[0][1]);
+          e = Math.max(e, BOUNDS_FL[1][0]); n = Math.max(n, BOUNDS_FL[1][1]);
+          return [[w, s], [e, n]];
+        }
+        function frame(animate) {
+          if (!mapApi || !mapApi.map) return;
+          var b = state.zoom === "fl" ? BOUNDS_FL : allBounds();
+          mapApi.map.fitBounds(b, { padding: 28, duration: animate ? 700 : 0 });
+        }
+
+        var popup = null;
+        function openPopup(feature) {
+          var p = reGeojson.points[feature.properties.idx];
+          if (!p) return;
+          var donors = p.donors.slice().sort(function (a, b) { return b.amount - a.amount; });
+          var root = el("div", "trd-popup-body");
+          if (donors.length > 1) {
+            root.appendChild(el("h3", null, donors.length + " donors · " + money(p.amt)));
+          } else {
+            root.appendChild(el("h3", null, donors[0].name));
+          }
+          root.appendChild(el("div", "pop-addr", donors[0].address));
+          var ul = el("ul", "pop-list");
+          donors.slice(0, 6).forEach(function (d) {
+            var li = el("li");
+            if (donors.length > 1) { li.appendChild(el("span", null, d.name + " ")); }
+            li.appendChild(el("b", null, money(d.amount)));
+            li.appendChild(el("div", "ind", d.industry));
+            ul.appendChild(li);
+          });
+          root.appendChild(ul);
+          if (donors.length > 6) root.appendChild(el("div", "pop-more", "and " + (donors.length - 6) + " more — see the table"));
+          if (popup) popup.remove();
+          popup = new mapboxgl.Popup({ maxWidth: "280px", offset: 8 })
+            .setLngLat(feature.geometry.coordinates).setDOMContent(root).addTo(mapApi.map);
+        }
+
+        function buildMap() {
+          if (!window.mapboxgl) { document.getElementById("mapFallback").style.display = "flex"; return; }
+          mapApi = TRDMap.create({
+            container: "map",
+            token: TOKEN,
+            theme: document.documentElement.getAttribute("data-theme"),
+            embed: isEmbed(),
+            cooperativeGestures: isEmbed(),
+            bounds: BOUNDS_FL,
+            fitBoundsOptions: { padding: 28 },
+            minZoom: 2.5,
+            maxZoom: 15,
+            addLayers: addLayers,
+            interactiveLayers: ["donors"],
+            onFeatureClick: openPopup,
+            onTokenError: function () { document.getElementById("mapFallback").style.display = "flex"; },
+          });
+        }
+
+        function updateMap() {
+          if (popup) { popup.remove(); popup = null; }
+          if (!mapApi || !mapApi.map) return;
+          var m = mapApi.map;
+          if (m.isStyleLoaded() && m.getSource("donors")) { addLayers(m); frame(true); }
+        }
+
+        document.querySelectorAll("[data-zoom]").forEach(function (b) {
+          b.addEventListener("click", function () {
+            state.zoom = b.getAttribute("data-zoom");
+            document.querySelectorAll("[data-zoom]").forEach(function (x) {
+              x.setAttribute("aria-pressed", x === b ? "true" : "false");
+            });
+            frame(true);
+          });
+        });
+
+        /* ---------- table ---------- */
+        var PAGE = 15;
+        function filtered() {
+          var q = state.q.trim().toLowerCase();
+          if (!q) return reRows();
+          return reRows().filter(function (d) {
+            return (d.name + " " + d.address + " " + d.industry).toLowerCase().indexOf(q) !== -1;
+          });
+        }
+        function renderTable() {
+          var rows = filtered();
+          var pages = Math.max(1, Math.ceil(rows.length / PAGE));
+          state.page = Math.min(state.page, pages - 1);
+          var start = state.page * PAGE;
+          var shown = rows.slice(start, start + PAGE);
+          var body = document.getElementById("reBody");
+          body.innerHTML = "";
+          if (!shown.length) {
+            var tr0 = el("tr"), td0 = el("td", null, "No donors match that search.");
+            td0.colSpan = 4; tr0.appendChild(td0); body.appendChild(tr0);
+          }
+          shown.forEach(function (d) {
+            var tr = el("tr");
+            var nm = el("td", "name", d.name);
+            nm.appendChild(el("small", null, d.address)); // phone: address folds under the name
+            tr.appendChild(nm);
+            tr.appendChild(el("td", "addr", d.address));
+            tr.appendChild(el("td", "num", money(d.amount)));
+            tr.appendChild(el("td", null, d.industry));
+            body.appendChild(tr);
+          });
+          document.getElementById("pgStatus").textContent = rows.length
+            ? (start + 1) + "–" + (start + shown.length) + " of " + rows.length : "0 of 0";
+          document.getElementById("pgPrev").disabled = state.page === 0;
+          document.getElementById("pgNext").disabled = state.page >= pages - 1;
+          document.querySelector(".pager").style.display = rows.length > PAGE ? "" : "none";
+        }
+        document.getElementById("pgPrev").addEventListener("click", function () { state.page--; renderTable(); resize(); });
+        document.getElementById("pgNext").addEventListener("click", function () { state.page++; renderTable(); resize(); });
+        document.getElementById("reSearch").addEventListener("input", function (e) {
+          state.q = e.target.value; state.page = 0; renderTable(); resize();
+        });
+
+        function renderRe() {
+          renderKpis();
+          renderMapNote();
+          renderTable();
+          updateMap();
+        }
+
+        /* =================== 2 & 3. Monthly momentum =================== */
+        var CFG = {
+          raised: { amt: "raisedAmt", cnt: "raisedCnt", tbl: "raisedTbl", noun: "contribution", nouns: "contributions", verb: "raised" },
+          spent: { amt: "spentAmt", cnt: "spentCnt", tbl: "spentTbl", noun: "expenditure", nouns: "expenditures", verb: "spent" },
+        };
+
+        function niceStep(max, n) {
+          var raw = max / n, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+          var f = raw / mag;
+          return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * mag;
+        }
+
+        function renderLegends() {
+          document.querySelectorAll("[data-legend]").forEach(function (box) {
+            box.innerHTML = "";
+            [["--viz-primary", "Primary (before Aug. 18, 2026)"], ["--viz-general", "General election (Aug. 18 on)"]].forEach(function (x) {
+              var it = el("span", "item");
+              var sw = el("span", "swatch"); sw.style.background = css(x[0]);
+              it.appendChild(sw); it.appendChild(el("span", null, x[1]));
+              box.appendChild(it);
+            });
+          });
+        }
+
+        // One bar chart: x = month, y = one measure. August 2026 stacks the
+        // pre- and post-primary portions; a dashed rule marks Aug. 18 inside it.
+        function barChart(boxId, rows, measure, target) {
+          var box = document.getElementById(boxId);
+          box.innerHTML = "";
+          var W = Math.max(300, box.getBoundingClientRect().width);
+          var narrow = W < 560;
+          var H = narrow ? 190 : 220;
+          var mL = narrow ? 40 : 48, mR = 6, mT = 36, mB = 34;
+          var iw = W - mL - mR, ih = H - mT - mB;
+          var n = rows.length, slot = iw / n, gap = Math.max(2, slot * 0.22), bw = slot - gap;
+          var isAmt = measure === "amt";
+          var P = isAmt ? "amtP" : "nP", G = isAmt ? "amtG" : "nG";
+          var tot = function (r) { return r[P] + r[G]; };
+          var max = Math.max.apply(null, rows.map(tot)) || 1;
+          var step = niceStep(max, narrow ? 3 : 4);
+          var top = Math.ceil(max / step) * step;
+          var Y = function (v) { return mT + ih - (v / top) * ih; };
+          var fmt = isAmt ? moneyShort : function (v) { return v.toLocaleString("en-US"); };
+
+          var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, role: "img",
+            "aria-label": (isAmt ? "Dollars " + CFG[target].verb : "Number of " + CFG[target].nouns) + " per month, " +
+              monthName(rows[0].m, true) + " to " + monthName(rows[n - 1].m, true) + ". Details in the table below." });
+
+          // primary-period band behind everything up to Aug. 18
+          var iAug = rows.findIndex(function (r) { return r.m === D.primary.slice(0, 7); });
+          var day = +D.primary.slice(8, 10);
+          var xRule = mL + iAug * slot + gap / 2 + bw * ((day - 1) / 31);
+
+          for (var v = 0; v <= top + 1e-9; v += step) {
+            svg.appendChild(svgEl("line", { x1: mL, x2: W - mR, y1: Y(v), y2: Y(v), class: v ? "grid" : "base" }));
+            svg.appendChild(svgEl("text", { x: mL - 6, y: Y(v) + 4, "text-anchor": "end", class: "tick" }, fmt(v)));
+          }
+
+          var cP = css("--viz-primary"), cG = css("--viz-general"), surf = css("--trd-bg");
+          var peakI = 0;
+          rows.forEach(function (r, i) { if (tot(r) > tot(rows[peakI])) peakI = i; });
+
+          var cols = [];
+          rows.forEach(function (r, i) {
+            var x = mL + i * slot + gap / 2;
+            var g = svgEl("g", { class: "col" });
+            var y0 = Y(0);
+            // 4px rounded data-end on the top segment; 2px surface gap between stacked fills
+            var segs = [[r[P], cP], [r[G], cG]].filter(function (s) { return s[0] > 0; });
+            segs.forEach(function (s, k) {
+              var h = (s[0] / top) * ih;
+              var isTop = k === segs.length - 1;
+              var yTop = y0 - h;
+              var hDraw = Math.max(isTop ? h : h - 2, 0.75);
+              var rad = isTop ? Math.min(4, bw / 2, hDraw) : 0;
+              var d = "M" + x + "," + y0 + "V" + (yTop + rad) +
+                (rad ? "Q" + x + "," + yTop + " " + (x + rad) + "," + yTop : "") +
+                "H" + (x + bw - rad) +
+                (rad ? "Q" + (x + bw) + "," + yTop + " " + (x + bw) + "," + (yTop + rad) : "") +
+                "V" + y0 + "Z";
+              if (!isTop) d = "M" + x + "," + y0 + "V" + (yTop + 2) + "H" + (x + bw) + "V" + y0 + "Z";
+              g.appendChild(svgEl("path", { d: d, fill: s[1], class: "bar" }));
+              y0 = yTop;
+            });
+            svg.appendChild(g);
+            cols.push(g);
+
+            // month labels: full AP abbreviation when there's room, else initials
+            var lab = slot >= 34 ? monthName(r.m) : monthName(r.m).charAt(0);
+            var showLab = slot >= 18 || i % 2 === 0;
+            if (showLab) svg.appendChild(svgEl("text", { x: x + bw / 2, y: H - mB + 15, "text-anchor": "middle", class: "mlabel" }, lab));
+            if (i === 0 || r.m.slice(5) === "01") {
+              svg.appendChild(svgEl("text", { x: x, y: H - mB + 29, class: "ylabel" }, r.m.slice(0, 4)));
+            }
+          });
+
+          // peak value label (selective direct label)
+          var px = mL + peakI * slot + slot / 2;
+          svg.appendChild(svgEl("text", { x: px, y: Y(tot(rows[peakI])) - 6, "text-anchor": px > W - 40 ? "end" : "middle", class: "peak" },
+            fmt(tot(rows[peakI]))));
+
+          // Aug. 18 primary rule
+          svg.appendChild(svgEl("line", { x1: xRule, x2: xRule, y1: 6, y2: mT + ih, class: "rule" }));
+          svg.appendChild(svgEl("text", { x: xRule - 5, y: 15, "text-anchor": "end", class: "rule-label" }, "Aug. 18 primary"));
+
+          // hit targets: the whole month column
+          rows.forEach(function (r, i) {
+            var hit = svgEl("rect", { x: mL + i * slot, y: mT, width: slot, height: ih, class: "hit", tabindex: 0,
+              "aria-label": monthName(r.m, true) + ": " + fmt(tot(r)) });
+            function on(ev) {
+              cols.forEach(function (c, j) { c.classList.toggle("dim", j !== i); });
+              showTip(momentumTip(r, target), ev);
+            }
+            function off() { cols.forEach(function (c) { c.classList.remove("dim"); }); hideTip(); }
+            hit.addEventListener("mouseenter", on);
+            hit.addEventListener("mousemove", moveTip);
+            hit.addEventListener("mouseleave", off);
+            hit.addEventListener("focus", on);
+            hit.addEventListener("blur", off);
+            hit.addEventListener("touchstart", function (ev) { on(ev.touches[0] || ev); }, { passive: true });
+            svg.appendChild(hit);
+          });
+
+          box.appendChild(svg);
+        }
+
+        function momentumTip(r, target) {
+          var c = CFG[target];
+          var nodes = [el("div", "t-head", monthName(r.m, true) + (r.m === "2026-09" ? " (through Sept. 25)" : ""))];
+          nodes.push(el("div", "t-big", money(r.amtP + r.amtG) + " " + c.verb));
+          var nTot = r.nP + r.nG;
+          nodes.push(el("div", "t-meta", nTot.toLocaleString("en-US") + " " + (nTot === 1 ? c.noun : c.nouns)));
+          if (r.nP && r.nG) {
+            [["--viz-primary", "Before Aug. 18", r.amtP, r.nP], ["--viz-general", "Aug. 18 on", r.amtG, r.nG]].forEach(function (x) {
+              var row = el("div", "t-row");
+              var sw = el("i"); sw.style.background = css(x[0]);
+              row.appendChild(sw);
+              row.appendChild(el("span", null, x[1] + ": " + moneyShort(x[2]) + " · " + x[3].toLocaleString("en-US")));
+              nodes.push(row);
+            });
+          }
+          return nodes;
+        }
+
+        function momentumTable(target, rows) {
+          var c = CFG[target];
+          var t = el("table", "data");
+          var head = el("tr");
+          ["Month", "Dollars " + c.verb, "Number of " + c.nouns].forEach(function (h, i) { head.appendChild(el("th", i ? "num" : null, h)); });
+          var th = el("thead"); th.appendChild(head); t.appendChild(th);
+          var tb = el("tbody");
+          rows.forEach(function (r) {
+            var tr = el("tr");
+            tr.appendChild(el("td", null, monthName(r.m, true) + (r.m === "2026-08" ? " (primary Aug. 18)" : "")));
+            tr.appendChild(el("td", "num", money(r.amtP + r.amtG)));
+            tr.appendChild(el("td", "num", (r.nP + r.nG).toLocaleString("en-US")));
+            tb.appendChild(tr);
+          });
+          t.appendChild(tb);
+          var box = document.getElementById(c.tbl);
+          box.innerHTML = "";
+          box.appendChild(t);
+        }
+
+        function renderMomentum(target) {
+          var rows = D[target][state[target]];
+          barChart(CFG[target].amt, rows, "amt", target);
+          barChart(CFG[target].cnt, rows, "cnt", target);
+          momentumTable(target, rows);
+        }
+
+        document.querySelectorAll("details.tbl").forEach(function (d) { d.addEventListener("toggle", resize); });
+
+        /* ---------- render all ---------- */
+        function renderCharts() {
+          renderLegends();
+          renderMomentum("raised");
+          renderMomentum("spent");
+        }
+
+        var resizeTimer = null, lastW = 0;
+        window.addEventListener("resize", function () {
+          var w = document.getElementById("app").getBoundingClientRect().width;
+          if (Math.abs(w - lastW) < 2) return;
+          lastW = w;
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(function () { renderCharts(); resize(); }, 150);
+        });
+
+        controller = TRDEmbed({
+          prefix: "fl-gov-money-10-07-26",
+          themeKey: "fl-gov-money:theme",
+          toggle: "#themeToggle",
+          mountTarget: "#app",
+          lazy: false, // tall content page: render immediately so the iframe sizes right
+          onMount: function (ctx) {
+            lastW = document.getElementById("app").getBoundingClientRect().width;
+            buildTabs();
+            renderRe();
+            renderCharts();
+            buildMap();
+            ctx.postLoaded();
+          },
+          onTheme: function (theme, ctx) {
+            var btn = document.getElementById("themeToggle");
+            if (btn) btn.textContent = theme === "dark" ? "Light" : "Dark";
+            if (mapApi && mapApi.map) mapApi.setTheme(theme); // style.load re-adds layers in new colors
+            if (document.getElementById("raisedAmt").firstChild) renderCharts();
+            ctx.requestResize();
+          },
+        });
+      })();
+    </script>
+  </body>
+</html>
