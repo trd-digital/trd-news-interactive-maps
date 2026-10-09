@@ -182,4 +182,9 @@ const TrdSorters = {
   sortNumber: (a, b) => {
     return a - b;
   },
+
+  // Parses formatted/empty values (e.g. "1,200", "$1,200") before comparing numerically.
+  sortNumeric: (a, b) => {
+    return TrdFormatters.getNumberValue(a) - TrdFormatters.getNumberValue(b);
+  },
 };
