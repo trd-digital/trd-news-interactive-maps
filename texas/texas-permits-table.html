@@ -87,6 +87,7 @@
     <script type="text/javascript">
       const displayColumns = [
         { dataField: "work_type", name: "Work Type", visible: true },
+        { dataField: "type_of_work", name: "Type of Work", visible: true },
         { dataField: "project_number", name: "Project Number", visible: false },
         { dataField: "project_name", name: "Project Name", visible: true },
         { dataField: "status", name: "Status", visible: true },
@@ -98,7 +99,12 @@
           visible: true,
           formatter: TrdFormatters.formatCurrency,
         },
-        { dataField: "square_footage", name: "Square Footage", visible: true },
+        {
+          dataField: "square_footage",
+          name: "Square Footage",
+          visible: true,
+          sorter: TrdSorters.sortNumeric,
+        },
         { dataField: "facility_name", name: "Facility Name", visible: true },
         {
           dataField: "start_date",
