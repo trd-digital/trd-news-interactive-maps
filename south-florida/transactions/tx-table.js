@@ -380,6 +380,14 @@
     return '<dl class="tx-facts">' + items.map(function (x) { return "<div><dt>" + x[0] + "</dt><dd>" + x[1] + "</dd></div>"; }).join("") + "</dl>";
   }
 
+  // Aerial thumbnail (when the sale is mapped) beside the facts.
+  function expandBody(r) {
+    var img = TX.aerialUrl(r, 240, 130);
+    return '<div class="tx-expand-grid">' +
+      (img ? '<img class="tx-expand-img" loading="lazy" alt="Satellite view of ' + fmt.escape(r.address || "the property") + '" src="' + fmt.escape(img) + '">' : "") +
+      "<div>" + detailList(r) + actions(r) + "</div></div>";
+  }
+
   function actions(r) {
     var out = "";
     if (r.parcelUrl) out += '<a class="tx-btn" href="' + fmt.escape(r.parcelUrl) + '" target="_blank" rel="noopener">Property record ↗</a>';
@@ -420,7 +428,7 @@
         '<td class="num"><strong>' + fmt.money(r.price) + "</strong></td>" +
         partyCells(r) +
         '<td class="col-mortgage">' + (r.financed ? (r.loan ? fmt.moneyShort(r.loan) : "Yes") : '<span class="tx-muted">—</span>') + "</td></tr>";
-      if (open) html += '<tr class="tx-expand"><td colspan="' + COLS.length + '">' + detailList(r) + actions(r) + "</td></tr>";
+      if (open) html += '<tr class="tx-expand"><td colspan="' + COLS.length + '">' + expandBody(r) + "</td></tr>";
 
       cards += '<li class="tx-card" data-id="' + fmt.escape(r.id) + '"><div class="tx-card-top"><span class="tx-addr">' + addr +
         '<span class="tx-addr-sub">' + fmt.escape([placeLine(r), r.county].filter(Boolean).join(" · ")) + "</span></span>" +
@@ -428,7 +436,7 @@
         '<div class="tx-card-meta"><span>' + fmt.date(r.date) + "</span>" + catCell(r) +
         "<span>" + (r.financed ? "Financed" : "No mortgage recorded") + "</span></div>" +
         '<div class="tx-card-parties">' + cardParties(r) + "</div>" +
-        "<details" + (open ? " open" : "") + "><summary>Details</summary>" + detailList(r) + actions(r) + "</details></li>";
+        "<details" + (open ? " open" : "") + "><summary>Details</summary>" + expandBody(r) + "</details></li>";
     });
     el.tbody.innerHTML = html;
     el.cards.innerHTML = cards;

@@ -21,6 +21,43 @@
     dark: { residential: "#3987e5", commercial: "#d95926", land: "#199e70", other: "#8a8984", ring: "#212121", sel: "#ffffff" },
   };
 
+  // Price tiers (ordinal, one hue). Validated with the dataviz ordinal gate on
+  // #ffffff and #212121; on dark, higher prices are lighter (more contrast).
+  var TIER_BREAKS = [5e5, 1e6, 5e6, 1e7];
+  var TIER_LABELS = ["Under $500K", "$500K–$1M", "$1M–$5M", "$5M–$10M", "$10M+"];
+  var TIER_RAMP = {
+    light: ["#86b6ef", "#5598e7", "#2a78d6", "#1c5cab", "#104281"],
+    dark: ["#1c5cab", "#3987e5", "#6da7ec", "#9ec5f4", "#cde2fb"],
+  };
+  // Density (heatmap) ramp: sequential blue, transparent at zero.
+  var HEAT_RAMP = {
+    light: ["#b7d3f6", "#6da7ec", "#2a78d6", "#1c5cab", "#104281"],
+    dark: ["#184f95", "#256abf", "#3987e5", "#86b6ef", "#cde2fb"],
+  };
+  STYLES.satellite = "mapbox://styles/mapbox/satellite-streets-v12";
+
+  // Reader's map options, remembered per browser.
+  var mapOpts = {
+    view: TX.prefs.get("map-view", "dots"), // "dots" | "density"
+    color: TX.prefs.get("map-color", "type"), // "type" | "price"
+    base: TX.prefs.get("map-base", "streets"), // "streets" | "satellite"
+  };
+  function styleUrl() {
+    return mapOpts.base === "satellite" ? STYLES.satellite : STYLES[theme];
+  }
+  // Satellite imagery is dark, so it uses the dark-surface steps + white rings.
+  function palette() {
+    var key = mapOpts.base === "satellite" ? "dark" : theme;
+    var cat = Object.assign({}, COLORS[key]);
+    if (mapOpts.base === "satellite") { cat.ring = "#ffffff"; cat.sel = "#ffffff"; }
+    return { cat: cat, tiers: TIER_RAMP[key], heat: HEAT_RAMP[key] };
+  }
+  function tierIndex(price) {
+    var i = 0;
+    while (i < TIER_BREAKS.length && price >= TIER_BREAKS[i]) i++;
+    return i;
+  }
+
   // Circle area tracks price (sqrt), so a $10M sale reads ~3x a $1M sale, not 10x.
   var PRICE_STOPS = [1e5, 1e6, 1e7, 1e8];
   var RADIUS_BY_ZOOM = {
@@ -71,7 +108,10 @@
   var isEmbed = window.self !== window.top;
   var app = document.getElementById("tx-app");
   var compact = params.get("view") === "dashboard" || window.innerHeight < 450;
-  if (compact) app.classList.add("tx-compact");
+  if (compact) {
+    app.classList.add("tx-compact");
+    mapOpts = { view: "dots", color: "type", base: "streets" }; // dashboard card stays simple
+  }
 
   var state = TX.stateFromUrl();
   var data = null;
@@ -101,7 +141,10 @@
     theme = t;
     document.documentElement.setAttribute("data-bs-theme", t);
     document.body.setAttribute("data-bs-theme", t);
-    if (map && changed) map.setStyle(STYLES[t]); // style.load re-adds our layers
+    if (map && changed) {
+      if (mapOpts.base === "satellite") applyMapOpts(); // imagery doesn't change with theme
+      else map.setStyle(styleUrl()); // style.load re-adds our layers
+    }
   }
   if (trdTheme) trdTheme.init();
   theme = (trdTheme && trdTheme.get()) ||
@@ -120,8 +163,11 @@
     areaBtn: app.querySelector(".tx-area-btn"),
     legend: app.querySelector(".tx-legend"),
     note: app.querySelector(".tx-mapnote"),
-    detail: app.querySelector(".tx-detail"),
+    detail: app.querySelector(".tx-detail:not(.tx-sheet)"),
     empty: app.querySelector(".tx-empty-map"),
+    layers: app.querySelector(".tx-layers"),
+    listBtn: app.querySelector(".tx-list-btn"),
+    sheet: app.querySelector(".tx-sheet"),
     mapWrap: app.querySelector(".tx-map-wrap"),
     loading: app.querySelector(".tx-loading"),
   };
@@ -247,6 +293,7 @@
         " without a mappable address " + (unmapped === 1 ? "is" : "are") + " listed in the table" : "") +
       (unclassified.length ? " · " + unclassified.join(" and ") + " sales aren’t classified by type yet, so type filters leave them out" : ""));
     renderEmpty(visible.length, located.length);
+    updateListBtn();
     renderLegend();
     setSource(located);
     if (opts && opts.fit) fitTo(located, opts.animate);
@@ -321,6 +368,7 @@
   function setSource(rows) {
     if (!map || !map.getSource("tx")) return;
     map.getSource("tx").setData(toFeatures(rows));
+    if (map.getSource("tx-asm")) map.getSource("tx-asm").setData(hullFeatures());
   }
 
   function fitTo(rows, animate) {
@@ -332,20 +380,42 @@
 
   // ------------------------------------------------------------------ legend
   function renderLegend() {
-    var base = TX.apply(data.rows, state, data.asOf, { ignoreCategory: true });
-    var counts = {};
-    base.forEach(function (r) { counts[r.colorGroup] = (counts[r.colorGroup] || 0) + 1; });
-    var all = state.categories.length === TX.CATEGORIES.length;
-    var html = '<button type="button" class="tx-legend-toggle" aria-expanded="false">Legend</button>' +
-      '<div class="tx-legend-body"><p class="tx-legend-title">Property type</p><div class="tx-legend-cats">';
-    GROUPS.forEach(function (g) {
-      var on = all || g.cats.some(function (c) { return state.categories.indexOf(c) >= 0; });
-      html += '<button type="button" class="tx-legend-cat' + (on ? "" : " is-off") + '" data-group="' + g.id +
-        '" aria-pressed="' + on + '" title="Show only ' + fmt.escape(g.label) + '">' +
-        '<i class="tx-swatch" data-cat="' + g.cats[0] + '"></i>' + fmt.escape(g.label) +
-        '<span class="tx-n">' + (counts[g.id] || 0).toLocaleString("en-US") + "</span></button>";
-    });
-    html += "</div>";
+    var html = '<button type="button" class="tx-legend-toggle" aria-expanded="false">Legend</button><div class="tx-legend-body">';
+    var p = palette();
+    if (mapOpts.view === "density") {
+      html += '<p class="tx-legend-title">Sales density</p>' +
+        '<div class="tx-heat-bar" style="background:linear-gradient(to right,' + p.heat.join(",") + ')"></div>' +
+        '<div class="tx-heat-labels"><span>Fewer</span><span>More</span></div>' +
+        '<p class="tx-legend-hint">Zoom in to see individual sales.</p>';
+    }
+    if (mapOpts.color === "price") {
+      var pb = TX.apply(data.rows, state, data.asOf, { ignorePrice: true });
+      var tc = [0, 0, 0, 0, 0];
+      pb.forEach(function (r) { tc[tierIndex(r.price)]++; });
+      var lo = state.price === "custom" ? state.priceMin || 0 : 0, hi = state.price === "custom" ? state.priceMax || Infinity : Infinity;
+      html += '<p class="tx-legend-title">Sale price</p><div class="tx-legend-cats">';
+      TIER_LABELS.forEach(function (label, i) {
+        var tLo = i ? TIER_BREAKS[i - 1] : 0, tHi = i < TIER_BREAKS.length ? TIER_BREAKS[i] : Infinity;
+        var on = state.price === "all" || (state.price === "custom" && tLo >= lo && tHi <= hi);
+        html += '<button type="button" class="tx-legend-cat' + (on || state.price === "all" ? "" : " is-off") + '" data-tier="' + i + '" title="Show only ' + label + '">' +
+          '<i class="tx-swatch" style="background:' + p.tiers[i] + '"></i>' + label + '<span class="tx-n">' + tc[i].toLocaleString("en-US") + "</span></button>";
+      });
+      html += "</div>";
+    } else {
+      var base = TX.apply(data.rows, state, data.asOf, { ignoreCategory: true });
+      var counts = {};
+      base.forEach(function (r) { counts[r.colorGroup] = (counts[r.colorGroup] || 0) + 1; });
+      var all = state.categories.length === TX.CATEGORIES.length;
+      html += '<p class="tx-legend-title">Property type</p><div class="tx-legend-cats">';
+      GROUPS.forEach(function (g) {
+        var on = all || g.cats.some(function (c) { return state.categories.indexOf(c) >= 0; });
+        html += '<button type="button" class="tx-legend-cat' + (on ? "" : " is-off") + '" data-group="' + g.id +
+          '" aria-pressed="' + on + '" title="Show only ' + fmt.escape(g.label) + '">' +
+          '<i class="tx-swatch" data-cat="' + g.cats[0] + '"></i>' + fmt.escape(g.label) +
+          '<span class="tx-n">' + (counts[g.id] || 0).toLocaleString("en-US") + "</span></button>";
+      });
+      html += "</div>";
+    }
     if (!compact) {
       var z = map ? map.getZoom() : 10;
       html += '<div class="tx-legend-sizes" aria-label="Circle size shows sale price">';
@@ -354,6 +424,9 @@
         html += '<span class="tx-legend-size"><i style="width:' + d + "px;height:" + d + 'px"></i>' + s[1] + "</span>";
       });
       html += "</div>";
+      if (visible.some(function (r) { return r.assemblageId && data.assemblages[r.assemblageId] && data.assemblages[r.assemblageId].type === "assemblage"; })) {
+        html += '<p class="tx-legend-asm"><i aria-hidden="true"></i>Assemblage footprint (approx.)' + (z < 12 ? " · zoom in" : "") + "</p>";
+      }
     }
     html += "</div>";
     var wasOpen = el.legend.classList.contains("is-open");
@@ -367,6 +440,18 @@
       var open = !el.legend.classList.contains("is-open");
       el.legend.classList.toggle("is-open", open);
       t.setAttribute("aria-expanded", String(open));
+      return;
+    }
+    var tb = e.target.closest("[data-tier]");
+    if (tb) {
+      var i = +tb.getAttribute("data-tier");
+      var ns = getState();
+      var tLo = i ? TIER_BREAKS[i - 1] : null, tHi = i < TIER_BREAKS.length ? TIER_BREAKS[i] : null;
+      var same = ns.price === "custom" && ns.priceMin === tLo && ns.priceMax === tHi;
+      if (same || (!tLo && !tHi)) { ns.price = "all"; ns.priceMin = null; ns.priceMax = null; }
+      else { ns.price = "custom"; ns.priceMin = tLo; ns.priceMax = tHi; }
+      onFilterChange(ns, "legend_tier:" + i);
+      filters.render();
       return;
     }
     var b = e.target.closest(".tx-legend-cat");
@@ -524,7 +609,9 @@
       '<div class="tx-detail-head"><h2 id="tx-detail-title">' + fmt.escape(r.address || "Address unavailable") +
       '<span class="tx-sub">' + fmt.escape(sub) + "</span></h2>" +
       '<button type="button" class="tx-close" aria-label="Close">×</button></div>' +
-      '<div class="tx-detail-body"><div class="tx-price">' + fmt.money(r.price) + "</div>" +
+      '<div class="tx-detail-body">' +
+      (r.located ? '<img class="tx-detail-img" loading="lazy" alt="Satellite view of ' + fmt.escape(r.address || "the property") + '" src="' + fmt.escape(TX.aerialUrl(r, 312, 140)) + '">' : "") +
+      '<div class="tx-price">' + fmt.money(r.price) + "</div>" +
       '<div class="tx-tags">' + tags + "</div>" +
       (asm ? '<button type="button" class="tx-assm-link" data-act="assemblage" data-aid="' + fmt.escape(asm.id) + '">' +
         '<span class="tx-assm">' + (asm.type === "building" ? "Building purchase" : "Assemblage") + "</span>One of " +
@@ -561,6 +648,24 @@
   function stripUnit(a) {
     return a ? a.replace(/\s+(#|unit|apt|ph)?\s*[A-Z]?-?\d+[A-Z]?$/i, "") : a;
   }
+
+  el.layers.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-key]");
+    if (b) setMapOpt(b.getAttribute("data-key"), b.getAttribute("data-val"));
+  });
+  el.listBtn.addEventListener("click", function () {
+    renderSheet();
+    el.sheet.hidden = false;
+    track("list_in_view", "");
+  });
+  el.sheet.addEventListener("click", function (e) {
+    if (e.target.closest(".tx-close")) { el.sheet.hidden = true; return; }
+    var pick = e.target.closest("[data-pick]");
+    if (pick) {
+      el.sheet.hidden = true;
+      select(pick.getAttribute("data-pick"), { fly: true, announce: true });
+    }
+  });
 
   el.detail.addEventListener("click", function (e) {
     var pick = e.target.closest("[data-pick]");
@@ -599,6 +704,7 @@
     map.setFilter("tx-selected", selectedAid
       ? ["==", ["get", "aid"], selectedAid]
       : ["==", ["get", "id"], selectedId || ""]);
+    if (map.getLayer("tx-asm-sel")) map.setFilter("tx-asm-sel", ["==", ["get", "aid"], selectedAid || ""]);
   }
 
   // Assemblage panel: every member deed, combined total, all rings on.
@@ -649,24 +755,53 @@
   }
 
   // ------------------------------------------------------------------ map
-  function addLayers() {
-    var c = COLORS[theme];
-    if (!map.getSource("tx")) {
-      map.addSource("tx", {
-        type: "geojson",
-        data: toFeatures(visible.filter(function (r) { return r.located; })),
-      });
+  function pointColor(p) {
+    if (mapOpts.color === "price") {
+      return ["step", ["to-number", ["get", "price"], 0], p.tiers[0], TIER_BREAKS[0], p.tiers[1], TIER_BREAKS[1], p.tiers[2], TIER_BREAKS[2], p.tiers[3], TIER_BREAKS[3], p.tiers[4]];
     }
-    var color = ["match", ["get", "cg"], "residential", c.residential, "commercial", c.commercial, "land", c.land, c.other];
+    return ["match", ["get", "cg"], "residential", p.cat.residential, "commercial", p.cat.commercial, "land", p.cat.land, p.cat.other];
+  }
+  function pointOpacity() {
+    var hover = ["case", ["boolean", ["feature-state", "hover"], false], 1, 0.82];
+    // Density mode: dots fade in as the heatmap fades out.
+    return mapOpts.view === "density" ? ["interpolate", ["linear"], ["zoom"], 11, 0, 12.5, hover] : hover;
+  }
+
+  function addLayers() {
+    var p = palette();
+    if (!map.getSource("tx")) {
+      map.addSource("tx", { type: "geojson", data: toFeatures(visible.filter(function (r) { return r.located; })) });
+    }
+    if (!map.getSource("tx-asm")) map.addSource("tx-asm", { type: "geojson", data: hullFeatures() });
+    // Assemblage footprints (approximate: padded hull around member parcels).
+    map.addLayer({ id: "tx-asm-fill", type: "fill", source: "tx-asm", minzoom: 12,
+      paint: { "fill-color": p.cat.sel, "fill-opacity": 0.06 } });
+    map.addLayer({ id: "tx-asm-line", type: "line", source: "tx-asm", minzoom: 12,
+      paint: { "line-color": p.cat.sel, "line-opacity": mapOpts.base === "satellite" ? 0.9 : 0.6, "line-width": mapOpts.base === "satellite" ? 2 : 1.5, "line-dasharray": [2, 2] } });
+    map.addLayer({ id: "tx-asm-sel", type: "line", source: "tx-asm", filter: ["==", ["get", "aid"], selectedAid || ""],
+      paint: { "line-color": p.cat.sel, "line-width": 2.5, "line-dasharray": [2, 1.5] } });
+    map.addLayer({
+      id: "tx-heat", type: "heatmap", source: "tx", maxzoom: 14,
+      layout: { visibility: mapOpts.view === "density" ? "visible" : "none" },
+      paint: {
+        "heatmap-weight": 1,
+        // Tuned so ~8k sales show hot spots instead of one saturated band.
+        "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 7, 0.12, 10, 0.35, 12, 0.9],
+        "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 7, 4, 10, 8, 13, 18],
+        "heatmap-color": ["interpolate", ["linear"], ["heatmap-density"], 0, "rgba(0,0,0,0)", 0.12, p.heat[0], 0.35, p.heat[1], 0.6, p.heat[2], 0.8, p.heat[3], 1, p.heat[4]],
+        "heatmap-opacity": ["interpolate", ["linear"], ["zoom"], 11, 0.85, 13, 0],
+      },
+    });
     map.addLayer({
       id: "tx-points",
       type: "circle",
       source: "tx",
       paint: {
         "circle-radius": radiusExpr(),
-        "circle-color": color,
-        "circle-opacity": ["case", ["boolean", ["feature-state", "hover"], false], 1, 0.82],
-        "circle-stroke-color": ["case", ["boolean", ["feature-state", "hover"], false], c.sel, c.ring],
+        "circle-color": pointColor(p),
+        "circle-opacity": pointOpacity(),
+        "circle-stroke-opacity": mapOpts.view === "density" ? ["interpolate", ["linear"], ["zoom"], 11, 0, 12.5, 1] : 1,
+        "circle-stroke-color": ["case", ["boolean", ["feature-state", "hover"], false], p.cat.sel, p.cat.ring],
         "circle-stroke-width": [
           "interpolate", ["linear"], ["zoom"],
           8, ["case", ["boolean", ["feature-state", "hover"], false], 2, 0.5],
@@ -683,10 +818,142 @@
       paint: {
         "circle-radius": radiusExpr(4),
         "circle-color": "rgba(0,0,0,0)",
-        "circle-stroke-color": c.sel,
+        "circle-stroke-color": p.cat.sel,
         "circle-stroke-width": 2.5,
       },
     });
+  }
+
+  // Restyle in place (color / view / theme on satellite) without a reload.
+  function applyMapOpts() {
+    if (!map || !map.getLayer("tx-points")) return;
+    var p = palette();
+    map.setPaintProperty("tx-points", "circle-color", pointColor(p));
+    map.setPaintProperty("tx-points", "circle-opacity", pointOpacity());
+    map.setPaintProperty("tx-points", "circle-stroke-opacity", mapOpts.view === "density" ? ["interpolate", ["linear"], ["zoom"], 11, 0, 12.5, 1] : 1);
+    map.setLayoutProperty("tx-heat", "visibility", mapOpts.view === "density" ? "visible" : "none");
+    if (data) renderLegend();
+  }
+
+  // ------------------------------------------------- assemblage footprints
+  // Padded convex hull around each assemblage's mapped parcels: every parcel
+  // contributes a ring of points ~30 m out, so 2-parcel sets get a capsule.
+  function hullFeatures() {
+    var feats = [];
+    if (!data) return { type: "FeatureCollection", features: feats };
+    var shown = {};
+    visible.forEach(function (r) { if (r.assemblageId) shown[r.assemblageId] = true; });
+    Object.keys(shown).forEach(function (aid) {
+      var a = data.assemblages[aid];
+      if (!a || a.type !== "assemblage") return;
+      var pts = a.members.filter(function (r) { return r.located; });
+      if (pts.length < 2) return;
+      var lat0 = pts[0].lat * Math.PI / 180;
+      var mx = 111320 * Math.cos(lat0), my = 110540, R = 30;
+      var cloud = [];
+      pts.forEach(function (r) {
+        for (var k = 0; k < 12; k++) {
+          var t = (k / 12) * Math.PI * 2;
+          cloud.push([r.lng + (R * Math.cos(t)) / mx, r.lat + (R * Math.sin(t)) / my]);
+        }
+      });
+      var ring = convexHull(cloud);
+      ring.push(ring[0]);
+      feats.push({ type: "Feature", properties: { aid: aid }, geometry: { type: "Polygon", coordinates: [ring] } });
+    });
+    return { type: "FeatureCollection", features: feats };
+  }
+  function convexHull(points) {
+    var p = points.slice().sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; });
+    function cross(o, a, b) { return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]); }
+    var lower = [], upper = [];
+    p.forEach(function (pt) {
+      while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], pt) <= 0) lower.pop();
+      lower.push(pt);
+    });
+    for (var i = p.length - 1; i >= 0; i--) {
+      while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p[i]) <= 0) upper.pop();
+      upper.push(p[i]);
+    }
+    upper.pop();
+    lower.pop();
+    return lower.concat(upper);
+  }
+
+  // "Layers" control: View (dots/density) · Color (type/price) · Map (streets/satellite)
+  function layersControl() {
+    return {
+      onAdd: function () {
+        var c = document.createElement("div");
+        c.className = "mapboxgl-ctrl mapboxgl-ctrl-group";
+        c.innerHTML = '<button type="button" class="tx-layers-btn" aria-expanded="false" aria-controls="tx-layers" title="Map layers" aria-label="Map layers">' +
+          '<svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M10 3l7 4-7 4-7-4z"/><path d="M3 11l7 4 7-4"/></svg></button>';
+        var btn = c.firstChild;
+        btn.addEventListener("click", function () {
+          var open = el.layers.hidden;
+          el.layers.hidden = !open;
+          btn.setAttribute("aria-expanded", String(open));
+          if (open) renderLayers();
+        });
+        document.addEventListener("click", function (e) {
+          // (An option re-renders on click, detaching its node; that's not "outside".)
+          if (!el.layers.hidden && e.target.isConnected && !el.layers.contains(e.target) && !c.contains(e.target)) {
+            el.layers.hidden = true;
+            btn.setAttribute("aria-expanded", "false");
+          }
+        });
+        return c;
+      },
+      onRemove: function () {},
+    };
+  }
+  function renderLayers() {
+    function seg(key, label, opts) {
+      return '<div class="tx-layers-row"><span class="tx-group-label">' + label + '</span><div class="tx-seg" role="radiogroup" aria-label="' + label + '">' +
+        opts.map(function (o) {
+          var on = mapOpts[key] === o[0];
+          return '<button type="button" role="radio" aria-checked="' + on + '" class="' + (on ? "is-active" : "") + '" data-key="' + key + '" data-val="' + o[0] + '">' + o[1] + "</button>";
+        }).join("") + "</div></div>";
+    }
+    el.layers.innerHTML = seg("view", "View", [["dots", "Dots"], ["density", "Density"]]) +
+      seg("color", "Color dots by", [["type", "Property type"], ["price", "Price"]]) +
+      seg("base", "Basemap", [["streets", "Streets"], ["satellite", "Satellite"]]);
+  }
+  function setMapOpt(key, val) {
+    if (mapOpts[key] === val) return;
+    mapOpts[key] = val;
+    TX.prefs.set("map-" + key, val);
+    track("map_" + key, val);
+    if (key === "base") map.setStyle(styleUrl()); // style.load re-adds layers
+    else applyMapOpts();
+    renderLayers();
+  }
+
+  // Phones: "List N sales in view" sheet.
+  function inView() {
+    if (!map) return [];
+    var b = map.getBounds();
+    return visible.filter(function (r) { return r.located && b.contains([r.lng, r.lat]); })
+      .sort(function (a, c) { return c.price - a.price; });
+  }
+  function updateListBtn() {
+    el.listBtn.hidden = compact || !data || window.innerWidth > 600;
+    if (el.listBtn.hidden) return;
+    var n = inView().length;
+    el.listBtn.innerHTML = '<svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 5h12M4 10h12M4 15h12"/></svg> ' +
+      "List " + n.toLocaleString("en-US") + (n === 1 ? " sale" : " sales") + " in view";
+    el.listBtn.disabled = !n;
+    if (!el.sheet.hidden) renderSheet();
+  }
+  function renderSheet() {
+    var list = inView();
+    var top = list.slice(0, 50);
+    el.sheet.innerHTML = '<div class="tx-detail-head"><h2>' + list.length.toLocaleString("en-US") + (list.length === 1 ? " sale" : " sales") + ' in view<span class="tx-sub">' +
+      (list.length > 50 ? "Top 50 by price · zoom in for the rest" : "Sorted by price") + '</span></h2><button type="button" class="tx-close" aria-label="Close list">×</button></div>' +
+      '<div class="tx-detail-body"><ul class="tx-stack">' + top.map(function (r) {
+        return '<li><button type="button" data-pick="' + fmt.escape(r.id) + '"><span class="tx-r-title">' + fmt.escape(r.address || "Address unavailable") +
+          " <strong>" + fmt.moneyShort(r.price) + '</strong></span><span class="tx-r-sub">' + fmt.dateShort(r.date) + " · " + fmt.escape(r.category) + "</span></button></li>";
+      }).join("") + "</ul></div>";
   }
 
   function declutter() {
@@ -699,7 +966,7 @@
     mapboxgl.accessToken = TOKEN;
     map = new mapboxgl.Map({
       container: "tx-map",
-      style: STYLES[theme],
+      style: styleUrl(),
       bounds: SOFLA_BOUNDS,
       maxBounds: [[-82.2, 24.3], [-78.8, 27.9]],
       minZoom: 7,
@@ -714,6 +981,7 @@
     map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
     if (!compact) map.addControl(new mapboxgl.FullscreenControl(), "top-right");
+    if (!compact) map.addControl(layersControl(), "top-right");
     // "Near me" only where the embedding page lets this frame use location.
     var geoAllowed = document.featurePolicy ? document.featurePolicy.allowsFeature("geolocation") : !isEmbed;
     if (!compact && geoAllowed && navigator.geolocation) {
@@ -767,6 +1035,10 @@
       if (hoverPopup) hoverPopup.remove();
     });
     map.on("click", function (e) {
+      if (mapOpts.view === "density" && map.getZoom() < 12) {
+        map.easeTo({ center: e.lngLat, zoom: Math.min(13, map.getZoom() + 2) });
+        return;
+      }
       // Pick the smallest hit (it is drawn on top) within a finger-sized box.
       var pad = canHover ? 3 : 10;
       var feats = map.queryRenderedFeatures([[e.point.x - pad, e.point.y - pad], [e.point.x + pad, e.point.y + pad]], { layers: ["tx-points"] });
@@ -799,6 +1071,7 @@
     });
     map.on("moveend", function (e) {
       if (e.originalEvent && data) showAreaButton(true); // reader-driven moves only
+      updateListBtn();
     });
     return new Promise(function (resolve) {
       map.on("load", resolve);
