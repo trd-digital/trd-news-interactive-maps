@@ -38,6 +38,9 @@
   // ------------------------------------------------------------------ DOM
   var el = {
     filters: app.querySelector(".tx-filters"),
+    searchWrap: app.querySelector(".tx-search-wrap"),
+    results: app.querySelector(".tx-results"),
+    chips: app.querySelector(".tx-active"),
     filterHost: app.querySelector(".tx-filter-host"),
     filterToggle: app.querySelector(".tx-filter-toggle"),
     tabs: app.querySelector(".tx-tabs"),
@@ -55,6 +58,39 @@
     showCategories: true,
   });
 
+  el.searchWrap.insertAdjacentHTML("afterbegin", TX.searchHtml(state.q));
+  var box = TX.search.searchBox({
+    input: el.searchWrap.querySelector(".tx-search-input"),
+    panel: el.results,
+    getBase: function () {
+      return data ? TX.apply(data.rows, state, data.asOf, { ignoreQuery: true }) : [];
+    },
+    onQuery: function (q) {
+      var s = TX.serializeState(state);
+      s.q = q;
+      onFilterChange(s, "search");
+    },
+    onPick: function (it) {
+      var s = TX.serializeState(state);
+      track("search_pick", it.kind);
+      if (it.kind === "city" || it.kind === "zip") {
+        s.place = { kind: it.kind, value: it.value, label: it.label };
+        s.q = "";
+        box.set("");
+        onFilterChange(s, "place");
+      } else if (it.kind === "party") {
+        s.party = { key: it.key, label: it.label };
+        s.q = "";
+        box.set("");
+        onFilterChange(s, "party");
+      } else if (it.kind === "sale") {
+        reveal(it.row.id);
+        if (it.row.located) peer.send("select", it.row.id);
+      }
+    },
+    placeholder: { wide: "Search address, city, ZIP, buyer or seller", narrow: "Search sales" },
+  });
+
   el.filterToggle.addEventListener("click", function () {
     var open = !el.filters.classList.contains("is-open");
     el.filters.classList.toggle("is-open", open);
@@ -63,6 +99,7 @@
 
   function onFilterChange(next, why) {
     state = next;
+    box && box.set(state.q);
     if (why !== "search") track("filter", why);
     page = 0;
     refresh();
@@ -145,6 +182,14 @@
     renderTabs();
     renderHead();
     renderSummary();
+    TX.search.activeChips(el.chips, state, function (s, why) {
+      onFilterChange(s, why);
+      filters.render();
+    });
+    var badge = el.filterToggle.querySelector(".tx-badge");
+    var n = filterCount();
+    badge.hidden = !n;
+    badge.textContent = n;
     renderBody();
     renderPager(pages);
   }
@@ -155,6 +200,16 @@
     el.summary.innerHTML = "<strong>" + s.count.toLocaleString("en-US") + "</strong> " + (s.count === 1 ? "sale" : "sales") +
       (s.count ? " · <strong>" + fmt.moneyShort(s.total) + "</strong> total · median " + fmt.moneyShort(med) : "");
     el.csv.disabled = !rows.length;
+  }
+
+  function filterCount() {
+    var d = TX.defaultState(), n = 0;
+    if (state.days !== d.days) n++;
+    if (state.price !== d.price) n++;
+    if (state.financed !== d.financed) n++;
+    if (state.counties.length !== d.counties.length) n++;
+    if (state.categories.length !== d.categories.length) n++;
+    return n;
   }
 
   function median(a) {
@@ -184,7 +239,7 @@
     if (r.parcelCount > 1) items.push(["Parcels", r.parcelCount + " parcels in one deal"]);
     if (r.useDetail) items.push(["County use code", fmt.escape(fmt.title(r.useDetail))]);
     if (r.parcelId) items.push(["Parcel ID", fmt.escape(r.parcelId)]);
-    return '<dl class="tx-dl">' + items.map(function (x) { return "<dt>" + x[0] + "</dt><dd>" + x[1] + "</dd>"; }).join("") + "</dl>";
+    return '<dl class="tx-facts">' + items.map(function (x) { return "<div><dt>" + x[0] + "</dt><dd>" + x[1] + "</dd></div>"; }).join("") + "</dl>";
   }
 
   function actions(r) {
@@ -197,7 +252,13 @@
   function renderBody() {
     var slice = entries.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
     if (!slice.length) {
-      var msg = "No sales match these filters." + (TX.isDefault(state) ? "" : ' <button type="button" class="tx-reset" data-act="reset">Reset filters</button>');
+      var searching = state.q || state.place || state.party;
+      var narrowed = filterCount() > 0 || state.bbox;
+      var what = state.q ? "“" + fmt.escape(state.q) + "”" : state.place ? fmt.escape(state.place.label) : state.party ? fmt.escape(state.party.label) : "";
+      var msg = searching
+        ? "No sales match " + what + (narrowed ? " with these filters." : " in the last " + state.days + " days.") +
+          (narrowed ? ' <button type="button" class="tx-reset" data-act="widen">Search all sales</button>' : "")
+        : "No sales match these filters." + (TX.isDefault(state) ? "" : ' <button type="button" class="tx-reset" data-act="reset">Reset filters</button>');
       el.tbody.innerHTML = '<tr><td class="tx-empty" colspan="' + COLS.length + '">' + msg + "</td></tr>";
       el.cards.innerHTML = '<li class="tx-empty">' + msg + "</li>";
       return;
@@ -370,6 +431,15 @@
     } else if (act === "map-assemblage") {
       peer.send("assemblage", b.getAttribute("data-id"));
       track("show_assemblage_on_map", b.getAttribute("data-id"));
+    } else if (act === "widen") {
+      // Keep what they searched for; drop everything else that narrows it.
+      var w = TX.defaultState();
+      w.q = state.q;
+      w.place = state.place;
+      w.party = state.party;
+      w.days = 60;
+      onFilterChange(w, "widen");
+      filters.render();
     } else if (act === "reset") {
       onFilterChange(TX.defaultState(), "reset");
       filters.render();

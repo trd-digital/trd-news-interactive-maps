@@ -64,6 +64,20 @@ Per feature:
 4. Fail loudly if any county's `latest_record_date` is more than 3 days old, or the feature count drops sharply day over day.
 5. Keep every committed file under GitHub's 100 MB hard limit (`broward_output.geojson` was ~78 MB in Oct 2026 and growing).
 
+## Search and URL presets
+
+Search (`tx-search.js`) suggests places (city, ZIP), people & companies,
+individual sales and parcel IDs, and on the map any address, neighborhood,
+city or ZIP via Mapbox geocoding (areas filter to their bounds, which covers
+counties whose records lack city/ZIP). Matching ignores case and punctuation
+and unifies abbreviations ("northwest 5th avenue" = "NW 5 Ave").
+
+Embeds can open a preset view with query parameters:
+`property-type`, `county`, `days` (7/14/30/60), `min-price` (`1m`/`5m`/`10m` or
+dollars), `max-price`, `financed` (`financed`/`cash`), `q`, `city`, `zip`,
+`sale=<id>`, and on the map `view=dashboard` (compact card); on the table
+`tab=biggest` and `csv=1`.
+
 ## Local preview
 
 ```bash

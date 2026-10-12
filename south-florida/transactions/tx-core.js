@@ -34,7 +34,7 @@
     Land: "land",
     Other: "other",
   };
-  var DAYS = [7, 14, 30];
+  var DAYS = [7, 14, 30, 60];
   var PRICE_PRESETS = [
     { id: "all", label: "All prices", min: 0 },
     { id: "1m", label: "$1M+", min: 1e6 },
@@ -44,7 +44,7 @@
   var FINANCED = [
     { id: "any", label: "Any" },
     { id: "financed", label: "Financed" },
-    { id: "cash", label: "No mortgage recorded" },
+    { id: "cash", label: "No mortgage", title: "No mortgage recorded with the deed" },
   ];
 
   // ------------------------------------------------------------------ format
@@ -157,10 +157,6 @@
       lat: located ? +g[1] : null,
       located: located,
     };
-    row._search = [row.address, row.city, row.zip, row.buyer, row.seller, row.parcelId]
-      .filter(Boolean)
-      .join(" ")
-      .toLowerCase();
     return row;
   }
 
@@ -183,6 +179,7 @@
         var rows = (fc.features || []).map(normalize).filter(function (r) {
           return r.price > 0 && r.date;
         });
+        if (TX.search) TX.search.indexRows(rows);
         var latest = {};
         var counties = fc.counties || {};
         Object.keys(counties).forEach(function (c) {
@@ -339,16 +336,23 @@
       days: 30,
       counties: COUNTIES.slice(),
       categories: CATEGORIES.slice(),
-      price: "all",
+      price: "all", // preset id, or "custom" with priceMin/priceMax
+      priceMin: null,
+      priceMax: null,
       financed: "any",
       q: "",
+      place: null, // { kind: "city"|"zip", value, label }
+      party: null, // { key, label } — a buyer/seller name
+      bbox: null, // [west, south, east, north] — "Search this area" / a searched place
+      bboxLabel: null, // e.g. "Miami Beach, FL 33139" when bbox came from search
     };
   }
 
   // URL presets let the dashboard / article embeds open a specific view:
   //   ?property-type=residential|commercial|land (comma list ok)
   //   ?county=miami-dade|broward|palm-beach   ?days=7|14|30
-  //   ?min-price=1m|5m|10m   ?financed=financed|cash   ?q=text   ?sale=<id>
+  //   ?min-price=1m|5m|10m|<dollars>   ?max-price=<dollars>
+  //   ?financed=financed|cash   ?q=text   ?city=<name>   ?zip=<zip>   ?sale=<id>
   function stateFromUrl(search) {
     var q = new URLSearchParams(search || location.search);
     var s = defaultState();
@@ -374,6 +378,13 @@
     if (DAYS.indexOf(days) >= 0) s.days = days;
     var mp = (q.get("min-price") || "").toLowerCase();
     if (PRICE_PRESETS.some(function (p) { return p.id === mp; })) s.price = mp;
+    else if (parsePrice(mp) || parsePrice(q.get("max-price"))) {
+      s.price = "custom";
+      s.priceMin = parsePrice(mp);
+      s.priceMax = parsePrice(q.get("max-price"));
+    }
+    if (q.get("city")) s.place = { kind: "city", value: fmt.title(q.get("city")), label: fmt.title(q.get("city")) };
+    if (/^\d{5}$/.test(q.get("zip") || "")) s.place = { kind: "zip", value: q.get("zip"), label: "ZIP " + q.get("zip") };
     var fin = q.get("financed");
     if (fin === "financed" || fin === "cash") s.financed = fin;
     if (q.get("q")) s.q = q.get("q");
@@ -385,8 +396,33 @@
   }
 
   function minPrice(state) {
+    if (state.price === "custom") return state.priceMin || 0;
     var p = PRICE_PRESETS.find(function (x) { return x.id === state.price; });
     return p ? p.min : 0;
+  }
+  function maxPrice(state) {
+    return state.price === "custom" && state.priceMax ? state.priceMax : Infinity;
+  }
+
+  // "1.5m", "$500K", "2,000,000", "750" (thousands assumed below 10,000) -> dollars
+  function parsePrice(v) {
+    if (v == null) return null;
+    var m = String(v).toLowerCase().replace(/[$,\s]/g, "").match(/^(\d+(?:\.\d+)?)(k|m|b)?$/);
+    if (!m) return null;
+    var n = parseFloat(m[1]) * ({ k: 1e3, m: 1e6, b: 1e9 }[m[2]] || 1);
+    if (!m[2] && n > 0 && n < 10000) n *= 1000;
+    return n > 0 ? n : null;
+  }
+
+  function priceLabel(state) {
+    if (state.price !== "custom") {
+      var p = PRICE_PRESETS.find(function (x) { return x.id === state.price; });
+      return p ? p.label : "";
+    }
+    if (state.priceMin && state.priceMax) return fmt.moneyShort(state.priceMin) + "–" + fmt.moneyShort(state.priceMax);
+    if (state.priceMin) return fmt.moneyShort(state.priceMin) + "+";
+    if (state.priceMax) return "Up to " + fmt.moneyShort(state.priceMax);
+    return "All prices";
   }
 
   // Days are counted back from the newest record date in the data, not from
@@ -403,17 +439,25 @@
   function apply(rows, state, asOf, opts) {
     opts = opts || {};
     var from = cutoff(asOf, state.days);
-    var min = minPrice(state);
-    var q = (state.q || "").trim().toLowerCase();
-    var terms = q ? q.split(/\s+/) : [];
+    var min = minPrice(state), max = maxPrice(state);
+    var q = opts.ignoreQuery ? "" : (state.q || "").trim();
+    var place = opts.ignoreQuery ? null : state.place;
+    var party = opts.ignoreQuery ? null : state.party;
+    var bb = opts.ignoreBbox ? null : state.bbox;
+    var placeCity = place && place.kind === "city" ? place.value.toLowerCase() : null;
     return rows.filter(function (r) {
       if (r.date < from) return false;
-      if (r.price < min) return false;
+      if (r.price < min || r.price > max) return false;
       if (state.counties.indexOf(r.county) < 0) return false;
       if (!opts.ignoreCategory && state.categories.indexOf(r.category) < 0) return false;
       if (state.financed === "financed" && !r.financed) return false;
       if (state.financed === "cash" && r.financed) return false;
-      for (var i = 0; i < terms.length; i++) if (r._search.indexOf(terms[i]) < 0) return false;
+      if (place) {
+        if (placeCity ? (r.city || "").toLowerCase() !== placeCity : r.zip !== place.value) return false;
+      }
+      if (party && r._partyKeys.indexOf(party.key) < 0) return false;
+      if (bb && !(r.located && r.lng >= bb[0] && r.lng <= bb[2] && r.lat >= bb[1] && r.lat <= bb[3])) return false;
+      if (q && !TX.search.rowMatches(r, q)) return false;
       return true;
     });
   }
@@ -425,6 +469,9 @@
       state.price === d.price &&
       state.financed === d.financed &&
       !state.q &&
+      !state.place &&
+      !state.party &&
+      !state.bbox &&
       state.counties.length === d.counties.length &&
       state.categories.length === d.categories.length
     );
@@ -507,9 +554,7 @@
 
     function render() {
       var s = getState();
-      var html = "";
-      if (!opts.noSearch) html += searchHtml(s.q, opts.searchPlaceholder);
-      html += '<div class="tx-filter-groups">';
+      var html = '<div class="tx-filter-groups">';
 
       html += group("Period", "days", DAYS.map(function (d) {
         return chip("days", d, d + " days", s.days === d);
@@ -519,7 +564,11 @@
       }).join(""));
       html += group("Price", "price", PRICE_PRESETS.map(function (p) {
         return chip("price", p.id, p.label, s.price === p.id);
-      }).join(""));
+      }).join("") +
+        '<div class="tx-range"><label><span class="tx-sr">Minimum price</span><input class="tx-range-in" data-end="min" inputmode="decimal" placeholder="Min, e.g. 500k" value="' +
+        (s.price === "custom" && s.priceMin ? fmt.escape(fmt.moneyShort(s.priceMin)) : "") + '" /></label><span aria-hidden="true">–</span>' +
+        '<label><span class="tx-sr">Maximum price</span><input class="tx-range-in" data-end="max" inputmode="decimal" placeholder="Max, e.g. 2m" value="' +
+        (s.price === "custom" && s.priceMax ? fmt.escape(fmt.moneyShort(s.priceMax)) : "") + '" /></label></div>');
       if (opts.showCategories) {
         html += group("Type", "category", CATEGORIES.map(function (c) {
           return chip("category", c, '<i class="tx-swatch" data-cat="' + c + '"></i>' + c,
@@ -527,7 +576,7 @@
         }).join(""));
       }
       html += group("Mortgage", "financed", FINANCED.map(function (f) {
-        return chip("financed", f.id, f.label, s.financed === f.id);
+        return chip("financed", f.id, f.label, s.financed === f.id, f.title ? '" title="' + fmt.escape(f.title) : "");
       }).join(""));
       html += '<button type="button" class="tx-reset"' + (isDefault(s) ? " hidden" : "") + ">Reset</button>";
       html += "</div>";
@@ -541,21 +590,38 @@
     }
 
     function wire() {
-      var input = el.querySelector(".tx-search-input");
-      if (input) {
-        bindSearch(input, getState, function (s) {
-          onChange(s, "search");
-          var reset = el.querySelector(".tx-reset");
-          if (reset) reset.hidden = isDefault(s);
+      var rangeTimer = null;
+      el.querySelectorAll(".tx-range-in").forEach(function (inp) {
+        function commit() {
+          var s = getState();
+          var lo = parsePrice(el.querySelector('[data-end="min"]').value);
+          var hi = parsePrice(el.querySelector('[data-end="max"]').value);
+          if (lo && hi && lo > hi) { var t = lo; lo = hi; hi = t; }
+          s.price = lo || hi ? "custom" : "all";
+          s.priceMin = lo;
+          s.priceMax = hi;
+          el.querySelectorAll('.tx-chip[data-group="price"]').forEach(function (c) {
+            var on = c.getAttribute("data-value") === s.price;
+            c.classList.toggle("is-active", on);
+            c.setAttribute("aria-pressed", String(on));
+          });
+          onChange(s, "price:custom");
+        }
+        inp.addEventListener("input", function () {
+          clearTimeout(rangeTimer);
+          rangeTimer = setTimeout(commit, 500);
         });
-      }
+        inp.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") { clearTimeout(rangeTimer); commit(); }
+        });
+      });
       el.querySelectorAll(".tx-chip").forEach(function (b) {
         b.addEventListener("click", function () {
           var s = getState();
           var g = b.getAttribute("data-group");
           var v = b.getAttribute("data-value");
           if (g === "days") s.days = +v;
-          if (g === "price") s.price = v;
+          if (g === "price") { s.price = v; s.priceMin = null; s.priceMax = null; }
           if (g === "financed") s.financed = v;
           // County / type chips: nothing selected == all. Clicking narrows to
           // that one; clicking more adds; clicking the last active one resets.
@@ -563,6 +629,8 @@
           if (g === "category") s.categories = toggleSet(s.categories, v, CATEGORIES);
           onChange(s, g + ":" + v);
           render();
+          var again = el.querySelector('.tx-chip[data-group="' + g + '"][data-value="' + v + '"]');
+          if (again) again.focus();
         });
       });
       var reset = el.querySelector(".tx-reset");
@@ -579,23 +647,9 @@
   function searchHtml(q, placeholder) {
     return '<div class="tx-search">' +
       '<svg aria-hidden="true" viewBox="0 0 20 20"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4.5 4.5"/></svg>' +
-      '<input type="search" class="tx-search-input" placeholder="' + fmt.escape(placeholder || "Search address, buyer, seller") +
+      '<input type="search" class="tx-search-input" enterkeyhint="search" placeholder="' + fmt.escape(placeholder || "Search address, city, ZIP, buyer or seller") +
       '" value="' + fmt.escape(q || "") + '" aria-label="Search sales" autocomplete="off" spellcheck="false" />' +
       "</div>";
-  }
-
-  // Debounced live search: updates state.q and calls onChange(state).
-  function bindSearch(input, getState, onChange) {
-    var timer = null;
-    input.addEventListener("input", function () {
-      clearTimeout(timer);
-      var v = input.value;
-      timer = setTimeout(function () {
-        var s = getState();
-        s.q = v;
-        onChange(s);
-      }, 150);
-    });
   }
 
   function toggleSet(current, v, all) {
@@ -665,7 +719,8 @@
     serializeState: serializeState,
     filterBar: filterBar,
     searchHtml: searchHtml,
-    bindSearch: bindSearch,
+    priceLabel: priceLabel,
+    parsePrice: parsePrice,
     summary: summary,
     asOfText: asOfText,
     slug: slug,

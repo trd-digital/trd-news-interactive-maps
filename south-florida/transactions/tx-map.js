@@ -116,6 +116,8 @@
     filterToggle: app.querySelector(".tx-filter-toggle"),
     filterPanel: app.querySelector(".tx-filter-panel"),
     results: app.querySelector(".tx-results"),
+    chips: app.querySelector(".tx-active"),
+    areaBtn: app.querySelector(".tx-area-btn"),
     legend: app.querySelector(".tx-legend"),
     note: app.querySelector(".tx-mapnote"),
     detail: app.querySelector(".tx-detail"),
@@ -123,13 +125,24 @@
   };
 
   // Search lives in the top bar; filter chips in the dropdown panel.
-  el.topbar.insertAdjacentHTML("afterbegin", TX.searchHtml(state.q, "Search address, buyer, seller"));
-  var searchEl = el.topbar.querySelector(".tx-search");
-  var searchInput = searchEl.querySelector("input");
-  TX.bindSearch(searchInput, getState, function (s) {
-    onFilterChange(s, "search");
+  el.topbar.insertAdjacentHTML("afterbegin", TX.searchHtml(state.q));
+  var searchInput = el.topbar.querySelector(".tx-search-input");
+  var box = TX.search.searchBox({
+    input: searchInput,
+    panel: el.results,
+    getBase: function () {
+      return data ? TX.apply(data.rows, state, data.asOf, { ignoreQuery: true }) : [];
+    },
+    onQuery: function (q, committed) {
+      var s = getState();
+      s.q = q;
+      onFilterChange(s, committed ? "search_enter" : "search", { fit: committed });
+    },
+    onPick: onPick,
+    geocode: compact ? null : geocode,
+    placeholder: { wide: "Search address, city, ZIP, buyer or seller", narrow: "Search sales" },
   });
-  var filters = TX.filterBar(el.filterPanel, getState, onFilterChange, { noSearch: true, showCategories: false });
+  var filters = TX.filterBar(el.filterPanel, getState, onFilterChange, { showCategories: false });
 
   function getState() {
     return TX.serializeState(state);
@@ -146,18 +159,37 @@
       el.filterPanel.hidden = true;
       el.filterToggle.setAttribute("aria-expanded", "false");
     }
-    if (!el.results.hidden && !el.results.contains(e.target) && !searchEl.contains(e.target)) {
-      el.results.hidden = true;
-    }
   });
 
+  // A pick from the suggestion list.
+  function onPick(it) {
+    var s = getState();
+    track("search_pick", it.kind);
+    if (it.kind === "text") {
+      onFilterChange(s, "search_all", { fit: true });
+    } else if (it.kind === "city" || it.kind === "zip") {
+      s.place = { kind: it.kind, value: it.value, label: it.label };
+      s.q = "";
+      box.set("");
+      onFilterChange(s, "place", { fit: true });
+    } else if (it.kind === "party") {
+      s.party = { key: it.key, label: it.label };
+      s.q = "";
+      box.set("");
+      onFilterChange(s, "party", { fit: true });
+    } else if (it.kind === "sale") {
+      select(it.row.id, { fly: true, announce: true });
+    } else if (it.kind === "geo") {
+      goTo(it);
+    }
+  }
+
   // ------------------------------------------------------------- filtering
-  function onFilterChange(next, why) {
+  function onFilterChange(next, why, opts) {
     state = next;
     if (why !== "search") track("filter", why);
-    refresh();
+    refresh(opts && opts.fit ? { fit: true, animate: true } : null);
     peer.send("filters", TX.serializeState(state));
-    if (why === "search") renderResults();
   }
 
   function activeFilterCount() {
@@ -176,7 +208,7 @@
     var sum = TX.summary(visible);
     var catLabel = state.categories.length === 1 ? state.categories[0].toLowerCase() + " " : "";
     el.count.innerHTML = "<strong>" + sum.count.toLocaleString("en-US") + "</strong> " + catLabel +
-      (sum.count === 1 ? "sale" : "sales") +
+      (sum.count === 1 ? "sale" : "sales") + (state.bbox ? (state.bboxLabel ? " in " + fmt.escape(state.bboxLabel) : " in this area") : "") +
       (compact ? " · last " + state.days + " days" : "") +
       (sum.count ? '<span class="tx-count-total"> · ' + fmt.moneyShort(sum.total) + "</span>" : "");
     var n = activeFilterCount();
@@ -184,15 +216,40 @@
     el.filterToggle.querySelector(".tx-badge").textContent = n;
     var unmapped = visible.length - located.length;
     var unclassified = typeFilterGaps();
-    el.note.textContent = compact
+    TX.search.activeChips(el.chips, state, function (s, why) {
+      box.set(s.q);
+      onFilterChange(s, why);
+      filters.render();
+    });
+    if (!state.bbox) showAreaButton(false);
+    setNote(compact
       ? "Recorded through " + fmt.date(data.asOf) + (unclassified.length ? " · " + unclassified.join(", ") + " not yet classified by type" : " · Source: county records")
       : TX.asOfText(data) +
       (unmapped ? " · " + unmapped.toLocaleString("en-US") + " sale" + (unmapped === 1 ? "" : "s") +
         " without a mappable address " + (unmapped === 1 ? "is" : "are") + " listed in the table" : "") +
-      (unclassified.length ? " · " + unclassified.join(" and ") + " sales aren’t classified by type yet, so type filters leave them out" : "");
+      (unclassified.length ? " · " + unclassified.join(" and ") + " sales aren’t classified by type yet, so type filters leave them out" : ""));
     renderLegend();
     setSource(located);
-    if (opts && opts.fit) fitTo(located);
+    if (opts && opts.fit) fitTo(located, opts.animate);
+  }
+
+  // One line by default; "More" expands when the note doesn't fit.
+  function setNote(text) {
+    el.note.innerHTML = '<span class="tx-note-text"></span><button type="button" class="tx-note-more" hidden aria-expanded="false">More</button>';
+    var t = el.note.querySelector(".tx-note-text");
+    var more = el.note.querySelector(".tx-note-more");
+    t.textContent = text;
+    el.note.classList.remove("is-open");
+    requestAnimationFrame(function () {
+      more.hidden = t.scrollWidth <= t.clientWidth + 1;
+    });
+    more.onclick = function () {
+      var open = !el.note.classList.contains("is-open");
+      el.note.classList.toggle("is-open", open);
+      more.textContent = open ? "Less" : "More";
+      more.setAttribute("aria-expanded", String(open));
+      if (map) map.resize();
+    };
   }
 
   // Counties whose rows are all "Other" (no use code at the source) vanish
@@ -223,11 +280,11 @@
     map.getSource("tx").setData(toFeatures(rows));
   }
 
-  function fitTo(rows) {
+  function fitTo(rows, animate) {
     if (!map || !rows.length) return;
     var b = new mapboxgl.LngLatBounds();
     rows.forEach(function (r) { b.extend([r.lng, r.lat]); });
-    map.fitBounds(b, { padding: compact ? 24 : 48, maxZoom: 14, duration: 0 });
+    map.fitBounds(b, { padding: compact ? 24 : 56, maxZoom: 15, duration: animate ? 700 : 0 });
   }
 
   // ------------------------------------------------------------------ legend
@@ -284,56 +341,66 @@
     onFilterChange(next, "legend:" + g.id);
   });
 
-  // ------------------------------------------------------------------ search
-  var activeResult = -1;
-  function renderResults() {
-    var q = (state.q || "").trim();
-    activeResult = -1;
-    if (q.length < 2 || document.activeElement !== searchInput) {
-      el.results.hidden = true;
+  // ------------------------------------------------------- places on the map
+  // Any address / neighborhood in South Florida, even with no sale there.
+  var GEO_BBOX = "-80.95,25.1,-79.95,27.0";
+  function geocode(q) {
+    var url = "https://api.mapbox.com/search/geocode/v6/forward?q=" + encodeURIComponent(q) +
+      "&bbox=" + GEO_BBOX + "&country=us&limit=3&types=address,street,neighborhood,locality,place,postcode&access_token=" + TOKEN;
+    return fetch(url).then(function (r) { return r.ok ? r.json() : { features: [] }; }).then(function (j) {
+      return (j.features || []).map(function (f) {
+        var p = f.properties || {};
+        return {
+          label: p.name || p.full_address,
+          sub: p.place_formatted || "",
+          center: f.geometry.coordinates,
+          type: p.feature_type,
+          bbox: p.bbox || f.bbox || null,
+        };
+      });
+    });
+  }
+
+  var goMarker = null;
+  function goTo(g) {
+    if (!map) return;
+    // Areas (ZIP, neighborhood, city) filter to their bounds, which also
+    // covers counties whose records lack city/ZIP; addresses just fly there.
+    if (g.bbox && /postcode|neighborhood|locality|place/.test(g.type)) {
+      var s = getState();
+      s.bbox = g.bbox.map(function (v) { return +(+v).toFixed(5); });
+      s.bboxLabel = g.type === "postcode" ? g.label + (g.sub ? " " + g.sub.split(",")[0] : "") : g.label;
+      s.q = "";
+      box.set("");
+      if (goMarker) { goMarker.remove(); goMarker = null; }
+      onFilterChange(s, "geo_area");
+      map.fitBounds([[s.bbox[0], s.bbox[1]], [s.bbox[2], s.bbox[3]]], { padding: 40, duration: 900 });
+      track("geocode_area", g.type);
       return;
     }
-    var ql = q.toLowerCase();
-    var hits = visible.slice().sort(function (a, b) {
-      var as = (a.address || "").toLowerCase().indexOf(ql) === 0 ? 0 : 1;
-      var bs = (b.address || "").toLowerCase().indexOf(ql) === 0 ? 0 : 1;
-      return as - bs || b.price - a.price;
-    }).slice(0, 8);
-    if (!hits.length) {
-      el.results.innerHTML = '<li class="tx-r-empty">No sales match “' + fmt.escape(q) +
-        "” with the current filters.</li>";
-    } else {
-      el.results.innerHTML = hits.map(function (r, i) {
-        return '<li><button type="button" data-id="' + fmt.escape(r.id) + '" data-i="' + i + '">' +
-          '<span class="tx-r-title">' + fmt.escape(r.address || "Address unavailable") + "</span>" +
-          '<span class="tx-r-sub">' + fmt.moneyShort(r.price) + " · " + fmt.dateShort(r.date) + " · " +
-          fmt.escape([r.city, r.county].filter(Boolean).join(", ")) +
-          (r.located ? "" : " · not on map") + "</span></button></li>";
-      }).join("");
-    }
-    el.results.hidden = false;
+    var zoom = { address: 17, street: 15, postcode: 13, neighborhood: 14, locality: 13, place: 12 }[g.type] || 15;
+    map.flyTo({ center: g.center, zoom: zoom, essential: true, duration: 900 });
+    if (goMarker) goMarker.remove();
+    var dot = document.createElement("div");
+    dot.className = "tx-go-marker";
+    dot.title = g.label;
+    goMarker = new mapboxgl.Marker({ element: dot }).setLngLat(g.center).addTo(map);
+    track("geocode_go", g.type);
   }
-  searchInput.addEventListener("focus", renderResults);
-  searchInput.addEventListener("keydown", function (e) {
-    var items = el.results.querySelectorAll("button[data-id]");
-    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-      if (!items.length) return;
-      e.preventDefault();
-      activeResult = (activeResult + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
-      items.forEach(function (b, i) { b.classList.toggle("is-active", i === activeResult); });
-    } else if (e.key === "Enter") {
-      var pick = items[Math.max(0, activeResult)];
-      if (pick) pick.click();
-    } else if (e.key === "Escape") {
-      el.results.hidden = true;
-    }
-  });
-  el.results.addEventListener("click", function (e) {
-    var b = e.target.closest("button[data-id]");
-    if (!b) return;
-    el.results.hidden = true;
-    track("search_select", b.getAttribute("data-id"));
-    select(b.getAttribute("data-id"), { fly: true, announce: true });
+
+  // "Search this area": appears after the reader pans or zooms.
+  function showAreaButton(show) {
+    if (compact) return;
+    el.areaBtn.hidden = !show;
+  }
+  el.areaBtn.addEventListener("click", function () {
+    var b = map.getBounds();
+    var s = getState();
+    s.bbox = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()].map(function (x) { return +x.toFixed(5); });
+    s.bboxLabel = null;
+    showAreaButton(false);
+    track("search_area", "");
+    onFilterChange(s, "bbox");
   });
 
   // ------------------------------------------------------------------ detail
@@ -596,6 +663,11 @@
     map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
     if (!compact) map.addControl(new mapboxgl.FullscreenControl(), "top-right");
+    // "Near me" only where the embedding page lets this frame use location.
+    var geoAllowed = document.featurePolicy ? document.featurePolicy.allowsFeature("geolocation") : !isEmbed;
+    if (!compact && geoAllowed && navigator.geolocation) {
+      map.addControl(new mapboxgl.GeolocateControl({ positionOptions: { enableHighAccuracy: false }, fitBoundsOptions: { maxZoom: 14 } }), "top-right");
+    }
 
     map.on("style.load", function () {
       declutter();
@@ -662,6 +734,9 @@
     map.on("zoomend", function () {
       if (data) renderLegend();
     });
+    map.on("moveend", function (e) {
+      if (e.originalEvent && data) showAreaButton(true); // reader-driven moves only
+    });
     return new Promise(function (resolve) {
       map.on("load", resolve);
     });
@@ -671,10 +746,11 @@
   var peer = TX.link("map", function (msg) {
     if (!data) return;
     if (msg.type === "filters" && msg.payload) {
+      var placeChanged = JSON.stringify([state.place, state.party]) !== JSON.stringify([msg.payload.place, msg.payload.party]);
       state = msg.payload;
       filters.render();
-      searchInput.value = state.q || "";
-      refresh();
+      box.set(state.q);
+      refresh(placeChanged && (state.place || state.party) ? { fit: true, animate: true } : null);
     } else if (msg.type === "select" || msg.type === "reveal") {
       var r = rowById(msg.payload);
       if (r) select(msg.payload, { fly: true });
