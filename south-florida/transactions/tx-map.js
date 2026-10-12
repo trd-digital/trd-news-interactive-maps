@@ -286,7 +286,7 @@
     el.count.innerHTML = "<strong>" + sum.count.toLocaleString("en-US") + "</strong> " + catLabel +
       (sum.count === 1 ? "sale" : "sales") + (state.bbox ? (state.bboxLabel ? " in " + fmt.escape(state.bboxLabel) : " in this area") : "") +
       (compact ? " · last " + state.days + " days" : "") +
-      (sum.count ? '<span class="tx-count-total"> · ' + fmt.moneyShort(sum.total) + "</span>" : "");
+      (sum.count ? '<span class="tx-count-total"> · ' + fmt.moneyShort(sum.total) + "</span>" : "") + TX.pendingNote(state, data.asOf);
     var n = activeFilterCount();
     el.filterToggle.querySelector(".tx-badge").hidden = !n;
     el.filterToggle.querySelector(".tx-badge").textContent = n;
@@ -1225,24 +1225,35 @@
     return;
   }
 
+  function prep() {
+    data.byId = {};
+    data.unclassifiedCounties = TX.COUNTIES.filter(function (c) {
+      var rs = data.rows.filter(function (r) { return r.county === c; });
+      return rs.length && rs.every(function (r) { return r.category === "Other"; });
+    });
+    data.rows.forEach(function (r, i) {
+      r._n = i;
+      data.byId[r.id] = r;
+    });
+  }
+
   Promise.all([TX.load(), mapReady])
     .then(function (res) {
       data = res[0];
-      data.byId = {};
-      data.unclassifiedCounties = TX.COUNTIES.filter(function (c) {
-        var rs = data.rows.filter(function (r) { return r.county === c; });
-        return rs.length && rs.every(function (r) { return r.category === "Other"; });
-      });
-      data.rows.forEach(function (r, i) {
-        r._n = i;
-        data.byId[r.id] = r;
-      });
+      prep();
       el.loading.hidden = true;
       initCompare();
       refresh({ fit: !params.get("sale") });
       var sale = params.get("sale");
       if (sale && rowById(sale)) select(sale, { fly: true, instant: true });
       track("loaded", data.rows.length);
+      // Older sales (before split_at) arrive in the background.
+      TX.onRest(function () {
+        prep();
+        if (cmp) cmp.refresh();
+        refresh();
+        if (sale && !selectedId && rowById(sale)) select(sale, { fly: true, instant: true });
+      });
     })
     .catch(function () {
       showError("Sales data couldn’t load. Please try again later.");

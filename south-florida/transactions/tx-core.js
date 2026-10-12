@@ -246,50 +246,116 @@
     }, 0);
   }
 
-  var loadPromise = null;
+  // The feed is published three ways from one build: the full 60-day file, and
+  // the same sales split into -recent (date >= split_at, the default 30-day
+  // view) and -older. The pages load -recent first, render, then fetch -older
+  // in the background; any mismatch (missing part, different generated_at)
+  // falls back to the full file.
+  var RECENT_FILE = DATA_FILE.replace(".json", "-recent.json");
+  var OLDER_FILE = DATA_FILE.replace(".json", "-older.json");
+
+  function fetchJson(url) {
+    return fetch(url).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    });
+  }
+  function rowsOf(fc) {
+    return (fc.features || []).map(normalize).filter(function (r) {
+      return r.price > 0 && r.date;
+    });
+  }
+
+  function build(fc) {
+    var rows = rowsOf(fc);
+    var linksOk = COUNTIES.every(function (cty) {
+      return rows.some(function (r) { return r.county === cty && r._linkCandidate; });
+    });
+    rows.forEach(function (r) {
+      r.parcelUrl = linksOk ? r._linkCandidate : null;
+    });
+    if (TX.search) TX.search.indexRows(rows);
+    var latest = {};
+    var counties = fc.counties || {};
+    Object.keys(counties).forEach(function (c) {
+      if (counties[c] && counties[c].latest_record_date) latest[c] = counties[c].latest_record_date;
+    });
+    if (!Object.keys(latest).length) {
+      rows.forEach(function (r) {
+        if (!latest[r.county] || r.date > latest[r.county]) latest[r.county] = r.date;
+      });
+    }
+    var asOf = Object.keys(latest).reduce(function (m, k) {
+      return latest[k] > m ? latest[k] : m;
+    }, "");
+    var meta = {
+      generatedAt: fc.generated_at || null,
+      windowDays: fc.window_days || null,
+      minPrice: fc.min_price || null,
+      topDeals: fc.top_deals || [],
+    };
+    return {
+      rows: rows, meta: meta, latestByCounty: latest, asOf: asOf, assemblages: indexAssemblages(rows),
+      linksOk: linksOk, splitAt: fc.split_at || null, // set while the older part is still loading
+    };
+  }
+
+  var loadPromise = null, restPromise = null, restListeners = [];
   function load() {
     if (loadPromise) return loadPromise;
-    loadPromise = fetch(dataUrl())
-      .then(function (r) {
-        if (!r.ok) throw new Error("HTTP " + r.status);
-        return r.json();
-      })
-      .then(function (fc) {
-        var rows = (fc.features || []).map(normalize).filter(function (r) {
-          return r.price > 0 && r.date;
-        });
-        var linksOk = COUNTIES.every(function (cty) {
-          return rows.some(function (r) { return r.county === cty && r._linkCandidate; });
-        });
-        rows.forEach(function (r) {
-          r.parcelUrl = linksOk ? r._linkCandidate : null;
-        });
-        if (TX.search) TX.search.indexRows(rows);
-        var latest = {};
-        var counties = fc.counties || {};
-        Object.keys(counties).forEach(function (c) {
-          if (counties[c] && counties[c].latest_record_date) latest[c] = counties[c].latest_record_date;
-        });
-        if (!Object.keys(latest).length) {
-          rows.forEach(function (r) {
-            if (!latest[r.county] || r.date > latest[r.county]) latest[r.county] = r.date;
-          });
-        }
-        var asOf = Object.keys(latest).reduce(function (m, k) {
-          return latest[k] > m ? latest[k] : m;
-        }, "");
-        var meta = {
-          generatedAt: fc.generated_at || null,
-          windowDays: fc.window_days || null,
-          minPrice: fc.min_price || null,
-          topDeals: fc.top_deals || [],
-        };
-        return { rows: rows, meta: meta, latestByCounty: latest, asOf: asOf, assemblages: indexAssemblages(rows) };
-      });
-    // Tag Manager (deferred in the page head) starts once the sales have
-    // rendered, so its ~90 tag requests don't compete with the data download.
-    loadPromise.then(startTags, startTags);
+    var override = dataUrl() !== DATA_FILE;
+    loadPromise = (override ? fetchJson(dataUrl()).then(build) : fetchJson(RECENT_FILE).then(function (fc) {
+      if (!fc.split_at) throw new Error("no split_at");
+      return build(fc);
+    }).catch(function () {
+      return fetchJson(DATA_FILE).then(build);
+    })).then(function (d) {
+      if (!d.splitAt) d.splitAt = null;
+      return d;
+    });
+    loadPromise.then(function (d) {
+      currentData = d;
+      // After the views' own .then() has rendered: older sales, then tags.
+      setTimeout(function () {
+        (d.splitAt ? loadRest(d) : Promise.resolve()).then(startTags, startTags);
+      }, 0);
+    }, startTags);
     return loadPromise;
+  }
+
+  // Fetch the sales before split_at and fold them into `d` (a new rows array,
+  // so caches keyed on it reset), then tell the views.
+  function loadRest(d) {
+    if (restPromise) return restPromise;
+    restPromise = fetchJson(OLDER_FILE).then(function (fc) {
+      if (!fc.generated_at || fc.generated_at !== d.meta.generatedAt || fc.split_at !== d.splitAt) throw new Error("parts differ");
+      var older = rowsOf(fc);
+      older.forEach(function (r) { r.parcelUrl = d.linksOk ? r._linkCandidate : null; });
+      var asm = indexAssemblages(older);
+      Object.keys(asm).forEach(function (k) { d.assemblages[k] = asm[k]; });
+      d.rows = d.rows.concat(older);
+      if (TX.search) TX.search.indexRows(d.rows);
+    }).catch(function () {
+      return fetchJson(DATA_FILE).then(function (fc) {
+        var full = build(fc);
+        ["rows", "meta", "latestByCounty", "asOf", "assemblages", "linksOk"].forEach(function (k) { d[k] = full[k]; });
+      });
+    }).then(function () {
+      d.splitAt = null;
+      restListeners.forEach(function (fn) { fn(d); });
+    }, function () {
+      d.splitAt = null; // give up: show what we have without "loading" notes
+      d.restFailed = true;
+      restListeners.forEach(function (fn) { fn(d); });
+    });
+    return restPromise;
+  }
+  // Views call this to re-render once the older sales are in.
+  function onRest(fn) { restListeners.push(fn); }
+  // True while sales dated before `iso` are still on their way.
+  var currentData = null;
+  function pendingBefore(iso) {
+    return !!(currentData && currentData.splitAt && iso && iso < currentData.splitAt);
   }
 
   // ------------------------------------------------------------ assemblages
@@ -563,6 +629,7 @@
   // Earliest record date per county; counties starting after `from`.
   var coverageCache = null;
   function coverageGaps(rows, from, counties) {
+    if (pendingBefore(from)) return [];
     if (!coverageCache || coverageCache.rows !== rows) {
       var start = {};
       rows.forEach(function (r) { if (!start[r.county] || r.date < start[r.county]) start[r.county] = r.date; });
@@ -1128,6 +1195,10 @@
     DAYS: DAYS,
     fmt: fmt,
     load: load,
+    loadRest: function () { return loadPromise ? loadPromise.then(loadRest) : load().then(loadRest); },
+    onRest: onRest,
+    pendingBefore: pendingBefore,
+    pendingNote: function (st, asOf) { return pendingBefore(dateRange(st, asOf)[0]) ? '<span class="tx-pending"> · loading older sales…</span>' : ""; },
     defaultState: defaultState,
     stateFromUrl: stateFromUrl,
     apply: apply,

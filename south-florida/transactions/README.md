@@ -70,10 +70,37 @@ Per feature:
 | `assemblage_id` | string, omitted if none | Same-day group of 2+ distinct deeds; the UI groups it only if all mappable members are within 500 m |
 | `location_status` | `"located"` \| `"unavailable"` | `geometry` is `null` when unavailable — never a county/city centroid |
 
+### Split files (faster first load)
+
+The same build is also published as two disjoint parts, which the pages load
+instead of the full file:
+
+| File | Contents |
+|---|---|
+| `../south-florida-transactions-recent.json` | Features with `date >= split_at` (the default 30-day view); carries `top_deals` |
+| `../south-florida-transactions-older.json` | Features with `date < split_at` |
+
+Both keep the full file's top level unchanged (`generated_at`, `window_days`
+60, `min_price`, `counties` for the whole window) and add `split_at`
+(`YYYY-MM-DD` = newest `latest_record_date` − 30 days + 1). The two parts
+together equal the full file, and all three share one `generated_at` and are
+committed together.
+
+The pages render from `-recent`, then fetch `-older` in the background
+(counts read "loading older sales…" and the pulse "Loading prior 30 days…"
+meanwhile; a `?sale=` link to an older sale opens when it arrives). If
+`-recent` lacks `split_at`, or `-older` is missing or its `generated_at` /
+`split_at` differ, the pages fall back to the full file, so publishing only
+the full file still works.
+
+Load order: `<link rel="preload">` for `-recent`, render, `-older`, then
+Google Tag Manager (deferred in the page head; 20 s fallback) so tags don't
+compete with the data.
+
 ### Publishing checklist (for the scheduled job)
 
 1. Run after all three county feeds have refreshed.
-2. Write `south-florida/south-florida-transactions.json` (~5–6 MB for 60 days).
+2. Write `south-florida/south-florida-transactions.json` (~9 MB for 60 days, ~1.5 MB gzipped) and its `-recent`/`-older` parts from the same build.
 3. Commit it to `main` of `trd-digital/trd-news-interactive-maps`; GitHub Pages deploys in ~2–3 minutes.
 4. Fail loudly if any county's `latest_record_date` is more than 3 days old, or the feature count drops sharply day over day.
 5. Keep every committed file under GitHub's 100 MB hard limit (`broward_output.geojson` was ~78 MB in Oct 2026 and growing).

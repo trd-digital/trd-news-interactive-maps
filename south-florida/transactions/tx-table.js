@@ -247,7 +247,7 @@
     var s = TX.summary(rows);
     var med = median(rows.map(function (r) { return r.price; }));
     el.summary.innerHTML = "<strong>" + s.count.toLocaleString("en-US") + "</strong> " + (s.count === 1 ? "sale" : "sales") +
-      (s.count ? " · <strong>" + fmt.moneyShort(s.total) + "</strong> total · median " + fmt.moneyShort(med) : "");
+      (s.count ? " · <strong>" + fmt.moneyShort(s.total) + "</strong> total · median " + fmt.moneyShort(med) : "") + TX.pendingNote(state, data.asOf);
     el.csv.disabled = !rows.length;
   }
 
@@ -779,18 +779,30 @@
   });
 
   // ------------------------------------------------------------------ boot
+  function prep() {
+    data.byId = {};
+    data.rows.forEach(function (r) { data.byId[r.id] = r; });
+  }
+
   TX.load()
     .then(function (d) {
       data = d;
-      data.byId = {};
-      data.rows.forEach(function (r) { data.byId[r.id] = r; });
+      prep();
       el.asof.textContent = TX.asOfText(data) + ". Deeds of $100,000 or more recorded in Miami-Dade, Broward and Palm Beach counties.";
       el.loading.hidden = true;
       initCompare();
       refresh();
       var sale = params.get("sale");
-      if (sale) reveal(sale);
+      if (sale && data.byId[sale]) reveal(sale);
       track("loaded", data.rows.length);
+      // Older sales (before split_at) arrive in the background.
+      TX.onRest(function () {
+        var wasMissing = sale && !data.byId[sale];
+        prep();
+        if (cmp) cmp.refresh();
+        refresh();
+        if (wasMissing && data.byId[sale]) reveal(sale);
+      });
     })
     .catch(function () {
       el.loading.innerHTML = "<span>Sales data couldn’t load. Please try again later.</span>";
