@@ -78,6 +78,17 @@ Per feature:
 4. Fail loudly if any county's `latest_record_date` is more than 3 days old, or the feature count drops sharply day over day.
 5. Keep every committed file under GitHub's 100 MB hard limit (`broward_output.geojson` was ~78 MB in Oct 2026 and growing).
 
+## History file: `../south-florida-transactions-history.json`
+
+Monthly aggregates behind the table's "Monthly trends" (~420 KB, fetched only
+when the Market overview is open). Columnar: `columns` =
+`[month, county, city, use_type, count, volume, median, financed]`, `rows` of
+arrays; `"*"` in county/city/use_type marks a rollup. Cells under 3 sales are
+omitted. `coverage[county].days_covered["YYYY-MM"]` (distinct record-days)
+decides which months are drawn as partial (below 75% of the county's median,
+or the month still being recorded); `partial_months` is the fallback.
+`HISTORY_READY` in `tx-insights.js` hides trends if the file is ever suspect.
+
 ## Search and URL presets
 
 Search understands plain-language queries — cities ("coral gables",
