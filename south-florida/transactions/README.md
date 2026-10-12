@@ -51,7 +51,7 @@ Per feature:
 | `financed` | bool | |
 | `loan` | number \| null | |
 | `prev_price`, `prev_date` | number/ISO \| null | Null when the "previous sale" is this sale |
-| `parcel_id`, `parcel_url` | string \| null | |
+| `parcel_id`, `parcel_url` | string \| null | Real parcel folio (Miami-Dade 13 digits with leading zeros, Broward 12, Palm Beach 17) and its county Property Appraiser page. **Links show for no county until every county has a browser-verified URL pattern** (`PROPERTY_LINKS` in `tx-core.js`); Broward is pending a folio. |
 | `parcel_count` | integer ≥ 1 | One deed covering several parcels |
 | `assemblage_id` | string, omitted if none | Same-day group of 2+ distinct deeds; the UI groups it only if all mappable members are within 500 m |
 | `location_status` | `"located"` \| `"unavailable"` | `geometry` is `null` when unavailable — never a county/city centroid |
