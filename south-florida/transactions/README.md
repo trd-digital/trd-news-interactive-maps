@@ -7,8 +7,21 @@ Two embeds on the TRD data site, both reading one data file:
 | `../south-florida-transactions-map.html` | `/data/miami/2024/priciest-south-florida-sales/` (1260×600), South Florida dashboard card (`?property-type=residential`, 487×394) |
 | `../south-florida-transactions-table.html` | `/data/miami/2024/priciest-south-florida-sales/` (1260×850) |
 
-Code: `tx-core.js` (data, filters, URL presets, map↔table sync), `tx-map.js`,
-`tx-table.js`, `tx.css`. `normalize()` in `tx-core.js` is the only code that
+Code:
+
+| File | Role |
+|---|---|
+| `tx-core.js` | Data load/normalize, filter model, URL presets, filter panel, map↔table sync, notices |
+| `tx-search.js` | Search: grouped suggestions, forgiving matching, active-filter chips |
+| `tx-charts.js` | SVG sparkline + bar chart with drag brush (timeline, price histogram) |
+| `tx-insights.js` | Table "Market overview": pulse strip, top deals, By area |
+| `tx-compare.js` | Compare up to four sales (tray + side-by-side panel), synced between frames |
+| `tx-map.js` / `tx-table.js` | The two embeds |
+| `tx.css` | All styles; light/dark tokens follow TRD theme.js |
+
+Map extras: a Layers control (Dots/Density, color by type/price, Streets/Satellite —
+remembered per reader in localStorage), approximate assemblage footprints, aerial
+thumbnails (Mapbox Static Images), and a phone "List sales in view" sheet. `normalize()` in `tx-core.js` is the only code that
 knows the data file's field names.
 
 ## Data file: `../south-florida-transactions.json`
@@ -76,8 +89,11 @@ and unifies abbreviations ("northwest 5th avenue" = "NW 5 Ave").
 Embeds can open a preset view with query parameters:
 `property-type`, `county`, `days` (7/14/30/60), `min-price` (`1m`/`5m`/`10m` or
 dollars), `max-price`, `financed` (`financed`/`cash`), `q`, `city`, `zip`,
-`sale=<id>`, and on the map `view=dashboard` (compact card); on the table
-`tab=biggest` and `csv=1`.
+`sale=<id>`, `from`/`to` (ISO dates, custom range), and on the map
+`view=dashboard` (compact card); on the table `tab=biggest|area` and `csv=1`.
+
+Restore point before the Oct 2026 enhancements batch: git tag
+`transactions-pre-enhancements`.
 
 ## Local preview
 
