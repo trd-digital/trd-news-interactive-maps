@@ -189,6 +189,24 @@
     return historyPromise;
   }
 
+  // A month is partial for a county when it is the month still being recorded,
+  // or its distinct record-days (coverage.days_covered) fall below 75% of that
+  // county's median. South Florida-wide months are partial if any county's is.
+  // Falls back to the file's flat partial_months list.
+  function isPartial(m, county) {
+    var counties = county === "*" ? Object.keys(history.coverage) : [county];
+    var usable = counties.length && counties.every(function (c) { return history.coverage[c] && history.coverage[c].days_covered; });
+    if (!usable) return history.partial.indexOf(m) >= 0;
+    if (history.through && m === history.through.slice(0, 7)) return true;
+    return counties.some(function (c) {
+      var dc = history.coverage[c].days_covered;
+      if (!(m in dc)) return false; // outside this county's coverage: no rows, nothing to mute
+      var cur = history.through && history.through.slice(0, 7);
+      var vals = Object.keys(dc).filter(function (k) { return k !== cur; }).map(function (k) { return dc[k]; }).sort(function (a, b) { return a - b; });
+      return dc[m] < 0.75 * vals[vals.length >> 1];
+    });
+  }
+
   function monthLabel(m, long) {
     var d = new Date(+m.slice(0, 4), +m.slice(5, 7) - 1, 1);
     return d.toLocaleDateString("en-US", long ? { month: "long", year: "numeric" } : { month: "short", year: "2-digit" });
@@ -211,7 +229,7 @@
     var city = scope.city ? cityKey(scope.city.name) : "*";
     var use = scope.use || "*";
     var series = history.months.map(function (m) {
-      return { m: m, v: history.idx[m + "|" + county + "|" + city + "|" + use] || null, partial: history.partial.indexOf(m) >= 0 };
+      return { m: m, v: history.idx[m + "|" + county + "|" + city + "|" + use] || null, partial: isPartial(m, county) };
     });
     var full = series.filter(function (s) { return s.v && !s.partial; });
     var scopeLabel = (scope.use ? TX.USE_TYPES[scope.use].label.toLowerCase() : "sales") + " in " +
