@@ -387,6 +387,8 @@
       party: null, // { key, label } — a buyer/seller name
       bbox: null, // [west, south, east, north] — "Search this area" / a searched place
       bboxLabel: null, // e.g. "Miami Beach, FL 33139" when bbox came from search
+      dateFrom: null, // custom record-date range from the timeline brush (ISO);
+      dateTo: null, //   overrides `days` when set
     };
   }
 
@@ -425,6 +427,8 @@
       s.priceMin = parsePrice(mp);
       s.priceMax = parsePrice(q.get("max-price"));
     }
+    if (/^\d{4}-\d{2}-\d{2}$/.test(q.get("from") || "")) s.dateFrom = q.get("from");
+    if (/^\d{4}-\d{2}-\d{2}$/.test(q.get("to") || "")) s.dateTo = q.get("to");
     if (q.get("city")) s.place = { kind: "city", value: fmt.title(q.get("city")), label: fmt.title(q.get("city")) };
     if (/^\d{5}$/.test(q.get("zip") || "")) s.place = { kind: "zip", value: q.get("zip"), label: "ZIP " + q.get("zip") };
     var fin = q.get("financed");
@@ -494,18 +498,51 @@
   function pad(n) {
     return n < 10 ? "0" + n : "" + n;
   }
+  function isoAdd(iso, days) {
+    var d = parseISO(iso);
+    d.setDate(d.getDate() + days);
+    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  }
+  // Effective [from, to] for a state (custom range or last N days).
+  function dateRange(state, asOf) {
+    return [state.dateFrom || cutoff(asOf, state.days), state.dateTo || asOf];
+  }
+  function dateRangeLabel(state, asOf) {
+    var r = dateRange(state, asOf);
+    return fmt.dateShort(r[0]) + "–" + fmt.dateShort(r[1]);
+  }
+
+  // Earliest record date per county; counties starting after `from`.
+  var coverageCache = null;
+  function coverageGaps(rows, from, counties) {
+    if (!coverageCache || coverageCache.rows !== rows) {
+      var start = {};
+      rows.forEach(function (r) { if (!start[r.county] || r.date < start[r.county]) start[r.county] = r.date; });
+      coverageCache = { rows: rows, start: start };
+    }
+    var minStart = Object.keys(coverageCache.start).reduce(function (m, k) { var v = coverageCache.start[k]; return !m || v < m ? v : m; }, "");
+    return (counties || COUNTIES).filter(function (c) {
+      var st = coverageCache.start[c];
+      // Only flag a county whose data starts well after the others (>2 days).
+      return st && st > from && st > isoAdd(minStart, 2);
+    }).map(function (c) { return { county: c, start: coverageCache.start[c] }; });
+  }
+
+  // Price histogram bin edges (log-ish, readable round numbers).
+  var PRICE_EDGES = [1e5, 1.5e5, 2e5, 3e5, 4e5, 5e5, 7.5e5, 1e6, 1.5e6, 2e6, 3e6, 5e6, 7.5e6, 1e7, 1.5e7, 2.5e7, 5e7, 1e8, 1e10];
 
   function apply(rows, state, asOf, opts) {
     opts = opts || {};
-    var from = cutoff(asOf, state.days);
-    var min = minPrice(state), max = maxPrice(state);
+    var from = opts.ignoreDate ? "" : state.dateFrom || cutoff(asOf, state.days);
+    var to = opts.ignoreDate || !state.dateTo ? "9999" : state.dateTo;
+    var min = opts.ignorePrice ? 0 : minPrice(state), max = opts.ignorePrice ? Infinity : maxPrice(state);
     var q = opts.ignoreQuery ? "" : (state.q || "").trim();
     var place = opts.ignoreQuery ? null : state.place;
     var party = opts.ignoreQuery ? null : state.party;
     var bb = opts.ignoreBbox ? null : state.bbox;
     var placeCity = place && place.kind === "city" ? place.value.toLowerCase() : null;
     return rows.filter(function (r) {
-      if (r.date < from) return false;
+      if (r.date < from || r.date > to) return false;
       if (r.price < min || r.price > max) return false;
       if (state.counties.indexOf(r.county) < 0) return false;
       if (!opts.ignoreCategory && state.categories.indexOf(r.category) < 0) return false;
@@ -531,6 +568,7 @@
       !state.place &&
       !state.party &&
       !state.bbox &&
+      !state.dateFrom &&
       state.counties.length === d.counties.length &&
       state.categories.length === d.categories.length
     );
@@ -616,14 +654,15 @@
       var html = '<div class="tx-filter-groups">';
 
       html += group("Period", "days", DAYS.map(function (d) {
-        return chip("days", d, d + " days", s.days === d);
-      }).join(""));
+        return chip("days", d, d + " days", !s.dateFrom && s.days === d);
+      }).join("") + (opts.getData ? '<div class="tx-chart tx-timeline" aria-hidden="false"></div><p class="tx-chart-cap"></p>' : ""));
       html += group("County", "county", COUNTIES.map(function (c) {
         return chip("county", c, c, s.counties.length < COUNTIES.length && s.counties.indexOf(c) >= 0);
       }).join(""));
       html += group("Price", "price", PRICE_PRESETS.map(function (p) {
         return chip("price", p.id, p.label, s.price === p.id);
       }).join("") +
+        (opts.getData ? '<div class="tx-chart tx-hist"></div>' : "") +
         '<div class="tx-range"><label><span class="tx-sr">Minimum price</span><input class="tx-range-in" data-end="min" inputmode="decimal" placeholder="Min, e.g. 500k" value="' +
         (s.price === "custom" && s.priceMin ? fmt.escape(fmt.moneyShort(s.priceMin)) : "") + '" /></label><span aria-hidden="true">–</span>' +
         '<label><span class="tx-sr">Maximum price</span><input class="tx-range-in" data-end="max" inputmode="decimal" placeholder="Max, e.g. 2m" value="' +
@@ -728,7 +767,7 @@
           var s = getState();
           var g = b.getAttribute("data-group");
           var v = b.getAttribute("data-value");
-          if (g === "days") s.days = +v;
+          if (g === "days") { s.days = +v; s.dateFrom = null; s.dateTo = null; }
           if (g === "price") { s.price = v; s.priceMin = null; s.priceMax = null; }
           if (g === "financed") s.financed = v;
           // County / type chips: nothing selected == all. Clicking narrows to
@@ -748,8 +787,99 @@
       });
     }
 
+    // Timeline (daily sales) + price histogram; both are brushes that set the
+    // same filters as the chips/inputs. Redrawn on every data change.
+    function drawCharts() {
+      if (!opts.getData || !TX.charts) return;
+      var d = opts.getData();
+      if (!d) return;
+      var s = getState();
+      var tl = el.querySelector(".tx-timeline");
+      if (tl) {
+        var base = apply(d.rows, s, d.asOf, { ignoreDate: true });
+        var first = isoAdd(d.asOf, -(d.windowDays || 60) + 1);
+        var days = [];
+        for (var iso = first; iso <= d.asOf; iso = isoAdd(iso, 1)) days.push({ iso: iso, n: 0, v: 0 });
+        var idx = {};
+        days.forEach(function (x, i) { idx[x.iso] = i; });
+        base.forEach(function (r) { var i = idx[r.date]; if (i != null) { days[i].n++; days[i].v += r.price; } });
+        var range = dateRange(s, d.asOf);
+        var i0 = idx[range[0]], i1 = idx[range[1]];
+        TX.charts.barBrush(tl, {
+          bins: days.map(function (x) {
+            return { value: x.n, tip: "<strong>" + fmt.date(x.iso, { weekday: "short", month: "short", day: "numeric" }) + "</strong>" +
+              x.n.toLocaleString("en-US") + (x.n === 1 ? " sale" : " sales") + (x.n ? " · " + fmt.moneyShort(x.v) : "") };
+          }),
+          selected: i0 != null ? [i0, i1 != null ? i1 : days.length - 1] : null,
+          ticks: [0, Math.floor(days.length / 2), days.length - 1].map(function (i) { return { i: i, label: fmt.dateShort(days[i].iso) }; }),
+          ariaLabel: "Sales per day. Drag across days to pick a date range.",
+          onBrush: function (a, b) {
+            var ns = getState();
+            if (a == null) { ns.dateFrom = null; ns.dateTo = null; }
+            else { ns.dateFrom = days[a].iso; ns.dateTo = days[b].iso; }
+            onChange(ns, "timeline");
+            render();
+          },
+        });
+        var cap = el.querySelector(".tx-chart-cap");
+        if (cap) {
+          // Counties whose records begin after the window starts are undercounted.
+          var gaps = coverageGaps(d.rows, range[0], s.counties);
+          cap.textContent = (s.dateFrom ? "Showing " + dateRangeLabel(s, d.asOf) + " · drag the chart to change, tap a period to reset" : "Sales per day · drag across days to pick dates") +
+            (gaps.length ? ". Note: " + gaps.map(function (g) { return g.county + " records start " + fmt.dateShort(g.start); }).join(", ") + ", so earlier days undercount " + (gaps.length > 1 ? "them" : "it") + "." : "");
+          cap.classList.toggle("is-warn", !!gaps.length);
+        }
+      }
+      var hi = el.querySelector(".tx-hist");
+      if (hi) {
+        var pb = apply(d.rows, s, d.asOf, { ignorePrice: true });
+        var E = PRICE_EDGES;
+        var bins = E.slice(0, -1).map(function (lo, i) { return { lo: lo, hi: E[i + 1], n: 0 }; });
+        pb.forEach(function (r) {
+          for (var i = bins.length - 1; i >= 0; i--) if (r.price >= bins[i].lo) { bins[i].n++; break; }
+        });
+        // Highlight the bins inside the current price filter.
+        var lo = minPrice(s), hiP = maxPrice(s);
+        var sel = null;
+        if (lo || hiP !== Infinity) {
+          var a = 0, b = bins.length - 1;
+          while (a < b && bins[a].hi <= lo) a++;
+          while (b > a && hiP !== Infinity && bins[b].lo >= hiP) b--;
+          sel = [a, b];
+        }
+        TX.charts.barBrush(hi, {
+          height: 56,
+          bins: bins.map(function (x, i) {
+            return { value: x.n, tip: "<strong>" + fmt.moneyShort(x.lo) + (i === bins.length - 1 ? "+" : "–" + fmt.moneyShort(x.hi)) + "</strong>" + x.n.toLocaleString("en-US") + (x.n === 1 ? " sale" : " sales") };
+          }),
+          selected: sel,
+          ticks: [{ i: 0, label: "$100K" }, { i: 7, label: "$1M" }, { i: 13, label: "$10M" }, { i: bins.length - 1, label: "$100M+" }],
+          ariaLabel: "Sales by price. Drag across bars to pick a price range.",
+          onBrush: function (a, b) {
+            var ns = getState();
+            if (a == null) { ns.price = "all"; ns.priceMin = null; ns.priceMax = null; }
+            else {
+              ns.price = "custom";
+              ns.priceMin = a === 0 ? null : bins[a].lo;
+              ns.priceMax = b === bins.length - 1 ? null : bins[b].hi;
+              if (!ns.priceMin && !ns.priceMax) ns.price = "all";
+            }
+            onChange(ns, "histogram");
+            render();
+            var m = el.querySelector(".tx-range-msg");
+            if (m && a != null && ns.price === "custom") { m.className = "tx-range-msg is-ok"; m.textContent = "Showing sales " + priceLabel(ns) + "."; }
+          },
+        });
+      }
+    }
+
+    var baseRender = render;
+    render = function () {
+      baseRender();
+      drawCharts();
+    };
     render();
-    return { render: render };
+    return { render: function () { render(); }, drawCharts: drawCharts };
   }
 
   function searchHtml(q, placeholder) {
@@ -854,6 +984,10 @@
     filterBar: filterBar,
     searchHtml: searchHtml,
     priceLabel: priceLabel,
+    dateRange: dateRange,
+    dateRangeLabel: dateRangeLabel,
+    coverageGaps: coverageGaps,
+    isoAdd: isoAdd,
     parsePrice: parsePrice,
     parsePriceInfo: parsePriceInfo,
     notify: notify,

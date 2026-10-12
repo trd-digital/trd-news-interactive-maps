@@ -56,6 +56,9 @@
 
   var filters = TX.filterBar(el.filterHost, function () { return TX.serializeState(state); }, onFilterChange, {
     showCategories: true,
+    getData: function () {
+      return data ? { rows: data.rows, asOf: data.asOf, windowDays: data.meta.windowDays } : null;
+    },
   });
 
   el.searchWrap.insertAdjacentHTML("afterbegin", TX.searchHtml(state.q));
@@ -194,7 +197,8 @@
     TX.search.activeChips(el.chips, state, function (s, why) {
       onFilterChange(s, why);
       filters.render();
-    });
+    }, { asOf: data.asOf });
+    filters.drawCharts();
     var badge = el.filterToggle.querySelector(".tx-badge");
     var n = filterCount();
     badge.hidden = !n;

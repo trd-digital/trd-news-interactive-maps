@@ -413,6 +413,7 @@
     if (state.place) chips.push({ key: "place", label: state.place.label, icon: "pin" });
     if (state.party) chips.push({ key: "party", label: state.party.label, icon: "person" });
     if (state.bbox) chips.push({ key: "bbox", label: state.bboxLabel ? "Area: " + state.bboxLabel : "Map area", icon: "pin" });
+    if (state.dateFrom && opts.asOf) chips.push({ key: "dates", label: TX.dateRangeLabel(state, opts.asOf) });
     if (opts.full) {
       if (state.counties.length !== d.counties.length) chips.push({ key: "counties", label: state.counties.join(", ") });
       if (state.categories.length !== d.categories.length) chips.push({ key: "categories", label: state.categories.join(", ") });
@@ -437,6 +438,7 @@
       if (k === "all") s = TX.defaultState();
       else if (k === "price") { s.price = d.price; s.priceMin = null; s.priceMax = null; }
       else if (k === "bbox") { s.bbox = null; s.bboxLabel = null; }
+      else if (k === "dates") { s.dateFrom = null; s.dateTo = null; }
       else s[k] = Array.isArray(d[k]) ? d[k].slice() : d[k];
       onChange(s, "chip:" + k);
     };

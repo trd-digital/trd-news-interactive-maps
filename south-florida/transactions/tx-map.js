@@ -147,7 +147,12 @@
     geocode: compact ? null : geocode,
     placeholder: { wide: "Search address, city, ZIP, buyer or seller", narrow: "Search sales" },
   });
-  var filters = TX.filterBar(el.filterPanel, getState, onFilterChange, { showCategories: false });
+  var filters = TX.filterBar(el.filterPanel, getState, onFilterChange, {
+    showCategories: false,
+    getData: function () {
+      return data ? { rows: data.rows, asOf: data.asOf, windowDays: data.meta.windowDays } : null;
+    },
+  });
 
   function getState() {
     return TX.serializeState(state);
@@ -156,6 +161,7 @@
   el.filterToggle.addEventListener("click", function () {
     var open = el.filterPanel.hidden;
     el.filterPanel.hidden = !open;
+    if (open) filters.drawCharts(); // charts measure their width, so draw once visible
     el.filterToggle.setAttribute("aria-expanded", String(open));
     if (open) track("filters", "open");
   });
@@ -231,7 +237,8 @@
       box.set(s.q);
       onFilterChange(s, why);
       filters.render();
-    });
+    }, { asOf: data.asOf });
+    if (!el.filterPanel.hidden) filters.drawCharts();
     if (!state.bbox) showAreaButton(false);
     setNote(compact
       ? "Recorded through " + fmt.date(data.asOf) + (unclassified.length ? " · " + unclassified.join(", ") + " not yet classified by type" : " · Source: county records")

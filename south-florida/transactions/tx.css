@@ -28,6 +28,7 @@
   --tx-accent-ink: #ffffff;
   --tx-focus: #1a5fb4;
   --tx-error: #c0392b;
+  --tx-series: #2a78d6; /* single-series charts: categorical slot 1 */
   --tx-shadow: 0 6px 24px rgba(0, 0, 0, 0.14);
   /* Categorical slots 1–3 (dataviz reference palette), validated all-pairs
      on #ffffff; Other is a neutral, not a hue. */
@@ -51,6 +52,7 @@
   --tx-accent-ink: #0b0b0b;
   --tx-focus: #86b6ef;
   --tx-error: #ff7b72;
+  --tx-series: #3987e5;
   --tx-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
   /* Same hues stepped for the dark surface, validated on #212121. */
   --tx-residential: #3987e5;
@@ -1471,4 +1473,118 @@ button {
 }
 .tx-empty-map p:last-child {
   margin-bottom: 0;
+}
+
+/* ------------------------------------------------------------------ charts */
+.tx-group[data-key="days"],
+.tx-group[data-key="price"] {
+  grid-column: span 2;
+}
+@media (max-width: 600px) {
+  .tx-group[data-key="days"],
+  .tx-group[data-key="price"] {
+    grid-column: auto;
+  }
+}
+.tx-chart {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  height: 64px;
+  margin-top: 4px;
+  touch-action: none;
+  user-select: none;
+}
+.tx-hist {
+  height: 56px;
+}
+.tx-chart svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  cursor: crosshair;
+}
+.tx-bar {
+  fill: var(--tx-series);
+  transition: opacity 0.12s;
+}
+.tx-bar.is-out {
+  opacity: 0.22;
+}
+.tx-bar.is-hover {
+  fill: var(--tx-text);
+  opacity: 1;
+}
+.tx-axis {
+  stroke: var(--tx-border);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.tx-ticks {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 14px;
+  pointer-events: none;
+}
+.tx-ticks span {
+  position: absolute;
+  bottom: 0;
+  color: var(--tx-text-3);
+  font-size: 10px;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+.tx-ticks span.is-first {
+  transform: none;
+  left: 0 !important;
+}
+.tx-ticks span.is-last {
+  transform: none;
+  left: auto !important;
+  right: 0;
+}
+.tx-chart-tip {
+  position: absolute;
+  z-index: 3;
+  bottom: calc(100% + 4px);
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: var(--tx-text);
+  color: var(--tx-bg);
+  font-size: 12px;
+  line-height: 1.35;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.tx-chart-tip strong {
+  display: block;
+}
+.tx-chart-cap {
+  margin: 0;
+  color: var(--tx-text-3);
+  font-size: 11px;
+}
+.tx-spark {
+  display: block;
+  width: 100%;
+  height: 22px;
+  margin-top: 6px;
+}
+.tx-spark path {
+  fill: none;
+  stroke: var(--tx-series);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.tx-chips > .tx-chart,
+.tx-chips > .tx-range,
+.tx-chips > .tx-range-msg,
+.tx-chips > .tx-chart-cap {
+  flex: 1 1 100%;
+}
+.tx-chart-cap.is-warn {
+  color: var(--tx-text-2);
 }
