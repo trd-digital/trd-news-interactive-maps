@@ -145,6 +145,7 @@
       parcelId: p.parcel_id || null,
       parcelUrl: p.parcel_url || null,
       parcelCount: +p.parcel_count || 1,
+      assemblageId: p.assemblage_id || null,
       lng: located ? +g[0] : null,
       lat: located ? +g[1] : null,
       located: located,
@@ -194,9 +195,86 @@
           minPrice: fc.min_price || null,
           topDeals: fc.top_deals || [],
         };
-        return { rows: rows, meta: meta, latestByCounty: latest, asOf: asOf };
+        return { rows: rows, meta: meta, latestByCounty: latest, asOf: asOf, assemblages: indexAssemblages(rows) };
       });
     return loadPromise;
+  }
+
+  // ------------------------------------------------------------ assemblages
+  // Same-day assemblages: separate deeds (own buyer LLC, seller, price) that
+  // were recorded together. They stay separate rows in the data; the UI shows
+  // them as one grouped entry with a COMBINED total. Only groups of 2+.
+  function indexAssemblages(rows) {
+    var by = {};
+    rows.forEach(function (r) {
+      if (r.assemblageId) (by[r.assemblageId] = by[r.assemblageId] || []).push(r);
+    });
+    var out = {};
+    Object.keys(by).forEach(function (id) {
+      var m = by[id];
+      if (m.length < 2) {
+        m[0].assemblageId = null;
+        return;
+      }
+      m.sort(function (a, b) { return b.price - a.price; });
+      out[id] = assemblage(id, m);
+    });
+    return out;
+  }
+
+  function uniq(list) {
+    var seen = {}, out = [];
+    list.forEach(function (x) {
+      if (x && !seen[x]) {
+        seen[x] = true;
+        out.push(x);
+      }
+    });
+    return out;
+  }
+
+  function assemblage(id, members) {
+    var cats = uniq(members.map(function (r) { return r.category; }));
+    var lead = members[0];
+    return {
+      kind: "assemblage",
+      id: id,
+      members: members,
+      price: members.reduce(function (s, r) { return s + r.price; }, 0),
+      date: members.reduce(function (d, r) { return r.date > d ? r.date : d; }, ""),
+      county: uniq(members.map(function (r) { return r.county; })).join(" / "),
+      category: cats.length === 1 ? cats[0] : "Mixed",
+      colorGroup: cats.length === 1 ? lead.colorGroup : "other",
+      buyers: uniq(members.map(function (r) { return r.buyer; })),
+      sellers: uniq(members.map(function (r) { return r.seller; })),
+      financed: members.some(function (r) { return r.financed; }),
+      lead: lead,
+      address: lead.address,
+    };
+  }
+
+  // Turn filtered deeds into display entries: a deed in an assemblage pulls in
+  // its whole group (once); everything else stays a single-deed entry.
+  function toEntries(rows, data) {
+    var seen = {}, out = [];
+    rows.forEach(function (r) {
+      var a = r.assemblageId && data.assemblages[r.assemblageId];
+      if (a) {
+        if (seen[a.id]) return;
+        seen[a.id] = true;
+        out.push(a);
+      } else {
+        out.push(r);
+      }
+    });
+    return out;
+  }
+
+  // "MM Real Estate Acquisitions LLC + 2 related buyers"
+  function partySummary(list, noun) {
+    if (!list.length) return "—";
+    var first = fmt.party(list[0]);
+    return list.length === 1 ? first : first + " + " + (list.length - 1) + " related " + noun + (list.length > 2 ? "s" : "");
   }
 
   // ------------------------------------------------------------ filter model
@@ -509,6 +587,8 @@
 
   global.TX = {
     hasPrevSale: hasPrevSale,
+    toEntries: toEntries,
+    partySummary: partySummary,
     COUNTIES: COUNTIES,
     CATEGORIES: CATEGORIES,
     COLOR_GROUP: COLOR_GROUP,

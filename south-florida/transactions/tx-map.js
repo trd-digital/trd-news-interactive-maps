@@ -78,6 +78,7 @@
   var visible = [];
   var map = null;
   var selectedId = null;
+  var selectedAid = null; // open assemblage: all members get the selection ring
   var hoverPopup = null;
   var theme = "light";
 
@@ -211,7 +212,7 @@
           type: "Feature",
           id: r._n,
           geometry: { type: "Point", coordinates: [r.lng, r.lat] },
-          properties: { id: r.id, price: r.price, cg: r.colorGroup },
+          properties: { id: r.id, price: r.price, cg: r.colorGroup, aid: r.assemblageId || "" },
         };
       }),
     };
@@ -345,6 +346,7 @@
     var r = rowById(id);
     if (!r) return;
     selectedId = id;
+    selectedAid = null;
     renderDetail(r);
     highlight();
     if (opts.fly && r.located && map) {
@@ -368,6 +370,7 @@
 
   function clearSelection() {
     selectedId = null;
+    selectedAid = null;
     el.detail.hidden = true;
     highlight();
   }
@@ -379,6 +382,7 @@
     if (r.parcelCount > 1) tags += '<span class="tx-tag">' + r.parcelCount + " parcels</span>";
     tags += '<span class="tx-tag">' + (r.financed ? "Financed" : "No mortgage recorded") + "</span>";
     if (!r.located) tags += '<span class="tx-tag">Not on map</span>';
+    var asm = r.assemblageId && data.assemblages[r.assemblageId];
 
     var rows = [
       ["Recorded", fmt.date(r.date)],
@@ -408,6 +412,9 @@
       '<button type="button" class="tx-close" aria-label="Close">×</button></div>' +
       '<div class="tx-detail-body"><div class="tx-price">' + fmt.money(r.price) + "</div>" +
       '<div class="tx-tags">' + tags + "</div>" +
+      (asm ? '<button type="button" class="tx-assm-link" data-act="assemblage" data-aid="' + fmt.escape(asm.id) + '">' +
+        '<span class="tx-assm">Assemblage</span>One of ' + asm.members.length + " deeds recorded together · " +
+        fmt.moneyShort(asm.price) + " combined ›</button>" : "") +
       '<dl class="tx-dl">' + rows.map(function (x) { return "<dt>" + x[0] + "</dt><dd>" + x[1] + "</dd>"; }).join("") + "</dl>" +
       (actions ? '<div class="tx-actions">' + actions + "</div>" : "") + "</div>";
     el.detail.setAttribute("aria-labelledby", "tx-detail-title");
@@ -451,6 +458,17 @@
       clearSelection();
       return;
     }
+    var asmBtn = e.target.closest('[data-act="assemblage"]');
+    if (asmBtn) {
+      track("open_assemblage", asmBtn.getAttribute("data-aid"));
+      openAssemblage(asmBtn.getAttribute("data-aid"), { announce: true });
+      return;
+    }
+    if (e.target.closest('[data-act="table-assemblage"]')) {
+      var a = data.assemblages[selectedAid];
+      if (a) peer.send("reveal", a.lead.id);
+      return;
+    }
     if (e.target.closest('[data-act="table"]')) {
       peer.send("reveal", selectedId);
       track("show_in_table", selectedId);
@@ -463,7 +481,50 @@
 
   function highlight() {
     if (!map || !map.getLayer("tx-selected")) return;
-    map.setFilter("tx-selected", ["==", ["get", "id"], selectedId || ""]);
+    map.setFilter("tx-selected", selectedAid
+      ? ["==", ["get", "aid"], selectedAid]
+      : ["==", ["get", "id"], selectedId || ""]);
+  }
+
+  // Assemblage panel: every member deed, combined total, all rings on.
+  function openAssemblage(aid, opts) {
+    opts = opts || {};
+    var a = data.assemblages[aid];
+    if (!a) return;
+    selectedAid = aid;
+    selectedId = null;
+    highlight();
+    var mapped = a.members.filter(function (r) { return r.located; });
+    el.detail.innerHTML =
+      '<div class="tx-detail-head"><h2 id="tx-detail-title"><span class="tx-assm">Assemblage · ' + a.members.length + " deeds</span><br>" +
+      fmt.escape(a.lead.address || "Address unavailable") + " and " + (a.members.length - 1) + " more" +
+      '<span class="tx-sub">' + fmt.escape(a.county) + " · recorded " + fmt.date(a.date) + "</span></h2>" +
+      '<button type="button" class="tx-close" aria-label="Close">×</button></div>' +
+      '<div class="tx-detail-body"><div class="tx-price">' + fmt.money(a.price) + ' <span class="tx-muted" style="font-size:13px;font-weight:400">combined</span></div>' +
+      '<p class="tx-assm-note">Separate deeds recorded together. The total adds up the individual deed prices.' +
+      (mapped.length < a.members.length ? " " + (a.members.length - mapped.length) + " without a mappable address." : "") + "</p>" +
+      '<dl class="tx-dl"><dt>Buyers</dt><dd>' + a.buyers.map(function (b) { return fmt.escape(fmt.party(b)); }).join("<br>") +
+      "</dd><dt>Sellers</dt><dd>" + a.sellers.map(function (s) { return fmt.escape(fmt.party(s)); }).join("<br>") + "</dd></dl>" +
+      '<ul class="tx-stack" style="margin-top:12px">' + a.members.map(function (r) {
+        return '<li><button type="button" data-pick="' + fmt.escape(r.id) + '"><span class="tx-r-title">' +
+          fmt.escape(r.address || "Address unavailable") + " <strong>" + fmt.moneyShort(r.price) + "</strong></span>" +
+          '<span class="tx-r-sub">' + fmt.escape(fmt.party(r.buyer)) + (r.located ? "" : " · not on map") + "</span></button></li>";
+      }).join("") + "</ul>" +
+      (peer.hasPeer("table") ? '<div class="tx-actions"><button type="button" class="tx-btn" data-act="table-assemblage">Show in table</button></div>' : "") +
+      "</div>";
+    el.detail.setAttribute("aria-labelledby", "tx-detail-title");
+    el.detail.hidden = false;
+    el.detail.querySelector(".tx-close").focus({ preventScroll: true });
+    if (mapped.length && map) {
+      var b = new mapboxgl.LngLatBounds();
+      mapped.forEach(function (r) { b.extend([r.lng, r.lat]); });
+      map.fitBounds(b, { padding: addPad(detailPadding()), maxZoom: 16, duration: opts.instant ? 0 : 900 });
+    }
+    if (opts.announce) peer.send("select", a.lead.id);
+  }
+
+  function addPad(p) {
+    return { top: 60 + p.top, bottom: 60 + p.bottom, left: 60 + p.left, right: 60 + p.right };
   }
 
   // ------------------------------------------------------------------ map
@@ -557,7 +618,8 @@
       hoverPopup
         .setLngLat(f.geometry.coordinates)
         .setHTML("<strong>" + fmt.escape(r.address || "Address unavailable") + "</strong>" +
-          fmt.moneyShort(r.price) + " <span>· " + fmt.dateShort(r.date) + " · " + fmt.escape(r.category) + "</span>")
+          fmt.moneyShort(r.price) + " <span>· " + fmt.dateShort(r.date) + " · " + fmt.escape(r.category) +
+          (r.assemblageId && data.assemblages[r.assemblageId] ? " · 1 of " + data.assemblages[r.assemblageId].members.length + " deeds in an assemblage" : "") + "</span>")
         .addTo(map);
     });
     map.on("mouseleave", "tx-points", function () {
@@ -613,6 +675,8 @@
     } else if (msg.type === "select" || msg.type === "reveal") {
       var r = rowById(msg.payload);
       if (r) select(msg.payload, { fly: true });
+    } else if (msg.type === "assemblage") {
+      openAssemblage(msg.payload);
     } else if (msg.type === "hello" && !TX.isDefault(state)) {
       peer.send("filters", TX.serializeState(state));
     }

@@ -13,7 +13,9 @@
 
   var state = TX.stateFromUrl();
   var data = null;
-  var rows = [];
+  var rows = []; // filtered deeds (summary, CSV)
+  var entries = []; // display rows: deeds + grouped assemblages
+  var focusMember = null; // member deed highlighted inside an open assemblage
   var sort = params.get("tab") === "biggest" ? { key: "price", dir: -1 } : { key: "date", dir: -1 };
   var page = 0;
   var openId = null;
@@ -136,8 +138,9 @@
   // ------------------------------------------------------------------ render
   function refresh() {
     if (!data) return;
-    rows = TX.apply(data.rows, state, data.asOf).sort(compare);
-    var pages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+    rows = TX.apply(data.rows, state, data.asOf);
+    entries = TX.toEntries(rows, data).sort(compare);
+    var pages = Math.max(1, Math.ceil(entries.length / PAGE_SIZE));
     if (page >= pages) page = pages - 1;
     renderTabs();
     renderHead();
@@ -192,7 +195,7 @@
   }
 
   function renderBody() {
-    var slice = rows.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+    var slice = entries.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
     if (!slice.length) {
       var msg = "No sales match these filters." + (TX.isDefault(state) ? "" : ' <button type="button" class="tx-reset" data-act="reset">Reset filters</button>');
       el.tbody.innerHTML = '<tr><td class="tx-empty" colspan="' + COLS.length + '">' + msg + "</td></tr>";
@@ -201,6 +204,12 @@
     }
     var html = "", cards = "";
     slice.forEach(function (r) {
+      if (r.kind === "assemblage") {
+        var a = renderAssemblage(r);
+        html += a.row;
+        cards += a.card;
+        return;
+      }
       var open = r.id === openId;
       var addr = r.address ? fmt.escape(r.address) : '<span class="tx-muted">Address unavailable</span>';
       html += '<tr class="tx-row' + (open ? " is-open" : "") + '" data-id="' + fmt.escape(r.id) + '" tabindex="0" aria-expanded="' + open + '">' +
@@ -227,12 +236,57 @@
     el.cards.innerHTML = cards;
   }
 
+  // One grouped row for a same-day assemblage; expanding lists every deed.
+  function renderAssemblage(a) {
+    var open = a.id === openId;
+    var n = a.members.length;
+    var badge = '<span class="tx-assm">Assemblage · ' + n + " deeds</span>";
+    var lead = a.lead.address ? fmt.escape(a.lead.address) : "Address unavailable";
+    var more = " + " + (n - 1) + " more";
+    var anyMapped = a.members.some(function (m) { return m.located; });
+    var membersHtml =
+      '<p class="tx-assm-note">Separate deeds recorded together on ' + fmt.date(a.date) +
+      ". The total adds up the individual deed prices.</p>" +
+      '<table class="tx-members"><thead><tr><th scope="col">Property</th><th scope="col" class="num">Price</th><th scope="col">Buyer</th><th scope="col">Seller</th><th scope="col"><span class="tx-sr">Links</span></th></tr></thead><tbody>' +
+      a.members.map(function (m) {
+        var links = "";
+        if (m.parcelUrl) links += '<a href="' + fmt.escape(m.parcelUrl) + '" target="_blank" rel="noopener">Record ↗</a> ';
+        if (m.located && peer.hasPeer("map")) links += '<button type="button" class="tx-linkbtn" data-act="map" data-id="' + fmt.escape(m.id) + '">Map</button>';
+        return '<tr' + (m.id === focusMember ? ' class="is-focus"' : "") + ' data-member="' + fmt.escape(m.id) + '"><td>' + (m.address ? fmt.escape(m.address) : '<span class="tx-muted">Address unavailable</span>') +
+          '<span class="tx-addr-sub">' + fmt.escape(m.category) + (m.date !== a.date ? " · " + fmt.dateShort(m.date) : "") + "</span></td>" +
+          '<td class="num">' + fmt.money(m.price) + "</td>" +
+          '<td class="tx-party">' + fmt.escape(fmt.party(m.buyer)) + "</td>" +
+          '<td class="tx-party">' + fmt.escape(fmt.party(m.seller)) + "</td><td>" + links + "</td></tr>";
+      }).join("") + "</tbody></table>" +
+      (anyMapped && peer.hasPeer("map") ? '<div class="tx-actions"><button type="button" class="tx-btn" data-act="map-assemblage" data-id="' + fmt.escape(a.id) + '">Show all on map</button></div>' : "");
+
+    var row = '<tr class="tx-row tx-row-assm' + (open ? " is-open" : "") + '" data-id="' + fmt.escape(a.id) + '" tabindex="0" aria-expanded="' + open + '">' +
+      "<td>" + fmt.date(a.date, { month: "short", day: "numeric" }) + "</td>" +
+      '<td><span class="tx-addr">' + badge + lead + '<span class="tx-addr-sub">' + more + "</span></span></td>" +
+      "<td>" + fmt.escape(a.county) + "</td>" +
+      "<td>" + catCell(a) + "</td>" +
+      '<td class="num"><strong>' + fmt.money(a.price) + '</strong><span class="tx-addr-sub">combined</span></td>' +
+      '<td class="tx-party">' + fmt.escape(TX.partySummary(a.buyers, "buyer")) + "</td>" +
+      '<td class="tx-party">' + fmt.escape(TX.partySummary(a.sellers, "seller")) + "</td>" +
+      "<td>" + (a.financed ? "Some" : '<span class="tx-muted">—</span>') + "</td></tr>";
+    if (open) row += '<tr class="tx-expand"><td colspan="' + COLS.length + '">' + membersHtml + "</td></tr>";
+
+    var card = '<li class="tx-card" data-id="' + fmt.escape(a.id) + '">' + badge +
+      '<div class="tx-card-top"><span class="tx-addr">' + lead + '<span class="tx-addr-sub">' + more + " · " + fmt.escape(a.county) + "</span></span>" +
+      '<span class="tx-card-price">' + fmt.moneyShort(a.price) + '<span class="tx-addr-sub">combined</span></span></div>' +
+      '<div class="tx-card-meta"><span>' + fmt.date(a.date) + "</span>" + catCell(a) + "</div>" +
+      '<div class="tx-card-parties"><strong>Buyers:</strong> ' + fmt.escape(TX.partySummary(a.buyers, "buyer")) +
+      "<br><strong>Sellers:</strong> " + fmt.escape(TX.partySummary(a.sellers, "seller")) + "</div>" +
+      "<details" + (open ? " open" : "") + "><summary>All " + n + " deeds</summary>" + membersHtml + "</details></li>";
+    return { row: row, card: card };
+  }
+
   function renderPager(pages) {
-    var from = rows.length ? page * PAGE_SIZE + 1 : 0;
-    var to = Math.min(rows.length, (page + 1) * PAGE_SIZE);
+    var from = entries.length ? page * PAGE_SIZE + 1 : 0;
+    var to = Math.min(entries.length, (page + 1) * PAGE_SIZE);
     var nums = pageNumbers(page, pages);
     el.pager.innerHTML = "<span>" + from.toLocaleString("en-US") + "–" + to.toLocaleString("en-US") + " of " +
-      rows.length.toLocaleString("en-US") + "</span>" +
+      entries.length.toLocaleString("en-US") + "</span>" +
       '<nav class="tx-pages" aria-label="Pages">' +
       '<button type="button" class="tx-chip" data-page="' + (page - 1) + '"' + (page === 0 ? " disabled" : "") + ' aria-label="Previous page">‹</button>' +
       nums.map(function (n) {
@@ -264,6 +318,7 @@
 
   function toggleRow(id) {
     openId = openId === id ? null : id;
+    focusMember = null;
     if (openId) track("expand", id);
     renderBody();
   }
@@ -292,6 +347,9 @@
     if (act === "map") {
       peer.send("select", b.getAttribute("data-id"));
       track("show_on_map", b.getAttribute("data-id"));
+    } else if (act === "map-assemblage") {
+      peer.send("assemblage", b.getAttribute("data-id"));
+      track("show_assemblage_on_map", b.getAttribute("data-id"));
     } else if (act === "reset") {
       onFilterChange(TX.defaultState(), "reset");
       filters.render();
@@ -304,24 +362,32 @@
   }
 
   // Map asked to reveal a sale: jump to its page and open it.
+  function entryIdFor(id) {
+    var r = data.byId[id];
+    return r && r.assemblageId && data.assemblages[r.assemblageId] ? r.assemblageId : id;
+  }
+
   function reveal(id) {
-    var i = rows.findIndex(function (r) { return r.id === id; });
+    var eid = entryIdFor(id);
+    var i = entries.findIndex(function (e) { return e.id === eid; });
     if (i < 0) return;
     page = Math.floor(i / PAGE_SIZE);
-    openId = id;
-    refresh();
-    var tr = el.tbody.querySelector('tr.tx-row[data-id="' + cssEscape(id) + '"]') ||
-      el.cards.querySelector('li[data-id="' + cssEscape(id) + '"]');
+    openId = eid;
+    focusMember = eid !== id ? id : null;
+    renderBody();
+    renderPager(Math.max(1, Math.ceil(entries.length / PAGE_SIZE)));
+    var tr = el.tbody.querySelector('tr.tx-row[data-id="' + cssEscape(eid) + '"]') ||
+      el.cards.querySelector('li[data-id="' + cssEscape(eid) + '"]');
     if (tr) tr.scrollIntoView({ block: "center", behavior: "smooth" });
   }
 
   // ------------------------------------------------------------------ CSV
   el.csv.hidden = !csvEnabled;
   el.csv.addEventListener("click", function () {
-    var head = ["Recorded", "Address", "City", "ZIP", "County", "Type", "Price", "Buyer", "Seller", "Financed", "Mortgage", "Previous price", "Previous date", "Parcels", "Parcel ID", "Use code", "Property record"];
+    var head = ["Recorded", "Address", "City", "ZIP", "County", "Type", "Price", "Buyer", "Seller", "Financed", "Mortgage", "Previous price", "Previous date", "Parcels", "Parcel ID", "Use code", "Property record", "Assemblage"];
     var lines = [head].concat(rows.map(function (r) {
       return [r.date, r.address, r.city, r.zip, r.county, r.category, r.price, r.buyer, r.seller, r.financed ? "Yes" : "No",
-        r.loan, r.prevPrice, r.prevDate, r.parcelCount, r.parcelId, r.useDetail, r.parcelUrl];
+        r.loan, r.prevPrice, r.prevDate, r.parcelCount, r.parcelId, r.useDetail, r.parcelUrl, r.assemblageId];
     })).map(function (cols) {
       return cols.map(function (v) {
         v = v == null ? "" : String(v);
@@ -350,7 +416,8 @@
     } else if (msg.type === "select" || msg.type === "reveal") {
       if (msg.type === "reveal") reveal(msg.payload);
       else if (rows.some(function (r) { return r.id === msg.payload; })) {
-        openId = msg.payload;
+        openId = entryIdFor(msg.payload);
+        focusMember = openId !== msg.payload ? msg.payload : null;
         renderBody();
       }
     } else if (msg.type === "hello" && !TX.isDefault(state)) {
@@ -362,6 +429,8 @@
   TX.load()
     .then(function (d) {
       data = d;
+      data.byId = {};
+      data.rows.forEach(function (r) { data.byId[r.id] = r; });
       el.asof.textContent = TX.asOfText(data) + ". Deeds of $100,000 or more recorded in Miami-Dade, Broward and Palm Beach counties.";
       el.loading.hidden = true;
       refresh();
