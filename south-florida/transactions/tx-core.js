@@ -237,6 +237,15 @@
     return DATA_FILE;
   }
 
+  function startTags() {
+    if (typeof global.__txLoadGtm !== "function") return;
+    var go = function () { global.__txLoadGtm(); };
+    setTimeout(function () { // after the views' own .then() has rendered
+      if (global.requestIdleCallback) global.requestIdleCallback(go, { timeout: 2000 });
+      else go();
+    }, 0);
+  }
+
   var loadPromise = null;
   function load() {
     if (loadPromise) return loadPromise;
@@ -277,6 +286,9 @@
         };
         return { rows: rows, meta: meta, latestByCounty: latest, asOf: asOf, assemblages: indexAssemblages(rows) };
       });
+    // Tag Manager (deferred in the page head) starts once the sales have
+    // rendered, so its ~90 tag requests don't compete with the data download.
+    loadPromise.then(startTags, startTags);
     return loadPromise;
   }
 
