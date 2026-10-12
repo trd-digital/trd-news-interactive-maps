@@ -59,10 +59,18 @@
   function digitsOnly(s) {
     return String(s || "").replace(/\D+/g, "");
   }
+  function idKey(s) {
+    return String(s || "").replace(/[^0-9A-Za-z]+/g, "").toUpperCase();
+  }
 
-  // A query of 6+ digits (dashes/spaces allowed) is treated as a parcel ID.
+  // A parcel / deed number: 6+ digits with optional dashes, dots and spaces
+  // ("50-43-44-23-000-020-160"), or one 10+ character token mixing letters
+  // and digits (Broward folios like 494203AD2580).
   function parcelQuery(q) {
-    return /^[\d\s\-.]+$/.test(String(q).trim()) && digitsOnly(q).length >= 6 ? digitsOnly(q) : null;
+    var t = String(q).trim();
+    if (/^[\d\s\-.]+$/.test(t) && digitsOnly(t).length >= 6) return idKey(t);
+    if (/^[0-9A-Za-z\-.]+$/.test(t) && idKey(t).length >= 10 && digitsOnly(t).length >= 6) return idKey(t);
+    return null;
   }
 
   // Split a party field into individual parties ("A; B" / glued Broward lists).
@@ -83,15 +91,15 @@
       });
       r._partyKeys = r._parties.map(function (p) { return p.key; });
       r._addr = " " + norm([r.address, r.city, r.zip].filter(Boolean).join(" ")) + " ";
-      r._norm = " " + norm([r.address, r.city, r.zip, r.county, r.parcelId].concat(parties.map(fmt.party)).filter(Boolean).join(" ")) + " ";
-      r._parcelDigits = digitsOnly(r.parcelId);
+      r._norm = " " + norm([r.address, r.city, r.zip, r.county, r.parcelId, r.instrument].concat(parties.map(fmt.party)).filter(Boolean).join(" ")) + " ";
+      r._idKeys = " " + [r.parcelId, r.instrument].filter(Boolean).map(idKey).join(" ") + " ";
     });
   }
 
   // Free-text match used by the filter model.
   function rowMatches(r, q) {
     var pq = parcelQuery(q);
-    if (pq) return r._parcelDigits.indexOf(pq) >= 0 || matchesAll(r._norm, tokens(q));
+    if (pq) return r._idKeys.indexOf(pq) >= 0 || matchesAll(r._norm, tokens(q));
     var toks = tokens(q);
     return !toks.length || matchesAll(r._norm, toks);
   }
@@ -125,7 +133,7 @@
         e.count++;
         e.total += r.price;
       });
-      if (pq ? r._parcelDigits.indexOf(pq) >= 0 : matchesAll(r._norm, toks)) {
+      if (pq ? r._idKeys.indexOf(pq) >= 0 : matchesAll(r._norm, toks)) {
         sales.push({ row: r, addrHit: !pq && matchesAll(r._addr, toks) });
       }
     });

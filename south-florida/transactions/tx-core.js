@@ -29,18 +29,20 @@
   // and confirmed to land on the right property. Links show for NO county
   // until EVERY county has a verified pattern (editorial rule: all or none),
   // and a row's URL must match its county's pattern exactly.
-  //   Miami-Dade  verified Oct 2026 (needs the 13-digit folio, leading zeros)
-  //   Palm Beach  verified Oct 2026
-  //   Broward     no folio in the feed yet (its parcel_id is a deed number)
+  // All three verified Oct 11 2026: format checked on every row, plus nine
+  // random links opened in a browser and matched to the row's address.
+  //   Miami-Dade  13-digit folio with leading zeros
+  //   Broward     12-character BCPA folio (may contain letters)
+  //   Palm Beach  17-digit parcel control number
   var PROPERTY_LINKS = {
     "Miami-Dade": /^https:\/\/apps\.miamidadepa\.gov\/PropertySearch\/#\/\?folio=\d{13}$/,
+    Broward: /^https:\/\/bcpa\.net\/RecInfo\.asp\?URL_Folio=[0-9A-Z]{12}$/,
     "Palm Beach": /^https:\/\/pbcpao\.gov\/Property\/Details\?parcelId=\d{17}$/,
-    Broward: null,
   };
   var LINKS_ENABLED = COUNTIES.every(function (c) { return !!PROPERTY_LINKS[c]; });
   // What a real parcel ID looks like per county (digits only). Anything else
   // (corrupted folios, deed numbers) is not shown or searched as a parcel.
-  var PARCEL_ID = { "Miami-Dade": /^\d{13}$/, Broward: /^\d{12}$/, "Palm Beach": /^\d{17}$/ };
+  var PARCEL_ID = { "Miami-Dade": /^\d{13}$/, Broward: /^[0-9A-Z]{12}$/, "Palm Beach": /^\d{17}$/ };
   // Map color groups. A dense point map can only carry three distinguishable
   // hues (dataviz all-pairs gate), so Multifamily shares Commercial's color
   // and Other is a neutral. Filters still split all five categories.
@@ -169,6 +171,7 @@
       parcelUrl: LINKS_ENABLED && p.parcel_url && PROPERTY_LINKS[p.county] && PROPERTY_LINKS[p.county].test(p.parcel_url) ? p.parcel_url : null,
       parcelCount: +p.parcel_count || 1,
       assemblageId: p.assemblage_id || null,
+      instrument: p.instrument_number ? String(p.instrument_number) : null,
       partiesDirected: p.party_direction ? p.party_direction !== "unknown" : UNDIRECTED_COUNTIES.indexOf(p.county) < 0,
       lng: located ? +g[0] : null,
       lat: located ? +g[1] : null,
@@ -179,7 +182,7 @@
 
   function validParcel(county, id, url) {
     if (!id) return null;
-    var digits = String(id).replace(/\D+/g, "");
+    var digits = String(id).replace(/[^0-9A-Za-z]+/g, "").toUpperCase();
     if (!PARCEL_ID[county] || !PARCEL_ID[county].test(digits)) return null;
     // Older Miami-Dade folios were mangled by a float round-trip and some
     // still have 13 digits, so length alone can't vouch for them. Trust one

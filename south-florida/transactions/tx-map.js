@@ -460,6 +460,7 @@
     }
     if (r.useDetail) rows.push(["County use code", fmt.escape(fmt.title(r.useDetail))]);
     if (r.parcelId) rows.push(["Parcel ID", fmt.escape(r.parcelId)]);
+    if (r.instrument) rows.push(["Deed instrument #", fmt.escape(r.instrument)]);
 
     var actions = "";
     if (r.parcelUrl) {

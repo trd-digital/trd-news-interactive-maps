@@ -239,6 +239,7 @@
     if (r.parcelCount > 1) items.push(["Parcels", r.parcelCount + " parcels in one deal"]);
     if (r.useDetail) items.push(["County use code", fmt.escape(fmt.title(r.useDetail))]);
     if (r.parcelId) items.push(["Parcel ID", fmt.escape(r.parcelId)]);
+    if (r.instrument) items.push(["Deed instrument #", fmt.escape(r.instrument)]);
     return '<dl class="tx-facts">' + items.map(function (x) { return "<div><dt>" + x[0] + "</dt><dd>" + x[1] + "</dd></div>"; }).join("") + "</dl>";
   }
 
