@@ -174,6 +174,7 @@
     var geoTimer = null;
     var qTimer = null;
     var geoCache = {};
+    var geoError = false;
 
     function setPlaceholder() {
       if (!opts.placeholder) return;
@@ -198,13 +199,35 @@
       active = -1;
     }
 
+    function hint(text) {
+      items = [];
+      panel.innerHTML = '<li class="tx-sg-hint" role="presentation">' + text + "</li>";
+      panel.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+    }
+
     function render(geo) {
       var q = input.value.trim();
-      if (q.length < 2) {
+      if (!q) {
         close();
         return;
       }
+      if (q.length < 2) {
+        hint("Keep typing — enter at least 2 characters. Try an address, city, ZIP, company, person or parcel ID.");
+        return;
+      }
       var s = suggest(q, opts.getBase());
+      // Matches the current filters hide (e.g. outside the date range or price).
+      var outside = 0;
+      if (opts.getAll) {
+        var all = opts.getAll();
+        var pq0 = parcelQuery(q), toks0 = tokens(q);
+        var total = 0;
+        for (var k = 0; k < all.length; k++) {
+          if (pq0 ? all[k]._idKeys.indexOf(pq0) >= 0 : matchesAll(all[k]._norm, toks0)) total++;
+        }
+        outside = Math.max(0, total - s.saleCount);
+      }
       items = [];
       var html = "";
       function section(title, list, fn) {
@@ -240,12 +263,28 @@
         });
       }
       // Always offer the plain text filter last.
-      var all = { kind: "text", q: q, count: s.saleCount };
-      items.push(all);
+      var isId = !!parcelQuery(q);
+      var allItem = { kind: "text", q: q, count: s.saleCount };
+      items.push(allItem);
       html += '<li role="option" id="tx-sg-' + (items.length - 1) + '" class="tx-sg tx-sg-all" data-i="' + (items.length - 1) + '" aria-selected="false">' +
         icon("search") + '<span class="tx-sg-main">' + (s.saleCount
           ? "Show all " + s.saleCount.toLocaleString("en-US") + " matching sales"
-          : "No sales match “" + fmt.escape(q) + "” with the current filters") + "</span></li>";
+          : isId
+            ? "No sale with parcel or deed number “" + fmt.escape(q) + "” in the current view"
+            : "No sales match “" + fmt.escape(q) + "” with the current filters") + "</span></li>";
+      if (outside) {
+        items.push({ kind: "widen", q: q, count: outside });
+        html += '<li role="option" id="tx-sg-' + (items.length - 1) + '" class="tx-sg tx-sg-widen" data-i="' + (items.length - 1) + '" aria-selected="false">' +
+          icon("search") + '<span class="tx-sg-main">' + outside.toLocaleString("en-US") + " more " + (outside === 1 ? "match" : "matches") +
+          ' outside your current filters<span class="tx-sg-sub">Include all ' + "60 days, prices, types and counties</span></span></li>";
+      } else if (!s.saleCount && !geo) {
+        html += '<li class="tx-sg-hint" role="presentation">' + (isId
+          ? "Parcel IDs are the county folio (Miami-Dade 13 digits, Broward 12 characters, Palm Beach 17 digits) or a deed instrument number."
+          : "Check the spelling, or try part of a name — “Related” finds “Related Companies”.") + "</li>";
+      }
+      if (geoError && opts.geocode) {
+        html += '<li class="tx-sg-hint" role="presentation">Address and place search isn’t available right now; sales search still works.</li>';
+      }
       panel.innerHTML = html;
       panel.hidden = false;
       input.setAttribute("aria-expanded", "true");
@@ -300,15 +339,19 @@
             var seq = ++geoSeq;
             if (geoCache[q]) return;
             opts.geocode(q).then(function (res) {
+              geoError = false;
               geoCache[q] = res;
               if (seq === geoSeq && input.value.trim() === q && document.activeElement === input) render(res);
-            }).catch(function () {});
+            }).catch(function () {
+              geoError = true;
+              if (seq === geoSeq && input.value.trim() === q && document.activeElement === input) render();
+            });
           }, 350);
         }
       }
     });
     input.addEventListener("focus", function () {
-      if (input.value.trim().length >= 2) render(geoCache[input.value.trim()]);
+      if (input.value.trim()) render(geoCache[input.value.trim()]);
     });
     input.addEventListener("keydown", function (e) {
       if (e.key === "ArrowDown") { e.preventDefault(); if (panel.hidden) render(); move(1); }
@@ -349,6 +392,13 @@
       close: close,
       set: function (v) {
         input.value = v || "";
+      },
+      // Drop a typed-but-not-yet-applied query (the other frame just sent
+      // newer filters; a late local apply would overwrite them).
+      cancel: function () {
+        clearTimeout(qTimer);
+        clearTimeout(geoTimer);
+        geoSeq++;
       },
     };
   }

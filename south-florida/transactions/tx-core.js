@@ -448,12 +448,29 @@
 
   // "1.5m", "$500K", "2,000,000", "750" (thousands assumed below 10,000) -> dollars
   function parsePrice(v) {
-    if (v == null) return null;
-    var m = String(v).toLowerCase().replace(/[$,\s]/g, "").match(/^(\d+(?:\.\d+)?)(k|m|b)?$/);
-    if (!m) return null;
+    var info = parsePriceInfo(v);
+    return info && info.value ? info.value : null;
+  }
+
+  // Detailed parse for the range inputs: { value, scaled } when readable,
+  // { error: true } when not, null when empty. Accepts "1.5m", "$500K",
+  // "2,000,000", "2 million", "750 thousand". A bare number under 10,000 is
+  // read as thousands ("750" -> $750K) and flagged so the UI can say so.
+  function parsePriceInfo(v) {
+    var raw = String(v == null ? "" : v).trim();
+    if (!raw) return null;
+    var s = raw.toLowerCase().replace(/[$,]/g, "").replace(/\s+/g, " ")
+      .replace(/\s*(million|mil|mm)$/, "m").replace(/\s*(thousand|grand)$/, "k").replace(/\s*(billion|bn)$/, "b")
+      .replace(/\s+/g, "");
+    var m = s.match(/^(\d+(?:\.\d+)?|\.\d+)(k|m|b)?$/);
+    if (!m) return { error: true };
     var n = parseFloat(m[1]) * ({ k: 1e3, m: 1e6, b: 1e9 }[m[2]] || 1);
-    if (!m[2] && n > 0 && n < 10000) n *= 1000;
-    return n > 0 ? n : null;
+    var scaled = false;
+    if (!m[2] && n > 0 && n < 10000) {
+      n *= 1000;
+      scaled = true;
+    }
+    return n > 0 ? { value: n, scaled: scaled } : { error: true };
   }
 
   function priceLabel(state) {
@@ -610,7 +627,8 @@
         '<div class="tx-range"><label><span class="tx-sr">Minimum price</span><input class="tx-range-in" data-end="min" inputmode="decimal" placeholder="Min, e.g. 500k" value="' +
         (s.price === "custom" && s.priceMin ? fmt.escape(fmt.moneyShort(s.priceMin)) : "") + '" /></label><span aria-hidden="true">–</span>' +
         '<label><span class="tx-sr">Maximum price</span><input class="tx-range-in" data-end="max" inputmode="decimal" placeholder="Max, e.g. 2m" value="' +
-        (s.price === "custom" && s.priceMax ? fmt.escape(fmt.moneyShort(s.priceMax)) : "") + '" /></label></div>');
+        (s.price === "custom" && s.priceMax ? fmt.escape(fmt.moneyShort(s.priceMax)) : "") + '" /></label></div>' +
+        '<p class="tx-range-msg" aria-live="polite"></p>');
       if (opts.showCategories) {
         html += group("Type", "category", CATEGORIES.map(function (c) {
           return chip("category", c, '<i class="tx-swatch" data-cat="' + c + '"></i>' + c,
@@ -633,28 +651,76 @@
 
     function wire() {
       var rangeTimer = null;
-      el.querySelectorAll(".tx-range-in").forEach(function (inp) {
-        function commit() {
-          var s = getState();
-          var lo = parsePrice(el.querySelector('[data-end="min"]').value);
-          var hi = parsePrice(el.querySelector('[data-end="max"]').value);
-          if (lo && hi && lo > hi) { var t = lo; lo = hi; hi = t; }
-          s.price = lo || hi ? "custom" : "all";
-          s.priceMin = lo;
-          s.priceMax = hi;
-          el.querySelectorAll('.tx-chip[data-group="price"]').forEach(function (c) {
-            var on = c.getAttribute("data-value") === s.price;
-            c.classList.toggle("is-active", on);
-            c.setAttribute("aria-pressed", String(on));
-          });
-          onChange(s, "price:custom");
+      var msg = el.querySelector(".tx-range-msg");
+      var minIn = el.querySelector('[data-end="min"]');
+      var maxIn = el.querySelector('[data-end="max"]');
+      function say(text, kind, action) {
+        msg.className = "tx-range-msg" + (kind ? " is-" + kind : "");
+        msg.innerHTML = text ? fmt.escape(text) + (action ? ' <button type="button" class="tx-msg-btn">' + fmt.escape(action.label) + "</button>" : "") : "";
+        msg.setAttribute("role", kind === "error" ? "alert" : "status");
+        if (action) msg.querySelector(".tx-msg-btn").onclick = action.run;
+      }
+      // strict: also report unreadable input (on Enter / leaving the field,
+      // not mid-typing).
+      function commit(strict) {
+        var lo = parsePriceInfo(minIn.value);
+        var hi = parsePriceInfo(maxIn.value);
+        minIn.removeAttribute("aria-invalid");
+        maxIn.removeAttribute("aria-invalid");
+        var bad = [lo && lo.error ? minIn : null, hi && hi.error ? maxIn : null].filter(Boolean);
+        if (bad.length) {
+          if (strict) {
+            bad.forEach(function (i) { i.setAttribute("aria-invalid", "true"); });
+            var v0 = bad[0].value.trim();
+            say(/\d.*\s*(-|–|to)\s*.*\d/i.test(v0)
+              ? "Put the minimum and maximum in separate boxes."
+              : "Couldn’t read “" + v0 + "”. Try 500k, 2.5m or 2,000,000.", "error");
+          }
+          return;
         }
+        var loV = lo && lo.value, hiV = hi && hi.value;
+        if (loV && hiV && loV > hiV) {
+          minIn.setAttribute("aria-invalid", "true");
+          maxIn.setAttribute("aria-invalid", "true");
+          say("Min (" + fmt.moneyShort(loV) + ") is higher than max (" + fmt.moneyShort(hiV) + ").", "error", {
+            label: "Swap to " + fmt.moneyShort(hiV) + "–" + fmt.moneyShort(loV),
+            run: function () {
+              var t = minIn.value;
+              minIn.value = maxIn.value;
+              maxIn.value = t;
+              commit(true);
+            },
+          });
+          return;
+        }
+        var s = getState();
+        s.price = loV || hiV ? "custom" : "all";
+        s.priceMin = loV || null;
+        s.priceMax = hiV || null;
+        el.querySelectorAll('.tx-chip[data-group="price"]').forEach(function (ch) {
+          var on = ch.getAttribute("data-value") === s.price;
+          ch.classList.toggle("is-active", on);
+          ch.setAttribute("aria-pressed", String(on));
+        });
+        var notes = [];
+        [[lo, minIn], [hi, maxIn]].forEach(function (pair) {
+          if (pair[0] && pair[0].scaled) notes.push("Read “" + pair[1].value.trim() + "” as " + fmt.moneyShort(pair[0].value) + ".");
+        });
+        if (loV || hiV) notes.unshift("Showing sales " + priceLabel(s) + ".");
+        say(notes.join(" "), loV || hiV ? "ok" : "");
+        onChange(s, "price:custom");
+      }
+      [minIn, maxIn].forEach(function (inp) {
         inp.addEventListener("input", function () {
           clearTimeout(rangeTimer);
-          rangeTimer = setTimeout(commit, 500);
+          rangeTimer = setTimeout(function () { commit(false); }, 700);
         });
         inp.addEventListener("keydown", function (e) {
-          if (e.key === "Enter") { clearTimeout(rangeTimer); commit(); }
+          if (e.key === "Enter") { clearTimeout(rangeTimer); commit(true); }
+        });
+        inp.addEventListener("change", function () {
+          clearTimeout(rangeTimer);
+          commit(true);
         });
       });
       el.querySelectorAll(".tx-chip").forEach(function (b) {
@@ -701,6 +767,29 @@
     var next = has ? current.filter(function (x) { return x !== v; }) : current.concat([v]);
     if (!next.length || next.length === all.length) return all.slice();
     return all.filter(function (x) { return next.indexOf(x) >= 0; });
+  }
+
+  // ---------------------------------------------------------------- notices
+  // A short, polite status message (no alerts/dialogs): <div class="tx-toast">.
+  var toastTimer = null;
+  function notify(container, text, opts) {
+    opts = opts || {};
+    var t = container.querySelector(".tx-toast");
+    if (!t) {
+      t = document.createElement("div");
+      t.className = "tx-toast";
+      t.setAttribute("role", "status");
+      t.setAttribute("aria-live", "polite");
+      container.appendChild(t);
+    }
+    t.innerHTML = '<span>' + fmt.escape(text) + "</span>" +
+      (opts.action ? '<button type="button" class="tx-msg-btn">' + fmt.escape(opts.action.label) + "</button>" : "") +
+      '<button type="button" class="tx-toast-x" aria-label="Dismiss">×</button>';
+    if (opts.action) t.querySelector(".tx-msg-btn").onclick = function () { t.hidden = true; opts.action.run(); };
+    t.querySelector(".tx-toast-x").onclick = function () { t.hidden = true; };
+    t.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.hidden = true; }, opts.ms || 6000);
   }
 
   // ------------------------------------------------------------ summary line
@@ -766,6 +855,8 @@
     searchHtml: searchHtml,
     priceLabel: priceLabel,
     parsePrice: parsePrice,
+    parsePriceInfo: parsePriceInfo,
+    notify: notify,
     summary: summary,
     asOfText: asOfText,
     slug: slug,

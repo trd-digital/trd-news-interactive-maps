@@ -121,6 +121,8 @@
     legend: app.querySelector(".tx-legend"),
     note: app.querySelector(".tx-mapnote"),
     detail: app.querySelector(".tx-detail"),
+    empty: app.querySelector(".tx-empty-map"),
+    mapWrap: app.querySelector(".tx-map-wrap"),
     loading: app.querySelector(".tx-loading"),
   };
 
@@ -132,6 +134,9 @@
     panel: el.results,
     getBase: function () {
       return data ? TX.apply(data.rows, state, data.asOf, { ignoreQuery: true }) : [];
+    },
+    getAll: function () {
+      return data ? data.rows : [];
     },
     onQuery: function (q, committed) {
       var s = getState();
@@ -167,6 +172,12 @@
     track("search_pick", it.kind);
     if (it.kind === "text") {
       onFilterChange(s, "search_all", { fit: true });
+    } else if (it.kind === "widen") {
+      var w = TX.defaultState();
+      w.q = it.q;
+      w.days = 60;
+      onFilterChange(w, "search_widen", { fit: true });
+      filters.render();
     } else if (it.kind === "city" || it.kind === "zip") {
       s.place = { kind: it.kind, value: it.value, label: it.label };
       s.q = "";
@@ -228,9 +239,34 @@
       (unmapped ? " · " + unmapped.toLocaleString("en-US") + " sale" + (unmapped === 1 ? "" : "s") +
         " without a mappable address " + (unmapped === 1 ? "is" : "are") + " listed in the table" : "") +
       (unclassified.length ? " · " + unclassified.join(" and ") + " sales aren’t classified by type yet, so type filters leave them out" : ""));
+    renderEmpty(visible.length, located.length);
     renderLegend();
     setSource(located);
     if (opts && opts.fit) fitTo(located, opts.animate);
+  }
+
+  // Card over the map when nothing matches, with the obvious way out.
+  function renderEmpty(n, mapped) {
+    var el2 = el.empty;
+    if (!data || mapped) {
+      el2.hidden = true;
+      return;
+    }
+    var html, act;
+    if (n && !mapped) {
+      html = n === 1
+        ? "<strong>This sale has no mappable address.</strong>It’s listed in the sales table."
+        : "<strong>None of these " + n.toLocaleString("en-US") + " sales have a mappable address.</strong>They’re listed in the sales table.";
+    } else if (state.bbox) {
+      html = "<strong>No sales " + (state.bboxLabel ? "in " + fmt.escape(state.bboxLabel) : "in this area") + "</strong>with the current filters.";
+      act = { label: "Clear area", run: function () { var s = getState(); s.bbox = null; s.bboxLabel = null; onFilterChange(s, "empty_clear_area"); } };
+    } else {
+      html = "<strong>No sales match these filters.</strong>Try a longer period or a wider price range.";
+      act = { label: "Reset filters", run: function () { box.set(""); onFilterChange(TX.defaultState(), "empty_reset", { fit: true }); filters.render(); } };
+    }
+    el2.innerHTML = '<p>' + html + "</p>" + (act ? '<button type="button" class="tx-btn">' + act.label + "</button>" : "");
+    if (act) el2.querySelector("button").onclick = act.run;
+    el2.hidden = false;
   }
 
   // One line by default; "More" expands when the note doesn't fit.
@@ -347,7 +383,10 @@
   function geocode(q) {
     var url = "https://api.mapbox.com/search/geocode/v6/forward?q=" + encodeURIComponent(q) +
       "&bbox=" + GEO_BBOX + "&country=us&limit=3&types=address,street,neighborhood,locality,place,postcode&access_token=" + TOKEN;
-    return fetch(url).then(function (r) { return r.ok ? r.json() : { features: [] }; }).then(function (j) {
+    return fetch(url).then(function (r) {
+      if (!r.ok) throw new Error("geocode " + r.status);
+      return r.json();
+    }).then(function (j) {
       return (j.features || []).map(function (f) {
         var p = f.properties || {};
         return {
@@ -415,6 +454,10 @@
     selectedId = id;
     selectedAid = null;
     renderDetail(r);
+    if (!r.located && el.empty.hidden) {
+      // (When the empty-state card is up it already says this.)
+      TX.notify(el.mapWrap, "This sale has no mappable address, so it isn’t on the map. Its details are shown here and in the table.");
+    }
     highlight();
     if (opts.fly && r.located && map) {
       map.flyTo({
@@ -667,7 +710,19 @@
     // "Near me" only where the embedding page lets this frame use location.
     var geoAllowed = document.featurePolicy ? document.featurePolicy.allowsFeature("geolocation") : !isEmbed;
     if (!compact && geoAllowed && navigator.geolocation) {
-      map.addControl(new mapboxgl.GeolocateControl({ positionOptions: { enableHighAccuracy: false }, fitBoundsOptions: { maxZoom: 14 } }), "top-right");
+      var geo = new mapboxgl.GeolocateControl({ positionOptions: { enableHighAccuracy: false }, fitBoundsOptions: { maxZoom: 14 } });
+      geo.on("error", function (err) {
+        TX.notify(el.mapWrap, err && err.code === 1
+          ? "Location access is blocked. Allow it in your browser settings to use “near me.”"
+          : "Couldn’t find your location. Try searching for your address instead.");
+      });
+      geo.on("geolocate", function (pos) {
+        var c = [pos.coords.longitude, pos.coords.latitude];
+        if (c[0] < -80.95 || c[0] > -79.95 || c[1] < 25.1 || c[1] > 27.0) {
+          TX.notify(el.mapWrap, "You appear to be outside South Florida, so there are no nearby sales to show.");
+        }
+      });
+      map.addControl(geo, "top-right");
     }
 
     map.on("style.load", function () {
@@ -750,6 +805,7 @@
       var placeChanged = JSON.stringify([state.place, state.party]) !== JSON.stringify([msg.payload.place, msg.payload.party]);
       state = msg.payload;
       filters.render();
+      box.cancel();
       box.set(state.q);
       refresh(placeChanged && (state.place || state.party) ? { fit: true, animate: true } : null);
     } else if (msg.type === "select" || msg.type === "reveal") {

@@ -27,6 +27,7 @@
   --tx-accent: #1a5fb4;
   --tx-accent-ink: #ffffff;
   --tx-focus: #1a5fb4;
+  --tx-error: #c0392b;
   --tx-shadow: 0 6px 24px rgba(0, 0, 0, 0.14);
   /* Categorical slots 1–3 (dataviz reference palette), validated all-pairs
      on #ffffff; Other is a neutral, not a hue. */
@@ -49,6 +50,7 @@
   --tx-accent: #5598e7;
   --tx-accent-ink: #0b0b0b;
   --tx-focus: #86b6ef;
+  --tx-error: #ff7b72;
   --tx-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
   /* Same hues stepped for the dark surface, validated on #212121. */
   --tx-residential: #3987e5;
@@ -1362,4 +1364,111 @@ button {
   .tx-table .col-mortgage {
     display: none;
   }
+}
+
+/* ----------------------------------------------------------- hints & errors */
+.tx-range-msg {
+  margin: 0;
+  min-height: 0;
+  color: var(--tx-text-2);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.tx-range-msg:empty {
+  display: none;
+}
+.tx-range-msg.is-error {
+  color: var(--tx-error);
+  font-weight: 700;
+}
+.tx-range-msg.is-error .tx-msg-btn {
+  font-weight: 700;
+}
+.tx-range-in[aria-invalid="true"] {
+  border-color: var(--tx-error);
+  box-shadow: 0 0 0 1px var(--tx-error);
+}
+.tx-msg-btn {
+  margin-left: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--tx-accent);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.tx-sg-hint {
+  padding: 8px 10px;
+  color: var(--tx-text-2);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.tx-sg-widen .tx-sg-main {
+  color: var(--tx-text);
+  white-space: normal;
+}
+.tx-toast {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  bottom: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  max-width: min(460px, calc(100% - 24px));
+  padding: 10px 10px 10px 14px;
+  border-radius: 10px;
+  background: var(--tx-text);
+  color: var(--tx-bg);
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: var(--tx-shadow);
+  transform: translateX(-50%);
+}
+.tx-toast .tx-msg-btn {
+  color: inherit;
+}
+.tx-toast-x {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  font-size: 18px;
+  line-height: 1;
+  opacity: 0.7;
+}
+.tx-toast-x:hover {
+  opacity: 1;
+}
+.tx-empty-map {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  width: min(320px, calc(100% - 32px));
+  padding: 16px 18px;
+  border: 1px solid var(--tx-border);
+  border-radius: 12px;
+  background: var(--tx-surface);
+  box-shadow: var(--tx-shadow);
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+.tx-empty-map p {
+  margin: 0 0 12px;
+  color: var(--tx-text-2);
+}
+.tx-empty-map p strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--tx-text);
+}
+.tx-empty-map p:last-child {
+  margin-bottom: 0;
 }

@@ -65,6 +65,9 @@
     getBase: function () {
       return data ? TX.apply(data.rows, state, data.asOf, { ignoreQuery: true }) : [];
     },
+    getAll: function () {
+      return data ? data.rows : [];
+    },
     onQuery: function (q) {
       var s = TX.serializeState(state);
       s.q = q;
@@ -73,7 +76,13 @@
     onPick: function (it) {
       var s = TX.serializeState(state);
       track("search_pick", it.kind);
-      if (it.kind === "city" || it.kind === "zip") {
+      if (it.kind === "widen") {
+        var w = TX.defaultState();
+        w.q = it.q;
+        w.days = 60;
+        onFilterChange(w, "search_widen");
+        filters.render();
+      } else if (it.kind === "city" || it.kind === "zip") {
         s.place = { kind: it.kind, value: it.value, label: it.label };
         s.q = "";
         box.set("");
@@ -503,6 +512,8 @@
     if (!data) return;
     if (msg.type === "filters" && msg.payload) {
       state = msg.payload;
+      box.cancel();
+      box.set(state.q);
       page = 0;
       filters.render();
       refresh();
