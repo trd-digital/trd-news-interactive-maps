@@ -52,7 +52,7 @@
       var x = i * bw + gap / 2;
       var r = svgEl("rect", {
         x: x.toFixed(2), y: (plotH - h).toFixed(2), width: Math.max(0.5, bw - gap).toFixed(2), height: h.toFixed(2),
-        rx: Math.min(2, (bw - gap) / 2).toFixed(2), class: "tx-bar",
+        rx: Math.min(2, (bw - gap) / 2).toFixed(2), class: "tx-bar" + (b.muted ? " is-muted" : ""),
       });
       bars.push(r);
       svg.appendChild(r);
@@ -82,7 +82,7 @@
     function paint(range) {
       bars.forEach(function (r, i) {
         var on = !range || (i >= range[0] && i <= range[1]);
-        r.setAttribute("class", "tx-bar" + (on ? "" : " is-out"));
+        r.setAttribute("class", "tx-bar" + (on ? "" : " is-out") + (bins[i].muted ? " is-muted" : ""));
       });
     }
     paint(sel);
@@ -108,7 +108,9 @@
     }
 
     var dragFrom = null;
+    if (opts.static) svg.style.cursor = "default";
     svg.addEventListener("pointerdown", function (e) {
+      if (opts.static) return; // read-only chart: hover tooltips only
       if (!n) return;
       dragFrom = indexAt(e.clientX);
       svg.setPointerCapture(e.pointerId);
@@ -137,6 +139,9 @@
       paint(sel);
       opts.onBrush(r[0], r[1]);
     });
+    if (opts.static) {
+      svg.addEventListener("pointerdown", function (e) { showTip(indexAt(e.clientX), e.clientX); }); // tap = tooltip on phones
+    }
     svg.addEventListener("pointerleave", function () {
       if (dragFrom == null) hideTip();
     });
