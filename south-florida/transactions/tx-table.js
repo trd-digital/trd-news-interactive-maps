@@ -130,12 +130,12 @@
   var COLS = [
     { key: "date", label: "Recorded", sortable: true },
     { key: "address", label: "Property", sortable: true },
-    { key: "county", label: "County", sortable: true },
+    { key: "county", label: "County", sortable: true, cls: "col-county" },
     { key: "category", label: "Type", sortable: true },
     { key: "price", label: "Price", sortable: true, num: true },
     { key: "buyer", label: "Buyer" },
     { key: "seller", label: "Seller" },
-    { key: "financed", label: "Mortgage", sortable: true },
+    { key: "financed", label: "Mortgage", sortable: true, cls: "col-mortgage" },
   ];
 
   function compare(a, b) {
@@ -153,7 +153,7 @@
 
   function renderHead() {
     el.thead.innerHTML = "<tr>" + COLS.map(function (c) {
-      var cls = c.num ? ' class="num"' : "";
+      var cls = c.num || c.cls ? ' class="' + [c.num ? "num" : "", c.cls || ""].join(" ").trim() + '"' : "";
       if (!c.sortable) return "<th scope=\"col\"" + cls + ">" + c.label + "</th>";
       var active = sort.key === c.key;
       var aria = active ? ' aria-sort="' + (sort.dir < 0 ? "descending" : "ascending") + '"' : "";
@@ -274,13 +274,14 @@
       var open = r.id === openId;
       var addr = r.address ? fmt.escape(r.address) : '<span class="tx-muted">Address unavailable</span>';
       html += '<tr class="tx-row' + (open ? " is-open" : "") + '" data-id="' + fmt.escape(r.id) + '" tabindex="0" aria-expanded="' + open + '">' +
-        "<td>" + fmt.date(r.date, { month: "short", day: "numeric" }) + "</td>" +
-        '<td><span class="tx-addr">' + addr + '<span class="tx-addr-sub">' + fmt.escape(placeLine(r)) + "</span></span></td>" +
-        "<td>" + fmt.escape(r.county) + "</td>" +
+        '<td class="tx-nowrap">' + fmt.date(r.date, { month: "short", day: "numeric" }) + "</td>" +
+        '<td><span class="tx-addr">' + addr + '<span class="tx-addr-sub">' + fmt.escape(placeLine(r)) +
+        '<span class="tx-sub-county">' + (placeLine(r) ? " · " : "") + fmt.escape(r.county) + " County</span></span></span></td>" +
+        '<td class="tx-nowrap col-county">' + fmt.escape(r.county) + "</td>" +
         "<td>" + catCell(r) + "</td>" +
         '<td class="num"><strong>' + fmt.money(r.price) + "</strong></td>" +
         partyCells(r) +
-        "<td>" + (r.financed ? (r.loan ? fmt.moneyShort(r.loan) : "Yes") : '<span class="tx-muted">—</span>') + "</td></tr>";
+        '<td class="col-mortgage">' + (r.financed ? (r.loan ? fmt.moneyShort(r.loan) : "Yes") : '<span class="tx-muted">—</span>') + "</td></tr>";
       if (open) html += '<tr class="tx-expand"><td colspan="' + COLS.length + '">' + detailList(r) + actions(r) + "</td></tr>";
 
       cards += '<li class="tx-card" data-id="' + fmt.escape(r.id) + '"><div class="tx-card-top"><span class="tx-addr">' + addr +
@@ -322,15 +323,16 @@
 
     var row = '<tr class="tx-row tx-row-assm' + (open ? " is-open" : "") + '" data-id="' + fmt.escape(a.id) + '" tabindex="0" aria-expanded="' + open + '">' +
       "<td>" + fmt.date(a.date, { month: "short", day: "numeric" }) + "</td>" +
-      '<td><span class="tx-addr">' + badge + lead + '<span class="tx-addr-sub">' + more + "</span></span></td>" +
-      "<td>" + fmt.escape(a.county) + "</td>" +
+      '<td><span class="tx-addr">' + badge + lead + '<span class="tx-addr-sub">' + more +
+      '<span class="tx-sub-county"> · ' + fmt.escape(a.county) + "</span></span></span></td>" +
+      '<td class="tx-nowrap col-county">' + fmt.escape(a.county) + "</td>" +
       "<td>" + catCell(a) + "</td>" +
       '<td class="num"><strong>' + fmt.money(a.price) + '</strong><span class="tx-addr-sub">combined</span></td>' +
       (a.partiesDirected
         ? '<td class="tx-party">' + fmt.escape(TX.partySummary(a.buyers, "buyer")) + "</td>" +
           '<td class="tx-party">' + fmt.escape(TX.partySummary(a.sellers, "seller")) + "</td>"
         : '<td class="tx-party" colspan="2"><span class="tx-muted">Parties:</span> ' + fmt.escape(TX.partySummary(a.parties, "party")) + "</td>") +
-      "<td>" + (a.financed ? "Some" : '<span class="tx-muted">—</span>') + "</td></tr>";
+      '<td class="col-mortgage">' + (a.financed ? "Some" : '<span class="tx-muted">—</span>') + "</td></tr>";
     if (open) row += '<tr class="tx-expand"><td colspan="' + COLS.length + '">' + membersHtml + "</td></tr>";
 
     var card = '<li class="tx-card" data-id="' + fmt.escape(a.id) + '">' + badge +

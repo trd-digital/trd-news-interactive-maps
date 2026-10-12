@@ -688,11 +688,14 @@
     return t;
   }
 
-  // Some county feeds report the current deed as the "previous sale". Only
-  // show a previous sale that is genuinely different from this one.
+  // Only show a previous sale a reader can interpret: it needs a date (Palm
+  // Beach's feed has none, and a third of its undated "previous sales" are
+  // decades-old or nominal), a real price (not a $100 family transfer), and
+  // it must not be this same deed echoed back.
+  var MIN_PREV_PRICE = 10000;
   function hasPrevSale(r) {
-    if (!r.prevPrice || r.prevPrice <= 0) return false;
-    if (r.prevDate && r.prevDate >= r.date) return false;
+    if (!r.prevPrice || r.prevPrice < MIN_PREV_PRICE || !r.prevDate) return false;
+    if (r.prevDate >= r.date) return false;
     if (r.prevPrice === r.price && (!r.prevDate || r.prevDate === r.date)) return false;
     return true;
   }
