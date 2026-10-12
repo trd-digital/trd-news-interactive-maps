@@ -1004,6 +1004,10 @@
     if (!r.prevPrice || r.prevPrice < MIN_PREV_PRICE || !r.prevDate) return false;
     if (r.prevDate >= r.date) return false;
     if (r.prevPrice === r.price && (!r.prevDate || r.prevDate === r.date)) return false;
+    // A "prior" within 30 days at nearly the same price is almost always this
+    // deed itself (its sale date precedes its record date), not a quick flip.
+    var gap = (Date.parse(r.date) - Date.parse(r.prevDate)) / 864e5;
+    if (gap <= 30 && Math.abs(r.prevPrice - r.price) / r.price <= 0.02) return false;
     return true;
   }
 
