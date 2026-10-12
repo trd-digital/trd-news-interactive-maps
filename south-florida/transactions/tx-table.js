@@ -59,6 +59,8 @@
     insightsRange: app.querySelector(".tx-insights-range"),
     pulse: app.querySelector(".tx-pulse"),
     deals: app.querySelector(".tx-deals"),
+    trends: app.querySelector(".tx-trends"),
+    ovScope: app.querySelector(".tx-ov-scope"),
     area: app.querySelector(".tx-area"),
     table: app.querySelector(".tx-table"),
     loading: app.querySelector(".tx-loading"),
@@ -211,6 +213,10 @@
   // ------------------------------------------------------------------ render
   function refresh() {
     if (!data) return;
+    // ZIP filters need the outlines (most records have no ZIP); load, then redo.
+    if (state.place && state.place.kind === "zip" && !TX.boundaries.loaded) {
+      TX.loadBoundaries().then(refresh).catch(function () {});
+    }
     rows = TX.apply(data.rows, state, data.asOf);
     entries = TX.toEntries(rows, data).sort(compare);
     var pages = Math.max(1, Math.ceil(entries.length / PAGE_SIZE));
@@ -260,19 +266,86 @@
     if (insightsOpen) renderInsights();
   });
 
+  // The overview has its own scope (area + property type), independent of the
+  // table's search and filters; only the period follows the table.
+  var ovScope = { county: null, city: null, use: null };
+  var OV_TYPES = ["condo", "single-family", "townhouse", "multifamily", "office", "retail", "industrial", "hotel", "land"];
+  function ovState() {
+    var s = TX.defaultState();
+    s.days = state.days;
+    s.dateFrom = state.dateFrom;
+    s.dateTo = state.dateTo;
+    if (ovScope.city) { s.counties = [ovScope.city.county]; s.place = { kind: "city", value: ovScope.city.name, label: ovScope.city.name }; }
+    else if (ovScope.county) s.counties = [ovScope.county];
+    s.useType = ovScope.use;
+    return s;
+  }
+  function renderScope() {
+    function pill(group, val, label, on) {
+      return '<button type="button" class="tx-chip' + (on ? " is-active" : "") + '" data-ov="' + group + '" data-val="' + fmt.escape(val) + '" aria-pressed="' + on + '">' + label + "</button>";
+    }
+    // City options: cities with sales in the period, by county, busiest first.
+    var periodRows = TX.apply(data.rows, Object.assign(TX.defaultState(), { days: state.days, dateFrom: state.dateFrom, dateTo: state.dateTo }), data.asOf);
+    var byCounty = {};
+    periodRows.forEach(function (r) {
+      if (!r.city || /^unincorporated$/i.test(r.city)) return;
+      if (ovScope.county && r.county !== ovScope.county) return;
+      var c = byCounty[r.county] || (byCounty[r.county] = {});
+      c[r.city] = (c[r.city] || 0) + 1;
+    });
+    var opts = '<option value="">' + (ovScope.city ? "All cities" : "City…") + "</option>" + TX.COUNTIES.filter(function (c) { return byCounty[c]; }).map(function (c) {
+      return '<optgroup label="' + c + '">' + Object.keys(byCounty[c]).sort(function (a, b) { return byCounty[c][b] - byCounty[c][a]; }).map(function (city) {
+        var v = c + "|" + city;
+        return '<option value="' + fmt.escape(v) + '"' + (ovScope.city && ovScope.city.name === city ? " selected" : "") + ">" + fmt.escape(city) + " (" + byCounty[c][city] + ")</option>";
+      }).join("") + "</optgroup>";
+    }).join("");
+    el.ovScope.innerHTML =
+      '<div class="tx-ov-row"><span class="tx-group-label">Area</span><div class="tx-chips">' +
+      pill("county", "", "South Florida", !ovScope.county && !ovScope.city) +
+      TX.COUNTIES.map(function (c) { return pill("county", c, c, ovScope.county === c && !ovScope.city); }).join("") +
+      '<label class="tx-ov-city' + (ovScope.city ? " is-active" : "") + '"><span class="tx-sr">Pick a city</span><select data-ov="city">' + opts + "</select></label>" +
+      "</div></div>" +
+      '<div class="tx-ov-row"><span class="tx-group-label">Type</span><div class="tx-chips tx-ov-types">' +
+      pill("use", "", "All types", !ovScope.use) +
+      OV_TYPES.map(function (k) { return pill("use", k, TX.USE_TYPES[k].label, ovScope.use === k); }).join("") +
+      "</div></div>";
+  }
+  el.ovScope.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-ov]");
+    if (!b) return;
+    var g = b.getAttribute("data-ov"), v = b.getAttribute("data-val");
+    if (g === "county") { ovScope.county = v || null; ovScope.city = null; }
+    if (g === "use") ovScope.use = v || null;
+    track("overview_" + g, v || "all");
+    renderInsights();
+  });
+  el.ovScope.addEventListener("change", function (e) {
+    var sel = e.target.closest("select[data-ov=city]");
+    if (!sel) return;
+    var v = sel.value;
+    if (v) { var p = v.split("|"); ovScope.city = { county: p[0], name: p[1] }; ovScope.county = p[0]; }
+    else ovScope.city = null;
+    track("overview_city", v || "all");
+    renderInsights();
+  });
+
   function renderInsights() {
-    el.insightsRange.textContent = TX.dateRangeLabel(state, data.asOf) + (TX.isDefault(state) ? "" : " · filtered");
+    var scopeName = ovScope.city ? ovScope.city.name : ovScope.county ? ovScope.county + " County" : "South Florida";
+    el.insightsRange.textContent = scopeName + (ovScope.use ? " · " + TX.USE_TYPES[ovScope.use].label : "") + " · " + TX.dateRangeLabel(state, data.asOf);
+    el.ovScope.hidden = !insightsOpen;
     if (!insightsOpen) return;
+    renderScope();
+    var os = ovState();
     TX.insights.pulse(el.pulse, {
-      rows: data.rows, state: state, asOf: data.asOf,
+      rows: data.rows, state: os, asOf: data.asOf,
       onCounties: function (cs) {
-        var s = TX.serializeState(state);
-        s.counties = cs;
-        onFilterChange(s, "pulse_counties");
-        filters.render();
+        if (cs.length === 1) { ovScope.county = cs[0]; ovScope.city = null; }
+        renderInsights();
       },
     });
-    TX.insights.topDeals(el.deals, entries, function (id) {
+    TX.insights.trends(el.trends, ovScope);
+    var ovEntries = TX.toEntries(TX.apply(data.rows, os, data.asOf), data);
+    TX.insights.topDeals(el.deals, ovEntries, function (id) {
       track("top_deal", id);
       view = "list";
       reveal(id);

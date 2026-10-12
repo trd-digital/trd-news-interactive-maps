@@ -157,7 +157,7 @@
     cityList.some(function (c) { if (grab(c.key)) { out.place = { kind: "city", value: c.city, label: c.city }; return true; } return false; });
     if (!out.place) {
       var z = n.match(/ (3[34]\d{3}) /);
-      if (z && zipSet[z[1]]) { out.place = { kind: "zip", value: z[1], label: "ZIP " + z[1] }; n = n.replace(z[0], " "); }
+      if (z && (zipSet[z[1]] || TX.boundaries.zip[z[1]])) { out.place = { kind: "zip", value: z[1], label: "ZIP " + z[1] }; n = n.replace(z[0], " "); }
     }
     out.rest = n.split(" ").filter(function (t) { return t && !FILLER[t]; }).join(" ");
     out.structured = !!(out.price || out.type || out.county || out.place);
@@ -188,8 +188,9 @@
 
   function parsedLabel(p) {
     var bits = [];
+    if (p.place && p.place.kind === "zip" && !p.place.sub) p.place.sub = zipCity(p.place.value);
     var type = p.type ? (p.type.charAt(0) === "@" ? p.type.slice(1) + " sales" : TX.USE_TYPES[p.type].label) : "Sales";
-    bits.push(type + (p.place ? " in " + p.place.label : p.county ? " in " + p.county + " County" : ""));
+    bits.push(type + (p.place ? " in " + p.place.label + (p.place.sub ? " (" + p.place.sub + ")" : "") : p.county ? " in " + p.county + " County" : ""));
     if (p.place && p.county) bits.push(p.county + " County");
     if (p.price) bits.push(TX.priceLabel({ price: "custom", priceMin: p.price.min || null, priceMax: p.price.max || null }));
     if (p.rest) bits.push("“" + p.rest + "”");
@@ -197,9 +198,20 @@
   }
 
   var zipSet = {};
+  // Main city of a ZIP: most common city among sales located inside it.
+  var allRows = [];
+  function zipCity(z) {
+    var f = TX.boundaries.zip[z];
+    var c = {};
+    allRows.forEach(function (r) {
+      if (r.city && (r.zip === z || (f && r.located && TX.inFeature(f, r.lng, r.lat)))) c[r.city] = (c[r.city] || 0) + 1;
+    });
+    return Object.keys(c).sort(function (a, b) { return c[b] - c[a]; })[0] || (f ? f.properties.county + " County" : "");
+  }
 
   // Precompute per-row search fields (called once after load).
   function indexRows(rows) {
+    allRows = rows;
     var cities = {};
     rows.forEach(function (r) {
       if (r.city) cities[norm(r.city)] = r.city;
@@ -260,6 +272,23 @@
         sales.push({ row: r, addrHit: !pq && matchesAll(r._addr, toks) });
       }
     });
+    if (zipQ && TX.boundaries.loaded) {
+      Object.keys(TX.boundaries.zip).filter(function (z) { return z.indexOf(zipQ) === 0; }).slice(0, 4).forEach(function (z) {
+        if (zips[z]) return;
+        var f = TX.boundaries.zip[z], cityCount = {};
+        var e = { kind: "zip", value: z, label: "ZIP " + z, sub: f.properties.county + " County", count: 0, total: 0 };
+        base.forEach(function (r) {
+          if (r.zip === z || (r.located && TX.inFeature(f, r.lng, r.lat))) {
+            e.count++;
+            e.total += r.price;
+            if (r.city) cityCount[r.city] = (cityCount[r.city] || 0) + 1;
+          }
+        });
+        var top = Object.keys(cityCount).sort(function (a, b) { return cityCount[b] - cityCount[a]; })[0];
+        if (top) e.sub = top + " · " + e.sub;
+        zips[z] = e;
+      });
+    }
     var byCount = function (a, b) { return b.count - a.count || b.total - a.total; };
     out.places = values(cities).sort(byCount).slice(0, 3).concat(values(zips).sort(byCount).slice(0, 2));
     out.parties = values(parties).sort(byCount).slice(0, 5);
@@ -488,6 +517,11 @@
     }
 
     input.addEventListener("input", function () {
+      if (/(^|\s)3[34]\d{0,3}(\s|$)/.test(input.value) && !TX.boundaries.loaded) {
+        TX.loadBoundaries().then(function () {
+          if (document.activeElement === input) render(geoCache[input.value.trim()]);
+        }).catch(function () {});
+      }
       clearTimeout(qTimer);
       qTimer = setTimeout(function () {
         var p = resolveQuery(input.value, opts.getBase());
