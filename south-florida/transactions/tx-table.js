@@ -390,6 +390,11 @@
 
   function actions(r) {
     var out = "";
+    if (cmp) {
+      var on = cmp.has(r.id);
+      out += '<button type="button" class="tx-btn tx-cmp-toggle' + (on ? " is-on" : "") + '" data-act="compare" data-id="' + fmt.escape(r.id) + '" aria-pressed="' + on + '">' +
+        (on ? "✓ In compare" : "＋ Compare") + "</button>";
+    }
     if (r.parcelUrl) out += '<a class="tx-btn" href="' + fmt.escape(r.parcelUrl) + '" target="_blank" rel="noopener">Property record ↗</a>';
     if (r.located && peer.hasPeer("map")) out += '<button type="button" class="tx-btn" data-act="map" data-id="' + fmt.escape(r.id) + '">Show on map</button>';
     return out ? '<div class="tx-actions">' + out + "</div>" : "";
@@ -576,6 +581,8 @@
     if (act === "map") {
       peer.send("select", b.getAttribute("data-id"));
       track("show_on_map", b.getAttribute("data-id"));
+    } else if (act === "compare") {
+      cmp.toggle(b.getAttribute("data-id"));
     } else if (act === "map-assemblage") {
       peer.send("assemblage", b.getAttribute("data-id"));
       track("show_assemblage_on_map", b.getAttribute("data-id"));
@@ -620,6 +627,25 @@
     if (tr) tr.scrollIntoView({ block: "center", behavior: "smooth" });
   }
 
+  // ------------------------------------------------------------- compare
+  var cmp = null;
+  function initCompare() {
+    cmp = TX.compare.init({
+      root: document.body,
+      peer: peer,
+      track: track,
+      ctx: function () { return { data: data, state: state }; },
+      showTray: function () { return true; },
+      onShow: function (id) {
+        reveal(id);
+        var r = data.byId[id];
+        if (r && r.located) peer.send("select", id);
+      },
+    });
+    cmp.onChange(function () { if (data) renderBody(); });
+    cmp.refresh();
+  }
+
   // ------------------------------------------------------------------ CSV
   el.csv.hidden = !csvEnabled;
   el.csv.addEventListener("click", function () {
@@ -661,6 +687,8 @@
         focusMember = openId !== msg.payload ? msg.payload : null;
         renderBody();
       }
+    } else if (msg.type === "compare") {
+      if (cmp) cmp.receive(msg.payload);
     } else if (msg.type === "hello" && !TX.isDefault(state)) {
       peer.send("filters", TX.serializeState(state));
     }
@@ -674,6 +702,7 @@
       data.rows.forEach(function (r) { data.byId[r.id] = r; });
       el.asof.textContent = TX.asOfText(data) + ". Deeds of $100,000 or more recorded in Miami-Dade, Broward and Palm Beach counties.";
       el.loading.hidden = true;
+      initCompare();
       refresh();
       var sale = params.get("sale");
       if (sale) reveal(sale);

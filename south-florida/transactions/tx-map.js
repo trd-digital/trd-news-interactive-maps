@@ -604,6 +604,7 @@
     if (peer.hasPeer("table")) {
       actions += '<button type="button" class="tx-btn" data-act="table">Show in table</button>';
     }
+    if (cmp) actions += compareBtn(r.id);
 
     el.detail.innerHTML =
       '<div class="tx-detail-head"><h2 id="tx-detail-title">' + fmt.escape(r.address || "Address unavailable") +
@@ -678,6 +679,14 @@
       clearSelection();
       return;
     }
+    var cb = e.target.closest('[data-act="compare"]');
+    if (cb) {
+      var added = !cmp.has(cb.getAttribute("data-id"));
+      if (cmp.toggle(cb.getAttribute("data-id"), el.mapWrap) && added && peer.hasPeer("table")) {
+        TX.notify(el.mapWrap, "Added to compare (" + cmp.list().length + " of " + TX.compare.MAX + "). Open the comparison from the bar under the sales table.");
+      }
+      return;
+    }
     var asmBtn = e.target.closest('[data-act="assemblage"]');
     if (asmBtn) {
       track("open_assemblage", asmBtn.getAttribute("data-aid"));
@@ -698,6 +707,29 @@
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && !el.detail.hidden) clearSelection();
   });
+
+  // ------------------------------------------------------------- compare
+  var cmp = null;
+  function compareBtn(id) {
+    var on = cmp.has(id);
+    return '<button type="button" class="tx-btn tx-cmp-toggle' + (on ? " is-on" : "") + '" data-act="compare" data-id="' + fmt.escape(id) + '" aria-pressed="' + on + '">' +
+      (on ? "✓ In compare" : "＋ Compare") + "</button>";
+  }
+  function initCompare() {
+    cmp = TX.compare.init({
+      root: app,
+      peer: peer,
+      track: track,
+      ctx: function () { return { data: data, state: state }; },
+      showTray: function () { return !compact && !peer.hasPeer("table"); },
+      onShow: function (id) { select(id, { fly: true, announce: true }); },
+    });
+    cmp.onChange(function () {
+      var b = el.detail.querySelector(".tx-cmp-toggle");
+      if (b) b.outerHTML = compareBtn(b.getAttribute("data-id"));
+    });
+    cmp.refresh();
+  }
 
   function highlight() {
     if (!map || !map.getLayer("tx-selected")) return;
@@ -1091,6 +1123,8 @@
     } else if (msg.type === "select" || msg.type === "reveal") {
       var r = rowById(msg.payload);
       if (r) select(msg.payload, { fly: true });
+    } else if (msg.type === "compare") {
+      if (cmp) cmp.receive(msg.payload);
     } else if (msg.type === "assemblage") {
       openAssemblage(msg.payload);
     } else if (msg.type === "hello" && !TX.isDefault(state)) {
@@ -1129,6 +1163,7 @@
         data.byId[r.id] = r;
       });
       el.loading.hidden = true;
+      initCompare();
       refresh({ fit: !params.get("sale") });
       var sale = params.get("sale");
       if (sale && rowById(sale)) select(sale, { fly: true, instant: true });
