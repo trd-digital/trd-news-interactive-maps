@@ -22,7 +22,7 @@
     causeway: "cswy", trail: "trl", square: "sq", way: "way",
     north: "n", south: "s", east: "e", west: "w",
     northeast: "ne", northwest: "nw", southeast: "se", southwest: "sw",
-    apartment: "", apt: "", unit: "", suite: "", ste: "",
+    apt: "", unit: "", suite: "", ste: "", // ("apartment" kept: it's a property type)
     and: "", the: "", of: "", "&": "",
     incorporated: "inc", company: "co", corporation: "corp", limited: "ltd",
   };
@@ -82,8 +82,131 @@
     return norm(fmt.party(name));
   }
 
+  // ----------------------------------------------------- natural-language query
+  // "condos in boca raton over 1m" -> { type, place, price, county, rest }.
+  // Words it doesn't recognize stay as ordinary text search (rest).
+  var TYPE_WORDS = [
+    ["condo", ["condominiums", "condominium", "condos", "condo"]],
+    ["townhouse", ["town homes", "town home", "townhouses", "townhouse", "townhomes", "townhome"]],
+    ["single-family", ["single family homes", "single family home", "single family", "sfh"]],
+    ["multifamily", ["apartment buildings", "apartment building", "multi family", "multifamily", "apartments", "apartment", "duplexes", "duplex", "triplex"]],
+    ["office", ["office buildings", "office building", "offices", "office"]],
+    ["retail", ["shopping centers", "shopping center", "retail", "stores", "store"]],
+    ["industrial", ["warehouses", "warehouse", "industrial", "distribution", "flex"]],
+    ["hotel", ["hotels", "hotel", "motels", "motel"]],
+    ["land", ["vacant land", "vacant", "land", "lots", "lot"]],
+    ["@Commercial", ["commercial"]],
+    ["@Residential", ["residential"]],
+  ];
+  var COUNTY_WORDS = [["Miami-Dade", ["miami dade county", "miami dade", "dade county", "dade"]], ["Broward", ["broward county", "broward"]], ["Palm Beach", ["palm beach county"]]];
+  var CITY_ALIASES = { "ft": "fort", "wpb": "w palm beach", "pbg": "palm beach gardens", "nmb": "n miami beach", "fll": "fort lauderdale" };
+  var FILLER = { "in": 1, "at": 1, "near": 1, "sales": 1, "sale": 1, "sold": 1, "properties": 1, "property": 1, "for": 1, "with": 1, "priced": 1, "price": 1, "deals": 1, "deal": 1, "all": 1, "between": 1, "to": 1 };
+  var MONEY = "\\$?\\s*(\\d+(?:\\.\\d+)?)\\s*(k|mm|m|mil|million|b|bn|billion|thousand|grand)?(?![a-z])";
+
+  function money(num, unit, otherUnit) {
+    var u = unit || otherUnit || "";
+    var mult = /^(k|thousand|grand)$/.test(u) ? 1e3 : /^(m|mm|mil|million)$/.test(u) ? 1e6 : /^(b|bn|billion)$/.test(u) ? 1e9 : 1;
+    var n = parseFloat(num) * mult;
+    if (mult === 1 && n < 10000) n *= 1000; // "750" -> $750K, as in the price boxes
+    return n;
+  }
+
+  var cityList = [];
+  function parseQuery(raw, opt) {
+    opt = opt || {};
+    var out = { price: null, priceReversed: false, type: null, county: null, place: null, rest: "", structured: false };
+    var s = " " + String(raw || "").toLowerCase().replace(/,(?=\d{3})/g, "").replace(/\s+/g, " ") + " ";
+    var M = MONEY;
+    function take(re, fn) {
+      var m = s.match(re);
+      if (!m || out.price) return;
+      var r = fn(m);
+      if (r) { out.price = r; s = s.replace(m[0], " "); }
+    }
+    // Ranges: "1m-3m", "1-3 million", "between 2 and 4 million", "500k to 2m"
+    take(new RegExp("(?:between\\s+)?" + M + "\\s*(?:-|–|—|to|and)\\s*" + M), function (m) {
+      if (!(m[0].indexOf("$") >= 0 || m[2] || m[4])) return null; // need a $ or unit somewhere
+      var a = money(m[1], m[2], m[4]), b = money(m[3], m[4], m[2]);
+      if (a > b) { out.priceReversed = true; var t = a; a = b; b = t; }
+      return { min: a, max: b };
+    });
+    take(new RegExp("(?:over|above|more than|at least|from|min(?:imum)?|>=?)\\s*" + M), function (m) { return { min: money(m[1], m[2]) }; });
+    take(new RegExp("(?:under|below|less than|up to|at most|max(?:imum)?|<=?)\\s*" + M), function (m) { return { max: money(m[1], m[2]) }; });
+    take(new RegExp(M + "\\s*(?:\\+|and up|or more|plus)"), function (m) { return m[0].indexOf("$") >= 0 || m[2] ? { min: money(m[1], m[2]) } : null; });
+    take(new RegExp("(?:^|\\s)(\\$\\s*\\d+(?:\\.\\d+)?\\s*(?:k|mm|m|mil|million|b|bn|billion)?|\\d+(?:\\.\\d+)?\\s*(?:k|mm|m|mil|million|b|bn|billion))(?=\\s)"), function (m) {
+      var mm = m[1].match(/(\d+(?:\.\d+)?)\s*([a-z]+)?/);
+      return { min: money(mm[1], mm[2]) };
+    });
+
+    var n = " " + norm(s.replace(/[$]/g, " ")).split(" ").map(function (t) { return CITY_ALIASES[t] || t; }).join(" ") + " ";
+    function grab(phrase) {
+      if (!phrase) return false;
+      var p = " " + phrase + " ";
+      var i = n.indexOf(p);
+      if (i < 0) return false;
+      n = n.slice(0, i) + " " + n.slice(i + p.length - 1);
+      return true;
+    }
+    COUNTY_WORDS.some(function (cw) {
+      return cw[1].some(function (w) { if (grab(norm(w))) { out.county = cw[0]; return true; } return false; });
+    });
+    if (!opt.noType) TYPE_WORDS.some(function (tw) {
+      return tw[1].some(function (w) { if (grab(norm(w))) { out.type = tw[0]; return true; } return false; });
+    });
+    // Longest city name first ("palm beach gardens" before "palm beach").
+    cityList.some(function (c) { if (grab(c.key)) { out.place = { kind: "city", value: c.city, label: c.city }; return true; } return false; });
+    if (!out.place) {
+      var z = n.match(/ (3[34]\d{3}) /);
+      if (z && zipSet[z[1]]) { out.place = { kind: "zip", value: z[1], label: "ZIP " + z[1] }; n = n.replace(z[0], " "); }
+    }
+    out.rest = n.split(" ").filter(function (t) { return t && !FILLER[t]; }).join(" ");
+    out.structured = !!(out.price || out.type || out.county || out.place);
+    return out;
+  }
+
+  // A type word inside a matching company name ("University Drive Apartments
+  // LLC", "… Land Trust") is part of the name, not a property-type filter.
+  function resolveQuery(q, base) {
+    var p = parseQuery(q);
+    if (p.type && suggest(q, base).parties.length) p = parseQuery(q, { noType: true });
+    return p;
+  }
+
+  // Apply a parsed query on top of the current filters.
+  function applyParsed(state, p) {
+    var s = TX.serializeState(state);
+    if (p.price) { s.price = "custom"; s.priceMin = p.price.min || null; s.priceMax = p.price.max || null; }
+    if (p.type) {
+      if (p.type.charAt(0) === "@") { s.categories = [p.type.slice(1)]; s.useType = null; }
+      else { s.useType = p.type; s.categories = TX.CATEGORIES.slice(); }
+    }
+    if (p.county) s.counties = [p.county];
+    if (p.place) s.place = p.place;
+    s.q = p.rest;
+    return s;
+  }
+
+  function parsedLabel(p) {
+    var bits = [];
+    var type = p.type ? (p.type.charAt(0) === "@" ? p.type.slice(1) + " sales" : TX.USE_TYPES[p.type].label) : "Sales";
+    bits.push(type + (p.place ? " in " + p.place.label : p.county ? " in " + p.county + " County" : ""));
+    if (p.place && p.county) bits.push(p.county + " County");
+    if (p.price) bits.push(TX.priceLabel({ price: "custom", priceMin: p.price.min || null, priceMax: p.price.max || null }));
+    if (p.rest) bits.push("“" + p.rest + "”");
+    return bits.join(" · ");
+  }
+
+  var zipSet = {};
+
   // Precompute per-row search fields (called once after load).
   function indexRows(rows) {
+    var cities = {};
+    rows.forEach(function (r) {
+      if (r.city) cities[norm(r.city)] = r.city;
+      if (r.zip) zipSet[r.zip] = true;
+    });
+    cityList = Object.keys(cities).filter(Boolean).sort(function (a, b) { return b.length - a.length; })
+      .map(function (k) { return { key: k, city: cities[k] }; });
     rows.forEach(function (r) {
       var parties = splitParties(r.buyer).concat(splitParties(r.seller));
       r._parties = parties.map(function (p) {
@@ -175,6 +298,7 @@
     var qTimer = null;
     var geoCache = {};
     var geoError = false;
+    var lastParsed = null;
 
     function setPlaceholder() {
       if (!opts.placeholder) return;
@@ -216,7 +340,16 @@
         hint("Keep typing — enter at least 2 characters. Try an address, city, ZIP, company, person or parcel ID.");
         return;
       }
-      var s = suggest(q, opts.getBase());
+      var base = opts.getBase();
+      var parsed = resolveQuery(q, base);
+      lastParsed = parsed;
+      var s = suggest(parsed.structured ? parsed.rest : q, base);
+      if (parsed.structured && !parsed.rest) {
+        // Still offer companies whose names match the whole query
+        // ("Boca Raton Associates X LLLP" for "boca raton").
+        var named = suggest(q, base).parties;
+        s = { places: [], parties: named, sales: [], saleCount: 0 };
+      }
       // Matches the current filters hide (e.g. outside the date range or price).
       var outside = 0;
       if (opts.getAll) {
@@ -230,6 +363,18 @@
       }
       items = [];
       var html = "";
+      if (parsed.structured && opts.countFor) {
+        var n = opts.countFor(parsed);
+        if (parsed.priceReversed) {
+          html += '<li class="tx-sg-hint is-warn" role="presentation">That price range was reversed (high to low), so it’s read as ' +
+            fmt.escape(TX.priceLabel({ price: "custom", priceMin: parsed.price.min, priceMax: parsed.price.max })) + ".</li>";
+        }
+        items.push({ kind: "smart", parsed: parsed, count: n });
+        html += '<li role="option" id="tx-sg-0" class="tx-sg tx-sg-smart" data-i="0" aria-selected="false">' + icon("search") +
+          '<span class="tx-sg-main">' + fmt.escape(parsedLabel(parsed)) + '<span class="tx-sg-sub">' +
+          (n ? "Press Enter to show these" : "No sales match — try a wider price or another place") + "</span></span>" +
+          '<span class="tx-sg-meta"><strong>' + n.toLocaleString("en-US") + "</strong> " + (n === 1 ? "sale" : "sales") + "</span></li>";
+      }
       function section(title, list, fn) {
         if (!list.length) return;
         html += '<li class="tx-sg-head" role="presentation">' + title + "</li>";
@@ -261,6 +406,23 @@
           return icon("go") + '<span class="tx-sg-main">' + highlight(g.label, q) +
             '<span class="tx-sg-sub">' + fmt.escape(g.sub || "") + "</span></span>";
         });
+      }
+      if (parsed.structured && !parsed.rest) {
+        if (s.parties.length) {
+          html += '<li class="tx-sg-head" role="presentation">People &amp; companies</li>';
+          s.parties.forEach(function (p) {
+            var i = items.length;
+            items.push(Object.assign({ kind: "party" }, p));
+            html += '<li role="option" id="tx-sg-' + i + '" class="tx-sg" data-i="' + i + '" aria-selected="false">' + icon("person") +
+              '<span class="tx-sg-main">' + highlight(p.label, q) + '<span class="tx-sg-sub">' + fmt.moneyShort(p.total) + " total</span></span>" +
+              '<span class="tx-sg-meta">' + count(p.count) + "</span></li>";
+          });
+        }
+        panel.innerHTML = html;
+        panel.hidden = false;
+        input.setAttribute("aria-expanded", "true");
+        active = -1;
+        return;
       }
       // Always offer the plain text filter last.
       var isId = !!parcelQuery(q);
@@ -328,7 +490,10 @@
     input.addEventListener("input", function () {
       clearTimeout(qTimer);
       qTimer = setTimeout(function () {
-        opts.onQuery(input.value);
+        var p = resolveQuery(input.value, opts.getBase());
+        // Structured queries ("condos over 1m") apply on Enter / pick; live,
+        // only their leftover words filter as text.
+        opts.onQuery(p.structured ? p.rest : input.value);
         render(geoCache[input.value.trim()]);
       }, 120);
       if (opts.geocode) {
@@ -360,6 +525,7 @@
         // preventDefault: the same keystroke must not "click" whatever we focus next.
         e.preventDefault();
         if (active >= 0) pick(active);
+        else if (items[0] && items[0].kind === "smart") pick(0);
         else {
           close();
           opts.onQuery(input.value, true);
@@ -414,6 +580,9 @@
     if (state.party) chips.push({ key: "party", label: state.party.label, icon: "person" });
     if (state.bbox) chips.push({ key: "bbox", label: state.bboxLabel ? "Area: " + state.bboxLabel : "Map area", icon: "pin" });
     if (state.dateFrom && opts.asOf) chips.push({ key: "dates", label: TX.dateRangeLabel(state, opts.asOf) });
+    if (state.useType && TX.USE_TYPES[state.useType]) chips.push({ key: "useType", label: TX.USE_TYPES[state.useType].label });
+    if (!opts.full && state.price !== d.price) chips.push({ key: "price", label: TX.priceLabel(state) });
+    if (!opts.full && state.counties.length !== d.counties.length) chips.push({ key: "counties", label: state.counties.join(", ") });
     if (opts.full) {
       if (state.counties.length !== d.counties.length) chips.push({ key: "counties", label: state.counties.join(", ") });
       if (state.categories.length !== d.categories.length) chips.push({ key: "categories", label: state.categories.join(", ") });
@@ -445,6 +614,9 @@
   }
 
   TX.search = {
+    parseQuery: parseQuery,
+    resolveQuery: resolveQuery,
+    applyParsed: applyParsed,
     norm: norm,
     indexRows: indexRows,
     rowMatches: rowMatches,

@@ -184,6 +184,9 @@
     getAll: function () {
       return data ? data.rows : [];
     },
+    countFor: function (parsed) {
+      return data ? TX.apply(data.rows, TX.search.applyParsed(state, parsed), data.asOf).length : 0;
+    },
     onQuery: function (q, committed) {
       var s = getState();
       s.q = q;
@@ -222,7 +225,12 @@
   function onPick(it) {
     var s = getState();
     track("search_pick", it.kind);
-    if (it.kind === "text") {
+    if (it.kind === "smart") {
+      var ns = TX.search.applyParsed(state, it.parsed);
+      box.set(ns.q);
+      onFilterChange(ns, "search_smart", { fit: true });
+      filters.render();
+    } else if (it.kind === "text") {
       onFilterChange(s, "search_all", { fit: true });
     } else if (it.kind === "widen") {
       var w = TX.defaultState();

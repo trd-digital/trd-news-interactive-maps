@@ -43,15 +43,19 @@
     priorState.dateTo = TX.isoAdd(range[0], -1);
     // A prior period is only comparable if every selected county has records
     // back to its start.
-    var gaps = TX.coverageGaps(ctx.rows, priorState.dateFrom, ctx.state.counties);
+    // Only the counties actually in the current results matter (a Boca Raton
+    // search shouldn't talk about Miami-Dade).
+    var inView = ctx.state.counties.filter(function (c) { return cur.some(function (r) { return r.county === c; }); });
+    if (!inView.length) inView = ctx.state.counties;
+    var gaps = TX.coverageGaps(ctx.rows, priorState.dateFrom, inView);
     // Comparable when the selected counties' records reach back to (within two
     // days of) the start of the prior period.
     var earliest = ctx.rows.reduce(function (m, r) {
-      return ctx.state.counties.indexOf(r.county) >= 0 && (!m || r.date < m) ? r.date : m;
+      return inView.indexOf(r.county) >= 0 && (!m || r.date < m) ? r.date : m;
     }, "");
     var comparable = !gaps.length && !!earliest && earliest <= TX.isoAdd(priorState.dateFrom, 2);
     var gapNames = gaps.map(function (g) { return g.county; });
-    var covered = ctx.state.counties.filter(function (c) { return gapNames.indexOf(c) < 0; });
+    var covered = inView.filter(function (c) { return gapNames.indexOf(c) < 0; });
     var prev = comparable ? TX.apply(ctx.rows, priorState, ctx.asOf) : null;
     var a = metrics(cur), b = prev ? metrics(prev) : null;
 

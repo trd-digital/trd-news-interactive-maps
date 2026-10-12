@@ -44,6 +44,34 @@
   };
   // Links also require the LOADED file to carry a verified link for every
   // county (see load()), so stale data can never show one county's links alone.
+  // Miami-Dade folios start with a two-digit municipality code; the feed has
+  // no city for Miami-Dade, so derive it (verified Oct 2026 against county
+  // records: 03 Coral Gables, 16 Florida City, 30 unincorporated, 35 Doral…).
+  var MD_MUNICIPALITY = {
+    "01": "Miami", "02": "Miami Beach", "03": "Coral Gables", "04": "Hialeah", "05": "Miami Springs",
+    "06": "North Miami", "07": "North Miami Beach", "08": "Opa-locka", "09": "South Miami", "10": "Homestead",
+    "11": "Miami Shores", "12": "Bal Harbour", "13": "Bay Harbor Islands", "14": "Surfside", "15": "West Miami",
+    "16": "Florida City", "17": "Biscayne Park", "18": "El Portal", "19": "Golden Beach", "20": "Pinecrest",
+    "21": "Indian Creek", "22": "Medley", "23": "North Bay Village", "24": "Key Biscayne", "25": "Sweetwater",
+    "26": "Virginia Gardens", "27": "Hialeah Gardens", "28": "Aventura", "30": "Unincorporated Miami-Dade",
+    "31": "Sunny Isles Beach", "32": "Miami Lakes", "33": "Palmetto Bay", "34": "Miami Gardens", "35": "Doral",
+    "36": "Cutler Bay",
+  };
+
+  // Property types readers search for, matched against the county use codes
+  // (category + use description). Keys are stable for URLs (?use=condo).
+  var USE_TYPES = {
+    condo: { label: "Condos", test: function (r) { return r.category === "Residential" && /condo/i.test(r.useDetail || ""); } },
+    townhouse: { label: "Townhouses", test: function (r) { return /townh/i.test(r.useDetail || "") && !/vacant/i.test(r.useDetail || ""); } },
+    "single-family": { label: "Single-family homes", test: function (r) { return /single fam|zero lot|cluster home|guest house/i.test(r.useDetail || ""); } },
+    multifamily: { label: "Multifamily & apartments", test: function (r) { return r.category === "Multifamily" || /multi-?family|apartment/i.test(r.useDetail || ""); } },
+    office: { label: "Office", test: function (r) { return /office/i.test(r.useDetail || ""); } },
+    retail: { label: "Retail", test: function (r) { return /retail|store|shopping/i.test(r.useDetail || ""); } },
+    industrial: { label: "Industrial & warehouse", test: function (r) { return /warehous|industrial|flex|manufact|distribut/i.test(r.useDetail || ""); } },
+    hotel: { label: "Hotels & motels", test: function (r) { return /hotel|motel/i.test(r.useDetail || ""); } },
+    land: { label: "Land", test: function (r) { return r.category === "Land" || /vacant/i.test(r.useDetail || ""); } },
+  };
+
   // What a real parcel ID looks like per county (digits only). Anything else
   // (corrupted folios, deed numbers) is not shown or searched as a parcel.
   var PARCEL_ID = { "Miami-Dade": /^\d{13}$/, Broward: /^[0-9A-Z]{12}$/, "Palm Beach": /^\d{17}$/ };
@@ -157,7 +185,7 @@
     var row = {
       id: String(p.id != null ? p.id : i),
       address: p.address ? fmt.title(p.address) : null,
-      city: p.city ? fmt.title(p.city) : null,
+      city: p.city ? fmt.title(p.city) : null, // Miami-Dade filled from the folio below
       zip: p.zip || null,
       county: p.county,
       price: +p.price,
@@ -182,6 +210,9 @@
       lat: located ? +g[1] : null,
       located: located,
     };
+    if (!row.city && row.county === "Miami-Dade" && row.parcelId) {
+      row.city = MD_MUNICIPALITY[String(row.parcelId).slice(0, 2)] || null;
+    }
     return row;
   }
 
@@ -390,6 +421,7 @@
       party: null, // { key, label } — a buyer/seller name
       bbox: null, // [west, south, east, north] — "Search this area" / a searched place
       bboxLabel: null, // e.g. "Miami Beach, FL 33139" when bbox came from search
+      useType: null, // key of USE_TYPES (condo, office, …)
       dateFrom: null, // custom record-date range from the timeline brush (ISO);
       dateTo: null, //   overrides `days` when set
     };
@@ -434,6 +466,7 @@
     if (/^\d{4}-\d{2}-\d{2}$/.test(q.get("to") || "")) s.dateTo = q.get("to");
     if (q.get("city")) s.place = { kind: "city", value: fmt.title(q.get("city")), label: fmt.title(q.get("city")) };
     if (/^\d{5}$/.test(q.get("zip") || "")) s.place = { kind: "zip", value: q.get("zip"), label: "ZIP " + q.get("zip") };
+    if (USE_TYPES[q.get("use")]) s.useType = q.get("use");
     var fin = q.get("financed");
     if (fin === "financed" || fin === "cash") s.financed = fin;
     if (q.get("q")) s.q = q.get("q");
@@ -555,6 +588,7 @@
         if (placeCity ? (r.city || "").toLowerCase() !== placeCity : r.zip !== place.value) return false;
       }
       if (party && r._partyKeys.indexOf(party.key) < 0) return false;
+      if (state.useType && USE_TYPES[state.useType] && !USE_TYPES[state.useType].test(r)) return false;
       if (bb && !(r.located && r.lng >= bb[0] && r.lng <= bb[2] && r.lat >= bb[1] && r.lat <= bb[3])) return false;
       if (q && !TX.search.rowMatches(r, q)) return false;
       return true;
@@ -572,6 +606,7 @@
       !state.party &&
       !state.bbox &&
       !state.dateFrom &&
+      !state.useType &&
       state.counties.length === d.counties.length &&
       state.categories.length === d.categories.length
     );
@@ -1000,6 +1035,7 @@
     COUNTIES: COUNTIES,
     CATEGORIES: CATEGORIES,
     COLOR_GROUP: COLOR_GROUP,
+    USE_TYPES: USE_TYPES,
     DAYS: DAYS,
     fmt: fmt,
     load: load,

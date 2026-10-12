@@ -80,14 +80,23 @@ Per feature:
 
 ## Search and URL presets
 
-Search (`tx-search.js`) suggests places (city, ZIP), people & companies,
+Search understands plain-language queries — cities ("coral gables",
+"ft lauderdale", "wpb"), ZIPs, counties, property types ("condos", "townhomes",
+"office", "warehouse", "hotel", "land", "apartments") and prices ("over 5m",
+"under $500k", "1-3m", "$10m+"; a reversed "10m-2m" is flagged and read as
+$2M–$10M) — alone or combined ("condos in boca raton over 1m"), previewing the
+count before it applies. Type words inside a matching company name stay part
+of the name. Miami-Dade cities come from the folio's two-digit municipality
+code (`MD_MUNICIPALITY` in tx-core.js); property types are `USE_TYPES`.
+
+Search (`tx-search.js`) also suggests places (city, ZIP), people & companies,
 individual sales and parcel IDs, and on the map any address, neighborhood,
 city or ZIP via Mapbox geocoding (areas filter to their bounds, which covers
 counties whose records lack city/ZIP). Matching ignores case and punctuation
 and unifies abbreviations ("northwest 5th avenue" = "NW 5 Ave").
 
 Embeds can open a preset view with query parameters:
-`property-type`, `county`, `days` (7/14/30/60), `min-price` (`1m`/`5m`/`10m` or
+`property-type`, `use` (a `USE_TYPES` key, e.g. `condo`), `county`, `days` (7/14/30/60), `min-price` (`1m`/`5m`/`10m` or
 dollars), `max-price`, `financed` (`financed`/`cash`), `q`, `city`, `zip`,
 `sale=<id>`, `from`/`to` (ISO dates, custom range), and on the map
 `view=dashboard` (compact card); on the table `tab=biggest|area` and `csv=1`.

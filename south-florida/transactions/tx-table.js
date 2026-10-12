@@ -81,6 +81,9 @@
     getAll: function () {
       return data ? data.rows : [];
     },
+    countFor: function (parsed) {
+      return data ? TX.apply(data.rows, TX.search.applyParsed(state, parsed), data.asOf).length : 0;
+    },
     onQuery: function (q) {
       var s = TX.serializeState(state);
       s.q = q;
@@ -89,7 +92,13 @@
     onPick: function (it) {
       var s = TX.serializeState(state);
       track("search_pick", it.kind);
-      if (it.kind === "widen") {
+      if (it.kind === "smart") {
+        var ns = TX.search.applyParsed(state, it.parsed);
+        box.set(ns.q);
+        view = "list";
+        onFilterChange(ns, "search_smart");
+        filters.render();
+      } else if (it.kind === "widen") {
         var w = TX.defaultState();
         w.q = it.q;
         w.days = 60;
@@ -121,7 +130,9 @@
 
   function onFilterChange(next, why) {
     state = next;
-    box && box.set(state.q);
+    // Mirror programmatic changes into the box — never while the reader is
+    // typing in it (a structured query keeps only its leftover text in q).
+    if (box && why !== "search") box.set(state.q);
     if (why !== "search") track("filter", why);
     page = 0;
     refresh();
