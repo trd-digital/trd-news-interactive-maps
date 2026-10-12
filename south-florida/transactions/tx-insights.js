@@ -53,7 +53,8 @@
     var earliest = ctx.rows.reduce(function (m, r) {
       return inView.indexOf(r.county) >= 0 && (!m || r.date < m) ? r.date : m;
     }, "");
-    var comparable = !gaps.length && !!earliest && earliest <= TX.isoAdd(priorState.dateFrom, 2);
+    var waiting = TX.pendingBefore(priorState.dateFrom); // older sales still loading
+    var comparable = !waiting && !gaps.length && !!earliest && earliest <= TX.isoAdd(priorState.dateFrom, 2);
     var gapNames = gaps.map(function (g) { return g.county; });
     var covered = inView.filter(function (c) { return gapNames.indexOf(c) < 0; });
     var prev = comparable ? TX.apply(ctx.rows, priorState, ctx.asOf) : null;
@@ -70,7 +71,7 @@
     var vs = "vs prior " + len + " days";
     function change(now, then, kind) {
       if (!b || now == null || then == null) {
-        return '<span class="tx-kpi-chg is-na">' + (gapNames.length
+        return '<span class="tx-kpi-chg is-na">' + (waiting ? "Loading " + vs.replace("vs ", "") + "…" : gapNames.length
           ? "No " + vs.replace("vs ", "") + " to compare for " + gapNames.join(" & ")
           : "No prior period to compare") + "</span>";
       }

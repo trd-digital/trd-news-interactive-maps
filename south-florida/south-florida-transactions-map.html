@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" href="south-florida-transactions-recent.json" as="fetch" crossorigin="anonymous" />
     <meta name="robots" content="noindex, nofollow" />
     <title>South Florida Live Transactions Map - The Real Deal</title>
     <link rel="icon" type="image/x-icon" href="https://therealdeal.com/favicon.ico" />
@@ -11,20 +12,27 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap" />
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" />
-    <link rel="stylesheet" href="transactions/tx.css?v=17" />
+    <link rel="stylesheet" href="transactions/tx.css?v=19" />
 
-    <!-- Google Tag Manager -->
+    <!-- Google Tag Manager, deferred: tx-core.js calls __txLoadGtm() once the
+         sales have rendered (20 s fallback), so tags don't slow the first load. -->
     <script>
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
-        j.async = true;
-        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", "GTM-K694XL6");
+      window.dataLayer = window.dataLayer || [];
+      window.__txLoadGtm = function () {
+        if (window.__txGtmLoaded) return;
+        window.__txGtmLoaded = true;
+        (function (w, d, s, l, i) {
+          w[l] = w[l] || [];
+          w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+          var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != "dataLayer" ? "&l=" + l : "";
+          j.async = true;
+          j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+          f.parentNode.insertBefore(j, f);
+        })(window, document, "script", "dataLayer", "GTM-K694XL6");
+      };
+      setTimeout(window.__txLoadGtm, 20000);
     </script>
     <!-- End Google Tag Manager -->
   </head>
@@ -72,10 +80,10 @@
     <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
     <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
-    <script src="transactions/tx-core.js?v=17"></script>
-    <script src="transactions/tx-search.js?v=17"></script>
-    <script src="transactions/tx-charts.js?v=17"></script>
-    <script src="transactions/tx-compare.js?v=17"></script>
-    <script src="transactions/tx-map.js?v=17"></script>
+    <script src="transactions/tx-core.js?v=19"></script>
+    <script src="transactions/tx-search.js?v=19"></script>
+    <script src="transactions/tx-charts.js?v=19"></script>
+    <script src="transactions/tx-compare.js?v=19"></script>
+    <script src="transactions/tx-map.js?v=19"></script>
   </body>
 </html>
