@@ -39,7 +39,8 @@
     Broward: /^https:\/\/bcpa\.net\/RecInfo\.asp\?URL_Folio=[0-9A-Z]{12}$/,
     "Palm Beach": /^https:\/\/pbcpao\.gov\/Property\/Details\?parcelId=\d{17}$/,
   };
-  var LINKS_ENABLED = COUNTIES.every(function (c) { return !!PROPERTY_LINKS[c]; });
+  // Links also require the LOADED file to carry a verified link for every
+  // county (see load()), so stale data can never show one county's links alone.
   // What a real parcel ID looks like per county (digits only). Anything else
   // (corrupted folios, deed numbers) is not shown or searched as a parcel.
   var PARCEL_ID = { "Miami-Dade": /^\d{13}$/, Broward: /^[0-9A-Z]{12}$/, "Palm Beach": /^\d{17}$/ };
@@ -168,7 +169,8 @@
       prevPrice: p.prev_price != null ? +p.prev_price : null,
       prevDate: p.prev_date || null,
       parcelId: validParcel(p.county, p.parcel_id, p.parcel_url),
-      parcelUrl: LINKS_ENABLED && p.parcel_url && PROPERTY_LINKS[p.county] && PROPERTY_LINKS[p.county].test(p.parcel_url) ? p.parcel_url : null,
+      parcelUrl: null, // set in load() once every county is known to have links
+      _linkCandidate: p.parcel_url && PROPERTY_LINKS[p.county] && PROPERTY_LINKS[p.county].test(p.parcel_url) ? p.parcel_url : null,
       parcelCount: +p.parcel_count || 1,
       assemblageId: p.assemblage_id || null,
       instrument: p.instrument_number ? String(p.instrument_number) : null,
@@ -212,6 +214,12 @@
       .then(function (fc) {
         var rows = (fc.features || []).map(normalize).filter(function (r) {
           return r.price > 0 && r.date;
+        });
+        var linksOk = COUNTIES.every(function (cty) {
+          return rows.some(function (r) { return r.county === cty && r._linkCandidate; });
+        });
+        rows.forEach(function (r) {
+          r.parcelUrl = linksOk ? r._linkCandidate : null;
         });
         if (TX.search) TX.search.indexRows(rows);
         var latest = {};
