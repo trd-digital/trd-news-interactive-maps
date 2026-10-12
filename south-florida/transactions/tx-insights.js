@@ -1,0 +1,154 @@
+/*!
+ * tx-insights.js — "Market overview" for the South Florida Live Transactions
+ * table: a market-pulse strip (sales, volume, median price, financed share,
+ * each vs the previous period of equal length), top-deal cards, and the
+ * "By area" summary. Depends on: tx-core.js, tx-charts.js.
+ */
+(function (global) {
+  "use strict";
+
+  var TX = global.TX;
+  var fmt = TX.fmt;
+
+  function median(a) {
+    if (!a.length) return null;
+    a = a.slice().sort(function (x, y) { return x - y; });
+    var m = a.length >> 1;
+    return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2;
+  }
+
+  function metrics(rows) {
+    var total = 0, fin = 0;
+    rows.forEach(function (r) { total += r.price; if (r.financed) fin++; });
+    return {
+      count: rows.length,
+      volume: total,
+      median: median(rows.map(function (r) { return r.price; })),
+      financed: rows.length ? fin / rows.length : null,
+    };
+  }
+
+  function daysBetween(a, b) {
+    return Math.round((TX.isoToDate(b) - TX.isoToDate(a)) / 864e5) + 1;
+  }
+
+  // ----------------------------------------------------------- market pulse
+  // ctx: { rows (all), state, asOf }
+  function pulse(el, ctx) {
+    var range = TX.dateRange(ctx.state, ctx.asOf);
+    var len = daysBetween(range[0], range[1]);
+    var cur = TX.apply(ctx.rows, ctx.state, ctx.asOf);
+    var priorState = TX.serializeState(ctx.state);
+    priorState.dateFrom = TX.isoAdd(range[0], -len);
+    priorState.dateTo = TX.isoAdd(range[0], -1);
+    // A prior period is only comparable if every selected county has records
+    // back to its start.
+    var gaps = TX.coverageGaps(ctx.rows, priorState.dateFrom, ctx.state.counties);
+    // Comparable when the selected counties' records reach back to (within two
+    // days of) the start of the prior period.
+    var earliest = ctx.rows.reduce(function (m, r) {
+      return ctx.state.counties.indexOf(r.county) >= 0 && (!m || r.date < m) ? r.date : m;
+    }, "");
+    var comparable = !gaps.length && !!earliest && earliest <= TX.isoAdd(priorState.dateFrom, 2);
+    var gapNames = gaps.map(function (g) { return g.county; });
+    var covered = ctx.state.counties.filter(function (c) { return gapNames.indexOf(c) < 0; });
+    var prev = comparable ? TX.apply(ctx.rows, priorState, ctx.asOf) : null;
+    var a = metrics(cur), b = prev ? metrics(prev) : null;
+
+    // Daily series for sparklines.
+    var days = [];
+    for (var d = range[0]; d <= range[1]; d = TX.isoAdd(d, 1)) days.push(d);
+    var idx = {};
+    days.forEach(function (x, i) { idx[x] = i; });
+    var n = days.map(function () { return 0; }), v = n.slice();
+    cur.forEach(function (r) { var i = idx[r.date]; if (i != null) { n[i]++; v[i] += r.price; } });
+
+    var vs = "vs prior " + len + " days";
+    function change(now, then, kind) {
+      if (!b || now == null || then == null) {
+        return '<span class="tx-kpi-chg is-na">' + (gapNames.length
+          ? "No " + vs.replace("vs ", "") + " to compare for " + gapNames.join(" & ")
+          : "No prior period to compare") + "</span>";
+      }
+      if (kind === "pts") {
+        var pts = Math.round((now - then) * 100);
+        return '<span class="tx-kpi-chg">' + arrow(pts) + Math.abs(pts) + (Math.abs(pts) === 1 ? " pt " : " pts ") + vs + "</span>";
+      }
+      if (!then) return '<span class="tx-kpi-chg is-na">—</span>';
+      var pct = Math.round(((now - then) / then) * 100);
+      return '<span class="tx-kpi-chg">' + arrow(pct) + Math.abs(pct) + "% " + vs + "</span>";
+    }
+    function arrow(x) {
+      return x > 0 ? '<span aria-label="up">▲</span> ' : x < 0 ? '<span aria-label="down">▼</span> ' : '<span aria-label="no change">■</span> ';
+    }
+    var tiles = [
+      { label: "Sales", value: a.count.toLocaleString("en-US"), chg: change(a.count, b && b.count), spark: n },
+      { label: "Volume", value: fmt.moneyShort(a.volume), chg: change(a.volume, b && b.volume), spark: v },
+      { label: "Median price", value: fmt.moneyShort(a.median), chg: change(a.median, b && b.median) },
+      { label: "Financed", value: a.financed == null ? "—" : Math.round(a.financed * 100) + "%", chg: change(a.financed, b && b.financed, "pts"), sub: "deeds with a mortgage recorded" },
+    ];
+    var note = !b && gapNames.length && covered.length
+      ? '<p class="tx-pulse-note">' + gapNames.join(" and ") + " records start " + fmt.dateShort(gaps[0].start) +
+        ", so there’s no earlier period to compare. " +
+        '<button type="button" class="tx-msg-btn" data-compare-counties="' + fmt.escape(covered.join("|")) + '">Compare ' + fmt.escape(covered.join(" & ")) + " only</button></p>"
+      : "";
+    el.innerHTML = note + tiles.map(function (t) {
+      return '<div class="tx-kpi"><span class="tx-kpi-label">' + t.label + "</span>" +
+        '<span class="tx-kpi-value">' + t.value + "</span>" + t.chg +
+        (t.spark ? TX.charts.sparkline(t.spark, 120, 22) : t.sub ? '<span class="tx-kpi-sub">' + t.sub + "</span>" : "") + "</div>";
+    }).join("");
+    var btn = el.querySelector("[data-compare-counties]");
+    if (btn && ctx.onCounties) btn.onclick = function () { ctx.onCounties(btn.getAttribute("data-compare-counties").split("|")); };
+  }
+
+  // -------------------------------------------------------------- top deals
+  // entries: display entries (deeds + assemblages) for the current filters.
+  function topDeals(el, entries, onPick) {
+    var top = entries.slice().sort(function (x, y) { return y.price - x.price; }).slice(0, 10);
+    if (!top.length) {
+      el.innerHTML = '<p class="tx-muted">No sales match these filters.</p>';
+      return;
+    }
+    el.innerHTML = top.map(function (e, i) {
+      var r = e.kind === "assemblage" ? e.lead : e;
+      var img = TX.aerialUrl(r, 240, 120);
+      var where = [r.city, e.kind === "assemblage" ? e.county : r.county].filter(Boolean).join(" · ");
+      var who = e.kind === "assemblage"
+        ? TX.partySummary(e.partiesDirected ? e.buyers : e.parties, e.partiesDirected ? "buyer" : "party")
+        : TX.partyLine(r);
+      return '<button type="button" class="tx-deal" data-id="' + fmt.escape(e.id) + '">' +
+        '<span class="tx-deal-rank">' + (i + 1) + "</span>" +
+        (img ? '<img class="tx-deal-img" loading="lazy" alt="" src="' + fmt.escape(img) + '">' : '<span class="tx-deal-img is-empty">No aerial — address unavailable</span>') +
+        '<span class="tx-deal-body">' +
+        (e.kind === "assemblage" ? '<span class="tx-assm">' + fmt.escape(e.label) + "</span>" : "") +
+        '<span class="tx-deal-price">' + fmt.moneyShort(e.price) + (e.kind === "assemblage" ? ' <small>combined</small>' : "") + "</span>" +
+        '<span class="tx-deal-addr">' + fmt.escape(r.address || "Address unavailable") + (e.kind === "assemblage" ? " + " + (e.members.length - 1) + " more" : "") + "</span>" +
+        '<span class="tx-deal-sub">' + fmt.escape(where) + " · " + fmt.dateShort(e.date) + "</span>" +
+        '<span class="tx-deal-who">' + fmt.escape(who) + "</span>" +
+        "</span></button>";
+    }).join("");
+    el.onclick = function (ev) {
+      var b = ev.target.closest(".tx-deal");
+      if (b) onPick(b.getAttribute("data-id"));
+    };
+  }
+
+  // ---------------------------------------------------------------- by area
+  // Groups deeds by city (Miami-Dade records don't carry a city yet).
+  function areaRows(rows) {
+    var by = {};
+    rows.forEach(function (r) {
+      var key = r.city ? r.city + "|" + r.county : "|" + r.county;
+      var g = by[key] || (by[key] = { city: r.city, county: r.county, rows: [] });
+      g.rows.push(r);
+    });
+    return Object.keys(by).map(function (k) {
+      var g = by[k];
+      var m = metrics(g.rows);
+      var top = g.rows.reduce(function (t, r) { return !t || r.price > t.price ? r : t; }, null);
+      return { city: g.city, county: g.county, count: m.count, volume: m.volume, median: m.median, financed: m.financed, top: top };
+    });
+  }
+
+  TX.insights = { pulse: pulse, topDeals: topDeals, areaRows: areaRows, metrics: metrics };
+})(window);

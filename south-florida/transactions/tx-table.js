@@ -16,6 +16,9 @@
   var rows = []; // filtered deeds (summary, CSV)
   var entries = []; // display rows: deeds + grouped assemblages
   var focusMember = null; // member deed highlighted inside an open assemblage
+  var view = params.get("tab") === "area" ? "area" : "list"; // "list" | "area"
+  var areaSort = { key: "volume", dir: -1 };
+  var areaAll = false;
   var sort = params.get("tab") === "biggest" ? { key: "price", dir: -1 } : { key: "date", dir: -1 };
   var page = 0;
   var openId = null;
@@ -51,6 +54,13 @@
     tbody: app.querySelector(".tx-table tbody"),
     cards: app.querySelector(".tx-cards"),
     pager: app.querySelector(".tx-pager"),
+    insights: app.querySelector(".tx-insights"),
+    insightsToggle: app.querySelector(".tx-insights-toggle"),
+    insightsRange: app.querySelector(".tx-insights-range"),
+    pulse: app.querySelector(".tx-pulse"),
+    deals: app.querySelector(".tx-deals"),
+    area: app.querySelector(".tx-area"),
+    table: app.querySelector(".tx-table"),
     loading: app.querySelector(".tx-loading"),
   };
 
@@ -122,17 +132,20 @@
   el.tabs.addEventListener("click", function (e) {
     var b = e.target.closest(".tx-tab");
     if (!b) return;
-    sort = b.getAttribute("data-tab") === "biggest" ? { key: "price", dir: -1 } : { key: "date", dir: -1 };
+    var tab = b.getAttribute("data-tab");
+    view = tab === "area" ? "area" : "list";
+    if (tab !== "area") sort = tab === "biggest" ? { key: "price", dir: -1 } : { key: "date", dir: -1 };
     page = 0;
     track("tab", b.getAttribute("data-tab"));
     refresh();
   });
 
   function renderTabs() {
-    var latest = sort.key === "date" && sort.dir === -1;
-    var biggest = sort.key === "price" && sort.dir === -1;
+    var latest = view === "list" && sort.key === "date" && sort.dir === -1;
+    var biggest = view === "list" && sort.key === "price" && sort.dir === -1;
     el.tabs.querySelectorAll(".tx-tab").forEach(function (b) {
-      var on = b.getAttribute("data-tab") === "latest" ? latest : biggest;
+      var tab = b.getAttribute("data-tab");
+      var on = tab === "area" ? view === "area" : tab === "latest" ? latest : biggest;
       b.classList.toggle("is-active", on);
       b.setAttribute("aria-selected", String(on));
     });
@@ -194,6 +207,12 @@
     renderTabs();
     renderHead();
     renderSummary();
+    renderInsights();
+    el.table.hidden = view === "area";
+    el.cards.hidden = view === "area";
+    el.pager.hidden = view === "area";
+    el.area.hidden = view !== "area";
+    if (view === "area") renderArea();
     TX.search.activeChips(el.chips, state, function (s, why) {
       onFilterChange(s, why);
       filters.render();
@@ -213,6 +232,111 @@
     el.summary.innerHTML = "<strong>" + s.count.toLocaleString("en-US") + "</strong> " + (s.count === 1 ? "sale" : "sales") +
       (s.count ? " · <strong>" + fmt.moneyShort(s.total) + "</strong> total · median " + fmt.moneyShort(med) : "");
     el.csv.disabled = !rows.length;
+  }
+
+  // ------------------------------------------------------- market overview
+  var insightsOpen = TX.prefs.get("insights-open", window.innerWidth > 720);
+  function setInsightsOpen(open) {
+    insightsOpen = open;
+    el.insights.classList.toggle("is-collapsed", !open);
+    el.insightsToggle.setAttribute("aria-expanded", String(open));
+  }
+  setInsightsOpen(insightsOpen);
+  el.insightsToggle.addEventListener("click", function () {
+    setInsightsOpen(!insightsOpen);
+    TX.prefs.set("insights-open", insightsOpen);
+    track("insights", insightsOpen ? "open" : "close");
+    if (insightsOpen) renderInsights();
+  });
+
+  function renderInsights() {
+    el.insightsRange.textContent = TX.dateRangeLabel(state, data.asOf) + (TX.isDefault(state) ? "" : " · filtered");
+    if (!insightsOpen) return;
+    TX.insights.pulse(el.pulse, {
+      rows: data.rows, state: state, asOf: data.asOf,
+      onCounties: function (cs) {
+        var s = TX.serializeState(state);
+        s.counties = cs;
+        onFilterChange(s, "pulse_counties");
+        filters.render();
+      },
+    });
+    TX.insights.topDeals(el.deals, entries, function (id) {
+      track("top_deal", id);
+      view = "list";
+      reveal(id);
+      var r = data.byId[id];
+      if (data.assemblages[id]) peer.send("assemblage", id);
+      else if (r && r.located) peer.send("select", id);
+    });
+  }
+
+  // ---------------------------------------------------------------- by area
+  var AREA_COLS = [
+    { key: "area", label: "Area" },
+    { key: "county", label: "County", cls: "col-county" },
+    { key: "count", label: "Sales", num: true },
+    { key: "volume", label: "Volume", num: true },
+    { key: "median", label: "Median price", num: true },
+    { key: "financed", label: "Financed", num: true, cls: "col-mortgage" },
+    { key: "top", label: "Biggest sale", cls: "col-top" },
+  ];
+  function renderArea() {
+    var list = TX.insights.areaRows(rows);
+    var k = areaSort.key;
+    list.sort(function (a, b) {
+      var va = k === "area" ? (a.city || "~") : k === "top" ? a.top.price : a[k];
+      var vb = k === "area" ? (b.city || "~") : k === "top" ? b.top.price : b[k];
+      if (typeof va === "string") return va.localeCompare(vb) * areaSort.dir;
+      return ((va || 0) - (vb || 0)) * areaSort.dir;
+    });
+    var shown = areaAll ? list : list.slice(0, 25);
+    if (!list.length) {
+      el.area.innerHTML = '<p class="tx-empty">No sales match these filters.</p>';
+      return;
+    }
+    el.area.innerHTML = '<table class="tx-table tx-area-table"><thead><tr>' + AREA_COLS.map(function (c) {
+      var active = areaSort.key === c.key;
+      return '<th scope="col" class="' + [c.num ? "num" : "", c.cls || ""].join(" ").trim() + '"' +
+        (active ? ' aria-sort="' + (areaSort.dir < 0 ? "descending" : "ascending") + '"' : "") +
+        '><button type="button" data-area-sort="' + c.key + '">' + c.label +
+        '<span class="tx-sort-ind" aria-hidden="true">' + (active ? (areaSort.dir < 0 ? "▼" : "▲") : "") + "</span></button></th>";
+    }).join("") + "</tr></thead><tbody>" + shown.map(function (a) {
+      var clickable = !!a.city;
+      return '<tr class="' + (clickable ? "tx-row" : "") + '"' + (clickable ? ' tabindex="0" data-city="' + fmt.escape(a.city) + '"' : "") + ">" +
+        '<td><span class="tx-addr">' + (a.city ? fmt.escape(a.city) : '<span class="tx-muted">City not recorded</span>') + "</span></td>" +
+        '<td class="col-county">' + fmt.escape(a.county) + "</td>" +
+        '<td class="num">' + a.count.toLocaleString("en-US") + "</td>" +
+        '<td class="num"><strong>' + fmt.moneyShort(a.volume) + "</strong></td>" +
+        '<td class="num">' + fmt.moneyShort(a.median) + "</td>" +
+        '<td class="num col-mortgage">' + (a.financed == null ? "—" : Math.round(a.financed * 100) + "%") + "</td>" +
+        '<td class="col-top"><span class="tx-addr-sub">' + fmt.moneyShort(a.top.price) + " · " + fmt.escape(a.top.address || "Address unavailable") + "</span></td></tr>";
+    }).join("") + "</tbody></table>" +
+      '<p class="tx-area-note">' + (list.length > 25 && !areaAll ? '<button type="button" class="tx-btn" data-area-all>Show all ' + list.length + " areas</button> " : "") +
+      (list.some(function (a) { return !a.city; }) ? '<span class="tx-muted">Miami-Dade records don’t include a city yet, so its sales are grouped by county. Tap a city to filter to it.</span>' : '<span class="tx-muted">Tap a city to filter to it.</span>') + "</p>";
+  }
+  el.area.addEventListener("click", function (e) {
+    var s = e.target.closest("[data-area-sort]");
+    if (s) {
+      var k = s.getAttribute("data-area-sort");
+      areaSort = areaSort.key === k ? { key: k, dir: -areaSort.dir } : { key: k, dir: k === "area" || k === "county" ? 1 : -1 };
+      renderArea();
+      return;
+    }
+    if (e.target.closest("[data-area-all]")) { areaAll = true; renderArea(); return; }
+    var tr = e.target.closest("tr[data-city]");
+    if (tr) pickCity(tr.getAttribute("data-city"));
+  });
+  el.area.addEventListener("keydown", function (e) {
+    var tr = e.target.closest("tr[data-city]");
+    if (tr && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); pickCity(tr.getAttribute("data-city")); }
+  });
+  function pickCity(city) {
+    var s = TX.serializeState(state);
+    s.place = { kind: "city", value: city, label: city };
+    view = "list";
+    track("area_pick", city);
+    onFilterChange(s, "area");
   }
 
   function filterCount() {
@@ -474,6 +598,7 @@
   }
 
   function reveal(id) {
+    if (view === "area") { view = "list"; refresh(); }
     var eid = entryIdFor(id);
     var i = entries.findIndex(function (e) { return e.id === eid; });
     if (i < 0) return;

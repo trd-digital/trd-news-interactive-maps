@@ -5,7 +5,7 @@
 (function () {
   "use strict";
 
-  var TOKEN = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
+  var TOKEN = TX.MAPBOX_TOKEN;
   var STYLES = { light: "mapbox://styles/mapbox/light-v11", dark: "mapbox://styles/mapbox/dark-v11" };
   var SOFLA_BOUNDS = [[-80.95, 25.1], [-79.95, 27.0]];
 

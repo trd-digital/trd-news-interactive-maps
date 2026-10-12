@@ -14,6 +14,9 @@
   "use strict";
 
   var DATA_FILE = "south-florida-transactions.json";
+  // Public (pk.) Mapbox token — the same one the existing TRD data maps use;
+  // shared by the map and the static aerial thumbnails.
+  var MAPBOX_TOKEN = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
   var NS = "trd-sofla-tx";
 
   var COUNTIES = ["Miami-Dade", "Broward", "Palm Beach"];
@@ -961,7 +964,33 @@
     return true;
   }
 
+  // Satellite thumbnail of a sale (Mapbox Static Images), pin at the parcel.
+  function aerialUrl(r, w, h, zoom) {
+    if (!r || !r.located) return null;
+    var ll = r.lng.toFixed(5) + "," + r.lat.toFixed(5);
+    return "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/static/pin-s+eb6834(" + ll + ")/" +
+      ll + "," + (zoom || 17) + ",0/" + w + "x" + h + "@2x?access_token=" + MAPBOX_TOKEN;
+  }
+
+  // Per-viewer UI preferences (not shared, not required to work).
+  var prefs = {
+    get: function (k, dflt) {
+      try {
+        var v = global.localStorage.getItem("trd-sofla-tx:" + k);
+        return v == null ? dflt : JSON.parse(v);
+      } catch (e) {
+        return dflt;
+      }
+    },
+    set: function (k, v) {
+      try { global.localStorage.setItem("trd-sofla-tx:" + k, JSON.stringify(v)); } catch (e) {}
+    },
+  };
+
   global.TX = {
+    MAPBOX_TOKEN: MAPBOX_TOKEN,
+    aerialUrl: aerialUrl,
+    prefs: prefs,
     hasPrevSale: hasPrevSale,
     partyRows: partyRows,
     partyLine: partyLine,
@@ -988,6 +1017,7 @@
     dateRangeLabel: dateRangeLabel,
     coverageGaps: coverageGaps,
     isoAdd: isoAdd,
+    isoToDate: parseISO,
     parsePrice: parsePrice,
     parsePriceInfo: parsePriceInfo,
     notify: notify,

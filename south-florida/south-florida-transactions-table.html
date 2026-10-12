@@ -7,7 +7,7 @@
     <title>South Florida Sales Table - The Real Deal</title>
     <link rel="icon" type="image/x-icon" href="https://therealdeal.com/favicon.ico" />
     <link rel="canonical" href="https://therealdeal.com/data/miami/2024/priciest-south-florida-sales/" />
-    <link rel="stylesheet" href="transactions/tx.css?v=8" />
+    <link rel="stylesheet" href="transactions/tx.css?v=9" />
 
     <!-- Google Tag Manager -->
     <script>
@@ -52,10 +52,26 @@
       </section>
       <div class="tx-active tx-active-table" aria-label="Active filters" hidden></div>
 
+      <section class="tx-insights" aria-labelledby="tx-insights-h">
+        <h2 id="tx-insights-h" class="tx-insights-h">
+          <button type="button" class="tx-insights-toggle" aria-expanded="true" aria-controls="tx-insights-body">
+            Market overview
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l5 5 5-5" /></svg>
+          </button>
+          <span class="tx-insights-range"></span>
+        </h2>
+        <div id="tx-insights-body" class="tx-insights-body">
+          <div class="tx-pulse"></div>
+          <h3 class="tx-subhead">Top deals</h3>
+          <div class="tx-deals" role="list"></div>
+        </div>
+      </section>
+
       <div class="tx-toolbar">
         <div class="tx-tabs" role="tablist" aria-label="Sort sales">
           <button type="button" class="tx-tab" role="tab" data-tab="latest">Latest</button>
           <button type="button" class="tx-tab" role="tab" data-tab="biggest">Biggest</button>
+          <button type="button" class="tx-tab" role="tab" data-tab="area">By area</button>
         </div>
         <span class="tx-summary" aria-live="polite"></span>
         <span class="tx-spacer"></span>
@@ -68,6 +84,7 @@
           <tbody></tbody>
         </table>
         <ul class="tx-cards"></ul>
+        <div class="tx-area" hidden></div>
         <div class="tx-loading"><span class="tx-spinner" aria-hidden="true"></span><span>Loading recent sales…</span></div>
       </div>
       <div class="tx-pager"></div>
@@ -76,9 +93,10 @@
 
     <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
     <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
-    <script src="transactions/tx-core.js?v=8"></script>
-    <script src="transactions/tx-search.js?v=8"></script>
-    <script src="transactions/tx-charts.js?v=8"></script>
-    <script src="transactions/tx-table.js?v=8"></script>
+    <script src="transactions/tx-core.js?v=9"></script>
+    <script src="transactions/tx-search.js?v=9"></script>
+    <script src="transactions/tx-charts.js?v=9"></script>
+    <script src="transactions/tx-insights.js?v=9"></script>
+    <script src="transactions/tx-table.js?v=9"></script>
   </body>
 </html>
