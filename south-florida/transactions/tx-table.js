@@ -240,13 +240,15 @@
   function renderAssemblage(a) {
     var open = a.id === openId;
     var n = a.members.length;
-    var badge = '<span class="tx-assm">Assemblage · ' + n + " deeds</span>";
+    var badge = '<span class="tx-assm">' + fmt.escape(a.label) + "</span>";
     var lead = a.lead.address ? fmt.escape(a.lead.address) : "Address unavailable";
     var more = " + " + (n - 1) + " more";
     var anyMapped = a.members.some(function (m) { return m.located; });
     var membersHtml =
-      '<p class="tx-assm-note">Separate deeds recorded together on ' + fmt.date(a.date) +
-      ". The total adds up the individual deed prices.</p>" +
+      '<p class="tx-assm-note">' + (a.type === "building"
+        ? "Units in one building bought by the same buyer on " + fmt.date(a.date)
+        : "Adjacent parcels bought by related buyers on " + fmt.date(a.date)) +
+      ", each on its own deed. The total adds up the individual deed prices.</p>" +
       '<table class="tx-members"><thead><tr><th scope="col">Property</th><th scope="col" class="num">Price</th><th scope="col">Buyer</th><th scope="col">Seller</th><th scope="col"><span class="tx-sr">Links</span></th></tr></thead><tbody>' +
       a.members.map(function (m) {
         var links = "";

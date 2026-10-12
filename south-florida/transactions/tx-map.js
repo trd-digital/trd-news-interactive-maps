@@ -413,7 +413,8 @@
       '<div class="tx-detail-body"><div class="tx-price">' + fmt.money(r.price) + "</div>" +
       '<div class="tx-tags">' + tags + "</div>" +
       (asm ? '<button type="button" class="tx-assm-link" data-act="assemblage" data-aid="' + fmt.escape(asm.id) + '">' +
-        '<span class="tx-assm">Assemblage</span>One of ' + asm.members.length + " deeds recorded together · " +
+        '<span class="tx-assm">' + (asm.type === "building" ? "Building purchase" : "Assemblage") + "</span>One of " +
+        asm.members.length + (asm.type === "building" ? " units bought together · " : " deeds recorded together · ") +
         fmt.moneyShort(asm.price) + " combined ›</button>" : "") +
       '<dl class="tx-dl">' + rows.map(function (x) { return "<dt>" + x[0] + "</dt><dd>" + x[1] + "</dd>"; }).join("") + "</dl>" +
       (actions ? '<div class="tx-actions">' + actions + "</div>" : "") + "</div>";
@@ -496,12 +497,13 @@
     highlight();
     var mapped = a.members.filter(function (r) { return r.located; });
     el.detail.innerHTML =
-      '<div class="tx-detail-head"><h2 id="tx-detail-title"><span class="tx-assm">Assemblage · ' + a.members.length + " deeds</span><br>" +
+      '<div class="tx-detail-head"><h2 id="tx-detail-title"><span class="tx-assm">' + fmt.escape(a.label) + "</span><br>" +
       fmt.escape(a.lead.address || "Address unavailable") + " and " + (a.members.length - 1) + " more" +
       '<span class="tx-sub">' + fmt.escape(a.county) + " · recorded " + fmt.date(a.date) + "</span></h2>" +
       '<button type="button" class="tx-close" aria-label="Close">×</button></div>' +
       '<div class="tx-detail-body"><div class="tx-price">' + fmt.money(a.price) + ' <span class="tx-muted" style="font-size:13px;font-weight:400">combined</span></div>' +
-      '<p class="tx-assm-note">Separate deeds recorded together. The total adds up the individual deed prices.' +
+      '<p class="tx-assm-note">' + (a.type === "building" ? "Units in one building bought by the same buyer the same day" : "Adjacent parcels bought by related buyers the same day") +
+      ", each on its own deed. The total adds up the individual deed prices." +
       (mapped.length < a.members.length ? " " + (a.members.length - mapped.length) + " without a mappable address." : "") + "</p>" +
       '<dl class="tx-dl"><dt>Buyers</dt><dd>' + a.buyers.map(function (b) { return fmt.escape(fmt.party(b)); }).join("<br>") +
       "</dd><dt>Sellers</dt><dd>" + a.sellers.map(function (s) { return fmt.escape(fmt.party(s)); }).join("<br>") + "</dd></dl>" +

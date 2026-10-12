@@ -216,10 +216,36 @@
         m[0].assemblageId = null;
         return;
       }
+      // The feed groups by county + record date + buyer name stem, which also
+      // catches builders' daily closings and iBuyer batches miles apart. Only
+      // a tight cluster is an assemblage; anything wider stays as single deeds.
+      var span = spanKm(m);
+      if (span > ASSEMBLAGE_MAX_KM) {
+        m.forEach(function (r) { r.assemblageId = null; });
+        return;
+      }
       m.sort(function (a, b) { return b.price - a.price; });
-      out[id] = assemblage(id, m);
+      out[id] = assemblage(id, m, span != null && span < SAME_BUILDING_KM ? "building" : "assemblage");
     });
     return out;
+  }
+
+  var ASSEMBLAGE_MAX_KM = 0.5;
+  var SAME_BUILDING_KM = 0.03;
+
+  // Largest distance between any two mappable members (null if < 2 mappable).
+  function spanKm(members) {
+    var pts = members.filter(function (r) { return r.located; });
+    if (pts.length < 2) return null;
+    var max = 0;
+    for (var i = 0; i < pts.length; i++) {
+      for (var j = i + 1; j < pts.length; j++) {
+        var kx = 111.32 * Math.cos((pts[i].lat * Math.PI) / 180);
+        var d = Math.hypot((pts[j].lng - pts[i].lng) * kx, (pts[j].lat - pts[i].lat) * 110.57);
+        if (d > max) max = d;
+      }
+    }
+    return max;
   }
 
   function uniq(list) {
@@ -233,11 +259,13 @@
     return out;
   }
 
-  function assemblage(id, members) {
+  function assemblage(id, members, type) {
     var cats = uniq(members.map(function (r) { return r.category; }));
     var lead = members[0];
     return {
       kind: "assemblage",
+      type: type, // "assemblage" (adjacent parcels) | "building" (units in one building)
+      label: type === "building" ? "Building purchase · " + members.length + " units" : "Assemblage · " + members.length + " deeds",
       id: id,
       members: members,
       price: members.reduce(function (s, r) { return s + r.price; }, 0),
