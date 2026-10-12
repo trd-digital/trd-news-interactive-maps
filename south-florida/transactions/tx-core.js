@@ -577,6 +577,10 @@
     var party = opts.ignoreQuery ? null : state.party;
     var bb = opts.ignoreBbox ? null : state.bbox;
     var placeCity = place && place.kind === "city" ? place.value.toLowerCase() : null;
+    // Only Broward records carry a ZIP; with outlines loaded a ZIP search
+    // also matches sales located inside that ZIP in every county.
+    var zipShape = place && place.kind === "zip" ? boundaryFor(place) : null;
+    var cityShape = place && place.kind === "city" ? boundaryFor(place) : null;
     return rows.filter(function (r) {
       if (r.date < from || r.date > to) return false;
       if (r.price < min || r.price > max) return false;
@@ -585,7 +589,11 @@
       if (state.financed === "financed" && !r.financed) return false;
       if (state.financed === "cash" && r.financed) return false;
       if (place) {
-        if (placeCity ? (r.city || "").toLowerCase() !== placeCity : r.zip !== place.value) return false;
+        if (placeCity) {
+          // The record's city, or — when it has none — inside the city outline.
+          if ((r.city || "").toLowerCase() !== placeCity && !(!r.city && cityShape && r.located && inFeature(cityShape, r.lng, r.lat))) return false;
+        }
+        else if (r.zip !== place.value && !(zipShape && r.located && inFeature(zipShape, r.lng, r.lat))) return false;
       }
       if (party && r._partyKeys.indexOf(party.key) < 0) return false;
       if (state.useType && USE_TYPES[state.useType] && !USE_TYPES[state.useType].test(r)) return false;
@@ -999,6 +1007,67 @@
     return true;
   }
 
+  // --------------------------------------------------------------- boundaries
+  // City and ZIP outlines (Census TIGERweb, simplified; built by
+  // build_boundaries.py). Loaded on demand — only when a city/ZIP is searched.
+  var BOUNDARY_FILE = "south-florida-boundaries.geojson";
+  var boundaries = { loaded: false, promise: null, city: {}, zip: {} };
+  function cityKey(s) {
+    return String(s || "").toLowerCase().replace(/[^a-z]/g, "");
+  }
+  function loadBoundaries() {
+    if (boundaries.promise) return boundaries.promise;
+    boundaries.promise = fetch(BOUNDARY_FILE).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    }).then(function (fc) {
+      fc.features.forEach(function (f) {
+        f.bbox = geomBBox(f.geometry);
+        var p = f.properties;
+        if (p.kind === "city") boundaries.city[cityKey(p.name)] = f;
+        else boundaries.zip[p.name] = f;
+      });
+      boundaries.loaded = true;
+      return boundaries;
+    }).catch(function (e) {
+      boundaries.promise = null; // allow a retry later
+      throw e;
+    });
+    return boundaries.promise;
+  }
+  function boundaryFor(place) {
+    if (!place || !boundaries.loaded) return null;
+    return place.kind === "zip" ? boundaries.zip[place.value] || null : boundaries.city[cityKey(place.value)] || null;
+  }
+  function geomBBox(g) {
+    var b = [180, 90, -180, -90];
+    (g.type === "Polygon" ? [g.coordinates] : g.coordinates).forEach(function (poly) {
+      poly[0].forEach(function (pt) {
+        if (pt[0] < b[0]) b[0] = pt[0];
+        if (pt[1] < b[1]) b[1] = pt[1];
+        if (pt[0] > b[2]) b[2] = pt[0];
+        if (pt[1] > b[3]) b[3] = pt[1];
+      });
+    });
+    return b;
+  }
+  // Even-odd ray casting over a (Multi)Polygon, holes included.
+  function inFeature(f, lng, lat) {
+    var b = f.bbox;
+    if (lng < b[0] || lng > b[2] || lat < b[1] || lat > b[3]) return false;
+    var polys = f.geometry.type === "Polygon" ? [f.geometry.coordinates] : f.geometry.coordinates;
+    var inside = false;
+    polys.forEach(function (rings) {
+      rings.forEach(function (ring) {
+        for (var i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+          var xi = ring[i][0], yi = ring[i][1], xj = ring[j][0], yj = ring[j][1];
+          if ((yi > lat) !== (yj > lat) && lng < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) inside = !inside;
+        }
+      });
+    });
+    return inside;
+  }
+
   // Satellite thumbnail of a sale (Mapbox Static Images), pin at the parcel.
   function aerialUrl(r, w, h, zoom) {
     if (!r || !r.located) return null;
@@ -1025,6 +1094,10 @@
   global.TX = {
     MAPBOX_TOKEN: MAPBOX_TOKEN,
     aerialUrl: aerialUrl,
+    loadBoundaries: loadBoundaries,
+    boundaryFor: boundaryFor,
+    boundaries: boundaries,
+    inFeature: inFeature,
     prefs: prefs,
     hasPrevSale: hasPrevSale,
     partyRows: partyRows,

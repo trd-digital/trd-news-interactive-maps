@@ -211,6 +211,10 @@
   // ------------------------------------------------------------------ render
   function refresh() {
     if (!data) return;
+    // ZIP filters need the outlines (most records have no ZIP); load, then redo.
+    if (state.place && state.place.kind === "zip" && !TX.boundaries.loaded) {
+      TX.loadBoundaries().then(refresh).catch(function () {});
+    }
     rows = TX.apply(data.rows, state, data.asOf);
     entries = TX.toEntries(rows, data).sort(compare);
     var pages = Math.max(1, Math.ceil(entries.length / PAGE_SIZE));

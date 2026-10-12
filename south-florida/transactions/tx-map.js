@@ -50,7 +50,12 @@
     var key = mapOpts.base === "satellite" ? "dark" : theme;
     var cat = Object.assign({}, COLORS[key]);
     if (mapOpts.base === "satellite") { cat.ring = "#ffffff"; cat.sel = "#ffffff"; }
-    return { cat: cat, tiers: TIER_RAMP[key], heat: HEAT_RAMP[key] };
+    var area = mapOpts.base === "satellite"
+      ? { line: "#ffffff", fill: "#ffffff", mask: "#000000", maskOpacity: 0.45 }
+      : theme === "dark"
+        ? { line: "#86b6ef", fill: "#86b6ef", mask: "#000000", maskOpacity: 0.45 }
+        : { line: "#1a5fb4", fill: "#1a5fb4", mask: "#ffffff", maskOpacity: 0.55 };
+    return { cat: cat, tiers: TIER_RAMP[key], heat: HEAT_RAMP[key], area: area };
   }
   function tierIndex(price) {
     var i = 0;
@@ -302,6 +307,7 @@
       (unclassified.length ? " · " + unclassified.join(" and ") + " sales aren’t classified by type yet, so type filters leave them out" : ""));
     renderEmpty(visible.length, located.length);
     updateListBtn();
+    drawArea();
     renderLegend();
     setSource(located);
     if (opts && opts.fit) fitTo(located, opts.animate);
@@ -380,7 +386,13 @@
   }
 
   function fitTo(rows, animate) {
-    if (!map || !rows.length) return;
+    if (!map) return;
+    var shape = TX.boundaryFor(state.place);
+    if (shape) {
+      map.fitBounds([[shape.bbox[0], shape.bbox[1]], [shape.bbox[2], shape.bbox[3]]], { padding: compact ? 16 : 40, duration: animate ? 700 : 0 });
+      return;
+    }
+    if (!rows.length) return;
     var b = new mapboxgl.LngLatBounds();
     rows.forEach(function (r) { b.extend([r.lng, r.lat]); });
     map.fitBounds(b, { padding: compact ? 24 : 56, maxZoom: 15, duration: animate ? 700 : 0 });
@@ -505,6 +517,31 @@
     if (!map) return;
     // Areas (ZIP, neighborhood, city) filter to their bounds, which also
     // covers counties whose records lack city/ZIP; addresses just fly there.
+    if (/postcode|place|locality/.test(g.type)) {
+      var exact = TX.loadBoundaries().then(function () {
+        var place = g.type === "postcode" ? { kind: "zip", value: g.label, label: "ZIP " + g.label } : { kind: "city", value: g.label, label: g.label };
+        return TX.boundaryFor(place) ? place : null;
+      }).catch(function () { return null; });
+      exact.then(function (place) {
+        if (place) {
+          var s2 = getState();
+          s2.place = place;
+          s2.bbox = null;
+          s2.bboxLabel = null;
+          s2.q = "";
+          box.set("");
+          if (goMarker) { goMarker.remove(); goMarker = null; }
+          track("geocode_boundary", g.type);
+          onFilterChange(s2, "geo_place", { fit: true });
+        } else {
+          goToArea(g);
+        }
+      });
+      return;
+    }
+    goToArea(g);
+  }
+  function goToArea(g) {
     if (g.bbox && /postcode|neighborhood|locality|place/.test(g.type)) {
       var s = getState();
       s.bbox = g.bbox.map(function (v) { return +(+v).toFixed(5); });
@@ -813,6 +850,13 @@
       map.addSource("tx", { type: "geojson", data: toFeatures(visible.filter(function (r) { return r.located; })) });
     }
     if (!map.getSource("tx-asm")) map.addSource("tx-asm", { type: "geojson", data: hullFeatures() });
+    var ad = areaData();
+    if (!map.getSource("tx-area")) map.addSource("tx-area", { type: "geojson", data: ad.area });
+    if (!map.getSource("tx-mask")) map.addSource("tx-mask", { type: "geojson", data: ad.mask });
+    // Searched city / ZIP: dim everything outside it, shade and outline it.
+    map.addLayer({ id: "tx-mask-fill", type: "fill", source: "tx-mask", paint: { "fill-color": p.area.mask, "fill-opacity": p.area.maskOpacity } });
+    map.addLayer({ id: "tx-area-fill", type: "fill", source: "tx-area", paint: { "fill-color": p.area.fill, "fill-opacity": 0.07 } });
+    map.addLayer({ id: "tx-area-line", type: "line", source: "tx-area", paint: { "line-color": p.area.line, "line-width": 2.5 } });
     // Assemblage footprints (approximate: padded hull around member parcels).
     map.addLayer({ id: "tx-asm-fill", type: "fill", source: "tx-asm", minzoom: 12,
       paint: { "fill-color": p.cat.sel, "fill-opacity": 0.06 } });
@@ -873,6 +917,29 @@
     map.setPaintProperty("tx-points", "circle-stroke-opacity", mapOpts.view === "density" ? ["interpolate", ["linear"], ["zoom"], 11, 0, 12.5, 1] : 1);
     map.setLayoutProperty("tx-heat", "visibility", mapOpts.view === "density" ? "visible" : "none");
     if (data) renderLegend();
+  }
+
+  // ------------------------------------------------------ searched area
+  var EMPTY_FC = { type: "FeatureCollection", features: [] };
+  function areaData() {
+    var f = TX.boundaryFor(state.place);
+    if (!f) return { area: EMPTY_FC, mask: EMPTY_FC };
+    var outers = f.geometry.type === "Polygon" ? [f.geometry.coordinates[0]] : f.geometry.coordinates.map(function (p) { return p[0]; });
+    var world = [[-180, -85], [180, -85], [180, 85], [-180, 85], [-180, -85]];
+    return {
+      area: { type: "FeatureCollection", features: [f] },
+      mask: { type: "FeatureCollection", features: [{ type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [world].concat(outers) } }] },
+    };
+  }
+  function drawArea() {
+    if (state.place && !TX.boundaries.loaded) {
+      TX.loadBoundaries().then(function () { refresh({ fit: true, animate: true }); }).catch(function () {});
+      return;
+    }
+    if (!map || !map.getSource("tx-area")) return;
+    var ad = areaData();
+    map.getSource("tx-area").setData(ad.area);
+    map.getSource("tx-mask").setData(ad.mask);
   }
 
   // ------------------------------------------------- assemblage footprints
