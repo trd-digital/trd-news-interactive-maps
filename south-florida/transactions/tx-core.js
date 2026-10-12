@@ -17,6 +17,12 @@
   var NS = "trd-sofla-tx";
 
   var COUNTIES = ["Miami-Dade", "Broward", "Palm Beach"];
+  // Counties whose scraped deeds don't record which party is the grantor:
+  // roughly half of Miami-Dade rows have buyer/seller flipped (Oct 2026), so
+  // the UI shows "Parties" without roles. A producer `party_direction` field
+  // ("verified" | "unknown") overrides this per row once it exists.
+  var UNDIRECTED_COUNTIES = ["Miami-Dade"];
+  var PARTY_NOTE = "County records for this sale don’t yet say which party bought and which sold.";
   var CATEGORIES = ["Residential", "Commercial", "Multifamily", "Land", "Other"];
   // Map color groups. A dense point map can only carry three distinguishable
   // hues (dataviz all-pairs gate), so Multifamily shares Commercial's color
@@ -146,6 +152,7 @@
       parcelUrl: p.parcel_url || null,
       parcelCount: +p.parcel_count || 1,
       assemblageId: p.assemblage_id || null,
+      partiesDirected: p.party_direction ? p.party_direction !== "unknown" : UNDIRECTED_COUNTIES.indexOf(p.county) < 0,
       lng: located ? +g[0] : null,
       lat: located ? +g[1] : null,
       located: located,
@@ -275,6 +282,8 @@
       colorGroup: cats.length === 1 ? lead.colorGroup : "other",
       buyers: uniq(members.map(function (r) { return r.buyer; })),
       sellers: uniq(members.map(function (r) { return r.seller; })),
+      parties: uniq(members.reduce(function (l, r) { return l.concat([r.buyer, r.seller]); }, [])),
+      partiesDirected: members.every(function (r) { return r.partiesDirected; }),
       financed: members.some(function (r) { return r.financed; }),
       lead: lead,
       address: lead.address,
@@ -298,11 +307,30 @@
     return out;
   }
 
+  // Label/value pairs for a deed's parties; roles only when the county
+  // records them reliably.
+  function partyRows(r) {
+    if (r.partiesDirected) {
+      return [["Buyer", fmt.escape(fmt.party(r.buyer))], ["Seller", fmt.escape(fmt.party(r.seller))]];
+    }
+    return [["Parties", [r.buyer, r.seller].filter(Boolean).map(function (x) { return fmt.escape(fmt.party(x)); }).join("<br>") +
+      '<span class="tx-addr-sub">' + PARTY_NOTE + "</span>"]];
+  }
+
+  // One-line party text for lists: "Buyer Name" or "Name A · Name B".
+  function partyLine(r) {
+    return r.partiesDirected ? fmt.party(r.buyer) : [r.buyer, r.seller].filter(Boolean).map(fmt.party).join(" · ");
+  }
+
   // "MM Real Estate Acquisitions LLC + 2 related buyers"
   function partySummary(list, noun) {
     if (!list.length) return "—";
     var first = fmt.party(list[0]);
-    return list.length === 1 ? first : first + " + " + (list.length - 1) + " related " + noun + (list.length > 2 ? "s" : "");
+    if (list.length === 1) return first;
+    var n = list.length - 1;
+    // Undirected "parties" mix both sides of the deals, so they aren't "related".
+    if (noun === "party") return first + " + " + n + (n === 1 ? " other" : " others");
+    return first + " + " + n + " related " + noun + (n > 1 ? "s" : "");
   }
 
   // ------------------------------------------------------------ filter model
@@ -596,11 +624,13 @@
       return data.latestByCounty[c] && data.latestByCounty[c] < data.asOf;
     });
     var t = "Recorded through " + fmt.date(data.asOf);
+    var undirected = data.rows.some(function (r) { return !r.partiesDirected; });
     if (lag.length) {
       t += " (" + lag.map(function (c) {
         return c + " through " + fmt.dateShort(data.latestByCounty[c]);
       }).join(", ") + ")";
     }
+    if (undirected) t += ". Buyer and seller roles aren’t yet available for Miami-Dade deeds";
     return t;
   }
 
@@ -615,6 +645,9 @@
 
   global.TX = {
     hasPrevSale: hasPrevSale,
+    partyRows: partyRows,
+    partyLine: partyLine,
+    PARTY_NOTE: PARTY_NOTE,
     toEntries: toEntries,
     partySummary: partySummary,
     COUNTIES: COUNTIES,

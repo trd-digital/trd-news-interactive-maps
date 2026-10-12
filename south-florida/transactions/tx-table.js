@@ -218,8 +218,7 @@
         "<td>" + fmt.escape(r.county) + "</td>" +
         "<td>" + catCell(r) + "</td>" +
         '<td class="num"><strong>' + fmt.money(r.price) + "</strong></td>" +
-        '<td class="tx-party">' + fmt.escape(fmt.party(r.buyer)) + "</td>" +
-        '<td class="tx-party">' + fmt.escape(fmt.party(r.seller)) + "</td>" +
+        partyCells(r) +
         "<td>" + (r.financed ? (r.loan ? fmt.moneyShort(r.loan) : "Yes") : '<span class="tx-muted">—</span>') + "</td></tr>";
       if (open) html += '<tr class="tx-expand"><td colspan="' + COLS.length + '">' + detailList(r) + actions(r) + "</td></tr>";
 
@@ -228,8 +227,7 @@
         '<span class="tx-card-price">' + fmt.moneyShort(r.price) + "</span></div>" +
         '<div class="tx-card-meta"><span>' + fmt.date(r.date) + "</span>" + catCell(r) +
         "<span>" + (r.financed ? "Financed" : "No mortgage recorded") + "</span></div>" +
-        '<div class="tx-card-parties"><strong>Buyer:</strong> ' + fmt.escape(fmt.party(r.buyer)) +
-        "<br><strong>Seller:</strong> " + fmt.escape(fmt.party(r.seller)) + "</div>" +
+        '<div class="tx-card-parties">' + cardParties(r) + "</div>" +
         "<details" + (open ? " open" : "") + "><summary>Details</summary>" + detailList(r) + actions(r) + "</details></li>";
     });
     el.tbody.innerHTML = html;
@@ -246,10 +244,10 @@
     var anyMapped = a.members.some(function (m) { return m.located; });
     var membersHtml =
       '<p class="tx-assm-note">' + (a.type === "building"
-        ? "Units in one building bought by the same buyer on " + fmt.date(a.date)
-        : "Adjacent parcels bought by related buyers on " + fmt.date(a.date)) +
+        ? "Units in one building recorded to the same " + (a.partiesDirected ? "buyer" : "party") + " on " + fmt.date(a.date)
+        : "Adjacent parcels recorded to related " + (a.partiesDirected ? "buyers" : "parties") + " on " + fmt.date(a.date)) +
       ", each on its own deed. The total adds up the individual deed prices.</p>" +
-      '<table class="tx-members"><thead><tr><th scope="col">Property</th><th scope="col" class="num">Price</th><th scope="col">Buyer</th><th scope="col">Seller</th><th scope="col"><span class="tx-sr">Links</span></th></tr></thead><tbody>' +
+      '<table class="tx-members"><thead><tr><th scope="col">Property</th><th scope="col" class="num">Price</th>' + (a.partiesDirected ? '<th scope="col">Buyer</th><th scope="col">Seller</th>' : '<th scope="col" colspan="2">Parties</th>') + '<th scope="col"><span class="tx-sr">Links</span></th></tr></thead><tbody>' +
       a.members.map(function (m) {
         var links = "";
         if (m.parcelUrl) links += '<a href="' + fmt.escape(m.parcelUrl) + '" target="_blank" rel="noopener">Record ↗</a> ';
@@ -257,8 +255,7 @@
         return '<tr' + (m.id === focusMember ? ' class="is-focus"' : "") + ' data-member="' + fmt.escape(m.id) + '"><td>' + (m.address ? fmt.escape(m.address) : '<span class="tx-muted">Address unavailable</span>') +
           '<span class="tx-addr-sub">' + fmt.escape(m.category) + (m.date !== a.date ? " · " + fmt.dateShort(m.date) : "") + "</span></td>" +
           '<td class="num">' + fmt.money(m.price) + "</td>" +
-          '<td class="tx-party">' + fmt.escape(fmt.party(m.buyer)) + "</td>" +
-          '<td class="tx-party">' + fmt.escape(fmt.party(m.seller)) + "</td><td>" + links + "</td></tr>";
+          partyCells(m) + "<td>" + links + "</td></tr>";
       }).join("") + "</tbody></table>" +
       (anyMapped && peer.hasPeer("map") ? '<div class="tx-actions"><button type="button" class="tx-btn" data-act="map-assemblage" data-id="' + fmt.escape(a.id) + '">Show all on map</button></div>' : "");
 
@@ -268,8 +265,10 @@
       "<td>" + fmt.escape(a.county) + "</td>" +
       "<td>" + catCell(a) + "</td>" +
       '<td class="num"><strong>' + fmt.money(a.price) + '</strong><span class="tx-addr-sub">combined</span></td>' +
-      '<td class="tx-party">' + fmt.escape(TX.partySummary(a.buyers, "buyer")) + "</td>" +
-      '<td class="tx-party">' + fmt.escape(TX.partySummary(a.sellers, "seller")) + "</td>" +
+      (a.partiesDirected
+        ? '<td class="tx-party">' + fmt.escape(TX.partySummary(a.buyers, "buyer")) + "</td>" +
+          '<td class="tx-party">' + fmt.escape(TX.partySummary(a.sellers, "seller")) + "</td>"
+        : '<td class="tx-party" colspan="2"><span class="tx-muted">Parties:</span> ' + fmt.escape(TX.partySummary(a.parties, "party")) + "</td>") +
       "<td>" + (a.financed ? "Some" : '<span class="tx-muted">—</span>') + "</td></tr>";
     if (open) row += '<tr class="tx-expand"><td colspan="' + COLS.length + '">' + membersHtml + "</td></tr>";
 
@@ -277,10 +276,29 @@
       '<div class="tx-card-top"><span class="tx-addr">' + lead + '<span class="tx-addr-sub">' + more + " · " + fmt.escape(a.county) + "</span></span>" +
       '<span class="tx-card-price">' + fmt.moneyShort(a.price) + '<span class="tx-addr-sub">combined</span></span></div>' +
       '<div class="tx-card-meta"><span>' + fmt.date(a.date) + "</span>" + catCell(a) + "</div>" +
-      '<div class="tx-card-parties"><strong>Buyers:</strong> ' + fmt.escape(TX.partySummary(a.buyers, "buyer")) +
-      "<br><strong>Sellers:</strong> " + fmt.escape(TX.partySummary(a.sellers, "seller")) + "</div>" +
+      '<div class="tx-card-parties">' + (a.partiesDirected
+        ? "<strong>Buyers:</strong> " + fmt.escape(TX.partySummary(a.buyers, "buyer")) +
+          "<br><strong>Sellers:</strong> " + fmt.escape(TX.partySummary(a.sellers, "seller"))
+        : "<strong>Parties:</strong> " + fmt.escape(TX.partySummary(a.parties, "party"))) + "</div>" +
       "<details" + (open ? " open" : "") + "><summary>All " + n + " deeds</summary>" + membersHtml + "</details></li>";
     return { row: row, card: card };
+  }
+
+  // Buyer + Seller cells, or one spanning "Parties" cell when roles are unknown.
+  function partyCells(r) {
+    if (r.partiesDirected) {
+      return '<td class="tx-party">' + fmt.escape(fmt.party(r.buyer)) + "</td>" +
+        '<td class="tx-party">' + fmt.escape(fmt.party(r.seller)) + "</td>";
+    }
+    return '<td class="tx-party" colspan="2" title="' + fmt.escape(TX.PARTY_NOTE) + '"><span class="tx-muted">Parties:</span> ' +
+      fmt.escape(TX.partyLine(r)) + "</td>";
+  }
+
+  function cardParties(r) {
+    if (r.partiesDirected) {
+      return "<strong>Buyer:</strong> " + fmt.escape(fmt.party(r.buyer)) + "<br><strong>Seller:</strong> " + fmt.escape(fmt.party(r.seller));
+    }
+    return "<strong>Parties:</strong> " + fmt.escape(TX.partyLine(r));
   }
 
   function renderPager(pages) {
@@ -386,10 +404,10 @@
   // ------------------------------------------------------------------ CSV
   el.csv.hidden = !csvEnabled;
   el.csv.addEventListener("click", function () {
-    var head = ["Recorded", "Address", "City", "ZIP", "County", "Type", "Price", "Buyer", "Seller", "Financed", "Mortgage", "Previous price", "Previous date", "Parcels", "Parcel ID", "Use code", "Property record", "Assemblage"];
+    var head = ["Recorded", "Address", "City", "ZIP", "County", "Type", "Price", "Buyer", "Seller", "Financed", "Mortgage", "Previous price", "Previous date", "Parcels", "Parcel ID", "Use code", "Property record", "Assemblage", "Buyer/seller roles verified"];
     var lines = [head].concat(rows.map(function (r) {
       return [r.date, r.address, r.city, r.zip, r.county, r.category, r.price, r.buyer, r.seller, r.financed ? "Yes" : "No",
-        r.loan, r.prevPrice, r.prevDate, r.parcelCount, r.parcelId, r.useDetail, r.parcelUrl, r.assemblageId];
+        r.loan, r.prevPrice, r.prevDate, r.parcelCount, r.parcelId, r.useDetail, r.parcelUrl, r.assemblageId, r.partiesDirected ? "Yes" : "No"];
     })).map(function (cols) {
       return cols.map(function (v) {
         v = v == null ? "" : String(v);

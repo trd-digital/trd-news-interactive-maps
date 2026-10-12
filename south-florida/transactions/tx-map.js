@@ -384,11 +384,7 @@
     if (!r.located) tags += '<span class="tx-tag">Not on map</span>';
     var asm = r.assemblageId && data.assemblages[r.assemblageId];
 
-    var rows = [
-      ["Recorded", fmt.date(r.date)],
-      ["Buyer", fmt.escape(fmt.party(r.buyer))],
-      ["Seller", fmt.escape(fmt.party(r.seller))],
-    ];
+    var rows = [["Recorded", fmt.date(r.date)]].concat(TX.partyRows(r));
     if (r.financed && r.loan) rows.push(["Mortgage", fmt.money(r.loan) + (r.price ? ' <span class="tx-muted">(' + Math.round((r.loan / r.price) * 100) + "% of price)</span>" : "")]);
     if (TX.hasPrevSale(r)) {
       var chg = r.prevPrice > 0 ? (r.price - r.prevPrice) / r.prevPrice : null;
@@ -502,15 +498,20 @@
       '<span class="tx-sub">' + fmt.escape(a.county) + " · recorded " + fmt.date(a.date) + "</span></h2>" +
       '<button type="button" class="tx-close" aria-label="Close">×</button></div>' +
       '<div class="tx-detail-body"><div class="tx-price">' + fmt.money(a.price) + ' <span class="tx-muted" style="font-size:13px;font-weight:400">combined</span></div>' +
-      '<p class="tx-assm-note">' + (a.type === "building" ? "Units in one building bought by the same buyer the same day" : "Adjacent parcels bought by related buyers the same day") +
+      '<p class="tx-assm-note">' + (a.type === "building"
+        ? "Units in one building recorded to the same " + (a.partiesDirected ? "buyer" : "party") + " the same day"
+        : "Adjacent parcels recorded to related " + (a.partiesDirected ? "buyers" : "parties") + " the same day") +
       ", each on its own deed. The total adds up the individual deed prices." +
       (mapped.length < a.members.length ? " " + (a.members.length - mapped.length) + " without a mappable address." : "") + "</p>" +
-      '<dl class="tx-dl"><dt>Buyers</dt><dd>' + a.buyers.map(function (b) { return fmt.escape(fmt.party(b)); }).join("<br>") +
-      "</dd><dt>Sellers</dt><dd>" + a.sellers.map(function (s) { return fmt.escape(fmt.party(s)); }).join("<br>") + "</dd></dl>" +
+      '<dl class="tx-dl">' + (a.partiesDirected
+        ? "<dt>Buyers</dt><dd>" + a.buyers.map(function (b) { return fmt.escape(fmt.party(b)); }).join("<br>") +
+          "</dd><dt>Sellers</dt><dd>" + a.sellers.map(function (s) { return fmt.escape(fmt.party(s)); }).join("<br>") + "</dd>"
+        : "<dt>Parties</dt><dd>" + a.parties.map(function (b) { return fmt.escape(fmt.party(b)); }).join("<br>") +
+          '<span class="tx-addr-sub">' + TX.PARTY_NOTE + "</span></dd>") + "</dl>" +
       '<ul class="tx-stack" style="margin-top:12px">' + a.members.map(function (r) {
         return '<li><button type="button" data-pick="' + fmt.escape(r.id) + '"><span class="tx-r-title">' +
           fmt.escape(r.address || "Address unavailable") + " <strong>" + fmt.moneyShort(r.price) + "</strong></span>" +
-          '<span class="tx-r-sub">' + fmt.escape(fmt.party(r.buyer)) + (r.located ? "" : " · not on map") + "</span></button></li>";
+          '<span class="tx-r-sub">' + fmt.escape(TX.partyLine(r)) + (r.located ? "" : " · not on map") + "</span></button></li>";
       }).join("") + "</ul>" +
       (peer.hasPeer("table") ? '<div class="tx-actions"><button type="button" class="tx-btn" data-act="table-assemblage">Show in table</button></div>' : "") +
       "</div>";
