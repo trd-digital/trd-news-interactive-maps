@@ -184,7 +184,7 @@
     var cat = CATEGORIES.indexOf(p.use_category) >= 0 ? p.use_category : "Other";
     var row = {
       id: String(p.id != null ? p.id : i),
-      address: p.address ? fmt.title(p.address) : null,
+      address: p.address && !/^(data not found|not found|unknown|n\/?a|none)$/i.test(String(p.address).trim()) ? fmt.title(p.address) : null,
       city: p.city ? fmt.title(p.city) : null, // Miami-Dade filled from the folio below
       zip: p.zip || null,
       county: p.county,
@@ -542,6 +542,7 @@
     }
     if (/^\d{4}-\d{2}-\d{2}$/.test(q.get("from") || "")) s.dateFrom = q.get("from");
     if (/^\d{4}-\d{2}-\d{2}$/.test(q.get("to") || "")) s.dateTo = q.get("to");
+    if (s.dateFrom && s.dateTo && s.dateFrom > s.dateTo) { var t = s.dateFrom; s.dateFrom = s.dateTo; s.dateTo = t; }
     if (q.get("city")) s.place = { kind: "city", value: fmt.title(q.get("city")), label: fmt.title(q.get("city")) };
     if (/^\d{5}$/.test(q.get("zip") || "")) s.place = { kind: "zip", value: q.get("zip"), label: "ZIP " + q.get("zip") };
     if (USE_TYPES[q.get("use")]) s.useType = q.get("use");
@@ -620,6 +621,18 @@
   // Effective [from, to] for a state (custom range or last N days).
   function dateRange(state, asOf) {
     return [state.dateFrom || cutoff(asOf, state.days), state.dateTo || asOf];
+  }
+  // Fit a custom date range (from a link) into the loaded window: clamp it,
+  // or drop it if it misses the window entirely. Returns true if changed.
+  function fitDates(state, asOf, windowDays) {
+    if (!state.dateFrom && !state.dateTo) return false;
+    var lo = cutoff(asOf, windowDays || 60), from = state.dateFrom, to = state.dateTo;
+    if ((to && to < lo) || (from && from > asOf)) { state.dateFrom = state.dateTo = null; }
+    else {
+      if (from && from < lo) state.dateFrom = lo;
+      if (to && to > asOf) state.dateTo = asOf;
+    }
+    return from !== state.dateFrom || to !== state.dateTo;
   }
   function dateRangeLabel(state, asOf) {
     var r = dateRange(state, asOf);
@@ -1087,6 +1100,10 @@
     // deed itself (its sale date precedes its record date), not a quick flip.
     var gap = (Date.parse(r.date) - Date.parse(r.prevDate)) / 864e5;
     if (gap <= 30 && Math.abs(r.prevPrice - r.price) / r.price <= 0.02) return false;
+    // More than 30x in under 20 years is almost always a partial interest,
+    // a single unit of a later-assembled site or a nominal transfer (e.g. a
+    // $112.6M hotel "previously sold" for $300,100 in 2012), not this property.
+    if (r.price / r.prevPrice > 30 && gap < 20 * 365.25) return false;
     return true;
   }
 
@@ -1195,6 +1212,7 @@
     DAYS: DAYS,
     fmt: fmt,
     load: load,
+    fitDates: fitDates,
     loadRest: function () { return loadPromise ? loadPromise.then(loadRest) : load().then(loadRest); },
     onRest: onRest,
     pendingBefore: pendingBefore,

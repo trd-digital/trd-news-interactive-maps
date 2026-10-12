@@ -1226,6 +1226,7 @@
   }
 
   function prep() {
+    TX.fitDates(state, data.asOf, data.meta.windowDays);
     data.byId = {};
     data.unclassifiedCounties = TX.COUNTIES.filter(function (c) {
       var rs = data.rows.filter(function (r) { return r.county === c; });
