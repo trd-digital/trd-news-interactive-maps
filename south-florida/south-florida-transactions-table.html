@@ -8,7 +8,7 @@
     <title>South Florida Sales Table - The Real Deal</title>
     <link rel="icon" type="image/x-icon" href="https://therealdeal.com/favicon.ico" />
     <link rel="canonical" href="https://therealdeal.com/data/miami/2024/priciest-south-florida-sales/" />
-    <link rel="stylesheet" href="transactions/tx.css?v=20" />
+    <link rel="stylesheet" href="transactions/tx.css?v=21" />
 
     <!-- Google Tag Manager, deferred: tx-core.js calls __txLoadGtm() once the
          sales have rendered (20 s fallback), so tags don't slow the first load. -->
@@ -65,7 +65,9 @@
         </div>
       </section>
 
-      <section class="tx-filters tx-filters-collapsible" aria-label="Search and filter sales">
+      <!-- Search row, pinned to the top of the frame while the reader scrolls
+           (tx-table.js sets .is-stuck and --tx-bar-h). -->
+      <div class="tx-searchbar" role="search" aria-label="Search sales">
         <div class="tx-filters-head">
           <div class="tx-search-wrap">
             <ul id="tx-results" class="tx-results" aria-label="Search suggestions" hidden></ul>
@@ -76,9 +78,11 @@
             <span class="tx-badge" hidden>0</span>
           </button>
         </div>
+        <div class="tx-active tx-active-table" aria-label="Active filters" hidden></div>
+      </div>
+      <section class="tx-filters tx-filters-collapsible" aria-label="Filter sales">
         <div id="tx-filter-host" class="tx-filter-host"></div>
       </section>
-      <div class="tx-active tx-active-table" aria-label="Active filters" hidden></div>
 
 
 
@@ -108,11 +112,11 @@
 
     <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
     <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
-    <script src="transactions/tx-core.js?v=20"></script>
-    <script src="transactions/tx-search.js?v=20"></script>
-    <script src="transactions/tx-charts.js?v=20"></script>
-    <script src="transactions/tx-compare.js?v=20"></script>
-    <script src="transactions/tx-insights.js?v=20"></script>
-    <script src="transactions/tx-table.js?v=20"></script>
+    <script src="transactions/tx-core.js?v=21"></script>
+    <script src="transactions/tx-search.js?v=21"></script>
+    <script src="transactions/tx-charts.js?v=21"></script>
+    <script src="transactions/tx-compare.js?v=21"></script>
+    <script src="transactions/tx-insights.js?v=21"></script>
+    <script src="transactions/tx-table.js?v=21"></script>
   </body>
 </html>

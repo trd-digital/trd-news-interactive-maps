@@ -711,7 +711,7 @@ button {
   border-radius: 12px;
   background: var(--tx-surface);
 }
-.tx-table-app .tx-filters .tx-search {
+.tx-table-app .tx-searchbar .tx-search {
   flex: none;
   max-width: 420px;
 }
@@ -760,7 +760,7 @@ button {
 }
 .tx-table th {
   position: sticky;
-  top: 0;
+  top: var(--tx-bar-h, 0px);
   z-index: 1;
   padding: 8px 10px;
   border-bottom: 2px solid var(--tx-border);
@@ -1177,7 +1177,7 @@ button {
 }
 .tx-active-table {
   flex-wrap: wrap;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 .tx-active-table .tx-active-chip {
   box-shadow: none;
@@ -1270,10 +1270,32 @@ button {
   font-weight: 700;
 }
 
-/* Table: search row + collapsible filters */
+/* Table: search row + collapsible filters. The search row (with the active
+   filter chips) is its own block so it can stay pinned to the top of the
+   frame; at rest it reads as the top of the filter card. */
+html {
+  scroll-padding-top: var(--tx-bar-h, 0px);
+}
+.tx-searchbar {
+  position: sticky;
+  z-index: 7;
+  top: 0;
+  padding: 14px 16px 12px;
+  border: 1px solid var(--tx-border);
+  border-bottom: 0;
+  border-radius: 12px 12px 0 0;
+  background: var(--tx-surface);
+}
+.tx-searchbar.is-stuck {
+  border-radius: 0;
+  /* Cover the page gutters on both sides, then a soft edge below. */
+  box-shadow: -13px 0 0 var(--tx-bg), 13px 0 0 var(--tx-bg), 0 8px 12px -10px rgba(0, 0, 0, 0.35);
+}
 .tx-table-app .tx-filters {
   gap: 0;
-  padding: 14px 16px 16px;
+  padding: 0 16px 16px;
+  border-top: 0;
+  border-radius: 0 0 12px 12px;
 }
 .tx-filters-head {
   display: flex;
@@ -1297,16 +1319,22 @@ button {
   font-size: 14px;
 }
 .tx-filter-host {
-  margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid var(--tx-border);
 }
 .tx-table-app .tx-filters-head .tx-filter-toggle {
   display: none;
 }
+/* Pinned, the toggle jumps back to the filters (they scroll away). */
+.tx-table-app .tx-searchbar.is-stuck .tx-filter-toggle {
+  display: inline-flex;
+}
 @media (max-width: 720px) {
   .tx-table-app .tx-filters-head .tx-filter-toggle {
     display: inline-flex;
+  }
+  .tx-filters-collapsible:not(.is-open) {
+    padding-bottom: 4px;
   }
   .tx-filters-collapsible:not(.is-open) .tx-filter-host {
     display: none;
