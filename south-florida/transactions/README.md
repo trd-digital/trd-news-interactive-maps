@@ -99,8 +99,18 @@ meanwhile; a `?sale=` link to an older sale opens when it arrives). If
 the full file still works.
 
 Load order: `<link rel="preload">` for `-recent`, render, `-older`, then
-Google Tag Manager (deferred in the page head; 20 s fallback) so tags don't
-compete with the data.
+Google Tag Manager and Piano (TRD-3464) together (deferred in the page head;
+20 s fallback) so tags don't compete with the data.
+
+The TRD article keeps each embed invisible until the frame's load event, so
+the map keeps that event light: it shows a still preview of the base map
+(`preview-{light,dark}.webp`, ~25 KB, made once with the Mapbox Static Images
+API and placed to match the live map's opening view, including its
+`maxBounds` clamp), and fetches Mapbox GL (~370 KB) without holding up load,
+running it afterwards (`window.__txMapbox`). The preview fades out once the
+live map has drawn. If the opening bounds, `maxBounds` or base styles change,
+regenerate the previews and update the numbers in the map page's inline
+script.
 
 ### Publishing checklist (for the scheduled job)
 

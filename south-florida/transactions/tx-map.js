@@ -144,6 +144,7 @@
     if (t !== "dark" && t !== "light") return;
     var changed = t !== theme;
     theme = t;
+    TX.prefs.set("theme-seen", t); // the next visit's preview matches
     document.documentElement.setAttribute("data-bs-theme", t);
     document.body.setAttribute("data-bs-theme", t);
     if (map && changed) {
@@ -1213,16 +1214,24 @@
     el.loading.hidden = false;
   }
 
-  var mapReady;
-  if (!window.mapboxgl || !mapboxgl.supported || !mapboxgl.supported()) {
-    showError("This map needs WebGL, which your browser doesn’t support. The sales table on this page lists every sale.");
-    return;
-  }
-  try {
-    mapReady = initMap();
-  } catch (e) {
-    showError("The map couldn’t load. The sales table on this page lists every sale.");
-    return;
+  // Mapbox GL arrives after the page's load event (see the HTML); until the
+  // live map has drawn, the page shows a still preview.
+  var mapReady = (window.__txMapbox || Promise.resolve()).then(function () {
+    if (!window.mapboxgl || !mapboxgl.supported || !mapboxgl.supported()) {
+      throw new Error("This map needs WebGL, which your browser doesn’t support. The sales table on this page lists every sale.");
+    }
+    try {
+      return initMap();
+    } catch (e) {
+      throw new Error("The map couldn’t load. The sales table on this page lists every sale.");
+    }
+  });
+  mapReady.catch(function (e) { showError(e.message); });
+  function hidePreview() {
+    var pv = app.querySelector(".tx-preview");
+    if (!pv) return;
+    pv.classList.add("is-gone");
+    setTimeout(function () { pv.remove(); }, 400);
   }
 
   function prep() {
@@ -1245,6 +1254,7 @@
       el.loading.hidden = true;
       initCompare();
       refresh({ fit: !params.get("sale") });
+      map.once("idle", hidePreview);
       var sale = params.get("sale");
       if (sale && rowById(sale)) select(sale, { fly: true, instant: true });
       track("loaded", data.rows.length);
@@ -1257,6 +1267,7 @@
       });
     })
     .catch(function () {
-      showError("Sales data couldn’t load. Please try again later.");
+      // A map failure is already reported by mapReady's own handler.
+      mapReady.then(function () { showError("Sales data couldn’t load. Please try again later."); }, function () {});
     });
 })();

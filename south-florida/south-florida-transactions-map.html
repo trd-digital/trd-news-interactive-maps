@@ -12,7 +12,31 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap" />
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" />
-    <link rel="stylesheet" href="transactions/tx.css?v=21" />
+    <link rel="stylesheet" href="transactions/tx.css?v=22" />
+    <!-- Mapbox GL (~370 KB) downloads right away but as a fetch, which (unlike
+         a script tag) doesn't hold up this page's load event; it runs once
+         the page has loaded, so the frame shows (with the preview) first.
+         tx-map.js waits on __txMapbox. -->
+    <script>
+      window.__txMapbox = new Promise(function (resolve) {
+        var src = "https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js";
+        function add(url) {
+          var s = document.createElement("script");
+          s.src = url;
+          s.onload = s.onerror = function () { resolve(); };
+          document.body.appendChild(s);
+        }
+        var code = fetch(src, { priority: "high" }).then(function (r) {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          return r.blob();
+        });
+        function run() {
+          code.then(function (b) { add(URL.createObjectURL(b)); }, function () { add(src); });
+        }
+        if (document.readyState === "complete") run();
+        else window.addEventListener("load", run);
+      });
+    </script>
 
     <!-- Google Tag Manager, deferred: tx-core.js calls __txLoadGtm() once the
          sales have rendered (20 s fallback), so tags don't slow the first load. -->
@@ -21,6 +45,13 @@
       window.__txLoadGtm = function () {
         if (window.__txGtmLoaded) return;
         window.__txGtmLoaded = true;
+        // Piano (TRD-3464) waits for the same moment: loaded with the page,
+        // it held up the frame (the TRD article shows an embed only after its
+        // load event) and competed with the sales file for bandwidth.
+        var piano = document.createElement("script");
+        piano.src = "https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5";
+        piano.async = true;
+        document.head.appendChild(piano);
         (function (w, d, s, l, i) {
           w[l] = w[l] || [];
           w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
@@ -60,6 +91,50 @@
         <ul id="tx-results" class="tx-results" aria-label="Search suggestions" hidden></ul>
       </div>
       <div class="tx-map-wrap">
+        <!-- Instant preview: a still of the base map, lined up with the live
+             map's opening view, shown until the live map has drawn (tx-map.js
+             fades it out). Made once with the Mapbox Static Images API at
+             -80.45,26.05385 z7.58, 1280x1280 map px (preview-*.webp). -->
+        <div class="tx-preview" aria-hidden="true"><img alt="" /><span>© Mapbox © OpenStreetMap</span></div>
+        <script>
+          (function () {
+            var box = document.querySelector(".tx-preview"), img = box.firstChild;
+            function pref(k) {
+              try { return JSON.parse(localStorage.getItem("trd-sofla-tx:" + k)); } catch (e) { return null; }
+            }
+            // Last theme the TRD page gave this embed, else the OS setting.
+            var theme = pref("theme-seen") || (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+            if (pref("map-base") === "satellite") theme = "dark";
+            img.src = "transactions/preview-" + theme + ".webp";
+            box.style.background = theme === "dark" ? "#1f201f" : "#dbdcdc";
+            box.lastChild.style.color = theme === "dark" ? "rgba(255,255,255,.6)" : "rgba(0,0,0,.55)";
+            // Same opening view as the live map: fit bounds [[-80.95,25.1],
+            // [-79.95,27]], zoomed in further if needed to stay inside
+            // maxBounds [[-82.2,24.3],[-78.8,27.9]], center clamped likewise.
+            // Units: map px at the preview's zoom (7.58).
+            var world = 512 * Math.pow(2, 7.58);
+            function X(lon) { return (lon + 180) / 360 * world; }
+            function Y(lat) { return (1 - Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360)) / Math.PI) / 2 * world; }
+            var bx0 = X(-80.95), bx1 = X(-79.95), by0 = Y(27), by1 = Y(25.1);
+            var mx0 = X(-82.2), mx1 = X(-78.8), my0 = Y(27.9), my1 = Y(24.3);
+            var icx = (bx0 + bx1) / 2, icy = (by0 + by1) / 2; // the image's center
+            function clamp(v, lo, hi) { return lo > hi ? (lo + hi) / 2 : Math.min(hi, Math.max(lo, v)); }
+            function place() {
+              var w = box.clientWidth, h = box.clientHeight;
+              if (!w || !h) return;
+              var k = Math.min(w / (bx1 - bx0), h / (by1 - by0));
+              k = Math.max(k, w / (mx1 - mx0), h / (my1 - my0));
+              var cx = clamp(icx, mx0 + w / 2 / k, mx1 - w / 2 / k);
+              var cy = clamp(icy, my0 + h / 2 / k, my1 - h / 2 / k);
+              var size = 1280 * k;
+              img.style.width = img.style.height = size + "px";
+              img.style.left = w / 2 + (icx - 640 - cx) * k + "px";
+              img.style.top = h / 2 + (icy - 640 - cy) * k + "px";
+            }
+            place();
+            window.addEventListener("resize", place);
+          })();
+        </script>
         <div id="tx-map" role="region" aria-label="Map of recent South Florida sales"></div>
         <div class="tx-active" aria-label="Active filters" hidden></div>
         <button type="button" class="tx-area-btn" hidden>
@@ -77,23 +152,11 @@
       <div class="tx-mapnote"></div>
     </main>
 
-    <!-- Piano (TRD-3464) loads after this page's load event: the TRD article
-         keeps the embed invisible until load fires, so Piano and the trackers it
-         pulls in must not hold that up. -->
-    <script>
-      window.addEventListener("load", function () {
-        var s = document.createElement("script");
-        s.src = "https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5";
-        s.async = true;
-        document.body.appendChild(s);
-      });
-    </script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
     <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
-    <script src="transactions/tx-core.js?v=21"></script>
-    <script src="transactions/tx-search.js?v=21"></script>
-    <script src="transactions/tx-charts.js?v=21"></script>
-    <script src="transactions/tx-compare.js?v=21"></script>
-    <script src="transactions/tx-map.js?v=21"></script>
+    <script src="transactions/tx-core.js?v=22"></script>
+    <script src="transactions/tx-search.js?v=22"></script>
+    <script src="transactions/tx-charts.js?v=22"></script>
+    <script src="transactions/tx-compare.js?v=22"></script>
+    <script src="transactions/tx-map.js?v=22"></script>
   </body>
 </html>
