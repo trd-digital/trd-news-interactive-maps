@@ -1267,6 +1267,10 @@
   // style is already loaded, else from the style.load handler.
   TX.loadPoints().then(function (pf) {
     if (data || !pointsCanShow(state)) return;
+    // A points file the daily build stopped refreshing would show old sales
+    // until the full data lands; past 36 hours, skip it.
+    var built = Date.parse(pf.generatedAt);
+    if (!built || Date.now() - built > 36 * 3600 * 1000) return;
     var asOf = pf.rows.reduce(function (m, r) { return r.date > m ? r.date : m; }, "");
     earlyRows = TX.apply(pf.rows, state, asOf);
     earlyRows.forEach(function (r, i) { r._n = i; });
