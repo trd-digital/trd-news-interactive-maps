@@ -463,6 +463,15 @@
           : NaN;
       }
 
+      // True medians of all deals for the rollups (city across types, county,
+      // South Florida), from the *-medians.json file; the median of the city
+      // medians is only a fallback if that file is missing.
+      let trueMedians = null;
+      function trueMedian(q, county, city, type, fallback) {
+        const v = trueMedians?.[q]?.[`${county}|${city}|${type}`];
+        return Number.isFinite(v) ? v : fallback;
+      }
+
       const keys = [
         "sales_volume",
         "avg_price",
@@ -528,9 +537,13 @@
         fetch("south-florida-snapshots-commercial.json").then((res) =>
           res.json()
         ),
-        // add more files as needed
+        fetch("south-florida-snapshots-all-medians.json")
+          .then((res) => (res.ok ? res.json() : null))
+          .catch(() => null),
       ])
         .then((allData) => {
+          const med = allData.pop();
+          trueMedians = med && med.quarters;
           // Merge all arrays into one
           const data = [].concat(...allData);
           return data;
@@ -653,7 +666,7 @@
             number_of_deals: o.num_deals,
             sales_volume: o.price_sum,
             avg_price: o.num_deals ? o.price_sum / o.num_deals : NaN,
-            median_price: median(o.med_list),
+            median_price: trueMedian(o.quarter, o.county, o.city, "*", median(o.med_list)),
           }));
 
           totalCards = cityQByType.length;
@@ -829,7 +842,8 @@
         );
         const sf_sum = allRows.reduce((s, r) => s + (r.sales_volume || 0), 0);
         const sf_avg = sf_deals ? sf_sum / sf_deals : NaN;
-        const sf_med = median(allRows.map((r) => r.median_price));
+        const typeKey = tSel === "All Types" ? "*" : tSel;
+        const sf_med = trueMedian(q, "*", "*", typeKey, median(allRows.map((r) => r.median_price)));
         aggregates.push({
           borough: "South Florida",
           quarter: q,
@@ -845,7 +859,7 @@
           const deals = rows.reduce((s, r) => s + (r.number_of_deals || 0), 0);
           const sum = rows.reduce((s, r) => s + (r.sales_volume || 0), 0);
           const avg = deals ? sum / deals : NaN;
-          const med = median(rows.map((r) => r.median_price));
+          const med = trueMedian(q, b, "*", typeKey, median(rows.map((r) => r.median_price)));
           aggregates.push({
             borough: b,
             quarter: q,
