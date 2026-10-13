@@ -251,7 +251,7 @@
       (last.v.count < 30 ? ' <span class="tx-muted">(small sample: medians swing month to month)</span>' : "") + "</p>" +
       '<div class="tx-trend-grid"><div><p class="tx-trend-h">Sales per month</p><div class="tx-chart tx-trend-count"></div></div>' +
       '<div><p class="tx-trend-h">Median price</p><div class="tx-chart tx-trend-median"></div></div></div>' +
-      '<p class="tx-chart-cap">' + (series.some(function (s) { return s.partial; }) ? "Lighter bars are partial months. " : "") +
+      '<p class="tx-chart-cap">' + (series.some(function (s) { return s.partial; }) ? "Faded bars are partial months. " : "") +
       "Deeds of $100,000+, by record date. Monthly history through " + fmt.date(history.through) + ".</p>";
     function bins(field, money) {
       return series.map(function (s) {

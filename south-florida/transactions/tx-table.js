@@ -604,7 +604,7 @@
     var to = Math.min(entries.length, (page + 1) * PAGE_SIZE);
     var nums = pageNumbers(page, pages);
     el.pager.innerHTML = "<span>" + from.toLocaleString("en-US") + "–" + to.toLocaleString("en-US") + " of " +
-      entries.length.toLocaleString("en-US") + "</span>" +
+      entries.length.toLocaleString("en-US") + (entries.length !== rows.length ? " entries (assemblages grouped)" : "") + "</span>" +
       '<nav class="tx-pages" aria-label="Pages">' +
       '<button type="button" class="tx-chip" data-page="' + (page - 1) + '"' + (page === 0 ? " disabled" : "") + ' aria-label="Previous page">‹</button>' +
       nums.map(function (n) {
@@ -780,6 +780,7 @@
 
   // ------------------------------------------------------------------ boot
   function prep() {
+    TX.fitDates(state, data.asOf, data.meta.windowDays);
     data.byId = {};
     data.rows.forEach(function (r) { data.byId[r.id] = r; });
   }
