@@ -518,8 +518,19 @@
       "</tbody></table></div>";
     card.insertAdjacentElement("afterend", d);
     renderCharts();
-    if (!quiet) d.scrollIntoView({ block: "start", behavior: "smooth" }); // lands below the pinned header
+    if (!quiet) scrollToDetail(d);
     postHeight();
+  }
+
+  // Scroll only this frame's own page so the history's title sits just
+  // below the pinned header. (scrollIntoView would also scroll the TRD
+  // article around the frame and tuck the title under the site's fixed
+  // navigation bar.)
+  function scrollToDetail(d) {
+    var head = root.querySelector(".sn-head");
+    var offset = (head && getComputedStyle(head).position === "sticky" ? head.offsetHeight : 0) + 8;
+    var top = d.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
   }
 
   function closeDetail() {
