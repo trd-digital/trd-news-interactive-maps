@@ -102,13 +102,22 @@ button {
 
 /* ------------------------------------------------------------- header */
 .sn-head {
+  position: sticky;
+  z-index: 5;
+  top: 0;
+  /* full-bleed background so cards don't show beside it when pinned */
+  margin: -16px -16px 0;
+  padding: 16px 16px 12px;
+  background: var(--sn-bg);
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
   gap: 10px 16px;
-  padding-bottom: 12px;
   border-bottom: 1px solid var(--sn-border);
+}
+.sn-head.is-stuck {
+  box-shadow: 0 6px 12px -10px rgba(0, 0, 0, 0.45);
 }
 .sn-title {
   margin: 0;
@@ -514,6 +523,10 @@ button {
   }
   .sn-title {
     font-size: 19px;
+  }
+  .sn-head {
+    margin: -12px -12px 0;
+    padding: 12px 12px 10px;
   }
   .sn-seg {
     width: 100%;

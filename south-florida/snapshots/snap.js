@@ -172,7 +172,9 @@
   var cache = {};
   function getJson(url) {
     if (!cache[url]) {
-      cache[url] = fetch(url).then(function (r) {
+      // no-cache = revalidate: a changed data file is never served stale
+      // from the browser cache (an unchanged one costs a 304).
+      cache[url] = fetch(url, { cache: "no-cache" }).then(function (r) {
         if (!r.ok) throw new Error("HTTP " + r.status);
         return r.json();
       });
@@ -285,7 +287,7 @@
     if (!idx) return;
     var q = state.quarter, t = state.type, pq = prevQuarter(q);
     el.meta.innerHTML = "<strong>" + qLabel(q) + "</strong> · " + esc(typeLabel(t)) +
-      " · Deeds of $100,000 or more, each sale counted once · Source: Florida Department of Revenue tax rolls, updated yearly";
+      " · Deeds of $100,000 or more, each sale counted once · Source: Florida Department of Revenue tax rolls, updated quarterly";
     var ents = entities();
 
     el.overview.innerHTML = ents.over.map(function (e) {
@@ -516,7 +518,7 @@
       "</tbody></table></div>";
     card.insertAdjacentElement("afterend", d);
     renderCharts();
-    if (!quiet) d.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    if (!quiet) d.scrollIntoView({ block: "start", behavior: "smooth" }); // lands below the pinned header
     postHeight();
   }
 
@@ -618,6 +620,19 @@
     if (e.data && (e.data.setTheme || e.data.theme)) return; // theme.js handles these
     postHeight();
   });
+
+  // Header (title, quarter + source line, scope switch) is pinned to the top
+  // of the frame (CSS); a shadow shows once content scrolls under it.
+  var head = root.querySelector(".sn-head");
+  if (!dashboard && head) {
+    window.addEventListener("scroll", function () {
+      head.classList.toggle("is-stuck", window.scrollY > 4); // the header starts at the top
+    }, { passive: true });
+    // Scrolled-to content (an opened history) lands below the pinned header.
+    var pad = function () { document.documentElement.style.scrollPaddingTop = head.offsetHeight + 8 + "px"; };
+    if (window.ResizeObserver) new ResizeObserver(pad).observe(head);
+    pad();
+  }
 
   // ------------------------------------------------------------------- boot
   buildControls();
