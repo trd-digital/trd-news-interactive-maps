@@ -120,6 +120,25 @@ script.
 4. Fail loudly if any county's `latest_record_date` is more than 3 days old, or the feature count drops sharply day over day.
 5. Keep every committed file under GitHub's 100 MB hard limit (`broward_output.geojson` was ~78 MB in Oct 2026 and growing).
 
+### Points file (early dots)
+
+`../south-florida-transactions-points.json` (~140 KB gzipped) lets the map
+draw dots before `-recent` (~750 KB) arrives. Same build, `generated_at` and
+`split_at` as `-recent`; one row per located `-recent` feature:
+
+```json
+{"generated_at": "…", "split_at": "YYYY-MM-DD",
+ "columns": ["id","lng","lat","price","date","county","use_category"],
+ "rows": [["miami-dade:e853dce134ad", -80.20158, 25.79921, 289398802, "2026-10-08", "Miami-Dade", "Commercial"], …]}
+```
+
+`id` is verbatim from the main file; coordinates have 5 decimals. The map
+uses it only for an opening view it can answer (≤30 days, no text, place,
+party, area, use-type, date-range or mortgage filter, no `?sale=`); clicks wait
+for the full data, which then replaces the dots in place. Optional: if it is
+missing or malformed the map just waits for `-recent`. Producer:
+`build_points()` / `write_points()` in CatchUpScrapers `transactions_file.py`.
+
 ## History file: `../south-florida-transactions-history.json`
 
 Monthly aggregates behind the table's "Monthly trends" (~420 KB, fetched only

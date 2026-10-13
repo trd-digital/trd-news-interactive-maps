@@ -264,6 +264,10 @@
   // ------------------------------------------------------------- filtering
   function onFilterChange(next, why, opts) {
     state = next;
+    if (!data && earlyRows) { // early dots can't answer a changed filter
+      earlyRows = null;
+      setSource([]);
+    }
     if (why !== "search") track("filter", why);
     refresh(opts && opts.fit ? { fit: true, animate: true } : null);
     peer.send("filters", TX.serializeState(state));
@@ -848,7 +852,7 @@
   function addLayers() {
     var p = palette();
     if (!map.getSource("tx")) {
-      map.addSource("tx", { type: "geojson", data: toFeatures(visible.filter(function (r) { return r.located; })) });
+      map.addSource("tx", { type: "geojson", data: toFeatures(data ? visible.filter(function (r) { return r.located; }) : earlyRows || []) });
     }
     if (!map.getSource("tx-asm")) map.addSource("tx-asm", { type: "geojson", data: hullFeatures() });
     var ad = areaData();
@@ -1112,6 +1116,7 @@
       declutter();
       addLayers();
       highlight();
+      drawEarly();
     });
 
     var hoverId = null;
@@ -1143,6 +1148,7 @@
       if (hoverPopup) hoverPopup.remove();
     });
     map.on("click", function (e) {
+      if (!data) return; // early dots (points file) only: details still loading
       if (mapOpts.view === "density" && map.getZoom() < 12) {
         map.easeTo({ center: e.lngLat, zoom: Math.min(13, map.getZoom() + 2) });
         return;
@@ -1247,6 +1253,38 @@
     });
   }
 
+  // Dots first: the points file usually lands well before the full sales
+  // file. Draw it when the opening view is one it can answer (recent sales;
+  // no text, place, party, area, use-type, date-range or mortgage filter);
+  // the full data then replaces it in place.
+  var earlyRows = null;
+  function pointsCanShow(s) {
+    return s.days <= 30 && !s.dateFrom && !s.dateTo && !s.q && !s.place && !s.party && !s.bbox && !s.useType &&
+      s.financed === "any" && !params.get("sale");
+  }
+  // Drawn as soon as the map style is up (not after its first tiles, which
+  // can take as long as the full data): drawEarly() runs from here if the
+  // style is already loaded, else from the style.load handler.
+  TX.loadPoints().then(function (pf) {
+    if (data || !pointsCanShow(state)) return;
+    var asOf = pf.rows.reduce(function (m, r) { return r.date > m ? r.date : m; }, "");
+    earlyRows = TX.apply(pf.rows, state, asOf);
+    earlyRows.forEach(function (r, i) { r._n = i; });
+    drawEarly();
+  }).catch(function () {});
+  var earlyDrawn = false;
+  function drawEarly() {
+    if (data || !earlyRows || earlyDrawn || !map || !map.getSource("tx")) return;
+    earlyDrawn = true;
+    setSource(earlyRows);
+    fitTo(earlyRows, false);
+    el.loading.hidden = true;
+    el.count.textContent = "Loading sale details…";
+    map.once("idle", hidePreview);
+    if (window.performance && performance.mark) performance.mark("tx-early-dots");
+    track("early_dots", earlyRows.length);
+  }
+
   Promise.all([TX.load(), mapReady])
     .then(function (res) {
       data = res[0];
@@ -1255,6 +1293,7 @@
       initCompare();
       refresh({ fit: !params.get("sale") });
       map.once("idle", hidePreview);
+      if (window.performance && performance.mark) performance.mark("tx-full-data");
       var sale = params.get("sale");
       if (sale && rowById(sale)) select(sale, { fly: true, instant: true });
       track("loaded", data.rows.length);

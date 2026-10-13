@@ -323,6 +323,32 @@
     return loadPromise;
   }
 
+  // Points file: each recent sale's location, price, date, county and type
+  // (~140 KB, the same build as -recent), so the map can draw dots before the
+  // full sales file arrives. Optional: any failure just means no early dots.
+  var POINTS_FILE = DATA_FILE.replace(".json", "-points.json");
+  var pointsPromise = null;
+  function loadPoints() {
+    if (pointsPromise) return pointsPromise;
+    if (dataUrl() !== DATA_FILE) return (pointsPromise = Promise.reject(new Error("data override")));
+    pointsPromise = fetchJson(POINTS_FILE).then(function (pf) {
+      var c = {};
+      (pf.columns || []).forEach(function (k, i) { c[k] = i; });
+      if (!Array.isArray(pf.rows) || ["id", "lng", "lat", "price", "date", "county"].some(function (k) { return c[k] == null; })) {
+        throw new Error("unexpected points file");
+      }
+      var rows = pf.rows.map(function (a) {
+        var cat = CATEGORIES.indexOf(a[c.use_category]) >= 0 ? a[c.use_category] : "Other";
+        return {
+          id: String(a[c.id]), lng: +a[c.lng], lat: +a[c.lat], price: +a[c.price], date: a[c.date],
+          county: a[c.county], category: cat, colorGroup: COLOR_GROUP[cat], located: true,
+        };
+      }).filter(function (r) { return isFinite(r.lng) && isFinite(r.lat) && r.price > 0 && r.date; });
+      return { generatedAt: pf.generated_at || null, splitAt: pf.split_at || null, rows: rows };
+    });
+    return pointsPromise;
+  }
+
   // Fetch the sales before split_at and fold them into `d` (a new rows array,
   // so caches keyed on it reset), then tell the views.
   function loadRest(d) {
@@ -1193,6 +1219,7 @@
 
   global.TX = {
     MAPBOX_TOKEN: MAPBOX_TOKEN,
+    loadPoints: loadPoints,
     aerialUrl: aerialUrl,
     loadBoundaries: loadBoundaries,
     boundaryFor: boundaryFor,
