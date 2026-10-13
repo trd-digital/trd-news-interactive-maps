@@ -40,6 +40,7 @@
 
   // ------------------------------------------------------------------ DOM
   var el = {
+    searchbar: app.querySelector(".tx-searchbar"),
     filters: app.querySelector(".tx-filters"),
     searchWrap: app.querySelector(".tx-search-wrap"),
     results: app.querySelector(".tx-results"),
@@ -125,10 +126,40 @@
   });
 
   el.filterToggle.addEventListener("click", function () {
-    var open = !el.filters.classList.contains("is-open");
+    // Pinned, the filters have scrolled away: open them and scroll back.
+    var stuck = el.searchbar.classList.contains("is-stuck");
+    var open = stuck || !el.filters.classList.contains("is-open");
     el.filters.classList.toggle("is-open", open);
     el.filterToggle.setAttribute("aria-expanded", String(open));
+    if (stuck) el.filters.scrollIntoView({ block: "start" });
   });
+
+  // ------------------------------------------------------- pinned search row
+  // The search row sticks to the top of the frame (CSS). Publish its height
+  // so the table header and scrollIntoView land below it, and mark it while
+  // pinned so it can show the Filters button and a shadow.
+  (function pinSearchbar() {
+    var bar = el.searchbar;
+    var root = document.documentElement;
+    function measure() {
+      root.style.setProperty("--tx-bar-h", bar.offsetHeight + "px");
+    }
+    var queued = false;
+    function check() {
+      queued = false;
+      bar.classList.toggle("is-stuck", window.scrollY > 0 && bar.getBoundingClientRect().top <= 0.5);
+    }
+    window.addEventListener("scroll", function () {
+      if (!queued) {
+        queued = true;
+        requestAnimationFrame(check);
+      }
+    }, { passive: true });
+    if (window.ResizeObserver) new ResizeObserver(measure).observe(bar);
+    else window.addEventListener("resize", measure);
+    measure();
+    check();
+  })();
 
   function onFilterChange(next, why) {
     state = next;

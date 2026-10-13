@@ -21,7 +21,12 @@ Code:
 
 Map extras: a Layers control (Dots/Density, color by type/price, Streets/Satellite —
 remembered per reader in localStorage), approximate assemblage footprints, aerial
-thumbnails (Mapbox Static Images), and a phone "List sales in view" sheet. `normalize()` in `tx-core.js` is the only code that
+thumbnails (Mapbox Static Images), and a phone "List sales in view" sheet.
+Table extras: the search row and active-filter chips stay pinned to the top of
+the frame while the reader scrolls (`.tx-searchbar`; tx-table.js sets
+`.is-stuck` and `--tx-bar-h`, which the sticky table header and
+`scroll-padding-top` use). Pinned, a Filters button jumps back to the filters.
+The map's search bar never scrolls away, since the map page doesn't scroll. `normalize()` in `tx-core.js` is the only code that
 knows the data file's field names.
 
 ## Data file: `../south-florida-transactions.json`
