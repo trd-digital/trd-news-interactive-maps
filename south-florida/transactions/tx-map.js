@@ -289,7 +289,7 @@
     var sum = TX.summary(visible);
     var catLabel = state.categories.length === 1 ? state.categories[0].toLowerCase() + " " : "";
     el.count.innerHTML = "<strong>" + sum.count.toLocaleString("en-US") + "</strong> " + catLabel +
-      (sum.count === 1 ? "sale" : "sales") + (state.bbox ? (state.bboxLabel ? " in " + fmt.escape(state.bboxLabel) : " in this area") : "") +
+      (sum.count === 1 ? "sale" : "sales") + (data.liteMappedOnly ? " on the map" : "") + (state.bbox ? (state.bboxLabel ? " in " + fmt.escape(state.bboxLabel) : " in this area") : "") +
       (compact ? " · last " + state.days + " days" : "") +
       (sum.count ? '<span class="tx-count-total"> · ' + fmt.moneyShort(sum.total) + "</span>" : "") + TX.pendingNote(state, data.asOf);
     var n = activeFilterCount();
@@ -852,7 +852,7 @@
   function addLayers() {
     var p = palette();
     if (!map.getSource("tx")) {
-      map.addSource("tx", { type: "geojson", data: toFeatures(data ? visible.filter(function (r) { return r.located; }) : earlyRows || []) });
+      map.addSource("tx", { type: "geojson", data: toFeatures(data ? visible.filter(function (r) { return r.located; }) : (earlyRows || []).filter(function (r) { return r.located; })) });
     }
     if (!map.getSource("tx-asm")) map.addSource("tx-asm", { type: "geojson", data: hullFeatures() });
     var ad = areaData();
@@ -1134,6 +1134,13 @@
       if (!hoverPopup) {
         hoverPopup = new mapboxgl.Popup({ closeButton: false, closeOnClick: false, className: "tx-tip", offset: 12, maxWidth: "260px" });
       }
+      if (data.lite) { // points file only: no address until the details load
+        hoverPopup.setLngLat(f.geometry.coordinates)
+          .setHTML("<strong>" + fmt.moneyShort(r.price) + "</strong><span>" + fmt.dateShort(r.date) + " · " + fmt.escape(r.category) +
+            " · " + fmt.escape(r.county) + " · click for details</span>")
+          .addTo(map);
+        return;
+      }
       hoverPopup
         .setLngLat(f.geometry.coordinates)
         .setHTML("<strong>" + fmt.escape(r.address || "Address unavailable") + "</strong>" +
@@ -1163,6 +1170,11 @@
       feats.sort(function (a, b) { return a.properties.price - b.properties.price; });
       var id = feats[0].properties.id;
       if (hoverPopup) hoverPopup.remove();
+      if (data.lite) {
+        track("select_lite", id);
+        upgrade().then(function () { pickLoaded(id); });
+        return;
+      }
       // Condo buildings stack many sales on one coordinate — list them all.
       var here = feats[0].geometry.coordinates.join(",");
       var stacked = {};
@@ -1265,23 +1277,79 @@
   // Drawn as soon as the map style is up (not after its first tiles, which
   // can take as long as the full data): drawEarly() runs from here if the
   // style is already loaded, else from the style.load handler.
+  // Dashboard card (compact): the card shows recent dots only, which the
+  // points file (~150 KB) fully answers, so the full sales files (~1.6 MB)
+  // wait until a reader clicks a sale. Any problem with the points file
+  // falls back to the full load.
+  var lite = compact && pointsCanShow(state);
   TX.loadPoints().then(function (pf) {
-    if (data || !pointsCanShow(state)) return;
+    if (data || !pointsCanShow(state)) throw new Error("not usable");
     // A points file the daily build stopped refreshing would show old sales
     // until the full data lands; past 36 hours, skip it.
     var built = Date.parse(pf.generatedAt);
-    if (!built || Date.now() - built > 36 * 3600 * 1000) return;
+    if (!built || Date.now() - built > 36 * 3600 * 1000) throw new Error("stale");
     var asOf = pf.rows.reduce(function (m, r) { return r.date > m ? r.date : m; }, "");
+    if (lite) return startLite(pf, asOf);
     earlyRows = TX.apply(pf.rows, state, asOf);
     earlyRows.forEach(function (r, i) { r._n = i; });
     drawEarly();
-  }).catch(function () {});
+  }).catch(function () {
+    if (lite) loadFull();
+  });
+
+  function startLite(pf, asOf) {
+    var latest = {};
+    pf.rows.forEach(function (r) {
+      if (!latest[r.county] || r.date > latest[r.county]) latest[r.county] = r.date;
+    });
+    var liteData = {
+      // Until the points file lists unmapped sales too, the card can only
+      // count the mapped ones; say so.
+      lite: true, liteMappedOnly: !pf.hasUnmapped, rows: pf.rows, asOf: asOf, latestByCounty: latest, assemblages: {}, linksOk: false, splitAt: null,
+      meta: { generatedAt: pf.generatedAt, windowDays: null, minPrice: null, topDeals: [] },
+    };
+    return mapReady.then(function () {
+      if (data) return; // the full data won the race
+      data = liteData;
+      prep();
+      el.loading.hidden = true;
+      refresh({ fit: true });
+      map.once("idle", hidePreview);
+      track("loaded_lite", data.rows.length);
+      if (typeof window.__txLoadGtm === "function") {
+        setTimeout(function () {
+          if (window.requestIdleCallback) requestIdleCallback(window.__txLoadGtm, { timeout: 2000 });
+          else window.__txLoadGtm();
+        }, 0);
+      }
+    });
+  }
+
+  // Lite card -> full data, once, on the first click on a sale.
+  var upgradePromise = null;
+  function upgrade() {
+    if (!upgradePromise) {
+      el.count.insertAdjacentHTML("beforeend", '<span class="tx-pending"> · loading details…</span>');
+      upgradePromise = loadFull();
+    }
+    return upgradePromise;
+  }
+  // A clicked sale once the details are in: its card, or every sale stacked
+  // on the same spot (condo buildings).
+  function pickLoaded(id) {
+    var r0 = rowById(id);
+    if (!r0) return;
+    var all = visible.filter(function (r) { return r.located && r.lng === r0.lng && r.lat === r0.lat; });
+    if (all.length > 1) renderStack(all);
+    else select(id, { announce: true });
+  }
   var earlyDrawn = false;
   function drawEarly() {
     if (data || !earlyRows || earlyDrawn || !map || !map.getSource("tx")) return;
     earlyDrawn = true;
-    setSource(earlyRows);
-    fitTo(earlyRows, false);
+    var mapped = earlyRows.filter(function (r) { return r.located; });
+    setSource(mapped);
+    fitTo(mapped, false);
     el.loading.hidden = true;
     el.count.textContent = "Loading sale details…";
     map.once("idle", hidePreview);
@@ -1289,13 +1357,17 @@
     track("early_dots", earlyRows.length);
   }
 
-  Promise.all([TX.load(), mapReady])
+  var fullPromise = null;
+  function loadFull() {
+    if (fullPromise) return fullPromise;
+    fullPromise = Promise.all([TX.load(), mapReady])
     .then(function (res) {
+      var wasLite = !!(data && data.lite);
       data = res[0];
       prep();
       el.loading.hidden = true;
       initCompare();
-      refresh({ fit: !params.get("sale") });
+      refresh({ fit: !wasLite && !params.get("sale") }); // keep the reader's view
       map.once("idle", hidePreview);
       if (window.performance && performance.mark) performance.mark("tx-full-data");
       var sale = params.get("sale");
@@ -1313,4 +1385,7 @@
       // A map failure is already reported by mapReady's own handler.
       mapReady.then(function () { showError("Sales data couldn’t load. Please try again later."); }, function () {});
     });
+    return fullPromise;
+  }
+  if (!lite) loadFull();
 })();

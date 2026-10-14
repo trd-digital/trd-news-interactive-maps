@@ -4,7 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preload" href="south-florida-transactions-points.json" as="fetch" crossorigin="anonymous" />
-    <link rel="preload" href="south-florida-transactions-recent.json" as="fetch" crossorigin="anonymous" />
+    <!-- The full map preloads the recent sales; the compact dashboard card
+         (same rule as tx-map.js) draws from the points file alone and fetches
+         sales only when a reader clicks one. -->
+    <script>
+      (function () {
+        var q = new URLSearchParams(location.search);
+        if (q.get("view") === "dashboard" || window.innerHeight < 450) return;
+        var l = document.createElement("link");
+        l.rel = "preload";
+        l.href = "south-florida-transactions-recent.json";
+        l.as = "fetch";
+        l.crossOrigin = "anonymous";
+        document.head.appendChild(l);
+      })();
+    </script>
     <meta name="robots" content="noindex, nofollow" />
     <title>South Florida Live Transactions Map - The Real Deal</title>
     <link rel="icon" type="image/x-icon" href="https://therealdeal.com/favicon.ico" />
@@ -154,10 +168,10 @@
     </main>
 
     <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
-    <script src="transactions/tx-core.js?v=23"></script>
+    <script src="transactions/tx-core.js?v=24"></script>
     <script src="transactions/tx-search.js?v=23"></script>
     <script src="transactions/tx-charts.js?v=23"></script>
     <script src="transactions/tx-compare.js?v=23"></script>
-    <script src="transactions/tx-map.js?v=24"></script>
+    <script src="transactions/tx-map.js?v=25"></script>
   </body>
 </html>

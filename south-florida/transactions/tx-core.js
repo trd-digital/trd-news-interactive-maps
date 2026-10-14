@@ -337,14 +337,20 @@
       if (!Array.isArray(pf.rows) || ["id", "lng", "lat", "price", "date", "county"].some(function (k) { return c[k] == null; })) {
         throw new Error("unexpected points file");
       }
+      // Rows without coordinates (unmapped sales) are kept as located:false,
+      // so counts can match the full file when the producer includes them.
       var rows = pf.rows.map(function (a) {
         var cat = CATEGORIES.indexOf(a[c.use_category]) >= 0 ? a[c.use_category] : "Other";
+        var lng = a[c.lng] == null ? NaN : +a[c.lng], lat = a[c.lat] == null ? NaN : +a[c.lat];
         return {
-          id: String(a[c.id]), lng: +a[c.lng], lat: +a[c.lat], price: +a[c.price], date: a[c.date],
-          county: a[c.county], category: cat, colorGroup: COLOR_GROUP[cat], located: true,
+          id: String(a[c.id]), lng: lng, lat: lat, price: +a[c.price], date: a[c.date],
+          county: a[c.county], category: cat, colorGroup: COLOR_GROUP[cat], located: isFinite(lng) && isFinite(lat),
         };
-      }).filter(function (r) { return isFinite(r.lng) && isFinite(r.lat) && r.price > 0 && r.date; });
-      return { generatedAt: pf.generated_at || null, splitAt: pf.split_at || null, rows: rows };
+      }).filter(function (r) { return r.price > 0 && r.date; });
+      return {
+        generatedAt: pf.generated_at || null, splitAt: pf.split_at || null, rows: rows,
+        hasUnmapped: rows.some(function (r) { return !r.located; }),
+      };
     });
     return pointsPromise;
   }
