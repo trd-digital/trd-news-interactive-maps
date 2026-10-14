@@ -74,9 +74,9 @@
     return t.length > 40 ? t.split(",")[0] : t;
   }
   // How a PHY_CITY reads on a card.
-  function placeName(county, city) {
+  function placeName(county, city, short) {
     if (!city) return "City not recorded";
-    if (/^(unincorporated( county)?|county of .*)$/i.test(city)) return "Unincorporated " + county;
+    if (/^(unincorporated( county)?|county of .*)$/i.test(city)) return (short ? "Uninc. " : "Unincorporated ") + county;
     return city;
   }
 
@@ -112,8 +112,9 @@
   function chg(p, suffix) {
     if (p == null) return "";
     var v = Math.round(p * 100);
-    var cls = v > 0 ? "up" : v < 0 ? "down" : "";
-    var arrow = v > 0 ? "▲" : v < 0 ? "▼" : "–";
+    if (!v) return '<span class="sn-chg flat">flat' + (suffix || "") + "</span>"; // under 1%: no arrow
+    var cls = v > 0 ? "up" : "down";
+    var arrow = v > 0 ? "▲" : "▼";
     return '<span class="sn-chg ' + cls + '"><i aria-hidden="true">' + arrow + "</i> " +
       '<span class="sn-sr">' + (v > 0 ? "up " : v < 0 ? "down " : "unchanged ") + "</span>" +
       Math.abs(v) + "%" + (suffix || "") + "</span>";
@@ -161,6 +162,9 @@
     cities: root.querySelector(".sn-cities"),
     more: root.querySelector(".sn-more"),
     foot: root.querySelector(".sn-foot"),
+    dashCap: root.querySelector(".sn-dash-cap"),
+    filterBtn: root.querySelector(".sn-filter-btn"),
+    controls: root.querySelector(".sn-controls"),
   };
 
   var state = { county: null, quarter: null, type: "*", q: "", sort: "deals", showTiny: false };
@@ -252,26 +256,52 @@
     });
     if (state.county) over = over.filter(function (e) { return e.kind === "S" || e.county === state.county; });
     var cities = idx.places.filter(function (p) { return !state.county || p.county === state.county; }).map(function (p) {
-      return { kind: "C", county: p.county, city: p.city, key: "C|" + p.county + "|" + p.city, name: placeName(p.county, p.city), sub: p.county + " County" };
+      return { kind: "C", county: p.county, city: p.city, key: "C|" + p.county + "|" + p.city, name: placeName(p.county, p.city),
+        short: placeName(p.county, p.city, true), sub: p.county + " County" };
     });
     return { over: over, cities: cities };
   }
 
   // ---------------------------------------------------------------- render
+  // Median over the last 8 quarters up to the one shown, as a tiny line.
+  function spark(ent) {
+    var i = idx.quarters.indexOf(state.quarter);
+    var qs = idx.quarters.slice(Math.max(0, i - 7), i + 1);
+    var v = qs.map(function (q) { var s = stat(ent, q, state.type); return s ? s.median : null; });
+    var have = v.filter(function (x) { return x != null && isFinite(x); });
+    if (have.length < 3) return "";
+    var lo = Math.min.apply(null, have), hi = Math.max.apply(null, have), W = 100, H = 24;
+    var pts = [], last = null;
+    v.forEach(function (x, j) {
+      if (x == null || !isFinite(x)) return;
+      var px = qs.length > 1 ? (j / (qs.length - 1)) * W : W / 2;
+      var py = hi > lo ? H - 2 - ((x - lo) / (hi - lo)) * (H - 4) : H / 2;
+      pts.push(px.toFixed(1) + "," + py.toFixed(1));
+      last = [px, py];
+    });
+    return '<svg class="sn-spark" viewBox="-2 0 ' + (W + 4) + " " + H + '" preserveAspectRatio="none" aria-hidden="true">' +
+      '<polyline points="' + pts.join(" ") + '" vector-effect="non-scaling-stroke"/>' +
+      // a zero-length round-capped line: stays a circle however the SVG stretches
+      '<line x1="' + last[0].toFixed(1) + '" y1="' + last[1].toFixed(1) + '" x2="' + last[0].toFixed(1) + '" y2="' + last[1].toFixed(1) + '" vector-effect="non-scaling-stroke"/></svg>' +
+      '<span class="sn-spark-cap">Median, last ' + qs.length + " quarters</span>";
+  }
+
   function cardHtml(ent, s, prev) {
     var few = s.deals < FEW;
     var open = openEntity && openEntity.key === ent.key;
     var vsQ = prevQuarter(state.quarter);
-    return '<div class="sn-card' + (few ? " is-few" : "") + '" role="button" tabindex="0" data-key="' + esc(ent.key) + '" aria-expanded="' + open + '"' +
+    var lead = ent.kind === "S" && !dashboard;
+    var title = ent.short && ent.short !== ent.name ? ' title="' + esc(ent.name) + '"' : "";
+    return '<div class="sn-card' + (few ? " is-few" : "") + (lead ? " sn-lead" : "") + '" role="button" tabindex="0" data-key="' + esc(ent.key) + '" aria-expanded="' + open + '"' +
       (dashboard ? "" : ' aria-label="' + esc(ent.name) + ": show quarterly history" + '"') + ">" +
-      '<div class="sn-card-top"><div><h3 class="sn-name">' + esc(ent.name) + '</h3><div class="sn-sub">' + esc(ent.sub) + "</div></div>" +
+      '<div class="sn-card-top"><div><h3 class="sn-name"' + title + ">" + esc(ent.short || ent.name) + '</h3><div class="sn-sub">' + esc(ent.sub) + "</div></div>" +
       (few ? '<span class="sn-badge" title="Medians from fewer than ' + FEW + ' sales swing widely">Few sales</span>' : "") + "</div>" +
       '<div class="sn-medblock"><div class="sn-label">Median price</div><div class="sn-hero"><span class="sn-hero-v">' + money(s.median) + "</span>" +
-      chg(prev && pct(s.median, prev.median), vsQ ? " vs " + qLabel(vsQ) : "") + "</div></div>" +
+      chg(prev && pct(s.median, prev.median), vsQ ? " vs " + qLabel(vsQ) : "") + "</div>" + (dashboard ? "" : '<div class="sn-trend">' + spark(ent) + "</div>") + "</div>" +
       '<div class="sn-stats">' +
       '<div class="sn-stat sn-stat-deals"><span class="sn-label">Sales</span><b>' + num(s.deals) + '</b><span class="sn-unit"> ' + (s.deals === 1 ? "sale" : "sales") + "</span>" + chg(prev && pct(s.deals, prev.deals)) + "</div>" +
-      '<div class="sn-stat"><span class="sn-label">Volume</span><b>' + money(s.volume) + "</b>" + chg(prev && pct(s.volume, prev.volume)) + "</div>" +
-      '<div class="sn-stat"><span class="sn-label">Average</span><b>' + money(s.avg) + "</b></div>" +
+      '<div class="sn-stat"><span class="sn-label">Volume</span><b>' + money(s.volume) + '</b><span class="sn-unit"> volume</span>' + chg(prev && pct(s.volume, prev.volume)) + "</div>" +
+      '<div class="sn-stat"><span class="sn-label">Average</span><span class="sn-unit">avg </span><b>' + money(s.avg) + "</b></div>" +
       "</div></div>";
   }
 
@@ -287,7 +317,8 @@
     if (!idx) return;
     var q = state.quarter, t = state.type, pq = prevQuarter(q);
     el.meta.innerHTML = "<strong>" + qLabel(q) + "</strong> · " + esc(typeLabel(t)) +
-      " · Deeds of $100,000 or more, each sale counted once · Source: Florida Department of Revenue tax rolls, updated quarterly";
+      '<span class="sn-meta-src"> · Deeds of $100,000 or more, each sale counted once · Source: Florida Department of Revenue tax rolls, updated quarterly</span>';
+    if (el.dashCap) el.dashCap.textContent = qLabel(q) + " · " + (scope === "all" ? "All sales" : SCOPES[scope].label) + " · median price, change vs " + (pq ? qLabel(pq) : "prior quarter");
     var ents = entities();
 
     el.overview.innerHTML = ents.over.map(function (e) {
@@ -321,6 +352,12 @@
         ? '<button type="button" class="sn-linkbtn" data-act="tiny">Show ' + hiddenTiny + " more " + (hiddenTiny === 1 ? "place" : "places") + " with 1–" + (TINY - 1) + " sales</button>"
         : '<button type="button" class="sn-linkbtn" data-act="tiny">Hide places with 1–' + (TINY - 1) + " sales</button>";
       el.reset.hidden = isDefault();
+      if (el.filterBtn) {
+        var nf = (state.quarter !== idx.quarters[idx.quarters.length - 1]) + (state.type !== "*") + (state.sort !== "deals");
+        var badge = el.filterBtn.querySelector(".sn-badge-n");
+        badge.textContent = nf;
+        badge.hidden = !nf;
+      }
       syncControls();
     }
     // Re-open the detail if its place is still on screen.
@@ -402,6 +439,11 @@
     el.search.addEventListener("input", function () {
       clearTimeout(searchTimer);
       searchTimer = setTimeout(function () { state.q = el.search.value; render(); }, 120);
+    });
+    if (el.filterBtn) el.filterBtn.addEventListener("click", function () {
+      var open = !el.controls.classList.contains("is-open");
+      el.controls.classList.toggle("is-open", open);
+      el.filterBtn.setAttribute("aria-expanded", String(open));
     });
     el.reset.addEventListener("click", function () {
       state = { county: null, quarter: idx.quarters[idx.quarters.length - 1], type: "*", q: "", sort: "deals", showTiny: false };
@@ -571,15 +613,38 @@
       },
     };
     var canvases = d.querySelectorAll("canvas");
+    // Label the selected quarter's value right on the chart.
+    var selIdx = data.map(function (x) { return x.q; }).indexOf(state.quarter);
+    function labelPlugin(fmtFn) {
+      return {
+        id: "snSelLabel",
+        afterDatasetsDraw: function (chart) {
+          if (selIdx < 0) return;
+          var meta = chart.getDatasetMeta(0), pt = meta.data[selIdx], v = chart.data.datasets[0].data[selIdx];
+          if (!pt || v == null) return;
+          var ctx = chart.ctx, text = fmtFn(v);
+          ctx.save();
+          ctx.font = "700 11px " + c.font;
+          ctx.fillStyle = c.text;
+          var w = ctx.measureText(text).width;
+          var x = Math.min(Math.max(pt.x, chart.chartArea.left + w / 2), chart.chartArea.right - w / 2);
+          ctx.textAlign = "center";
+          ctx.textBaseline = "bottom";
+          ctx.fillText(text, x, Math.max(chart.chartArea.top + 11, pt.y - 6));
+          ctx.restore();
+        },
+      };
+    }
     var sel = data.map(function (x) { return x.q === state.quarter; });
     charts.push(new Chart(canvases[0], {
       type: "bar",
       data: { labels: labels, datasets: [{ label: "Sales", data: data.map(function (x) { return x.s ? x.s.deals : null; }),
         backgroundColor: sel.map(function (on) { return on ? c.series : c.soft; }), borderRadius: 3, maxBarThickness: 18 }] },
+      plugins: [labelPlugin(num)],
       options: Object.assign({}, common, {
         plugins: Object.assign({}, common.plugins, { tooltip: Object.assign({}, common.plugins.tooltip, {
           callbacks: { title: function (it) { return qLabel(data[it[0].dataIndex].q); }, label: function (it) { return " " + num(it.raw) + " sales"; } } }) }),
-        scales: { x: common.scales.x, y: { beginAtZero: true, grid: { color: c.grid }, border: { display: false }, ticks: Object.assign({ maxTicksLimit: 5, precision: 0, callback: function (v) { return num(v); } }, tick) } },
+        scales: { x: common.scales.x, y: { beginAtZero: true, grace: "14%", grid: { color: c.grid }, border: { display: false }, ticks: Object.assign({ maxTicksLimit: 5, precision: 0, callback: function (v) { return num(v); } }, tick) } },
       }),
     }));
     charts.push(new Chart(canvases[1], {
@@ -590,10 +655,11 @@
         { label: "Average", data: data.map(function (x) { return x.s ? x.s.avg : null; }), borderColor: c.muted, backgroundColor: c.muted,
           borderWidth: 2, borderDash: [5, 4], tension: 0, pointRadius: 0, pointHoverRadius: 4, spanGaps: true },
       ] },
+      plugins: [labelPlugin(money)],
       options: Object.assign({}, common, {
         plugins: Object.assign({}, common.plugins, { tooltip: Object.assign({}, common.plugins.tooltip, {
           callbacks: { title: function (it) { return qLabel(data[it[0].dataIndex].q); }, label: function (it) { return " " + it.dataset.label + ": " + money(it.raw); } } }) }),
-        scales: { x: common.scales.x, y: { grid: { color: c.grid }, border: { display: false }, ticks: Object.assign({ maxTicksLimit: 5, callback: function (v) { return money(v); } }, tick) } },
+        scales: { x: common.scales.x, y: { grace: "14%", grid: { color: c.grid }, border: { display: false }, ticks: Object.assign({ maxTicksLimit: 5, callback: function (v) { return money(v); } }, tick) } },
       }),
     }));
   }
@@ -647,6 +713,11 @@
 
   // ------------------------------------------------------------------- boot
   buildControls();
+  // Placeholder cards while the data loads, so the layout doesn't jump.
+  var skel = function (n) { return new Array(n + 1).join('<div class="sn-card sn-skel" aria-hidden="true"><i></i><i></i><i></i></div>'); };
+  el.overview.innerHTML = skel(4);
+  if (!dashboard) el.overview.firstChild.classList.add("sn-lead");
+  if (!dashboard) el.cities.innerHTML = skel(10);
   setScope(scope).catch(function () {
     el.overview.innerHTML = '<p class="sn-empty">The snapshot data couldn’t load. Please try again later.</p>';
   });

@@ -32,6 +32,7 @@
   --sn-up: #1e7b45;
   --sn-down: #c0392b;
   --sn-shadow: 0 6px 24px rgba(0, 0, 0, 0.14);
+  --sn-zebra: #fafaf8;
   --sn-font: "Proxima Nova", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --sn-serif: "Merriweather", Georgia, serif;
 }
@@ -52,6 +53,7 @@
   --sn-up: #4cc38a;
   --sn-down: #ff7b72;
   --sn-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+  --sn-zebra: #2e2e2e;
 }
 
 *,
@@ -500,7 +502,10 @@ button {
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
-.sn-table tr.is-sel td {
+.sn-table tbody tr:nth-child(even) td {
+  background: var(--sn-zebra);
+}
+.sn-table tbody tr.is-sel td {
   background: var(--sn-surface-2);
   font-weight: 700;
 }
@@ -656,4 +661,260 @@ button {
 }
 .sn-dash .sn-hero-v {
   font-size: 22px;
+}
+
+/* ======================================================= Oct 2026 polish */
+
+/* Hover feedback: cards read as clickable. */
+.sn-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.sn-card:not(.sn-skel):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+.sn-dash .sn-card:hover {
+  transform: none;
+}
+
+/* "flat" (under 1%) in grey, no arrow */
+.sn-chg.flat {
+  color: var(--sn-text-3);
+}
+
+/* Trend line: median over the last 8 quarters */
+.sn-trend {
+  margin-top: 6px;
+}
+.sn-spark {
+  display: block;
+  width: 100%;
+  height: 24px;
+  overflow: visible;
+}
+.sn-spark polyline {
+  fill: none;
+  stroke: var(--sn-series);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.sn-spark line {
+  stroke: var(--sn-series);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+.sn-spark-cap {
+  display: block;
+  margin-top: 2px;
+  color: var(--sn-text-3);
+  font-size: 10.5px;
+}
+.sn-cities .sn-spark-cap {
+  display: none;
+}
+
+/* South Florida leads the overview */
+@media (min-width: 720px) {
+  .sn-lead {
+    grid-column: span 2;
+  }
+}
+.sn-grid.sn-overview {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+.sn-lead {
+  border-color: var(--sn-text-3);
+}
+.sn-lead .sn-name {
+  font-size: 19px;
+}
+.sn-lead .sn-hero-v {
+  font-size: 34px;
+}
+.sn-lead .sn-spark {
+  height: 40px;
+}
+
+/* City cards: no capital labels on every card; units carry the meaning. */
+.sn-cities .sn-medblock .sn-label {
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.sn-cities .sn-stats {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 3px 10px;
+  font-size: 12.5px;
+}
+/* same layout on every card: sales | average, then volume */
+.sn-cities .sn-stat-deals {
+  order: 1;
+}
+.sn-cities .sn-stat:last-child {
+  order: 2;
+  justify-content: flex-end;
+}
+.sn-cities .sn-stat:nth-child(2) {
+  order: 3;
+}
+.sn-cities .sn-stat {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 4px;
+}
+.sn-cities .sn-stat .sn-label {
+  display: none;
+}
+.sn-cities .sn-unit {
+  display: inline;
+  color: var(--sn-text-3);
+}
+
+/* Slimmer header once pinned */
+.sn-head {
+  transition: padding 0.15s ease;
+}
+.sn-head.is-stuck {
+  align-items: center;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.sn-head.is-stuck .sn-title {
+  font-size: 17px;
+}
+.sn-head.is-stuck .sn-meta {
+  margin-top: 1px;
+}
+.sn-head.is-stuck .sn-meta-src {
+  display: none;
+}
+.sn-head.is-stuck .sn-seg button {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+/* Dashboard card: name the quarter */
+.sn-dash-cap {
+  display: none;
+}
+.sn-dash .sn-dash-cap {
+  display: block;
+  margin: 0 0 6px;
+  color: var(--sn-text-3);
+  font-size: 12px;
+}
+
+/* Loading placeholders */
+.sn-skel {
+  min-height: 150px;
+  pointer-events: none;
+}
+.sn-skel i {
+  display: block;
+  height: 12px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--sn-surface-2) 25%, var(--sn-border) 50%, var(--sn-surface-2) 75%);
+  background-size: 200% 100%;
+  animation: sn-shimmer 1.2s linear infinite;
+}
+.sn-skel i:nth-child(1) {
+  width: 55%;
+  height: 16px;
+}
+.sn-skel i:nth-child(2) {
+  width: 40%;
+  height: 26px;
+  margin-top: 10px;
+}
+.sn-skel i:nth-child(3) {
+  width: 85%;
+  margin-top: 18px;
+}
+@keyframes sn-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* Filters button: phones only */
+.sn-filter-btn {
+  display: none;
+  align-items: center;
+  gap: 6px;
+}
+.sn-badge-n {
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--sn-accent);
+  color: var(--sn-accent-ink);
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+}
+@media (max-width: 600px) {
+  .sn-filter-btn {
+    display: inline-flex;
+    order: 3;
+    align-self: flex-end;
+  }
+  /* search and Filters share a row */
+  .sn-controls > .sn-field.sn-search {
+    order: 2;
+    flex: 1 1 0;
+  }
+  .sn-controls > .sn-pills {
+    order: 1;
+    flex-basis: 100%;
+  }
+  .sn-controls > .sn-opt,
+  .sn-controls > .sn-reset {
+    order: 4;
+  }
+  .sn-controls:not(.is-open) .sn-opt {
+    display: none;
+  }
+  .sn-cities .sn-trend {
+    display: none;
+  }
+  /* keep the compact phone rows (the desktop city-card rules above come later) */
+  .sn-cities .sn-stats {
+    display: block;
+  }
+  .sn-cities .sn-stat:not(.sn-stat-deals) {
+    display: none;
+  }
+  .sn-cities .sn-skel {
+    min-height: 56px;
+  }
+  .sn-head.is-stuck .sn-seg {
+    width: auto;
+  }
+}
+
+/* History panel eases in */
+.sn-detail {
+  animation: sn-in 0.18s ease-out;
+}
+@keyframes sn-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sn-card,
+  .sn-head,
+  .sn-detail,
+  .sn-skel i {
+    transition: none;
+    animation: none;
+  }
+  .sn-card:not(.sn-skel):hover {
+    transform: none;
+  }
 }

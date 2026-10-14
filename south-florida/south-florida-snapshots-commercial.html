@@ -9,7 +9,7 @@
     <link rel="canonical" href="https://therealdeal.com/data/south-florida-market-snapshots/" />
     <link rel="preload" href="south-florida-snapshots-commercial.json" as="fetch" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap" />
-    <link rel="stylesheet" href="snapshots/snap.css?v=2" />
+    <link rel="stylesheet" href="snapshots/snap.css?v=3" />
   </head>
   <body>
     <!-- One page for residential, commercial and all sales; this file opens on
@@ -26,11 +26,12 @@
 
       <div class="sn-controls">
         <div class="sn-pills" role="group" aria-label="County"></div>
+        <button type="button" class="sn-btn sn-filter-btn" aria-expanded="false">Filters <span class="sn-badge-n" hidden>0</span></button>
         <span class="sn-spacer"></span>
-        <label class="sn-field"><span>Quarter</span><select id="sn-quarter"></select></label>
-        <label class="sn-field"><span>Property type</span><select id="sn-type"></select></label>
+        <label class="sn-field sn-opt"><span>Quarter</span><select id="sn-quarter"></select></label>
+        <label class="sn-field sn-opt"><span>Property type</span><select id="sn-type"></select></label>
         <label class="sn-field sn-search"><span>Find a city</span><input id="sn-search" type="search" placeholder="e.g. Coral Gables" autocomplete="off" /></label>
-        <label class="sn-field"><span>Sort cities by</span>
+        <label class="sn-field sn-opt"><span>Sort cities by</span>
           <select id="sn-sort">
             <option value="deals">Most sales</option>
             <option value="volume">Highest volume</option>
@@ -43,7 +44,8 @@
       </div>
 
       <div id="sn-results" aria-live="polite">
-        <div class="sn-grid sn-overview"><p class="sn-empty">Loading…</p></div>
+        <p class="sn-dash-cap"></p>
+        <div class="sn-grid sn-overview"></div>
         <h2 class="sn-section-h sn-cities-h"><span>Cities</span><span>Tap a card for its quarterly history</span></h2>
         <div class="sn-grid sn-cities"></div>
         <p class="sn-more" hidden></p>
@@ -53,6 +55,6 @@
 
     <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-    <script src="snapshots/snap.js?v=3"></script>
+    <script src="snapshots/snap.js?v=4"></script>
   </body>
 </html>
