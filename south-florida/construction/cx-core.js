@@ -381,8 +381,10 @@
   function stateFromUrl(search) {
     var q = new URLSearchParams(search == null ? location.search : search);
     var s = defaultState();
-    // ?property-type=residential is what the TRD dashboard card uses.
-    var t = listParam(q.get("type") || q.get("property-type"), TYPES);
+    // ?type= narrows the type. The TRD dashboard embeds the map with
+    // ?property-type=residential; that is deliberately ignored (as on the
+    // transactions map), so the card shows every project.
+    var t = listParam(q.get("type"), TYPES);
     if (t) s.types = t;
     var sz = listParam(q.get("size"), SIZE_IDS);
     if (sz) s.sizes = sz;
