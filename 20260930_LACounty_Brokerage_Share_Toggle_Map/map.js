@@ -159,7 +159,12 @@ function setPeriod(period) {
 
   // Remove the previous period's popup.
   clearHover();
+  const legend = document.getElementById('legend');
+  const hadLegendFocus = legend.contains(document.activeElement);
   renderLegend();
+  if (hadLegendFocus) {
+    legend.querySelector(`[data-period="${selectedPeriod}"]`).focus();
+  }
 }
 
 function renderLegend() {
