@@ -57,7 +57,7 @@
   var STATUSES = [
     { id: "any", label: "Any" },
     { id: "open", label: "Active or pending" },
-    { id: "final", label: "Finaled" },
+    { id: "final", label: "Final" },
   ];
 
   // ------------------------------------------------------------------ format
