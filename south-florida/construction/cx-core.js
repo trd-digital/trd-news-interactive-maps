@@ -776,8 +776,10 @@
       document.body.setAttribute("data-bs-theme", t);
       if (changed && onChange) onChange(t);
     }
-    var trd = typeof global.TrdTheme === "function"
-      ? global.TrdTheme({ updateCallback: function (t) { set(t); if (track) track("theme", t); } })
+    // theme.js declares `const TrdTheme` (a global binding, not a window
+    // property), so look it up by name.
+    var trd = typeof TrdTheme === "function"
+      ? TrdTheme({ updateCallback: function (t) { set(t); if (track) track("theme", t); } }) // eslint-disable-line no-undef
       : null;
     if (trd) trd.init();
     current = (trd && trd.get()) || (global.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
