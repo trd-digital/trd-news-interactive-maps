@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>South Florida&rsquo;s Branded Condos | The Real Deal</title>
+    <meta name="description" content="From Ritz-Carlton and St. Regis to Bentley, Bugatti and Dolce &amp; Gabbana: an interactive map of 66 branded condo projects planned, rising or recently completed across South Florida." />
+
+    <!-- Pre-paint boot snippet (core/boot-snippet.html) with this map's key. -->
+    <script>
+      (function () {
+        var r = document.documentElement, p = null;
+        try { p = new URLSearchParams(location.search); } catch (e) {}
+        var framed;
+        try { framed = window.self !== window.top; } catch (e) { framed = true; }
+        if ((p && p.get("layout") === "embed") || framed) r.setAttribute("data-layout", "embed");
+        var q = p && p.get("theme"), saved = null;
+        if (r.getAttribute("data-layout") !== "embed") {
+          try { saved = localStorage.getItem("sofla-branded-condos-10-15-26:theme"); } catch (e) {}
+        }
+        var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        r.setAttribute("data-theme", (q === "dark" || q === "light") ? q
+          : (saved === "dark" || saved === "light") ? saved : (dark ? "dark" : "light"));
+      })();
+    </script>
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css" rel="stylesheet" />
+    <link rel="stylesheet" href="trd-embed.css" />
+    <link rel="stylesheet" href="trd-map.css" />
+    <style>
+      :root { --trd-embed-h: 620px; --trd-embed-h-phone: 640px; --trd-embed-h-wide: 600px; }
+      html, body { height: 100%; }
+      .stage { position: relative; width: 100%; height: 100%; }
+      /* Standalone: the header takes --trd-header-h, so the stage fills the rest. */
+      :root:not([data-layout="embed"]) .stage { height: calc(100% - var(--trd-header-h)); }
+      .theme-toggle {
+        position: absolute; top: 12px; right: 56px; z-index: 4;
+        background: var(--trd-panel); color: var(--trd-text);
+        border: 1px solid var(--trd-border); border-radius: 999px; cursor: pointer;
+        padding: 6px 12px; font-size: 12px; font-weight: 700;
+      }
+
+      /* Filter bar (top-left) */
+      .filters {
+        position: absolute; top: 12px; left: 12px; z-index: 3;
+        display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px;
+        background: var(--trd-panel); color: var(--trd-text);
+        border: 1px solid var(--trd-border); border-radius: 6px;
+        padding: 8px 10px; font-size: 12px; box-shadow: var(--trd-shadow);
+        max-width: calc(100% - 24px);
+      }
+      :root:not([data-layout="embed"]) .filters { max-width: calc(100% - 150px); }
+      .filters .count { color: var(--trd-muted); white-space: nowrap; }
+      .filters .count b { color: var(--trd-text); }
+      .chips { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+      .chip {
+        font: inherit; font-size: 12px; font-weight: 700; cursor: pointer;
+        padding: 3px 9px; border-radius: 999px;
+        border: 1px solid var(--trd-border); background: var(--trd-bg-soft); color: var(--trd-text);
+      }
+      .chip[aria-pressed="true"] { background: var(--trd-brand); border-color: var(--trd-brand); color: #fff; }
+      .link {
+        font: inherit; font-size: 12px; font-weight: 700; color: var(--trd-brand);
+        background: none; border: 0; cursor: pointer; padding: 0 2px;
+      }
+      .link[hidden] { display: none; }
+      .zoom { color: var(--trd-muted); white-space: nowrap; }
+
+      /* Legend (bottom-left) */
+      .legend {
+        position: absolute; bottom: 28px; left: 12px; z-index: 3;
+        background: var(--trd-panel); color: var(--trd-text);
+        border: 1px solid var(--trd-border); border-radius: 6px;
+        padding: 9px 11px; font-size: 12px; box-shadow: var(--trd-shadow);
+        max-height: 60%; overflow: auto; max-width: 250px;
+      }
+      .legend .title { font-weight: 700; margin-bottom: 2px; }
+      .legend .sub { color: var(--trd-muted); font-size: 11px; margin-bottom: 6px; }
+      .legend .row {
+        display: flex; align-items: center; gap: 8px; margin: 4px 0; cursor: pointer;
+        opacity: 1; transition: opacity .15s;
+      }
+      .legend .row.dim { opacity: .35; }
+      .legend .dot { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid #fff; flex: 0 0 auto; box-shadow: 0 0 0 1px rgba(0,0,0,.25); }
+      .legend .lbl { flex: 1 1 auto; }
+      .legend .n { color: var(--trd-muted); margin-left: auto; padding-left: 10px; white-space: nowrap; text-align: right; line-height: 1.2; }
+      .legend .n b { color: var(--trd-text); font-weight: 700; }
+      .legend .sep { border-top: 1px solid var(--trd-border); margin: 7px 0 5px; }
+      .legend .sizes { display: flex; align-items: flex-end; gap: 12px; margin: 4px 0 2px; }
+      .legend .sizes .s { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--trd-muted); font-size: 10.5px; }
+      .legend .sizes .c { border-radius: 50%; background: var(--trd-muted); opacity: .5; border: 1.5px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.2); }
+      .legend .note { color: var(--trd-muted); margin-top: 6px; font-size: 11px; line-height: 1.35; }
+      @media (max-width: 560px) {
+        .legend { max-height: 42%; padding: 7px 9px; font-size: 11px; max-width: 200px; bottom: 24px; }
+        .legend .note, .legend .sub, .legend .sizes, .legend .sep { display: none; }
+        .filters { gap: 5px 8px; padding: 6px 8px; }
+      }
+
+      /* trd-map.js parks the embed zoom control top-left, under the filter bar;
+         embeds have no theme toggle, so move it to the free top-right corner. */
+      :root[data-layout="embed"] .mapboxgl-ctrl-top-left { left: auto; right: 0; }
+
+      /* Popup — sits above the filter bar / legend overlays. */
+      .mapboxgl-popup { z-index: 5; }
+      .mapboxgl-popup-content { max-height: none; }
+      .trd-popup-body { max-height: 62vh; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+      :root[data-layout="embed"] .trd-popup-body { max-height: 380px; }
+      @media (max-width: 560px) { :root[data-layout="embed"] .trd-popup-body { max-height: 320px; } }
+      .mapboxgl-popup-close-button { z-index: 1; }
+      .trd-popup-body h3 { padding-right: 14px; }
+      .trd-popup-brand { font-size: 12px; color: var(--trd-muted); margin: 0 0 6px; }
+      .trd-popup-tag { font-size: 12px; font-weight: 700; margin: 2px 0 8px; display: inline-flex; align-items: center; gap: 6px; }
+      .trd-popup-tag .dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.25); }
+      .trd-popup-facts { margin: 6px 0 0; padding: 0; font-size: 12px; line-height: 1.45; }
+      .trd-popup-facts div { margin: 2px 0; }
+      .trd-popup-facts b { font-weight: 700; }
+      .hover-tip .mapboxgl-popup-content { padding: 5px 9px; font-size: 12px; font-weight: 700; pointer-events: none; }
+      .hover-tip .mapboxgl-popup-tip { display: none; }
+    </style>
+  </head>
+  <body>
+    <header class="trd-header trd-standalone-only">
+      <h1>South Florida&rsquo;s Branded Condos</h1>
+    </header>
+
+    <!-- .trd-embed-fill makes .stage adopt the fixed embed height. -->
+    <div class="trd-map stage trd-embed-fill">
+      <div id="map"></div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">Dark</button>
+
+      <div class="filters" role="group" aria-label="Filters">
+        <span class="count" id="count"></span>
+        <span class="chips" id="chips" role="group" aria-label="Brand type"></span>
+        <span class="zoom">Zoom: <button class="link" data-zoom="Miami-Dade" type="button">Miami-Dade</button> · <button class="link" data-zoom="Broward" type="button">Broward</button> · <button class="link" data-zoom="Palm Beach" type="button">Palm Beach</button> · <button class="link" data-zoom="" type="button">All</button></span>
+        <button class="link" id="reset" type="button" hidden>Clear filters</button>
+      </div>
+
+      <div class="legend" aria-label="Legend">
+        <div class="title">Status</div>
+        <div class="sub">Click a status to isolate it</div>
+        <div id="legendRows"></div>
+        <div class="sep"></div>
+        <div class="sub" style="margin-bottom:2px">Sized by number of condos</div>
+        <div class="sizes" id="legendSizes"></div>
+        <div class="note">Status as of Oct. 2026. Unit counts are condo residences and may change as plans evolve.</div>
+      </div>
+    </div>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+    <script src="trd-embed.js"></script>
+    <script src="trd-map.js"></script>
+    <script>
+      // Status categories assigned in build_data.py. Light/dark steps are the
+      // dataviz-skill categorical slots 1, 3, 7, 2 (validated on TRD surfaces).
+      var STATUS_ORDER = ["Planned", "Under construction", "Stalled", "Recently completed"];
+      var STATUS_LABEL = { "Stalled": "Under construction, stalled" };
+      var PALETTES = {
+        light: { "Planned": "#2a78d6", "Under construction": "#eb6834", "Stalled": "#4a3aa7", "Recently completed": "#1baf7a" },
+        dark:  { "Planned": "#3987e5", "Under construction": "#d95926", "Stalled": "#9085e9", "Recently completed": "#199e70" },
+      };
+      // Brand-type chips: hotel/hospitality brands vs. everything else (cars, fashion, design, ...).
+      var KINDS = [
+        { key: "", label: "All brands" },
+        { key: "hotel", label: "Hotel & hospitality" },
+        { key: "other", label: "Cars, fashion & design" },
+      ];
+      // Public pk.* token — URL-restrict it in the Mapbox dashboard.
+      var TOKEN = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
+
+      var mapApi = null, GEO = null, popup = null, tip = null;
+      var currentTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+      var state = { status: "", kind: "" };
+
+      function palette() { return PALETTES[currentTheme] || PALETTES.light; }
+      function label(s) { return STATUS_LABEL[s] || s; }
+      function esc(s) {
+        return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+      function fmt(n) { return n == null ? "" : Number(n).toLocaleString("en-US"); }
+      function fact(lbl, value) {
+        var v = String(value == null ? "" : value).trim();
+        return v ? "<div><b>" + lbl + ":</b> " + v + "</div>" : "";
+      }
+      function kindOf(p) { return p.brand_type === "Hospitality" ? "hotel" : "other"; }
+
+      // ---- filtering ------------------------------------------------------
+      function matches(p) {
+        return (!state.status || p.status === state.status) && (!state.kind || kindOf(p) === state.kind);
+      }
+      function currentFilter() {
+        var parts = ["all"];
+        if (state.status) parts.push(["==", ["get", "status"], state.status]);
+        if (state.kind === "hotel") parts.push(["==", ["get", "brand_type"], "Hospitality"]);
+        if (state.kind === "other") parts.push(["!=", ["get", "brand_type"], "Hospitality"]);
+        return parts.length > 1 ? parts : null;
+      }
+      function visible() { return GEO.features.filter(function (f) { return matches(f.properties); }); }
+      // Camera padding that keeps dots clear of the filter bar (which wraps to
+      // two or three lines on phones) as well as the map edges.
+      function fitPad() {
+        var narrow = document.getElementById("map").clientWidth < 560, base = narrow ? 24 : 50;
+        var bar = document.querySelector(".filters");
+        var top = bar ? bar.offsetTop + bar.offsetHeight + 12 : base;
+        // On phones the legend spans most of the width, so reserve its height too.
+        var leg = document.querySelector(".legend");
+        var bottom = narrow && leg ? leg.offsetHeight + 36 : base;
+        return { top: Math.max(base, top), bottom: bottom, left: base, right: base };
+      }
+      function fitTo(fs, maxZoom) {
+        if (fs.length) mapApi.fitBounds(TRDMap.boundsOf(fs), { padding: fitPad(), maxZoom: maxZoom || 14 });
+      }
+      function applyFilter(refit) {
+        if (!mapApi || !mapApi.map || !mapApi.map.getLayer("points")) return;
+        mapApi.map.setFilter("points", currentFilter());
+        var vis = visible(), total = GEO.features.length;
+        var units = vis.reduce(function (a, f) { return a + (f.properties.units || 0); }, 0);
+        document.getElementById("count").innerHTML =
+          "<b>" + (vis.length === total ? total : vis.length + " of " + total) + "</b> projects · <b>" + fmt(units) + "</b> condos";
+        document.getElementById("reset").hidden = !state.status && !state.kind;
+        Array.prototype.forEach.call(document.querySelectorAll("#legendRows .row"), function (r) {
+          r.classList.toggle("dim", !!state.status && r.getAttribute("data-status") !== state.status);
+        });
+        Array.prototype.forEach.call(document.querySelectorAll("#chips .chip"), function (c) {
+          c.setAttribute("aria-pressed", String(c.getAttribute("data-kind") === state.kind));
+        });
+        if (popup) { popup.remove(); popup = null; }
+        if (refit) fitTo(vis, 13);
+      }
+
+      function buildControls() {
+        var counts = {}, units = {};
+        GEO.features.forEach(function (f) {
+          var s = f.properties.status;
+          counts[s] = (counts[s] || 0) + 1;
+          units[s] = (units[s] || 0) + (f.properties.units || 0);
+        });
+        var wrap = document.getElementById("legendRows");
+        STATUS_ORDER.forEach(function (s) {
+          if (!counts[s]) return;
+          var row = document.createElement("div");
+          row.className = "row"; row.setAttribute("data-status", s); row.setAttribute("role", "button"); row.tabIndex = 0;
+          row.title = fmt(units[s]) + " condos";
+          row.innerHTML = '<span class="dot"></span><span class="lbl">' + esc(label(s)) + '</span><span class="n"><b>' + counts[s] + "</b></span>";
+          function toggle() { state.status = state.status === s ? "" : s; applyFilter(true); }
+          row.addEventListener("click", toggle);
+          row.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
+          wrap.appendChild(row);
+        });
+
+        var chips = document.getElementById("chips");
+        KINDS.forEach(function (k) {
+          var b = document.createElement("button");
+          b.type = "button"; b.className = "chip"; b.setAttribute("data-kind", k.key);
+          var n = k.key ? GEO.features.filter(function (f) { return kindOf(f.properties) === k.key; }).length : 0;
+          b.textContent = k.label + (n ? " (" + n + ")" : "");
+          b.addEventListener("click", function () { state.kind = k.key; applyFilter(true); });
+          chips.appendChild(b);
+        });
+
+        document.getElementById("reset").addEventListener("click", function () { state.status = ""; state.kind = ""; applyFilter(true); });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-zoom]"), function (b) {
+          b.addEventListener("click", function () {
+            var c = b.getAttribute("data-zoom");
+            // Martin County's lone project rides with the Palm Beach view.
+            fitTo(visible().filter(function (f) {
+              var k = f.properties.county;
+              return !c || k === c || (c === "Palm Beach" && k === "Martin");
+            }), 15);
+          });
+        });
+
+        // Size key: same sqrt scale as build_data.py (r = 4 + 16*sqrt(u/umax)), at the z13 step.
+        var umax = Math.max.apply(null, GEO.features.map(function (f) { return f.properties.units || 0; }));
+        var sizes = document.getElementById("legendSizes");
+        [50, 250, umax].forEach(function (u) {
+          var r = (4 + 16 * Math.sqrt(u / umax)) * 0.8;
+          var d = document.createElement("div"); d.className = "s";
+          d.innerHTML = '<span class="c" style="width:' + (2 * r) + "px;height:" + (2 * r) + 'px"></span><span>' + fmt(u) + "</span>";
+          sizes.appendChild(d);
+        });
+        paintLegend();
+      }
+      function paintLegend() {
+        var pal = palette();
+        Array.prototype.forEach.call(document.querySelectorAll("#legendRows .row"), function (r) {
+          r.querySelector(".dot").style.background = pal[r.getAttribute("data-status")];
+        });
+      }
+
+      // ---- popup ------------------------------------------------------------
+      function popupHTML(p) {
+        var pal = palette();
+        return '<div class="trd-popup-body">' +
+          "<h3>" + esc(p.name) + "</h3>" +
+          '<p class="trd-popup-brand">' + esc(p.brand) + " &middot; " + esc(p.brand_type) + "</p>" +
+          '<div class="trd-popup-tag"><span class="dot" style="background:' + pal[p.status] + '"></span>' + esc(label(p.status)) + "</div>" +
+          '<div class="trd-popup-facts">' +
+            fact("Condos", esc(fmt(p.units))) +
+            fact("Developers", esc(p.developers)) +
+            fact("Address", esc(p.address)) +
+          "</div></div>";
+      }
+      function openFeature(feature) {
+        var p = feature.properties || {};
+        var coords = feature.geometry.coordinates.slice();
+        if (tip) tip.remove();
+        mapApi.flyTo(coords, { zoom: Math.max(mapApi.map.getZoom(), 14) });
+        if (popup) popup.remove();
+        var mine = new mapboxgl.Popup({ offset: 12, closeButton: true, maxWidth: "320px" })
+          .setLngLat(coords)
+          .setHTML(popupHTML(p))
+          .addTo(mapApi.map);
+        popup = mine;
+        mine.on("close", function () { if (popup === mine) popup = null; });
+      }
+      // Desktop hover: name tooltip (skipped while a click popup is open).
+      function wireHover(map) {
+        if (!window.matchMedia || !window.matchMedia("(hover: hover)").matches) return;
+        tip = new mapboxgl.Popup({ closeButton: false, closeOnClick: false, offset: 10, className: "hover-tip" });
+        map.on("mousemove", "points", function (e) {
+          var f = e.features && e.features[0];
+          if (!f || popup) { tip.remove(); return; }
+          tip.setLngLat(f.geometry.coordinates).setText(f.properties.name).addTo(map);
+        });
+        map.on("mouseleave", "points", function () { tip.remove(); });
+      }
+
+      var controller = TRDEmbed({
+        prefix: "sofla-branded-condos-10-15-26",
+        themeKey: "sofla-branded-condos-10-15-26:theme",
+        toggle: "#themeToggle",
+        mountTarget: "#map",
+        onMount: function (ctx) {
+          currentTheme = ctx.theme;
+          TRDMap.loadGeoJSON("data.geojson").then(function (geo) {
+            GEO = geo;
+            buildControls();
+            mapApi = TRDMap.create({
+              container: "map",
+              token: TOKEN,
+              theme: ctx.theme,
+              embed: ctx.isEmbed,
+              data: GEO,
+              bounds: TRDMap.boundsOf(GEO),
+              fitBoundsOptions: { padding: fitPad(), maxZoom: 12 },
+              cooperativeGestures: ctx.isEmbed,
+              interactiveLayers: ["points"],
+              // Idempotent: re-runs on every style.load (incl. theme swaps).
+              addLayers: function (map, c) {
+                if (!map.getSource("pts")) map.addSource("pts", { type: "geojson", data: c.data });
+                var color = c.matchColor(["get", "status"], palette());
+                if (!map.getLayer("points")) {
+                  map.addLayer({
+                    id: "points",
+                    type: "circle",
+                    source: "pts",
+                    layout: {
+                      // Smaller projects draw on top so they stay clickable inside big ones.
+                      "circle-sort-key": ["-", 30, ["get", "r"]],
+                    },
+                    paint: {
+                      "circle-radius": ["interpolate", ["linear"], ["zoom"],
+                        8, ["*", ["get", "r"], 0.45],
+                        11, ["*", ["get", "r"], 0.65],
+                        13, ["*", ["get", "r"], 0.8],
+                        16, ["get", "r"]],
+                      "circle-color": color,
+                      "circle-stroke-color": "#ffffff",
+                      "circle-stroke-width": 1.5,
+                      "circle-opacity": 0.88,
+                    },
+                  });
+                } else {
+                  map.setPaintProperty("points", "circle-color", color);
+                }
+                var f = currentFilter();
+                if (f) map.setFilter("points", f);
+              },
+              onFeatureClick: function (feature) { if (feature) openFeature(feature); },
+            });
+            mapApi.on("loaded", function () {
+              wireHover(mapApi.map);
+              applyFilter(false);
+              // Refit once the iframe/stage has settled at its final height.
+              mapApi.map.resize();
+              fitTo(visible(), 12);
+              ctx.postLoaded();
+            });
+          }).catch(function (e) {
+            console.error("[sofla-branded-condos-10-15-26] Could not load data.geojson", e);
+          });
+        },
+        onTheme: function (theme, ctx) {
+          currentTheme = theme;
+          var tb = document.getElementById("themeToggle");
+          if (tb) tb.textContent = theme === "dark" ? "Light" : "Dark";
+          paintLegend();
+          if (mapApi) mapApi.setTheme(theme);
+          ctx.requestResize();
+        },
+      });
+    </script>
+  </body>
+</html>
