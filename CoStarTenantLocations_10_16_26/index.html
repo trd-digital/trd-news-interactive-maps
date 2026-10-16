@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Where Austin&rsquo;s Defense and Chip Tenants Are Landing | The Real Deal</title>
+    <meta name="description" content="An interactive map of 29 Austin-area leases by defense, aerospace and semiconductor tenants, from Saronic and Allen Control Systems to NXP, NVIDIA and AMD." />
+
+    <!-- Pre-paint boot snippet (core/boot-snippet.html) with this map's key. -->
+    <script>
+      (function () {
+        var r = document.documentElement, p = null;
+        try { p = new URLSearchParams(location.search); } catch (e) {}
+        var framed;
+        try { framed = window.self !== window.top; } catch (e) { framed = true; }
+        if ((p && p.get("layout") === "embed") || framed) r.setAttribute("data-layout", "embed");
+        var q = p && p.get("theme"), saved = null;
+        if (r.getAttribute("data-layout") !== "embed") {
+          try { saved = localStorage.getItem("costar-tenant-locations-10-16-26:theme"); } catch (e) {}
+        }
+        var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        r.setAttribute("data-theme", (q === "dark" || q === "light") ? q
+          : (saved === "dark" || saved === "light") ? saved : (dark ? "dark" : "light"));
+      })();
+    </script>
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css" rel="stylesheet" />
+    <link rel="stylesheet" href="trd-embed.css" />
+    <link rel="stylesheet" href="trd-map.css" />
+    <style>
+      :root { --trd-embed-h: 620px; --trd-embed-h-phone: 640px; --trd-embed-h-wide: 600px; }
+      html, body { height: 100%; }
+      .stage { position: relative; width: 100%; height: 100%; }
+      /* Standalone: the header takes --trd-header-h, so the stage fills the rest. */
+      :root:not([data-layout="embed"]) .stage { height: calc(100% - var(--trd-header-h)); }
+      .theme-toggle {
+        position: absolute; top: 12px; right: 56px; z-index: 4;
+        background: var(--trd-panel); color: var(--trd-text);
+        border: 1px solid var(--trd-border); border-radius: 999px; cursor: pointer;
+        padding: 6px 12px; font-size: 12px; font-weight: 700;
+      }
+
+      /* Filter bar (top-left) */
+      .filters {
+        position: absolute; top: 12px; left: 12px; z-index: 3;
+        display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+        background: var(--trd-panel); color: var(--trd-text);
+        border: 1px solid var(--trd-border); border-radius: 6px;
+        padding: 10px 14px; font-size: 15px; box-shadow: var(--trd-shadow);
+        max-width: calc(100% - 24px);
+      }
+      :root:not([data-layout="embed"]) .filters { max-width: calc(100% - 150px); }
+      :root[data-layout="embed"] .filters { max-width: calc(100% - 66px); }   /* clear the top-right zoom control */
+      .filters .count { color: var(--trd-muted); white-space: nowrap; }
+      .filters .count b { color: var(--trd-text); }
+      .filters .lab { color: var(--trd-muted); margin-right: -6px; }
+      .chips { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+      .chip {
+        font: inherit; font-weight: 700; cursor: pointer;
+        padding: 5px 12px; border-radius: 999px;
+        border: 1px solid var(--trd-border); background: var(--trd-bg-soft); color: var(--trd-text);
+      }
+      .chip[aria-pressed="true"] { background: var(--trd-brand); border-color: var(--trd-brand); color: #fff; }
+      .link {
+        font: inherit; font-weight: 700; color: var(--trd-brand);
+        background: none; border: 0; cursor: pointer; padding: 0 2px;
+      }
+      .link[hidden] { display: none; }
+      .zoom { color: var(--trd-muted); white-space: nowrap; }
+
+      /* Legend (bottom-left) */
+      .legend {
+        position: absolute; bottom: 28px; left: 12px; z-index: 3;
+        background: var(--trd-panel); color: var(--trd-text);
+        border: 1px solid var(--trd-border); border-radius: 6px;
+        padding: 9px 11px; font-size: 12px; box-shadow: var(--trd-shadow);
+        max-height: 60%; overflow: auto; max-width: 260px;
+      }
+      .legend .title { font-weight: 700; margin-bottom: 2px; }
+      .legend .sub { color: var(--trd-muted); font-size: 11px; margin-bottom: 6px; }
+      .legend .row {
+        display: flex; align-items: center; gap: 8px; margin: 4px 0; cursor: pointer;
+        opacity: 1; transition: opacity .15s;
+      }
+      .legend .row.dim { opacity: .35; }
+      .legend .dot { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid #fff; flex: 0 0 auto; box-shadow: 0 0 0 1px rgba(0,0,0,.25); }
+      .legend .lbl { flex: 1 1 auto; }
+      .legend .n { color: var(--trd-muted); margin-left: auto; padding-left: 10px; white-space: nowrap; text-align: right; line-height: 1.2; }
+      .legend .n b { color: var(--trd-text); font-weight: 700; }
+      .legend .sep { border-top: 1px solid var(--trd-border); margin: 7px 0 5px; }
+      .legend .sizes { display: flex; align-items: flex-end; gap: 12px; margin: 4px 0 2px; }
+      .legend .sizes .s { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--trd-muted); font-size: 10.5px; }
+      .legend .sizes .c { border-radius: 50%; background: var(--trd-muted); opacity: .5; border: 1.5px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.2); }
+      .legend .note { color: var(--trd-muted); margin-top: 6px; font-size: 11px; line-height: 1.35; }
+      @media (max-width: 560px) {
+        .legend { max-height: 42%; padding: 7px 9px; font-size: 11px; max-width: 220px; bottom: 24px; }
+        .legend .note, .legend .sub, .legend .sizes, .legend .sep { display: none; }
+        .filters { gap: 6px 10px; padding: 8px 10px; font-size: 13px; }
+        .chip { padding: 4px 10px; }
+        /* The legend spans most of a phone's width; get it out of an open popup's way. */
+        .stage.popup-open .legend { display: none; }
+      }
+
+      /* trd-map.js parks the embed zoom control top-left, under the filter bar;
+         embeds have no theme toggle, so move it to the free top-right corner. */
+      :root[data-layout="embed"] .mapboxgl-ctrl-top-left { left: auto; right: 0; }
+
+      /* Popup — sits above the filter bar / legend overlays. */
+      .mapboxgl-popup { z-index: 5; }
+      .mapboxgl-popup-content { max-height: none; }
+      .trd-popup-body { max-height: 62vh; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+      :root[data-layout="embed"] .trd-popup-body { max-height: 380px; }
+      @media (max-width: 560px) { :root[data-layout="embed"] .trd-popup-body { max-height: 320px; } }
+      .mapboxgl-popup-close-button { z-index: 1; }
+      .trd-popup-body h3 { padding-right: 14px; }
+      .trd-popup-sub { font-size: 12px; color: var(--trd-muted); margin: 0 0 6px; line-height: 1.4; }
+      .trd-popup-tag { font-size: 12px; font-weight: 700; margin: 2px 0 4px; display: inline-flex; align-items: center; gap: 6px; }
+      .trd-popup-tag .dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.25); }
+      .lease { border-top: 1px solid var(--trd-border); padding: 7px 0 2px; margin-top: 6px; font-size: 12px; line-height: 1.45; }
+      .lease .tenant { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+      .lease .tenant .sf { font-weight: 400; color: var(--trd-muted); font-size: 12px; }
+      .lease div { margin: 2px 0; }
+      .lease b { font-weight: 700; }
+      .lease .soon { color: var(--trd-muted); font-style: italic; }
+      .hover-tip .mapboxgl-popup-content { padding: 5px 9px; font-size: 12px; font-weight: 700; pointer-events: none; }
+      .hover-tip .mapboxgl-popup-tip { display: none; }
+    </style>
+  </head>
+  <body>
+    <header class="trd-header trd-standalone-only">
+      <h1>Where Austin&rsquo;s Defense and Chip Tenants Are Landing</h1>
+    </header>
+
+    <!-- .trd-embed-fill makes .stage adopt the fixed embed height. -->
+    <div class="trd-map stage trd-embed-fill">
+      <div id="map"></div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">Dark</button>
+
+      <div class="filters" role="group" aria-label="Filters">
+        <span class="count" id="count"></span>
+        <span class="lab">Moved in:</span>
+        <span class="chips" id="chips" role="group" aria-label="Move-in year"></span>
+        <span class="zoom">Zoom: <button class="link" data-zoom="downtown" type="button">Downtown</button> · <button class="link" data-zoom="" type="button">All</button></span>
+        <button class="link" id="reset" type="button" hidden>Clear filters</button>
+      </div>
+
+      <div class="legend" aria-label="Legend">
+        <div class="title">Industry</div>
+        <div class="sub">Click an industry to isolate it</div>
+        <div id="legendRows"></div>
+        <div class="sep"></div>
+        <div class="sub" style="margin-bottom:2px">Sized by square feet occupied</div>
+        <div class="sizes" id="legendSizes"></div>
+        <div class="note">Source: CoStar. Industry groups NAICS codes. Move-in dates after Oct. 2026 are scheduled.</div>
+      </div>
+    </div>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+    <script src="trd-embed.js"></script>
+    <script src="trd-map.js"></script>
+    <script>
+      // Sectors assigned from NAICS codes in build_data.py. Light/dark steps are
+      // the dataviz-skill categorical slots used on the branded-condos map.
+      var SECTOR_ORDER = ["Defense & aerospace", "Semiconductors & electronics", "R&D & engineering"];
+      var PALETTES = {
+        light: { "Defense & aerospace": "#eb6834", "Semiconductors & electronics": "#2a78d6", "R&D & engineering": "#4a3aa7" },
+        dark:  { "Defense & aerospace": "#d95926", "Semiconductors & electronics": "#3987e5", "R&D & engineering": "#9085e9" },
+      };
+      var NOW_YM = "2026-10";   // move-ins after this month read as scheduled
+      // Downtown preset: the CBD / South Congress-1st St cluster.
+      var DOWNTOWN = [[-97.765, 30.25], [-97.73, 30.28]];
+      // Public pk.* token — URL-restrict it in the Mapbox dashboard.
+      var TOKEN = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
+
+      var mapApi = null, GEO = null, popup = null, tip = null, SF_MAX = 1;
+      var stage = document.querySelector(".stage");
+      var currentTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+      var state = { sector: "", year: "" };
+
+      function palette() { return PALETTES[currentTheme] || PALETTES.light; }
+      function esc(s) {
+        return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+      function fmt(n) { return n == null ? "" : Number(n).toLocaleString("en-US"); }
+      function sfShort(n) { return n >= 1e6 ? (n / 1e6).toFixed(2).replace(/0$/, "") + "M" : Math.round(n / 1000) + "K"; }
+      function radius(sf) { return 4 + 16 * Math.sqrt(sf / SF_MAX); }
+      function fact(lbl, value) {
+        var v = String(value == null ? "" : value).trim();
+        return v ? "<div><b>" + lbl + ":</b> " + v + "</div>" : "";
+      }
+
+      // ---- filtering --------------------------------------------------------
+      // Filters act on leases; each address shows (and is sized by) its matching leases.
+      function leaseMatches(l) {
+        return (!state.sector || l.sector === state.sector) && (!state.year || String(l.year) === state.year);
+      }
+      function visible() {
+        var out = [];
+        GEO.features.forEach(function (f, i) {
+          var ls = f.properties.leases.filter(leaseMatches);
+          if (!ls.length) return;
+          var sf = ls.reduce(function (a, l) { return a + l.sf; }, 0);
+          var tenants = [];
+          ls.forEach(function (l) { if (tenants.indexOf(l.tenant) < 0) tenants.push(l.tenant); });
+          out.push({
+            type: "Feature",
+            geometry: f.geometry,
+            properties: { i: i, sector: ls[0].sector, sf: sf, r: Math.round(radius(sf) * 100) / 100, tenants: tenants.join(", "), n: ls.length },
+          });
+        });
+        return out;
+      }
+      // Camera padding that keeps dots clear of the filter bar (which wraps to
+      // two or three lines on phones) as well as the map edges.
+      function fitPad() {
+        var narrow = document.getElementById("map").clientWidth < 560, base = narrow ? 24 : 50;
+        var bar = document.querySelector(".filters");
+        var top = bar ? bar.offsetTop + bar.offsetHeight + 12 : base;
+        // On phones the legend spans most of the width, so reserve its height too.
+        var leg = document.querySelector(".legend");
+        var bottom = narrow && leg ? leg.offsetHeight + 36 : base;
+        return { top: Math.max(base, top), bottom: bottom, left: base, right: base };
+      }
+      function fitTo(fs, maxZoom) {
+        if (fs.length) mapApi.fitBounds(TRDMap.boundsOf(fs), { padding: fitPad(), maxZoom: maxZoom || 14 });
+      }
+      function applyFilter(refit) {
+        if (!mapApi || !mapApi.map || !mapApi.map.getSource("pts")) return;
+        var vis = visible();
+        mapApi.map.getSource("pts").setData({ type: "FeatureCollection", features: vis });
+        var n = vis.reduce(function (a, f) { return a + f.properties.n; }, 0);
+        var sf = vis.reduce(function (a, f) { return a + f.properties.sf; }, 0);
+        var total = GEO.features.reduce(function (a, f) { return a + f.properties.leases.length; }, 0);
+        document.getElementById("count").innerHTML =
+          "<b>" + (n === total ? total : n + " of " + total) + "</b> leases · <b>" + sfShort(sf) + "</b> SF";
+        document.getElementById("reset").hidden = !state.sector && !state.year;
+        Array.prototype.forEach.call(document.querySelectorAll("#legendRows .row"), function (r) {
+          r.classList.toggle("dim", !!state.sector && r.getAttribute("data-sector") !== state.sector);
+        });
+        Array.prototype.forEach.call(document.querySelectorAll("#chips .chip"), function (c) {
+          c.setAttribute("aria-pressed", String(c.getAttribute("data-year") === state.year));
+        });
+        if (popup) { popup.remove(); popup = null; }
+        if (refit) fitTo(vis, 13);
+      }
+
+      function buildControls() {
+        var counts = {}, sfs = {}, years = {};
+        GEO.features.forEach(function (f) {
+          var site = 0;
+          f.properties.leases.forEach(function (l) {
+            counts[l.sector] = (counts[l.sector] || 0) + 1;
+            sfs[l.sector] = (sfs[l.sector] || 0) + l.sf;
+            years[l.year] = (years[l.year] || 0) + 1;
+            site += l.sf;
+          });
+          SF_MAX = Math.max(SF_MAX, site);
+        });
+        var wrap = document.getElementById("legendRows");
+        SECTOR_ORDER.forEach(function (s) {
+          if (!counts[s]) return;
+          var row = document.createElement("div");
+          row.className = "row"; row.setAttribute("data-sector", s); row.setAttribute("role", "button"); row.tabIndex = 0;
+          row.title = fmt(sfs[s]) + " SF";
+          row.innerHTML = '<span class="dot"></span><span class="lbl">' + esc(s) + '</span><span class="n"><b>' + counts[s] + "</b> leases</span>";
+          function toggle() { state.sector = state.sector === s ? "" : s; applyFilter(true); }
+          row.addEventListener("click", toggle);
+          row.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
+          wrap.appendChild(row);
+        });
+
+        var chips = document.getElementById("chips");
+        [""].concat(Object.keys(years).sort()).forEach(function (y) {
+          var b = document.createElement("button");
+          b.type = "button"; b.className = "chip"; b.setAttribute("data-year", y);
+          b.textContent = y ? y + (y > NOW_YM.slice(0, 4) ? "*" : "") : "All";
+          if (y) b.title = years[y] + " leases";
+          b.addEventListener("click", function () { state.year = y; applyFilter(true); });
+          chips.appendChild(b);
+        });
+
+        document.getElementById("reset").addEventListener("click", function () { state.sector = ""; state.year = ""; applyFilter(true); });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-zoom]"), function (b) {
+          b.addEventListener("click", function () {
+            if (b.getAttribute("data-zoom") === "downtown") {
+              mapApi.fitBounds(DOWNTOWN, { padding: fitPad(), maxZoom: 15 });
+            } else {
+              fitTo(visible(), 13);
+            }
+          });
+        });
+
+        // Size key at the z13 step of the radius ramp below.
+        var sizes = document.getElementById("legendSizes");
+        [25000, 100000, SF_MAX].forEach(function (sf) {
+          var r = radius(sf) * 0.8;
+          var d = document.createElement("div"); d.className = "s";
+          d.innerHTML = '<span class="c" style="width:' + (2 * r) + "px;height:" + (2 * r) + 'px"></span><span>' + sfShort(sf) + "</span>";
+          sizes.appendChild(d);
+        });
+        paintLegend();
+      }
+      function paintLegend() {
+        var pal = palette();
+        Array.prototype.forEach.call(document.querySelectorAll("#legendRows .row"), function (r) {
+          r.querySelector(".dot").style.background = pal[r.getAttribute("data-sector")];
+        });
+      }
+
+      // ---- popup ------------------------------------------------------------
+      function leaseHTML(l) {
+        var soon = l.moved_ym > NOW_YM ? ' <span class="soon">(scheduled)</span>' : "";
+        var reps = [l.landlord_rep && "landlord: " + esc(l.landlord_rep), l.tenant_rep && "tenant: " + esc(l.tenant_rep)].filter(Boolean).join("; ");
+        return '<div class="lease">' +
+          '<div class="tenant">' + esc(l.tenant) + ' <span class="sf">' + fmt(l.sf) + " SF</span></div>" +
+          fact("NAICS", esc(l.naics) + " (" + esc(l.naics_code) + ")") +
+          fact("Moved in", esc(l.moved_in) + soon) +
+          fact("Share of building", esc(l.pct_bldg) + " · " + esc(l.occupancy)) +
+          fact("Brokers", reps) +
+          "</div>";
+      }
+      function popupHTML(i, maxH) {
+        var p = GEO.features[i].properties, pal = palette();
+        var ls = p.leases.filter(leaseMatches);
+        var title = p.park ? p.park + (p.building ? ", " + p.building : "") : (p.building || p.address);
+        var type = p.property_type + (p.secondary_type ? " (" + p.secondary_type.toLowerCase() + ")" : "");
+        var hidden = p.leases.length - ls.length;
+        return '<div class="trd-popup-body" style="max-height:' + maxH + 'px">' +
+          "<h3>" + esc(title) + "</h3>" +
+          '<p class="trd-popup-sub">' + esc(p.address) + ", " + esc(p.city) + "<br>" + esc(type) + " · " + esc(p.submarket) + " submarket</p>" +
+          '<div class="trd-popup-tag"><span class="dot" style="background:' + pal[ls[0].sector] + '"></span>' + esc(ls[0].sector) + "</div>" +
+          ls.map(leaseHTML).join("") +
+          (hidden ? '<p class="trd-popup-sub" style="margin-top:6px">+' + hidden + " more lease" + (hidden > 1 ? "s" : "") + " here outside the current filter</p>" : "") +
+          "</div>";
+      }
+      function openFeature(feature) {
+        var i = feature.properties.i;
+        var coords = GEO.features[i].geometry.coordinates.slice();
+        if (tip) tip.remove();
+        // Sites can carry several leases, so park the dot near the bottom and open
+        // the popup upward, capped to the room between the dot and the filter bar.
+        var H = document.getElementById("map").clientHeight;
+        var dotY = H - 56;
+        var maxH = Math.max(160, dotY - 12 - 10 - fitPad().top - 28);
+        mapApi.flyTo(coords, { zoom: Math.max(mapApi.map.getZoom(), 14), offset: [0, dotY - H / 2] });
+        if (popup) popup.remove();
+        var mine = new mapboxgl.Popup({ offset: 12, anchor: "bottom", closeButton: true, maxWidth: "330px" })
+          .setLngLat(coords)
+          .setHTML(popupHTML(i, maxH))
+          .addTo(mapApi.map);
+        popup = mine;
+        stage.classList.add("popup-open");
+        mine.on("close", function () { if (popup === mine) { popup = null; stage.classList.remove("popup-open"); } });
+      }
+      // Desktop hover: tenant tooltip (skipped while a click popup is open).
+      function wireHover(map) {
+        if (!window.matchMedia || !window.matchMedia("(hover: hover)").matches) return;
+        tip = new mapboxgl.Popup({ closeButton: false, closeOnClick: false, offset: 10, className: "hover-tip" });
+        map.on("mousemove", "points", function (e) {
+          var f = e.features && e.features[0];
+          if (!f || popup) { tip.remove(); return; }
+          tip.setLngLat(f.geometry.coordinates).setText(f.properties.tenants + " · " + fmt(f.properties.sf) + " SF").addTo(map);
+        });
+        map.on("mouseleave", "points", function () { tip.remove(); });
+      }
+
+      var controller = TRDEmbed({
+        prefix: "costar-tenant-locations-10-16-26",
+        themeKey: "costar-tenant-locations-10-16-26:theme",
+        toggle: "#themeToggle",
+        mountTarget: "#map",
+        onMount: function (ctx) {
+          currentTheme = ctx.theme;
+          TRDMap.loadGeoJSON("data.geojson").then(function (geo) {
+            GEO = geo;
+            buildControls();
+            mapApi = TRDMap.create({
+              container: "map",
+              token: TOKEN,
+              theme: ctx.theme,
+              embed: ctx.isEmbed,
+              data: GEO,
+              bounds: TRDMap.boundsOf(GEO),
+              fitBoundsOptions: { padding: fitPad(), maxZoom: 12 },
+              cooperativeGestures: ctx.isEmbed,
+              interactiveLayers: ["points"],
+              // Idempotent: re-runs on every style.load (incl. theme swaps).
+              addLayers: function (map, c) {
+                if (!map.getSource("pts")) map.addSource("pts", { type: "geojson", data: { type: "FeatureCollection", features: visible() } });
+                var color = c.matchColor(["get", "sector"], palette());
+                if (!map.getLayer("points")) {
+                  map.addLayer({
+                    id: "points",
+                    type: "circle",
+                    source: "pts",
+                    layout: {
+                      // Smaller sites draw on top so they stay clickable next to big ones.
+                      "circle-sort-key": ["-", 30, ["get", "r"]],
+                    },
+                    paint: {
+                      "circle-radius": ["interpolate", ["linear"], ["zoom"],
+                        8, ["*", ["get", "r"], 0.5],
+                        11, ["*", ["get", "r"], 0.7],
+                        13, ["*", ["get", "r"], 0.8],
+                        16, ["get", "r"]],
+                      "circle-color": color,
+                      "circle-stroke-color": "#ffffff",
+                      "circle-stroke-width": 1.5,
+                      "circle-opacity": 0.88,
+                    },
+                  });
+                } else {
+                  map.setPaintProperty("points", "circle-color", color);
+                }
+              },
+              onFeatureClick: function (feature) { if (feature) openFeature(feature); },
+            });
+            mapApi.on("loaded", function () {
+              wireHover(mapApi.map);
+              applyFilter(false);
+              // Refit once the iframe/stage has settled at its final height.
+              mapApi.map.resize();
+              fitTo(visible(), 12);
+              ctx.postLoaded();
+            });
+          }).catch(function (e) {
+            console.error("[costar-tenant-locations-10-16-26] Could not load data.geojson", e);
+          });
+        },
+        onTheme: function (theme, ctx) {
+          currentTheme = theme;
+          var tb = document.getElementById("themeToggle");
+          if (tb) tb.textContent = theme === "dark" ? "Light" : "Dark";
+          paintLegend();
+          if (mapApi) mapApi.setTheme(theme);
+          ctx.requestResize();
+        },
+      });
+    </script>
+  </body>
+</html>
