@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>7+ Fact-Check Map</title>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #ffffff; --ink: #14171f; --ink2: #4a5163; --muted: #737a8c; --line: #dfe2e8;
+        --chip: #f1f3f6; --accent: #2a78d6; --warn: #b3261e; --hl: #fff4c2;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #0f1218; --ink: #eef0f4; --ink2: #b7bdca; --muted: #8b92a3; --line: #2a303c;
+          --chip: #1b2029; --accent: #3987e5; --warn: #ff8a80; --hl: #3a3410; color-scheme: dark;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; }
+      body { background: var(--bg); color: var(--ink); font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+      .app { display: grid; grid-template-columns: 330px 1fr; height: 100%; }
+      aside { overflow-y: auto; padding: 14px 16px; border-right: 1px solid var(--line); }
+      h1 { font-size: 17px; margin: 0 0 2px; }
+      .sub { color: var(--muted); font-size: 12.5px; margin: 0 0 12px; }
+      .warn-box { background: var(--chip); border-left: 3px solid var(--warn); padding: 6px 9px; font-size: 12px; color: var(--ink2); margin-bottom: 12px; }
+      fieldset { border: 0; padding: 0; margin: 0 0 12px; }
+      legend { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-bottom: 4px; }
+      label.ck { display: flex; align-items: center; gap: 7px; padding: 2px 0; cursor: pointer; }
+      label.ck .n { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px; }
+      .sw { width: 13px; height: 13px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.35); flex: none; }
+      .sw.hollow { background: transparent !important; border-width: 3px; box-shadow: 0 0 0 1px rgba(0,0,0,.35), inset 0 0 0 1px rgba(0,0,0,.35); }
+      input[type=search] { width: 100%; padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); font: inherit; }
+      .results { margin: 6px 0 0; padding: 0; list-style: none; max-height: 220px; overflow-y: auto; }
+      .results li { padding: 5px 6px; border-radius: 5px; cursor: pointer; font-size: 12.5px; }
+      .results li:hover { background: var(--chip); }
+      .results .m { color: var(--muted); font-size: 11.5px; }
+      .count { font-size: 12.5px; color: var(--ink2); margin: 4px 0 10px; }
+      button.lnk { background: none; border: 0; color: var(--accent); cursor: pointer; padding: 0; font: inherit; font-size: 12.5px; }
+      #map { height: 100%; }
+      .notice { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); background: var(--bg); color: var(--warn); border: 1px solid var(--line); padding: 7px 12px; border-radius: 6px; font-size: 13px; z-index: 5; display: none; box-shadow: 0 2px 8px rgba(0,0,0,.25); }
+      .mapwrap { position: relative; height: 100%; }
+      /* popup */
+      .mapboxgl-popup-content { background: var(--bg); color: var(--ink); padding: 12px 14px 10px; border-radius: 8px; max-height: 60vh; overflow-y: auto; width: 340px; font-size: 12.5px; }
+      .mapboxgl-popup-tip { border-top-color: var(--bg) !important; border-bottom-color: var(--bg) !important; }
+      .mapboxgl-popup-close-button { color: var(--ink2); font-size: 18px; padding: 2px 7px; }
+      .p-addr { font-weight: 700; font-size: 14px; margin-right: 16px; }
+      .p-meta { color: var(--ink2); margin: 2px 0 6px; }
+      .p-meta code, .f code { font-size: 11.5px; }
+      .p-twp { display: inline-flex; align-items: center; gap: 5px; }
+      .p-twp .sw { width: 10px; height: 10px; border-width: 1px; }
+      .f { border-top: 1px solid var(--line); padding: 6px 4px; }
+      .f.hl { background: var(--hl); border-radius: 4px; }
+      .f .row1 { display: flex; justify-content: space-between; gap: 8px; }
+      .f a { color: var(--accent); }
+      .tag { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 0 5px; border-radius: 3px; background: var(--chip); color: var(--ink2); margin-right: 3px; }
+      .tag.out { color: var(--warn); }
+      .tag.tp { background: #eb6834; color: #fff; }
+      .why { color: var(--warn); font-size: 11.5px; }
+      .m { color: var(--muted); font-size: 11.5px; }
+      .p-link { margin-top: 6px; font-size: 11.5px; color: var(--muted); word-break: break-all; }
+      @media (max-width: 760px) {
+        .app { grid-template-columns: 1fr; grid-template-rows: auto 62vh; height: auto; }
+        aside { border-right: 0; border-bottom: 1px solid var(--line); max-height: none; }
+        .mapwrap { height: 62vh; }
+        .mapboxgl-popup-content { width: 280px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside>
+        <h1>7+ fact-check map</h1>
+        <p class="sub" id="sub"></p>
+        <div class="warn-box">Internal tool for the reporters. Not for publication.</div>
+        <fieldset>
+          <legend>Find</legend>
+          <input type="search" id="q" placeholder="Address, PIN, doc number or plaintiff" autocomplete="off" />
+          <ul class="results" id="results"></ul>
+        </fieldset>
+        <div class="count" id="count"></div>
+        <fieldset id="fsGroup"><legend>Fact-checker group</legend></fieldset>
+        <fieldset id="fsStatus"><legend>Status</legend></fieldset>
+        <fieldset id="fsTwp"><legend>Township (from the map boundary)</legend></fieldset>
+        <button class="lnk" id="reset">Reset filters</button>
+      </aside>
+      <div class="mapwrap">
+        <div id="map"></div>
+        <div class="notice" id="notice"></div>
+      </div>
+    </div>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+    <script src="data.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        var TOKEN = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
+        var D = window.FCMAP;
+        // Bright hues that hold up on satellite imagery; every pin also has a white ring.
+        var TWP_COLOR = {
+          "Hyde Park": "#ff8a1f", "Lake": "#2f9bff", "West Chicago": "#ffd400", "Lake View": "#ff4fb0",
+          "Jefferson": "#00e0c0", "South Chicago": "#a77bff", "North Chicago": "#ff4a4a", "Rogers Park": "#8be04e"
+        };
+        var TWP_ORDER = Object.keys(TWP_COLOR);
+        var MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
+
+        var B = D.buildings;
+        B.forEach(function (b, i) { b.i = i; });
+        var byDoc = {};
+        B.forEach(function (b) { b.filings.forEach(function (f) { byDoc[f.doc] = b; }); });
+
+        var state = { groups: { 1: true, 2: true, 3: true, 4: true }, inT: true, outT: true, taggedOnly: false, twps: {} };
+        TWP_ORDER.forEach(function (t) { state.twps[t] = true; });
+        var selected = null, selectedDoc = null, popup = null;
+
+        function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+        function fmtDate(s) { if (!s) return ""; var p = s.split("-"); return MONTHS[+p[1] - 1] + " " + (+p[2]) + ", " + p[0]; }
+        function rowVisible(f, b) {
+          return state.groups[f.group] && (f.in ? state.inT : state.outT) && (!state.taggedOnly || f.tagged) && state.twps[b.twp];
+        }
+
+        // ---------- sidebar ----------
+        document.getElementById("sub").textContent = D.meta.rows + " filings on " + D.meta.buildings + " buildings · " +
+          D.meta.in_totals + " counted, " + D.meta.removed + " removed from the totals";
+        function ck(parent, label, checked, n, sw, onChange) {
+          var l = document.createElement("label"); l.className = "ck";
+          l.innerHTML = '<input type="checkbox"' + (checked ? " checked" : "") + ">" + (sw || "") + "<span>" + esc(label) + '</span><span class="n">' + n + "</span>";
+          l.querySelector("input").addEventListener("change", function (e) { onChange(e.target.checked); refresh(); });
+          parent.appendChild(l); return l;
+        }
+        var allRows = []; B.forEach(function (b) { b.filings.forEach(function (f) { allRows.push([f, b]); }); });
+        function cnt(fn) { return allRows.filter(function (r) { return fn(r[0], r[1]); }).length; }
+        var fsG = document.getElementById("fsGroup");
+        [1, 2, 3, 4].forEach(function (g) { ck(fsG, "Group " + g, true, cnt(function (f) { return f.group == g; }), "", function (v) { state.groups[g] = v; }); });
+        var fsS = document.getElementById("fsStatus");
+        ck(fsS, "Counted in the totals", true, cnt(function (f) { return f.in; }), '<span class="sw" style="background:#9aa0ad"></span>', function (v) { state.inT = v; });
+        ck(fsS, "Removed from the totals", true, cnt(function (f) { return !f.in; }), '<span class="sw hollow" style="border-color:#9aa0ad"></span>', function (v) { state.outT = v; });
+        ck(fsS, "Tagged party only (Bialostozky, Tauber, Rotenberg, MJNT)", false, cnt(function (f) { return f.tagged; }), "", function (v) { state.taggedOnly = v; });
+        var fsT = document.getElementById("fsTwp");
+        TWP_ORDER.forEach(function (t) {
+          ck(fsT, t, true, cnt(function (f, b) { return b.twp === t; }), '<span class="sw" style="background:' + TWP_COLOR[t] + '"></span>', function (v) { state.twps[t] = v; });
+        });
+        document.getElementById("reset").addEventListener("click", function () {
+          document.querySelectorAll("aside input[type=checkbox]").forEach(function (el) {
+            el.checked = !/Tagged/.test(el.parentNode.textContent);
+          });
+          state.groups = { 1: true, 2: true, 3: true, 4: true }; state.inT = state.outT = true; state.taggedOnly = false;
+          TWP_ORDER.forEach(function (t) { state.twps[t] = true; });
+          refresh();
+        });
+
+        // search
+        var q = document.getElementById("q"), results = document.getElementById("results");
+        q.addEventListener("input", function () {
+          var s = q.value.trim().toLowerCase(), digits = s.replace(/\D/g, "");
+          results.innerHTML = "";
+          if (s.length < 2) return;
+          var hits = [];
+          B.forEach(function (b) {
+            var docHit = null;
+            b.filings.forEach(function (f) {
+              if ((digits.length >= 4 && f.doc.indexOf(digits) >= 0) || f.plaintiff.toLowerCase().indexOf(s) >= 0) docHit = docHit || f;
+            });
+            var pinHit = digits.length >= 4 && b.filings.some(function (f) { return f.parcels.some(function (p) { return p.indexOf(digits) >= 0; }); });
+            if (docHit || pinHit || b.addr.toLowerCase().indexOf(s) >= 0) hits.push([b, docHit]);
+          });
+          hits.slice(0, 40).forEach(function (h) {
+            var li = document.createElement("li");
+            li.innerHTML = esc(h[0].addr) + '<div class="m">' + esc(h[0].twp) + " · " + h[0].filings.length + " filing" + (h[0].filings.length > 1 ? "s" : "") +
+              (h[1] ? " · doc " + esc(h[1].doc) + " " + esc(h[1].plaintiff) : "") + "</div>";
+            li.addEventListener("click", function () { openBuilding(h[0], h[1] && h[1].doc, true); });
+            results.appendChild(li);
+          });
+          if (!hits.length) results.innerHTML = '<li class="m">No match</li>';
+        });
+
+        // ---------- map ----------
+        mapboxgl.accessToken = TOKEN;
+        var map = new mapboxgl.Map({
+          container: "map", style: "mapbox://styles/mapbox/satellite-streets-v12",
+          bounds: bounds(B), fitBoundsOptions: { padding: 40 }, attributionControl: true
+        });
+        map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
+        map.addControl(new mapboxgl.ScaleControl({ unit: "imperial" }), "bottom-right");
+
+        function bounds(list) {
+          var b = new mapboxgl.LngLatBounds();
+          list.forEach(function (x) { if (x.lon != null) b.extend([x.lon, x.lat]); });
+          return b;
+        }
+
+        // one pin per row; rows on the same building sit on a small ring of
+        // constant screen size around the parcel centroid
+        function pinsGeo() {
+          var z = map.getZoom(), feats = [];
+          var degPx = 360 / (512 * Math.pow(2, z));
+          B.forEach(function (b) {
+            if (b.lon == null) return;
+            var rows = b.filings.filter(function (f) { return rowVisible(f, b); });
+            var n = rows.length, R = n > 1 ? 6 + 1.5 * n : 0;
+            rows.forEach(function (f, k) {
+              var a = -Math.PI / 2 + 2 * Math.PI * k / Math.max(n, 1);
+              var dx = R * Math.cos(a) * degPx, dy = -R * Math.sin(a) * degPx * Math.cos(b.lat * Math.PI / 180);
+              feats.push({ type: "Feature", geometry: { type: "Point", coordinates: [b.lon + dx, b.lat + dy] },
+                properties: { b: b.i, doc: f.doc, color: TWP_COLOR[b.twp] || "#ffffff", inT: f.in ? 1 : 0, tagged: f.tagged ? 1 : 0,
+                  sel: selected === b ? (selectedDoc === f.doc ? 2 : 1) : 0 } });
+            });
+          });
+          return { type: "FeatureCollection", features: feats };
+        }
+
+        function refresh() {
+          var nRows = 0, nB = 0;
+          B.forEach(function (b) {
+            var k = b.filings.filter(function (f) { return rowVisible(f, b); }).length;
+            nRows += k; if (k) nB++;
+          });
+          document.getElementById("count").textContent = "Showing " + nRows + " of " + D.meta.rows + " filings on " + nB + " buildings";
+          if (map.getSource("pins")) map.getSource("pins").setData(pinsGeo());
+          if (map.getLayer("twp-fill")) {
+            var on = TWP_ORDER.filter(function (t) { return state.twps[t]; });
+            map.setFilter("twp-line", ["in", ["get", "township"], ["literal", on]]);
+          }
+        }
+
+        map.on("load", function () {
+          fetch("townships.geojson").then(function (r) { return r.json(); }).then(function (fc) {
+            map.addSource("twp", { type: "geojson", data: fc });
+            var colorExpr = ["match", ["get", "township"]];
+            TWP_ORDER.forEach(function (t) { colorExpr.push(t, TWP_COLOR[t]); });
+            colorExpr.push("#ffffff");
+            map.addLayer({ id: "twp-fill", type: "fill", source: "twp", paint: { "fill-color": colorExpr, "fill-opacity": 0.08 } });
+            map.addLayer({ id: "twp-casing", type: "line", source: "twp", paint: { "line-color": "#000", "line-width": 4.5, "line-opacity": 0.45 } });
+            map.addLayer({ id: "twp-line", type: "line", source: "twp", paint: { "line-color": colorExpr, "line-width": 2.2 } });
+            var labels = { type: "FeatureCollection", features: fc.features.map(function (f) {
+              return { type: "Feature", geometry: { type: "Point", coordinates: [f.properties.label_lon, f.properties.label_lat] }, properties: { township: f.properties.township } };
+            }) };
+            map.addSource("twp-lbl", { type: "geojson", data: labels });
+            map.addLayer({ id: "twp-label", type: "symbol", source: "twp-lbl", maxzoom: 14.5,
+              layout: { "text-field": ["upcase", ["get", "township"]], "text-size": 13, "text-letter-spacing": 0.08, "text-font": ["DIN Pro Bold", "Arial Unicode MS Bold"] },
+              paint: { "text-color": colorExpr, "text-halo-color": "rgba(0,0,0,.85)", "text-halo-width": 1.8 } });
+
+            map.addSource("pins", { type: "geojson", data: pinsGeo() });
+            map.addLayer({ id: "pin-sel", type: "circle", source: "pins", filter: [">", ["get", "sel"], 0],
+              paint: { "circle-radius": ["case", ["==", ["get", "sel"], 2], 13, 10], "circle-color": "rgba(0,0,0,0)",
+                "circle-stroke-color": ["case", ["==", ["get", "sel"], 2], "#ffffff", "rgba(255,255,255,.55)"], "circle-stroke-width": 2.5 } });
+            map.addLayer({ id: "pins", type: "circle", source: "pins",
+              paint: {
+                "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 4.5, 14, 6.5, 17, 8],
+                "circle-color": ["case", ["==", ["get", "inT"], 1], ["get", "color"], "rgba(20,20,20,.75)"],
+                "circle-stroke-color": ["case", ["==", ["get", "inT"], 1], "#ffffff", ["get", "color"]],
+                "circle-stroke-width": ["case", ["==", ["get", "inT"], 1], 1.5, 3]
+              } });
+            map.addLayer({ id: "pins-hit", type: "circle", source: "pins", paint: { "circle-radius": 11, "circle-color": "rgba(0,0,0,0)" } });
+
+            map.on("click", "pins-hit", function (e) {
+              var p = e.features[0].properties; openBuilding(B[p.b], p.doc, false);
+            });
+            map.on("mouseenter", "pins-hit", function () { map.getCanvas().style.cursor = "pointer"; });
+            map.on("mouseleave", "pins-hit", function () { map.getCanvas().style.cursor = ""; });
+            var raf = 0;
+            map.on("zoom", function () { if (raf) return; raf = requestAnimationFrame(function () { raf = 0; map.getSource("pins").setData(pinsGeo()); }); });
+            refresh();
+            applyDeepLink();
+          });
+        });
+
+        function linkFor(b, doc) {
+          var base = location.href.split(/[?#]/)[0];
+          return b.pin ? base + "?pin=" + b.pin : base + "?doc=" + (doc || b.filings[0].doc);
+        }
+
+        function popupHTML(b) {
+          var sw = '<span class="sw" style="background:' + (TWP_COLOR[b.twp] || "#fff") + '"></span>';
+          var pinLine = b.pin ? "PIN <code>" + b.pin + "</code>" : "PINs <code>" + esc(b.filings[0].keypin) + "</code>";
+          var h = '<div class="p-addr">' + esc(b.addr) + "</div>" +
+            '<div class="p-meta"><span class="p-twp">' + sw + esc(b.twp) + " Township</span> · " + esc(b.area) + "<br>" + pinLine +
+            (b.twp_csv && b.twp_csv !== b.twp ? '<br><span class="m">Workbook township: ' + esc(b.twp_csv) + "</span>" : "") + "</div>";
+          b.filings.forEach(function (f) {
+            h += '<div class="f' + (f.doc === selectedDoc ? " hl" : "") + '" data-doc="' + f.doc + '">' +
+              '<div class="row1"><span><a href="' + esc(f.link) + '" target="_blank" rel="noopener">Doc ' + f.doc + "</a> · " + fmtDate(f.date) + "</span>" +
+              '<span class="tag">Group ' + esc(f.group) + "</span></div>" +
+              "<div>" + esc(f.plaintiff) + "</div><div>" +
+              (f.in ? '<span class="tag">In totals</span>' : '<span class="tag out">Removed</span>') +
+              (f.tagged ? '<span class="tag tp">Tagged (4-party rule)</span>' : '<span class="tag">Not tagged</span>') +
+              (f.flag ? '<span class="tag">' + esc(f.flag.replace(/_/g, " ")) + "</span>" : "") + "</div>" +
+              (f.why ? '<div class="why">' + esc(f.why) + "</div>" : "") +
+              (f.party ? '<div class="m">Names on the building\'s tab: ' + esc(f.party) + "</div>" : "") +
+              (f.parcels.length > 1 ? '<div class="m">Parcels: ' + f.parcels.join(", ") + "</div>" : "") +
+              "</div>";
+          });
+          h += '<div class="p-link">Link: <a href="' + esc(linkFor(b, selectedDoc)) + '">' + esc(linkFor(b, selectedDoc)) + "</a></div>";
+          return h;
+        }
+
+        function openBuilding(b, doc, fly) {
+          if (popup) { var old = popup; popup = null; old.remove(); }
+          selected = b; selectedDoc = doc || null;
+          var go = function () {
+            popup = new mapboxgl.Popup({ maxWidth: "none", offset: 14, focusAfterOpen: false })
+              .setLngLat([b.lon, b.lat]).setHTML(popupHTML(b)).addTo(map);
+            var mine = popup;
+            popup.on("close", function () { if (popup === mine) { popup = null; selected = null; selectedDoc = null; refresh(); } });
+            var hl = popup.getElement().querySelector(".f.hl");
+            if (hl) hl.scrollIntoView({ block: "nearest" });
+            history.replaceState(null, "", linkFor(b, selectedDoc).replace(location.href.split(/[?#]/)[0], location.pathname));
+          };
+          if (fly) { map.flyTo({ center: [b.lon, b.lat], zoom: Math.max(map.getZoom(), 17.5), speed: 1.6 }); map.once("moveend", go); }
+          else go();
+          refresh();
+        }
+
+        function notice(msg) {
+          var n = document.getElementById("notice"); n.textContent = msg; n.style.display = "block";
+          setTimeout(function () { n.style.display = "none"; }, 6000);
+        }
+
+        // ?pin=<14-digit keypin> or ?doc=<filing doc number>; the same in the hash also works
+        function applyDeepLink() {
+          var p = new URLSearchParams(location.search);
+          var h = new URLSearchParams(location.hash.replace(/^#/, ""));
+          var pin = (p.get("pin") || h.get("pin") || "").replace(/\D/g, "");
+          var doc = (p.get("doc") || h.get("doc") || "").replace(/\D/g, "");
+          if (doc) {
+            if (byDoc[doc]) return jump(byDoc[doc], doc);
+            return notice("No filing with doc number " + doc + " on this map.");
+          }
+          if (pin) {
+            var b = B.filter(function (x) { return x.pin === pin; })[0] ||
+              B.filter(function (x) { return x.filings.some(function (f) { return f.parcels.indexOf(pin) >= 0; }); })[0];
+            if (b) return jump(b, null);
+            return notice("No building with PIN " + pin + " on this map.");
+          }
+        }
+        function jump(b, doc) {
+          map.jumpTo({ center: [b.lon, b.lat], zoom: 17.5 });
+          openBuilding(b, doc, false);
+        }
+        window.addEventListener("hashchange", applyDeepLink);
+      })();
+    </script>
+  </body>
+</html>
