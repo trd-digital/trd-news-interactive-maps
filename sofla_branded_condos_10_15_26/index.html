@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>South Florida&rsquo;s Branded Condos | The Real Deal</title>
+    <title>South Florida&rsquo;s Branded Condo Boom | The Real Deal</title>
     <meta name="description" content="From Ritz-Carlton and St. Regis to Bentley, Bugatti and Dolce &amp; Gabbana: an interactive map of 66 branded condo projects planned, rising or recently completed across South Florida." />
 
     <!-- Pre-paint boot snippet (core/boot-snippet.html) with this map's key. -->
@@ -29,11 +29,27 @@
     <link rel="stylesheet" href="trd-embed.css" />
     <link rel="stylesheet" href="trd-map.css" />
     <style>
-      :root { --trd-embed-h: 620px; --trd-embed-h-phone: 640px; --trd-embed-h-wide: 600px; }
+      :root { --trd-embed-h: 690px; --trd-embed-h-phone: 730px; --trd-embed-h-wide: 670px; }
       html, body { height: 100%; }
-      .stage { position: relative; width: 100%; height: 100%; }
-      /* Standalone: the header takes --trd-header-h, so the stage fills the rest. */
-      :root:not([data-layout="embed"]) .stage { height: calc(100% - var(--trd-header-h)); }
+      /* Headline block on top (shown in the embed too), map fills the rest. */
+      body { display: flex; flex-direction: column; }
+      .map-head {
+        flex: 0 0 auto; padding: 14px 18px 12px;
+        background: var(--trd-panel); border-bottom: 1px solid var(--trd-border);
+      }
+      .map-head h1 {
+        font-family: var(--trd-font-serif); font-weight: 900; font-size: 24px;
+        line-height: 1.15; letter-spacing: -0.01em; margin: 0;
+      }
+      .map-head p { margin: 4px 0 0; font-size: 15px; line-height: 1.35; color: var(--trd-muted); }
+      @media (max-width: 560px) {
+        .map-head { padding: 12px 14px 10px; }
+        .map-head h1 { font-size: 21px; }
+        .map-head p { font-size: 14px; }
+      }
+      .stage { position: relative; width: 100%; flex: 1 1 auto; min-height: 0; }
+      /* Override the toolkit's fixed embed height: the stage takes what the headline leaves. */
+      :root[data-layout="embed"] .stage.trd-embed-fill { height: auto; }
       .theme-toggle {
         position: absolute; top: 12px; right: 56px; z-index: 4;
         background: var(--trd-panel); color: var(--trd-text);
@@ -122,8 +138,9 @@
     </style>
   </head>
   <body>
-    <header class="trd-header trd-standalone-only">
-      <h1>South Florida&rsquo;s Branded Condos</h1>
+    <header class="map-head">
+      <h1>South Florida&rsquo;s Branded Condo Boom</h1>
+      <p>The Real Deal&rsquo;s analysis of branded projects as of October 2026</p>
     </header>
 
     <!-- .trd-embed-fill makes .stage adopt the fixed embed height. -->
@@ -145,7 +162,7 @@
         <div class="sep"></div>
         <div class="sub" style="margin-bottom:2px">Sized by number of condos</div>
         <div class="sizes" id="legendSizes"></div>
-        <div class="note">Status as of Oct. 2026. Unit counts are condo residences and may change as plans evolve.</div>
+        <div class="note">Unit counts are condo residences and may change as plans evolve.</div>
       </div>
     </div>
 
