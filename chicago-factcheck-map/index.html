@@ -55,6 +55,7 @@
       .f.hl { background: var(--hl); border-radius: 4px; }
       .f .row1 { display: flex; justify-content: space-between; gap: 8px; }
       .f a { color: var(--accent); }
+      .f .links { font-size: 12px; margin: 1px 0 2px; }
       .tag { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 0 5px; border-radius: 3px; background: var(--chip); color: var(--ink2); margin-right: 3px; }
       .tag.out { color: var(--warn); }
       .tag.tp { background: #eb6834; color: #fff; }
@@ -283,6 +284,10 @@
             h += '<div class="f' + (f.doc === selectedDoc ? " hl" : "") + '" data-doc="' + f.doc + '">' +
               '<div class="row1"><span><a href="' + esc(f.link) + '" target="_blank" rel="noopener">Doc ' + f.doc + "</a> · " + fmtDate(f.date) + "</span>" +
               '<span class="tag">Group ' + esc(f.group) + "</span></div>" +
+              ((f.detail || f.pdf) ? '<div class="links">' +
+                (f.detail ? '<a href="' + esc(f.detail) + '" target="_blank" rel="noopener">Filing page</a>' : "") +
+                (f.detail && f.pdf ? " · " : "") +
+                (f.pdf ? '<a href="' + esc(f.pdf) + '" target="_blank" rel="noopener">PDF</a>' : "") + "</div>" : "") +
               "<div>" + esc(f.plaintiff) + "</div><div>" +
               (f.in ? '<span class="tag">In totals</span>' : '<span class="tag out">Removed</span>') +
               (f.tagged ? '<span class="tag tp">Tagged (4-party rule)</span>' : '<span class="tag">Not tagged</span>') +
