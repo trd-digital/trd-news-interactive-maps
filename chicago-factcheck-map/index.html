@@ -274,6 +274,19 @@
           return b.pin ? base + "?pin=" + b.pin : base + "?doc=" + (doc || b.filings[0].doc);
         }
 
+        function ext(href, label, title) {
+          return '<a href="' + esc(href) + '" target="_blank" rel="noopener"' + (title ? ' title="' + esc(title) + '"' : "") + ">" + label + "</a>";
+        }
+        // Clerk search (the doc link), then filing page, PDF, Street View, Assessor
+        function linksHTML(f, b) {
+          var a = [];
+          if (f.detail) a.push(ext(f.detail, "Filing page"));
+          if (f.pdf) a.push(ext(f.pdf, "PDF"));
+          if (b.sv) a.push(ext(b.sv, "Street View"));
+          if (b.assessor) a.push(ext(b.assessor, "Assessor PIN page", b.npins > 1 ? "PIN " + b.apin + " (first of " + b.npins + " building PINs)" : "PIN " + b.apin));
+          return a.length ? '<div class="links">' + a.join(" · ") + "</div>" : "";
+        }
+
         function popupHTML(b) {
           var sw = '<span class="sw" style="background:' + (TWP_COLOR[b.twp] || "#fff") + '"></span>';
           var pinLine = b.pin ? "PIN <code>" + b.pin + "</code>" : "PINs <code>" + esc(b.filings[0].keypin) + "</code>";
@@ -284,10 +297,7 @@
             h += '<div class="f' + (f.doc === selectedDoc ? " hl" : "") + '" data-doc="' + f.doc + '">' +
               '<div class="row1"><span><a href="' + esc(f.link) + '" target="_blank" rel="noopener">Doc ' + f.doc + "</a> · " + fmtDate(f.date) + "</span>" +
               '<span class="tag">Group ' + esc(f.group) + "</span></div>" +
-              ((f.detail || f.pdf) ? '<div class="links">' +
-                (f.detail ? '<a href="' + esc(f.detail) + '" target="_blank" rel="noopener">Filing page</a>' : "") +
-                (f.detail && f.pdf ? " · " : "") +
-                (f.pdf ? '<a href="' + esc(f.pdf) + '" target="_blank" rel="noopener">PDF</a>' : "") + "</div>" : "") +
+              linksHTML(f, b) +
               "<div>" + esc(f.plaintiff) + "</div><div>" +
               (f.in ? '<span class="tag">In totals</span>' : '<span class="tag out">Removed</span>') +
               (f.tagged ? '<span class="tag tp">Tagged (4-party rule)</span>' : '<span class="tag">Not tagged</span>') +
