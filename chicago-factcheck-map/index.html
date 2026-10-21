@@ -84,6 +84,7 @@
         <div class="count" id="count"></div>
         <fieldset id="fsGroup"><legend>Fact-checker group</legend></fieldset>
         <fieldset id="fsStatus"><legend>Status</legend></fieldset>
+        <fieldset id="fsCheck"><legend>Reporters' fact check</legend></fieldset>
         <fieldset id="fsTwp"><legend>Township (from the map boundary)</legend></fieldset>
         <button class="lnk" id="reset">Reset filters</button>
       </aside>
@@ -113,14 +114,17 @@
         var byDoc = {};
         B.forEach(function (b) { b.filings.forEach(function (f) { byDoc[f.doc] = b; }); });
 
-        var state = { groups: { 1: true, 2: true, 3: true, 4: true }, inT: true, outT: true, taggedOnly: false, twps: {} };
+        var CHECK_ORDER = ["kept by the reporters", "taken out by the reporters", "put back by the reporters", "stays out (reporters agreed)"];
+        var state = { groups: { 1: true, 2: true, 3: true, 4: true }, inT: true, outT: true, taggedOnly: false, twps: {}, checks: {} };
+        CHECK_ORDER.forEach(function (c) { state.checks[c] = true; });
         TWP_ORDER.forEach(function (t) { state.twps[t] = true; });
         var selected = null, selectedDoc = null, popup = null;
 
         function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
         function fmtDate(s) { if (!s) return ""; var p = s.split("-"); return MONTHS[+p[1] - 1] + " " + (+p[2]) + ", " + p[0]; }
         function rowVisible(f, b) {
-          return state.groups[f.group] && (f.in ? state.inT : state.outT) && (!state.taggedOnly || f.tagged) && state.twps[b.twp];
+          return state.groups[f.group] && (f.in ? state.inT : state.outT) && (!state.taggedOnly || f.tagged) && state.twps[b.twp] &&
+            (!f.status || state.checks[f.status] !== false);
         }
 
         // ---------- sidebar ----------
@@ -140,6 +144,10 @@
         ck(fsS, "Counted in the totals", true, cnt(function (f) { return f.in; }), '<span class="sw" style="background:#9aa0ad"></span>', function (v) { state.inT = v; });
         ck(fsS, "Removed from the totals", true, cnt(function (f) { return !f.in; }), '<span class="sw hollow" style="border-color:#9aa0ad"></span>', function (v) { state.outT = v; });
         ck(fsS, "Tagged party only (Bialostozky, Tauber, Rotenberg, MJNT)", false, cnt(function (f) { return f.tagged; }), "", function (v) { state.taggedOnly = v; });
+        var fsC = document.getElementById("fsCheck");
+        CHECK_ORDER.forEach(function (c) {
+          ck(fsC, c.charAt(0).toUpperCase() + c.slice(1), true, cnt(function (f) { return f.status === c; }), "", function (v) { state.checks[c] = v; });
+        });
         var fsT = document.getElementById("fsTwp");
         TWP_ORDER.forEach(function (t) {
           ck(fsT, t, true, cnt(function (f, b) { return b.twp === t; }), '<span class="sw" style="background:' + TWP_COLOR[t] + '"></span>', function (v) { state.twps[t] = v; });
@@ -150,6 +158,7 @@
           });
           state.groups = { 1: true, 2: true, 3: true, 4: true }; state.inT = state.outT = true; state.taggedOnly = false;
           TWP_ORDER.forEach(function (t) { state.twps[t] = true; });
+          CHECK_ORDER.forEach(function (c) { state.checks[c] = true; });
           refresh();
         });
 
@@ -302,7 +311,10 @@
               (f.in ? '<span class="tag">In totals</span>' : '<span class="tag out">Removed</span>') +
               (f.tagged ? '<span class="tag tp">Tagged (4-party rule)</span>' : '<span class="tag">Not tagged</span>') +
               (f.flag ? '<span class="tag">' + esc(f.flag.replace(/_/g, " ")) + "</span>" : "") + "</div>" +
-              (f.why ? '<div class="why">' + esc(f.why) + "</div>" : "") +
+              (f.status ? '<div class="m">Fact check: ' + esc(f.status) + "</div>" : "") +
+              (f.why && f.why.replace(/^reporters' fact check \(D-22\):\s*$/, "") ? '<div class="why">' + esc(f.why) + "</div>" : "") +
+              (f.notes && (f.why || "").indexOf(f.notes) < 0 ? '<div class="m">Reporter note: ' + esc(f.notes) + "</div>" : "") +
+              (f.ruling && (f.why || "").indexOf(f.ruling) < 0 ? '<div class="m">Ruling: ' + esc(f.ruling) + "</div>" : "") +
               (f.party ? '<div class="m">Names on the building\'s tab: ' + esc(f.party) + "</div>" : "") +
               (f.parcels.length > 1 ? '<div class="m">Parcels: ' + f.parcels.join(", ") + "</div>" : "") +
               "</div>";
