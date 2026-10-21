@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>South Florida Building Permits Map - The Real Deal</title>
+    <link rel="icon" type="image/x-icon" href="https://therealdeal.com/favicon.ico" />
+    <link rel="preload" href="construction/cx-places.json" as="fetch" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://static.therealdeal.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap" />
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" />
+    <link rel="stylesheet" href="transactions/tx.css?v=23" />
+    <link rel="stylesheet" href="construction/cx.css?v=2" />
+    <link rel="stylesheet" href="permits/pm.css?v=1" />
+    <!-- Mapbox GL downloads right away as a fetch (which doesn't hold up this
+         page's load event, so the TRD article shows the frame sooner) and
+         runs after load. pm-map.js waits on __pmMapbox. -->
+    <script>
+      window.__pmMapbox = new Promise(function (resolve) {
+        var src = "https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js";
+        function add(url) {
+          var s = document.createElement("script");
+          s.src = url;
+          s.onload = s.onerror = function () { resolve(); };
+          document.body.appendChild(s);
+        }
+        var code = fetch(src, { priority: "high" }).then(function (r) {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          return r.blob();
+        });
+        function run() {
+          code.then(function (b) { add(URL.createObjectURL(b)); }, function () { add(src); });
+        }
+        if (document.readyState === "complete") run();
+        else window.addEventListener("load", run);
+      });
+    </script>
+
+    <!-- Google Tag Manager and Piano (TRD-3464), deferred: pm-core.js calls
+         __pmLoadGtm() once the permits have loaded (20 s fallback). -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.__pmLoadGtm = function () {
+        if (window.__pmGtmLoaded) return;
+        window.__pmGtmLoaded = true;
+        var piano = document.createElement("script");
+        piano.src = "https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5";
+        piano.async = true;
+        document.head.appendChild(piano);
+        (function (w, d, s, l, i) {
+          w[l] = w[l] || [];
+          w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+          var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != "dataLayer" ? "&l=" + l : "";
+          j.async = true;
+          j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+          f.parentNode.insertBefore(j, f);
+        })(window, document, "script", "dataLayer", "GTM-K694XL6");
+      };
+      setTimeout(window.__pmLoadGtm, 20000);
+    </script>
+    <!-- End Google Tag Manager -->
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-K694XL6"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- One shared runtime: permits/pm-core.js + pm-map.js. Styles: the
+         transactions map's tx.css (same look), construction/cx.css and permits/pm.css. -->
+    <main id="tx-app" class="tx-map-app cx-app pm-app">
+      <div class="tx-topbar">
+        <button type="button" class="tx-filter-toggle" aria-expanded="false" aria-controls="tx-filter-panel">
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h14M6 10h8M9 15h2" /></svg>
+          <span class="tx-ft-label">Filters</span>
+          <span class="tx-badge" hidden>0</span>
+        </button>
+        <div class="tx-count" aria-live="polite"></div>
+        <div id="tx-filter-panel" class="tx-filter-panel" hidden></div>
+        <ul id="tx-results" class="tx-results" aria-label="Search suggestions" hidden></ul>
+      </div>
+      <div class="tx-map-wrap">
+        <!-- Instant preview: a still of the base map lined up with the live
+             map's opening view, shown until the live map has drawn. Made with
+             the Mapbox Static Images API at -80.34,25.76 z8.6 640x640@2x
+             (= 1280x1280 map px at z9.6). -->
+        <div class="tx-preview" aria-hidden="true"><img alt="" /><span>© Mapbox © OpenStreetMap</span></div>
+        <script>
+          (function () {
+            var box = document.querySelector(".tx-preview"), img = box.firstChild;
+            var theme = null;
+            try { theme = JSON.parse(localStorage.getItem("trd-sofla-pm:theme-seen")); } catch (e) {}
+            theme = theme || (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+            img.src = "construction/preview-" + theme + ".webp";
+            box.style.background = theme === "dark" ? "#1f201f" : "#dbdcdc";
+            box.lastChild.style.color = theme === "dark" ? "rgba(255,255,255,.6)" : "rgba(0,0,0,.55)";
+            // Same opening view as pm-map.js: fit OPEN bounds, clamped to MAX.
+            var world = 512 * Math.pow(2, 9.6);
+            function X(lon) { return (lon + 180) / 360 * world; }
+            function Y(lat) { return (1 - Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360)) / Math.PI) / 2 * world; }
+            var bx0 = X(-80.56), bx1 = X(-80.12), by0 = Y(25.98), by1 = Y(25.54);
+            var mx0 = X(-80.9), mx1 = X(-79.8), my0 = Y(26.25), my1 = Y(25.25);
+            var icx = X(-80.34), icy = Y(25.76); // the image's center
+            var ocx = (bx0 + bx1) / 2, ocy = (by0 + by1) / 2;
+            function clamp(v, lo, hi) { return lo > hi ? (lo + hi) / 2 : Math.min(hi, Math.max(lo, v)); }
+            function place() {
+              var w = box.clientWidth, h = box.clientHeight;
+              if (!w || !h) return;
+              var k = Math.min(w / (bx1 - bx0), h / (by1 - by0));
+              k = Math.max(k, w / (mx1 - mx0), h / (my1 - my0));
+              var cx = clamp(ocx, mx0 + w / 2 / k, mx1 - w / 2 / k);
+              var cy = clamp(ocy, my0 + h / 2 / k, my1 - h / 2 / k);
+              var size = 1280 * k;
+              img.style.width = img.style.height = size + "px";
+              img.style.left = w / 2 + (icx - 640 - cx) * k + "px";
+              img.style.top = h / 2 + (icy - 640 - cy) * k + "px";
+            }
+            place();
+            window.addEventListener("resize", place);
+          })();
+        </script>
+        <div id="tx-map" role="region" aria-label="Map of building permits in Miami-Dade"></div>
+        <div class="tx-active" aria-label="Active filters" hidden></div>
+        <div class="tx-legend"></div>
+        <div class="tx-empty-map" hidden></div>
+        <button type="button" class="tx-list-btn" hidden></button>
+        <aside class="tx-sheet tx-detail" role="dialog" aria-label="Sites in view" hidden></aside>
+        <aside class="tx-detail" role="dialog" aria-modal="false" hidden></aside>
+        <div class="tx-loading"><span class="tx-spinner" aria-hidden="true"></span><span>Loading building permits…</span></div>
+      </div>
+      <div class="tx-mapnote"></div>
+    </main>
+
+    <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
+    <script src="permits/pm-core.js?v=1"></script>
+    <script src="permits/pm-map.js?v=1"></script>
+  </body>
+</html>

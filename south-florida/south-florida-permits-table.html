@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>South Florida Building Permits Table - The Real Deal</title>
+    <link rel="icon" type="image/x-icon" href="https://therealdeal.com/favicon.ico" />
+    <link rel="preload" href="construction/cx-places.json" as="fetch" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://static.therealdeal.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap" />
+    <link rel="stylesheet" href="transactions/tx.css?v=23" />
+    <link rel="stylesheet" href="construction/cx.css?v=2" />
+    <link rel="stylesheet" href="permits/pm.css?v=1" />
+
+    <!-- Google Tag Manager and Piano (TRD-3464), deferred: pm-core.js calls
+         __pmLoadGtm() once the permits have loaded (20 s fallback). -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.__pmLoadGtm = function () {
+        if (window.__pmGtmLoaded) return;
+        window.__pmGtmLoaded = true;
+        var piano = document.createElement("script");
+        piano.src = "https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5";
+        piano.async = true;
+        document.head.appendChild(piano);
+        (function (w, d, s, l, i) {
+          w[l] = w[l] || [];
+          w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+          var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != "dataLayer" ? "&l=" + l : "";
+          j.async = true;
+          j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+          f.parentNode.insertBefore(j, f);
+        })(window, document, "script", "dataLayer", "GTM-K694XL6");
+      };
+      setTimeout(window.__pmLoadGtm, 20000);
+    </script>
+    <!-- End Google Tag Manager -->
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-K694XL6"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Shared runtime: permits/pm-core.js + pm-table.js. Styles: the
+         transactions table's tx.css (same look), construction/cx.css and permits/pm.css. -->
+    <main id="tx-app" class="tx-table-app cx-app pm-app">
+      <div class="cx-kpis" aria-live="polite"></div>
+
+      <!-- Search row, pinned to the top of the frame while the reader scrolls. -->
+      <div class="tx-searchbar" role="search" aria-label="Search permits">
+        <div class="tx-filters-head">
+          <div class="tx-search-wrap">
+            <ul id="tx-results" class="tx-results" aria-label="Search suggestions" hidden></ul>
+          </div>
+          <button type="button" class="tx-filter-toggle" aria-expanded="false" aria-controls="tx-filter-host">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h14M6 10h8M9 15h2" /></svg>
+            <span>Filters</span>
+            <span class="tx-badge" hidden>0</span>
+          </button>
+        </div>
+        <div class="tx-active tx-active-table" aria-label="Active filters" hidden></div>
+      </div>
+      <section class="tx-filters tx-filters-collapsible" aria-label="Filter permits">
+        <div id="tx-filter-host" class="tx-filter-host"></div>
+      </section>
+
+      <div class="tx-toolbar">
+        <div class="tx-tabs" role="tablist" aria-label="Sort sites">
+          <button type="button" class="tx-tab" role="tab" data-tab="latest">Latest</button>
+          <button type="button" class="tx-tab" role="tab" data-tab="biggest">Biggest</button>
+          <button type="button" class="tx-tab" role="tab" data-tab="area">By area</button>
+        </div>
+        <span class="tx-summary" aria-live="polite"></span>
+      </div>
+
+      <div style="position: relative; min-height: 200px">
+        <table class="tx-table cx-table">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+        <ul class="tx-cards"></ul>
+        <div class="tx-area" hidden></div>
+        <div class="tx-loading"><span class="tx-spinner" aria-hidden="true"></span><span>Loading building permits…</span></div>
+      </div>
+      <div class="tx-pager"></div>
+      <p class="tx-asof"></p>
+    </main>
+
+    <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
+    <script src="permits/pm-core.js?v=1"></script>
+    <script src="permits/pm-table.js?v=1"></script>
+  </body>
+</html>

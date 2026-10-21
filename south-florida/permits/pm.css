@@ -1,0 +1,93 @@
+/* pm.css — South Florida building permits map and table.
+   Builds on transactions/tx.css and construction/cx.css; only the
+   permit-specific pieces live here. */
+
+/* Work colors: the tx.css palette slots (validated in both themes); the map
+   layer in pm-map.js uses the same values. */
+:root {
+  --pm-new: var(--tx-residential);
+  --pm-addition: var(--tx-land);
+  --pm-renovation: var(--tx-other);
+  --pm-demolition: var(--tx-commercial);
+}
+.pm-swatch-new { background: var(--pm-new); }
+.pm-swatch-addition { background: var(--pm-addition); }
+.pm-swatch-renovation { background: var(--pm-renovation); }
+.pm-swatch-demolition { background: var(--pm-demolition); }
+
+/* City picker in the filter panel */
+.pm-select {
+  max-width: 100%;
+  min-height: 34px;
+  padding: 6px 30px 6px 10px;
+  border: 1px solid var(--tx-border);
+  border-radius: 8px;
+  background: var(--tx-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%2376756f' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 10px center;
+  color: var(--tx-text);
+  font: inherit;
+  font-size: 13px;
+  appearance: none;
+}
+.pm-select:focus-visible {
+  outline: 2px solid var(--tx-accent);
+  outline-offset: 1px;
+}
+
+/* Jobs on a site (detail panel and expanded table row) */
+.pm-jobs {
+  margin-top: 12px;
+  font-size: 13px;
+}
+.pm-jobs-title {
+  margin: 0 0 6px;
+  color: var(--tx-text-3);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.pm-jobs-title .tx-muted {
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.pm-jobs ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pm-jobs li {
+  padding: 7px 0;
+  border-top: 1px solid var(--tx-border);
+}
+.pm-jobs li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.pm-job-head {
+  display: block;
+  color: var(--tx-text-2);
+}
+.pm-job-head strong {
+  color: var(--tx-text);
+  font-variant-numeric: tabular-nums;
+}
+.pm-job-head .tx-swatch {
+  margin-right: 6px;
+}
+.pm-job-desc {
+  display: block;
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+.pm-job-meta {
+  display: block;
+  margin-top: 2px;
+  color: var(--tx-text-3);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.pm-more {
+  margin: 6px 0 0;
+  font-size: 12px;
+}
