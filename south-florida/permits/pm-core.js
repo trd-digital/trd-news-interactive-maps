@@ -648,7 +648,11 @@
   // -------------------------------------------------------------- sibling sync
   // Same pattern as the transactions and construction embeds: same-origin
   // sibling iframes on one TRD page reach each other through parent.frames.
+  // On the combined page (south-florida-permits.html) the map and table run in
+  // one window and talk through `local` instead.
+  var local = [];
   function link(role, onMessage) {
+    local.push({ role: role, onMessage: onMessage });
     function siblings() {
       var out = [];
       try {
@@ -669,11 +673,16 @@
     });
     var api = {
       send: function (type, payload) {
+        local.forEach(function (l) {
+          if (l.role === role) return;
+          setTimeout(function () { l.onMessage({ ns: NS, from: role, type: type, payload: clone(payload), local: true }); }, 0);
+        });
         siblings().forEach(function (w) {
           w.postMessage({ ns: NS, from: role, type: type, payload: payload }, location.origin);
         });
       },
       hasPeer: function (peerRole) {
+        if (local.some(function (l) { return l.role === peerRole; })) return true;
         return siblings().some(function (w) { return w.location.pathname.indexOf("permits-" + peerRole) >= 0; });
       },
     };
@@ -992,7 +1001,11 @@
 
   // Theme: TRD's theme.js init() asks the parent page and sets <body
   // data-bs-theme>; mirror it onto <html> (tokens live on :root).
+  // One handshake per window, however many views ask (the combined page).
+  var themeApi = null, themeListeners = [];
   function theme(onChange, track) {
+    if (onChange) themeListeners.push(onChange);
+    if (themeApi) return themeApi;
     var current = null;
     function set(t) {
       if (t !== "dark" && t !== "light") return;
@@ -1000,7 +1013,7 @@
       current = t;
       document.documentElement.setAttribute("data-bs-theme", t);
       document.body.setAttribute("data-bs-theme", t);
-      if (changed && onChange) onChange(t);
+      if (changed) themeListeners.forEach(function (f) { f(t); });
     }
     // theme.js declares `const TrdTheme` (a global binding, not a window
     // property), so look it up by name.
@@ -1011,10 +1024,17 @@
     current = (trd && trd.get()) || (global.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     document.documentElement.setAttribute("data-bs-theme", current);
     document.body.setAttribute("data-bs-theme", current);
-    return { get: function () { return current; } };
+    themeApi = { get: function () { return current; } };
+    return themeApi;
+  }
+  // The view's root element: the script tag's data-root, else #tx-app.
+  function root(script) {
+    var id = (script && script.getAttribute("data-root")) || "tx-app";
+    return document.getElementById(id);
   }
 
   global.PM = {
+    root: root,
     MAPBOX_TOKEN: MAPBOX_TOKEN,
     WORKS: WORKS,
     WORK_IDS: WORK_IDS,

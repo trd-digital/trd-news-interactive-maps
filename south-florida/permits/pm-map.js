@@ -61,7 +61,7 @@
   var track = PM.tracker("sofla-permits-map");
   var params = new URLSearchParams(location.search);
   var isEmbed = window.self !== window.top;
-  var app = document.getElementById("tx-app");
+  var app = PM.root(document.currentScript);
   var compact = params.get("view") === "dashboard" || window.innerHeight < 450;
   if (compact) app.classList.add("tx-compact");
 
@@ -529,6 +529,8 @@
       if (r) {
         revealRow(r);
         select(msg.payload, { fly: true });
+        // Combined page: bring the map back into view.
+        if (msg.local) window.scrollTo({ top: Math.max(0, app.getBoundingClientRect().top + window.scrollY), behavior: "smooth" });
       }
     } else if (msg.type === "hello" && !PM.isDefault(state)) {
       peer.send("filters", PM.clone(state));

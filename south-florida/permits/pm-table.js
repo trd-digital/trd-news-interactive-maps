@@ -9,7 +9,7 @@
   var fmt = PM.fmt;
   var track = PM.tracker("sofla-permits-table");
   var params = new URLSearchParams(location.search);
-  var app = document.getElementById("tx-app");
+  var app = PM.root(document.currentScript);
 
   var state = PM.stateFromUrl();
   var data = null;

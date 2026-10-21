@@ -91,3 +91,29 @@
   margin: 6px 0 0;
   font-size: 12px;
 }
+
+/* ------------------------------------------------- combined page (one iframe)
+   south-florida-permits.html: map on top, table below; the frame scrolls.
+   The map's search and filters drive both, so the table's own are hidden. */
+html.pm-combined,
+html.pm-combined body {
+  height: auto;
+}
+.pm-combined .tx-map-app {
+  height: max(420px, min(640px, 82vh));
+  border-bottom: 1px solid var(--tx-border);
+}
+.pm-combined .tx-filter-panel {
+  /* the map box, not the frame, is the limit here */
+  max-height: calc(max(420px, min(640px, 82vh)) - 68px);
+}
+.pm-combined .tx-map-app .tx-mapnote {
+  display: none; /* the same note closes the table */
+}
+.pm-combined .tx-table-app .tx-searchbar,
+.pm-combined .tx-table-app .tx-filters {
+  display: none;
+}
+.pm-combined .tx-table-app {
+  padding-top: 16px;
+}
