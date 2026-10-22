@@ -1,0 +1,135 @@
+/* pp.css — South Florida project-pipeline maps and tables (Live Local, condo
+   filings). Builds on transactions/tx.css, construction/cx.css and
+   permits/pm.css; only the pipeline pieces live here. Stage colors are set as
+   --pp-<stage> by pp-core.js from the page's config. */
+
+/* Live Local share of a project's units */
+.pp-share {
+  margin: 12px 0 4px;
+}
+.pp-share-text {
+  margin: 12px 0 6px;
+  color: var(--tx-text-2);
+  font-size: 13px;
+}
+.pp-share .pp-share-text {
+  margin-top: 0;
+}
+.pp-share-text strong {
+  color: var(--tx-text);
+  font-family: var(--tx-serif);
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+.pp-share-bar {
+  display: block;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--tx-surface-2);
+}
+.pp-share-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--tx-accent);
+}
+
+.pp-desc {
+  margin: 12px 0;
+  color: var(--tx-text-2);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.pp-story {
+  margin: 12px 0 0;
+  font-size: 13px;
+}
+.pp-story-link {
+  color: var(--tx-accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+.pp-story-link:hover {
+  text-decoration: underline;
+}
+.pp-story-link .tx-muted {
+  font-weight: 400;
+}
+.pp-entity {
+  display: block;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+/* Legend: circle sizes */
+.pp-size-key {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+  color: var(--tx-text-3);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.pp-size-key span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+.pp-size-key i {
+  display: block;
+  border: 1.2px solid var(--tx-text-3);
+  border-radius: 50%;
+}
+.pp-size-key + .tx-legend-hint {
+  margin-top: 4px;
+}
+
+/* Several projects at one map point */
+.pp-stack {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pp-stack > li {
+  border-top: 1px solid var(--tx-border);
+}
+.pp-stack > li:first-child {
+  border-top: 0;
+}
+.pp-stack summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 0;
+  cursor: pointer;
+  font-weight: 700;
+  list-style: none;
+}
+.pp-stack summary::-webkit-details-marker {
+  display: none;
+}
+.pp-stack summary::after {
+  content: "›";
+  color: var(--tx-text-3);
+  transition: transform 0.15s;
+}
+.pp-stack details[open] summary::after {
+  transform: rotate(90deg);
+}
+.pp-stack-name {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.pp-stack details > :not(summary) {
+  margin-bottom: 10px;
+}
+
+/* Table: the expanded row keeps the description readable */
+.tx-expand .pp-desc {
+  max-width: 68ch;
+}
