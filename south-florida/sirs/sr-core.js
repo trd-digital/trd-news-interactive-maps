@@ -83,7 +83,8 @@
       lng: c && isFinite(c[0]) ? +c[0] : null,
       lat: c && isFinite(c[1]) ? +c[1] : null,
     };
-    r.located = r.lng != null && r.lat != null;
+    // Only associations placed at the building itself go on the map; the rest are table-only.
+    r.located = r.precise && r.lng != null && r.lat != null;
     r.hay = [r.name, r.projects.join(" "), r.otherNames.join(" "), r.city, r.zip, r.county].join(" ").toLowerCase();
     return r;
   }
@@ -424,7 +425,7 @@
     out.push(["Where", fmt.escape([r.city, r.zip].filter(Boolean).join(" ") + (r.county ? " · " + r.county + " County" : ""))]);
     if (r.type !== "Not listed") out.push(["Type", r.type]);
     if (r.filings > 1) out.push(["Filings", plural(r.filings, "filing") + ' <span class="tx-muted">on DBPR’s lists</span>']);
-    if (!r.precise) out.push(["Map location", '<span class="tx-muted">Approximate: placed at ' + fmt.escape(r.locLabel || "the area") + "</span>"]);
+    if (!r.located) out.push(["Map", '<span class="tx-muted">Not mapped: its building couldn’t be pinned down from the name, city and ZIP it filed</span>']);
     return out;
   }
   function projectsHtml(r, max) {
@@ -446,7 +447,7 @@
   function asOfText(data) {
     return "Condo and co-op associations in Miami-Dade, Broward and Palm Beach that have reported a structural integrity reserve study (SIRS) to Florida’s DBPR, from its two public lists (before July 2025, and July 2025 on)" +
       (data.generated ? ", combined " + new Date(data.generated + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "") +
-      ". An association on both lists appears once. Names are as associations filed them. The lists have no street addresses: locations come from the association or condo name, city and ZIP, and some are only approximate.";
+      ". An association on both lists appears once. Names are as associations filed them. The lists have no street addresses, so locations come from the association or condo name, city and ZIP; the map shows only associations whose building was found.";
   }
 
   // Theme: TRD's theme.js init() asks the parent page and sets <body data-bs-theme>.

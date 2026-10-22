@@ -24,7 +24,8 @@
   if (compact) app.classList.add("tx-compact");
 
   var state = SR.stateFromUrl();
-  var data = null;
+  var data = null; // only the mapped associations (see mappedOnly)
+  var allRows = [];
   var visible = [];
   var map = null;
   var selectedSpot = null;
@@ -122,7 +123,7 @@
   function refresh(opts) {
     if (!data) return;
     visible = SR.apply(data.rows, state);
-    var located = visible.filter(function (r) { return r.located; });
+    var located = visible;
     el.count.innerHTML = "<strong>" + visible.length.toLocaleString("en-US") + "</strong> " + (visible.length === 1 ? "association" : "associations") +
       (state.city ? " in " + fmt.escape(state.city) : "");
     var n = SR.filterCount(state);
@@ -136,10 +137,10 @@
       if (!el.filterPanel.hidden) filters.render();
     });
     if (!el.filterPanel.hidden) filters.render();
-    var approx = located.filter(function (r) { return !r.precise; }).length;
+    var unmapped = SR.apply(allRows, state).length - visible.length;
     el.note.textContent = compact
-      ? "Associations that reported a SIRS to Florida’s DBPR · Hollow dots: approximate location"
-      : SR.asOfText(data) + (approx ? " Hollow dots (" + approx.toLocaleString("en-US") + ") are approximate: the ZIP code or city center, the street, or a nearby place." : "");
+      ? "Associations that reported a SIRS to Florida’s DBPR"
+      : SR.asOfText(data) + (unmapped ? " Another " + SR.plural(unmapped, "association") + " matching these filters " + (unmapped === 1 ? "is" : "are") + " in the table only." : "");
     el.empty.hidden = !!located.length;
     el.empty.innerHTML = located.length ? "" : "No associations match these filters." + (SR.isDefault(state) ? "" : ' <button type="button" class="tx-reset" data-act="reset">Reset filters</button>');
     renderLegend();
@@ -160,14 +161,13 @@
     rows.forEach(function (r) {
       var f = by[r.spot];
       if (!f) {
-        f = by[r.spot] = { type: "Feature", id: out.length, geometry: { type: "Point", coordinates: [r.lng, r.lat] }, properties: { spot: r.spot, n: 0, period: r.period, precise: r.precise ? 1 : 0, rank: 0 } };
+        f = by[r.spot] = { type: "Feature", id: out.length, geometry: { type: "Point", coordinates: [r.lng, r.lat] }, properties: { spot: r.spot, n: 0, period: r.period, rank: 0 } };
         out.push(f);
       }
       f.properties.n++;
       // Color by the most recent report at the spot.
       var rank = { post: 3, both: 2, pre: 1 }[r.period];
       if (rank > f.properties.rank) { f.properties.rank = rank; f.properties.period = r.period; }
-      if (r.precise) f.properties.precise = 1;
     });
     return { type: "FeatureCollection", features: out };
   }
@@ -196,7 +196,7 @@
         '" title="Show only ' + x.long.toLowerCase() + '"><i class="tx-swatch" style="background:' + p[x.id] + '"></i>' + x.label +
         '<span class="tx-n">' + (counts[x.id] || 0).toLocaleString("en-US") + "</span></button>";
     });
-    html += '</div><p class="tx-legend-hint sr-legend-hollow"><i aria-hidden="true"></i>Approximate location</p></div>';
+    html += "</div></div>";
     var wasOpen = el.legend.classList.contains("is-open");
     el.legend.innerHTML = html;
     el.legend.querySelector(".tx-legend-toggle").setAttribute("aria-expanded", String(wasOpen));
@@ -235,7 +235,7 @@
     highlight();
     var r = data.rows.filter(function (x) { return x.spot === spot; })[0];
     if (opts.fly && r && map) {
-      map.flyTo({ center: [r.lng, r.lat], zoom: Math.max(map.getZoom(), r.precise ? 15.5 : 13), padding: detailPadding(), duration: opts.instant ? 0 : 900, essential: true });
+      map.flyTo({ center: [r.lng, r.lat], zoom: Math.max(map.getZoom(), 15.5), padding: detailPadding(), duration: opts.instant ? 0 : 900, essential: true });
     }
   }
   function detailPadding() {
@@ -267,7 +267,7 @@
     } else {
       var r0 = list[0];
       head = SR.plural(list.length, "association") + ' here<span class="tx-sub">' +
-        fmt.escape([r0.city, r0.zip].filter(Boolean).join(" ") + (r0.precise ? "" : " · approximate location")) + "</span>";
+        fmt.escape([r0.city, r0.zip].filter(Boolean).join(" ")) + "</span>";
       body = '<ul class="sr-stack">' + list.map(function (x) {
         var openIt = x.id === focusId;
         return '<li><details' + (openIt ? " open" : "") + '><summary><span class="sr-stack-name">' + fmt.escape(x.name) + '</span><span class="tx-swatch sr-swatch-' + x.period + '" title="' + fmt.escape(SR.periodLabel(x.period)) + '"></span></summary>' +
@@ -299,7 +299,7 @@
   }
   function addLayers() {
     var p = COLORS[theme.get()];
-    if (!map.getSource("sr")) map.addSource("sr", { type: "geojson", data: toFeatures(visible.filter(function (r) { return r.located; })) });
+    if (!map.getSource("sr")) map.addSource("sr", { type: "geojson", data: toFeatures(visible) });
     var hover = ["boolean", ["feature-state", "hover"], false];
     var color = ["match", ["get", "period"], "post", p.post, "both", p.both, p.pre];
     // Bigger for points holding several associations. `extra` widens the selection ring.
@@ -313,13 +313,11 @@
       source: "sr",
       paint: {
         "circle-radius": radius(0),
-        // Approximate locations draw hollow.
-        "circle-color": ["case", ["==", ["get", "precise"], 1], color, "rgba(0,0,0,0)"],
+        "circle-color": color,
         "circle-opacity": ["case", hover, 1, 0.85],
-        "circle-stroke-color": ["case", hover, p.sel, ["==", ["get", "precise"], 1], p.ring, color],
-        "circle-stroke-width": ["case", ["==", ["get", "precise"], 1], ["case", hover, 2, 0.8], ["case", hover, 2.5, 1.6]],
+        "circle-stroke-color": ["case", hover, p.sel, p.ring],
+        "circle-stroke-width": ["case", hover, 2, 0.8],
       },
-      layout: { "circle-sort-key": ["get", "precise"] },
     });
     map.addLayer({
       id: "sr-selected",
@@ -368,8 +366,8 @@
       if (!hoverPopup) hoverPopup = new mapboxgl.Popup({ closeButton: false, closeOnClick: false, className: "tx-tip", offset: 10, maxWidth: "260px" });
       var r = list[0];
       hoverPopup.setLngLat(f.geometry.coordinates).setHTML(list.length === 1
-        ? "<strong>" + fmt.escape(r.name) + "</strong>" + fmt.escape([r.city, r.zip].filter(Boolean).join(" ")) + " <span>· " + fmt.escape(SR.periodLabel(r.period)) + (r.precise ? "" : " · approximate location") + "</span>"
-        : "<strong>" + SR.plural(list.length, "association") + "</strong>" + fmt.escape([r.city, r.zip].filter(Boolean).join(" ")) + " <span>· click to list" + (r.precise ? "" : " · approximate location") + "</span>")
+        ? "<strong>" + fmt.escape(r.name) + "</strong>" + fmt.escape([r.city, r.zip].filter(Boolean).join(" ")) + " <span>· " + fmt.escape(SR.periodLabel(r.period)) + "</span>"
+        : "<strong>" + SR.plural(list.length, "association") + "</strong>" + fmt.escape([r.city, r.zip].filter(Boolean).join(" ")) + " <span>· click to list</span>")
         .addTo(map);
     });
     map.on("mouseleave", "sr-points", function () {
@@ -387,7 +385,6 @@
         return;
       }
       if (hoverPopup) hoverPopup.remove();
-      feats.sort(function (a, b) { return b.properties.precise - a.properties.precise; });
       track("select", feats[0].properties.spot);
       selectSpot(feats[0].properties.spot);
     });
@@ -406,7 +403,7 @@
       refresh(cityChanged && state.city ? { fit: true, animate: true } : null);
     } else if (msg.type === "select" || msg.type === "reveal") {
       var r = data.byId[msg.payload];
-      if (r) {
+      if (r && r.located) {
         reveal(r);
         selectRow(r, { fly: true });
       }
@@ -416,6 +413,18 @@
   });
 
   // ------------------------------------------------------------------ boot
+  // The map's copy of the data: associations without a building location are
+  // left out of the dots, counts, legend, filters and search (the table has them).
+  function mappedOnly(d) {
+    var rows = d.rows.filter(function (r) { return r.located; });
+    var counts = {};
+    rows.forEach(function (r) { if (r.city) counts[r.city] = (counts[r.city] || 0) + 1; });
+    var out = Object.create(d);
+    out.rows = rows;
+    out.cityCounts = counts;
+    out.cities = d.cities.filter(function (c) { return counts[c]; });
+    return out;
+  }
   function showError(msg) {
     el.loading.innerHTML = "<span>" + fmt.escape(msg) + "</span>";
     el.loading.hidden = false;
@@ -438,7 +447,8 @@
     setTimeout(function () { pv.remove(); }, 400);
   }
   Promise.all([SR.load(), mapReady]).then(function (res) {
-    data = res[0];
+    allRows = res[0].rows;
+    data = mappedOnly(res[0]);
     SR.resolveCity(state, data);
     el.loading.hidden = true;
     refresh({ fit: !!(state.city || state.q) });
