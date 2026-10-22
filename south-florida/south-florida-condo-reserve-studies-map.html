@@ -2,54 +2,67 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
-    <title>South Florida Transactions Map - The Real Deal</title>
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="https://therealdeal.com/favicon.ico"
-    />
-    <link rel="canonical" href="https://therealdeal.com/data/" />
+    <title>South Florida Condo Reserve Studies Map - The Real Deal</title>
+    <link rel="canonical" href="https://therealdeal.com/data/miami/2025/south-florida-condo-reserve-studies-map/" />
+    <link rel="icon" type="image/x-icon" href="https://therealdeal.com/favicon.ico" />
+    <link rel="preload" href="south-florida-condo-reserve-studies.geojson" as="fetch" crossorigin="anonymous" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin="true"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@0,400;0,700;0,900&display=swap"
-    />
-    <link
-      rel="stylesheet"
-      href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css"
-    />
-    <link rel="stylesheet" href="../trd-data/common-map/map.css" />
-
-    <!-- Google Tag Manager -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap" />
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" />
+    <link rel="stylesheet" href="transactions/tx.css?v=23" />
+    <link rel="stylesheet" href="construction/cx.css?v=2" />
+    <link rel="stylesheet" href="permits/pm.css?v=2" />
+    <link rel="stylesheet" href="sirs/sr.css?v=1" />
+    <!-- Mapbox GL downloads right away as a fetch (which doesn't hold up this
+         page's load event, so the TRD article shows the frame sooner) and
+         runs after load. sr-map.js waits on __srMapbox. -->
     <script>
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
-        j.async = true;
-        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", "GTM-K694XL6");
+      window.__srMapbox = new Promise(function (resolve) {
+        var src = "https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js";
+        function add(url) {
+          var s = document.createElement("script");
+          s.src = url;
+          s.onload = s.onerror = function () { resolve(); };
+          document.body.appendChild(s);
+        }
+        var code = fetch(src, { priority: "high" }).then(function (r) {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          return r.blob();
+        });
+        function run() {
+          code.then(function (b) { add(URL.createObjectURL(b)); }, function () { add(src); });
+        }
+        if (document.readyState === "complete") run();
+        else window.addEventListener("load", run);
+      });
+    </script>
+
+    <!-- Google Tag Manager and Piano (TRD-3464), deferred: sr-core.js calls
+         __srLoadGtm() once the filings have loaded (20 s fallback). -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.__srLoadGtm = function () {
+        if (window.__srGtmLoaded) return;
+        window.__srGtmLoaded = true;
+        var piano = document.createElement("script");
+        piano.src = "https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5";
+        piano.async = true;
+        document.head.appendChild(piano);
+        (function (w, d, s, l, i) {
+          w[l] = w[l] || [];
+          w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+          var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != "dataLayer" ? "&l=" + l : "";
+          j.async = true;
+          j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+          f.parentNode.insertBefore(j, f);
+        })(window, document, "script", "dataLayer", "GTM-K694XL6");
+      };
+      setTimeout(window.__srLoadGtm, 20000);
     </script>
     <!-- End Google Tag Manager -->
   </head>
@@ -65,235 +78,32 @@
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
-    <main class="map-container">
-      <section id="map" class="map"></section>
+    <!-- One shared runtime: sirs/sr-core.js + sr-map.js. Styles: the
+         transactions map's tx.css (same look), construction/cx.css, permits/pm.css and sirs/sr.css. -->
+    <main id="tx-app" class="tx-map-app cx-app pm-app sr-app">
+      <div class="tx-topbar">
+        <button type="button" class="tx-filter-toggle" aria-expanded="false" aria-controls="tx-filter-panel">
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h14M6 10h8M9 15h2" /></svg>
+          <span class="tx-ft-label">Filters</span>
+          <span class="tx-badge" hidden>0</span>
+        </button>
+        <div class="tx-count" aria-live="polite"></div>
+        <div id="tx-filter-panel" class="tx-filter-panel" hidden></div>
+        <ul id="tx-results" class="tx-results" aria-label="Search suggestions" hidden></ul>
+      </div>
+      <div class="tx-map-wrap">
+        <div id="tx-map" role="region" aria-label="Map of condo associations that reported a reserve study"></div>
+        <div class="tx-active" aria-label="Active filters" hidden></div>
+        <div class="tx-legend"></div>
+        <div class="tx-empty-map" hidden></div>
+        <aside class="tx-detail" role="dialog" aria-modal="false" hidden></aside>
+        <div class="tx-loading"><span class="tx-spinner" aria-hidden="true"></span><span>Loading reserve study filings…</span></div>
+      </div>
+      <div class="tx-mapnote"></div>
     </main>
 
-    <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
     <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
-    <script src="../trd-data/common-formatter/formatter.js"></script>
-    <script src="../trd-data/common-loading/loading.js"></script>
-    <script src="../trd-data/common-map/map.js?v=1.1"></script>
-    <script>
-      const legendKeys = [
-        {
-          title: "",
-          options: [
-            {
-              value: 0,
-              color: {
-                light: "#FFCC80",
-                dark: "#FFCC80",
-              },
-              text: "Mortgage",
-              default: false,
-            },
-          ],
-        },
-        {
-          title: "Sales",
-          options: [
-            {
-              value: 5_000_000,
-              color: {
-                light: "#90CAF9",
-                dark: "#90CAF9",
-              },
-              text: "< $5M",
-              default: false,
-            },
-            {
-              value: 10_000_000,
-              color: {
-                light: "#42A5F5",
-                dark: "#42A5F5",
-              },
-              text: "$5M - $10M",
-              default: false,
-            },
-            {
-              value: 20_000_000,
-              color: {
-                light: "#1E88E5",
-                dark: "#1E88E5",
-              },
-              text: "$10M - $20M",
-              default: false,
-            },
-            {
-              value: 50_000_000,
-              color: {
-                light: "#1565C0",
-                dark: "#1565C0",
-              },
-              text: "$20M - $50M",
-              default: false,
-            },
-            {
-              value: 100_000_000,
-              color: {
-                light: "#0D47A1",
-                dark: "#0D47A1",
-              },
-              text: "> $50M",
-              default: true,
-            },
-          ],
-        },
-      ];
-
-      const tooltipDisplayFields = {
-        title: {
-          field: "Physical Address",
-          label: "Address",
-        },
-        content: [
-          {
-            field: "Sale Price",
-            label: "Sale Price",
-            format: "formatPrice",
-          },
-          {
-            field: "Use Code Description",
-            label: "Use Code",
-          },
-          {
-            field: "pointType",
-            label: "Party",
-            format: (value) => value.charAt(0).toUpperCase() + value.slice(1),
-          },
-        ],
-      };
-
-      const modalDisplayFields = {
-        title: { field: "Project Name", label: "Project Name" },
-        content: [
-          { field: "Association Name", label: "Association" },
-          { field: "Project Type", label: "Type" },
-          { field: "Address", label: "Address" },
-          { field: "City", label: "City" },
-          { field: "County", label: "County" },
-          { field: "Zip", label: "Zip" },
-        ],
-      };
-      const filterFields = [
-        {
-          title: "Project Type",
-          name: "project_type",
-          dataField: "Project Type",
-          fieldType: "checkbox",
-          fieldLayoutClass: "checkbox-list",
-          multiSelect: true,
-          defaultValue: "",
-          callback: (values, item) => {
-            return values.some((value) =>
-              item.properties["Project Type"].includes(value)
-            );
-          },
-          options: [
-            {
-              label: "Cooperative",
-              value: "COOPERATIVE",
-            },
-            {
-              label: "Condominium",
-              value: "CONDOMINIUM",
-            },
-          ],
-        },
-        {
-          title: "County",
-          name: "country",
-          dataField: "County",
-          fieldType: "checkbox",
-          fieldLayoutClass: "checkbox-list",
-          multiSelect: true,
-          callback: (values, item) => {
-            return values.some((value) =>
-              item.properties["County"].includes(value)
-            );
-          },
-          options: [
-            {
-              label: "Broward",
-              value: "BROWARD",
-            },
-            {
-              label: "Miami-Dade",
-              value: "MIAMI-DADE",
-            },
-            {
-              label: "Palm Beach",
-              value: "PALM BEACH",
-            },
-          ],
-        },
-      ];
-
-      const fetchDataFilterCallback = (data) => {
-        // Clean in callback to keep contract similar to sample.js
-        if (data && data.features) {
-          data.features.forEach((f) => {
-            const p = f.properties;
-            p["Project Name"] = TrdFormatters.cleanValue(p["Project Name"]);
-            p["Association Name"] = TrdFormatters.cleanValue(
-              p["Association Name"]
-            );
-            p["Address"] = TrdFormatters.cleanValue(p["Address"]);
-            p["City"] = TrdFormatters.cleanValue(p["City"]);
-            p["County"] = TrdFormatters.cleanValue(p["County"]);
-            p["Project Type"] = TrdFormatters.cleanValue(p["Project Type"]);
-          });
-        }
-        return data;
-      };
-
-      window.map = trdDataCommonMap({
-        filePaths: ["south-florida-condo-reserve-studies.geojson"],
-        fetchDataFilterCallback,
-        loadingEnabled: true,
-
-        eventCategory: "south-florida-sirs",
-        mapElementId: "map",
-        modalDisplayFields,
-        mapCenterLat: 26.1,
-        mapCenterLng: -80.2,
-        filterFields,
-        zoom: 7,
-        minZoom: 4,
-        mapLayerPaint: {
-          "circle-stroke-width": 1,
-          "circle-stroke-color": "#e1e1e1",
-        },
-        pointSettings: {
-          clickToCenter: true,
-          clickToZoom: true,
-          colorType: "case",
-          radiusType: "radius",
-          paintSettings: {
-            hover: {
-              color: { light: "#FF9800", dark: "#F57C00" },
-            },
-            active: {
-              color: { light: "#FF5722", dark: "#D84315" },
-            },
-            default: {
-              radius: 5,
-              color: { light: "#007cbf", dark: "#007cbf" },
-            },
-          },
-        },
-        searchSettings: {
-          enable: true,
-          placeholderText: "Search by project name, address, or association...",
-          resultTitleField: "Project Name",
-          resultDescriptionField: "Address",
-          searchFields: ["Project Name", "Address", "Association Name"],
-        },
-      });
-    </script>
+    <script src="sirs/sr-core.js?v=1"></script>
+    <script src="sirs/sr-map.js?v=1"></script>
   </body>
 </html>

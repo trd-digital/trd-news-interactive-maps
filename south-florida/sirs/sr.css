@@ -1,0 +1,74 @@
+/* sr.css — South Florida condo reserve study (SIRS) map and table.
+   Builds on transactions/tx.css, construction/cx.css and permits/pm.css
+   (city picker, condo lists); only SIRS pieces live here. */
+
+/* Reporting-period colors: tx.css palette slots; sr-map.js uses the same. */
+:root {
+  --sr-post: var(--tx-residential);
+  --sr-both: var(--tx-land);
+  --sr-pre: var(--tx-commercial);
+}
+.sr-swatch-post { background: var(--sr-post); }
+.sr-swatch-both { background: var(--sr-both); }
+.sr-swatch-pre { background: var(--sr-pre); }
+
+/* Legend: the hollow dot for approximate locations */
+.sr-legend-hollow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sr-legend-hollow i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 1.6px solid var(--tx-text-3);
+  border-radius: 50%;
+}
+
+/* Several associations at one map point */
+.sr-stack {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sr-stack > li {
+  border-top: 1px solid var(--tx-border);
+}
+.sr-stack > li:first-child {
+  border-top: 0;
+}
+.sr-stack summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 0;
+  cursor: pointer;
+  font-weight: 700;
+  list-style: none;
+}
+.sr-stack summary::-webkit-details-marker {
+  display: none;
+}
+.sr-stack summary::after {
+  content: "›";
+  color: var(--tx-text-3);
+  transition: transform 0.15s;
+}
+.sr-stack details[open] summary::after {
+  transform: rotate(90deg);
+}
+.sr-stack-name {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.sr-stack details > :not(summary) {
+  margin-bottom: 10px;
+}
+.sr-aka {
+  margin: 8px 0 0;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
