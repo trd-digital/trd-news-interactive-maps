@@ -14,6 +14,9 @@
 (function (global) {
   "use strict";
 
+  // Miami-Dade, Broward and Palm Beach, generously.
+  var COUNTY_BOX = [[-80.95, 25.1], [-79.9, 27.0]];
+
   var CFG = global.PP_CONFIG;
   var MAPBOX_TOKEN = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
   var COUNTIES = ["Miami-Dade", "Broward", "Palm Beach"];
@@ -102,7 +105,11 @@
         r.id = r.id || "p" + i;
         r.lng = c && isFinite(c[0]) ? +c[0] : null;
         r.lat = c && isFinite(c[1]) ? +c[1] : null;
-        r.located = r.lng != null && r.lat != null && !(r.lng === 0 && r.lat === 0);
+        // A point outside the three counties is a bad geocode (a "Miami" condo
+        // placed in Ave Maria): listed, but not mapped.
+        var has = r.lng != null && r.lat != null && !(r.lng === 0 && r.lat === 0);
+        r.located = has && r.lng >= COUNTY_BOX[0][0] && r.lng <= COUNTY_BOX[1][0] && r.lat >= COUNTY_BOX[0][1] && r.lat <= COUNTY_BOX[1][1];
+        r.offMap = has && !r.located;
         r.hay = (r.hay || [r.name, r.sub, r.city, r.county].join(" ")).toLowerCase();
         rows.push(r);
       });

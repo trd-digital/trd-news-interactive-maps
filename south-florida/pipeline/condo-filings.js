@@ -37,7 +37,7 @@
     // DBPR's legal names run long ("1400 Biscayne Condo, a Condominium Within a
     // Portion of a Buildin"); the map and table show the short name.
     var filedName = h.nameCase(p["Condo Name"] || "");
-    var short = filedName.replace(/(,\s*|\s+a\s+)(a\s+)?(land\s+)?condo(minium)?\b.*$/i, "").replace(/[,\s]+$/, "");
+    var short = filedName.replace(/(,\s*|\s+a\s+)(a\s+)?(land\s+|phase\s+)?condo(minium)?\b.*$/i, "").replace(/[,\s]+$/, "");
     var r = {
       id: "c" + (p["Project Number"] || i),
       name: short || filedName || "Unnamed condo",

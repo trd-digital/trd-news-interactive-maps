@@ -141,7 +141,8 @@
       if (!el.filterPanel.hidden) filters.render();
     }, data);
     if (!el.filterPanel.hidden) filters.render();
-    el.note.innerHTML = CFG.note(data, compact);
+    var offMap = visible.length - located.length;
+    el.note.innerHTML = CFG.note(data, compact) + (offMap && !compact ? " " + fmt.escape(offMap === 1 ? "One " + CFG.noun.one + " isn’t on the map: its address places it outside the three counties. It’s in the table." : offMap + " " + CFG.noun.many + " aren’t on the map: their addresses place them outside the three counties. They’re in the table.") : "");
     el.empty.hidden = !!located.length;
     el.empty.innerHTML = located.length ? "" : "No " + CFG.noun.many + " match these filters." + (PP.isDefault(state) ? "" : ' <button type="button" class="tx-reset" data-act="reset">Reset filters</button>');
     renderLegend();
@@ -179,20 +180,12 @@
     var src = map && map.getSource("pp");
     if (src) src.setData(toFeatures(rows));
   }
-  // A stray point outside the three counties (a filing geocoded elsewhere)
-  // shouldn't pull the view away; fit to the ones inside when there are any.
-  var COUNTY_BOX = [[-80.95, 25.1], [-79.9, 27.0]];
-  function inBox(r) {
-    return r.lng >= COUNTY_BOX[0][0] && r.lng <= COUNTY_BOX[1][0] && r.lat >= COUNTY_BOX[0][1] && r.lat <= COUNTY_BOX[1][1];
-  }
   function fitPadding() {
     return window.innerWidth <= 600 ? 40 : { top: 60, bottom: 40, left: 40, right: el.detail.hidden ? 60 : 380 };
   }
   function fitTo(rows, animate) {
     if (map && area.fit(animate, fitPadding())) return; // a picked city fits to its outline
     if (!map || !rows.length) return;
-    var inside = rows.filter(inBox);
-    if (inside.length) rows = inside;
     var b = new mapboxgl.LngLatBounds();
     rows.forEach(function (r) { b.extend([r.lng, r.lat]); });
     map.fitBounds(b, { padding: fitPadding(), maxZoom: 15, duration: animate ? 800 : 0 });

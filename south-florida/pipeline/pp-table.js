@@ -206,7 +206,8 @@
       '<span class="cx-kpi-sub">' + (sub || "&nbsp;") + "</span>" + (extra || "") + "</div>";
   }
   function expandBody(r) {
-    return "<div>" + CFG.detail(r, "row") + actions(r) + "</div>";
+    return "<div>" + CFG.detail(r, "row") + actions(r) +
+      (r.offMap ? '<p class="tx-muted pp-desc">Not on the map: its address places it outside Miami-Dade, Broward and Palm Beach.</p>' : "") + "</div>";
   }
   function actions(r) {
     return r.located && peer.hasPeer("map") ? '<div class="tx-actions"><button type="button" class="tx-btn" data-act="map" data-id="' + fmt.escape(r.id) + '">Show on map</button></div>' : "";
