@@ -26,6 +26,14 @@
   var data = null;
   var visible = [];
   var map = null;
+  // The picked city's outline (shared/sofla-area.js); the map snaps to it.
+  var area = SoflaArea.attach({
+    id: "pp",
+    getMap: function () { return map; },
+    getTheme: function () { return theme.get(); },
+    onLoad: function () { area.fit(true, fitPadding()); },
+  });
+  var shownCity = null;
   var selectedSpot = null;
   var hoverPopup = null;
 
@@ -138,9 +146,12 @@
     el.empty.innerHTML = located.length ? "" : "No " + CFG.noun.many + " match these filters." + (PP.isDefault(state) ? "" : ' <button type="button" class="tx-reset" data-act="reset">Reset filters</button>');
     renderLegend();
     setSource(located);
+    area.show(state.city);
+    var cityChanged = state.city !== shownCity;
+    shownCity = state.city;
     if (selectedSpot && !visible.some(function (r) { return r.spot === selectedSpot; })) clearSelection();
     else if (selectedSpot) renderDetail(selectedSpot);
-    if (opts && opts.fit) fitTo(located, opts.animate);
+    if ((opts && opts.fit) || (cityChanged && state.city)) fitTo(located, opts ? opts.animate : true);
   }
   el.empty.addEventListener("click", function (e) {
     if (!e.target.closest('[data-act="reset"]')) return;
@@ -174,13 +185,17 @@
   function inBox(r) {
     return r.lng >= COUNTY_BOX[0][0] && r.lng <= COUNTY_BOX[1][0] && r.lat >= COUNTY_BOX[0][1] && r.lat <= COUNTY_BOX[1][1];
   }
+  function fitPadding() {
+    return window.innerWidth <= 600 ? 40 : { top: 60, bottom: 40, left: 40, right: el.detail.hidden ? 60 : 380 };
+  }
   function fitTo(rows, animate) {
+    if (map && area.fit(animate, fitPadding())) return; // a picked city fits to its outline
     if (!map || !rows.length) return;
     var inside = rows.filter(inBox);
     if (inside.length) rows = inside;
     var b = new mapboxgl.LngLatBounds();
     rows.forEach(function (r) { b.extend([r.lng, r.lat]); });
-    map.fitBounds(b, { padding: window.innerWidth <= 600 ? 40 : { top: 60, bottom: 40, left: 40, right: el.detail.hidden ? 60 : 380 }, maxZoom: 15, duration: animate ? 800 : 0 });
+    map.fitBounds(b, { padding: fitPadding(), maxZoom: 15, duration: animate ? 800 : 0 });
   }
 
   // Circle radius in px for a unit count at a zoom; the layer and the size key share it.
@@ -315,6 +330,7 @@
     });
   }
   function addLayers() {
+    area.addLayers(); // under the points
     var t = theme.get(), ring = RING[t];
     if (!map.getSource("pp")) map.addSource("pp", { type: "geojson", data: toFeatures(visible.filter(function (r) { return r.located; })) });
     var hover = ["boolean", ["feature-state", "hover"], false];

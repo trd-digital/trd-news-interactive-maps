@@ -69,6 +69,14 @@
   var data = null;
   var visible = [];
   var map = null;
+  // The picked city's outline (shared/sofla-area.js); the map snaps to it.
+  var area = SoflaArea.attach({
+    id: "pm",
+    getMap: function () { return map; },
+    getTheme: function () { return theme.get(); },
+    onLoad: function () { if (!state.hood) area.fit(true, fitPadding()); },
+  });
+  var shownCity = null;
   var selectedId = null;
   var hoverPopup = null;
 
@@ -211,9 +219,12 @@
     renderEmpty(visible.length, located.length);
     renderLegend();
     setSource(located);
+    area.show(state.city);
+    var cityChanged = state.city !== shownCity;
+    shownCity = state.city;
     updateListBtn();
     if (selectedId && !visible.some(function (r) { return r.id === selectedId; })) clearSelection();
-    if (opts && opts.fit) fitTo(located, opts.animate);
+    if ((opts && opts.fit) || (cityChanged && state.city)) fitTo(located, opts ? opts.animate : true);
   }
 
   function renderEmpty(n, mapped) {
@@ -248,16 +259,16 @@
     var src = map && map.getSource("pm");
     if (src) src.setData(toFeatures(rows));
   }
+  function fitPadding() {
+    return window.innerWidth <= 600 ? 40 : { top: 60, bottom: 40, left: 40, right: el.detail.hidden ? 60 : 380 };
+  }
   function fitTo(rows, animate) {
+    // A picked city fits to its outline; a neighborhood to its permits.
+    if (map && !state.hood && area.fit(animate, fitPadding())) return;
     if (!map || !rows.length) return;
     var b = new mapboxgl.LngLatBounds();
     rows.forEach(function (r) { b.extend([r.lng, r.lat]); });
-    var narrow = window.innerWidth <= 600;
-    map.fitBounds(b, {
-      padding: narrow ? 40 : { top: 60, bottom: 40, left: 40, right: el.detail.hidden ? 60 : 380 },
-      maxZoom: 15,
-      duration: animate ? 800 : 0,
-    });
+    map.fitBounds(b, { padding: fitPadding(), maxZoom: 15, duration: animate ? 800 : 0 });
   }
 
   // ------------------------------------------------------------------ legend
@@ -418,6 +429,7 @@
     });
   }
   function addLayers() {
+    area.addLayers(); // under the points
     var p = COLORS[theme.get()];
     if (!map.getSource("pm")) map.addSource("pm", { type: "geojson", data: toFeatures(visible.filter(function (r) { return r.located; })) });
     var hover = ["boolean", ["feature-state", "hover"], false];

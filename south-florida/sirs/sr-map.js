@@ -28,6 +28,14 @@
   var allRows = [];
   var visible = [];
   var map = null;
+  // The picked city's outline (shared/sofla-area.js); the map snaps to it.
+  var area = SoflaArea.attach({
+    id: "sr",
+    getMap: function () { return map; },
+    getTheme: function () { return theme.get(); },
+    onLoad: function () { area.fit(true, fitPadding()); },
+  });
+  var shownCity = null;
   var selectedSpot = null;
   var hoverPopup = null;
 
@@ -145,9 +153,12 @@
     el.empty.innerHTML = located.length ? "" : "No associations match these filters." + (SR.isDefault(state) ? "" : ' <button type="button" class="tx-reset" data-act="reset">Reset filters</button>');
     renderLegend();
     setSource(located);
+    area.show(state.city);
+    var cityChanged = state.city !== shownCity;
+    shownCity = state.city;
     if (selectedSpot && !visible.some(function (r) { return r.spot === selectedSpot; })) clearSelection();
     else if (selectedSpot) renderDetail(selectedSpot);
-    if (opts && opts.fit) fitTo(located, opts.animate);
+    if ((opts && opts.fit) || (cityChanged && state.city)) fitTo(located, opts ? opts.animate : true);
   }
   el.empty.addEventListener("click", function (e) {
     if (!e.target.closest('[data-act="reset"]')) return;
@@ -175,11 +186,15 @@
     var src = map && map.getSource("sr");
     if (src) src.setData(toFeatures(rows));
   }
+  function fitPadding() {
+    return window.innerWidth <= 600 ? 40 : { top: 60, bottom: 40, left: 40, right: el.detail.hidden ? 60 : 380 };
+  }
   function fitTo(rows, animate) {
+    if (map && area.fit(animate, fitPadding())) return; // a picked city fits to its outline
     if (!map || !rows.length) return;
     var b = new mapboxgl.LngLatBounds();
     rows.forEach(function (r) { b.extend([r.lng, r.lat]); });
-    map.fitBounds(b, { padding: window.innerWidth <= 600 ? 40 : { top: 60, bottom: 40, left: 40, right: el.detail.hidden ? 60 : 380 }, maxZoom: 15, duration: animate ? 800 : 0 });
+    map.fitBounds(b, { padding: fitPadding(), maxZoom: 15, duration: animate ? 800 : 0 });
   }
 
   // ------------------------------------------------------------------ legend
@@ -298,6 +313,7 @@
     });
   }
   function addLayers() {
+    area.addLayers(); // under the points
     var p = COLORS[theme.get()];
     if (!map.getSource("sr")) map.addSource("sr", { type: "geojson", data: toFeatures(visible) });
     var hover = ["boolean", ["feature-state", "hover"], false];
