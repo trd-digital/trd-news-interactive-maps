@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" />
     <link rel="stylesheet" href="transactions/tx.css?v=23" />
     <link rel="stylesheet" href="construction/cx.css?v=2" />
-    <link rel="stylesheet" href="permits/pm.css?v=2" />
+    <link rel="stylesheet" href="permits/pm.css?v=3" />
     <!-- Mapbox GL downloads right away as a fetch (which doesn't hold up this
          page's load event, so the TRD article shows the frame sooner) and
          runs after load. pm-map.js waits on __pmMapbox. -->
@@ -110,7 +110,7 @@
             function X(lon) { return (lon + 180) / 360 * world; }
             function Y(lat) { return (1 - Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360)) / Math.PI) / 2 * world; }
             var bx0 = X(-80.56), bx1 = X(-80.12), by0 = Y(25.98), by1 = Y(25.54);
-            var mx0 = X(-80.9), mx1 = X(-79.8), my0 = Y(26.25), my1 = Y(25.25);
+            var mx0 = X(-81.0), mx1 = X(-79.7), my0 = Y(27.05), my1 = Y(25.25);
             var icx = X(-80.34), icy = Y(25.76); // the image's center
             var ocx = (bx0 + bx1) / 2, ocy = (by0 + by1) / 2;
             function clamp(v, lo, hi) { return lo > hi ? (lo + hi) / 2 : Math.min(hi, Math.max(lo, v)); }
@@ -130,7 +130,7 @@
             window.addEventListener("resize", place);
           })();
         </script>
-        <div id="tx-map" role="region" aria-label="Map of building permits in Miami-Dade"></div>
+        <div id="tx-map" role="region" aria-label="Map of building permits in South Florida"></div>
         <div class="tx-active" aria-label="Active filters" hidden></div>
         <div class="tx-legend"></div>
         <div class="tx-empty-map" hidden></div>
@@ -143,7 +143,7 @@
     </main>
 
     <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
-    <script src="permits/pm-core.js?v=2"></script>
-    <script src="permits/pm-map.js?v=2"></script>
+    <script src="permits/pm-core.js?v=3"></script>
+    <script src="permits/pm-map.js?v=3"></script>
   </body>
 </html>

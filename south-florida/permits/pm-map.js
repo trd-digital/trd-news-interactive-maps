@@ -8,7 +8,7 @@
   var STYLES = { light: "mapbox://styles/mapbox/light-v11", dark: "mapbox://styles/mapbox/dark-v11" };
   // Opening view and limits; the HTML's instant preview uses the same numbers.
   var OPEN_BOUNDS = [[-80.56, 25.54], [-80.12, 25.98]];
-  var MAX_BOUNDS = [[-80.9, 25.25], [-79.8, 26.25]];
+  var MAX_BOUNDS = [[-81.0, 25.25], [-79.7, 27.05]];
   // Must match the --pm-* tokens in pm.css (tx.css palette slots).
   var COLORS = {
     light: { new: "#2a78d6", addition: "#1baf7a", renovation: "#9a9993", demolition: "#eb6834", ring: "#ffffff", sel: "#111111" },
@@ -206,7 +206,7 @@
     if (!el.filterPanel.hidden) filters.render();
     var unmapped = visible.length - located.length;
     el.note.textContent = compact
-      ? "Permits through " + fmt.date(data.asOf) + " · Source: City of Miami, Miami Beach, Miami-Dade County"
+      ? "Permits through " + fmt.date(data.asOf) + " · Source: " + PM.sourceShort(data)
       : PM.asOfText(data) + (unmapped ? " " + PM.plural(unmapped, "site") + " without a reliable map location " + (unmapped === 1 ? "is" : "are") + " listed in the table." : "");
     renderEmpty(visible.length, located.length);
     renderLegend();
@@ -239,7 +239,7 @@
           type: "Feature",
           id: r._n,
           geometry: { type: "Point", coordinates: [r.lng, r.lat] },
-          properties: { id: r.id, value: r.value || 0, work: r.work, minor: r.size === "minor" ? 1 : 0 },
+          properties: { id: r.id, value: r.value || 0, work: r.work, minor: r.size === "minor" || r.size === "nocost" ? 1 : 0 },
         };
       }),
     };

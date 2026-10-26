@@ -8,7 +8,8 @@
  * iframes on one TRD page.
  *
  * The permits file (sofla-multi-county-permits-map-data.geojson, one row per
- * permit from the City of Miami, Miami Beach and Miami-Dade County) is
+ * permit from the City of Miami, Miami Beach, Miami-Dade County, Fort
+ * Lauderdale and West Palm Beach) is
  * produced upstream and served from static.therealdeal.com. `toPermit()` is
  * the only place that knows its field names.
  *
@@ -47,7 +48,14 @@
   };
   var UNINC = "Unincorporated Miami-Dade";
   // Who issued the permit (the file's Dataset field).
-  var AGENCY = { "City of Miami": "City of Miami", "Miami Beach": "City of Miami Beach", "Miami-Dade County": "Miami-Dade County" };
+  var AGENCY = { "City of Miami": "City of Miami", "Miami Beach": "City of Miami Beach", "Miami-Dade County": "Miami-Dade County",
+    "Ft Lauderdale": "City of Fort Lauderdale", "West Palm Beach": "City of West Palm Beach" };
+  // City permits outside Miami-Dade: the city is the issuer.
+  var AGENCY_CITY = { "Miami Beach": "Miami Beach", "City of Miami": "Miami", "Ft Lauderdale": "Fort Lauderdale", "West Palm Beach": "West Palm Beach" };
+  // The file's West Palm Beach longitudes are wrong (checked Oct 26 2026: 16 of
+  // 21 are 1–18 km off; latitudes are right), so its permits are listed but not
+  // mapped. Remove the entry once the feed is fixed.
+  var NO_MAP = { "West Palm Beach": true };
 
   // What the permit is for. One color each on the map.
   var WORKS = [
@@ -68,9 +76,13 @@
     { id: "mid", label: "Mid-size", long: "Mid-size projects", note: "$1M–$10M, or a new building of 10,000+ sq ft or 10+ units" },
     { id: "small", label: "Small", long: "Small projects", note: "$100K–$1M, or a smaller new building" },
     { id: "minor", label: "Minor work", long: "Minor work", note: "Under $100K or no cost given: repairs, unit remodels, trade work" },
+    { id: "nocost", label: "No cost listed", long: "No cost listed", note: "Issued by a city whose permits list no costs (Miami Beach, Fort Lauderdale, West Palm Beach)" },
   ];
   var SIZE_IDS = SIZES.map(function (s) { return s.id; });
-  var DEFAULT_SIZES = ["major", "mid", "small"];
+  var DEFAULT_SIZES = ["major", "mid", "small", "nocost"];
+  // Issuers whose permits in the file never list a cost (set on load): their
+  // work can't be sized, so it isn't hidden as minor.
+  var COSTLESS = {};
   var PERIODS = [
     { id: "30", label: "30 days", days: 30 },
     { id: "90", label: "90 days", days: 90 },
@@ -142,8 +154,8 @@
   function splitAddress(raw, city) {
     var s = String(raw || "").replace(/\s+/g, " ").trim();
     if (!s) return { street: null, unit: null };
-    s = s.replace(/\s+(Fl|FL|Florida)\s+\d{5}(-\d{4})?$/, "");
-    if (city) s = s.replace(new RegExp("\\s+" + city.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$", "i"), "");
+    s = s.replace(/,?\s+(Fl|FL|Florida),?\s+\d{5}(-?\d{4})?$/, "");
+    if (city) s = s.replace(new RegExp(",?\\s+" + city.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$", "i"), "");
     var unit = null;
     var m = /^(.*?)\s+(?:Unit:?|Apt\.?|Ste\.?|Suite|#)\s*([\w-]+)$/i.exec(s);
     if (m) { s = m[1]; unit = m[2]; }
@@ -184,14 +196,16 @@
       if (RES_RE.test(d)) return "Residential";
       return /COMMERCIAL/.test(m) ? "Commercial" : "Not specified";
     }
-    var text = agency === "Miami-Dade County" ? d.split(",")[0] : d;
+    // Fort Lauderdale and West Palm Beach give no description; West Palm
+    // Beach's permit kind names the class ("Remodel - Commercial").
+    var text = agency === "Miami-Dade County" ? d.split(",")[0] : AGENCY_CITY[agency] && !d ? m : d;
     var r = RES_RE.test(text), c = COM_RE.test(text);
     return r && c ? "Mixed use" : r ? "Residential" : c ? "Commercial" : "Not specified";
   }
   function statusOf(s) {
     var t = String(s || "").toLowerCase();
     if (!t) return null;
-    if (/^final/.test(t)) return { key: "final", label: "Final" };
+    if (/^(final|complete)/.test(t)) return { key: "final", label: "Final" };
     if (/active|issued|hold/.test(t)) return { key: "open", label: t === "hold" ? "On hold" : "Open" };
     return { key: "closed", label: titleCase(t) }; // expired, revoked, suspended
   }
@@ -201,12 +215,13 @@
     var p = f.properties || {};
     var c = f.geometry && f.geometry.coordinates;
     var agency = p.Dataset || "";
-    var folio = String(p.Parcel_ID == null ? "" : p.Parcel_ID).replace(/\D/g, "");
     var county = p.County || "Miami-Dade";
+    // Miami-Dade folios are digits; Broward's can hold letters ("0494330AF1400").
+    var folio = String(p.Parcel_ID == null ? "" : p.Parcel_ID).replace(county === "Miami-Dade" ? /\D/g : /[^\dA-Z]/gi, "").toUpperCase();
     if (county === "Miami-Dade" && folio && folio.length < 13) folio = folio.padStart(13, "0"); // the leading 0 was lost
     var city = county === "Miami-Dade" ? MUNICIPALITY[folio.slice(0, 2)] || null : null;
-    if (!city) city = agency === "Miami Beach" ? "Miami Beach" : agency === "City of Miami" ? "Miami" : null;
-    var addr = splitAddress(p.Address, agency === "Miami Beach" ? "Miami Beach" : null);
+    if (!city) city = AGENCY_CITY[agency] || null;
+    var addr = splitAddress(p.Address, agency !== "City of Miami" && agency !== "Miami-Dade County" ? AGENCY_CITY[agency] : null);
     var lng = c && isFinite(c[0]) ? +c[0] : num(p.Longitude), lat = c && isFinite(c[1]) ? +c[1] : num(p.Latitude);
     var num_ = String(p.Permit_Number || "").trim();
     var cm = agency === "City of Miami" ? /^(BD\d{8})(.*)$/.exec(num_) : null;
@@ -244,10 +259,12 @@
     var m = /^\d{3}([A-Z]+)\d{3}$/.exec(suffix || "") || /^[A-Z]\d{2}([A-Z]+)\d{3}$/.exec(suffix || "");
     return m ? TRADES[m[1]] || "Other" : null;
   }
-  // Miami-Dade, generously (the 27 City of Miami permits drawn near Lake
-  // Okeechobee fall outside and are kept off the map).
+  // The permit's county, generously (the 27 City of Miami permits drawn near
+  // Lake Okeechobee fall outside and are kept off the map).
+  var COUNTY_BOX = { "Miami-Dade": [-80.95, 25.1, -80.05, 26.0], Broward: [-80.9, 25.95, -80.0, 26.35], "Palm Beach": [-80.9, 26.3, -79.95, 27.0] };
   function inArea(p) {
-    return p.lng != null && p.lat != null && p.lng > -80.95 && p.lng < -80.05 && p.lat > 25.1 && p.lat < 26.0;
+    var b = COUNTY_BOX[p.county];
+    return !NO_MAP[p.agency] && !!b && p.lng != null && p.lat != null && p.lng > b[0] && p.lng < b[2] && p.lat > b[1] && p.lat < b[3];
   }
 
   // ------------------------------------------------------------------ jobs
@@ -402,6 +419,7 @@
   }
   function sizeOf(r) {
     var v = r.value || 0, sq = r.newSqft || 0, u = r.newUnits || 0;
+    if (!v && !sq && !u && r.agencies.every(function (a) { return COSTLESS[a]; })) return "nocost";
     if (v >= 1e7 || sq >= 1e5 || u >= 50) return "major";
     if (v >= 1e6 || sq >= 1e4 || u >= 10) return "mid";
     if (v >= 1e5 || sq > 0 || u > 0) return "small";
@@ -506,6 +524,8 @@
         seen[k] = true;
         return true;
       });
+      COSTLESS = {};
+      permits.forEach(function (p) { if (!(p.agency in COSTLESS)) COSTLESS[p.agency] = true; if (p.cost) COSTLESS[p.agency] = false; });
       var jobs = buildJobs(permits);
       var rows = buildSites(jobs);
       return placesP.then(function (list) {
@@ -731,7 +751,7 @@
       if (data && data.cities.length > 1) {
         var cityC = counts(data, s, "city", "city");
         html += '<div class="tx-group" data-key="city"><label class="tx-group-label" for="pm-city">City</label><div class="tx-chips">' +
-          '<select id="pm-city" class="pm-select"><option value="">All of Miami-Dade</option>' +
+          '<select id="pm-city" class="pm-select"><option value="">All cities</option>' +
           data.cities.map(function (c) {
             return '<option value="' + fmt.escape(c) + '"' + (s.city === c ? " selected" : "") + ">" + fmt.escape(c) + " (" + (cityC[c] || 0).toLocaleString("en-US") + ")</option>";
           }).join("") + "</select></div></div>";
@@ -925,7 +945,7 @@
     if (r.owners.length) rows.push(["Owner", r.owners.slice(0, 2).map(function (o) { return fmt.escape(titleCase(o)); }).join("<br>")]);
     if (r.units.length > 1) rows.push(["Units", plural(r.units.length, "unit") + ' <span class="tx-muted">with permits</span>']);
     rows.push(["Issued by", fmt.escape(r.agencies.map(function (a) { return AGENCY[a] || a; }).join(", "))]);
-    if (r.folios.length === 1) rows.push(["Folio", fmt.escape(r.folios[0])]);
+    if (r.folios.length === 1) rows.push([r.county === "Palm Beach" ? "Parcel" : "Folio", fmt.escape(r.folios[0])]);
     else if (r.folios.length > 1) rows.push(["Folios", plural(r.folios.length, "parcel") + ' <span class="tx-muted">at this location</span>']);
     return rows;
   }
@@ -975,6 +995,10 @@
   function agencyList(data) {
     var names = data.agencies.map(function (a) { return AGENCY[a] || a; });
     return names.length > 1 ? names.slice(0, -1).join(", ") + " and " + names[names.length - 1] : names[0] || "";
+  }
+  // "City of Miami, Miami Beach, Miami-Dade County, Fort Lauderdale"
+  function sourceShort(data) {
+    return data.agencies.map(function (a) { return a === "Miami-Dade County" ? a : AGENCY_CITY[a] || a; }).join(", ");
   }
   function asOfText(data) {
     return "Building permits issued " + fmt.date(data.first, { month: "short", day: "numeric" }) + " to " + fmt.date(data.asOf) +
@@ -1074,6 +1098,7 @@
     typeTag: typeTag,
     aerialUrl: aerialUrl,
     asOfText: asOfText,
+    sourceShort: sourceShort,
     notify: notify,
     theme: theme,
     slug: slug,

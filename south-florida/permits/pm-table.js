@@ -156,7 +156,7 @@
     { key: "permitCount", label: "Permits", sortable: true, num: true, cls: "cx-col-units" },
     { key: "status", label: "Status", sortable: true, cls: "cx-col-status" },
   ];
-  var SIZE_RANK = { major: 3, mid: 2, small: 1, minor: 0 };
+  var SIZE_RANK = { major: 3, mid: 2, small: 1, minor: 0, nocost: 0 };
   function sortVal(r, k) {
     if (k === "size") return SIZE_RANK[r.size] * 1e12 + (r.value || 0);
     if (k === "work") return PM.workLabel(r.work);
@@ -233,7 +233,7 @@
     var jobs = rows.reduce(function (n, r) { return n + r.jobs.length; }, 0);
     el.kpis.innerHTML =
       kpi("Sites", s.count.toLocaleString("en-US"), big ? PM.plural(big, "major or mid-size", "major or mid-size") : "&nbsp;", rows.length ? '<span class="cx-mix" aria-hidden="true">' + mix + "</span>" : "") +
-      kpi("Estimated cost", fmt.moneyShort(s.value), "Sum of job estimates") +
+      kpi("Estimated cost", s.value ? fmt.moneyShort(s.value) : "—", s.value ? "Sum of job estimates" : "No costs listed") +
       kpi("New floor area", s.sqft ? fmt.numShort(s.sqft) + " sq ft" : "—", "New buildings and additions") +
       kpi("Permits", s.permits.toLocaleString("en-US"), jobs ? "Combined into " + PM.plural(jobs, "job") : "&nbsp;");
   }
@@ -348,7 +348,7 @@
         "<td>" + fmt.escape(a.top.address || "—") + ' <span class="tx-muted">' + (a.top.value ? fmt.moneyShort(a.top.value) : "") + "</span></td></tr>";
     }).join("") + '</tbody></table><p class="tx-area-note"><span class="tx-muted">' + (byHood
       ? (state.city === "Miami" ? "Neighborhoods are the City of Miami’s." : "Areas are census-designated places.") + " Tap a name to filter to it."
-      : "Cities come from the property’s folio number. Pick Miami or Unincorporated Miami-Dade to see neighborhoods; tap a name to filter to it.") + "</span></p>";
+      : "Miami-Dade cities come from the property’s folio number. Pick Miami or Unincorporated Miami-Dade to see neighborhoods; tap a name to filter to it.") + "</span></p>";
   }
   el.area.addEventListener("click", function (e) {
     var s = e.target.closest("[data-asort]");
