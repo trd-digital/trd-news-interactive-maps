@@ -48,7 +48,7 @@
     var city = p.City === "Unincorporated" && county ? "Unincorporated " + county : p.City || null;
     var story = p["Recent Coverage"] || null;
     // Untitled projects go by their street address ("824 Alton Road").
-    var street = String(p.Address || "").split(/,| in /)[0].trim();
+    var street = String(p.Address || "").split(/,| in /)[0].trim().replace(/^[a-z]/, function (c) { return c.toUpperCase(); });
     var r = {
       id: "ll" + i,
       name: project || street || dev || "Unnamed project",
@@ -82,12 +82,13 @@
   }
   function detail(r, where) {
     var F = PP.fmt, out = '<div class="tx-tags">' + PP.stageTag(r) + countyTag(r) + "</div>";
-    if (r.ll != null || r.total != null) out += PP.shareBar(r.ll, r.total, r.ll != null ? "Live Local units" : "units in all");
+    if (r.ll != null) out += PP.shareBar(r.ll, r.total, "Live Local units");
+    else if (r.total != null) out += '<p class="pp-share-text"><strong>' + F.num(r.total) + "</strong> units <span class=\"tx-muted\">· Live Local count not disclosed</span></p>";
     else if (r.pct != null) out += '<p class="pp-share-text"><strong>' + r.pct + "%</strong> Live Local units <span class=\"tx-muted\">· unit count not disclosed</span></p>";
     if (r.desc) out += '<p class="pp-desc">' + esc(r.desc) + "</p>";
     var facts = [];
     if (r.developer) facts.push(["Developer", esc(r.developer)]);
-    if (!r.project && where !== "row" && r.address !== r.name) facts.push(["Address", esc(r.address)]);
+    if (!r.project && where !== "row" && r.address.toLowerCase() !== r.name.toLowerCase()) facts.push(["Address", esc(r.address)]);
     if (r.architect) facts.push(["Architect", esc(r.architect)]);
     if (where === "row" && r.address) facts.push(["Address", esc(r.address)]);
     if (r.city) facts.push(["Where", esc(r.city) + (r.county && r.city.indexOf(r.county) < 0 ? " · " + esc(r.county) + " County" : "")]);
