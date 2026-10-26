@@ -5,6 +5,9 @@ on:
   # schedule:
   #   - cron: '0 5 * * *'  # 12:00 AM ET in winter, 1:00 AM ET in summer
 
+permissions:
+  contents: write
+
 jobs:
   update-SoFla-LiveLocal:
     runs-on: ubuntu-latest
@@ -40,6 +43,7 @@ jobs:
           mv ./south-florida/_live_local_auto_update/live_local.geojson ./south-florida/south-florida-live-local.geojson
           git add ./south-florida/south-florida-live-local.geojson
           git commit -m "Update SoFla Live Local Map data" || echo "No changes to commit"
+          git pull --rebase origin main
           git push origin HEAD:main
 
       - name: Clean up
