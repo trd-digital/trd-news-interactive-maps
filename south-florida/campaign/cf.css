@@ -1,0 +1,422 @@
+/* cf.css — South Florida campaign-money interactives.
+   Builds on transactions/tx.css and construction/cx.css; only the
+   campaign-specific pieces live here. */
+
+/* Sector colors: categorical slots 1–6 in fixed order (validated adjacent
+   pairs, both themes). Party colors for the race chart's candidates come
+   from the same slots, assigned per candidate in cf-governor.js. */
+:root {
+  --cf-groups: #2a78d6;
+  --cf-developers: #eb6834;
+  --cf-other: #1baf7a;
+  --cf-realtors: #eda100;
+  --cf-property: #e87ba4;
+  --cf-builders: #008300;
+  --cf-s1: #2a78d6;
+  --cf-s2: #eb6834;
+  --cf-s3: #1baf7a;
+  --cf-s4: #eda100;
+  --cf-s5: #e87ba4;
+  --cf-s6: #008300;
+  --cf-bar: #2a78d6;
+  --cf-grid: #e8e8e4;
+}
+[data-bs-theme="dark"] {
+  --cf-groups: #3987e5;
+  --cf-developers: #d95926;
+  --cf-other: #199e70;
+  --cf-realtors: #c98500;
+  --cf-property: #d55181;
+  --cf-builders: #008300;
+  --cf-s1: #3987e5;
+  --cf-s2: #d95926;
+  --cf-s3: #199e70;
+  --cf-s4: #c98500;
+  --cf-s5: #d55181;
+  --cf-s6: #008300;
+  --cf-bar: #3987e5;
+  --cf-grid: #3a3a38;
+}
+.cf-swatch-groups { background: var(--cf-groups); }
+.cf-swatch-developers { background: var(--cf-developers); }
+.cf-swatch-other { background: var(--cf-other); }
+.cf-swatch-realtors { background: var(--cf-realtors); }
+.cf-swatch-property { background: var(--cf-property); }
+.cf-swatch-builders { background: var(--cf-builders); }
+
+/* 2px surface gap between stacked segments */
+.cf-mix {
+  gap: 2px;
+  background: none;
+}
+.cf-mix i {
+  border-radius: 1px;
+}
+.cf-mix i:first-child {
+  border-radius: 3px 1px 1px 3px;
+}
+.cf-mix i:last-child {
+  border-radius: 1px 3px 3px 1px;
+}
+
+/* ------------------------------------------------------------------ table
+   Phones keep the table (fewer columns) instead of switching to cards. */
+.cf-table-wrap {
+  position: relative;
+}
+@media (max-width: 720px) {
+  .tx-table.cf-table {
+    display: table;
+  }
+  .cf-table .cf-wide {
+    display: none;
+  }
+  .cf-table td,
+  .cf-table th {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+}
+.cf-table tbody tr.cf-static {
+  cursor: default;
+}
+.cf-table td strong {
+  font-variant-numeric: tabular-nums;
+}
+.cf-name {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.cf-sub {
+  display: block;
+  color: var(--tx-text-2);
+  font-size: 12px;
+  font-weight: 400;
+}
+.cf-sector {
+  font-size: 12px;
+  color: var(--tx-text-2);
+}
+.cf-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--tx-accent);
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+.cf-link:hover {
+  text-decoration: underline;
+}
+
+/* A label and its chips stay on one line */
+.cf-ctl {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+
+/* Expanded row: breakdown lists */
+.cf-expand {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px 24px;
+  padding-top: 6px;
+}
+.cf-list-title {
+  margin: 0 0 6px;
+  color: var(--tx-text-3);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.cf-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+.cf-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 0;
+  border-top: 1px solid var(--tx-border);
+}
+.cf-list li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.cf-list .cf-li-main {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.cf-list .cf-li-amt {
+  flex: none;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.cf-more {
+  margin: 6px 0 0;
+  color: var(--tx-text-3);
+  font-size: 12px;
+}
+.cf-note {
+  margin: 10px 0 0;
+  color: var(--tx-text-2);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+/* Filter row above a table */
+.cf-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin: 0 0 10px;
+}
+.cf-controls .tx-search {
+  flex: 1 1 260px;
+  max-width: 420px;
+}
+.cf-controls .tx-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cf-label {
+  color: var(--tx-text-3);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.cf-select {
+  max-width: 100%;
+  min-height: 34px;
+  padding: 6px 30px 6px 10px;
+  border: 1px solid var(--tx-border);
+  border-radius: 8px;
+  background: var(--tx-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%2376756f' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 10px center;
+  color: var(--tx-text);
+  font: inherit;
+  font-size: 13px;
+  appearance: none;
+}
+
+/* Sector breakdown (tracker) */
+.cf-sectors {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 2px 18px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+.cf-sectors button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 4px 6px;
+  margin: 0 -6px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--tx-text);
+  font: inherit;
+  text-align: left;
+}
+.cf-sectors button:hover {
+  background: var(--tx-surface-2);
+}
+.cf-sectors button.is-active {
+  background: var(--tx-surface-2);
+  box-shadow: inset 0 0 0 1px var(--tx-text-3);
+}
+.cf-sectors .cf-s-amt {
+  margin-left: auto;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.cf-sectors .cf-s-pct {
+  min-width: 34px;
+  color: var(--tx-text-3);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Lookup: donor header */
+.cf-donor-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px 16px;
+  margin: 4px 0 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--tx-border);
+  border-radius: 10px;
+  background: var(--tx-surface);
+}
+.cf-donor-head h2 {
+  flex: 1 1 260px;
+  margin: 0;
+  font-family: var(--tx-serif);
+  font-size: 18px;
+  line-height: 1.3;
+}
+.cf-donor-head .cf-big {
+  font-family: var(--tx-serif);
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.cf-donor-head .tx-actions {
+  flex-basis: 100%;
+  margin-top: 4px;
+}
+
+/* --------------------------------------------------------------- map page */
+.cf-map-app .tx-legend {
+  min-width: 190px;
+}
+.cf-ramp {
+  display: flex;
+  gap: 2px;
+  margin: 4px 0 2px;
+}
+.cf-ramp i {
+  flex: 1;
+  height: 10px;
+}
+.cf-ramp i:first-child {
+  border-radius: 3px 0 0 3px;
+}
+.cf-ramp i:last-child {
+  border-radius: 0 3px 3px 0;
+}
+.cf-ramp-labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--tx-text-2);
+  font-variant-numeric: tabular-nums;
+}
+.cf-map-app .tx-topbar .tx-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cf-split {
+  display: flex;
+  height: 8px;
+  gap: 2px;
+  margin: 6px 0 4px;
+}
+.cf-split i {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+}
+.cf-split-legend {
+  display: flex;
+  justify-content: space-between;
+  color: var(--tx-text-2);
+  font-size: 12px;
+}
+
+/* ------------------------------------------------------------- race chart */
+.cf-chart {
+  position: relative;
+  margin: 0 0 6px;
+}
+.cf-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.cf-chart .cf-grid line {
+  stroke: var(--cf-grid);
+  stroke-width: 1;
+}
+.cf-chart .cf-axis text {
+  fill: var(--tx-text-3);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.cf-chart .cf-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.cf-chart .cf-dot {
+  stroke: var(--tx-bg);
+  stroke-width: 2;
+}
+.cf-chart .cf-label-text {
+  fill: var(--tx-text);
+  font-size: 12px;
+  font-weight: 700;
+}
+.cf-chart .cf-cross {
+  stroke: var(--tx-text-3);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+.cf-tip {
+  position: absolute;
+  z-index: 3;
+  min-width: 180px;
+  padding: 8px 10px;
+  border: 1px solid var(--tx-border);
+  border-radius: 8px;
+  background: var(--tx-surface);
+  box-shadow: var(--tx-shadow);
+  font-size: 12px;
+  pointer-events: none;
+}
+.cf-tip strong {
+  display: block;
+  margin-bottom: 4px;
+}
+.cf-tip div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 1px 0;
+}
+.cf-tip div span:last-child {
+  margin-left: auto;
+  padding-left: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.cf-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+.cf-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.cf-legend i {
+  display: inline-block;
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+}

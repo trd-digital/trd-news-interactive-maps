@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>South Florida Campaign Donors Map - The Real Deal</title>
+    <link rel="icon" type="image/x-icon" href="https://therealdeal.com/favicon.ico" />
+    <link rel="preload" href="campaign/cf-zips.json" as="fetch" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap" />
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" />
+    <!-- Mapbox GL downloads right away as a fetch and runs after load;
+         cf-map.js waits on __cfMapbox. -->
+    <script>
+      window.__cfMapbox = new Promise(function (resolve) {
+        var src = "https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js";
+        function add(url) {
+          var s = document.createElement("script");
+          s.src = url;
+          s.onload = s.onerror = function () { resolve(); };
+          document.body.appendChild(s);
+        }
+        var code = fetch(src, { priority: "high" }).then(function (r) {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          return r.blob();
+        });
+        function run() {
+          code.then(function (b) { add(URL.createObjectURL(b)); }, function () { add(src); });
+        }
+        if (document.readyState === "complete") run();
+        else window.addEventListener("load", run);
+      });
+    </script>
+    <link rel="stylesheet" href="transactions/tx.css?v=23" />
+    <link rel="stylesheet" href="construction/cx.css?v=2" />
+    <link rel="stylesheet" href="campaign/cf.css?v=1" />
+
+    <!-- Google Tag Manager and Piano (TRD-3464), deferred: cf-core.js calls
+         __cfLoadGtm() once the data has loaded (20 s fallback). -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.__cfLoadGtm = function () {
+        if (window.__cfGtmLoaded) return;
+        window.__cfGtmLoaded = true;
+        var piano = document.createElement("script");
+        piano.src = "https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5";
+        piano.async = true;
+        document.head.appendChild(piano);
+        (function (w, d, s, l, i) {
+          w[l] = w[l] || [];
+          w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+          var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != "dataLayer" ? "&l=" + l : "";
+          j.async = true;
+          j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+          f.parentNode.insertBefore(j, f);
+        })(window, document, "script", "dataLayer", "GTM-K694XL6");
+      };
+      setTimeout(window.__cfLoadGtm, 20000);
+    </script>
+    <!-- End Google Tag Manager -->
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-K694XL6"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Giving by ZIP code: campaign/cf-core.js + cf-map.js; ZIP shapes from south-florida-boundaries.geojson. Data: campaign/cf-zips.json, built by
+         _campaign/build_campaign.py from the Florida Division of Elections exports. -->
+    <main id="tx-app" class="tx-map-app cx-app cf-app cf-map-app">
+      <div class="tx-topbar">
+        <div class="tx-chips cf-metric" role="group" aria-label="Shade ZIP codes by"></div>
+        <div class="tx-count" aria-live="polite"></div>
+      </div>
+      <div class="tx-map-wrap">
+        <div id="tx-map" role="region" aria-label="Map of campaign giving by South Florida ZIP code"></div>
+        <div class="tx-legend"></div>
+        <aside class="tx-detail" role="dialog" aria-modal="false" aria-label="ZIP code details" hidden></aside>
+        <div class="tx-loading"><span class="tx-spinner" aria-hidden="true"></span><span>Loading campaign contributions…</span></div>
+      </div>
+      <div class="tx-mapnote"></div>
+    </main>
+
+    <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
+    <script src="campaign/cf-core.js?v=1"></script>
+    <script src="campaign/cf-map.js?v=1"></script>
+  </body>
+</html>
