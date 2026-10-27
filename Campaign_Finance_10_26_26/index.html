@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Real Estate's Political Money | The Real Deal</title>
+    <meta name="description" content="Federal campaign contributions tied to 85 real estate firms in the 2022, 2024 and 2026 election cycles, by party, recipient and donor." />
+
+    <!-- Pre-paint boot snippet (trd_graphics core/boot-snippet.html). MUST stay inline and first. -->
+    <script>
+      (function () {
+        var r = document.documentElement, p = null;
+        try { p = new URLSearchParams(location.search); } catch (e) {}
+        var framed;
+        try { framed = window.self !== window.top; } catch (e) { framed = true; }
+        if ((p && p.get("layout") === "embed") || framed) r.setAttribute("data-layout", "embed");
+        var q = p && p.get("theme"), saved = null;
+        if (r.getAttribute("data-layout") !== "embed") {
+          try { saved = localStorage.getItem("campaign-finance-10-26-26:theme"); } catch (e) {}
+        }
+        var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        r.setAttribute("data-theme", (q === "dark" || q === "light") ? q
+          : (saved === "dark" || saved === "light") ? saved : (dark ? "dark" : "light"));
+      })();
+    </script>
+
+    <link href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="trd-embed.css" />
+    <style>
+      /* Live TRD articles embed a plain 560px iframe (trd_graphics README,
+         "How graphics actually run on therealdeal.com"), so the whole graphic
+         is a fixed 560px card at every width. */
+      :root {
+        --trd-embed-h: 560px; --trd-embed-h-phone: 560px; --trd-embed-h-wide: 560px;
+        --app-h: 560px;
+        --rep: #d2433d; --dem: #2a78d6; --oth: #a3a9b5;
+        --row-h: 36px;
+      }
+      :root[data-theme="dark"] { --rep: #e5605a; --dem: #4a90e8; --oth: #6b7282; }
+
+      body { background: var(--trd-bg-soft); }
+      .app {
+        position: relative; height: var(--app-h); max-width: 910px; margin: 0 auto;
+        display: flex; flex-direction: column; overflow: hidden;
+        background: var(--trd-panel); color: var(--trd-text);
+      }
+      :root:not([data-layout="embed"]) body { padding: 24px 12px; }
+      :root:not([data-layout="embed"]) .app { border: 1px solid var(--trd-border); border-radius: 6px; }
+      :root[data-layout="embed"] body { background: var(--trd-panel); }
+      /* A hairline frame so the card reads as one unit on a white or #222 TRD page. */
+      :root[data-layout="embed"] .app { border: 1px solid var(--trd-border); }
+
+      button { font-family: var(--trd-font-sans); }
+      button:focus-visible, select:focus-visible { outline: 2px solid var(--trd-brand); outline-offset: 2px; }
+
+      /* ---- Head ---- */
+      .head { flex: none; padding: 14px 18px 8px; position: relative; }
+      .head h1 { font-family: var(--trd-font-serif); font-weight: 900; font-size: 21px; line-height: 1.2; margin: 0; letter-spacing: -0.01em; }
+      .head .dek { font-size: 13.5px; line-height: 1.35; color: var(--trd-muted); margin: 3px 0 0; }
+      #themeToggle {
+        position: absolute; top: 12px; right: 14px; width: 30px; height: 30px; border-radius: 50%;
+        border: 1px solid var(--trd-border); background: var(--trd-bg); color: var(--trd-text); cursor: pointer; font-size: 14px;
+      }
+      :root:not([data-layout="embed"]) .head { padding-right: 56px; }
+
+      /* ---- Controls ---- */
+      .controls { flex: none; display: flex; align-items: center; gap: 10px; padding: 2px 18px 10px; }
+      .seg { display: inline-flex; flex: none; border: 1px solid var(--trd-border); border-radius: 999px; overflow: hidden; }
+      .seg button {
+        background: transparent; border: 0; cursor: pointer; color: var(--trd-text);
+        font-weight: 700; font-size: 13px; padding: 6px 12px; white-space: nowrap;
+      }
+      .seg button + button { border-left: 1px solid var(--trd-border); }
+      .seg button[aria-pressed="true"] { background: var(--trd-text); color: var(--trd-panel); }
+      .controls select {
+        margin-left: auto; min-width: 0; flex: 0 1 220px; padding: 6px 10px; font: 13px var(--trd-font-sans);
+        color: var(--trd-text); background: var(--trd-bg); border: 1px solid var(--trd-border); border-radius: 999px;
+      }
+
+      /* ---- Body: summary + list/detail ---- */
+      .body { flex: 1 1 auto; min-height: 0; position: relative; display: flex; flex-direction: column; }
+      .summary { flex: none; padding: 0 18px 10px; }
+      .sum-line { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin: 0 0 6px; }
+      .sum-line .big { font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
+      .sum-line .lbl { font-size: 13px; color: var(--trd-muted); }
+      .sum-line .call { font-size: 13px; color: var(--trd-text); }
+      .bar { display: flex; flex: none; height: 12px; border-radius: 3px; overflow: hidden; background: var(--trd-bg-soft); }
+      .bar span { display: block; flex: none; height: 100%; }
+      .bar span + span { box-shadow: -1px 0 0 var(--trd-panel); }
+      .bar .R { background: var(--rep); } .bar .D { background: var(--dem); } .bar .N { background: var(--oth); }
+      .legend { display: flex; flex-wrap: wrap; gap: 2px 14px; margin-top: 5px; font-size: 12.5px; color: var(--trd-muted); }
+      .legend b { color: var(--trd-text); font-variant-numeric: tabular-nums; }
+      .sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; vertical-align: 0; }
+      .sw.R { background: var(--rep); } .sw.D { background: var(--dem); } .sw.N { background: var(--oth); }
+
+      .main { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); border-top: 1px solid var(--trd-border); }
+      .list { min-height: 0; display: flex; flex-direction: column; padding: 4px 0 0; }
+      .list-head { flex: none; display: flex; justify-content: space-between; padding: 4px 18px 2px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--trd-muted); }
+      .rows { flex: 1 1 auto; min-height: 0; overflow: hidden; }
+      .row {
+        display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; align-items: center; column-gap: 8px;
+        width: 100%; height: var(--row-h); padding: 0 18px 0 15px; border: 0; border-left: 3px solid transparent;
+        background: transparent; color: var(--trd-text); text-align: left; cursor: pointer;
+      }
+      .row:hover { background: var(--trd-bg-soft); }
+      .row[aria-current="true"] { background: var(--trd-bg-soft); border-left-color: var(--trd-brand); }
+      .row .rk { font-size: 12px; color: var(--trd-muted); font-variant-numeric: tabular-nums; text-align: right; }
+      .row .nm { min-width: 0; }
+      .row .nm .lbl { display: block; font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+      .row .bar { height: 5px; border-radius: 2px; }
+      .row .amt { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .pager { flex: none; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 4px 18px 6px; font-size: 12.5px; color: var(--trd-muted); font-variant-numeric: tabular-nums; }
+      .pager button {
+        width: 28px; height: 26px; border-radius: 6px; border: 1px solid var(--trd-border);
+        background: var(--trd-bg); color: var(--trd-text); cursor: pointer; font-size: 14px; line-height: 1;
+      }
+      .pager button:disabled { opacity: 0.35; cursor: default; }
+
+      .detail { min-height: 0; overflow: hidden; border-left: 1px solid var(--trd-border); padding: 10px 18px 6px; display: flex; flex-direction: column; }
+      .back { display: none; align-self: flex-start; margin: 0 0 6px; padding: 4px 10px 4px 6px; border: 1px solid var(--trd-border); border-radius: 999px; background: var(--trd-bg); color: var(--trd-text); font-size: 12.5px; font-weight: 700; cursor: pointer; }
+      .detail h2 { font-family: var(--trd-font-serif); font-weight: 900; font-size: 18px; line-height: 1.2; margin: 0 0 2px; }
+      .detail .meta { flex: none; font-size: 12.5px; color: var(--trd-muted); margin: 0 0 8px; }
+      .detail .meta b { color: var(--trd-text); }
+      .detail .bar { height: 9px; }
+      .detail h2, .detail h3, .detail ul, .detail .legend { flex: none; }
+      .detail h3 { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--trd-muted); margin: 10px 0 2px; }
+      .detail ul { list-style: none; margin: 0; padding: 0; }
+      .detail li { display: flex; align-items: center; gap: 7px; height: 21px; font-size: 12.5px; border-top: 1px solid var(--trd-border); }
+      .detail li:first-child { border-top: 0; }
+      .detail li .t { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .detail li .v { flex: none; font-weight: 700; font-variant-numeric: tabular-nums; }
+      .detail li .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; }
+      .dot.R { background: var(--rep); } .dot.D { background: var(--dem); } .dot.N { background: var(--oth); }
+
+      .foot { flex: none; display: flex; align-items: center; gap: 10px; padding: 6px 18px 8px; border-top: 1px solid var(--trd-border); font-size: 11.5px; line-height: 1.3; color: var(--trd-muted); }
+      .foot .src { flex: 1 1 auto; min-width: 0; }
+      .foot button { flex: none; border: 0; background: none; padding: 0; color: var(--trd-brand); font-size: 11.5px; font-weight: 700; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+
+      .about {
+        position: absolute; inset: 0; z-index: 3; display: none; overflow: hidden;
+        background: var(--trd-panel); padding: 12px 18px; font-size: 13px; line-height: 1.45;
+      }
+      .about.open { display: block; }
+      .about h2 { font-family: var(--trd-font-serif); font-size: 16px; margin: 0 0 6px; }
+      .about p { margin: 0 0 7px; }
+      .about .close { position: absolute; top: 10px; right: 14px; border: 1px solid var(--trd-border); background: var(--trd-bg); color: var(--trd-text); border-radius: 999px; padding: 3px 10px; font-size: 12.5px; font-weight: 700; cursor: pointer; }
+
+      /* ---- Narrow: list fills the body; the detail swaps in over it ---- */
+      @media (max-width: 699px) {
+        .main { grid-template-columns: minmax(0, 1fr); }
+        .detail { position: absolute; inset: 0; z-index: 2; border-left: 0; background: var(--trd-panel); display: none; padding-top: 4px; }
+        .app.show-detail .detail { display: flex; }
+        .back { display: inline-block; }
+        .sum-line .call { display: none; }
+        .about { font-size: 12.5px; line-height: 1.4; }
+      }
+      @media (max-width: 420px) {
+        .head { padding: 12px 14px 6px; }
+        .head h1 { font-size: 19px; }
+        .head .dek { font-size: 12.5px; }
+        .controls { padding: 2px 14px 8px; gap: 8px; }
+        .seg button { padding: 6px 9px; font-size: 12.5px; }
+        .summary, .foot, .list-head, .pager { padding-left: 14px; padding-right: 14px; }
+        .row { padding: 0 14px 0 11px; grid-template-columns: 20px minmax(0, 1fr) auto; }
+        .detail { padding-left: 14px; padding-right: 14px; }
+        .about { padding: 10px 14px; }
+        .sum-line .big { font-size: 21px; }
+      }
+      @media (max-width: 340px) {
+        .seg button { padding: 6px 7px; font-size: 12px; }
+        .controls select { flex-basis: 76px; padding: 6px 6px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app" id="app">
+      <header class="head">
+        <h1>Real Estate's Political Money</h1>
+        <p class="dek">Federal contributions tied to 85 real estate firms and their leaders, 2022–2026 election cycles</p>
+        <button id="themeToggle" class="trd-standalone-only" type="button" aria-label="Toggle dark mode">◐</button>
+      </header>
+
+      <div class="controls">
+        <div class="seg" role="group" aria-label="Election cycle" id="cycles">
+          <button type="button" data-c="all" aria-pressed="true">All cycles</button>
+          <button type="button" data-c="2022" aria-pressed="false">2022</button>
+          <button type="button" data-c="2024" aria-pressed="false">2024</button>
+          <button type="button" data-c="2026" aria-pressed="false">2026</button>
+        </div>
+        <select id="find" aria-label="Find a company"></select>
+      </div>
+
+      <div class="body">
+        <section class="summary" aria-live="polite">
+          <div class="sum-line"><span class="big" id="sumTotal"></span><span class="lbl" id="sumLbl"></span><span class="call" id="sumCall"></span></div>
+          <div class="bar" id="sumBar"></div>
+          <div class="legend" id="sumLegend"></div>
+        </section>
+
+        <div class="main" id="chart">
+          <div class="list">
+            <div class="list-head"><span>Company</span><span>Total given</span></div>
+            <div class="rows" id="rows"></div>
+            <div class="pager"><button type="button" id="prev" aria-label="Previous companies">‹</button><span id="pageLbl"></span><button type="button" id="next" aria-label="More companies">›</button></div>
+          </div>
+          <section class="detail" id="detail" aria-live="polite"></section>
+        </div>
+
+        <section class="about" id="about" aria-label="About the data">
+          <button type="button" class="close" id="aboutClose">Close</button>
+          <h2>About the data</h2>
+          <p>Itemized federal contributions reported to the FEC by donors whose employer or name ties them to one of 85 real estate firms and trade groups, compiled by The Real Deal. The 2026 cycle runs through <span id="asof"></span>.</p>
+          <p>Party is the recipient's: candidate and party committees use their FEC party. PACs, super PACs and joint fundraising committees that back one party's candidates were classified by TRD. Trade, company and issue PACs, and smaller committees, are shown as nonpartisan &amp; other.</p>
+          <p>Memo entries and ActBlue/WinRed pass-throughs are excluded, as are Realtor associations' transfers into NAR's own committees, so money isn't counted twice. Refunds are netted out. Donor names are as reported, so one person can appear under two spellings.</p>
+        </section>
+      </div>
+
+      <footer class="foot">
+        <span class="src">Source: Federal Election Commission data compiled by The Real Deal</span>
+        <button type="button" id="aboutOpen">About the data</button>
+      </footer>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="trd-embed.js"></script>
+    <script>
+      (function () {
+        var DATA = window.CF_DATA;
+        var PARTY = { R: "Republican", D: "Democratic", N: "Nonpartisan & other" };
+        var CYCLE_LBL = { all: "given, 2022–2026 cycles", "2022": "given, 2022 cycle", "2024": "given, 2024 cycle", "2026": "given, 2026 cycle so far" };
+        var state = { cycle: "all", page: 0, sel: null };
+        var app = document.getElementById("app");
+        var $ = function (id) { return document.getElementById(id); };
+
+        // Numbers ≥ 1 million read "$21.7 million" (house style); smaller keep commas.
+        function big(n) {
+          function one(x) { return x.toFixed(1).replace(/\.0$/, ""); }
+          var a = Math.abs(n);
+          if (a >= 1e9) return one(n / 1e9) + " billion";
+          if (a >= 1e6) return one(n / 1e6) + " million";
+          return Math.round(n).toLocaleString("en-US");
+        }
+        function money(n) { return (n < 0 ? "−$" : "$") + big(Math.abs(n)); }
+        function pct(part, total) { return total > 0 ? Math.round(100 * Math.max(0, part) / total) : 0; }
+        function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+        function barHTML(d) {
+          var pos = Math.max(0, d.R) + Math.max(0, d.D) + Math.max(0, d.N);
+          return ["R", "D", "N"].map(function (k) {
+            var w = pos ? 100 * Math.max(0, d[k]) / pos : 0;
+            return w > 0 ? '<span class="' + k + '" style="width:' + w.toFixed(2) + '%"></span>' : "";
+          }).join("");
+        }
+        function partyTitle(d) {
+          return ["R", "D", "N"].map(function (k) { return PARTY[k] + " " + pct(d[k], d.total) + "%"; }).join(", ");
+        }
+        function companies() { return DATA.cycles[state.cycle].companies; }
+
+        function renderSummary() {
+          var o = DATA.cycles[state.cycle].overall;
+          $("sumTotal").textContent = money(o.total);
+          $("sumLbl").textContent = CYCLE_LBL[state.cycle];
+          var t = o.top[0];
+          $("sumCall").innerHTML = t ? "· " + esc(t[0]) + (t[2] ? " of " + esc(t[2]) : "") + " alone gave <b>" + money(t[1]) + "</b> (" + pct(t[1], o.total) + "%)" : "";
+          $("sumBar").innerHTML = barHTML(o);
+          $("sumBar").setAttribute("role", "img");
+          $("sumBar").setAttribute("aria-label", partyTitle(o));
+          $("sumLegend").innerHTML = ["R", "D", "N"].map(function (k) {
+            return '<span><i class="sw ' + k + '"></i>' + PARTY[k] + " <b>" + pct(o[k], o.total) + "%</b></span>";
+          }).join("");
+        }
+
+        function perPage() {
+          var h = $("rows").clientHeight;
+          var rh = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--row-h")) || 36;
+          return Math.max(3, Math.floor(h / rh));
+        }
+
+        function renderList() {
+          var list = companies(), n = perPage();
+          var pages = Math.ceil(list.length / n);
+          state.page = Math.min(state.page, pages - 1);
+          var start = state.page * n, items = list.slice(start, start + n);
+          $("rows").innerHTML = items.map(function (c, i) {
+            return '<button type="button" class="row" data-name="' + esc(c.name) + '"' + (c.name === state.sel ? ' aria-current="true"' : "") +
+              ' aria-label="' + esc(c.name + ", " + money(c.total) + ". " + partyTitle(c)) + '">' +
+              '<span class="rk">' + (start + i + 1) + '</span>' +
+              '<span class="nm"><span class="lbl">' + esc(c.name) + '</span><span class="bar">' + barHTML(c) + '</span></span>' +
+              '<span class="amt">' + money(c.total) + '</span></button>';
+          }).join("");
+          $("pageLbl").textContent = (start + 1) + "–" + (start + items.length) + " of " + list.length;
+          $("prev").disabled = state.page === 0;
+          $("next").disabled = state.page >= pages - 1;
+        }
+
+        function renderFind() {
+          var names = companies().map(function (c) { return c.name; }).sort(function (a, b) { return a.localeCompare(b); });
+          $("find").innerHTML = '<option value="">' + (window.innerWidth < 500 ? "Find…" : "Find a company…") + "</option>" + names.map(function (n) {
+            return '<option value="' + esc(n) + '">' + esc(n) + "</option>";
+          }).join("");
+        }
+
+        function renderDetail() {
+          var c = companies().filter(function (x) { return x.name === state.sel; })[0];
+          if (!c) { state.sel = companies()[0].name; c = companies()[0]; }
+          var rank = companies().indexOf(c) + 1;
+          var lis = function (rows, isRecip) {
+            return rows.map(function (r) {
+              return "<li>" + (isRecip ? '<i class="dot ' + r[1] + '" title="' + PARTY[r[1]] + '"></i>' : "") +
+                '<span class="t">' + esc(r[0]) + '</span><span class="v">' + money(isRecip ? r[2] : r[1]) + "</span></li>";
+            }).join("");
+          };
+          $("detail").innerHTML =
+            '<button type="button" class="back" id="back">‹ All companies</button>' +
+            "<h2>" + esc(c.name) + "</h2>" +
+            '<p class="meta"><b>' + money(c.total) + "</b> · No. " + rank + " · " + c.n.toLocaleString("en-US") + " contributions from " + c.donors.toLocaleString("en-US") + (c.donors === 1 ? " donor" : " donors") + "</p>" +
+            '<div class="bar" role="img" aria-label="' + esc(partyTitle(c)) + '">' + barHTML(c) + "</div>" +
+            '<div class="legend">' + ["R", "D", "N"].map(function (k) {
+              return '<span><i class="sw ' + k + '"></i>' + (k === "N" ? "Other" : PARTY[k]) + " <b>" + pct(c[k], c.total) + "%</b></span>";
+            }).join("") + "</div>" +
+            "<h3>Top recipients</h3><ul>" + lis(c.recips, true) + "</ul>" +
+            "<h3>Top donors</h3><ul>" + lis(c.top, false) + "</ul>";
+          $("back").addEventListener("click", function () { app.classList.remove("show-detail"); });
+          fitDetail();
+        }
+
+        // Drop list items from the bottom until the panel fits its box (560px is fixed).
+        function fitDetail() {
+          var d = $("detail"), guard = 0;
+          while (d.scrollHeight > d.clientHeight + 1 && guard++ < 10) {
+            var uls = d.querySelectorAll("ul"), ul = uls[1] && uls[1].children.length > uls[0].children.length - 1 ? uls[1] : uls[0];
+            if (!ul || ul.children.length <= 2) break;
+            ul.removeChild(ul.lastElementChild);
+          }
+        }
+
+        function select(name, open) {
+          state.sel = name;
+          var idx = companies().map(function (c) { return c.name; }).indexOf(name);
+          if (idx >= 0) state.page = Math.floor(idx / perPage());
+          if (open) app.classList.add("show-detail");  // before rendering, so fitDetail measures a visible panel
+          renderList();
+          renderDetail();
+        }
+
+        function renderAll() {
+          renderSummary();
+          renderFind();
+          renderList();
+          renderDetail();
+        }
+
+        function mount() {
+          state.sel = companies()[0].name;
+          $("asof").textContent = new Date(DATA.asof + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }).replace(/^(Jan|Feb|Aug|Sep|Oct|Nov|Dec)\b/, "$1.").replace("Sep.", "Sept.");
+          renderAll();
+
+          $("cycles").addEventListener("click", function (e) {
+            var b = e.target.closest("button[data-c]");
+            if (!b || b.dataset.c === state.cycle) return;
+            state.cycle = b.dataset.c;
+            [].forEach.call($("cycles").children, function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+            var keep = companies().some(function (c) { return c.name === state.sel; });
+            if (!keep) state.sel = companies()[0].name;
+            state.page = 0;
+            renderAll();
+            if (keep) select(state.sel, false);
+          });
+          $("rows").addEventListener("click", function (e) {
+            var r = e.target.closest(".row");
+            if (r) select(r.dataset.name, true);
+          });
+          $("find").addEventListener("change", function () {
+            if (this.value) select(this.value, true);
+            this.value = "";
+          });
+          $("prev").addEventListener("click", function () { state.page--; renderList(); });
+          $("next").addEventListener("click", function () { state.page++; renderList(); });
+          $("aboutOpen").addEventListener("click", function () { $("about").classList.add("open"); $("aboutClose").focus(); });
+          $("aboutClose").addEventListener("click", function () { $("about").classList.remove("open"); $("aboutOpen").focus(); });
+          var t;
+          window.addEventListener("resize", function () { clearTimeout(t); t = setTimeout(function () { renderList(); renderDetail(); }, 120); });
+        }
+
+        TRDEmbed({
+          prefix: "campaign-finance-10-26-26",
+          themeKey: "campaign-finance-10-26-26:theme",
+          toggle: "#themeToggle",
+          mountTarget: "#chart",
+          onMount: function (ctx) { mount(); ctx.postLoaded(); },
+          onTheme: function () {},
+        });
+      })();
+    </script>
+  </body>
+</html>

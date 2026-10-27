@@ -6,6 +6,69 @@ The Real Deal article pages. The two existing reference maps
 of the pattern and are **left untouched** — this toolkit extracts their shared
 integration surface so future graphics don't re-discover the same pitfalls.
 
+## How graphics actually run on therealdeal.com (read first)
+
+Checked live on Oct. 26, 2026 with Claude in Chrome, on the Publix, branded
+condos, Wynwood and Florida governor's race articles. Every embed was the same:
+
+```html
+<div class="container"><div class="iframe-wrap">
+  <iframe loading="lazy" src="https://trd-digital.github.io/trd-news-interactive-maps/<folder>/"
+          width="100%" height="560" frameborder="0" scrolling="yes"></iframe>
+</div></div>
+```
+
+- **Producers paste a plain iframe.** The `_embed-snippet.html` parent script is
+  not used, so there is **no auto-resize and no theme handshake**. The core's
+  postMessage bridge is harmless but nobody is listening.
+- **The frame is 560px tall at every width.** The article column is **910px
+  wide on desktop** and the viewport minus the gutters on phones (~358px on a
+  390px phone). Anything below 560px is cut off or turns into a nested
+  scroll box (`scrolling="yes"`). The governor's-race page, built as a tall
+  auto-sizing page, shipped as a 560px box the reader scrolls inside. Avoid that.
+- **The theme follows the reader's OS**, via the boot snippet's
+  `prefers-color-scheme` fallback. The TRD page has its own light/dark setting
+  (the `theme` key in localStorage on therealdeal.com), and the graphic can't read it across origins. A light graphic on the
+  dark page, or the reverse, is normal. Both themes must look intentional as a
+  bordered panel against a `#222` page and a white page.
+- **The article supplies the context lines.** Producers put a lead-in sentence
+  above the frame and an italic credit below it ("Mapbox map created by Adam
+  Farence"). The graphic carries its own headline and subhead; don't add a
+  credit inside the graphic.
+- **The frame starts late.** TRD swaps `src` for `data-src` and starts the frame
+  near the viewport (only in a visible tab). It stays at opacity 0 until the
+  frame's own `load` event, so keep load-blocking resources light (see the
+  `trd-embed-loader` memory).
+- **Claude in Chrome screenshots of these cross-origin frames are unreliable**
+  (often blank or stale). Inspect the article DOM with JS (iframe attributes and
+  size), and judge rendering with `_article-embed-test.html` in Playwright.
+
+### Rules for every new graphic
+
+1. **Design for a fixed 910×560 and ~358×560 viewport.** Set
+   `--trd-embed-h`, `--trd-embed-h-wide` and `--trd-embed-h-phone` to `560px`.
+   The headline, controls, graphic, legend and source line must all fit with
+   **no inner scrollbar** (`document.body.scrollHeight <= 560` in the embed).
+2. **No tall multi-section pages.** If there's more to show, use tabs, a pager, a
+   select, or a detail panel that swaps in place, not more height. Paginate long
+   lists to the rows that fit rather than scrolling them.
+3. **Keep the headline inside the graphic, compact.** Use a one-line headline,
+   a one-line subhead (it may wrap on phones), and a short source/notes line
+   at the bottom.
+4. **Both themes are first-class.** Test light and dark (the OS setting) against
+   both a dark and a light page.
+5. **Format numbers ≥ 1 million as words.** Write "$21.7 million" and "3.2
+   million sq. ft.", with one decimal and ".0" dropped; billions likewise.
+   Below a million, use commas ("$445,120").
+6. **Test in the real embed shape before handing off.** Serve the repo root over
+   http, open
+   `trd_graphics/_article-embed-test.html?src=../<folder>/&page=dark&w=910`
+   (and `&w=358`, `&page=light`), and assert in Playwright that the iframe
+   document has no vertical overflow and no console errors.
+7. **Hand-off gives the producer the plain iframe line** (above) with the
+   deployed URL. `_embed-snippet.html` is kept only for the optional
+   auto-sizing variant.
+
 ## The idea: one constraint surface, many graphic types
 
 The hard part of a TRD interactive isn't the map or the chart — it's living
@@ -40,7 +103,8 @@ It knows nothing about Mapbox, D3, SVG, etc. Those belong to the graphic module.
 | `core/trd-embed.css` | Theme tokens + the sizing-trap-safe embed shell. |
 | `core/boot-snippet.html` | The inline `<head>` pre-paint snippet to paste per project. |
 | `embed-snippet.template.html` | Parent-page side: paste into the TRD article slot. |
-| `_embed-test.html` | Local harness mimicking TRD's ~1040px column. Serve + open it. |
+| `_article-embed-test.html` | **Use this one.** Reproduces the live article embed: plain 560px iframe, 910px (or `&w=358`) column, dark or light page. `?src=../<folder>/`. |
+| `_embed-test.html` | Older harness for the auto-sizing snippet (not what the live site does). |
 | `starter/` | Minimal **non-map** example (SVG bar chart) proving a graphic mounts. |
 | `graphics/map/trd-map.js` | Blessed **Mapbox** module: token guard, cooperative gestures, `style.load` re-add, declutter, overlay camera padding. Data-agnostic. |
 | `graphics/map/trd-map.css` | Themes Mapbox chrome (popups, controls) with the core tokens. |
