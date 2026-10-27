@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Four-Party Network</title>
+    <style>
+      :root {
+        --bg: #ffffff; --panel: #f7f8fa; --ink: #14171f; --ink2: #4a5163; --muted: #737a8c; --line: #dfe2e8;
+        --chip: #eef0f4; --accent: #2a78d6; --hl: #fff4c2;
+        --p-Rotenberg: #2a78d6; --p-MJNT: #1baf7a; --p-Bialostozky: #eb6834; --p-Tauber: #8b5cf6; --p-multi: #4a5163;
+        --r-deed: #14171f; --r-mortgage: #737a8c; --r-assignment: #737a8c; --r-lis: #d23b2e; --r-attorney: #c98a00; --r-officer: #737a8c; --r-tag: #14171f;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #0f1218; --panel: #151a22; --ink: #eef0f4; --ink2: #b7bdca; --muted: #8b92a3; --line: #2a303c;
+          --chip: #1f2530; --accent: #3987e5; --hl: #3a3410;
+          --p-Rotenberg: #3987e5; --p-MJNT: #199e70; --p-Bialostozky: #d95926; --p-Tauber: #9d76ff; --p-multi: #b7bdca;
+          --r-deed: #eef0f4; --r-mortgage: #8b92a3; --r-assignment: #8b92a3; --r-lis: #ff6b5e; --r-attorney: #e0a419; --r-officer: #8b92a3; --r-tag: #eef0f4;
+          color-scheme: dark;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; }
+      body { background: var(--bg); color: var(--ink); font: 13.5px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+      .app { display: grid; grid-template-columns: 290px 1fr 390px; height: 100vh; }
+      aside, .detail { overflow-y: auto; padding: 14px 16px; background: var(--panel); }
+      aside { border-right: 1px solid var(--line); }
+      .detail { border-left: 1px solid var(--line); }
+      h1 { font-size: 16px; margin: 0 0 2px; }
+      .sub { color: var(--muted); font-size: 12px; margin: 0 0 10px; }
+      .warn-box { background: var(--chip); border-left: 3px solid var(--r-lis); padding: 6px 9px; font-size: 12px; color: var(--ink2); margin-bottom: 12px; }
+      fieldset { border: 0; padding: 0; margin: 0 0 14px; }
+      legend { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-bottom: 5px; }
+      input[type=search] { width: 100%; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); font: inherit; }
+      label.ck { display: flex; align-items: center; gap: 7px; padding: 2px 0; cursor: pointer; }
+      label.ck .n, .lg .n { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px; }
+      .lg { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
+      .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+      .ln { width: 26px; height: 0; border-top: 2px solid; flex: none; }
+      .shape { width: 14px; height: 14px; flex: none; }
+      .results { margin: 5px 0 0; padding: 0; list-style: none; max-height: 210px; overflow-y: auto; }
+      .results li { padding: 4px 6px; border-radius: 5px; cursor: pointer; font-size: 12.5px; }
+      .results li:hover { background: var(--chip); }
+      .m { color: var(--muted); font-size: 11.5px; }
+      .graph { position: relative; overflow: hidden; }
+      #svg { width: 100%; height: 100%; display: block; cursor: grab; }
+      .status { position: absolute; left: 12px; top: 10px; font-size: 12px; color: var(--ink2); background: var(--bg); padding: 4px 8px; border-radius: 5px; border: 1px solid var(--line); }
+      .zoomb { position: absolute; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 4px; }
+      .zoomb button, button.btn { background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 5px; padding: 3px 9px; font: inherit; cursor: pointer; }
+      .tip { position: absolute; pointer-events: none; background: var(--bg); border: 1px solid var(--line); border-radius: 5px; padding: 4px 8px; font-size: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.2); display: none; max-width: 340px; }
+      .anchor text { font-size: 30px; font-weight: 800; letter-spacing: .02em; opacity: .16; text-anchor: middle; pointer-events: none; }
+      .node path { stroke: var(--bg); stroke-width: 1.2; cursor: pointer; }
+      .node.lvl-T path { stroke: var(--ink); stroke-width: 3; }
+      .node.lvl-R path { stroke: var(--ink); stroke-width: 1.8; }
+      .node.lvl-UR path { stroke: var(--ink); stroke-width: 1.6; stroke-dasharray: 2 1.5; }
+      .labels text { fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-linejoin: round; pointer-events: none; }
+      .labels text.tagged { font-weight: 700; }
+      .edge { fill: none; stroke-opacity: .4; cursor: pointer; }
+      .edge.r-deed { stroke: var(--r-deed); stroke-width: 1.4; }
+      .edge.r-mortgage { stroke: var(--r-mortgage); stroke-width: 1.2; }
+      .edge.r-assignment { stroke: var(--r-assignment); stroke-width: 1.2; stroke-dasharray: 5 3; }
+      .edge.r-lis { stroke: var(--r-lis); stroke-width: 1.2; }
+      .edge.r-attorney { stroke: var(--r-attorney); stroke-width: 1; stroke-dasharray: 1.5 2.5; }
+      .edge.r-officer { stroke: var(--r-officer); stroke-width: 1; stroke-dasharray: 8 3 1 3; }
+      .edge.r-tag { stroke: var(--r-tag); stroke-width: 1; stroke-dasharray: 2 4; stroke-opacity: .22; }
+      .dim .edge { stroke-opacity: .05; }
+      .dim .node { opacity: .14; }
+      .dim .labels text { opacity: .2; }
+      .dim .edge.on { stroke-opacity: .95; stroke-width: 2.2; }
+      .dim .node.on, .dim .labels text.on { opacity: 1; }
+      .edge.sel { stroke-opacity: 1 !important; stroke-width: 3.5 !important; }
+      .d-name { font-size: 15px; font-weight: 700; margin: 0 0 2px; word-break: break-word; }
+      .pchip { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 3px; color: #fff; margin: 2px 3px 2px 0; }
+      .chip { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 3px; background: var(--chip); color: var(--ink2); margin: 2px 3px 2px 0; }
+      .chip.tag { background: var(--ink); color: var(--bg); }
+      .grp { margin-top: 12px; }
+      .grp h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 0 0 4px; }
+      .e { border-top: 1px solid var(--line); padding: 6px 2px; font-size: 12.5px; }
+      .e.sel { background: var(--hl); border-radius: 4px; }
+      .e a, .detail a { color: var(--accent); }
+      button.lnk { background: none; border: 0; color: var(--accent); cursor: pointer; padding: 0; font: inherit; text-align: left; font-weight: 600; }
+      table { border-collapse: collapse; width: 100%; font-size: 12px; }
+      th, td { text-align: left; padding: 4px 5px; border-top: 1px solid var(--line); vertical-align: top; }
+      th { font-size: 11px; color: var(--muted); }
+      @media (max-width: 1100px) {
+        .app { grid-template-columns: 1fr; grid-template-rows: auto 70vh auto; height: auto; }
+        aside, .detail { border: 0; border-bottom: 1px solid var(--line); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside>
+        <h1>Who the four parties are connected to</h1>
+        <p class="sub" id="sub"></p>
+        <div class="warn-box">Internal checking tool. Names are exactly as recorded; one person or company spelled two ways is two nodes.</div>
+        <fieldset>
+          <legend>Find a name</legend>
+          <input type="search" id="q" placeholder="Type a name" autocomplete="off" />
+          <ul class="results" id="results"></ul>
+        </fieldset>
+        <fieldset id="fsParty"><legend>Connected to (node colour)</legend></fieldset>
+        <fieldset>
+          <label class="ck"><input type="checkbox" id="bridges" /> <span>Highlight names connected to more than one party</span></label>
+        </fieldset>
+        <fieldset id="fsRel"><legend>Link type (line style)</legend></fieldset>
+        <fieldset id="fsKind"><legend>Name kind (shape)</legend></fieldset>
+        <fieldset>
+          <legend>Reporters' tags</legend>
+          <div class="lg"><svg class="shape" viewBox="-8 -8 16 16"><circle r="5.5" fill="none" stroke="currentColor" stroke-width="3"></circle></svg><span>Thick outline: tagged party (T-)</span></div>
+          <div class="lg"><svg class="shape" viewBox="-8 -8 16 16"><circle r="5.5" fill="none" stroke="currentColor" stroke-width="1.8"></circle></svg><span>Thin outline: confirmed related (R-)</span></div>
+          <div class="lg"><svg class="shape" viewBox="-8 -8 16 16"><circle r="5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2 1.5"></circle></svg><span>Dashed outline: unconfirmed related (UR-)</span></div>
+          <label class="ck"><input type="checkbox" id="labelsAll" /> <span>Label every node</span></label>
+        </fieldset>
+      </aside>
+      <div class="graph">
+        <svg id="svg"></svg>
+        <div class="status" id="status"></div>
+        <div class="zoomb"><button id="zin" title="Zoom in">+</button><button id="zout" title="Zoom out">−</button><button id="zfit" title="Fit">⤢</button></div>
+        <div class="tip" id="tip"></div>
+      </div>
+      <div class="detail" id="detail"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+    <script src="data.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        var D = window.P4NET;
+        var FOUR = ["Rotenberg", "MJNT", "Bialostozky", "Tauber"];
+        // each party pulls its names toward one corner; a name on several parties' buildings settles between them
+        var ANCHOR = { Rotenberg: [-1, -1], MJNT: [1, -1], Bialostozky: [-1, 1], Tauber: [1, 1] };
+        var SPREAD = 330;
+        // node: [name, kind, tagged[], relation_to_party, n_edges, n_buildings, first, last, tokens, connected[], basis]
+        var N = D.nodes.map(function (r, i) {
+          return { i: i, name: r[0], kind: r[1], tagged: r[2], rel: r[3], nEdges: r[4], nBld: r[5], first: r[6], last: r[7], tok: r[8], conn: r[9], basis: r[10] };
+        });
+        var E = D.edges.map(function (r, i) {
+          return { i: i, s: r[0], t: r[1], g: r[2], relation: r[3], docType: r[4], doc: r[5], recorded: r[6], amount: r[7],
+            address: r[8], keypin: r[9], bparties: r[10], county: r[11], docLink: r[12], src: r[13], id: r[14], recAddr: r[15] };
+        });
+        var byTok = {};
+        N.forEach(function (n) { if (n.tok) (byTok[n.tok] = byTok[n.tok] || []).push(n.i); });
+        var KIND = {
+          "entity": ["Company / entity", d3.symbolSquare], "person": ["Person", d3.symbolCircle], "lender / trust": ["Lender / trust", d3.symbolDiamond],
+          "attorney / preparer": ["Attorney / preparer", d3.symbolTriangle], "title company / land trust": ["Title co. / land trust", d3.symbolCross],
+          "government": ["Government", d3.symbolStar],
+          "service company (registered agent / sale officer)": ["Service co. (registered agent / sale officer)", d3.symbolWye]
+        };
+        var SERVICE = "service company (registered agent / sale officer)";
+        var REL = {
+          deed: ["Sold the building to (deed)", "--r-deed", "solid"], mortgage: ["Borrowed from (mortgage)", "--r-mortgage", "solid"],
+          assignment: ["Assigned the loan to", "--r-assignment", "dashed"], lis: ["Filed a foreclosure against", "--r-lis", "solid"],
+          attorney: ["Attorney / agent / PTAX preparer for", "--r-attorney", "dotted"],
+          officer: ["Officer / agent of the company (company record)", "--r-officer", "dashed"],
+          tag: ["Reporters’ tag: party behind this name (judgment, not a document)", "--r-tag", "dotted"]
+        };
+        var state = { parties: {}, rels: {}, kinds: {}, bridges: false, labelsAll: false, focus: null, edgeSel: null };
+        FOUR.forEach(function (p) { state.parties[p] = true; });
+        Object.keys(REL).forEach(function (k) { state.rels[k] = true; });
+        Object.keys(KIND).forEach(function (k) { state.kinds[k] = true; });
+
+        function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+        function money(a) { return a == null ? "" : "$" + Math.round(a).toLocaleString("en-US"); }
+        function cssv(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+        function pColor(p) { return cssv("--p-" + p); }
+        function nodeColor(n) { return n.kind === SERVICE ? cssv("--muted") : n.conn.length === 1 ? pColor(n.conn[0]) : cssv("--p-multi"); }
+        function pchips(list) { return list.map(function (p) { return '<span class="pchip" style="background:' + (FOUR.indexOf(p) >= 0 ? pColor(p) : cssv("--muted")) + '">' + esc(p) + "</span>"; }).join(""); }
+        function kindLabel(k) { return (KIND[k] || ["?"])[0]; }
+        // a registered agent or court sale officer serves many companies; that is not a relationship
+        var multi = N.filter(function (n) { return n.conn.length > 1 && n.kind !== SERVICE; });
+        // reporters' tag level, strongest first: T- > R- > UR- > company on a deed side they tagged
+        function tagLevel(n) {
+          var r = n.rel || "";
+          return /^tagged party/.test(r) ? "T" : /^confirmed related/.test(r) ? "R" : /^unconfirmed related/.test(r) ? "UR" : /^entity on/.test(r) ? "side" : "";
+        }
+        N.forEach(function (n) { n.lvl = tagLevel(n); });
+        var LVL = { T: "tagged party (T-)", R: "confirmed related (R-)", UR: "unconfirmed related (UR-)", side: "company on a deed side the reporters tagged" };
+
+        document.getElementById("sub").textContent = D.meta.nodes.toLocaleString() + " names, " + D.meta.edges.toLocaleString() +
+          " links on the 53 buildings tied to Bialostozky, MJNT, Rotenberg and Tauber · source files " + D.meta.source_mtime;
+
+        // ---------- controls ----------
+        function ck(parent, html, checked, n, onChange) {
+          var l = document.createElement("label"); l.className = "ck";
+          l.innerHTML = '<input type="checkbox"' + (checked ? " checked" : "") + ">" + html + '<span class="n">' + n + "</span>";
+          l.querySelector("input").addEventListener("change", function (ev) { onChange(ev.target.checked); rebuild(); });
+          parent.appendChild(l);
+        }
+        FOUR.forEach(function (p) {
+          ck(document.getElementById("fsParty"), '<span class="dot" style="background:var(--p-' + p + ')"></span><span>' + p + "</span>", true,
+            N.filter(function (n) { return n.conn.indexOf(p) >= 0; }).length, function (v) { state.parties[p] = v; });
+        });
+        var lgm = document.createElement("div"); lgm.className = "lg";
+        lgm.innerHTML = '<span class="dot" style="background:var(--p-multi)"></span><span>Two or more parties</span><span class="n">' + multi.length + "</span>";
+        document.getElementById("fsParty").appendChild(lgm);
+        document.getElementById("bridges").addEventListener("change", function (ev) { state.bridges = ev.target.checked; applyFocus(); });
+        var relCount = {}; E.forEach(function (e) { relCount[e.g] = (relCount[e.g] || 0) + 1; });
+        Object.keys(REL).forEach(function (k) {
+          ck(document.getElementById("fsRel"), '<span class="ln" style="border-top-style:' + REL[k][2] + ";border-color:var(" + REL[k][1] + ')"></span><span>' + REL[k][0] + "</span>",
+            true, relCount[k] || 0, function (v) { state.rels[k] = v; });
+        });
+        var kindCount = {}; N.forEach(function (n) { kindCount[n.kind] = (kindCount[n.kind] || 0) + 1; });
+        Object.keys(KIND).forEach(function (k) {
+          ck(document.getElementById("fsKind"), '<svg class="shape" viewBox="-8 -8 16 16"><path d="' + d3.symbol(KIND[k][1], 70)() + '" fill="currentColor"></path></svg><span>' + KIND[k][0] + "</span>",
+            true, kindCount[k] || 0, function (v) { state.kinds[k] = v; });
+        });
+        document.getElementById("labelsAll").addEventListener("change", function (ev) { state.labelsAll = ev.target.checked; drawLabels(); });
+
+        function nodeOn(n) { return state.kinds[n.kind] && n.conn.some(function (p) { return state.parties[p]; }); }
+
+        // ---------- graph ----------
+        var svg = d3.select("#svg"), root = svg.append("g"), gA = root.append("g"), gE = root.append("g"), gN = root.append("g"), gL = root.append("g").attr("class", "labels");
+        var curK = 1;
+        var zoom = d3.zoom().scaleExtent([0.1, 12]).on("zoom", function (ev) { root.attr("transform", ev.transform); curK = ev.transform.k; drawLabels(); });
+        svg.call(zoom).on("dblclick.zoom", null);
+        svg.on("click", function (ev) { if (ev.target === svg.node()) clearSel(); });
+        document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") clearSel(); });
+        function clearSel() { state.focus = null; state.edgeSel = null; applyFocus(); renderDetail(); }
+        var view = { nodes: [], edges: [], byI: {} }, pos = {};
+        var tip = document.getElementById("tip");
+
+        // lay out the whole graph once so positions stay put when filters change
+        (function layout() {
+          var nodes = N.map(function (n) {
+            var ax = 0, ay = 0;
+            n.conn.forEach(function (p) { ax += ANCHOR[p][0]; ay += ANCHOR[p][1]; });
+            ax = ax / n.conn.length * SPREAD; ay = ay / n.conn.length * SPREAD;
+            return { id: n.i, ax: ax, ay: ay, x: ax + (Math.random() - 0.5) * 80, y: ay + (Math.random() - 0.5) * 80, deg: n.nEdges };
+          });
+          var links = E.map(function (e) { return { source: e.s, target: e.t, g: e.g }; });
+          var sim = d3.forceSimulation(nodes)
+            .force("link", d3.forceLink(links).id(function (d) { return d.id; }).distance(function (l) { return l.g === "officer" ? 18 : 34; }).strength(0.25))
+            .force("charge", d3.forceManyBody().strength(-38).distanceMax(260))
+            .force("collide", d3.forceCollide(function (d) { return rad(d.deg) + 2; }))
+            .force("x", d3.forceX(function (d) { return d.ax; }).strength(0.16))
+            .force("y", d3.forceY(function (d) { return d.ay; }).strength(0.16))
+            .stop();
+          for (var k = 0; k < 360; k++) sim.tick();
+          nodes.forEach(function (d) { pos[d.id] = [d.x, d.y]; });
+          gA.selectAll("g").data(FOUR).enter().append("g").attr("class", "anchor").append("text")
+            .attr("x", function (p) { return ANCHOR[p][0] * SPREAD * 1.55; }).attr("y", function (p) { return ANCHOR[p][1] * SPREAD * 1.45; })
+            .attr("fill", function (p) { return pColor(p); }).style("opacity", 0.55).text(function (p) { return p; });
+        })();
+        function rad(deg) { return 3.5 + Math.min(12, 1.5 * Math.sqrt(deg)); }
+
+        function rebuild() {
+          var nodes = [], byI = {};
+          N.forEach(function (n) { if (nodeOn(n)) { var d = { id: n.i, n: n, x: pos[n.i][0], y: pos[n.i][1], deg: 0 }; byI[n.i] = d; nodes.push(d); } });
+          var links = [];
+          E.forEach(function (e) {
+            if (!state.rels[e.g] || !byI[e.s] || !byI[e.t]) return;
+            links.push({ e: e, source: byI[e.s], target: byI[e.t] }); byI[e.s].deg++; byI[e.t].deg++;
+          });
+          nodes = nodes.filter(function (d) { return d.deg > 0; });
+          byI = {}; nodes.forEach(function (d) { byI[d.id] = d; });
+          view = { nodes: nodes, edges: links, byI: byI };
+          document.getElementById("status").textContent = nodes.length + " names, " + links.length + " links shown";
+
+          var pairN = {};
+          links.forEach(function (l) { var key = Math.min(l.e.s, l.e.t) + "-" + Math.max(l.e.s, l.e.t); l.k = pairN[key] = (pairN[key] || 0) + 1; });
+          var le = gE.selectAll("path").data(links, function (l) { return l.e.i; });
+          le.exit().remove();
+          le.enter().append("path").attr("class", function (l) { return "edge r-" + l.e.g; })
+            .on("click", function (ev, l) { ev.stopPropagation(); state.edgeSel = l.e.i; if (state.focus !== l.e.s && state.focus !== l.e.t) state.focus = l.e.s; applyFocus(); renderDetail(); })
+            .on("mousemove", function (ev, l) { showTip(ev, esc(N[l.e.s].name) + " → " + esc(N[l.e.t].name) + "<br>" + esc(l.e.relation) + (l.e.doc ? " · " + esc(l.e.doc) : "")); })
+            .on("mouseleave", hideTip)
+            .merge(le).attr("d", function (l) {
+              var a = l.source, b = l.target;
+              if (l.k === 1) return "M" + a.x + "," + a.y + "L" + b.x + "," + b.y;
+              var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2, dx = b.x - a.x, dy = b.y - a.y, len = Math.sqrt(dx * dx + dy * dy) || 1;
+              var off = (l.k % 2 ? 1 : -1) * Math.ceil(l.k / 2) * 6;
+              return "M" + a.x + "," + a.y + "Q" + (mx - dy / len * off) + "," + (my + dx / len * off) + " " + b.x + "," + b.y;
+            });
+          var ln = gN.selectAll("g.node").data(nodes, function (d) { return d.id; });
+          ln.exit().remove();
+          var enter = ln.enter().append("g").attr("class", function (d) { return "node" + (d.n.lvl ? " lvl-" + d.n.lvl : ""); });
+          enter.append("path");
+          enter.on("click", function (ev, d) { ev.stopPropagation(); state.edgeSel = null; state.focus = state.focus === d.id ? null : d.id; applyFocus(); renderDetail(); })
+            .on("mousemove", function (ev, d) {
+              showTip(ev, "<b>" + esc(d.n.name) + "</b><br>" + esc(kindLabel(d.n.kind)) + " · connected to " + esc(d.n.conn.join(", ")) +
+                (d.n.lvl ? "<br>Reporters’ tag: " + esc(LVL[d.n.lvl]) + (d.n.tagged.length ? ", " + esc(d.n.tagged.join(", ")) : "") : "") + "<br>" + d.deg + " link" + (d.deg === 1 ? "" : "s") + " shown");
+            })
+            .on("mouseleave", hideTip);
+          var all = enter.merge(ln);
+          all.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; });
+          all.select("path").attr("d", function (d) { var rr = rad(d.n.nEdges); return d3.symbol((KIND[d.n.kind] || KIND.entity)[1], Math.PI * rr * rr)(); })
+            .attr("fill", function (d) { return nodeColor(d.n); });
+          var order = nodes.slice().sort(function (a, b) { return score(b) - score(a); });
+          order.forEach(function (d, k) { d.rank = k; });
+          var lt = gL.selectAll("text").data(nodes, function (d) { return d.id; });
+          lt.exit().remove();
+          lt.enter().append("text").attr("dy", "0.32em").merge(lt)
+            .attr("class", function (d) { return d.n.lvl === "T" ? "tagged" : null; })
+            .attr("x", function (d) { return d.x + rad(d.n.nEdges) + 3; }).attr("y", function (d) { return d.y; })
+            .text(function (d) { return d.n.name; });
+          if (state.focus != null && !byI[state.focus]) state.focus = null;
+          applyFocus(); renderDetail();
+        }
+        // label priority: reporters' T- names, then names on several parties' buildings, then the busiest
+        function score(d) { return ({ T: 3e6, R: 1.5e6, UR: 1e6 }[d.n.lvl] || 0) + (d.n.conn.length > 1 && d.n.kind !== SERVICE ? 2e6 : 0) + d.deg; }
+
+        function drawLabels() {
+          // labels keep a constant on-screen size, so collisions are tested in screen units
+          var lim = Math.max(24, Math.round(24 * curK * curK)), placed = [], show = {}, shown = 0, s = 1 / curK;
+          gL.style("font-size", (11 * s) + "px").style("stroke-width", (3 * s) + "px");
+          var cand = view.nodes.filter(function (d) { return state.focus != null || state.bridges ? d.on : true; })
+            .sort(function (a, b) { return (a.id === state.focus ? -1 : 0) - (b.id === state.focus ? -1 : 0) || a.rank - b.rank; });
+          cand.forEach(function (d) {
+            if (!state.labelsAll && shown >= lim && d.id !== state.focus) return;
+            var x0 = d.x + rad(d.n.nEdges) + 3 * s, w = d.n.name.length * 6.6 * s, box = [x0, d.y - 7 * s, x0 + w, d.y + 7 * s];
+            var hit = !state.labelsAll && d.id !== state.focus && placed.some(function (b) { return box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1]; });
+            if (!hit) { placed.push(box); show[d.id] = 1; shown++; }
+          });
+          gL.selectAll("text").style("display", function (d) { return show[d.id] ? null : "none"; });
+        }
+        function applyFocus() {
+          var f = state.focus, nb = {};
+          root.classed("dim", f != null || state.bridges);
+          gE.selectAll("path").classed("on", function (l) {
+            var on = f != null && (l.e.s === f || l.e.t === f);
+            if (on) { nb[l.e.s] = nb[l.e.t] = 1; } return on;
+          }).classed("sel", function (l) { return l.e.i === state.edgeSel; });
+          gN.selectAll("g.node").each(function (d) { d.on = f != null ? (!!nb[d.id] || d.id === f) : state.bridges && d.n.conn.length > 1 && d.n.kind !== SERVICE; })
+            .classed("on", function (d) { return d.on; });
+          gL.selectAll("text").classed("on", function (d) { return d.on; });
+          gN.selectAll("g.node").filter(function (d) { return d.on; }).raise();
+          drawLabels();
+        }
+        function fit() {
+          var b = root.node().getBBox(), w = svg.node().clientWidth, h = svg.node().clientHeight;
+          if (!b.width) return;
+          var k = Math.min(4, 0.94 / Math.max(b.width / w, b.height / h));
+          svg.call(zoom.transform, d3.zoomIdentity.translate(w / 2 - k * (b.x + b.width / 2), h / 2 - k * (b.y + b.height / 2)).scale(k));
+        }
+        function centerOn(i) {
+          var d = view.byI[i]; if (!d) return;
+          var w = svg.node().clientWidth, h = svg.node().clientHeight, k = Math.max(curK, 1.6);
+          svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity.translate(w / 2 - k * d.x, h / 2 - k * d.y).scale(k));
+        }
+        document.getElementById("zin").onclick = function () { svg.transition().call(zoom.scaleBy, 1.5); };
+        document.getElementById("zout").onclick = function () { svg.transition().call(zoom.scaleBy, 1 / 1.5); };
+        document.getElementById("zfit").onclick = fit;
+        function showTip(ev, html) {
+          var box = svg.node().getBoundingClientRect();
+          tip.innerHTML = html; tip.style.display = "block";
+          tip.style.left = Math.min(ev.clientX - box.left + 12, box.width - 350) + "px"; tip.style.top = (ev.clientY - box.top + 12) + "px";
+        }
+        function hideTip() { tip.style.display = "none"; }
+
+        // ---------- detail panel ----------
+        var det = document.getElementById("detail");
+        function nameBtn(i) {
+          var n = N[i];
+          return '<button class="lnk" data-n="' + i + '">' + esc(n.name) + "</button> " + pchips(n.conn);
+        }
+        function edgeHTML(e, from) {
+          var other = e.s === from ? e.t : e.s, out = e.s === from;
+          return '<div class="e' + (e.i === state.edgeSel ? " sel" : "") + '">' +
+            "<div>" + (out ? esc(e.relation) : "← " + esc(e.relation) + " (from)") + " " + nameBtn(other) + "</div>" +
+            '<div class="m">' + esc(e.docType) + " · <b>" + esc(e.doc) + "</b>" + (e.recorded ? " · " + esc(e.recorded) : "") + (e.amount != null ? " · " + money(e.amount) : "") + "</div>" +
+            (e.address ? '<div class="m">' + esc(e.address) + (e.keypin ? " · PIN " + esc(e.keypin) : "") + (e.bparties.length ? " · building tied to " + esc(e.bparties.join(" & ")) : "") + "</div>" : "") +
+            (e.recAddr ? '<div class="m">Address on the company record: ' + esc(e.recAddr) + "</div>" : "") +
+            "<div>" + (e.docLink ? '<a href="' + esc(e.docLink) + '" target="_blank" rel="noopener">' + (/opencorporates/.test(e.docLink) ? "OpenCorporates record" : "Clerk document page") + "</a>" : "") +
+            (e.docLink && e.county ? " · " : "") + (e.county ? '<a href="' + esc(e.county) + '" target="_blank" rel="noopener">Clerk search</a>' : "") +
+            (!e.docLink && !e.county ? '<span class="m">no link in the source file</span>' : "") +
+            ' <span class="m">· edge ' + e.id + "</span></div></div>";
+        }
+        function renderDetail() {
+          var f = state.focus;
+          if (f == null) {
+            // ready-made answer: the names that sit on more than one party's buildings
+            var groups = {};
+            multi.forEach(function (n) { var k = n.conn.join(" + "); (groups[k] = groups[k] || []).push(n); });
+            var keys = Object.keys(groups).sort(function (a, b) { return b.split("+").length - a.split("+").length || groups[b].length - groups[a].length; });
+            det.innerHTML = '<p class="d-name">Names on more than one party’s buildings</p>' +
+              '<p class="m">' + multi.length + " of the " + N.length + " names. Click a name to list its links with their documents; click a line to highlight one document. Esc or a click on empty space clears.</p>" +
+              keys.map(function (k) {
+                return '<div class="grp"><h3>' + esc(k) + " (" + groups[k].length + ")</h3>" + groups[k].sort(function (a, b) { return b.nEdges - a.nEdges; }).map(function (n) {
+                  return '<div class="e"><button class="lnk" data-n="' + n.i + '">' + esc(n.name) + "</button> " +
+                    (n.lvl && n.lvl !== "side" ? '<span class="chip tag">' + n.lvl + "- " + esc(n.tagged.join(", ")) + "</span>" : "") +
+                    '<span class="m">' + esc(kindLabel(n.kind)) + " · " + n.nEdges + " links</span></div>";
+                }).join("") + "</div>";
+              }).join("") +
+              '<div class="grp"><h3>Every link shown</h3><button class="btn" id="tblBtn">Show as a table</button><div id="tbl"></div></div>';
+            document.getElementById("tblBtn").onclick = function () { renderTable(view.edges.map(function (l) { return l.e; })); this.remove(); };
+            return;
+          }
+          var n = N[f], mine = view.edges.map(function (l) { return l.e; }).filter(function (e) { return e.s === f || e.t === f; });
+          var total = E.filter(function (e) { return e.s === f || e.t === f; }).length;
+          var groupsE = {};
+          mine.forEach(function (e) { (groupsE[e.g] = groupsE[e.g] || []).push(e); });
+          var h = '<p class="d-name">' + esc(n.name) + "</p><div>" + '<span class="chip">' + esc(kindLabel(n.kind)) + "</span>" +
+            (n.lvl ? '<span class="chip tag">' + esc(LVL[n.lvl]) + (n.tagged.length ? ": " + esc(n.tagged.join(", ")) : "") + "</span>" : "") + "</div>" +
+            "<div>Connected to " + pchips(n.conn) + "</div>" +
+            '<div class="m">How: ' + esc(n.basis) + "</div>" +
+            (n.rel ? '<div class="m">Reporters’ tag detail: ' + esc(n.rel) + "</div>" : "") +
+            '<div class="m">' + n.nEdges + " links, on " + n.nBld + " building" + (n.nBld === 1 ? "" : "s") + (n.first ? " · seen " + esc(n.first) + " to " + esc(n.last) : "") +
+            (total > mine.length ? " · " + (total - mine.length) + " hidden by the filters" : "") + "</div>" +
+            ((byTok[n.tok] || []).length > 1 ? '<div class="m" style="margin-top:4px">Possibly the same name in another word order (not merged): ' +
+              byTok[n.tok].filter(function (j) { return j !== f; }).map(nameBtn).join(", ") + "</div>" : "");
+          Object.keys(REL).forEach(function (g) {
+            if (!groupsE[g]) return;
+            groupsE[g].sort(function (a, b) { return (a.recorded || "9").localeCompare(b.recorded || "9"); });
+            h += '<div class="grp"><h3>' + esc(REL[g][0]) + " (" + groupsE[g].length + ")</h3>" + groupsE[g].map(function (e) { return edgeHTML(e, f); }).join("") + "</div>";
+          });
+          det.innerHTML = h;
+          var s = det.querySelector(".e.sel"); if (s) s.scrollIntoView({ block: "nearest" });
+        }
+        function jump(i) {
+          if (!view.byI[i]) {
+            // the name is filtered out: turn the party and kind filters back on
+            document.querySelectorAll("#fsParty input, #fsKind input").forEach(function (el) { el.checked = true; });
+            FOUR.forEach(function (p) { state.parties[p] = true; }); Object.keys(KIND).forEach(function (k) { state.kinds[k] = true; });
+            rebuild();
+          }
+          state.focus = i; state.edgeSel = null; applyFocus(); renderDetail(); centerOn(i);
+        }
+        det.addEventListener("click", function (ev) { var b = ev.target.closest("button.lnk[data-n]"); if (b) jump(+b.getAttribute("data-n")); });
+        function renderTable(es) {
+          var rows = es.slice().sort(function (a, b) { return (a.recorded || "9").localeCompare(b.recorded || "9"); });
+          var html = "<table><thead><tr><th>From</th><th>Link</th><th>To</th><th>Document</th></tr></thead><tbody>";
+          rows.forEach(function (e) {
+            html += "<tr><td>" + esc(N[e.s].name) + "</td><td>" + esc(e.relation) + "</td><td>" + esc(N[e.t].name) + "</td><td>" +
+              esc(e.docType) + " " + esc(e.doc) + "<br>" + esc(e.recorded) + (e.amount != null ? " · " + money(e.amount) : "") + "<br>" + esc(e.address || e.recAddr) + "<br>" +
+              (e.docLink ? '<a href="' + esc(e.docLink) + '" target="_blank" rel="noopener">' + (/opencorporates/.test(e.docLink) ? "OpenCorporates" : "Document") + "</a> " : "") +
+              (e.county ? '<a href="' + esc(e.county) + '" target="_blank" rel="noopener">Clerk search</a>' : "") + "</td></tr>";
+          });
+          document.getElementById("tbl").innerHTML = html + "</tbody></table>";
+        }
+
+        // ---------- search ----------
+        var q = document.getElementById("q"), results = document.getElementById("results");
+        q.addEventListener("input", function () {
+          var s = q.value.trim().toUpperCase(); results.innerHTML = "";
+          if (s.length < 2) return;
+          var hits = N.filter(function (n) { return n.name.indexOf(s) >= 0; })
+            .sort(function (a, b) { return (a.name.indexOf(s) === 0 ? 0 : 1) - (b.name.indexOf(s) === 0 ? 0 : 1) || b.nEdges - a.nEdges; }).slice(0, 40);
+          if (!hits.length) { results.innerHTML = '<li class="m">No match</li>'; return; }
+          hits.forEach(function (n) {
+            var li = document.createElement("li");
+            li.innerHTML = esc(n.name) + ' <span class="m">' + esc(kindLabel(n.kind)) + " · " + n.nEdges + " links · " + esc(n.conn.join(", ")) + "</span>";
+            li.onclick = function () { jump(n.i); };
+            results.appendChild(li);
+          });
+        });
+
+        window.addEventListener("resize", fit);
+        rebuild(); fit();
+      })();
+    </script>
+  </body>
+</html>
