@@ -85,6 +85,13 @@
       table { border-collapse: collapse; width: 100%; font-size: 12px; }
       th, td { text-align: left; padding: 4px 5px; border-top: 1px solid var(--line); vertical-align: top; }
       th { font-size: 11px; color: var(--muted); }
+      details.src { margin: 4px 0 14px; font-size: 12px; color: var(--ink2); }
+      details.src summary { cursor: pointer; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+      details.src li { margin: 4px 0; }
+      details.src ul { padding-left: 16px; margin: 6px 0; }
+      details.src code { font-size: 11px; word-break: break-all; }
+      .built { font-size: 11px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; }
+      .prov { font-size: 11.5px; color: var(--muted); font-style: italic; }
       @media (max-width: 1100px) {
         .app { grid-template-columns: 1fr; grid-template-rows: auto 70vh auto; height: auto; }
         aside, .detail { border: 0; border-bottom: 1px solid var(--line); }
@@ -115,6 +122,19 @@
           <div class="lg"><svg class="shape" viewBox="-8 -8 16 16"><circle r="5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2 1.5"></circle></svg><span>Dashed outline: unconfirmed related (UR-)</span></div>
           <label class="ck"><input type="checkbox" id="labelsAll" /> <span>Label every node</span></label>
         </fieldset>
+        <details class="src">
+          <summary>Sources and how to check</summary>
+          <ul>
+            <li><b>Deeds, mortgages, assignments and foreclosure filings (lis pendens):</b> Cook County Clerk recordings, <a href="https://crs.cookcountyclerkil.gov/" target="_blank" rel="noopener">crs.cookcountyclerkil.gov</a>. Every such link has a Clerk search link and, where we have it, the Clerk document page. A PIN opens every recording on that parcel.</li>
+            <li><b>Reporters’ tags (T-, R-, UR-), attorneys / agents and PTAX-203 preparers, and the building list:</b> the reporters’ own spreadsheet <code>pin histories of source examples.xlsx</code>, sheet “examples pinhist transactions”.</li>
+            <li><b>Officer / manager / agent “of the company” links:</b> OpenCorporates / Illinois Secretary of State company records (files <code>owner_entity_map.csv</code> and <code>combined_entity_officer.csv</code>). Each one links to its OpenCorporates page.</li>
+            <li><b>Which party a building is tied to:</b> the Q1 pipeline’s ownership-based list, <code>foreclosure_questions/variant_pinhist_four/building_units_sqft.csv</code>, column <code>tagged_parties</code> (the same list as the workbook’s violations tab): 53 buildings.</li>
+            <li><b>The data behind this page:</b> <code>variant_pinhist_four/network/network_nodes.csv</code>, <code>network_edges.csv</code> and <code>README.txt</code> (column definitions), built by <code>nb/pipeline_pinhist_four.ipynb</code>.</li>
+            <li><b>In Excel:</b> the same rows are in <code>variant_pinhist_four/q1_part2_workbook_pinhist_four.xlsx</code>, tabs <code>R_network_nodes</code> and <code>R_network_edges</code>. The “edge N” number shown on each link here is the <code>edge_id</code> column there.</li>
+            <li><b>Clerk links:</b> the Clerk’s site keeps one search per browser session, so a second link opened in the same session can show the first search again. Open each link in a new private window if the result looks wrong.</li>
+          </ul>
+        </details>
+        <p class="built" id="built"></p>
       </aside>
       <div class="graph">
         <svg id="svg"></svg>
@@ -181,6 +201,7 @@
         N.forEach(function (n) { n.lvl = tagLevel(n); });
         var LVL = { T: "tagged party (T-)", R: "confirmed related (R-)", UR: "unconfirmed related (UR-)", side: "company on a deed side the reporters tagged" };
 
+        document.getElementById("built").textContent = "Built from " + D.meta.built_from.join(" and ") + " (files of " + D.meta.source_mtime + "). " + D.meta.readme;
         document.getElementById("sub").textContent = D.meta.nodes.toLocaleString() + " names, " + D.meta.edges.toLocaleString() +
           " links on the 53 buildings tied to Bialostozky, MJNT, Rotenberg and Tauber · source files " + D.meta.source_mtime;
 
@@ -363,12 +384,13 @@
           return '<div class="e' + (e.i === state.edgeSel ? " sel" : "") + '">' +
             "<div>" + (out ? esc(e.relation) : "← " + esc(e.relation) + " (from)") + " " + nameBtn(other) + "</div>" +
             '<div class="m">' + esc(e.docType) + " · <b>" + esc(e.doc) + "</b>" + (e.recorded ? " · " + esc(e.recorded) : "") + (e.amount != null ? " · " + money(e.amount) : "") + "</div>" +
-            (e.address ? '<div class="m">' + esc(e.address) + (e.keypin ? " · PIN " + esc(e.keypin) : "") + (e.bparties.length ? " · building tied to " + esc(e.bparties.join(" & ")) : "") + "</div>" : "") +
+            (e.address ? '<div class="m">' + esc(e.address) + (e.keypin ? ' · PIN <a href="https://crs.cookcountyclerkil.gov/Search/Result?id1=' + esc(e.keypin) + '" target="_blank" rel="noopener" title="Every recording on this parcel at the Cook County Clerk">' + esc(e.keypin) + "</a>" : "") + (e.bparties.length ? " · building tied to " + esc(e.bparties.join(" & ")) : "") + "</div>" : "") +
             (e.recAddr ? '<div class="m">Address on the company record: ' + esc(e.recAddr) + "</div>" : "") +
             "<div>" + (e.docLink ? '<a href="' + esc(e.docLink) + '" target="_blank" rel="noopener">' + (/opencorporates/.test(e.docLink) ? "OpenCorporates record" : "Clerk document page") + "</a>" : "") +
             (e.docLink && e.county ? " · " : "") + (e.county ? '<a href="' + esc(e.county) + '" target="_blank" rel="noopener">Clerk search</a>' : "") +
             (!e.docLink && !e.county ? '<span class="m">no link in the source file</span>' : "") +
-            ' <span class="m">· edge ' + e.id + "</span></div></div>";
+            ' <span class="m">· edge ' + e.id + "</span></div>" +
+            '<div class="m">Source: ' + esc(e.src) + "</div></div>";
         }
         function renderDetail() {
           var f = state.focus;
@@ -396,7 +418,9 @@
           mine.forEach(function (e) { (groupsE[e.g] = groupsE[e.g] || []).push(e); });
           var h = '<p class="d-name">' + esc(n.name) + "</p><div>" + '<span class="chip">' + esc(kindLabel(n.kind)) + "</span>" +
             (n.lvl ? '<span class="chip tag">' + esc(LVL[n.lvl]) + (n.tagged.length ? ": " + esc(n.tagged.join(", ")) : "") + "</span>" : "") + "</div>" +
+            (n.lvl ? '<div class="prov">The tag is the reporters’ judgment in their tab; the documents it sits on are the dotted “reporters’ tag” links below.</div>' : "") +
             "<div>Connected to " + pchips(n.conn) + "</div>" +
+            '<div class="prov">Derived from the links below: the buildings this name is on and the party each building is tied to.</div>' +
             '<div class="m">How: ' + esc(n.basis) + "</div>" +
             (n.rel ? '<div class="m">Reporters’ tag detail: ' + esc(n.rel) + "</div>" : "") +
             '<div class="m">' + n.nEdges + " links, on " + n.nBld + " building" + (n.nBld === 1 ? "" : "s") + (n.first ? " · seen " + esc(n.first) + " to " + esc(n.last) : "") +
