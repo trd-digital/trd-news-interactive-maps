@@ -9,7 +9,7 @@
       :root {
         --bg: #ffffff; --panel: #f7f8fa; --ink: #14171f; --ink2: #4a5163; --muted: #737a8c; --line: #dfe2e8;
         --chip: #eef0f4; --accent: #2a78d6; --party: #eb6834; --hl: #fff4c2; --edge: #9aa0ad;
-        --k-entity: #2a78d6; --k-person: #1baf7a; --k-lender: #8b5cf6; --k-attorney: #c98a00; --k-title: #8a6d4b; --k-gov: #7b8494;
+        --c-sel: #eb6834; --c-one: #2a78d6; --c-multi: #4a5163; --c-svc: #b3b8c4;
         --r-deed: #14171f; --r-mortgage: #8b5cf6; --r-assignment: #8b5cf6; --r-lis: #d23b2e; --r-attorney: #c98a00; --r-officer: #1baf7a;
         color-scheme: light;
       }
@@ -17,7 +17,7 @@
         :root:not([data-theme="light"]) {
           --bg: #0f1218; --panel: #151a22; --ink: #eef0f4; --ink2: #b7bdca; --muted: #8b92a3; --line: #2a303c;
           --chip: #1f2530; --accent: #3987e5; --party: #ff7a45; --hl: #3a3410; --edge: #5d6577;
-          --k-entity: #3987e5; --k-person: #199e70; --k-lender: #9d76ff; --k-attorney: #e0a419; --k-title: #a8875f; --k-gov: #8b92a3;
+          --c-sel: #ff7a45; --c-one: #3987e5; --c-multi: #b7bdca; --c-svc: #5d6577;
           --r-deed: #eef0f4; --r-mortgage: #9d76ff; --r-assignment: #9d76ff; --r-lis: #ff6b5e; --r-attorney: #e0a419; --r-officer: #199e70;
           color-scheme: dark;
         }
@@ -39,7 +39,7 @@
       label.ck .n, .lg .n { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px; }
       .lg { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
       .dot { width: 11px; height: 11px; border-radius: 50%; flex: none; }
-      .ring { width: 13px; height: 13px; border-radius: 50%; border: 3px solid var(--party); flex: none; }
+      .shape { width: 14px; height: 14px; flex: none; }
       .ln { width: 26px; height: 0; border-top: 2px solid; flex: none; }
       .results { margin: 5px 0 0; padding: 0; list-style: none; max-height: 210px; overflow-y: auto; }
       .results li { padding: 4px 6px; border-radius: 5px; cursor: pointer; font-size: 12.5px; }
@@ -51,9 +51,11 @@
       .zoomb { position: absolute; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 4px; }
       .zoomb button, button.btn { background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 5px; padding: 3px 9px; font: inherit; cursor: pointer; }
       .tip { position: absolute; pointer-events: none; background: var(--bg); border: 1px solid var(--line); border-radius: 5px; padding: 4px 8px; font-size: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.2); display: none; max-width: 320px; }
-      .node circle { stroke: var(--bg); stroke-width: 1.2; cursor: pointer; }
-      .node.party circle { stroke: var(--party); stroke-width: 3; }
-      .labels text { font-size: 10.5px; fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
+      .node path { stroke: var(--bg); stroke-width: 1.2; cursor: pointer; }
+      .node.lvl-T path { stroke: var(--ink); stroke-width: 3; }
+      .node.lvl-R path { stroke: var(--ink); stroke-width: 1.8; }
+      .node.lvl-UR path { stroke: var(--ink); stroke-width: 1.6; stroke-dasharray: 2 1.5; }
+      .labels text { fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
       .labels text.party { font-weight: 700; }
       .edge { fill: none; stroke-opacity: .45; cursor: pointer; }
       .edge.r-deed { stroke: var(--r-deed); stroke-width: 1.4; }
@@ -65,11 +67,15 @@
       .edge.r-tag { stroke: var(--party); stroke-width: 1; stroke-dasharray: 2 4; stroke-opacity: .3; }
       .dim .edge { stroke-opacity: .06; }
       .dim .node { opacity: .15; }
+      .dim .labels text { opacity: .2; }
+      .dim .labels text.on { opacity: 1; }
       .dim .edge.on { stroke-opacity: .95; stroke-width: 2.2; }
       .dim .node.on { opacity: 1; }
       .edge.sel { stroke-opacity: 1 !important; stroke-width: 3.5 !important; }
       .d-name { font-size: 15px; font-weight: 700; margin: 0 0 2px; word-break: break-word; }
       .tagp { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 3px; background: var(--party); color: #fff; margin: 2px 3px 2px 0; }
+      .pchip { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 3px; color: #fff; margin: 2px 3px 2px 0; }
+      .chip.tag { background: var(--ink); color: var(--bg); }
       .chip { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 3px; background: var(--chip); color: var(--ink2); margin: 2px 3px 2px 0; }
       .grp { margin-top: 12px; }
       .grp h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 0 0 4px; }
@@ -112,11 +118,18 @@
           <select id="party"></select>
           <div class="m" style="margin-top:4px">Shows the documents on that party's buildings, plus company records for the companies on them.</div>
         </fieldset>
-        <fieldset id="fsRel"><legend>Relations (edge style)</legend></fieldset>
-        <fieldset id="fsKind"><legend>Name kind (node colour)</legend></fieldset>
+        <fieldset id="fsConn"><legend>Connected to (node colour)</legend></fieldset>
         <fieldset>
-          <legend>Highlight</legend>
-          <div class="lg"><span class="ring"></span><span>Name the reporters tied to a party (label shows the party)</span></div>
+          <label class="ck"><input type="checkbox" id="bridges" /> <span>Highlight names connected to more than one party</span></label>
+        </fieldset>
+        <fieldset id="fsRel"><legend>Relations (edge style)</legend></fieldset>
+        <fieldset id="fsKind"><legend>Name kind (shape)</legend></fieldset>
+        <fieldset>
+          <legend>Reporters' tags</legend>
+          <div class="lg"><svg class="shape" viewBox="-8 -8 16 16"><circle r="5.5" fill="none" stroke="currentColor" stroke-width="3"></circle></svg><span>Thick outline: tagged party (T-)</span></div>
+          <div class="lg"><svg class="shape" viewBox="-8 -8 16 16"><circle r="5.5" fill="none" stroke="currentColor" stroke-width="1.8"></circle></svg><span>Thin outline: confirmed related (R-)</span></div>
+          <div class="lg"><svg class="shape" viewBox="-8 -8 16 16"><circle r="5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2 1.5"></circle></svg><span>Dashed outline: unconfirmed related (UR-)</span></div>
+          <div class="m">Labels of T-, R- and UR- names show the party in brackets.</div>
           <label class="ck"><input type="checkbox" id="labelsAll" /> <span>Label every node</span></label>
         </fieldset>
         <details class="src">
@@ -125,7 +138,9 @@
             <li><b>Deeds, mortgages, assignments and foreclosure filings (lis pendens):</b> Cook County Clerk recordings, <a href="https://crs.cookcountyclerkil.gov/" target="_blank" rel="noopener">crs.cookcountyclerkil.gov</a>. Every such link has a Clerk search link and, where we have it, the Clerk document page. A PIN opens every recording on that parcel.</li>
             <li><b>Reporters’ tags (T-, R-, UR-), attorneys / agents and PTAX-203 preparers, and the building list:</b> the reporters’ own spreadsheet <code>pin histories of source examples.xlsx</code>, sheet “examples pinhist transactions”.</li>
             <li><b>Officer / manager / agent “of the company” links:</b> OpenCorporates / Illinois Secretary of State company records (files <code>owner_entity_map.csv</code> and <code>combined_entity_officer.csv</code>). Each one links to its OpenCorporates page.</li>
-            <li><b>The data behind this page:</b> <code>variant_pinhist/network/network_nodes.csv</code>, <code>network_edges.csv</code> and <code>README.txt</code> (column definitions). The “edge N” number on each link is the <code>edge_id</code> column in <code>network_edges.csv</code>.</li>
+            <li><b>Which party a building is tied to:</b> the Q1 pipeline’s ownership-based list, <code>foreclosure_questions/variant_pinhist/building_units_sqft.csv</code>, column <code>tagged_parties</code> (the same list as the workbook’s violations tab): 243 buildings.</li>
+            <li><b>The data behind this page:</b> <code>variant_pinhist/network/network_nodes.csv</code>, <code>network_edges.csv</code> and <code>README.txt</code> (column definitions), built by <code>nb/pipeline_pinhist.ipynb</code>.</li>
+            <li><b>In Excel:</b> the same rows are in <code>variant_pinhist/q1_part2_workbook_pinhist.xlsx</code>, tabs <code>R_network_nodes</code> and <code>R_network_edges</code>. The “edge N” number shown on each link here is the <code>edge_id</code> column there.</li>
             <li><b>Clerk links:</b> the Clerk’s site keeps one search per browser session, so a second link opened in the same session can show the first search again. Open each link in a new private window if the result looks wrong.</li>
           </ul>
         </details>
@@ -146,10 +161,10 @@
       (function () {
         "use strict";
         var D = window.PNET;
-        // node: [name, kind, parties[], relation_to_party, n_edges, n_buildings, first, last]
+        // node: [name, kind, tagged[], relation_to_party, n_edges, n_buildings, first, last, tokens, connected[], basis]
         // edge: [s, t, group, relation, doc_type, doc_number, recorded, amount, address, keypin, building_parties[], county_link, document_link, source_file, edge_id]
         var N = D.nodes.map(function (r, i) {
-          return { i: i, name: r[0], kind: r[1], parties: r[2], rel: r[3], nEdges: r[4], nBld: r[5], first: r[6], last: r[7], tok: r[8] };
+          return { i: i, name: r[0], kind: r[1], parties: r[2], rel: r[3], nEdges: r[4], nBld: r[5], first: r[6], last: r[7], tok: r[8], conn: r[9], basis: r[10] };
         });
         var E = D.edges.map(function (r, i) {
           return { i: i, s: r[0], t: r[1], g: r[2], relation: r[3], docType: r[4], doc: r[5], recorded: r[6], amount: r[7],
@@ -158,24 +173,56 @@
         var byTok = {};
         N.forEach(function (n) { if (n.tok) (byTok[n.tok] = byTok[n.tok] || []).push(n.i); });
         var KIND = {
-          "entity": ["Company / entity", "--k-entity"], "person": ["Person", "--k-person"], "lender / trust": ["Lender / trust", "--k-lender"],
-          "attorney / preparer": ["Attorney / preparer", "--k-attorney"], "title company / land trust": ["Title co. / land trust", "--k-title"],
-          "government": ["Government", "--k-gov"]
+          "entity": ["Company / entity", d3.symbolSquare], "person": ["Person", d3.symbolCircle], "lender / trust": ["Lender / trust", d3.symbolDiamond],
+          "attorney / preparer": ["Attorney / preparer", d3.symbolTriangle], "title company / land trust": ["Title co. / land trust", d3.symbolCross],
+          "government": ["Government", d3.symbolStar],
+          "service company (registered agent / sale officer)": ["Service co. (registered agent / sale officer)", d3.symbolWye]
         };
+        var SERVICE = "service company (registered agent / sale officer)";
+        // a registered agent or court sale officer serves many companies; that is not a relationship
+        function isMulti(n) { return n.conn.length > 1 && n.kind !== SERVICE; }
+        var multi = N.filter(isMulti);
+        // reporters' tag level, strongest first: T- > R- > UR- > company on a deed side they tagged
+        function tagLevel(n) {
+          var r = n.rel || "";
+          return /^tagged party/.test(r) ? "T" : /^confirmed related/.test(r) ? "R" : /^unconfirmed related/.test(r) ? "UR" : /^entity on/.test(r) ? "side" : "";
+        }
+        N.forEach(function (n) { n.lvl = tagLevel(n); n.lab = n.name + (n.lvl && n.lvl !== "side" && n.parties.length ? "  [" + n.parties.join(", ") + "]" : ""); });
+        var LVL = { T: "tagged party (T-)", R: "confirmed related (R-)", UR: "unconfirmed related (UR-)", side: "company on a deed side the reporters tagged" };
         var REL = {
           deed: ["Sold the building to (deed)", "--r-deed", "solid"], mortgage: ["Borrowed from (mortgage)", "--r-mortgage", "solid"],
           assignment: ["Assigned the loan to", "--r-assignment", "dashed"], lis: ["Filed a foreclosure against", "--r-lis", "solid"],
           attorney: ["Attorney / agent / PTAX preparer for", "--r-attorney", "dotted"], officer: ["Officer / agent of the company (company records)", "--r-officer", "dashed"],
           tag: ["Reporters\u2019 tag: party behind this name (judgment, not a document)", "--party", "dashed"]
         };
-        var state = { party: "", rels: {}, kinds: {}, labelsAll: false, focus: null, edgeSel: null };
+        var state = { party: "", rels: {}, kinds: {}, bridges: false, labelsAll: false, focus: null, edgeSel: null };
         Object.keys(REL).forEach(function (k) { state.rels[k] = true; });
         Object.keys(KIND).forEach(function (k) { state.kinds[k] = true; });
 
         function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
         function money(a) { return a == null ? "" : "$" + Math.round(a).toLocaleString("en-US"); }
         function cssv(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
-        function kindColor(k) { return cssv((KIND[k] || KIND.entity)[1]); }
+        function kindLabel(k) { return (KIND[k] || ["?"])[0]; }
+        // colour: service company grey; else, with a party chosen, only that party / that party and others / other parties only;
+        // with all parties, one party / two or more
+        function connClass(n) {
+          if (n.kind === SERVICE) return "svc";
+          var p = state.party;
+          if (!p) return n.conn.length > 1 ? "multi" : "one";
+          return n.conn.indexOf(p) < 0 ? "one" : n.conn.length > 1 ? "multi" : "sel";
+        }
+        function nodeColor(n) { return cssv("--c-" + connClass(n)); }
+        function pchips(list) { return list.map(function (p) { return '<span class="pchip" style="background:' + (p === state.party ? cssv("--c-sel") : cssv("--c-one")) + '">' + esc(p) + "</span>"; }).join(""); }
+        function tagChip(n) { return n.lvl && n.lvl !== "side" ? '<span class="chip tag">' + n.lvl + "- " + esc(n.parties.join(", ")) + "</span>" : ""; }
+        function drawConnLegend() {
+          var p = state.party, rows = p
+            ? [["sel", "Only " + p], ["multi", p + " and other parties"], ["one", "Other parties only (via company records)"], ["svc", "Service company (not a relationship)"]]
+            : [["one", "One party"], ["multi", "Two or more parties"], ["svc", "Service company (not a relationship)"]];
+          var cnt = {}; view.nodes.forEach(function (d) { var c = connClass(d.n); cnt[c] = (cnt[c] || 0) + 1; });
+          document.getElementById("fsConn").innerHTML = "<legend>Connected to (node colour)</legend>" + rows.map(function (r) {
+            return '<div class="lg"><span class="dot" style="background:var(--c-' + r[0] + ')"></span><span>' + esc(r[1]) + '</span><span class="n">' + (cnt[r[0]] || 0) + "</span></div>";
+          }).join("") + '<div class="m">From the buildings each name appears on and the party each building is tied to. ' + multi.length + " names in all are connected to two or more parties.</div>";
+        }
 
         document.getElementById("built").textContent = "Built from " + D.meta.built_from.join(" and ") + " (files of " + D.meta.source_mtime + "). " + D.meta.readme;
         document.getElementById("sub").textContent = D.meta.nodes.toLocaleString() + " names, " + D.meta.edges.toLocaleString() +
@@ -205,9 +252,10 @@
         });
         var kindCount = {}; N.forEach(function (n) { kindCount[n.kind] = (kindCount[n.kind] || 0) + 1; });
         Object.keys(KIND).forEach(function (k) {
-          ck(document.getElementById("fsKind"), '<span class="dot" style="background:var(' + KIND[k][1] + ')"></span><span>' + KIND[k][0] + "</span>",
+          ck(document.getElementById("fsKind"), '<svg class="shape" viewBox="-8 -8 16 16"><path d="' + d3.symbol(KIND[k][1], 70)() + '" fill="currentColor"></path></svg><span>' + KIND[k][0] + "</span>",
             true, kindCount[k] || 0, function (v) { state.kinds[k] = v; });
         });
+        document.getElementById("bridges").addEventListener("change", function (ev) { state.bridges = ev.target.checked; applyFocus(); });
         document.getElementById("labelsAll").addEventListener("change", function (ev) { state.labelsAll = ev.target.checked; drawLabels(); });
 
         // ---------- view (subgraph) ----------
@@ -278,42 +326,45 @@
             });
           var ln = gN.selectAll("g.node").data(nodes, function (d) { return d.id; });
           ln.exit().remove();
-          var enter = ln.enter().append("g").attr("class", function (d) { return "node" + (d.n.parties.length ? " party" : ""); });
-          enter.append("circle");
+          var enter = ln.enter().append("g").attr("class", function (d) { return "node" + (d.n.lvl ? " lvl-" + d.n.lvl : ""); });
+          enter.append("path");
           enter.on("click", function (ev, d) { ev.stopPropagation(); state.edgeSel = null; state.focus = state.focus === d.id ? null : d.id; applyFocus(); renderDetail(); })
             .on("mousemove", function (ev, d) {
-              showTip(ev, "<b>" + esc(d.n.name) + "</b><br>" + esc((KIND[d.n.kind] || ["?"])[0]) + (d.n.parties.length ? " · " + esc(d.n.parties.join(", ")) : "") +
+              showTip(ev, "<b>" + esc(d.n.name) + "</b><br>" + esc(kindLabel(d.n.kind)) + " · connected to " + esc(d.n.conn.join(", ")) +
+                (d.n.lvl ? "<br>Reporters’ tag: " + esc(LVL[d.n.lvl]) + (d.n.parties.length ? ", " + esc(d.n.parties.join(", ")) : "") : "") +
                 "<br>" + d.deg + " link" + (d.deg === 1 ? "" : "s") + " in this view");
             })
             .on("mouseleave", hideTip);
           var all = enter.merge(ln);
           all.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; });
-          all.select("circle").attr("r", r).attr("fill", function (d) { return kindColor(d.n.kind); });
-          // label priority: reporters' party ties first, then the busiest names
-          var order = nodes.slice().sort(function (a, b) { return (b.n.parties.length ? 1e6 : 0) + b.deg - ((a.n.parties.length ? 1e6 : 0) + a.deg); });
+          all.select("path").attr("d", function (d) { var rr = r(d); return d3.symbol((KIND[d.n.kind] || KIND.entity)[1], Math.PI * rr * rr)(); })
+            .attr("fill", function (d) { return nodeColor(d.n); });
+          var order = nodes.slice().sort(function (a, b) { return score(b) - score(a); });
           order.forEach(function (d, k) { d.rank = k; });
           var lt = gL.selectAll("text").data(nodes, function (d) { return d.id; });
           lt.exit().remove();
           lt.enter().append("text").attr("dy", "0.32em").merge(lt)
-            .attr("class", function (d) { return d.n.parties.length ? "party" : null; })
+            .attr("class", function (d) { return d.n.lvl === "T" ? "party" : null; })
             .attr("x", function (d) { return d.x + r(d) + 3; }).attr("y", function (d) { return d.y; })
-            .text(function (d) { return d.n.name + (d.n.parties.length ? "  [" + d.n.parties.join(", ") + "]" : ""); });
+            .text(function (d) { return d.n.lab; });
           if (state.focus != null && !view.byI[state.focus]) state.focus = null;
-          applyFocus(); fit(); renderDetail();
+          drawConnLegend(); applyFocus(); fit(); renderDetail();
         }
+        // label priority: reporters' T- names, then names connected to several parties, then R- / UR-, then the busiest
+        function score(d) { return ({ T: 3e6, R: 1.5e6, UR: 1e6 }[d.n.lvl] || 0) + (isMulti(d.n) ? 2e6 : 0) + d.deg; }
         function r(d) { return 3 + Math.min(14, 1.6 * Math.sqrt(d.deg)); }
 
         function drawLabels() {
           // greedy by rank; a label is drawn only where it does not overlap one
           // already placed (the focused name is always drawn)
-          var lim = Math.max(12, Math.round(14 * curK * curK)), placed = [], show = {};
-          var cand = view.nodes.filter(function (d) { return state.focus != null ? d.on : (state.labelsAll || d.rank < lim * 3); })
+          var lim = Math.max(16, Math.round(18 * curK * curK)), placed = [], show = {}, s = 1 / curK;
+          gL.style("font-size", (10.5 * s) + "px").style("stroke-width", (3 * s) + "px");
+          var cand = view.nodes.filter(function (d) { return state.focus != null || state.bridges ? d.on : (state.labelsAll || d.rank < lim * 3); })
             .sort(function (a, b) { return (a.id === state.focus ? -1 : 0) - (b.id === state.focus ? -1 : 0) || a.rank - b.rank; });
           var shown = 0;
           cand.forEach(function (d) {
             if (!state.labelsAll && state.focus == null && shown >= lim) return;
-            var label = d.n.name + (d.n.parties.length ? "  [" + d.n.parties.join(", ") + "]" : "");
-            var x0 = d.x + r(d) + 3, w = label.length * 6.3, box = [x0, d.y - 7, x0 + w, d.y + 7];
+            var x0 = d.x + r(d) + 3 * s, w = d.n.lab.length * 6.3 * s, box = [x0, d.y - 7 * s, x0 + w, d.y + 7 * s];
             var hit = !state.labelsAll && d.id !== state.focus && placed.some(function (b) { return box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1]; });
             if (!hit) { placed.push(box); show[d.id] = 1; shown++; }
           });
@@ -321,12 +372,13 @@
         }
         function applyFocus() {
           var f = state.focus;
-          root.classed("dim", f != null);
+          root.classed("dim", f != null || state.bridges);
           var nb = {};
           gE.selectAll("path").classed("on", function (l) { var on = f != null && (l.e.s === f || l.e.t === f); if (on) { nb[l.e.s] = nb[l.e.t] = 1; } return on; })
             .classed("sel", function (l) { return l.e.i === state.edgeSel; });
-          gN.selectAll("g.node").each(function (d) { d.on = f != null && !!nb[d.id] || d.id === f; }).classed("on", function (d) { return d.on; });
-          gN.selectAll("g.node").filter(function (d) { return d.id === f; }).raise();
+          gN.selectAll("g.node").each(function (d) { d.on = f != null ? (!!nb[d.id] || d.id === f) : state.bridges && isMulti(d.n); }).classed("on", function (d) { return d.on; });
+          gL.selectAll("text").classed("on", function (d) { return d.on; });
+          gN.selectAll("g.node").filter(function (d) { return d.on; }).raise();
           drawLabels();
         }
         function fit() {
@@ -357,7 +409,7 @@
           var verb = out ? esc(e.relation) : "← " + esc(e.relation) + " (from)";
           var h = '<div class="e' + (e.i === state.edgeSel ? " sel" : "") + '" data-e="' + e.i + '">' +
             "<div>" + verb + ' <button class="lnk" data-n="' + other + '">' + esc(N[other].name) + "</button>" +
-            (N[other].parties.length ? ' <span class="tagp">' + esc(N[other].parties.join(", ")) + "</span>" : "") + "</div>" +
+            " " + pchips(N[other].conn) + "</div>" +
             '<div class="m">' + esc(e.docType) + (e.doc ? " · <b>" + esc(e.doc) + "</b>" : " · <b>no doc number</b>") +
             (e.recorded ? " · " + esc(e.recorded) : "") + (e.amount != null ? " · " + money(e.amount) : "") + "</div>" +
             (e.address ? '<div class="m">' + esc(e.address) + (e.keypin ? ' · PIN <a href="https://crs.cookcountyclerkil.gov/Search/Result?id1=' + esc(e.keypin) + '" target="_blank" rel="noopener" title="Every recording on this parcel at the Cook County Clerk">' + esc(e.keypin) + "</a>" : "") + "</div>" : "") +
@@ -374,14 +426,26 @@
           var f = state.focus;
           if (f == null) {
             var es = view.edges.map(function (l) { return l.e; });
-            var pc = {}; view.nodes.forEach(function (d) { d.n.parties.forEach(function (p) { pc[p] = 1; }); });
+            // ready-made answer: the names connected to more than one party (with a party chosen, the ones that include it)
+            var mm = multi.filter(function (n) { return !state.party || n.conn.indexOf(state.party) >= 0; }), groups = {};
+            // 16 parties make too many combinations to group by; group by how many parties instead
+            mm.forEach(function (n) { var k = n.conn.length; (groups[k] = groups[k] || []).push(n); });
+            var keys = Object.keys(groups).sort(function (a, b) { return b - a; });
             det.innerHTML = '<p class="d-name">' + esc(state.party || "All parties") + "</p>" +
               '<p class="m">Click a name to list its links with their documents. Click a line to highlight one document. Esc or a click on empty space clears.</p>' +
+              '<div class="grp"><h3>Names connected to ' + (state.party ? esc(state.party) + " and another party" : "more than one party") + " (" + mm.length + ")</h3>" +
+              (mm.length ? "" : '<p class="empty">None.</p>') + "</div>" +
+              keys.map(function (k) {
+                return '<div class="grp"><h3>' + k + " parties (" + groups[k].length + ")</h3>" + groups[k].sort(function (a, b) { return b.nEdges - a.nEdges; }).map(function (n) {
+                  return '<div class="e"><button class="lnk" data-n="' + n.i + '">' + esc(n.name) + "</button> " + tagChip(n) +
+                    '<span class="m">' + esc(kindLabel(n.kind)) + " · " + n.nEdges + " links" + (view.byI[n.i] ? "" : " · not in this view") + "</span>" +
+                    '<div class="m">' + esc(n.conn.join(", ")) + "</div></div>";
+                }).join("") + "</div>";
+              }).join("") +
               '<div class="grp"><h3>Most-linked names in this view</h3>' +
-              view.nodes.slice().sort(function (a, b) { return b.deg - a.deg; }).slice(0, 25).map(function (d) {
-                return '<div class="e"><button class="lnk" data-n="' + d.id + '">' + esc(d.n.name) + "</button> " +
-                  (d.n.parties.length ? '<span class="tagp">' + esc(d.n.parties.join(", ")) + "</span>" : "") +
-                  '<span class="m">' + esc((KIND[d.n.kind] || ["?"])[0]) + " · " + d.deg + " links</span></div>";
+              view.nodes.slice().sort(function (a, b) { return b.deg - a.deg; }).slice(0, 15).map(function (d) {
+                return '<div class="e"><button class="lnk" data-n="' + d.id + '">' + esc(d.n.name) + "</button> " + tagChip(d.n) +
+                  '<span class="m">' + esc(kindLabel(d.n.kind)) + " · " + d.deg + " links</span></div>";
               }).join("") + "</div>" +
               '<div class="grp"><h3>All ' + es.length.toLocaleString() + ' links in this view</h3><button class="btn" id="tblBtn">Show as a table</button><div id="tbl"></div></div>';
             var b = document.getElementById("tblBtn");
@@ -393,15 +457,18 @@
           var groups = {};
           mine.forEach(function (e) { (groups[e.g] = groups[e.g] || []).push(e); });
           var h = '<p class="d-name">' + esc(n.name) + "</p>" +
-            "<div>" + '<span class="chip">' + esc((KIND[n.kind] || ["?"])[0]) + "</span>" +
-            n.parties.map(function (p) { return '<span class="tagp">' + esc(p) + "</span>"; }).join("") + "</div>" +
-            (n.rel ? '<div class="m">Reporters’ tag: ' + esc(n.rel) + "</div>" +
-              '<div class="prov">The tag is the reporters’ judgment in their tab; the documents it sits on are the dotted “reporters’ tag” links below.</div>' : "") +
+            "<div>" + '<span class="chip">' + esc(kindLabel(n.kind)) + "</span>" +
+            (n.lvl ? '<span class="chip tag">' + esc(LVL[n.lvl]) + (n.parties.length ? ": " + esc(n.parties.join(", ")) : "") + "</span>" : "") + "</div>" +
+            (n.lvl ? '<div class="prov">The tag is the reporters’ judgment in their tab; the documents it sits on are the dotted “reporters’ tag” links below.</div>' : "") +
+            "<div>Connected to " + pchips(n.conn) + "</div>" +
+            '<div class="prov">Derived from the links: the buildings this name is on and the party each building is tied to.</div>' +
+            '<div class="m">How: ' + esc(n.basis) + "</div>" +
+            (n.rel ? '<div class="m">Reporters’ tag detail: ' + esc(n.rel) + "</div>" : "") +
             '<div class="m">' + n.nEdges + " links in all, on " + n.nBld + " building" + (n.nBld === 1 ? "" : "s") +
             (n.first ? " · seen " + esc(n.first) + " to " + esc(n.last) : "") + "</div>" +
             ((byTok[n.tok] || []).length > 1 ? '<div class="m" style="margin-top:4px">Possibly the same name in another word order (not merged): ' +
               byTok[n.tok].filter(function (j) { return j !== f; }).map(function (j) {
-                return '<button class="lnk" data-n="' + j + '">' + esc(N[j].name) + "</button>" + (N[j].parties.length ? ' <span class="tagp">' + esc(N[j].parties.join(", ")) + "</span>" : "");
+                return '<button class="lnk" data-n="' + j + '">' + esc(N[j].name) + "</button> " + pchips(N[j].conn);
               }).join(", ") + "</div>" : "") +
             (allMine.length > mine.length ? '<div class="m">' + mine.length + " of its " + allMine.length + ' links are in this view. <button class="lnk" id="allP">Show all parties</button></div>' : "");
           Object.keys(REL).forEach(function (g) {
@@ -442,8 +509,8 @@
           if (!hits.length) { results.innerHTML = '<li class="m">No match</li>'; return; }
           hits.forEach(function (n) {
             var li = document.createElement("li");
-            li.innerHTML = esc(n.name) + ' <span class="m">' + esc((KIND[n.kind] || ["?"])[0]) + " · " + n.nEdges + " links" +
-              (n.parties.length ? " · " + esc(n.parties.join(", ")) : "") + (view.byI[n.i] ? "" : " · not in this view") + "</span>";
+            li.innerHTML = esc(n.name) + ' <span class="m">' + esc(kindLabel(n.kind)) + " · " + n.nEdges + " links · " +
+              esc(n.conn.join(", ")) + (view.byI[n.i] ? "" : " · not in this view") + "</span>";
             li.onclick = function () {
               if (!view.byI[n.i]) { sel.value = ""; state.party = ""; rebuild(); }
               state.focus = n.i; state.edgeSel = null; applyFocus(); renderDetail(); centerOn(n.i);
