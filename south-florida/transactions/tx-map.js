@@ -43,6 +43,8 @@
     base: TX.prefs.get("map-base", "streets"), // "streets" | "satellite"
   };
   function styleUrl() {
+    var sat = document.querySelector(".tx-credit-sat"); // imagery credit, satellite only
+    if (sat) sat.hidden = mapOpts.base !== "satellite";
     return mapOpts.base === "satellite" ? STYLES.satellite : STYLES[theme];
   }
   // Satellite imagery is dark, so it uses the dark-surface steps + white rings.
@@ -1090,7 +1092,7 @@
     });
     map.touchZoomRotate.disableRotation();
     if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__txMap = map; // dev/test hook
-    map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
+    // Map credit (Mapbox, OpenStreetMap, "Improve this map") is in the note line (.tx-credit).
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
     if (!compact) map.addControl(new mapboxgl.FullscreenControl(), "top-right");
     if (!compact) map.addControl(layersControl(), "top-right");

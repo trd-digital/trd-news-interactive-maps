@@ -497,6 +497,49 @@ button {
 .tx-compact .tx-mapnote {
   padding: 3px 8px;
 }
+/* Note line plus the map credit, which replaces Mapbox's attribution
+   button; the credit wraps to its own line when the frame is narrow. */
+.tx-mapfoot {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 12px;
+  padding: 5px 8px;
+  border-top: 1px solid var(--tx-border);
+  background: var(--tx-bg);
+  color: var(--tx-text-2);
+  font-size: 11px;
+  line-height: 1.35;
+}
+.tx-compact .tx-mapfoot {
+  padding: 3px 8px;
+}
+.tx-mapfoot .tx-mapnote {
+  flex: 1 1 260px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.tx-mapfoot .tx-mapnote:empty {
+  display: none;
+}
+.tx-credit {
+  flex: none;
+  margin: 0 0 0 auto;
+  color: var(--tx-text-3);
+  white-space: nowrap;
+}
+.tx-credit a {
+  color: inherit;
+  text-decoration: none;
+}
+.tx-credit a:hover,
+.tx-credit a:focus-visible {
+  color: var(--tx-text-2);
+  text-decoration: underline;
+}
 
 /* Detail panel (side on wide, bottom sheet on narrow) */
 .tx-detail {

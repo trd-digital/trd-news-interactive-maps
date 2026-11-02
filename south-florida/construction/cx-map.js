@@ -454,7 +454,7 @@
     });
     map.touchZoomRotate.disableRotation();
     if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__cxMap = map; // dev/test hook
-    map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
+    // Map credit (Mapbox, OpenStreetMap, "Improve this map") is in the note line (.tx-credit).
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
     if (!compact) map.addControl(new mapboxgl.FullscreenControl(), "top-right");
 
