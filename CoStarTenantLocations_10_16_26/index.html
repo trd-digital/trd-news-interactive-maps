@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="trd-embed.css" />
     <link rel="stylesheet" href="trd-map.css" />
     <style>
-      :root { --trd-embed-h: 620px; --trd-embed-h-phone: 640px; --trd-embed-h-wide: 600px; }
+      :root { --trd-embed-h: 560px; --trd-embed-h-phone: 560px; --trd-embed-h-wide: 560px;   /* live articles: plain 560px iframe */ }
       html, body { height: 100%; }
       .stage { position: relative; width: 100%; height: 100%; }
       /* Standalone: the header takes --trd-header-h, so the stage fills the rest. */
@@ -152,7 +152,7 @@
         <div class="sep"></div>
         <div class="sub" style="margin-bottom:2px">Sized by square feet occupied</div>
         <div class="sizes" id="legendSizes"></div>
-        <div class="note">Source: CoStar. Industry groups NAICS codes. Move-in dates after Oct. 2026 are scheduled.</div>
+        <div class="note">Source: CoStar. Industry groups from NAICS codes. Move-in dates after Nov. 2026 are scheduled.</div>
       </div>
     </div>
 
@@ -167,7 +167,7 @@
         light: { "Defense & aerospace": "#eb6834", "Semiconductors & electronics": "#2a78d6", "R&D & engineering": "#4a3aa7" },
         dark:  { "Defense & aerospace": "#d95926", "Semiconductors & electronics": "#3987e5", "R&D & engineering": "#9085e9" },
       };
-      var NOW_YM = "2026-10";   // move-ins after this month read as scheduled
+      var NOW_YM = "2026-11";   // move-ins after this month read as scheduled
       // Downtown preset: the CBD / South Congress-1st St cluster.
       var DOWNTOWN = [[-97.765, 30.25], [-97.73, 30.28]];
       // Public pk.* token — URL-restrict it in the Mapbox dashboard.
@@ -185,7 +185,7 @@
         });
       }
       function fmt(n) { return n == null ? "" : Number(n).toLocaleString("en-US"); }
-      function sfShort(n) { return n >= 1e6 ? (n / 1e6).toFixed(2).replace(/0$/, "") + "M" : Math.round(n / 1000) + "K"; }
+      function sfShort(n) { return n >= 1e6 ? (n / 1e6).toFixed(1).replace(/\.0$/, "") + " million" : Math.round(n / 1000) + "K"; }
       function radius(sf) { return 4 + 16 * Math.sqrt(sf / SF_MAX); }
       function fact(lbl, value) {
         var v = String(value == null ? "" : value).trim();
@@ -235,7 +235,7 @@
         var sf = vis.reduce(function (a, f) { return a + f.properties.sf; }, 0);
         var total = GEO.features.reduce(function (a, f) { return a + f.properties.leases.length; }, 0);
         document.getElementById("count").innerHTML =
-          "<b>" + (n === total ? total : n + " of " + total) + "</b> leases · <b>" + sfShort(sf) + "</b> SF";
+          "<b>" + (n === total ? total : n + " of " + total) + "</b> leases · <b>" + sfShort(sf) + "</b> sq. ft.";
         document.getElementById("reset").hidden = !state.sector && !state.year;
         Array.prototype.forEach.call(document.querySelectorAll("#legendRows .row"), function (r) {
           r.classList.toggle("dim", !!state.sector && r.getAttribute("data-sector") !== state.sector);
@@ -276,7 +276,7 @@
         [""].concat(Object.keys(years).sort()).forEach(function (y) {
           var b = document.createElement("button");
           b.type = "button"; b.className = "chip"; b.setAttribute("data-year", y);
-          b.textContent = y ? y + (y > NOW_YM.slice(0, 4) ? "*" : "") : "All";
+          b.textContent = y ? y + (y !== "TBD" && y > NOW_YM.slice(0, 4) ? "*" : "") : "All";
           if (y) b.title = years[y] + " leases";
           b.addEventListener("click", function () { state.year = y; applyFilter(true); });
           chips.appendChild(b);
@@ -311,14 +311,15 @@
       }
 
       // ---- popup ------------------------------------------------------------
-      function leaseHTML(l) {
-        var soon = l.moved_ym > NOW_YM ? ' <span class="soon">(scheduled)</span>' : "";
+      function leaseHTML(l, bldg) {
+        var soon = l.year !== "TBD" && l.moved_ym > NOW_YM ? ' <span class="soon">(scheduled)</span>' : "";
         var reps = [l.landlord_rep && "landlord: " + esc(l.landlord_rep), l.tenant_rep && "tenant: " + esc(l.tenant_rep)].filter(Boolean).join("; ");
         return '<div class="lease">' +
           '<div class="tenant">' + esc(l.tenant) + ' <span class="sf">' + fmt(l.sf) + " SF</span></div>" +
           fact("NAICS", esc(l.naics) + " (" + esc(l.naics_code) + ")") +
           fact("Moved in", esc(l.moved_in) + soon) +
-          fact("Share of building", esc(l.pct_bldg) + " · " + esc(l.occupancy)) +
+          (bldg && l.building !== bldg ? fact("Building", esc(l.building)) : "") +
+          fact("Share of building", [l.pct_bldg, l.occupancy].filter(Boolean).map(esc).join(" · ")) +
           fact("Brokers", reps) +
           "</div>";
       }
@@ -330,9 +331,9 @@
         var hidden = p.leases.length - ls.length;
         return '<div class="trd-popup-body" style="max-height:' + maxH + 'px">' +
           "<h3>" + esc(title) + "</h3>" +
-          '<p class="trd-popup-sub">' + esc(p.address) + ", " + esc(p.city) + "<br>" + esc(type) + " · " + esc(p.submarket) + " submarket</p>" +
+          '<p class="trd-popup-sub">' + esc(p.address) + ", " + esc(p.city) + (p.approx ? " (approximate location)" : "") + "<br>" + esc(type) + (p.submarket ? " · " + esc(p.submarket) + " submarket" : "") + "</p>" +
           '<div class="trd-popup-tag"><span class="dot" style="background:' + pal[ls[0].sector] + '"></span>' + esc(ls[0].sector) + "</div>" +
-          ls.map(leaseHTML).join("") +
+          ls.map(function (l) { return leaseHTML(l, p.building); }).join("") +
           (hidden ? '<p class="trd-popup-sub" style="margin-top:6px">+' + hidden + " more lease" + (hidden > 1 ? "s" : "") + " here outside the current filter</p>" : "") +
           "</div>";
       }
