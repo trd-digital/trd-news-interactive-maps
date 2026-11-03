@@ -240,7 +240,7 @@
           });
           return out;
         }
-        function isRatio(m) { return m.agg === "ratio_pct" || m.agg === "ratio_per"; }
+        function isRatio(m) { return m.agg === "ratio_pct" || m.agg === "ratio_per" || m.agg === "share_of_total_pct"; }
 
         // ---------- published totals: recomputed from the rows on load ----------
         var CHECK_FNS = {
@@ -250,6 +250,7 @@
           institutions: function (c, T, rows) { return distinct(T, rows, "institution"); },
           top: function (c, T, rows, want) { var o = {}; Object.keys(want).forEach(function (i) { o[i] = distinct(T, rows.filter(eq(T, "institution", i)), S[c.table].key); }); return o; },
           buildings: function (c, T, rows) { return distinct(T, rows, "keypin"); },
+          units: function (c, T, rows) { var g = getter(T, "units"), s = 0; rows.forEach(function (r) { s += num(g(r)) || 0; }); return Math.round(s * 100) / 100; },
           violations: function (c, T, rows) { var g = getter(T, "violations_2018plus"), s = 0; rows.forEach(function (r) { s += num(g(r)) || 0; }); return s; },
           rows: function (c, T, rows) { return rows.length; },
           edges: function (c, T, rows) { return rows.length; },
@@ -294,7 +295,7 @@
         var CHECK_VIEW = { filings: "q1_share", buildings: "p2e_violations", loans: "p2f_originators", network_edges: "p2g_network" };
         document.getElementById("checks").addEventListener("click", function (ev) {
           var b = ev.target.closest("button[data-chk]"); if (!b) return;
-          var c = checkResults[+b.getAttribute("data-chk")].c, pid = c.id.indexOf("q2") === 0 ? "q2_lenders" : CHECK_VIEW[c.table];
+          var c = checkResults[+b.getAttribute("data-chk")].c, pid = c.id.indexOf("q2") === 0 ? "q2_lenders" : c.id.indexOf("units") === 0 && P.q1_units_scope ? "q1_units_scope" : CHECK_VIEW[c.table];
           var sc = c.scope === "four parties" ? "four" : "all";
           state.scope = sc; state = defaultState(pid); state.scope = sc;
           Object.keys(c.filters).forEach(function (k) {
@@ -544,6 +545,12 @@
           var ms = state.measures.length ? state.measures : [{ id: "rows", label: "rows", agg: "count_distinct", column: S[t].key }];
           var out = order.map(function (k) { return { key: k, vals: k.split("\u0001"), m: measureVals(t, T, groups[k], ms) }; });
           var total = { key: null, vals: [], m: measureVals(t, T, rows, ms) };
+          // share_of_total_pct: the group's value of measure `of` as a % of the same measure over every row passing the filters
+          ms.forEach(function (m) {
+            if (m.agg !== "share_of_total_pct") return;
+            var all = total.m[m.of];
+            out.concat([total]).forEach(function (g) { g.m[m.id] = all ? Math.round(10000 * g.m[m.of] / all) / 100 : null; });
+          });
           var sort = sumSort ? [sumSort] : state.sort.length ? state.sort : ms.length ? [[ms[0].id, "desc"]] : [];
           out.sort(function (a, b) {
             for (var i = 0; i < sort.length; i++) {
@@ -557,7 +564,7 @@
           });
           return { ms: ms, rows: out, total: total };
         }
-        function mfmt(m, v) { return v == null ? "–" : isRatio(m) ? fmt(v, 2) + (m.agg === "ratio_pct" ? "%" : "") : fmt(v); }
+        function mfmt(m, v) { return v == null ? "–" : isRatio(m) ? fmt(v, 2) + (m.agg === "ratio_per" ? "" : "%") : fmt(v); }
         function summaryHTML(t, res) {
           var h = "<table id=\"sum\"><thead><tr>" + state.groupBy.map(function (c) { return '<th data-s="' + c + '">' + esc(label(t, R(t, c))) + "</th>"; }).join("") +
             res.ms.map(function (m) { return '<th class="num" data-s="' + m.id + '">' + esc(m.label) + (m.scope && state.scope === "four" ? " (four)" : "") + "</th>"; }).join("") + "</tr></thead><tbody>";
@@ -604,7 +611,7 @@
         }
 
         // ---------- pivot ----------
-        var AGGS = { count_rows: "count rows", count_distinct: "count distinct", count_where: "count rows where … =", count_where_gt0: "count rows where … > 0", sum: "sum of", ratio_pct: "% (a ÷ b)", ratio_per: "per N (a ÷ b × N)" };
+        var AGGS = { count_rows: "count rows", count_distinct: "count distinct", count_where: "count rows where … =", count_where_gt0: "count rows where … > 0", sum: "sum of", ratio_pct: "% (a ÷ b)", share_of_total_pct: "% of the total of", ratio_per: "per N (a ÷ b × N)" };
         function pivotHTML(t) {
           var gcols = S[t].columns.filter(function (c) { return (c.groupable || ((c.name === "year" || c.name === "filing_year" || c.name === "month") && COL[t][c.name])) && !/_four$/.test(c.name); });
           var ncols = S[t].columns.filter(function (c) { return c.type === "number"; });
@@ -623,12 +630,12 @@
           var agg = document.getElementById("pvAgg"); if (!agg) return;
           var col = document.getElementById("pvCol"), val = document.getElementById("pvVal"), of = document.getElementById("pvOf"), over = document.getElementById("pvOver"), per = document.getElementById("pvPer");
           function sync() {
-            var a = agg.value, ratio = a === "ratio_pct" || a === "ratio_per";
+            var a = agg.value, ratio = a === "ratio_pct" || a === "ratio_per", share = a === "share_of_total_pct";
             var cols = S[t].columns.filter(function (c) { return a === "sum" || a === "count_where_gt0" ? c.type === "number" : a === "count_where" ? c.filterable && c.type === "text" : c.type !== "link"; });
             col.innerHTML = cols.map(function (c) { return '<option value="' + c.name + '"' + (c.name === S[t].key && a === "count_distinct" ? " selected" : "") + ">" + esc(c.label) + "</option>"; }).join("");
-            col.style.display = ratio || a === "count_rows" ? "none" : ""; val.style.display = a === "count_where" ? "" : "none";
+            col.style.display = ratio || share || a === "count_rows" ? "none" : ""; val.style.display = a === "count_where" ? "" : "none";
             var opts = state.measures.filter(function (m) { return !isRatio(m); }).map(function (m) { return '<option value="' + m.id + '">' + esc(m.label) + "</option>"; }).join("");
-            of.innerHTML = opts; over.innerHTML = opts; of.style.display = over.style.display = ratio ? "" : "none"; per.style.display = a === "ratio_per" ? "" : "none";
+            of.innerHTML = opts; over.innerHTML = opts; of.style.display = ratio || share ? "" : "none"; over.style.display = ratio ? "" : "none"; per.style.display = a === "ratio_per" ? "" : "none";
             if (state.measures.length > 1) over.selectedIndex = 0, of.selectedIndex = Math.min(1, state.measures.length - 1);
             syncVals();
           }
@@ -636,7 +643,10 @@
           agg.onchange = sync; col.onchange = syncVals; sync();
           document.getElementById("pvAdd").onclick = function () {
             var a = agg.value, id = "m" + Date.now().toString(36), m = { id: id, agg: a };
-            if (a === "ratio_pct" || a === "ratio_per") {
+            if (a === "share_of_total_pct") {
+              if (!of.value) return;
+              m.of = of.value; m.label = state.measures.filter(function (x) { return x.id === m.of; })[0].label + " as % of the total";
+            } else if (a === "ratio_pct" || a === "ratio_per") {
               if (!of.value || !over.value) return;
               m.of = of.value; m.over = over.value; if (a === "ratio_per") m.per = +per.value || 100;
               var lo = state.measures.filter(function (x) { return x.id === m.of; })[0].label, lv = state.measures.filter(function (x) { return x.id === m.over; })[0].label;
