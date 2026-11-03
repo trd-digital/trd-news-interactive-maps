@@ -9,7 +9,14 @@
     <link rel="canonical" href="https://therealdeal.com/data/south-florida-market-snapshots/" />
     <link rel="preload" href="south-florida-snapshots-commercial.json" as="fetch" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap" />
-    <link rel="stylesheet" href="snapshots/snap.css?v=4" />
+    <link rel="stylesheet" href="snapshots/snap.css?v=5" />
+    <!-- Dashboard card: hide the full-page parts (search, cities, footnote)
+         before the first paint, not only once snap.js runs. -->
+    <script>
+      if (new URLSearchParams(location.search).get("type") === "dashboard" && window.self !== window.top) {
+        document.documentElement.classList.add("sn-dash-pre");
+      }
+    </script>
   </head>
   <body>
     <!-- One page for residential, commercial and all sales; this file opens on
