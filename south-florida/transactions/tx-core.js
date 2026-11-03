@@ -538,22 +538,15 @@
   }
 
   // URL presets let the dashboard / article embeds open a specific view:
-  //   ?property-type=residential|commercial|land (comma list ok)
   //   ?county=miami-dade|broward|palm-beach   ?days=7|14|30
   //   ?min-price=1m|5m|10m|<dollars>   ?max-price=<dollars>
   //   ?financed=financed|cash   ?q=text   ?city=<name>   ?zip=<zip>   ?sale=<id>
   function stateFromUrl(search) {
     var q = new URLSearchParams(search || location.search);
     var s = defaultState();
-    var pt = q.get("property-type");
-    if (pt) {
-      var cats = pt.split(",").map(function (x) {
-        return CATEGORIES.find(function (c) {
-          return c.toLowerCase() === x.trim().toLowerCase();
-        });
-      }).filter(Boolean);
-      if (cats.length) s.categories = cats;
-    }
+    // The TRD dashboard embeds the map with ?property-type=residential; it is
+    // deliberately ignored (as on the construction map), so every property
+    // type shows on load.
     var county = q.get("county");
     if (county) {
       var cs = county.split(",").map(function (x) {
