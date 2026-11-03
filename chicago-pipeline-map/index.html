@@ -478,7 +478,13 @@
           '<span class="l"><span class="badge q">Q1</span> answers that question</span>';
 
         var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { drawEdges(); applySel(); }, 120); });
+        // deep links from the data explorer: ?q=<question id>[&run=four] opens that question's workbook with its answer tab marked; ?node=<id> opens a box
+        var qs = new URLSearchParams(location.search);
+        if (qs.get("run") === "four") state.run = "pinhist_four"; else if (qs.get("run") === "all") state.run = "pinhist";
         syncControls(); layout(); render();
+        var dq = Q[qs.get("q")], dn = qs.get("node");
+        if (dq) { var wid = wbNode(state.run === "pinhist_four" ? dq.workbook_four : dq.workbook_all); if (wid) select(wid, true, dq.answer_tab.split(/[ ,(]/)[0]); }
+        else if (dn && N[dn]) select(dn, true);
       })();
     </script>
   </body>

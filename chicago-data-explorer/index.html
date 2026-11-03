@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Foreclosure Data Explorer</title>
+    <style>
+      :root {
+        --bg: #ffffff; --panel: #f7f8fa; --ink: #14171f; --ink2: #4a5163; --muted: #737a8c; --line: #dfe2e8;
+        --chip: #eef0f4; --accent: #2a78d6; --hl: #fff4c2; --card: #ffffff;
+        --ok: #1a8a5c; --bad: #d23b2e; --four: #eb6834;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #0f1218; --panel: #151a22; --ink: #eef0f4; --ink2: #b7bdca; --muted: #8b92a3; --line: #2a303c;
+          --chip: #1f2530; --accent: #3987e5; --hl: #3a3410; --card: #1a2029;
+          --ok: #2fb47c; --bad: #ff6b5e; --four: #ff7a45;
+          color-scheme: dark;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; }
+      body { background: var(--bg); color: var(--ink); font: 13.5px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+      a { color: var(--accent); }
+      button { font: inherit; }
+      header { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--panel); }
+      h1 { font-size: 16px; margin: 0; }
+      .sub { color: var(--muted); font-size: 12px; margin: 0; }
+      .titles { flex: 1 1 260px; min-width: 0; }
+      form.ask { flex: 2 1 420px; display: flex; gap: 6px; }
+      form.ask input { flex: 1; min-width: 0; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); font: inherit; font-size: 14px; }
+      .btn { background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; white-space: nowrap; }
+      .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+      .btn:disabled { opacity: .5; cursor: default; }
+      .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+      .seg button { border: 0; background: var(--bg); color: var(--ink2); font-size: 12.5px; padding: 6px 10px; cursor: pointer; }
+      .seg button.on { background: var(--ink); color: var(--bg); font-weight: 600; }
+      .seg button.on[data-scope="four"] { background: var(--four); color: #fff; }
+      .checks { padding: 6px 16px; font-size: 12.5px; border-bottom: 1px solid var(--line); }
+      .checks.ok { color: var(--ok); }
+      .checks.bad { background: var(--bad); color: #fff; font-weight: 600; }
+      .checks.pending { color: var(--muted); }
+      .checks details summary { cursor: pointer; }
+      .checks ul { margin: 6px 0 2px; padding-left: 18px; font-weight: 400; }
+      .checks li button { background: none; border: 0; padding: 0; color: inherit; text-decoration: underline; cursor: pointer; }
+      .app { display: grid; grid-template-columns: 270px minmax(0, 1fr); align-items: start; }
+      nav { position: sticky; top: 0; max-height: 100vh; overflow-y: auto; padding: 12px 14px 20px; background: var(--panel); border-right: 1px solid var(--line); }
+      nav h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 14px 0 4px; }
+      nav h2:first-child { margin-top: 0; }
+      nav button.p { display: block; width: 100%; text-align: left; background: none; border: 0; border-radius: 5px; padding: 4px 6px; color: var(--ink); cursor: pointer; font-size: 12.5px; }
+      nav button.p:hover { background: var(--chip); }
+      nav button.p.on { background: var(--ink); color: var(--bg); font-weight: 600; }
+      nav .pivotb { margin-top: 14px; width: 100%; }
+      #presetSel { display: none; width: 100%; padding: 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); font: inherit; }
+      main { padding: 12px 18px 40px; min-width: 0; }
+      .understood { background: var(--chip); border-radius: 6px; padding: 7px 10px; font-size: 12.5px; color: var(--ink2); margin-bottom: 10px; }
+      .understood b { color: var(--ink); }
+      .understood .no { color: var(--muted); }
+      .vh { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+      .vh h2 { font-size: 17px; margin: 0; }
+      .notes { font-size: 12px; color: var(--ink2); margin: 4px 0 10px; }
+      .notes div { margin: 2px 0; }
+      .badge { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 3px; background: var(--chip); color: var(--ink2); }
+      .badge.chk { background: var(--ok); color: #fff; }
+      .badge.unchk { background: var(--muted); color: #fff; }
+      .badge.four { background: var(--four); color: #fff; }
+      .filters { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+      .filters .lbl { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-right: 2px; }
+      .fbtn { background: var(--bg); color: var(--ink2); border: 1px solid var(--line); border-radius: 14px; padding: 3px 10px; cursor: pointer; font-size: 12.5px; max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .fbtn.set { background: var(--accent); border-color: var(--accent); color: #fff; }
+      .fbtn.grp { background: var(--hl); color: var(--ink); border-color: var(--line); }
+      .dates { display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; color: var(--ink2); }
+      .dates input { padding: 3px 5px; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); font: inherit; font-size: 12.5px; }
+      select.more { padding: 3px 6px; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); color: var(--ink2); font: inherit; font-size: 12.5px; max-width: 180px; }
+      .pop { position: absolute; z-index: 30; width: 340px; max-width: calc(100vw - 32px); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.22); padding: 10px; }
+      .pop h4 { margin: 0 0 6px; font-size: 13px; }
+      .pop input[type=search], .pop input[type=number], .pop input[type=date] { width: 100%; padding: 5px 7px; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); font: inherit; }
+      .pop .list { max-height: 280px; overflow-y: auto; margin: 6px 0; }
+      .pop label { display: flex; gap: 6px; align-items: flex-start; padding: 2px 0; font-size: 12.5px; cursor: pointer; }
+      .pop label .n { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; }
+      .pop .row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+      .card { border: 1px solid var(--line); border-radius: 8px; margin-bottom: 14px; background: var(--card); }
+      .card > .hd { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+      .card > .hd h3 { margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); flex: 1; }
+      .tw { overflow-x: auto; }
+      .sumw { max-height: 460px; overflow: auto; }
+      table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+      th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+      th { position: sticky; top: 0; background: var(--panel); font-size: 11.5px; color: var(--ink2); cursor: pointer; white-space: nowrap; z-index: 1; }
+      th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+      tbody tr.g { cursor: pointer; }
+      tbody tr.g:hover { background: var(--chip); }
+      tbody tr.sel { background: var(--hl); }
+      tr.total td { font-weight: 700; border-top: 2px solid var(--ink2); }
+      #raw td { max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      #raw td.wrap { white-space: normal; min-width: 180px; }
+      .pager { display: flex; align-items: center; gap: 8px; padding: 8px 10px; font-size: 12.5px; color: var(--ink2); }
+      .m { color: var(--muted); font-size: 12px; }
+      .pivot { border: 1px dashed var(--accent); border-radius: 8px; padding: 10px; margin-bottom: 12px; }
+      .pivot .r { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 4px 0; }
+      .pivot .r > b { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); min-width: 74px; }
+      .pivot select, .pivot input { padding: 4px 6px; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); font: inherit; font-size: 12.5px; max-width: 240px; }
+      .tag { display: inline-flex; align-items: center; gap: 4px; background: var(--chip); border-radius: 12px; padding: 2px 4px 2px 9px; font-size: 12px; }
+      .tag button { background: none; border: 0; color: var(--muted); cursor: pointer; padding: 0 4px; }
+      .src { font-size: 12px; color: var(--ink2); }
+      .src li { margin: 4px 0; }
+      .src code { font-size: 11.5px; }
+      footer { padding: 0 18px 30px; }
+      .loading { color: var(--muted); padding: 20px 10px; }
+      @media (max-width: 900px) {
+        .app { grid-template-columns: 1fr; }
+        nav { position: static; max-height: none; border-right: 0; border-bottom: 1px solid var(--line); }
+        nav .plist { display: none; }
+        #presetSel { display: block; }
+        main { padding: 10px 12px 30px; }
+        form.ask { flex-basis: 100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="titles">
+        <h1>Foreclosure data explorer: the 7+ pool</h1>
+        <p class="sub" id="sub">Loading…</p>
+      </div>
+      <form class="ask" id="ask" autocomplete="off">
+        <input type="search" id="q" placeholder="Ask, e.g. “Rotenberg filings 2024 to 2025”, “violations in Lake”, “lenders by year”" />
+        <button class="btn primary" type="submit">Show</button>
+      </form>
+      <span class="seg" id="scopeSeg" title="Party scope"><button data-scope="all" class="on">All 16 parties</button><button data-scope="four">Four parties</button></span>
+    </header>
+    <div class="checks pending" id="checks">Checking the published totals against the rows…</div>
+    <div class="app">
+      <nav>
+        <select id="presetSel"></select>
+        <div class="plist" id="plist"></div>
+        <button class="btn pivotb" id="pivotBtn">Build your own table (pivot)</button>
+      </nav>
+      <main id="main"><div class="loading">Loading the filings…</div></main>
+    </div>
+    <footer id="footer"></footer>
+    <div class="pop" id="pop" hidden></div>
+
+    <script src="meta.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        var X = window.EXPLORER, S = X.schema.tables, PRESETS = X.presets.presets, VOCAB = X.vocab;
+        var PMAP = "https://trd-digital.github.io/trd-news-interactive-maps/chicago-pipeline-map/";
+        var P = {}; PRESETS.forEach(function (p) { P[p.id] = p; });
+        var COL = {}; Object.keys(S).forEach(function (t) { COL[t] = {}; S[t].columns.forEach(function (c) { COL[t][c.name] = c; }); });
+        var TABLES = {}, LOADING = {};
+        // filters shown as buttons when the table has them; the rest sit under "More filters"
+        var PRIMARY = ["township", "community_area", "units_group", "assessor_class", "tagged", "tagged_party", "party", "building_tag", "institution", "lender_type",
+          "plaintiff", "status", "pool_status", "foreclosure_kind", "factcheck_verdict", "originator", "foreclosing_lender", "lender", "seller_class",
+          "violation_status", "department_bureau", "relation", "kind", "connected_to_party"];
+        // columns whose values the question box looks for in the typed text (names, places, parties, lenders)
+        var ASKABLE = ["township", "community_area", "tagged_party", "party", "building_tag", "institution", "plaintiff", "lender_type", "foreclosure_kind",
+          "originator", "foreclosing_lender", "lender", "department_bureau", "connected_to_party"];
+        var state = defaultState("q1_share");
+        state.scope = "all";
+        var understood = null, rawPage = 0, rawSort = null, sumSort = null;
+
+        function defaultState(pid) {
+          var p = P[pid];
+          return { mode: "preset", preset: pid, table: p.table, filters: JSON.parse(JSON.stringify(p.filters || {})), from: "", to: "",
+            groupBy: p.group_by.slice(), measures: JSON.parse(JSON.stringify(p.measures)), columns: p.columns.slice(), sort: p.sort.slice(), group: null, scope: state ? state.scope : "all" };
+        }
+
+        // ---------- helpers ----------
+        function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+        function num(v) { if (v === "" || v == null) return null; var n = +String(v).replace(/[$,]/g, ""); return isNaN(n) ? null : n; }
+        function fmt(v, dec) { if (v == null || v === "") return ""; if (typeof v !== "number") return v; return dec ? v.toLocaleString("en-US", { minimumFractionDigits: dec, maximumFractionDigits: dec }) : v.toLocaleString("en-US"); }
+        function label(t, c) { var x = COL[t][c]; return x ? x.label || c : c; }
+        // the party scope: under "four parties" every scope column reads its four-party twin
+        function R(t, c) { return state.scope === "four" && S[t].scope_columns[c] ? S[t].scope_columns[c] : c; }
+        function wbName(s) { return String(s || "").replace(/_\*\.xlsx/g, state.scope === "four" ? "_pinhist_four.xlsx" : "_pinhist.xlsx"); }
+        function yearCol(t) { return COL[t].year ? "year" : COL[t].filing_year ? "filing_year" : null; }
+        function linkLabel(c) { return /pdf/.test(c) ? "PDF" : /detail|document/.test(c) ? "Document page" : "Clerk search"; }
+
+        function load(t) {
+          if (TABLES[t]) return Promise.resolve(TABLES[t]);
+          if (LOADING[t]) return LOADING[t];
+          LOADING[t] = fetch("data/" + t + ".json").then(function (r) { if (!r.ok) throw new Error(t + ": HTTP " + r.status); return r.json(); }).then(function (d) {
+            var ci = {}; d.columns.forEach(function (c, i) { ci[c] = i; });
+            var rows = d.data.map(function (r) { return r.map(function (v) { return v == null ? "" : String(v); }); });
+            TABLES[t] = { cols: d.columns, ci: ci, rows: rows };
+            return TABLES[t];
+          });
+          return LOADING[t];
+        }
+        function getter(T, c) { var i = T.ci[c]; return i == null ? function () { return ""; } : function (r) { return r[i]; }; }
+
+        // ---------- filtering and measures ----------
+        function scopeRows(t, T) {
+          if (state.scope !== "four" || T.ci.in_four_party_scope == null) return T.rows;
+          var g = getter(T, "in_four_party_scope");
+          return T.rows.filter(function (r) { return g(r) === "Yes"; });
+        }
+        function passes(t, T, skip) {
+          var tests = [];
+          Object.keys(state.filters).forEach(function (c) {
+            if (c === skip) return;
+            var f = state.filters[c], g = getter(T, R(t, c));
+            if (Array.isArray(f)) { if (!f.length) return; var set = {}; f.forEach(function (v) { set[String(v)] = 1; }); tests.push(function (r) { return set[g(r)] === 1; }); }
+            else if (f && (f.min !== "" && f.min != null || f.max !== "" && f.max != null)) {
+              tests.push(function (r) { var v = num(g(r)); return v != null && (f.min === "" || f.min == null || v >= +f.min) && (f.max === "" || f.max == null || v <= +f.max); });
+            }
+          });
+          var dc = S[t].date_column;
+          if (dc && skip !== "__date" && (state.from || state.to)) {
+            var gd = getter(T, dc);
+            tests.push(function (r) { var d = gd(r); return d && (!state.from || d >= state.from) && (!state.to || d <= state.to); });
+          }
+          return function (r) { for (var i = 0; i < tests.length; i++) if (!tests[i](r)) return false; return true; };
+        }
+        function filtered(t, T, skip) { var ok = passes(t, T, skip); return scopeRows(t, T).filter(ok); }
+
+        function measureVals(t, T, rows, ms) {
+          var out = {};
+          ms.forEach(function (m) {
+            var v = null;
+            if (m.agg === "count_distinct") { var g = getter(T, R(t, m.column)), s = new Set(); rows.forEach(function (r) { var x = g(r); if (x !== "") s.add(x); }); v = s.size; }
+            else if (m.agg === "count_distinct_where") {
+              var g2 = getter(T, R(t, m.column)), conds = Object.keys(m.where).map(function (c) { return [getter(T, R(t, c)), String(m.where[c])]; }), s2 = new Set();
+              rows.forEach(function (r) { if (conds.every(function (cd) { return cd[0](r) === cd[1]; })) { var x = g2(r); if (x !== "") s2.add(x); } }); v = s2.size;
+            }
+            else if (m.agg === "count_rows") v = rows.length;
+            else if (m.agg === "count_where") { var g3 = getter(T, R(t, m.column)), w = String(m.where); v = rows.filter(function (r) { return g3(r) === w; }).length; }
+            else if (m.agg === "count_where_gt0") { var g4 = getter(T, R(t, m.column)); v = rows.filter(function (r) { var x = num(g4(r)); return x != null && x > 0; }).length; }
+            else if (m.agg === "sum") { var g5 = getter(T, R(t, m.column)); v = 0; rows.forEach(function (r) { var x = num(g5(r)); if (x != null) v += x; }); v = Math.round(v * 100) / 100; }
+            else if (m.agg === "count_distinct_two") { var s3 = new Set(); m.columns.forEach(function (c) { var g6 = getter(T, R(t, c)); rows.forEach(function (r) { var x = g6(r); if (x !== "") s3.add(x); }); }); v = s3.size; }
+            out[m.id] = v;
+          });
+          ms.forEach(function (m) {
+            if (m.agg === "ratio_pct") out[m.id] = out[m.over] ? Math.round(10000 * out[m.of] / out[m.over]) / 100 : null;
+            if (m.agg === "ratio_per") out[m.id] = out[m.over] ? Math.round(100 * out[m.of] / out[m.over] * m.per) / 100 : null;
+          });
+          return out;
+        }
+        function isRatio(m) { return m.agg === "ratio_pct" || m.agg === "ratio_per"; }
+
+        // ---------- published totals: recomputed from the rows on load ----------
+        var CHECK_FNS = {
+          filings: function (c, T, rows) { var k = c.table === "filings" ? S[c.table].key : "filing_doc_number"; return distinct(T, rows, k); },
+          tagged: function (c, T, rows) { return distinct(T, rows.filter(eq(T, tagCol(c), "Yes")), S[c.table].key); },
+          share: function (c, T, rows) { var a = distinct(T, rows.filter(eq(T, tagCol(c), "Yes")), S[c.table].key), b = distinct(T, rows, S[c.table].key); return Math.round(10000 * a / b) / 100; },
+          institutions: function (c, T, rows) { return distinct(T, rows, "institution"); },
+          top: function (c, T, rows, want) { var o = {}; Object.keys(want).forEach(function (i) { o[i] = distinct(T, rows.filter(eq(T, "institution", i)), S[c.table].key); }); return o; },
+          buildings: function (c, T, rows) { return distinct(T, rows, "keypin"); },
+          violations: function (c, T, rows) { var g = getter(T, "violations_2018plus"), s = 0; rows.forEach(function (r) { s += num(g(r)) || 0; }); return s; },
+          rows: function (c, T, rows) { return rows.length; },
+          edges: function (c, T, rows) { return rows.length; },
+          edges_four: function (c, T, rows) { return rows.filter(eq(T, "in_four_party_scope", "Yes")).length; }
+        };
+        function tagCol(c) { return c.scope === "four parties" ? (S[c.table].scope_columns.tagged || "tagged") : "tagged"; }
+        function eq(T, c, v) { var g = getter(T, c); return function (r) { return g(r) === v; }; }
+        function distinct(T, rows, c) { var g = getter(T, c), s = new Set(); rows.forEach(function (r) { var x = g(r); if (x !== "") s.add(x); }); return s.size; }
+        var checkResults = [];
+        function runChecks() {
+          var tabs = Array.from(new Set(X.checks.checks.map(function (c) { return c.table; })));
+          return Promise.all(tabs.map(load)).then(function () {
+            checkResults = X.checks.checks.map(function (c) {
+              var T = TABLES[c.table], rows = T.rows.filter(function (r) {
+                return Object.keys(c.filters).every(function (k) { var g = getter(T, k); return c.filters[k].map(String).indexOf(g(r)) >= 0; });
+              });
+              var got = {}, ok = true;
+              Object.keys(c.expect).forEach(function (k) {
+                var fn = CHECK_FNS[k], w = c.expect[k];
+                if (!fn) { got[k] = "no computation"; ok = false; return; }
+                got[k] = fn(c, T, rows, w);
+                if (JSON.stringify(got[k]) !== JSON.stringify(w)) ok = false;
+              });
+              return { c: c, ok: ok, got: got };
+            });
+            renderChecks();
+          }).catch(function (e) {
+            var el = document.getElementById("checks"); el.className = "checks bad"; el.textContent = "Could not run the checks: " + e.message;
+          });
+        }
+        function renderChecks() {
+          var el = document.getElementById("checks"), bad = checkResults.filter(function (r) { return !r.ok; });
+          el.className = "checks " + (bad.length ? "bad" : "ok");
+          var items = checkResults.map(function (r, i) {
+            return "<li>" + (r.ok ? "✓ " : "✗ DIFFERS: ") + '<button data-chk="' + i + '">' + esc(r.c.source) + "</button>" + (r.c.scope ? " (" + esc(r.c.scope) + ")" : "") +
+              (r.ok ? "" : " · page computes " + esc(JSON.stringify(r.got)) + ", published " + esc(JSON.stringify(r.c.expect))) + "</li>";
+          }).join("");
+          el.innerHTML = "<details" + (bad.length ? " open" : "") + "><summary>" + (bad.length
+            ? "Warning: " + bad.length + " of " + checkResults.length + " published totals do not add up from the rows on this page. Do not use these figures until the data is rebuilt."
+            : "✓ All " + checkResults.length + " published totals add up from the rows on this page (click to see them)") + "</summary><ul>" + items + "</ul></details>";
+        }
+        var CHECK_VIEW = { filings: "q1_share", buildings: "p2e_violations", loans: "p2f_originators", network_edges: "p2g_network" };
+        document.getElementById("checks").addEventListener("click", function (ev) {
+          var b = ev.target.closest("button[data-chk]"); if (!b) return;
+          var c = checkResults[+b.getAttribute("data-chk")].c, pid = c.id.indexOf("q2") === 0 ? "q2_lenders" : CHECK_VIEW[c.table];
+          var sc = c.scope === "four parties" ? "four" : "all";
+          state.scope = sc; state = defaultState(pid); state.scope = sc;
+          Object.keys(c.filters).forEach(function (k) {
+            // a check written against a twin column (tagged_four) is a filter on the base column under the four-party scope
+            var base = k; Object.keys(S[c.table].scope_columns).forEach(function (b2) { if (S[c.table].scope_columns[b2] === k) base = b2; });
+            state.filters[base] = c.filters[k].map(String);
+          });
+          understood = { text: "Published total: " + c.source, parts: [] };
+          go();
+        });
+
+        // ---------- the question box (deterministic; no figure is ever taken from the text) ----------
+        var STOP = { the: 1, and: 1, for: 1, with: 1, how: 1, many: 1, much: 1, what: 1, which: 1, were: 1, was: 1, are: 1, from: 1, that: 1, this: 1, show: 1, me: 1, of: 1, in: 1, on: 1, to: 1, by: 1, a: 1, an: 1, did: 1, does: 1, all: 1, per: 1, between: 1, since: 1, after: 1, before: 1, through: 1, list: 1, who: 1, filed: 1, number: 1 };
+        function wordRe(p) { return new RegExp("(^|[^a-z0-9])" + p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?=$|[^a-z0-9])", "i"); }
+        // a preset keyword also matches with any of its words in the plural ("lenders by year" for "lender by year")
+        function kwRe(k) {
+          return new RegExp("(^|[^a-z0-9])" + k.toLowerCase().split(/\s+/).map(function (w) { return w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + (/[a-z]$/.test(w) ? "s?" : ""); }).join("\\s+") + "(?=$|[^a-z0-9])", "i");
+        }
+        function parseQuestion(text) {
+          var t = " " + text.toLowerCase().replace(/[’']/g, "'") + " ", used = [], parts = [], filters = {}, years = null, scope = null, groupBy = null;
+          function mark(a, b) { used.push([a, b]); }
+          function free(a, b) { return used.every(function (u) { return b <= u[0] || a >= u[1]; }); }
+          // party scope words
+          var ms = t.match(/four[- ]part(y|ies)|four parties|the four|d-21/); if (ms) { scope = "four"; mark(ms.index, ms.index + ms[0].length); }
+          var ma = t.match(/all (16 )?parties|16 parties|sixteen parties|d-27/); if (ma) { scope = "all"; mark(ma.index, ma.index + ma[0].length); }
+          // years and year ranges
+          var rg = t.match(/(20(?:1[89]|2[0-6]))\s*(?:to|-|–|through|thru|and|until)\s*(20(?:1[89]|2[0-6]))/);
+          var since = t.match(/(since|after|from)\s+(20(?:1[89]|2[0-6]))/), before = t.match(/before\s+(20(?:1[89]|2[0-6]))/);
+          function span(a, b) { var o = []; for (var y = a; y <= b; y++) o.push(String(y)); return o; }
+          if (rg) { years = span(Math.min(+rg[1], +rg[2]), Math.max(+rg[1], +rg[2])); mark(rg.index, rg.index + rg[0].length); }
+          else if (since) { years = span(+since[2] + (since[1] === "after" ? 1 : 0), 2026); mark(since.index, since.index + since[0].length); }
+          else if (before) { years = span(2018, +before[1] - 1); mark(before.index, before.index + before[0].length); }
+          else { var yy = t.match(/20(?:1[89]|2[0-6])/g); if (yy) { years = Array.from(new Set(yy)).sort(); var re = /20(?:1[89]|2[0-6])/g, m; while ((m = re.exec(t))) mark(m.index, m.index + 4); } }
+          // values of name-like columns, longest first
+          var cands = [];
+          Object.keys(VOCAB).forEach(function (tb) {
+            Object.keys(VOCAB[tb]).forEach(function (c) {
+              if (ASKABLE.indexOf(c) < 0) return;
+              VOCAB[tb][c].forEach(function (v) {
+                v.split(/\s*(?:\||;| \/ )\s*/).forEach(function (part) {
+                  var p = part.trim().toLowerCase();
+                  if (p.length < 4 && !/^[a-z]{2,3}$/.test(p) || /^\d+$/.test(p) || p.length < 3) return;
+                  cands.push({ p: p, table: tb, col: c, value: v });
+                });
+              });
+            });
+          });
+          cands.sort(function (a, b) { return b.p.length - a.p.length; });
+          var hits = {};
+          cands.forEach(function (cd) {
+            var m = wordRe(cd.p).exec(t); if (!m) return;
+            var a = m.index + m[1].length, b = a + cd.p.length;
+            var key = cd.p;
+            if (!hits[key]) { if (!free(a, b)) return; hits[key] = { p: cd.p, a: a, b: b, cols: {} }; }
+            var h = hits[key], k2 = cd.table + "." + cd.col;
+            (h.cols[k2] = h.cols[k2] || { table: cd.table, col: cd.col, values: [] }).values.push(cd.value);
+          });
+          Object.keys(hits).forEach(function (k) { mark(hits[k].a, hits[k].b); });
+          // presets: keyword and label phrases
+          var best = null, bestScore = 0;
+          PRESETS.forEach(function (p) {
+            var sc = 0;
+            p.keywords.forEach(function (k) {
+              if (/^\d+$/.test(k)) return;
+              // the longest keyword that matches counts, so one specific phrase beats several short ones
+              var m = kwRe(k).exec(t); if (m) { sc = Math.max(sc, 2 + k.length); }
+            });
+            p.label.toLowerCase().split(/[^a-z0-9]+/).forEach(function (w) { if (w.length >= 5 && !STOP[w] && wordRe(w).test(t)) sc += 1; });
+            // a preset on a table that holds the matched columns wins ties
+            Object.keys(hits).forEach(function (k) { Object.keys(hits[k].cols).forEach(function (k2) { if (hits[k].cols[k2].table === p.table) sc += 0.5; }); });
+            if (sc > bestScore) { bestScore = sc; best = p; }
+          });
+          var kwHit = best && best.keywords.some(function (k) { return !/^\d+$/.test(k) && kwRe(k).test(t); });
+          if (!kwHit) best = P.q1_share;
+          var pt = best.table;
+          if (best.keywords) best.keywords.forEach(function (k) { if (/^\d+$/.test(k)) return; var m = kwRe(k).exec(t); if (m) mark(m.index + m[1].length, m.index + m[0].length); });
+          // "by <column>" sets the grouping
+          var byM = t.match(/\bby ([a-z][a-z \-]+)/);
+          if (byM) {
+            var after = byM[1], bestCol = null, bestLen = 0;
+            S[pt].columns.forEach(function (c) {
+              if (!(c.groupable || c.name === "year" || c.name === "month" || c.name === "filing_year")) return;
+              [c.label.toLowerCase(), c.name.replace(/_/g, " ")].forEach(function (lab) {
+                var first = lab.split(" (")[0];
+                if (after.indexOf(first) === 0 && first.length > bestLen) { bestCol = c.name; bestLen = first.length; }
+              });
+            });
+            if (bestCol) { groupBy = [bestCol]; mark(byM.index, byM.index + 3 + bestLen); }
+          }
+          // filters: only columns the chosen table has
+          var ignored = [];
+          Object.keys(hits).forEach(function (k) {
+            var h = hits[k], here = Object.keys(h.cols).map(function (k2) { return h.cols[k2]; }).filter(function (x) { return x.table === pt; });
+            if (!here.length) { ignored.push("“" + h.p + "” (not a value in this table)"); return; }
+            // one column per phrase: the party / place column before free-text ones
+            here.sort(function (a, b) { return ASKABLE.indexOf(a.col) - ASKABLE.indexOf(b.col); });
+            var x = here[0], vals = Array.from(new Set(x.values));
+            filters[x.col] = Array.from(new Set((filters[x.col] || []).concat(vals)));
+            parts.push(label(pt, x.col) + " = " + vals.join(" or "));
+          });
+          var yc = yearCol(pt), from = "", to = "";
+          if (years) {
+            if (yc) { filters[yc] = years; parts.push("year " + (years.length > 1 ? years[0] + "–" + years[years.length - 1] : years[0])); }
+            else if (S[pt].date_column) { from = years[0] + "-01-01"; to = years[years.length - 1] + "-12-31"; parts.push(label(pt, S[pt].date_column) + " " + years[0] + "–" + years[years.length - 1]); }
+            else ignored.push("the years (this table has no date)");
+          }
+          var leftover = [];
+          var wre = /[a-z0-9][a-z0-9'\-]*/g, wm;
+          while ((wm = wre.exec(t))) { if (free(wm.index, wm.index + wm[0].length) && wm[0].length >= 4 && !STOP[wm[0]]) leftover.push(wm[0]); }
+          return { preset: best.id, kwHit: kwHit, filters: filters, from: from, to: to, groupBy: groupBy, scope: scope, parts: parts, ignored: ignored, leftover: leftover };
+        }
+        document.getElementById("ask").addEventListener("submit", function (ev) {
+          ev.preventDefault();
+          var text = document.getElementById("q").value.trim(); if (!text) return;
+          var r = parseQuestion(text);
+          if (r.scope) state.scope = r.scope;
+          var sc = state.scope; state = defaultState(r.preset); state.scope = sc;
+          Object.keys(r.filters).forEach(function (c) { state.filters[c] = r.filters[c]; });
+          state.from = r.from; state.to = r.to;
+          // "by <column>" adds that column in front of the view's own grouping ("lenders by year" = year, then lender)
+          if (r.groupBy && state.groupBy.indexOf(r.groupBy[0]) < 0) {
+            state.groupBy = r.groupBy.concat(state.groupBy);
+            if (/year|month/.test(r.groupBy[0])) state.sort = [[r.groupBy[0], "asc"]].concat(state.sort.filter(function (x) { return x[0] !== r.groupBy[0]; }));
+          }
+          understood = { text: text, r: r };
+          go();
+        });
+
+        // ---------- rendering ----------
+        var mainEl = document.getElementById("main");
+        function presetGroups() {
+          var g = { "Q1: share on tagged buildings": [], "Q2: lenders and borrowers": [], "Part 2": [], "Checks": [] };
+          PRESETS.forEach(function (p) {
+            var k = /^q1/.test(p.id) ? "Q1: share on tagged buildings" : /^q2/.test(p.id) ? "Q2: lenders and borrowers" : /^p2/.test(p.id) ? "Part 2" : "Checks";
+            g[k].push(p);
+          });
+          return g;
+        }
+        function renderNav() {
+          var g = presetGroups(), h = "", o = "";
+          Object.keys(g).forEach(function (k) {
+            h += "<h2>" + esc(k) + "</h2>" + g[k].map(function (p) {
+              return '<button class="p' + (state.mode === "preset" && state.preset === p.id ? " on" : "") + '" data-p="' + p.id + '">' + esc(p.label) + "</button>";
+            }).join("");
+            o += '<optgroup label="' + esc(k) + '">' + g[k].map(function (p) { return '<option value="' + p.id + '"' + (state.preset === p.id ? " selected" : "") + ">" + esc(p.label) + "</option>"; }).join("") + "</optgroup>";
+          });
+          document.getElementById("plist").innerHTML = h;
+          document.getElementById("presetSel").innerHTML = (state.mode === "pivot" ? '<option value="">Your own table</option>' : "") + o;
+          document.getElementById("pivotBtn").textContent = state.mode === "pivot" ? "Back to the ready-made view" : "Build your own table (pivot)";
+        }
+        function openPreset(pid) { var sc = state.scope; state = defaultState(pid); state.scope = sc; understood = null; go(); }
+        document.getElementById("plist").addEventListener("click", function (ev) { var b = ev.target.closest("button[data-p]"); if (b) openPreset(b.getAttribute("data-p")); });
+        document.getElementById("presetSel").addEventListener("change", function (ev) { if (ev.target.value) openPreset(ev.target.value); });
+        document.getElementById("pivotBtn").addEventListener("click", function () {
+          if (state.mode === "pivot") { openPreset(state.preset || "q1_share"); return; }
+          state.mode = "pivot"; go();
+        });
+        document.getElementById("scopeSeg").addEventListener("click", function (ev) {
+          var b = ev.target.closest("button[data-scope]"); if (!b) return; state.scope = b.getAttribute("data-scope"); state.group = null; go();
+        });
+
+        function go() {
+          rawPage = 0; rawSort = null; sumSort = null;
+          document.querySelectorAll("#scopeSeg button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-scope") === state.scope); });
+          renderNav(); saveHash();
+          if (!TABLES[state.table]) { mainEl.innerHTML = '<div class="loading">Loading ' + esc(state.table) + "…</div>"; load(state.table).then(render).catch(function (e) { mainEl.innerHTML = '<div class="loading">Could not load ' + esc(state.table) + ": " + esc(e.message) + "</div>"; }); return; }
+          render();
+        }
+
+        function understoodHTML() {
+          if (!understood) return "";
+          if (!understood.r) return '<div class="understood">' + esc(understood.text) + "</div>";
+          var r = understood.r, p = P[r.preset];
+          return '<div class="understood">You asked: <b>“' + esc(understood.text) + "”</b>. Opened <b>" + esc(p.label) + "</b>" +
+            (r.kwHit ? "" : " (no topic word matched, so the headline view)") +
+            (r.parts.length ? ", with " + esc(r.parts.join("; ")) : "") + (r.groupBy ? ", grouped by " + esc(label(p.table, r.groupBy[0])) : "") +
+            (r.scope ? ", party scope: " + (r.scope === "four" ? "four parties" : "all 16 parties") : "") + "." +
+            (r.ignored.length ? ' <span class="no">Not applied: ' + esc(r.ignored.join(", ")) + ".</span>" : "") +
+            (r.leftover.length ? ' <span class="no">Words not used: ' + esc(r.leftover.join(", ")) + ".</span>" : "") +
+            ' <span class="no">The figures below come from the rows, never from the text.</span></div>';
+        }
+
+        function render() {
+          var t = state.table, T = TABLES[t], p = P[state.preset];
+          var rows = filtered(t, T);
+          var h = understoodHTML();
+          var checked = p && state.mode === "preset" ? p.checked : "";
+          h += '<div class="vh"><h2>' + esc(state.mode === "pivot" ? "Your own table: " + t.replace(/_/g, " ") : p.label) + "</h2>" +
+            (state.scope === "four" ? '<span class="badge four">four parties (D-21)</span>' : '<span class="badge">all 16 parties (D-27)</span>') + "</div>";
+          h += '<div class="notes">';
+          if (state.mode === "preset") {
+            h += "<div>" + (checked ? '<span class="badge ' + (/^checked/.test(checked) ? "chk" : "unchk") + '">' + esc(checked.split(":")[0]) + "</span> " + esc(checked.split(":").slice(1).join(":").trim()) : '<span class="badge">no fact-check label</span>') + "</div>" +
+              "<div>Check it in: <b>" + esc(wbName(p.source_tab)) + "</b>" + (p.question_id ? ' · <a href="' + PMAP + "?q=" + encodeURIComponent(p.question_id) + (state.scope === "four" ? "&run=four" : "") + '" target="_blank" rel="noopener">' + esc(p.question_id) + " on the pipeline map</a>" : "") + "</div>" +
+              (p.note ? '<div class="m">' + esc(p.note) + "</div>" : "");
+          } else {
+            h += '<div class="m">Built here from the rows; not a published figure. Table sources: ' + esc(S[t].sources.join("; ")) + "</div>";
+          }
+          h += "</div>";
+          if (state.mode === "pivot") h += pivotHTML(t);
+          h += filtersHTML(t, T);
+          // summary
+          var res = summarise(t, T, rows);
+          h += '<div class="card"><div class="hd"><h3>Summary · ' + rows.length.toLocaleString() + " rows pass the filters</h3>" +
+            '<button class="btn" id="dlSum">Download summary (CSV)</button></div><div class="tw sumw">' + summaryHTML(t, res) + "</div></div>";
+          // raw rows
+          var rr = state.group ? rows.filter(groupTest(t, T, state.group)) : rows;
+          h += '<div class="card"><div class="hd"><h3>Raw rows' + (state.group ? " in the selected group" : "") + " · " + rr.length.toLocaleString() + "</h3>" +
+            (state.group ? '<button class="btn" id="clrGroup">Show every row</button>' : '<span class="m">Click a summary row to see only its rows.</span>') +
+            '<button class="btn" id="dlRaw">Download these rows (CSV, all columns)</button></div><div class="tw" id="raw">' + rawHTML(t, T, rr) + "</div></div>";
+          mainEl.innerHTML = h;
+          wire(t, T, rows, rr, res);
+          document.getElementById("sub").textContent = "Data built " + X.meta.built + " · " + PRESETS.length + " ready-made views · every figure is computed from the rows shown";
+        }
+
+        function filtersHTML(t, T) {
+          var h = '<div class="filters"><span class="lbl">Filters</span>';
+          var dc = S[t].date_column;
+          if (dc) h += '<span class="dates">' + esc(label(t, dc)) + ' <input type="date" id="dFrom" value="' + esc(state.from) + '"> to <input type="date" id="dTo" value="' + esc(state.to) + '"></span>';
+          var yc = yearCol(t);
+          var fcols = S[t].columns.filter(function (c) { return c.filterable && !/_four$/.test(c.name) && c.name !== "in_four_party_scope"; });
+          var prim = fcols.filter(function (c) { return c.name === yc || PRIMARY.indexOf(c.name) >= 0; }).sort(function (a, b) { return (a.name === yc ? -1 : PRIMARY.indexOf(a.name)) - (b.name === yc ? -1 : PRIMARY.indexOf(b.name)); });
+          var shown = {};
+          prim.concat(Object.keys(state.filters).filter(function (c) { return COL[t][c] && prim.every(function (x) { return x.name !== c; }); }).map(function (c) { return COL[t][c]; })).forEach(function (c) {
+            shown[c.name] = 1; h += filterBtn(t, c);
+          });
+          var rest = fcols.filter(function (c) { return !shown[c.name] && c.type !== "date"; });
+          if (rest.length) h += '<select class="more" id="moreF"><option value="">More filters…</option>' + rest.map(function (c) { return '<option value="' + c.name + '">' + esc(c.label) + "</option>"; }).join("") + "</select>";
+          var any = Object.keys(state.filters).some(function (c) { var f = state.filters[c]; return Array.isArray(f) ? f.length : f && (f.min !== "" || f.max !== ""); }) || state.from || state.to;
+          if (any) h += '<button class="btn" id="clrF">Clear filters</button>';
+          return h + "</div>";
+        }
+        function filterBtn(t, c) {
+          var f = state.filters[c.name], txt = "any", set = false;
+          if (Array.isArray(f) && f.length) { set = true; txt = f.length === 1 ? f[0] : f.length + " chosen"; }
+          else if (f && (f.min !== "" || f.max !== "")) { set = true; txt = (f.min !== "" ? f.min : "…") + " to " + (f.max !== "" ? f.max : "…"); }
+          var sc = S[t].scope_columns[c.name] && state.scope === "four" ? " (four)" : "";
+          return '<button class="fbtn' + (set ? " set" : "") + '" data-f="' + c.name + '" title="' + esc(c.label + ": " + txt) + '">' + esc(c.label.split(" (")[0]) + sc + ": " + esc(txt) + " ▾</button>";
+        }
+
+        function summarise(t, T, rows) {
+          var gb = state.groupBy.map(function (c) { return R(t, c); }), gs = gb.map(function (c) { return getter(T, c); });
+          var groups = {}, order = [];
+          if (gb.length) rows.forEach(function (r) {
+            var k = gs.map(function (g) { return g(r); }).join("\u0001");
+            if (!groups[k]) { groups[k] = []; order.push(k); } groups[k].push(r);
+          });
+          var ms = state.measures.length ? state.measures : [{ id: "rows", label: "rows", agg: "count_distinct", column: S[t].key }];
+          var out = order.map(function (k) { return { key: k, vals: k.split("\u0001"), m: measureVals(t, T, groups[k], ms) }; });
+          var total = { key: null, vals: [], m: measureVals(t, T, rows, ms) };
+          var sort = sumSort ? [sumSort] : state.sort.length ? state.sort : ms.length ? [[ms[0].id, "desc"]] : [];
+          out.sort(function (a, b) {
+            for (var i = 0; i < sort.length; i++) {
+              var c = sort[i][0], d = sort[i][1] === "asc" ? 1 : -1, gi = state.groupBy.indexOf(c), x, y;
+              if (gi >= 0) { x = a.vals[gi]; y = b.vals[gi]; var nx = num(x), ny = num(y); if (nx != null && ny != null) { x = nx; y = ny; } }
+              else { x = a.m[c]; y = b.m[c]; }
+              if (x == null) x = -Infinity; if (y == null) y = -Infinity;
+              if (x < y) return -d; if (x > y) return d;
+            }
+            return 0;
+          });
+          return { ms: ms, rows: out, total: total };
+        }
+        function mfmt(m, v) { return v == null ? "–" : isRatio(m) ? fmt(v, 2) + (m.agg === "ratio_pct" ? "%" : "") : fmt(v); }
+        function summaryHTML(t, res) {
+          var h = "<table id=\"sum\"><thead><tr>" + state.groupBy.map(function (c) { return '<th data-s="' + c + '">' + esc(label(t, R(t, c))) + "</th>"; }).join("") +
+            res.ms.map(function (m) { return '<th class="num" data-s="' + m.id + '">' + esc(m.label) + (m.scope && state.scope === "four" ? " (four)" : "") + "</th>"; }).join("") + "</tr></thead><tbody>";
+          res.rows.forEach(function (r, i) {
+            var sel = state.group && state.group.join("\u0001") === r.key;
+            h += '<tr class="g' + (sel ? " sel" : "") + '" data-g="' + i + '">' + r.vals.map(function (v) { return "<td>" + (v === "" ? '<span class="m">(blank)</span>' : esc(v)) + "</td>"; }).join("") +
+              res.ms.map(function (m) { return '<td class="num">' + mfmt(m, r.m[m.id]) + "</td>"; }).join("") + "</tr>";
+          });
+          h += '<tr class="total">' + (state.groupBy.length ? '<td colspan="' + state.groupBy.length + '">All rows that pass the filters</td>' : "") +
+            res.ms.map(function (m) { return '<td class="num">' + mfmt(m, res.total.m[m.id]) + "</td>"; }).join("") + "</tr>";
+          return h + "</tbody></table>";
+        }
+        function groupTest(t, T, vals) {
+          var gs = state.groupBy.map(function (c) { return getter(T, R(t, c)); });
+          return function (r) { return gs.every(function (g, i) { return g(r) === vals[i]; }); };
+        }
+        function rawCols(t) {
+          var cols = state.columns.length ? state.columns : S[t].columns.map(function (c) { return c.name; });
+          return cols.map(function (c) { return R(t, c); }).filter(function (c, i, a) { return COL[t][c] && a.indexOf(c) === i; });
+        }
+        var PAGE = 100;
+        function rawHTML(t, T, rows) {
+          var cols = rawCols(t);
+          if (rawSort) {
+            var g = getter(T, rawSort[0]), d = rawSort[1] === "asc" ? 1 : -1, isNum = COL[t][rawSort[0]].type === "number";
+            rows = rows.slice().sort(function (a, b) { var x = g(a), y = g(b); if (isNum) { x = num(x); y = num(y); if (x == null) x = -Infinity; if (y == null) y = -Infinity; } return x < y ? -d : x > y ? d : 0; });
+          }
+          var pages = Math.max(1, Math.ceil(rows.length / PAGE)); if (rawPage >= pages) rawPage = pages - 1;
+          var slice = rows.slice(rawPage * PAGE, rawPage * PAGE + PAGE);
+          var gs = cols.map(function (c) { return getter(T, c); });
+          var h = "<table><thead><tr>" + cols.map(function (c) { var ty = COL[t][c].type; return '<th data-r="' + c + '" class="' + (ty === "number" ? "num" : "") + '">' + esc(label(t, c)) + (rawSort && rawSort[0] === c ? (rawSort[1] === "asc" ? " ▲" : " ▼") : "") + "</th>"; }).join("") + "</tr></thead><tbody>";
+          slice.forEach(function (r) {
+            h += "<tr>" + cols.map(function (c, i) {
+              var v = gs[i](r), ty = COL[t][c].type;
+              if (ty === "link") return "<td>" + (v ? '<a href="' + esc(v) + '" target="_blank" rel="noopener">' + linkLabel(c) + "</a>" : "") + "</td>";
+              return '<td class="' + (ty === "number" ? "num" : v.length > 60 ? "wrap" : "") + '" title="' + esc(v.length > 40 ? v : "") + '">' + esc(v) + "</td>";
+            }).join("") + "</tr>";
+          });
+          h += "</tbody></table>";
+          if (!rows.length) h += '<div class="loading">No rows pass these filters.</div>';
+          if (pages > 1) h += '<div class="pager"><button class="btn" id="pPrev"' + (rawPage ? "" : " disabled") + '>‹ Previous</button> rows ' + (rawPage * PAGE + 1).toLocaleString() + "–" + Math.min(rows.length, rawPage * PAGE + PAGE).toLocaleString() + " of " + rows.length.toLocaleString() +
+            ' <button class="btn" id="pNext"' + (rawPage < pages - 1 ? "" : " disabled") + ">Next ›</button></div>";
+          return h;
+        }
+
+        // ---------- pivot ----------
+        var AGGS = { count_rows: "count rows", count_distinct: "count distinct", count_where: "count rows where … =", count_where_gt0: "count rows where … > 0", sum: "sum of", ratio_pct: "% (a ÷ b)", ratio_per: "per N (a ÷ b × N)" };
+        function pivotHTML(t) {
+          var gcols = S[t].columns.filter(function (c) { return (c.groupable || ((c.name === "year" || c.name === "filing_year" || c.name === "month") && COL[t][c.name])) && !/_four$/.test(c.name); });
+          var ncols = S[t].columns.filter(function (c) { return c.type === "number"; });
+          var h = '<div class="pivot"><div class="r"><b>Table</b><select id="pvTable">' + Object.keys(S).map(function (k) { return '<option value="' + k + '"' + (k === t ? " selected" : "") + ">" + esc(k.replace(/_/g, " ")) + " (" + S[k].rows.toLocaleString() + " rows)</option>"; }).join("") + "</select></div>";
+          h += '<div class="r"><b>Group by</b>' + state.groupBy.map(function (c, i) { return '<span class="tag">' + esc(label(t, c)) + '<button data-rmg="' + i + '" title="Remove">×</button></span>'; }).join("") +
+            '<select id="pvAddG"><option value="">+ add a column…</option>' + gcols.filter(function (c) { return state.groupBy.indexOf(c.name) < 0; }).map(function (c) { return '<option value="' + c.name + '">' + esc(c.label) + "</option>"; }).join("") + "</select></div>";
+          h += '<div class="r"><b>Measures</b>' + state.measures.map(function (m, i) { return '<span class="tag">' + esc(m.label) + '<button data-rmm="' + i + '" title="Remove">×</button></span>'; }).join("") + "</div>";
+          h += '<div class="r"><b>Add</b><select id="pvAgg">' + Object.keys(AGGS).map(function (k) { return '<option value="' + k + '">' + AGGS[k] + "</option>"; }).join("") + "</select>" +
+            '<select id="pvCol"></select><input id="pvVal" placeholder="value" list="pvVals" style="display:none"><datalist id="pvVals"></datalist>' +
+            '<select id="pvOf" style="display:none"></select><select id="pvOver" style="display:none"></select><input id="pvPer" type="number" value="100" style="display:none;width:70px">' +
+            '<button class="btn" id="pvAdd">Add measure</button></div>' +
+            '<div class="m">Every measure is computed from the rows passing the filters below. A figure built here is not a published one: check it against the workbooks before using it.</div></div>';
+          return h;
+        }
+        function wirePivot(t) {
+          var agg = document.getElementById("pvAgg"); if (!agg) return;
+          var col = document.getElementById("pvCol"), val = document.getElementById("pvVal"), of = document.getElementById("pvOf"), over = document.getElementById("pvOver"), per = document.getElementById("pvPer");
+          function sync() {
+            var a = agg.value, ratio = a === "ratio_pct" || a === "ratio_per";
+            var cols = S[t].columns.filter(function (c) { return a === "sum" || a === "count_where_gt0" ? c.type === "number" : a === "count_where" ? c.filterable && c.type === "text" : c.type !== "link"; });
+            col.innerHTML = cols.map(function (c) { return '<option value="' + c.name + '"' + (c.name === S[t].key && a === "count_distinct" ? " selected" : "") + ">" + esc(c.label) + "</option>"; }).join("");
+            col.style.display = ratio || a === "count_rows" ? "none" : ""; val.style.display = a === "count_where" ? "" : "none";
+            var opts = state.measures.filter(function (m) { return !isRatio(m); }).map(function (m) { return '<option value="' + m.id + '">' + esc(m.label) + "</option>"; }).join("");
+            of.innerHTML = opts; over.innerHTML = opts; of.style.display = over.style.display = ratio ? "" : "none"; per.style.display = a === "ratio_per" ? "" : "none";
+            if (state.measures.length > 1) over.selectedIndex = 0, of.selectedIndex = Math.min(1, state.measures.length - 1);
+            syncVals();
+          }
+          function syncVals() { var v = (VOCAB[t] || {})[col.value] || []; document.getElementById("pvVals").innerHTML = v.slice(0, 400).map(function (x) { return '<option value="' + esc(x) + '">'; }).join(""); }
+          agg.onchange = sync; col.onchange = syncVals; sync();
+          document.getElementById("pvAdd").onclick = function () {
+            var a = agg.value, id = "m" + Date.now().toString(36), m = { id: id, agg: a };
+            if (a === "ratio_pct" || a === "ratio_per") {
+              if (!of.value || !over.value) return;
+              m.of = of.value; m.over = over.value; if (a === "ratio_per") m.per = +per.value || 100;
+              var lo = state.measures.filter(function (x) { return x.id === m.of; })[0].label, lv = state.measures.filter(function (x) { return x.id === m.over; })[0].label;
+              m.label = a === "ratio_pct" ? lo + " as % of " + lv : lo + " per " + m.per + " " + lv;
+            } else {
+              m.column = col.value;
+              if (a === "count_rows") { delete m.column; m.label = "rows"; }
+              else if (a === "count_where") { if (!val.value) return; m.where = val.value; m.label = "rows where " + label(t, m.column) + " = " + val.value; }
+              else m.label = AGGS[a].replace(" …", "") + " " + label(t, m.column) + (a === "count_where_gt0" ? " > 0" : "");
+              if (S[t].scope_columns[m.column]) m.scope = true;
+            }
+            state.measures.push(m); go();
+          };
+          document.getElementById("pvTable").onchange = function (ev) {
+            var nt = ev.target.value;
+            state.table = nt; state.filters = {}; state.groupBy = []; state.columns = []; state.sort = []; state.group = null; state.from = state.to = "";
+            state.measures = [{ id: "rows", label: "count distinct " + S[nt].key, agg: "count_distinct", column: S[nt].key }];
+            go();
+          };
+          document.getElementById("pvAddG").onchange = function (ev) { if (ev.target.value) { state.groupBy.push(ev.target.value); state.group = null; state.sort = []; go(); } };
+          mainEl.querySelectorAll("[data-rmg]").forEach(function (b) { b.onclick = function () { state.groupBy.splice(+b.getAttribute("data-rmg"), 1); state.group = null; state.sort = []; go(); }; });
+          mainEl.querySelectorAll("[data-rmm]").forEach(function (b) {
+            b.onclick = function () {
+              var gone = state.measures.splice(+b.getAttribute("data-rmm"), 1)[0];
+              state.measures = state.measures.filter(function (m) { return m.of !== gone.id && m.over !== gone.id; });
+              state.sort = state.sort.filter(function (s) { return s[0] !== gone.id; }); go();
+            };
+          });
+        }
+
+        // ---------- events after a render ----------
+        function wire(t, T, rows, rr, res) {
+          wirePivot(t);
+          var df = document.getElementById("dFrom"), dt = document.getElementById("dTo");
+          if (df) df.onchange = function () { state.from = df.value; state.group = null; go(); };
+          if (dt) dt.onchange = function () { state.to = dt.value; state.group = null; go(); };
+          var more = document.getElementById("moreF"); if (more) more.onchange = function () { if (more.value) openFilter(t, T, more.value, more); };
+          var clr = document.getElementById("clrF"); if (clr) clr.onclick = function () { state.filters = {}; state.from = state.to = ""; state.group = null; go(); };
+          mainEl.querySelectorAll("button[data-f]").forEach(function (b) { b.onclick = function (ev) { ev.stopPropagation(); openFilter(t, T, b.getAttribute("data-f"), b); }; });
+          mainEl.querySelectorAll("#sum tr.g").forEach(function (tr) {
+            tr.onclick = function () { var r = res.rows[+tr.getAttribute("data-g")]; state.group = state.group && state.group.join("\u0001") === r.key ? null : r.vals; rawPage = 0; render(); saveHash(); };
+          });
+          mainEl.querySelectorAll("#sum th[data-s]").forEach(function (th) {
+            th.onclick = function () { var c = th.getAttribute("data-s"); sumSort = [c, sumSort && sumSort[0] === c && sumSort[1] === "desc" ? "asc" : "desc"]; var keep = sumSort; render(); sumSort = keep; };
+          });
+          mainEl.querySelectorAll("#raw th[data-r]").forEach(function (th) {
+            th.onclick = function () { var c = th.getAttribute("data-r"); rawSort = [c, rawSort && rawSort[0] === c && rawSort[1] === "asc" ? "desc" : "asc"]; rawPage = 0; refreshRaw(t, T, rr); };
+          });
+          wirePager(t, T, rr);
+          var cg = document.getElementById("clrGroup"); if (cg) cg.onclick = function () { state.group = null; render(); saveHash(); };
+          document.getElementById("dlSum").onclick = function () {
+            var head = state.groupBy.map(function (c) { return label(t, R(t, c)); }).concat(res.ms.map(function (m) { return m.label; }));
+            var body = res.rows.map(function (r) { return r.vals.concat(res.ms.map(function (m) { return r.m[m.id]; })); });
+            body.push(state.groupBy.map(function (c, i) { return i ? "" : "All rows that pass the filters"; }).concat(res.ms.map(function (m) { return res.total.m[m.id]; })));
+            download(fileStem() + "_summary.csv", [head].concat(body));
+          };
+          document.getElementById("dlRaw").onclick = function () { download(fileStem() + "_rows.csv", [T.cols].concat(rr)); };
+        }
+        function refreshRaw(t, T, rr) {
+          document.getElementById("raw").innerHTML = rawHTML(t, T, rr);
+          mainEl.querySelectorAll("#raw th[data-r]").forEach(function (th) {
+            th.onclick = function () { var c = th.getAttribute("data-r"); rawSort = [c, rawSort && rawSort[0] === c && rawSort[1] === "asc" ? "desc" : "asc"]; rawPage = 0; refreshRaw(t, T, rr); };
+          });
+          wirePager(t, T, rr);
+        }
+        function wirePager(t, T, rr) {
+          var pp = document.getElementById("pPrev"), pn = document.getElementById("pNext");
+          if (pp) pp.onclick = function () { rawPage--; refreshRaw(t, T, rr); };
+          if (pn) pn.onclick = function () { rawPage++; refreshRaw(t, T, rr); };
+        }
+        function fileStem() { return (state.mode === "pivot" ? "pivot_" + state.table : state.preset) + "_" + (state.scope === "four" ? "four_parties" : "all_parties"); }
+        function download(name, rows) {
+          var csv = rows.map(function (r) { return r.map(function (v) { v = v == null ? "" : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(","); }).join("\n");
+          var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv" })); a.download = name;
+          document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+        }
+
+        // ---------- filter pop-up ----------
+        var pop = document.getElementById("pop");
+        function openFilter(t, T, c, anchor) {
+          var col = COL[t][c], rc = R(t, c), f = state.filters[c];
+          var r = anchor.getBoundingClientRect();
+          pop.style.left = Math.max(8, Math.min(r.left + window.scrollX, window.scrollX + document.documentElement.clientWidth - 350)) + "px";
+          pop.style.top = (r.bottom + window.scrollY + 4) + "px";
+          var h = "<h4>" + esc(col.label) + (rc !== c ? ' <span class="badge four">reads ' + esc(rc) + "</span>" : "") + "</h4>";
+          if (col.type === "number" && c !== "year" && c !== "filing_year") {
+            h += '<div class="row"><input type="number" id="fMin" placeholder="from" value="' + esc(f && f.min != null ? f.min : "") + '"><input type="number" id="fMax" placeholder="to" value="' + esc(f && f.max != null ? f.max : "") + '"></div>';
+          } else {
+            // counts are for the rows passing every other filter
+            var rows = filtered(t, T, c), g = getter(T, rc), cnt = {};
+            rows.forEach(function (x) { var v = g(x); cnt[v] = (cnt[v] || 0) + 1; });
+            var cur = Array.isArray(f) ? f.map(String) : [];
+            cur.forEach(function (v) { if (!(v in cnt)) cnt[v] = 0; });
+            var vals = Object.keys(cnt).sort(function (a, b) { return c === "year" || c === "filing_year" ? a.localeCompare(b) : cnt[b] - cnt[a] || a.localeCompare(b); });
+            h += '<input type="search" id="fSearch" placeholder="Search ' + vals.length + ' values">' +
+              '<div class="list" id="fList">' + vals.map(function (v) {
+                return '<label data-v="' + esc(v.toLowerCase()) + '"><input type="checkbox" value="' + esc(v) + '"' + (cur.indexOf(v) >= 0 ? " checked" : "") + "><span>" + (v === "" ? '<span class="m">(blank)</span>' : esc(v)) + '</span><span class="n">' + cnt[v].toLocaleString() + "</span></label>";
+              }).join("") + "</div>" + '<div class="row"><button class="btn" id="fAllVis">Tick all shown</button><button class="btn" id="fNone">Untick all</button></div>';
+          }
+          h += '<div class="row"><button class="btn primary" id="fApply">Apply</button><button class="btn" id="fClear">Clear this filter</button><button class="btn" id="fClose">Cancel</button></div>';
+          pop.innerHTML = h; pop.hidden = false;
+          var s = document.getElementById("fSearch");
+          if (s) {
+            s.focus();
+            s.oninput = function () { var q = s.value.trim().toLowerCase(); pop.querySelectorAll("#fList label").forEach(function (l) { l.style.display = !q || l.getAttribute("data-v").indexOf(q) >= 0 ? "" : "none"; }); };
+            document.getElementById("fAllVis").onclick = function () { pop.querySelectorAll("#fList label").forEach(function (l) { if (l.style.display !== "none") l.querySelector("input").checked = true; }); };
+            document.getElementById("fNone").onclick = function () { pop.querySelectorAll("#fList input").forEach(function (i) { i.checked = false; }); };
+          }
+          document.getElementById("fApply").onclick = function () {
+            if (s) state.filters[c] = Array.from(pop.querySelectorAll("#fList input:checked")).map(function (i) { return i.value; });
+            else state.filters[c] = { min: document.getElementById("fMin").value, max: document.getElementById("fMax").value };
+            closePop(); state.group = null; go();
+          };
+          document.getElementById("fClear").onclick = function () { delete state.filters[c]; closePop(); state.group = null; go(); };
+          document.getElementById("fClose").onclick = closePop;
+        }
+        function closePop() { pop.hidden = true; var m = document.getElementById("moreF"); if (m) m.value = ""; }
+        document.addEventListener("click", function (ev) { if (!pop.hidden && !ev.target.closest("#pop") && !ev.target.closest("[data-f]") && !ev.target.closest("#moreF")) closePop(); });
+        document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") closePop(); });
+
+        // ---------- shareable state in the address ----------
+        function saveHash() {
+          var o = { s: state.scope, m: state.mode, p: state.preset, t: state.table, f: state.filters, a: state.from, b: state.to, g: state.groupBy, gr: state.group };
+          if (state.mode === "pivot") o.ms = state.measures;
+          try { history.replaceState(null, "", "#" + encodeURIComponent(JSON.stringify(o))); } catch (e) {}
+        }
+        function readHash() {
+          try {
+            var o = JSON.parse(decodeURIComponent(location.hash.slice(1)));
+            if (!o || !S[o.t]) return;
+            state.scope = o.s === "four" ? "four" : "all";
+            if (P[o.p]) { var sc = state.scope; state = defaultState(o.p); state.scope = sc; }
+            if (o.m === "pivot") { state.mode = "pivot"; state.table = o.t; if (o.ms) state.measures = o.ms; state.columns = o.t === (P[o.p] || {}).table ? state.columns : []; }
+            state.filters = o.f || {}; state.from = o.a || ""; state.to = o.b || ""; if (o.g) state.groupBy = o.g; state.group = o.gr || null;
+          } catch (e) {}
+        }
+
+        // ---------- sources ----------
+        document.getElementById("footer").innerHTML = '<details class="src"><summary>Sources and how to check</summary><ul>' +
+          "<li><b>The data behind this page:</b> <code>foreclosure_questions/explorer/</code> — <code>data/&lt;table&gt;.json</code> (" + Object.keys(S).length + " tables), <code>schema.json</code> (columns), <code>presets.json</code> (the ready-made views) and <code>checks.json</code> (the published totals checked on load), written by <code>nb/make_explorer_data.py</code> from the workbooks. Each table’s rows come from these tabs: " +
+          Object.keys(S).map(function (k) { return "<b>" + esc(k) + "</b>: " + esc(S[k].sources.join("; ")); }).join(" · ") + "</li>" +
+          "<li><b>Party scope:</b> " + esc(X.schema.scope_note) + "</li>" +
+          "<li><b>The fact-check path:</b> every row’s links go to the Cook County Clerk (search, document page, PDF). The Clerk’s site keeps one search per browser session, so open each link in a new private window if a result looks wrong.</li>" +
+          '<li><b>Related pages:</b> <a href="' + PMAP + '" target="_blank" rel="noopener">pipeline map</a> (which file answers which question) · <a href="https://trd-digital.github.io/trd-news-interactive-maps/chicago-factcheck-map/" target="_blank" rel="noopener">7+ fact-check map</a> · <a href="https://trd-digital.github.io/trd-news-interactive-maps/chicago-party-network/" target="_blank" rel="noopener">all-party network</a> · <a href="https://trd-digital.github.io/trd-news-interactive-maps/chicago-four-party-network/" target="_blank" rel="noopener">four-party network</a></li>' +
+          "</ul><p class=\"m\">Data built " + esc(X.meta.built) + " (files of " + esc(X.meta.source_mtime) + "). " + esc(X.meta.readme) + "</p></details>";
+
+        readHash();
+        go();
+        load(state.table).then(runChecks);
+      })();
+    </script>
+  </body>
+</html>
