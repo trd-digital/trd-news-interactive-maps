@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Pipeline Map</title>
+    <style>
+      :root {
+        --bg: #ffffff; --panel: #f7f8fa; --ink: #14171f; --ink2: #4a5163; --muted: #737a8c; --line: #dfe2e8;
+        --chip: #eef0f4; --accent: #2a78d6; --hl: #fff4c2; --card: #ffffff;
+        --b-source: #1baf7a; --b-step: #2a78d6; --b-out: #8b5cf6; --b-dec: #eb6834; --b-live: #c98a00; --b-doc: #737a8c; --b-test: #9aa0ad;
+        --run-all: #2a78d6; --run-four: #eb6834;
+        --edge: #9aa0ad; --edge-back: #eb6834;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #0f1218; --panel: #151a22; --ink: #eef0f4; --ink2: #b7bdca; --muted: #8b92a3; --line: #2a303c;
+          --chip: #1f2530; --accent: #3987e5; --hl: #3a3410; --card: #1a2029;
+          --b-source: #199e70; --b-step: #3987e5; --b-out: #9d76ff; --b-dec: #ff7a45; --b-live: #e0a419; --b-doc: #8b92a3; --b-test: #5d6577;
+          --run-all: #3987e5; --run-four: #ff7a45;
+          --edge: #5d6577; --edge-back: #ff7a45;
+          color-scheme: dark;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; }
+      body { background: var(--bg); color: var(--ink); font: 13.5px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+      .app { display: grid; grid-template-columns: 1fr 410px; grid-template-rows: auto 1fr; height: 100vh; }
+      header { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--panel); }
+      h1 { font-size: 16px; margin: 0; }
+      .sub { color: var(--muted); font-size: 12px; margin: 0; }
+      .titles { flex: 1 1 300px; min-width: 0; }
+      .searchwrap { position: relative; flex: 1 1 320px; max-width: 520px; }
+      input[type=search] { width: 100%; padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); font: inherit; }
+      .results { position: absolute; z-index: 20; left: 0; right: 0; top: 100%; margin: 4px 0 0; padding: 4px; list-style: none; max-height: 60vh; overflow-y: auto;
+        background: var(--bg); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 6px 18px rgba(0,0,0,.18); display: none; }
+      .results li { padding: 6px 8px; border-radius: 5px; cursor: pointer; font-size: 12.5px; }
+      .results li:hover, .results li.act { background: var(--chip); }
+      .results .rt { font-weight: 600; }
+      .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+      .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+      .seg button { border: 0; background: var(--bg); color: var(--ink2); font: inherit; font-size: 12.5px; padding: 5px 10px; cursor: pointer; }
+      .seg button.on { background: var(--ink); color: var(--bg); font-weight: 600; }
+      label.ck { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12.5px; }
+      .runnote { flex-basis: 100%; font-size: 12px; color: var(--ink2); }
+      .flow { position: relative; overflow: auto; }
+      .bands { position: relative; display: grid; grid-template-columns: repeat(4, minmax(210px, 1fr)); gap: 0 64px; padding: 14px 40px 40px 20px; min-width: 1060px; }
+      .band h2 { position: sticky; top: 0; z-index: 3; margin: 0 0 8px; padding: 6px 0; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); background: var(--bg); }
+      .band h3 { font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 14px 0 6px; font-weight: 600; }
+      .card { position: relative; z-index: 2; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--c); border-radius: 6px; padding: 6px 8px; margin-bottom: 8px; cursor: pointer; }
+      .card:hover { border-color: var(--c); }
+      .card .t { font-weight: 650; font-size: 12.5px; word-break: break-word; }
+      .card .d { font-size: 11.5px; color: var(--ink2); margin-top: 1px; }
+      .card .meta { margin-top: 3px; display: flex; flex-wrap: wrap; gap: 3px; }
+      .card.plumb { border-style: dashed; border-left-style: solid; }
+      .card.old { opacity: .55; }
+      .card.old .t { text-decoration: line-through; text-decoration-color: var(--muted); }
+      .card.planned { border-style: dashed; }
+      .card.sel { box-shadow: 0 0 0 2px var(--accent); }
+      .tests { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+      .tchip { position: relative; z-index: 2; font-size: 11px; padding: 2px 6px; border-radius: 4px; border: 1px dashed var(--line); background: var(--card); cursor: pointer; color: var(--ink2); }
+      .tchip.sel { box-shadow: 0 0 0 2px var(--accent); }
+      .dimmed .card:not(.on), .dimmed .tchip:not(.on) { opacity: .28; }
+      .badge { display: inline-block; font-size: 10.5px; padding: 0 5px; border-radius: 3px; background: var(--chip); color: var(--ink2); white-space: nowrap; }
+      .badge.all { background: var(--run-all); color: #fff; }
+      .badge.four { background: var(--run-four); color: #fff; }
+      .badge.st { background: var(--ink2); color: var(--bg); }
+      .badge.q { background: var(--b-out); color: #fff; }
+      svg.edges { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 1; overflow: visible; }
+      svg.edges path { fill: none; stroke: var(--edge); stroke-width: 1.2; opacity: .55; }
+      svg.edges path.back { stroke: var(--edge-back); stroke-dasharray: 5 3; opacity: .6; }
+      svg.edges path.via { stroke-dasharray: 2 3; }
+      .dimmed svg.edges path { opacity: .08; }
+      .dimmed svg.edges path.on { opacity: 1; stroke-width: 2; stroke: var(--accent); }
+      .dimmed svg.edges path.on.back { stroke: var(--edge-back); }
+      .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 11.5px; color: var(--ink2); padding: 0 20px 6px; }
+      .legend span.l { display: inline-flex; align-items: center; gap: 5px; }
+      .legend i { display: inline-block; width: 22px; border-top: 2px solid var(--edge); }
+      aside { overflow-y: auto; background: var(--panel); border-left: 1px solid var(--line); }
+      .tabs { position: sticky; top: 0; z-index: 4; display: flex; background: var(--panel); border-bottom: 1px solid var(--line); }
+      .tabs button { flex: 1; border: 0; background: none; color: var(--muted); font: inherit; font-size: 12px; font-weight: 600; padding: 9px 4px; cursor: pointer; border-bottom: 2px solid transparent; }
+      .tabs button.on { color: var(--ink); border-bottom-color: var(--accent); }
+      .pane { padding: 12px 16px 24px; }
+      .d-name { font-size: 15px; font-weight: 700; margin: 0 0 4px; word-break: break-word; }
+      .m { color: var(--muted); font-size: 11.5px; }
+      .grp { margin-top: 14px; }
+      .grp h4 { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 0 0 5px; }
+      .e { border-top: 1px solid var(--line); padding: 6px 2px; font-size: 12.5px; }
+      .e.sel { background: var(--hl); border-radius: 4px; }
+      code, .path { font: 11.5px ui-monospace, SFMono-Regular, Menlo, monospace; word-break: break-all; color: var(--ink2); }
+      a { color: var(--accent); }
+      button.lnk { background: none; border: 0; color: var(--accent); cursor: pointer; padding: 0; font: inherit; text-align: left; font-weight: 600; }
+      .headline { border-left: 3px solid var(--b-out); padding: 4px 8px; background: var(--chip); border-radius: 0 4px 4px 0; font-size: 12.5px; margin: 4px 0; }
+      .warn-box { background: var(--chip); border-left: 3px solid var(--b-dec); padding: 6px 9px; font-size: 12px; color: var(--ink2); margin-bottom: 12px; }
+      table { border-collapse: collapse; width: 100%; font-size: 12px; }
+      td { padding: 3px 4px; border-top: 1px solid var(--line); vertical-align: top; }
+      td:first-child { white-space: nowrap; font: 11.5px ui-monospace, SFMono-Regular, Menlo, monospace; }
+      tr.hit td { background: var(--hl); }
+      .src li { margin: 5px 0; font-size: 12px; color: var(--ink2); }
+      .src ul { padding-left: 16px; }
+      .built { font-size: 11px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; margin-top: 14px; }
+      .st-retired, .st-superseded { color: var(--muted); }
+      @media (max-width: 1100px) {
+        .app { grid-template-columns: 1fr; grid-template-rows: auto 75vh auto; height: auto; }
+        aside { border-left: 0; border-top: 1px solid var(--line); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <div class="titles">
+          <h1>Pipeline map: which file answers which question</h1>
+          <p class="sub" id="sub"></p>
+        </div>
+        <div class="searchwrap">
+          <input type="search" id="q" placeholder="Which file do I open for … (e.g. violations, Pandev, lenders)" autocomplete="off" />
+          <ul class="results" id="results"></ul>
+        </div>
+        <div class="controls">
+          <span class="seg" id="runSeg"><button data-run="pinhist" class="on">All 16 parties</button><button data-run="pinhist_four">The four parties</button></span>
+          <label class="ck"><input type="checkbox" id="plumb" /> Show the plumbing</label>
+        </div>
+        <div class="runnote" id="runnote"></div>
+      </header>
+      <div class="flow" id="flow">
+        <div class="legend" id="legend"></div>
+        <div class="bands" id="bands"></div>
+      </div>
+      <aside>
+        <div class="tabs" id="tabs"><button data-tab="detail" class="on">Details</button><button data-tab="questions">Questions</button><button data-tab="decisions">Decisions</button><button data-tab="sources">Sources</button></div>
+        <div class="pane" id="pane"></div>
+      </aside>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        var D = window.PMAP;
+        var N = {}, ORDER = {};
+        D.nodes.forEach(function (n, i) { N[n.id] = n; ORDER[n.id] = i; });
+        var DEC = {}; D.decisions.forEach(function (d) { DEC[d.id] = d; });
+        var Q = {}; D.questions.forEach(function (q) { Q[q.id] = q; });
+        // four bands, left to right; each band lists its layers in this order
+        var BANDS = [
+          { title: "Sources", layers: [["source", "Where the data comes from"], ["document", "Reference documents"]] },
+          { title: "Notebooks & scripts", layers: [["step", ""], ["test", "Tests (run by 20_qa.ipynb)"]] },
+          { title: "Outputs", layers: [["output", "Workbooks and network files"], ["decision_file", "Decision files (rules the notebooks read)"], ["intermediate", "Intermediate files"]] },
+          { title: "Live pages", layers: [["live_page", ""]] }
+        ];
+        var BAND_OF = {}, COLOR = { source: "--b-source", document: "--b-doc", step: "--b-step", test: "--b-test", output: "--b-out", decision_file: "--b-dec", intermediate: "--b-doc", live_page: "--b-live" };
+        BANDS.forEach(function (b, i) { b.layers.forEach(function (l) { BAND_OF[l[0]] = i; }); });
+        var RUNS = { pinhist: "All 16 parties", pinhist_four: "The four parties" };
+        var state = { run: "pinhist", plumb: false, sel: null, tab: "detail" };
+        try { var saved = JSON.parse(localStorage.getItem("pmap") || "{}"); if (RUNS[saved.run]) state.run = saved.run; state.plumb = !!saved.plumb; } catch (e) {}
+
+        function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+        function splitName(n) { var i = n.name.indexOf(" — "); return i < 0 ? [n.name, ""] : [n.name.slice(0, i), n.name.slice(i + 3)]; }
+        function runBadge(n) {
+          if (n.run === "pinhist") return '<span class="badge all">16 parties</span>';
+          if (n.run === "pinhist_four") return '<span class="badge four">4 parties</span>';
+          if (n.run === "shared") return '<span class="badge">shared by both runs</span>';
+          if (n.run === "both") return "";
+          return '<span class="badge">run ' + esc(n.run) + "</span>";
+        }
+        function statusBadge(n) {
+          if (n.status === "current") return "";
+          var t = n.status === "retired" ? "retired · superseded" : n.status;
+          return '<span class="badge st">' + esc(t) + "</span>";
+        }
+        function bytes(b) { if (b === "" || b == null) return ""; b = +b; return b >= 1e6 ? (b / 1e6).toFixed(1) + " MB" : b >= 1e3 ? Math.round(b / 1e3) + " KB" : b + " bytes"; }
+        function save() { try { localStorage.setItem("pmap", JSON.stringify({ run: state.run, plumb: state.plumb })); } catch (e) {} }
+
+        function visible(n) {
+          if (!state.plumb && n.audience !== "reporters") return false;
+          // the other run's files are hidden; shared / both / retired runs stay
+          if ((n.run === "pinhist" || n.run === "pinhist_four") && n.run !== state.run) return false;
+          return true;
+        }
+
+        // edges between visible nodes; a path through hidden (plumbing) nodes becomes one dotted "via" edge
+        function viewEdges() {
+          var out = [], seen = {}, adj = {};
+          D.edges.forEach(function (e) { (adj[e.source] = adj[e.source] || []).push(e); });
+          D.nodes.forEach(function (n) {
+            if (!visible(n)) return;
+            var stack = (adj[n.id] || []).map(function (e) { return [e, [e.relation], 0]; }), been = {};
+            while (stack.length) {
+              var it = stack.pop(), e = it[0], t = N[e.target];
+              if (visible(t)) {
+                if (t.id === n.id) continue;
+                var key = n.id + ">" + t.id;
+                if (!seen[key]) { seen[key] = 1; out.push({ s: n.id, t: t.id, rel: it[2] ? "via " + it[2] + " plumbing step" + (it[2] > 1 ? "s" : "") : e.relation, via: it[2] > 0 }); }
+                continue;
+              }
+              // hidden only because of the other run: the path stops there
+              if ((t.run === "pinhist" || t.run === "pinhist_four") && t.run !== state.run) continue;
+              if (been[t.id]) continue; been[t.id] = 1;
+              (adj[t.id] || []).forEach(function (e2) { stack.push([e2, it[1].concat(e2.relation), it[2] + 1]); });
+            }
+          });
+          return out;
+        }
+
+        // ---------- layout ----------
+        var bandsEl = document.getElementById("bands"), flow = document.getElementById("flow");
+        var svgNS = "http://www.w3.org/2000/svg", svg, EDGES = [];
+        function layout() {
+          var vis = D.nodes.filter(visible), es = viewEdges();
+          EDGES = es;
+          // order within each layer: a few barycentre passes so lines cross less
+          var groups = {};
+          vis.forEach(function (n) { (groups[n.layer] = groups[n.layer] || []).push(n); });
+          var pos = {};
+          function setPos() {
+            BANDS.forEach(function (b) { var k = 0; b.layers.forEach(function (l) { (groups[l[0]] || []).forEach(function (n) { pos[n.id] = k++; }); }); });
+          }
+          setPos();
+          var nb = {}; es.forEach(function (e) { (nb[e.s] = nb[e.s] || []).push(e.t); (nb[e.t] = nb[e.t] || []).push(e.s); });
+          for (var pass = 0; pass < 6; pass++) {
+            Object.keys(groups).forEach(function (l) {
+              if (l === "test") return;
+              groups[l].forEach(function (n) {
+                var ns = (nb[n.id] || []).filter(function (x) { return BAND_OF[N[x].layer] !== BAND_OF[n.layer]; });
+                n._bc = ns.length ? ns.reduce(function (a, x) { return a + pos[x]; }, 0) / ns.length : pos[n.id];
+              });
+              groups[l].sort(function (a, b) { return a._bc - b._bc || ORDER[a.id] - ORDER[b.id]; });
+            });
+            setPos();
+          }
+          var html = "";
+          BANDS.forEach(function (b) {
+            html += '<div class="band"><h2>' + esc(b.title) + "</h2>";
+            b.layers.forEach(function (l) {
+              var g = groups[l[0]]; if (!g || !g.length) return;
+              if (l[1]) html += "<h3>" + esc(l[1]) + "</h3>";
+              if (l[0] === "test") {
+                html += '<div class="tests">' + g.sort(function (a, b) { return ORDER[a.id] - ORDER[b.id]; }).map(function (n) {
+                  return '<span class="tchip" data-id="' + n.id + '" title="' + esc(n.name) + '">' + esc(splitName(n)[0]) + "</span>";
+                }).join("") + "</div>";
+                return;
+              }
+              g.forEach(function (n) {
+                var nm = splitName(n), old = n.status === "retired" || n.status === "superseded";
+                html += '<div class="card' + (n.audience !== "reporters" ? " plumb" : "") + (old ? " old" : "") + (n.status === "planned" ? " planned" : "") +
+                  '" data-id="' + n.id + '" style="--c:var(' + COLOR[n.layer] + ')"><div class="t">' + esc(nm[0]) + "</div>" +
+                  (nm[1] ? '<div class="d">' + esc(nm[1]) + "</div>" : "") +
+                  '<div class="meta">' + runBadge(n) + statusBadge(n) + n.questions.map(function (q) { return '<span class="badge q">' + esc(q) + "</span>"; }).join("") + "</div></div>";
+              });
+            });
+            html += "</div>";
+          });
+          bandsEl.innerHTML = html;
+          svg = document.createElementNS(svgNS, "svg"); svg.setAttribute("class", "edges");
+          svg.innerHTML = '<defs><marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L8,4L0,8z" fill="currentColor"></path></marker></defs>';
+          bandsEl.appendChild(svg);
+          document.getElementById("sub").textContent = vis.length + " of " + D.nodes.length + " items shown · " + es.length + " links · data built " + D.meta.built;
+          drawEdges(); applySel();
+        }
+        function rectOf(id) {
+          var el = bandsEl.querySelector('[data-id="' + id + '"]'); if (!el) return null;
+          var b = bandsEl.getBoundingClientRect(), r = el.getBoundingClientRect();
+          return { l: r.left - b.left, r: r.right - b.left, t: r.top - b.top, b: r.bottom - b.top, y: (r.top + r.bottom) / 2 - b.top };
+        }
+        function drawEdges() {
+          var w = bandsEl.scrollWidth, h = bandsEl.scrollHeight;
+          svg.setAttribute("width", w); svg.setAttribute("height", h);
+          var paths = EDGES.map(function (e, i) {
+            var a = rectOf(e.s), b = rectOf(e.t); if (!a || !b) return "";
+            var bs = BAND_OF[N[e.s].layer], bt = BAND_OF[N[e.t].layer], d, cls = e.via ? "via" : "";
+            if (bs < bt) {
+              var dx = Math.max(30, (b.l - a.r) / 2);
+              d = "M" + a.r + "," + a.y + " C" + (a.r + dx) + "," + a.y + " " + (b.l - dx) + "," + b.y + " " + (b.l - 2) + "," + b.y;
+            } else if (bs > bt) {
+              // runs against the flow (a decision file read back by a notebook, the fact check returned): orange, dashed
+              cls += " back";
+              var dx2 = Math.max(30, (a.l - b.r) / 2);
+              d = "M" + a.l + "," + a.y + " C" + (a.l - dx2) + "," + a.y + " " + (b.r + dx2) + "," + b.y + " " + (b.r + 2) + "," + b.y;
+            } else {
+              // same band: a loop out to the right
+              var x = Math.max(a.r, b.r), off = 18 + Math.min(40, Math.abs(b.y - a.y) / 8);
+              d = "M" + a.r + "," + a.y + " C" + (x + off) + "," + a.y + " " + (x + off) + "," + b.y + " " + (b.r + 2) + "," + b.y;
+            }
+            return '<path data-i="' + i + '" class="' + cls + '" d="' + d + '"><title>' + esc(N[e.s].name + " → " + N[e.t].name + " (" + e.rel + ")") + "</title></path>";
+          });
+          svg.innerHTML = svg.querySelector("defs").outerHTML + paths.join("");
+        }
+        function applySel() {
+          var f = state.sel, on = {};
+          flow.classList.toggle("dimmed", f != null && !!bandsEl.querySelector('[data-id="' + f + '"]'));
+          svg.querySelectorAll("path[data-i]").forEach(function (p) {
+            var e = EDGES[+p.getAttribute("data-i")], hit = f != null && (e.s === f || e.t === f);
+            p.classList.toggle("on", hit); if (hit) { on[e.s] = on[e.t] = 1; }
+          });
+          bandsEl.querySelectorAll("[data-id]").forEach(function (el) {
+            var id = el.getAttribute("data-id");
+            el.classList.toggle("on", !!on[id] || id === f); el.classList.toggle("sel", id === f);
+          });
+        }
+        bandsEl.addEventListener("click", function (ev) {
+          var el = ev.target.closest("[data-id]");
+          if (!el) { state.sel = null; applySel(); if (state.tab === "detail") render(); return; }
+          select(el.getAttribute("data-id"), false);
+        });
+        document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") { state.sel = null; applySel(); hideResults(); render(); } });
+
+        function select(id, scroll, hiTab) {
+          var n = N[id]; if (!n) return;
+          var changed = false;
+          if (!visible(n)) {
+            if (n.run === "pinhist" || n.run === "pinhist_four") { if (n.run !== state.run) { state.run = n.run; changed = true; } }
+            if (n.audience !== "reporters" && !state.plumb) { state.plumb = true; changed = true; }
+          }
+          if (changed) { syncControls(); layout(); }
+          state.sel = id; state.tab = "detail"; state.hiTab = hiTab || null; applySel(); render();
+          if (scroll) { var el = bandsEl.querySelector('[data-id="' + id + '"]'); if (el) el.scrollIntoView({ block: "center", inline: "center", behavior: "smooth" }); }
+        }
+
+        // ---------- side panel ----------
+        var pane = document.getElementById("pane");
+        document.getElementById("tabs").addEventListener("click", function (ev) {
+          var b = ev.target.closest("button[data-tab]"); if (!b) return; state.tab = b.getAttribute("data-tab"); render();
+        });
+        function nodeBtn(id) { var n = N[id]; return '<button class="lnk" data-n="' + id + '">' + esc(splitName(n)[0]) + "</button>"; }
+        function wbNode(path) {
+          // the workbook node whose path is this question's workbook
+          for (var k in N) if (N[k].path === path) return k;
+          return null;
+        }
+        function questionHTML(q, compact) {
+          var wb = state.run === "pinhist_four" ? q.workbook_four : q.workbook_all, hl = state.run === "pinhist_four" ? q.headline_four : q.headline_all, id = wbNode(wb);
+          return '<div class="e"><div><span class="badge q">' + esc(q.id) + "</span> " + esc(q.question.replace(/^Q1(-2to6)? — |^Q2 — /, "")) + "</div>" +
+            '<div class="m" style="margin-top:3px">Answer tab: <b>' + esc(q.answer_tab) + "</b> in " + (id ? nodeBtn(id) : "<code>" + esc(wb) + "</code>") + "</div>" +
+            (compact ? "" : '<div class="headline">' + esc(hl) + "</div>") +
+            '<div class="m">' + (/^checked/.test(q.checked) ? "✔ " : "") + esc(q.checked) + "</div></div>";
+        }
+        function decisionHTML(d) {
+          return '<div class="e"><div><b>' + esc(d.id) + "</b> " + '<span class="m">' + esc(d.date) + (d.who ? " · " + esc(d.who) : "") + "</span> " +
+            '<span class="badge' + (/^in force$/.test(d.status) ? "" : " st") + '">' + esc(d.status) + "</span></div>" +
+            "<div>" + esc(d.one_line) + "</div>" +
+            (d.applied_in.length ? '<div class="m">Applied in: ' + d.applied_in.map(nodeBtn).join(", ") + "</div>" : "") + "</div>";
+        }
+        function render() {
+          document.querySelectorAll("#tabs button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-tab") === state.tab); });
+          if (state.tab === "questions") {
+            pane.innerHTML = '<p class="d-name">The ' + D.questions.length + " questions and where each is answered</p>" +
+              '<p class="m">Workbooks and headline sentences for the <b>' + esc(RUNS[state.run].toLowerCase()) + "</b> run (switch at the top). Every figure is copied from the workbook’s READ ME.</p>" +
+              D.questions.map(function (q) { return questionHTML(q, false); }).join("");
+            return;
+          }
+          if (state.tab === "decisions") {
+            pane.innerHTML = '<p class="d-name">Decisions D-2 to D-' + D.decisions[D.decisions.length - 1].id.slice(2) + "</p>" +
+              '<p class="m">The numbered rules in PLAN.md, in order, each with its status and where it is applied (' + D.decisions.length + ' listed).</p>' +
+              D.decisions.map(decisionHTML).join("");
+            return;
+          }
+          if (state.tab === "sources") { pane.innerHTML = sourcesHTML(); return; }
+          if (state.sel == null) { pane.innerHTML = introHTML(); return; }
+          var n = N[state.sel], nm = splitName(n);
+          var ins = [], outs = [];
+          D.edges.forEach(function (e) { if (e.target === n.id) ins.push(e); if (e.source === n.id) outs.push(e); });
+          var h = '<p class="d-name">' + esc(nm[0]) + "</p>" + (nm[1] ? '<div class="m" style="font-size:12.5px">' + esc(nm[1]) + "</div>" : "") +
+            '<div style="margin:5px 0">' + '<span class="badge">' + esc(n.kind) + "</span> " + runBadge(n) + " " + statusBadge(n) +
+            (n.audience !== "reporters" ? ' <span class="badge">plumbing</span>' : "") + "</div>" +
+            "<div>" + esc(n.purpose) + "</div>";
+          if (n.url) h += '<div class="grp"><h4>Live page</h4><a href="' + esc(n.url) + '" target="_blank" rel="noopener">' + esc(n.url) + "</a></div>";
+          h += '<div class="grp"><h4>File</h4><div class="path">' + esc(n.path) + "</div>" +
+            '<div class="m">' + [n.last_run ? "last run " + esc(n.last_run) + (n.last_run_status ? " (" + esc(n.last_run_status) + ")" : "") : "",
+              n.mtime ? "file saved " + esc(n.mtime) : "", bytes(n.bytes), n.rows !== "" ? (+n.rows).toLocaleString() + " rows" : "",
+              n.n_sheets ? n.n_sheets + " tabs" : ""].filter(Boolean).join(" · ") + "</div>" +
+            (n.last_run && n.kind === "notebook" ? '<div class="m">For notebooks the last run (from manifests/) is what counts; the file time changes whenever it is opened and saved.</div>' : "") + "</div>";
+          if (n.headline) h += '<div class="grp"><h4>READ ME headline</h4><div class="headline">' + esc(n.headline) + "</div></div>";
+          if (n.questions.length) h += '<div class="grp"><h4>Answers</h4>' + n.questions.map(function (q) { return questionHTML(Q[q], false); }).join("") + "</div>";
+          if (n.decisions.length) h += '<div class="grp"><h4>Decisions applied</h4>' + n.decisions.map(function (d) { return DEC[d] ? decisionHTML(DEC[d]) : ""; }).join("") + "</div>";
+          if (n.datasets.length) h += '<div class="grp"><h4>Datasets</h4><div>' + n.datasets.map(esc).join(", ") + " (DATASETS.md)</div>" + (n.dataset_notes ? '<div class="m">' + esc(n.dataset_notes) + "</div>" : "") + "</div>";
+          if (n.sheets.length) {
+            var idx = {}; n.index.forEach(function (r) { idx[r[0]] = r[1]; });
+            h += '<div class="grp"><h4>Tabs (' + n.sheets.length + ")</h4><table>" + n.sheets.map(function (s) {
+              return '<tr class="' + (state.hiTab && state.hiTab === s ? "hit" : "") + '"><td>' + esc(s) + "</td><td>" + esc(idx[s] || "") + "</td></tr>";
+            }).join("") + "</table></div>";
+          }
+          function flowList(list, dir) {
+            return list.map(function (e) {
+              var o = dir === "in" ? e.source : e.target;
+              return '<div class="e">' + (dir === "in" ? nodeBtn(o) + ' <span class="m">' + esc(e.relation) + " this</span>" : '<span class="m">' + esc(e.relation) + "</span> " + nodeBtn(o)) +
+                (visible(N[o]) ? "" : ' <span class="m">(' + (N[o].audience !== "reporters" ? "plumbing" : RUNS[N[o].run] ? RUNS[N[o].run].toLowerCase() + " run" : "hidden") + ")</span>") + "</div>";
+            }).join("");
+          }
+          if (ins.length) h += '<div class="grp"><h4>What feeds it (' + ins.length + ")</h4>" + flowList(ins, "in") + "</div>";
+          if (outs.length) h += '<div class="grp"><h4>What it feeds (' + outs.length + ")</h4>" + flowList(outs, "out") + "</div>";
+          if (n.log.length) h += '<div class="grp"><h4>LOG.md rows</h4><div>' + n.log.map(function (r) { return "LOG #" + r; }).join(", ") + "</div>" +
+            (n.n_log_rows > n.log.length ? '<div class="m">The last ' + n.log.length + " of " + n.n_log_rows + " rows that mention it.</div>" : "") + "</div>";
+          pane.innerHTML = h;
+        }
+        function introHTML() {
+          return '<div class="warn-box">Internal guide for the reporters. Nothing here is a new analysis; every figure is copied from a workbook’s READ ME.</div>' +
+            '<p class="d-name">How to read this map</p>' +
+            "<p>Data flows left to right: <b>sources</b> are read by <b>notebooks and scripts</b>, which write the <b>workbooks</b> you check, which feed the <b>live pages</b>.</p>" +
+            "<p>Orange dashed lines run against the flow: the decision files (the rules the reporters and editors set) are read back into the notebooks, and the fact-check workbook went out to the reporters and came back as a source.</p>" +
+            "<p>Click any box for what it is, which question it answers, the rules applied, its tabs and where it sits in LOG.md. Search at the top for a topic (“violations”, “Pandev”) to find the file and tab to open.</p>" +
+            '<p class="m">The default view shows the ' + D.meta.reporters_nodes + " items a reporter needs. “Show the plumbing” adds the other " + (D.nodes.length - D.meta.reporters_nodes) +
+            " (intermediate files, refresh scripts, the 32 tests, review bundles). Dotted lines in the default view stand for a path through plumbing that is hidden.</p>" +
+            '<div class="grp"><h4>Start here</h4>' + D.questions.slice(0, 2).map(function (q) { return questionHTML(q, false); }).join("") +
+            '<p class="m">All ' + D.questions.length + " questions are in the Questions tab.</p></div>";
+        }
+        function sourcesHTML() {
+          var lp = D.meta.live_pages || {};
+          return '<p class="d-name">Sources</p><ul class="src">' +
+            "<li><b>The data behind this page:</b> <code>foreclosure_questions/pipeline_map/</code> — <code>nodes.csv</code>, <code>edges.csv</code>, <code>decisions.csv</code>, <code>questions.csv</code> and <code>pipeline_map.json</code> (all four), with <code>README.txt</code> for the columns. Written by <code>" + esc(D.meta.built_by) + "</code> after each pipeline run.</li>" +
+            "<li><b>Purposes and question text:</b> written by hand in that script; the headline sentences and tab lists are read from each workbook’s READ ME and INDEX tabs.</li>" +
+            "<li><b>Decisions:</b> <code>PLAN.md</code> (the first sentence of each D-n entry). <b>LOG rows:</b> <code>LOG.md</code>. <b>Datasets:</b> <code>DATASETS.md</code>. <b>Last run:</b> <code>manifests/</code>.</li>" +
+            "<li><b>Live pages:</b> " + Object.keys(lp).map(function (k) { return '<a href="' + esc(lp[k]) + '" target="_blank" rel="noopener">' + esc(N[k] ? splitName(N[k])[0].replace(/ \(live\)$/, "") : k) + "</a>"; }).join(" · ") + "</li>" +
+            "</ul>" + '<p class="built">Built from pipeline_map.json (data built ' + esc(D.meta.built) + ", file of " + esc(D.meta.source_mtime) + "). " + esc(D.meta.readme) + "</p>";
+        }
+        pane.addEventListener("click", function (ev) { var b = ev.target.closest("button.lnk[data-n]"); if (b) select(b.getAttribute("data-n"), true); });
+
+        // ---------- search: "which file do I open for ...?" ----------
+        var q = document.getElementById("q"), results = document.getElementById("results"), hits = [];
+        function hideResults() { results.style.display = "none"; }
+        function norm(s) { return String(s || "").toLowerCase(); }
+        q.addEventListener("input", function () {
+          var s = norm(q.value.trim()); hits = [];
+          if (s.length < 2) { hideResults(); return; }
+          D.questions.forEach(function (x) {
+            if ((norm(x.question) + " " + norm(x.answer_tab) + " " + norm(x.id)).indexOf(s) < 0) return;
+            var wb = state.run === "pinhist_four" ? x.workbook_four : x.workbook_all, id = wbNode(wb);
+            hits.push({ score: 0, html: '<span class="badge q">' + esc(x.id) + '</span> <span class="rt">' + esc(x.answer_tab) + "</span><div class=\"m\">in " + esc(wb.split("/").pop()) + " · " + esc(x.question.slice(0, 110)) + "…</div>",
+              go: function () { if (id) select(id, true, x.answer_tab.split(/[ ,(]/)[0]); } });
+          });
+          D.nodes.forEach(function (n) {
+            var tabHit = n.sheets.filter(function (t) { return norm(t).indexOf(s) >= 0; }).concat(n.index.filter(function (r) { return norm(r[1]).indexOf(s) >= 0 && norm(r[0]).indexOf(s) < 0; }).map(function (r) { return r[0]; }));
+            var inName = norm(n.name).indexOf(s) >= 0, inText = (norm(n.purpose) + " " + norm(n.path)).indexOf(s) >= 0;
+            if (!inName && !inText && !tabHit.length) return;
+            var other = (n.run === "pinhist" || n.run === "pinhist_four") && n.run !== state.run;
+            hits.push({ score: (inName ? 1 : tabHit.length ? 2 : 3) + (n.audience === "reporters" ? 0 : 2) + (other ? 4 : 0),
+              html: '<span class="rt">' + esc(splitName(n)[0]) + "</span> " + runBadge(n) +
+                '<div class="m">' + (tabHit.length ? "tab " + esc(tabHit.slice(0, 3).join(", ")) + (tabHit.length > 3 ? " +" + (tabHit.length - 3) : "") + " · " : "") + esc(n.purpose.slice(0, 100)) + "…</div>",
+              go: function () { select(n.id, true, tabHit[0]); } });
+          });
+          hits.sort(function (a, b) { return a.score - b.score; });
+          hits = hits.slice(0, 30);
+          results.innerHTML = hits.length ? hits.map(function (h, i) { return '<li data-i="' + i + '">' + h.html + "</li>"; }).join("") : '<li class="m">No match</li>';
+          results.style.display = "block";
+        });
+        results.addEventListener("click", function (ev) { var li = ev.target.closest("li[data-i]"); if (!li) return; hits[+li.getAttribute("data-i")].go(); hideResults(); });
+        q.addEventListener("keydown", function (ev) { if (ev.key === "Enter" && hits.length) { hits[0].go(); hideResults(); } });
+        document.addEventListener("click", function (ev) { if (!ev.target.closest(".searchwrap")) hideResults(); });
+        q.addEventListener("focus", function () { if (q.value.trim().length >= 2 && hits.length) results.style.display = "block"; });
+
+        // ---------- controls ----------
+        function syncControls() {
+          document.querySelectorAll("#runSeg button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-run") === state.run); });
+          document.getElementById("plumb").checked = state.plumb;
+          document.getElementById("runnote").innerHTML = "<b>Run: " + esc(RUNS[state.run].toLowerCase()) + ".</b> The two runs are the same notebook on the same 354 counted 7+ filings; the only file that differs is " +
+            '<button class="lnk" data-n="d_scope">pinhist_parties_in_scope.csv</button> (16 party labels for all parties, D-27; 4 for the four parties, D-21). Switching swaps the run’s own workbooks, network files and pages.';
+          save();
+        }
+        document.getElementById("runnote").addEventListener("click", function (ev) { var b = ev.target.closest("button.lnk[data-n]"); if (b) select(b.getAttribute("data-n"), true); });
+        document.getElementById("runSeg").addEventListener("click", function (ev) {
+          var b = ev.target.closest("button[data-run]"); if (!b) return;
+          state.run = b.getAttribute("data-run");
+          if (state.sel && !visible(N[state.sel])) state.sel = null;
+          syncControls(); layout(); render();
+        });
+        document.getElementById("plumb").addEventListener("change", function (ev) {
+          state.plumb = ev.target.checked;
+          if (state.sel && !visible(N[state.sel])) state.sel = null;
+          syncControls(); layout(); render();
+        });
+        document.getElementById("legend").innerHTML =
+          '<span class="l"><i></i>feeds (left to right)</span>' +
+          '<span class="l"><i style="border-top-style:dotted"></i>through hidden plumbing</span>' +
+          '<span class="l"><i style="border-top:2px dashed var(--edge-back)"></i>read back against the flow</span>' +
+          '<span class="l"><span class="badge all">16 parties</span><span class="badge four">4 parties</span> one run only (others are used by both)</span>' +
+          '<span class="l"><span class="badge q">Q1</span> answers that question</span>';
+
+        var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { drawEdges(); applySel(); }, 120); });
+        syncControls(); layout(); render();
+      })();
+    </script>
+  </body>
+</html>
