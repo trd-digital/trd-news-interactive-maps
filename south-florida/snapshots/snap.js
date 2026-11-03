@@ -133,6 +133,15 @@
   var params = new URLSearchParams(location.search);
   var dashboard = params.get("type") === "dashboard" && window.self !== window.top;
   if (dashboard) document.body.classList.add("sn-dash");
+  // A tall dashboard card (the Nov 2026 layout gives it ~630px) fills its
+  // frame: the cards stretch and show their trend lines (CSS sn-dash-tall).
+  // Only with two columns of cards; one column already runs past the frame.
+  var TALL = 480, TWO_COLS = 472;
+  function setTall() {
+    document.body.classList.toggle("sn-dash-tall", dashboard && window.innerHeight >= TALL && window.innerWidth >= TWO_COLS);
+  }
+  setTall();
+  window.addEventListener("resize", setTall);
   var scope = SCOPES[params.get("scope")] ? params.get("scope") : root.getAttribute("data-scope") || "all";
 
   var trdTheme = typeof TrdTheme === "function" ? TrdTheme({ updateCallback: function (t) { setTheme(t); } }) : null;
@@ -283,7 +292,9 @@
       '<polyline points="' + pts.join(" ") + '" vector-effect="non-scaling-stroke"/>' +
       // a zero-length round-capped line: stays a circle however the SVG stretches
       '<line x1="' + last[0].toFixed(1) + '" y1="' + last[1].toFixed(1) + '" x2="' + last[0].toFixed(1) + '" y2="' + last[1].toFixed(1) + '" vector-effect="non-scaling-stroke"/></svg>' +
-      '<span class="sn-spark-cap">Median, last ' + qs.length + " quarters</span>";
+      '<span class="sn-spark-cap">Median, last ' + qs.length + " quarters" +
+      // the line spans low to high; tall dashboard cards print that range
+      '<span class="sn-spark-range">: ' + money(lo) + "–" + money(hi) + "</span></span>";
   }
 
   function cardHtml(ent, s, prev) {
@@ -297,7 +308,7 @@
       '<div class="sn-card-top"><div><h3 class="sn-name"' + title + ">" + esc(ent.short || ent.name) + '</h3><div class="sn-sub">' + esc(ent.sub) + "</div></div>" +
       (few ? '<span class="sn-badge" title="Medians from fewer than ' + FEW + ' sales swing widely">Few sales</span>' : "") + "</div>" +
       '<div class="sn-medblock"><div class="sn-label">Median price</div><div class="sn-hero"><span class="sn-hero-v">' + money(s.median) + "</span>" +
-      chg(prev && pct(s.median, prev.median), vsQ ? " vs " + qLabel(vsQ) : "") + "</div>" + (dashboard ? "" : '<div class="sn-trend">' + spark(ent) + "</div>") + "</div>" +
+      chg(prev && pct(s.median, prev.median), vsQ ? " vs " + qLabel(vsQ) : "") + "</div>" + '<div class="sn-trend">' + spark(ent) + "</div></div>" +
       '<div class="sn-stats">' +
       '<div class="sn-stat sn-stat-deals"><span class="sn-label">Sales</span><b>' + num(s.deals) + '</b><span class="sn-unit"> ' + (s.deals === 1 ? "sale" : "sales") + "</span>" + chg(prev && pct(s.deals, prev.deals)) + "</div>" +
       '<div class="sn-stat"><span class="sn-label">Volume</span><b>' + money(s.volume) + '</b><span class="sn-unit"> volume</span>' + chg(prev && pct(s.volume, prev.volume)) + "</div>" +
@@ -685,7 +696,11 @@
   // ----------------------------------------------------- height for TRD pages
   // The TRD dashboard grows the card's frame to this height (min-height).
   function postHeight() {
+    // Report the content's own height, not the stretched fill of a tall card.
+    var tall = document.body.classList.contains("sn-dash-tall");
+    if (tall) document.body.classList.remove("sn-dash-tall");
     var h = el.results.offsetHeight;
+    if (tall) document.body.classList.add("sn-dash-tall");
     var origin = location.origin === "https://trd-digital.github.io" ? "https://therealdeal.com" : "http://localhost:3010";
     try {
       window.parent.postMessage({ updateHeight: h + 10, src: location.href }, origin);

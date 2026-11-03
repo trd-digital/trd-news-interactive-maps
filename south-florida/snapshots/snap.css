@@ -669,6 +669,44 @@ button {
 .sn-dash .sn-hero-v {
   font-size: 22px;
 }
+.sn-dash .sn-trend {
+  display: none;
+}
+/* Tall dashboard card: fill the frame, cards share the height evenly and
+   the median trend line takes the extra room. */
+.sn-dash-tall .sn-app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.sn-dash-tall #sn-results {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.sn-dash-tall .sn-grid.sn-overview {
+  flex: 1;
+  grid-auto-rows: 1fr;
+}
+.sn-dash-tall .sn-card {
+  justify-content: space-between;
+}
+.sn-spark-range {
+  display: none;
+}
+.sn-dash-tall .sn-spark-range {
+  display: inline;
+}
+.sn-dash-tall .sn-trend {
+  display: flex;
+  flex-direction: column;
+  height: 64px; /* taller would exaggerate small moves: the line is unscaled */
+}
+.sn-dash-tall .sn-spark {
+  flex: 1;
+  height: auto;
+  min-height: 24px;
+}
 
 /* ======================================================= Oct 2026 polish */
 
