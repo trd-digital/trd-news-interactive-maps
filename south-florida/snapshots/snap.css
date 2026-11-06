@@ -1,0 +1,965 @@
+/* snap.css — South Florida Market Snapshots (residential, commercial, all).
+   Same tokens, fonts and controls as the Live Transactions pages (tx.css);
+   the theme follows TRD's theme.js via [data-bs-theme]. */
+
+@font-face {
+  font-family: "Proxima Nova";
+  src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Proxima Nova";
+  src: url("https://static.therealdeal.com/fonts/ProximaNova/ProximaNova-Extrabld.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light;
+  --sn-bg: #ffffff;
+  --sn-surface: #ffffff;
+  --sn-surface-2: #f4f4f2;
+  --sn-border: #dcdcd8;
+  --sn-text: #111111;
+  --sn-text-2: #52514e;
+  --sn-text-3: #76756f;
+  --sn-accent: #1a5fb4;
+  --sn-accent-ink: #ffffff;
+  --sn-focus: #1a5fb4;
+  --sn-series: #2a78d6;
+  --sn-series-soft: #b7d3f6;
+  --sn-up: #1e7b45;
+  --sn-down: #c0392b;
+  --sn-shadow: 0 6px 24px rgba(0, 0, 0, 0.14);
+  --sn-zebra: #fafaf8;
+  --sn-font: "Proxima Nova", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --sn-serif: "Merriweather", Georgia, serif;
+}
+[data-bs-theme="dark"] {
+  color-scheme: dark;
+  --sn-bg: #212121;
+  --sn-surface: #2a2a2a;
+  --sn-surface-2: #333333;
+  --sn-border: #474747;
+  --sn-text: #f0efec;
+  --sn-text-2: #c3c2b7;
+  --sn-text-3: #9d9c95;
+  --sn-accent: #5598e7;
+  --sn-accent-ink: #0b0b0b;
+  --sn-focus: #86b6ef;
+  --sn-series: #3987e5;
+  --sn-series-soft: #2a4f7c;
+  --sn-up: #4cc38a;
+  --sn-down: #ff7b72;
+  --sn-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+  --sn-zebra: #2e2e2e;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  background: var(--sn-bg);
+  color: var(--sn-text);
+  font-family: var(--sn-font);
+  font-size: 14px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+}
+:focus-visible {
+  outline: 2px solid var(--sn-focus);
+  outline-offset: 2px;
+}
+[hidden] {
+  display: none !important;
+}
+.sn-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.sn-app {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 16px 16px 24px;
+}
+
+/* ------------------------------------------------------------- header */
+.sn-head {
+  position: sticky;
+  z-index: 5;
+  top: 0;
+  /* full-bleed background so cards don't show beside it when pinned */
+  margin: -16px -16px 0;
+  padding: 16px 16px 12px;
+  background: var(--sn-bg);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px 16px;
+  border-bottom: 1px solid var(--sn-border);
+}
+.sn-head.is-stuck {
+  box-shadow: 0 6px 12px -10px rgba(0, 0, 0, 0.45);
+}
+.sn-title {
+  margin: 0;
+  font-family: var(--sn-serif);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.sn-meta {
+  margin: 4px 0 0;
+  color: var(--sn-text-2);
+  font-size: 13px;
+}
+.sn-meta strong {
+  color: var(--sn-text);
+}
+
+/* Segmented switch (Residential / Commercial / All) */
+.sn-seg {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--sn-surface-2);
+}
+.sn-seg button {
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--sn-text-2);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.sn-seg button[aria-pressed="true"] {
+  background: var(--sn-surface);
+  color: var(--sn-text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* ------------------------------------------------------------ controls */
+.sn-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+}
+.sn-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.sn-pill {
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--sn-border);
+  border-radius: 999px;
+  background: var(--sn-surface);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.sn-pill[aria-pressed="true"] {
+  border-color: var(--sn-accent);
+  background: var(--sn-accent);
+  color: var(--sn-accent-ink);
+}
+.sn-field {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.sn-field > span {
+  color: var(--sn-text-3);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.sn-field select,
+.sn-field input {
+  height: 34px;
+  max-width: 100%;
+  padding: 0 10px;
+  border: 1px solid var(--sn-border);
+  border-radius: 8px;
+  background: var(--sn-surface);
+}
+.sn-field input {
+  width: 200px;
+}
+.sn-field select {
+  max-width: 240px;
+}
+.sn-controls .sn-spacer {
+  flex: 1;
+}
+.sn-btn {
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--sn-border);
+  border-radius: 8px;
+  background: var(--sn-surface);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.sn-btn:hover {
+  border-color: var(--sn-text-3);
+}
+.sn-linkbtn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--sn-accent);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ----------------------------------------------------------------- grid */
+.sn-section-h {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 18px 0 8px;
+  color: var(--sn-text-3);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.sn-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  grid-auto-flow: row dense; /* cards after an open detail backfill its row */
+  gap: 10px;
+}
+.sn-grid.sn-overview {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.sn-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--sn-border);
+  border-radius: 12px;
+  background: var(--sn-surface);
+  text-align: left;
+}
+.sn-card:hover {
+  border-color: var(--sn-text-3);
+}
+.sn-card[aria-expanded="true"] {
+  border-color: var(--sn-accent);
+  box-shadow: 0 0 0 1px var(--sn-accent);
+}
+.sn-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+.sn-name {
+  margin: 0;
+  font-family: var(--sn-serif);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.sn-sub {
+  color: var(--sn-text-3);
+  font-size: 12px;
+}
+.sn-badge {
+  flex: none;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--sn-surface-2);
+  color: var(--sn-text-2);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.sn-label {
+  color: var(--sn-text-3);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.sn-hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+}
+.sn-hero-v {
+  font-size: 26px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.is-few .sn-hero-v {
+  color: var(--sn-text-3);
+}
+.sn-chg {
+  color: var(--sn-text-2);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.sn-chg i {
+  font-style: normal;
+}
+.sn-chg.up i {
+  color: var(--sn-up);
+}
+.sn-chg.down i {
+  color: var(--sn-down);
+}
+.sn-stats {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: space-between;
+  gap: 4px 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--sn-border);
+}
+.sn-stat {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.sn-stat b {
+  font-variant-numeric: tabular-nums;
+}
+.sn-stat .sn-chg {
+  font-size: 11px;
+}
+
+.sn-unit {
+  display: none;
+}
+.sn-section-h > span:last-child {
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.sn-empty {
+  grid-column: 1 / -1;
+  padding: 28px 12px;
+  color: var(--sn-text-2);
+  text-align: center;
+}
+.sn-more {
+  margin-top: 12px;
+}
+.sn-foot {
+  margin: 16px 0 0;
+  color: var(--sn-text-3);
+  font-size: 12px;
+}
+
+/* --------------------------------------------------------------- detail */
+.sn-detail {
+  grid-column: 1 / -1;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--sn-border);
+  border-radius: 12px;
+  background: var(--sn-surface);
+  box-shadow: var(--sn-shadow);
+  scroll-margin: 12px;
+}
+.sn-detail-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.sn-detail-top h3 {
+  margin: 0;
+  font-family: var(--sn-serif);
+  font-size: 19px;
+}
+.sn-detail-actions {
+  display: flex;
+  gap: 8px;
+}
+.sn-x {
+  width: 34px;
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+}
+.sn-figs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0 6px;
+}
+.sn-fig {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--sn-surface-2);
+}
+.sn-fig b {
+  display: block;
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+}
+.sn-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 14px;
+}
+.sn-chart h4 {
+  margin: 0 0 6px;
+  font-size: 13px;
+}
+.sn-chart-box {
+  position: relative;
+  height: 220px;
+}
+.sn-legend {
+  display: flex;
+  gap: 14px;
+  margin: 0 0 4px;
+  color: var(--sn-text-2);
+  font-size: 12px;
+}
+.sn-legend i {
+  display: inline-block;
+  width: 16px;
+  height: 0;
+  margin-right: 5px;
+  vertical-align: middle;
+  border-top: 2px solid var(--sn-series);
+}
+.sn-legend i.is-avg {
+  border-top: 2px dashed var(--sn-text-3);
+}
+.sn-table-wrap {
+  max-height: 340px;
+  margin-top: 16px;
+  overflow: auto;
+  border: 1px solid var(--sn-border);
+  border-radius: 10px;
+}
+.sn-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+.sn-table th,
+.sn-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--sn-border);
+  text-align: right;
+  white-space: nowrap;
+}
+.sn-table th:first-child,
+.sn-table td:first-child {
+  text-align: left;
+}
+.sn-table th {
+  position: sticky;
+  top: 0;
+  background: var(--sn-surface);
+  color: var(--sn-text-3);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.sn-table tbody tr:nth-child(even) td {
+  background: var(--sn-zebra);
+}
+.sn-table tbody tr.is-sel td {
+  background: var(--sn-surface-2);
+  font-weight: 700;
+}
+.sn-table td i {
+  margin-left: 4px;
+  font-size: 10px;
+  font-style: normal;
+}
+.sn-table td i.up {
+  color: var(--sn-up);
+}
+.sn-table td i.down {
+  color: var(--sn-down);
+}
+
+/* --------------------------------------------------------------- phones */
+@media (max-width: 600px) {
+  .sn-app {
+    padding: 12px 12px 20px;
+  }
+  .sn-title {
+    font-size: 19px;
+  }
+  .sn-head {
+    margin: -12px -12px 0;
+    padding: 12px 12px 10px;
+  }
+  .sn-seg {
+    width: 100%;
+  }
+  .sn-seg button {
+    flex: 1;
+    padding: 6px 8px;
+  }
+  .sn-field,
+  .sn-field input,
+  .sn-field select {
+    width: 100%;
+    max-width: none;
+  }
+  .sn-controls > .sn-field {
+    flex: 1 1 45%;
+  }
+  .sn-controls > .sn-field.sn-search {
+    flex-basis: 100%;
+  }
+  /* City cards become compact rows; tapping opens the detail below. */
+  .sn-grid,
+  .sn-grid.sn-overview,
+  .sn-grid.sn-cities {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sn-grid.sn-cities {
+    gap: 0;
+    border-top: 1px solid var(--sn-border);
+  }
+  .sn-cities .sn-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0 10px;
+    padding: 10px 2px;
+    border: 0;
+    border-bottom: 1px solid var(--sn-border);
+    border-radius: 0;
+  }
+  .sn-cities .sn-card[aria-expanded="true"] {
+    box-shadow: none;
+    background: var(--sn-surface-2);
+  }
+  .sn-cities .sn-card-top {
+    grid-column: 1;
+    display: block;
+  }
+  .sn-cities .sn-name {
+    font-size: 15px;
+  }
+  .sn-cities .sn-badge {
+    display: inline-block;
+    margin-top: 3px;
+  }
+  .sn-cities .sn-medblock {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    text-align: right;
+  }
+  .sn-cities .sn-medblock .sn-label {
+    display: none;
+  }
+  .sn-cities .sn-hero {
+    justify-content: flex-end;
+  }
+  .sn-cities .sn-hero-v {
+    font-size: 17px;
+  }
+  .sn-cities .sn-stats {
+    grid-column: 1;
+    display: block;
+    padding: 0;
+    border: 0;
+    color: var(--sn-text-2);
+    font-size: 12px;
+  }
+  .sn-cities .sn-stat:not(.sn-stat-deals) {
+    display: none;
+  }
+  .sn-cities .sn-stat .sn-label,
+  .sn-cities .sn-stat .sn-chg {
+    display: none;
+  }
+  .sn-cities .sn-unit {
+    display: inline;
+  }
+  .sn-cities .sn-stat-deals {
+    display: block;
+  }
+  .sn-cities .sn-detail {
+    margin: 8px 0;
+  }
+  .sn-figs {
+    grid-template-columns: 1fr 1fr;
+  }
+  .sn-charts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sn-detail {
+    padding: 12px;
+  }
+  .sn-fig b {
+    font-size: 17px;
+  }
+}
+
+/* -------------------------------------------- dashboard card (?type=dashboard) */
+.sn-dash .sn-head,
+.sn-dash .sn-controls,
+.sn-dash .sn-section-h,
+.sn-dash .sn-cities,
+.sn-dash .sn-more,
+.sn-dash .sn-foot,
+.sn-dash-pre .sn-head,
+.sn-dash-pre .sn-controls,
+.sn-dash-pre .sn-section-h,
+.sn-dash-pre .sn-cities,
+.sn-dash-pre .sn-more,
+.sn-dash-pre .sn-foot {
+  display: none !important;
+}
+.sn-dash .sn-app {
+  /* breathing room inside the dashboard card's frame */
+  padding: 10px 12px 12px;
+}
+.sn-dash .sn-grid.sn-overview {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+}
+.sn-dash .sn-card {
+  padding: 10px 12px;
+  gap: 6px;
+}
+.sn-dash .sn-hero-v {
+  font-size: 22px;
+}
+.sn-dash .sn-trend {
+  display: none;
+}
+/* Tall dashboard card: fill the frame, cards share the height evenly and
+   the median trend line takes the extra room. */
+.sn-dash-tall .sn-app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.sn-dash-tall #sn-results {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.sn-dash-tall .sn-grid.sn-overview {
+  flex: 1;
+  grid-auto-rows: 1fr;
+}
+.sn-dash-tall .sn-card {
+  justify-content: space-between;
+}
+.sn-spark-range {
+  display: none;
+}
+.sn-dash-tall .sn-spark-range {
+  display: inline;
+}
+.sn-dash-tall .sn-trend {
+  display: flex;
+  flex-direction: column;
+  height: 64px; /* taller would exaggerate small moves: the line is unscaled */
+}
+.sn-dash-tall .sn-spark {
+  flex: 1;
+  height: auto;
+  min-height: 24px;
+}
+
+/* ======================================================= Oct 2026 polish */
+
+/* Hover feedback: cards read as clickable. */
+.sn-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.sn-card:not(.sn-skel):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+.sn-dash .sn-card:hover {
+  transform: none;
+}
+
+/* "flat" (under 1%) in grey, no arrow */
+.sn-chg.flat {
+  color: var(--sn-text-3);
+}
+
+/* Trend line: median over the last 8 quarters */
+.sn-trend {
+  margin-top: 6px;
+}
+.sn-spark {
+  display: block;
+  width: 100%;
+  height: 24px;
+  overflow: visible;
+}
+.sn-spark polyline {
+  fill: none;
+  stroke: var(--sn-series);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.sn-spark line {
+  stroke: var(--sn-series);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+.sn-spark-cap {
+  display: block;
+  margin-top: 2px;
+  color: var(--sn-text-3);
+  font-size: 10.5px;
+}
+.sn-cities .sn-spark-cap {
+  display: none;
+}
+
+/* South Florida leads the overview */
+@media (min-width: 720px) {
+  .sn-lead {
+    grid-column: span 2;
+  }
+}
+.sn-grid.sn-overview {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+.sn-lead {
+  border-color: var(--sn-text-3);
+}
+.sn-lead .sn-name {
+  font-size: 19px;
+}
+.sn-lead .sn-hero-v {
+  font-size: 34px;
+}
+.sn-lead .sn-spark {
+  height: 40px;
+}
+
+/* City cards: no capital labels on every card; units carry the meaning. */
+.sn-cities .sn-medblock .sn-label {
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.sn-cities .sn-stats {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 3px 10px;
+  font-size: 12.5px;
+}
+/* same layout on every card: sales | average, then volume */
+.sn-cities .sn-stat-deals {
+  order: 1;
+}
+.sn-cities .sn-stat:last-child {
+  order: 2;
+  justify-content: flex-end;
+}
+.sn-cities .sn-stat:nth-child(2) {
+  order: 3;
+}
+.sn-cities .sn-stat {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 4px;
+}
+.sn-cities .sn-stat .sn-label {
+  display: none;
+}
+.sn-cities .sn-unit {
+  display: inline;
+  color: var(--sn-text-3);
+}
+
+/* Slimmer header once pinned */
+.sn-head {
+  transition: padding 0.15s ease;
+}
+.sn-head.is-stuck {
+  align-items: center;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.sn-head.is-stuck .sn-title {
+  font-size: 17px;
+}
+.sn-head.is-stuck .sn-meta {
+  margin-top: 1px;
+}
+.sn-head.is-stuck .sn-meta-src {
+  display: none;
+}
+.sn-head.is-stuck .sn-seg button {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+/* Dashboard card: name the quarter */
+.sn-dash-cap {
+  display: none;
+}
+.sn-dash .sn-dash-cap {
+  display: block;
+  margin: 0 0 6px;
+  color: var(--sn-text-3);
+  font-size: 12px;
+}
+
+/* Loading placeholders */
+.sn-skel {
+  min-height: 150px;
+  pointer-events: none;
+}
+.sn-skel i {
+  display: block;
+  height: 12px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--sn-surface-2) 25%, var(--sn-border) 50%, var(--sn-surface-2) 75%);
+  background-size: 200% 100%;
+  animation: sn-shimmer 1.2s linear infinite;
+}
+.sn-skel i:nth-child(1) {
+  width: 55%;
+  height: 16px;
+}
+.sn-skel i:nth-child(2) {
+  width: 40%;
+  height: 26px;
+  margin-top: 10px;
+}
+.sn-skel i:nth-child(3) {
+  width: 85%;
+  margin-top: 18px;
+}
+@keyframes sn-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* Filters button: phones only */
+.sn-filter-btn {
+  display: none;
+  align-items: center;
+  gap: 6px;
+}
+.sn-badge-n {
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--sn-accent);
+  color: var(--sn-accent-ink);
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+}
+@media (max-width: 600px) {
+  .sn-filter-btn {
+    display: inline-flex;
+    order: 3;
+    align-self: flex-end;
+  }
+  /* search and Filters share a row */
+  .sn-controls > .sn-field.sn-search {
+    order: 2;
+    flex: 1 1 0;
+  }
+  .sn-controls > .sn-pills {
+    order: 1;
+    flex-basis: 100%;
+  }
+  .sn-controls > .sn-opt,
+  .sn-controls > .sn-reset {
+    order: 4;
+  }
+  .sn-controls:not(.is-open) .sn-opt {
+    display: none;
+  }
+  .sn-cities .sn-trend {
+    display: none;
+  }
+  /* keep the compact phone rows (the desktop city-card rules above come later) */
+  .sn-cities .sn-stats {
+    display: block;
+  }
+  .sn-cities .sn-stat:not(.sn-stat-deals) {
+    display: none;
+  }
+  .sn-cities .sn-skel {
+    min-height: 56px;
+  }
+  .sn-head.is-stuck .sn-seg {
+    width: auto;
+  }
+}
+
+/* History panel eases in */
+.sn-detail {
+  animation: sn-in 0.18s ease-out;
+}
+@keyframes sn-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sn-card,
+  .sn-head,
+  .sn-detail,
+  .sn-skel i {
+    transition: none;
+    animation: none;
+  }
+  .sn-card:not(.sn-skel):hover {
+    transform: none;
+  }
+}

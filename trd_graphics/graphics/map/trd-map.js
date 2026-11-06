@@ -172,14 +172,32 @@
       antialias: true,
       attributionControl: false,
     };
+    // Right-edge padding the camera should reserve for the overlay card column
+    // (wide embed only). Single source of truth — matches the CSS column width.
+    function overlayPad() {
+      if (!embed || !opts.overlayWidth) return 0;
+      if (docWidth() < 780) return 0;
+      return opts.overlayWidth;
+    }
+    // Merge the overlay reserve into a fitBounds `padding` (number or object),
+    // so the initial bounds fit (and api.fitBounds) keep every feature clear
+    // of the wide-embed card column, same as flyTo already did.
+    function withOverlayPadding(o) {
+      var out = {};
+      for (var k in o) if (o.hasOwnProperty(k)) out[k] = o[k];
+      var pad = overlayPad();
+      if (pad > 0) {
+        var p = out.padding == null ? 40 : out.padding;
+        if (typeof p === "number") p = { top: p, bottom: p, left: p, right: p };
+        else { var q = {}; for (var s in p) q[s] = p[s]; p = q; }
+        p.right = (p.right || 0) + pad;
+        out.padding = p;
+      }
+      return out;
+    }
     if (opts.bounds) {
       mapOptions.bounds = opts.bounds;
-      mapOptions.fitBoundsOptions = opts.fitBoundsOptions || {
-        top: 40,
-        bottom: 40,
-        left: 40,
-        right: 40,
-      };
+      mapOptions.fitBoundsOptions = withOverlayPadding(opts.fitBoundsOptions || { padding: 40 });
     } else {
       mapOptions.center = opts.center || [-73.98, 40.75];
       mapOptions.zoom = opts.zoom != null ? opts.zoom : 11;
@@ -296,13 +314,7 @@
       return api;
     };
 
-    // Right-edge padding the camera should reserve for the overlay card column
-    // (wide embed only). Single source of truth — matches the CSS column width.
-    api.overlayPadding = function () {
-      if (!embed || !opts.overlayWidth) return 0;
-      if (docWidth() < 780) return 0;
-      return opts.overlayWidth;
-    };
+    api.overlayPadding = overlayPad;
 
     api.flyTo = function (center, o) {
       if (!map) return api;
@@ -327,7 +339,7 @@
     };
 
     api.fitBounds = function (bounds, o) {
-      if (map && bounds) map.fitBounds(bounds, o || { padding: 40 });
+      if (map && bounds) map.fitBounds(bounds, withOverlayPadding(o || { padding: 40 }));
       return api;
     };
 

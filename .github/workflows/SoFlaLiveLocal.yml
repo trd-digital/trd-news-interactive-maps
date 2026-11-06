@@ -22,24 +22,27 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r ./SoFlaLiveLocalAutoUpdateMap/requirements.txt
+          pip install -r ./south-florida/_live_local_auto_update/requirements.txt
 
       - name: Run jupyter notebook
+        working-directory: ./south-florida/_live_local_auto_update
         run: |
           # Decode the base64 encoded credentials and save to a file
           # @see
-          echo "${{ secrets.AUTO_SCRAPER_CREDENTIALS_BASE64 }}" | base64 --decode > ./SoFlaLiveLocalAutoUpdateMap/autoscraper-380600-0d0c84856d6b.json
-          jupyter execute ./SoFlaLiveLocalAutoUpdateMap/LiveLocalAutoUpdater.ipynb --ExecutePreprocessor.timeout=-1
+          echo "${{ secrets.AUTO_SCRAPER_CREDENTIALS_BASE64 }}" | base64 --decode > autoscraper-380600-0d0c84856d6b.json
+          jupyter execute LiveLocalAutoUpdater.ipynb --ExecutePreprocessor.timeout=-1
 
       - name: Commit and push changes
         run: |
           git config --local user.name "GitHub Actions"
           git config --local user.email "actions@github.com"
-          git add ./SoFlaLiveLocalAutoUpdateMap/live_local.geojson
+          # The live map and table read south-florida/south-florida-live-local.geojson
+          mv ./south-florida/_live_local_auto_update/live_local.geojson ./south-florida/south-florida-live-local.geojson
+          git add ./south-florida/south-florida-live-local.geojson
           git commit -m "Update SoFla Live Local Map data" || echo "No changes to commit"
           git push origin HEAD:main
 
       - name: Clean up
+        if: always()
         run: |
-          rm ./SoFlaLiveLocalAutoUpdateMap/autoscraper-380600-0d0c84856d6b.json
-          rm ./SoFlaLiveLocalAutoUpdateMap/live_local.geojson
+          rm -f ./south-florida/_live_local_auto_update/autoscraper-380600-0d0c84856d6b.json

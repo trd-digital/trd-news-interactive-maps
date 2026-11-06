@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TRD article embed test</title>
+    <style>
+      /* Reproduces how graphics actually run on therealdeal.com (checked live
+         Oct 26 2026 on the Publix, branded condos, Wynwood and FL governor
+         articles): a 910px article column on desktop, and producers paste a
+         PLAIN iframe, width 100% and height="560", with scrolling="yes". There is
+         no parent-side snippet, so no auto-resize and no theme handshake. The
+         graphic's theme follows the reader's OS (prefers-color-scheme), while
+         the TRD page can be light or dark on its own.
+
+         Query params:
+           ?src=../my_graphic/      graphic to load (default: starter)
+           &page=dark|light         TRD page background (default: dark)
+           &w=910|358               column width (default 910; 358 = phone)
+           &h=560                   iframe height (default 560) */
+      :root { --page: #222222; --ink: #ffffff; --muted: #b9b9b9; }
+      body.light { --page: #ffffff; --ink: #111111; --muted: #555555; }
+      body { margin: 0; background: var(--page); color: var(--ink); font-family: "proxima-nova", system-ui, sans-serif; }
+      .col { max-width: var(--col, 910px); margin: 0 auto; padding: 40px 0 120px; }
+      .col p { font-size: 20px; line-height: 1.5; margin: 0 0 22px; }
+      /* TRD's article markup: <div class="container"><div class="iframe-wrap"><iframe …> */
+      .iframe-wrap { margin: 0 0 8px; }
+      .iframe-wrap iframe { display: block; }
+      .credit { text-align: right; font-size: 13px; font-style: italic; color: var(--muted); margin: 0 0 28px; }
+    </style>
+  </head>
+  <body>
+    <div class="col">
+      <p>Article copy above the graphic. Producers usually add a lead-in sentence here.</p>
+      <div class="container">
+        <div class="iframe-wrap"><iframe id="f" loading="lazy" width="100%" height="560" frameborder="0" scrolling="yes"></iframe></div>
+      </div>
+      <p class="credit">Graphic created by Adam Farence</p>
+      <p>Article copy below the graphic.</p>
+    </div>
+    <script>
+      var p = new URLSearchParams(location.search);
+      if (p.get("page") === "light") document.body.classList.add("light");
+      if (p.get("w")) document.querySelector(".col").style.setProperty("--col", p.get("w") + "px");
+      var f = document.getElementById("f");
+      if (p.get("h")) f.setAttribute("height", p.get("h"));
+      f.src = p.get("src") || "starter/index.html";
+    </script>
+  </body>
+</html>

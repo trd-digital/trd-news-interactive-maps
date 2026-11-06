@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Multifamily Proposals Near Baptist Health in Kendall | The Real Deal</title>
+    <meta name="description" content="Four multifamily projects proposed near Baptist Health South Florida's campus in Kendall." />
+
+    <!-- Pre-paint boot snippet (core/boot-snippet.html) with this map's key. -->
+    <script>
+      (function () {
+        var r = document.documentElement, p = null;
+        try { p = new URLSearchParams(location.search); } catch (e) {}
+        var framed;
+        try { framed = window.self !== window.top; } catch (e) { framed = true; }
+        if ((p && p.get("layout") === "embed") || framed) r.setAttribute("data-layout", "embed");
+        var q = p && p.get("theme"), saved = null;
+        if (r.getAttribute("data-layout") !== "embed") {
+          try { saved = localStorage.getItem("map-baptistmultifamilypropoals-sfla-08-07-26:theme"); } catch (e) {}
+        }
+        var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        r.setAttribute("data-theme", (q === "dark" || q === "light") ? q
+          : (saved === "dark" || saved === "light") ? saved : (dark ? "dark" : "light"));
+      })();
+    </script>
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="trd-embed.css" />
+    <link rel="stylesheet" href="trd-map.css" />
+    <style>
+      :root { --trd-embed-h: 560px; --trd-embed-h-phone: 600px; --trd-embed-h-wide: 520px; }
+      html, body { height: 100%; }
+      .stage { position: relative; width: 100%; height: 100%; }
+      .theme-toggle {
+        position: absolute; top: 12px; right: 12px; z-index: 4;
+        background: var(--trd-panel); color: var(--trd-text);
+        border: 1px solid var(--trd-border); border-radius: 999px; cursor: pointer;
+        padding: 6px 12px; font-size: 12px; font-weight: 700;
+      }
+      .legend {
+        position: absolute; bottom: 12px; left: 12px; z-index: 3;
+        background: var(--trd-panel); color: var(--trd-text);
+        border: 1px solid var(--trd-border); border-radius: 6px;
+        padding: 9px 11px; font-size: 12px; box-shadow: var(--trd-shadow);
+      }
+      .legend .row { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+      .legend .dot { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid #fff; flex: 0 0 auto; }
+      .trd-popup-facts { margin: 6px 0; padding: 0; font-size: 12px; line-height: 1.45; }
+      .trd-popup-facts div { margin: 2px 0; }
+      .trd-popup-facts b { font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <header class="trd-header trd-standalone-only">
+      <h1>Multifamily Proposals Near Baptist Health in Kendall</h1>
+    </header>
+
+    <!-- .trd-embed-fill makes .stage adopt the fixed embed height. -->
+    <div class="trd-map stage trd-embed-fill">
+      <div id="map"></div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">Dark</button>
+      <div class="legend">
+        <div class="row"><span class="dot" style="background:#27509b"></span> Capital Partners</div>
+        <div class="row"><span class="dot" style="background:#0fa073"></span> Serralta Family Trust</div>
+        <div class="row"><span class="dot" style="background:#eaa31a"></span> Cape Summit 69 Holdings LLC</div>
+      </div>
+    </div>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+    <script src="trd-embed.js"></script>
+    <script src="trd-map.js"></script>
+    <script>
+      // Colors keyed by the developer behind each proposal.
+      var PALETTE = {
+        "Capital Partners": "#27509b",
+        "Serralta Family Trust": "#0fa073",
+        "Cape Summit 69 Holdings LLC": "#eaa31a",
+      };
+      // Public pk.* token — URL-restrict it in the Mapbox dashboard.
+      var TOKEN = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
+
+      var mapApi = null;
+
+      function esc(s) {
+        return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+
+      var controller = TRDEmbed({
+        prefix: "map-baptistmultifamilypropoals-sfla-08-07-26",
+        themeKey: "map-baptistmultifamilypropoals-sfla-08-07-26:theme",
+        toggle: "#themeToggle",
+        mountTarget: "#map",
+        onMount: function (ctx) {
+          TRDMap.loadGeoJSON("data.geojson").then(function (GEO) {
+            mapApi = TRDMap.create({
+              container: "map",
+              token: TOKEN,
+              theme: ctx.theme,
+              embed: ctx.isEmbed,
+              data: GEO,
+              bounds: TRDMap.boundsOf(GEO),
+              // All four sites sit within a couple of Kendall blocks.
+              fitBoundsOptions: { padding: ctx.isEmbed ? 60 : 100, maxZoom: 16 },
+              overlayWidth: 380,
+              interactiveLayers: ["points"],
+              // Idempotent: re-runs on every style.load (incl. theme swaps).
+              addLayers: function (map, c) {
+              if (!map.getSource("pts")) {
+                map.addSource("pts", { type: "geojson", data: c.data });
+              }
+              if (!map.getLayer("points")) {
+                map.addLayer({
+                  id: "points",
+                  type: "circle",
+                  source: "pts",
+                  paint: {
+                    "circle-radius": 9,
+                    "circle-color": c.matchColor(["get", "developer"], PALETTE),
+                    "circle-stroke-color": "#ffffff",
+                    "circle-stroke-width": 2,
+                  },
+                });
+              }
+            },
+            onFeatureClick: function (feature) {
+              if (!feature) return;
+              var p = feature.properties || {};
+              mapApi.flyTo(feature.geometry.coordinates, { zoom: 16.5 });
+              new mapboxgl.Popup({ offset: 14, closeButton: true, maxWidth: "320px" })
+                .setLngLat(feature.geometry.coordinates)
+                .setHTML(
+                  '<div class="trd-popup-body"><h3>' + esc(p.name) + "</h3>" +
+                  '<div class="trd-popup-addr">' + esc(p.address) + "</div>" +
+                  '<div class="trd-popup-facts"><div><b>Developer:</b> ' +
+                    esc(p.developer) + "</div></div>" +
+                  '<div class="trd-popup-desc">' + esc(p.description) + "</div></div>"
+                )
+                .addTo(mapApi.map);
+            },
+          });
+            mapApi.on("loaded", function () { ctx.postLoaded(); });
+          }).catch(function (e) {
+            console.error("[baptist-multifamily-map] Could not load data.geojson", e);
+          });
+        },
+        onTheme: function (theme, ctx) {
+          if (mapApi) mapApi.setTheme(theme);
+          ctx.requestResize();
+        },
+      });
+    </script>
+  </body>
+</html>

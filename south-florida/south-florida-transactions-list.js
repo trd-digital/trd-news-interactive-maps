@@ -1,5 +1,8 @@
-const dataUrl =
-  "https://static.therealdeal.com/interactive-maps/map_data.geojson";
+// Derived daily by the SoFla scraper (trd_scrapers/CatchUpScrapers,
+// `trd map build`) from the same county geojson files the map and table
+// embeds use. Flat array of {Physical Address, Sale Price, Record Date,
+// Buyer, Seller, County}, deeds only, last 60 days, sorted by price.
+const dataUrl = "south-florida-transactions-list.json";
 
 const excludeValue = [
   "null",
@@ -124,12 +127,12 @@ const trdList = () => {
     },
 
     renderListItems: (data) => {
-      let items = data.features
+      let items = data
         .filter(helpers.filterListEmptyData)
+        .filter(helpers.filterToLast30Days)
         .sort(helpers.sortListBySalePrice)
         .slice(0, listLimit)
-        .map((feature) => {
-          const item = feature.properties;
+        .map((item) => {
           const address = item["Physical Address"];
           const price = helpers.formatCurrency(item["Sale Price"], true);
           const date = helpers.formatDate(item["Record Date"]);
@@ -154,7 +157,7 @@ const trdList = () => {
         const viewMore = document.createElement("div");
         viewMore.className = "text-center";
         viewMore.innerHTML = `
-        <a href="https://therealdeal.com/data/new-york/2024/nyc-transactions/?utm_source=embed&utm_medium=widget" class="btn btn-primary" target="_parent">
+        <a href="https://therealdeal.com/data/miami/2024/priciest-south-florida-sales/?utm_source=embed&utm_medium=widget" class="btn btn-primary" target="_parent">
           <div class="me-2 text-uppercase label">View More</div>
         </a>
         `;
@@ -232,10 +235,9 @@ const trdList = () => {
     },
 
     filterListEmptyData: (data) => {
-      const properties = data.properties;
-      const address = properties["Physical Address"];
-      const price = properties["Sale Price"];
-      const date = properties["Record Date"];
+      const address = data["Physical Address"];
+      const price = data["Sale Price"];
+      const date = data["Record Date"];
 
       return (
         !helpers.isEmptyValue(price) &&
@@ -244,9 +246,18 @@ const trdList = () => {
       );
     },
 
+    // "Priciest ... In Last Month": same window as the NYC list widget.
+    filterToLast30Days: (data) => {
+      const date = Date.parse(data["Record Date"]);
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+      return date > thirtyDaysAgo;
+    },
+
     sortListBySalePrice: (a, b) => {
-      const priceA = a.properties["Sale Price"];
-      const priceB = b.properties["Sale Price"];
+      const priceA = Number(a["Sale Price"]) || 0;
+      const priceB = Number(b["Sale Price"]) || 0;
       return priceB - priceA;
     },
 

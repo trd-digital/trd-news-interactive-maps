@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Mapping Frisco's Biggest Developments | The Real Deal</title>
+    <meta name="description" content="An interactive map of 13 major developments in Frisco, Texas, from Fields and the PGA campus to The Star and Hall Park." />
+
+    <!-- Pre-paint boot snippet (trd_graphics core/boot-snippet.html). MUST stay inline and first. -->
+    <script>
+      (function () {
+        var r = document.documentElement, p = null;
+        try { p = new URLSearchParams(location.search); } catch (e) {}
+        var framed;
+        try { framed = window.self !== window.top; } catch (e) { framed = true; }
+        if ((p && p.get("layout") === "embed") || framed) r.setAttribute("data-layout", "embed");
+        var q = p && p.get("theme"), saved = null;
+        if (r.getAttribute("data-layout") !== "embed") {
+          try { saved = localStorage.getItem("texas-frisco-11-06-26:theme"); } catch (e) {}
+        }
+        var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        r.setAttribute("data-theme", (q === "dark" || q === "light") ? q
+          : (saved === "dark" || saved === "light") ? saved : (dark ? "dark" : "light"));
+      })();
+    </script>
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="trd-embed.css" />
+    <link rel="stylesheet" href="trd-map.css" />
+    <style>
+      /* Live TRD articles embed a plain 560px iframe (trd_graphics README,
+         "How graphics actually run on therealdeal.com"), so the whole graphic
+         is a fixed 560px card at every width. */
+      :root {
+        --trd-embed-h: 560px; --trd-embed-h-phone: 560px; --trd-embed-h-wide: 560px;
+        --app-h: 560px;
+        --card-w: 330px;
+        --map-h: 190px;            /* narrow layout: map band above the card */
+        /* Status colors (dataviz slots 3, 1, 2). */
+        --c-construction: #eb6834; --c-expanding: #2a78d6; --c-leasing: #1baf7a;
+      }
+      :root[data-theme="dark"] {
+        --c-construction: #d95926; --c-expanding: #3987e5; --c-leasing: #199e70;
+      }
+
+      body { background: var(--trd-bg-soft); }
+      .app {
+        position: relative; height: var(--app-h); max-width: 910px; margin: 0 auto;
+        display: flex; flex-direction: column; overflow: hidden;
+        background: var(--trd-panel); color: var(--trd-text);
+      }
+      :root:not([data-layout="embed"]) body { padding: 24px 12px; }
+      :root:not([data-layout="embed"]) .app { border: 1px solid var(--trd-border); border-radius: 6px; }
+      :root[data-layout="embed"] body { background: var(--trd-panel); }
+      /* A hairline frame so the card reads as one unit on a white or #222 TRD page. */
+      :root[data-layout="embed"] .app { border: 1px solid var(--trd-border); }
+
+      button { font-family: var(--trd-font-sans); }
+      button:focus-visible, a:focus-visible { outline: 2px solid var(--trd-brand); outline-offset: 2px; }
+
+      /* ---- Head ---- */
+      .head { flex: none; padding: 14px 18px 11px; position: relative; }
+      .head h1 { font-family: var(--trd-font-serif); font-weight: 900; font-size: 21px; line-height: 1.2; margin: 0; letter-spacing: -0.01em; }
+      .head .dek { font-size: 13.5px; line-height: 1.35; color: var(--trd-muted); margin: 3px 0 0; }
+      #themeToggle {
+        position: absolute; top: 12px; right: 14px; width: 30px; height: 30px; border-radius: 50%;
+        border: 1px solid var(--trd-border); background: var(--trd-bg); color: var(--trd-text); cursor: pointer; font-size: 14px;
+      }
+      :root:not([data-layout="embed"]) .head { padding-right: 56px; }
+
+      /* ---- Body: map + story card ---- */
+      .body {
+        flex: 1 1 auto; min-height: 0; position: relative;
+        display: grid; grid-template-columns: minmax(0, 1fr) var(--card-w);
+        border-top: 1px solid var(--trd-border);
+      }
+      .map-box { position: relative; min-height: 0; }
+      #map { position: absolute; inset: 0; }
+      /* The toolkit parks the embed zoom control top-left; nothing overlays it here. */
+
+      .legend {
+        position: absolute; right: 10px; top: 10px; z-index: 1; pointer-events: none;
+        display: flex; flex-direction: column; gap: 3px;
+        padding: 7px 10px; border-radius: 6px; font-size: 12px; line-height: 1.2;
+        background: color-mix(in srgb, var(--trd-panel) 90%, transparent);
+        border: 1px solid var(--trd-border);
+      }
+      .legend span { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+      .legend i, .card .kicker i { width: 10px; height: 10px; border-radius: 50%; flex: none; border: 1.5px solid #fff; box-sizing: content-box; }
+      .t-construction { --c: var(--c-construction); } .t-expanding { --c: var(--c-expanding); } .t-leasing { --c: var(--c-leasing); }
+      .legend i, .card .kicker i { background: var(--c); }
+
+      .card {
+        min-height: 0; display: flex; flex-direction: column; overflow: hidden;
+        border-left: 1px solid var(--trd-border); background: var(--trd-panel);
+        padding: 10px 18px 12px;
+      }
+      .nav { flex: none; display: flex; align-items: center; gap: 10px; margin: 0 0 10px; }
+      .nav button {
+        width: 30px; height: 28px; border-radius: 6px; border: 1px solid var(--trd-border);
+        background: var(--trd-bg); color: var(--trd-text); cursor: pointer; font-size: 16px; line-height: 1;
+      }
+      .nav button:hover { background: var(--trd-bg-soft); }
+      .nav .pos { font-size: 12.5px; color: var(--trd-muted); font-variant-numeric: tabular-nums; }
+      .nav .pos b { color: var(--trd-text); }
+      .nav .hint { margin-left: auto; font-size: 11.5px; color: var(--trd-muted); }
+      .card .kicker {
+        flex: none; display: flex; align-items: center; gap: 7px; margin: 0 0 5px;
+        font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--trd-muted);
+      }
+      .card .kicker .num {
+        display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%;
+        background: var(--c); color: #fff; font-size: 11px; letter-spacing: 0;
+      }
+      .card h2 { flex: none; font-family: var(--trd-font-serif); font-weight: 900; font-size: 19px; line-height: 1.22; margin: 0 0 2px; }
+      .card .addr { flex: none; font-size: 12.5px; line-height: 1.35; color: var(--trd-muted); margin: 0 0 8px; }
+      .card .cap { flex: 0 1 auto; min-height: 0; overflow: hidden; font-size: 14px; line-height: 1.45; }
+      .card .cap p { margin: 0 0 8px; }
+      .card .facts { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 10px; margin: 0; }
+      .card .facts dt {
+        font-size: 0.72em; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase;
+        color: var(--trd-muted); padding-top: 0.2em; white-space: nowrap;
+      }
+      .card .facts dd { margin: 0; }
+      .card.clipped .cap { -webkit-mask-image: linear-gradient(#000 70%, transparent); mask-image: linear-gradient(#000 70%, transparent); }
+      .card .links { flex: none; display: flex; align-items: center; gap: 14px; margin-top: 9px; font-size: 13px; font-weight: 700; }
+            .card .more { display: none; border: 0; background: none; padding: 0; color: var(--trd-text); font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+      .card.clipped .more, .card.expanded .more { display: inline; }
+      .card:not(.clipped):not(.expanded) .links { display: none; }
+
+      .foot { flex: none; padding: 6px 18px 8px; border-top: 1px solid var(--trd-border); font-size: 11.5px; line-height: 1.3; color: var(--trd-muted); }
+
+      /* ---- Narrow: map band on top, story card below; "More" opens the card over the map ---- */
+      @media (max-width: 699px) {
+        .body { display: block; }
+        .map-box { position: absolute; top: 0; left: 0; right: 0; height: var(--map-h); }
+        .card { position: absolute; top: var(--map-h); left: 0; right: 0; bottom: 0; z-index: 2; border-left: 0; border-top: 1px solid var(--trd-border); padding: 9px 16px 10px; }
+        .card.expanded { top: 0; border-top: 0; }
+        .legend { display: none; }
+        .nav { margin-bottom: 7px; }
+        .nav .hint { display: none; }
+        .card h2 { font-size: 17px; }
+        .card .addr { margin-bottom: 6px; }
+        .card .cap { font-size: 13.5px; }
+        .card .links { margin-top: 7px; }
+      }
+      @media (max-width: 420px) {
+        .head { padding: 12px 14px 6px; }
+        .head h1 { font-size: 19px; }
+        .head .dek { font-size: 12.5px; }
+        .card { padding-left: 14px; padding-right: 14px; }
+        .foot { padding-left: 14px; padding-right: 14px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app" id="app">
+      <header class="head">
+        <h1>Mapping Frisco's Biggest Developments</h1>
+        <p class="dek">The mixed-use districts and master plans reshaping the Dallas suburb, from Fields to The Star</p>
+        <button id="themeToggle" class="trd-standalone-only" type="button" aria-label="Toggle dark mode">◐</button>
+      </header>
+
+      <div class="body">
+        <section class="map-box trd-map" aria-label="Map of Frisco developments">
+          <div id="map" role="application" aria-label="Map"></div>
+          <div class="legend" id="legend" aria-hidden="true"></div>
+        </section>
+        <article class="card" id="card" aria-live="polite">
+          <div class="nav">
+            <button type="button" id="prev" aria-label="Previous project">‹</button>
+            <span class="pos" id="pos"></span>
+            <button type="button" id="next" aria-label="Next project">›</button>
+            <span class="hint">Click a dot to jump</span>
+          </div>
+          <p class="kicker" id="kicker"></p>
+          <h2 id="name"></h2>
+          <p class="addr" id="addr"></p>
+          <div class="cap" id="cap"></div>
+          <div class="links"><button type="button" class="more" id="more">Read more</button></div>
+        </article>
+      </div>
+
+      <footer class="foot">Source: The Real Deal research. Costs are developer or reported estimates. Fields Frisco pin is approximate.</footer>
+    </div>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+    <script src="trd-embed.js"></script>
+    <script src="trd-map.js"></script>
+    <script>
+      var TOKEN = "pk.eyJ1IjoidHJkZGF0YSIsImEiOiJjamc2bTc2YmUxY2F3MnZxZGh2amR2MTY5In0.QlOWqB-yQNrNlXD0KQ9IvQ";
+
+      // Must match the --c-* variables above.
+      var COLORS = {
+        light: { construction: "#eb6834", expanding: "#2a78d6", leasing: "#1baf7a" },
+        dark:  { construction: "#d95926", expanding: "#3987e5", leasing: "#199e70" },
+      };
+      // Status groups, from the sheet's "buckets" column.
+      var TYPES = [
+        ["construction", "Under construction", "Under construction"],
+        ["expanding", "Expansion underway", "Expansion underway"],
+        ["leasing", "Built, leasing", "Built, leasing"],
+      ];
+      var TYPE_LABEL = {};
+      TYPES.forEach(function (t) { TYPE_LABEL[t[0]] = t[1]; });
+      var EMPTY = { type: "FeatureCollection", features: [] };
+
+      var mapApi = null, FEATURES = [], GEO = null, activeN = null;
+      var $ = function (id) { return document.getElementById(id); };
+      var card = $("card");
+
+      function esc(s) {
+        return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+      function prefersReduce() {
+        return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      }
+      function narrow() { return window.innerWidth < 700; }
+      function featureByN(n) {
+        for (var i = 0; i < FEATURES.length; i++) if (FEATURES[i].properties.n === n) return FEATURES[i];
+        return null;
+      }
+
+      $("legend").innerHTML = TYPES.map(function (t) {
+        return '<span class="t-' + t[0] + '"><i></i>' + t[2] + "</span>";
+      }).join("");
+
+      // ---- Story card ---------------------------------------------------------
+      // When the card has the whole column (desktop, or "Read more" on phones),
+      // step the card text down until it fits; otherwise fade it and offer
+      // "Read more".
+      function fitCard() {
+        var cap = $("cap");
+        var over = function () { return cap.scrollHeight > cap.clientHeight + 1; };
+        card.classList.remove("clipped");
+        cap.style.fontSize = "";
+        if (!narrow() || card.classList.contains("expanded")) {
+          var fs = parseFloat(getComputedStyle(cap).fontSize);
+          while (over() && fs > 12) { fs -= 0.5; cap.style.fontSize = fs + "px"; }
+        }
+        if (over() && !card.classList.contains("expanded")) card.classList.add("clipped");
+      }
+      function render(f) {
+        var p = f.properties;
+        card.className = "card t-" + p.status;
+        $("pos").innerHTML = "<b>" + p.n + "</b> of " + FEATURES.length;
+        $("kicker").innerHTML = '<span class="num">' + p.n + "</span>" + esc(TYPE_LABEL[p.status]);
+        $("name").textContent = p.name;
+        $("addr").textContent = p.address;
+        var facts = [["Developer", p.developer], ["Cost", p.cost], ["Status", p.progress], ["Tenants", p.tenants]];
+        $("cap").innerHTML = "<p>" + esc(p.details) + '</p><dl class="facts">' + facts.filter(function (x) { return x[1]; }).map(function (x) {
+          return "<dt>" + x[0] + "</dt><dd>" + esc(x[1]) + "</dd>";
+        }).join("") + "</dl>";
+        $("more").textContent = "Read more";
+        fitCard();
+      }
+      $("more").addEventListener("click", function () {
+        var open = !card.classList.contains("expanded");
+        card.classList.toggle("expanded", open);
+        this.textContent = open ? "Show map" : "Read more";
+        fitCard();
+      });
+
+      function setActiveSource(f) {
+        var src = mapApi && mapApi.map && mapApi.map.getSource("active");
+        if (src) src.setData(f ? { type: "FeatureCollection", features: [f] } : EMPTY);
+      }
+
+      // Select a project; `move` = "fly" (zoom in to it), "pan" (keep the zoom
+      // unless it's too far out) or nothing (leave the camera alone).
+      function activate(n, move) {
+        var f = featureByN(n);
+        if (!f) return;
+        activeN = n;
+        render(f);
+        setActiveSource(f);
+        if (!mapApi || !mapApi.map || !move) return;
+        var z = mapApi.map.getZoom();
+        mapApi.flyTo(f.geometry.coordinates, { zoom: move === "fly" ? Math.max(z, 13) : Math.max(z, 12) });
+      }
+      function step(d) {
+        var i = activeN == null ? 0 : activeN - 1;
+        i = (i + d + FEATURES.length) % FEATURES.length;
+        activate(FEATURES[i].properties.n, "fly");
+      }
+      $("prev").addEventListener("click", function () { step(-1); });
+      $("next").addEventListener("click", function () { step(1); });
+      card.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowLeft") { e.preventDefault(); step(-1); }
+        if (e.key === "ArrowRight") { e.preventDefault(); step(1); }
+      });
+
+      function fitOpts() {
+        return { padding: narrow() ? 22 : 40, maxZoom: 13, duration: prefersReduce() ? 0 : 700 };
+      }
+      function showAll(animate) {
+        if (!mapApi || !mapApi.map) return;
+        var o = fitOpts();
+        if (!animate) o.duration = 0;
+        mapApi.map.fitBounds(TRDMap.boundsOf(GEO), o);
+      }
+
+      // ---- Pins: canvas-drawn numbered circles, scaled by zoom --------------------
+      // The Star and Frisco Station sit ~300 m apart, and Hall Park is just
+      // south of them, so at each zoom stop overlapping pins are relaxed apart in
+      // screen space; the offsets interpolate by zoom and fade to zero once true
+      // positions clear. Pins shrink to small unnumbered dots when zoomed far out.
+      var BASE_R = 11;
+      var ZOOMS = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+      function radiusAt(z) { return z <= 6 ? 5 : z >= 11 ? BASE_R : 5 + (z - 6) * (BASE_R - 5) / 5; }
+      function textAt(z) { return z <= 9 ? 9 : z >= 11 ? 12 : 9 + (z - 9) * 1.5; }
+      var SIZE_EXPR = ["interpolate", ["linear"], ["zoom"], 6, 5 / BASE_R, 11, 1];
+      var TEXT_EXPR = ["interpolate", ["linear"], ["zoom"], 9, 9, 11, 12];
+
+      function project(lon, lat, z) {
+        var s = 512 * Math.pow(2, z), rad = lat * Math.PI / 180;
+        return [(lon + 180) / 360 * s, (1 - Math.log(Math.tan(rad) + 1 / Math.cos(rad)) / Math.PI) / 2 * s];
+      }
+      function relax(features, z) {
+        var minPx = 2 * radiusAt(z) + 2;
+        var base = features.map(function (f) { return project(f.geometry.coordinates[0], f.geometry.coordinates[1], z); });
+        var pos = base.map(function (b) { return [b[0], b[1]]; });
+        for (var it = 0; it < 300; it++) {
+          var moved = false;
+          for (var i = 0; i < pos.length; i++) {
+            for (var j = i + 1; j < pos.length; j++) {
+              var dx = pos[j][0] - pos[i][0], dy = pos[j][1] - pos[i][1];
+              var d = Math.sqrt(dx * dx + dy * dy);
+              if (d >= minPx) continue;
+              if (d < 0.01) { dx = 1; dy = 0; d = 1; }
+              var push = (minPx - d) / 2 + 0.05, ux = dx / d, uy = dy / d;
+              pos[i][0] -= ux * push; pos[i][1] -= uy * push;
+              pos[j][0] += ux * push; pos[j][1] += uy * push;
+              moved = true;
+            }
+          }
+          if (!moved) break;
+        }
+        return pos.map(function (p, k) { return [p[0] - base[k][0], p[1] - base[k][1]]; });
+      }
+      function spreadOverlaps(features) {
+        ZOOMS.forEach(function (z) {
+          var offs = relax(features, z), size = radiusAt(z) / BASE_R, ts = textAt(z);
+          features.forEach(function (f, k) {
+            var o = offs[k];
+            // icon-offset is scaled by icon-size; text-offset is in ems.
+            f.properties["o" + z] = [Math.round(o[0] / size * 10) / 10, Math.round(o[1] / size * 10) / 10];
+            f.properties["t" + z] = [Math.round(o[0] / ts * 100) / 100, Math.round(o[1] / ts * 100) / 100];
+          });
+        });
+      }
+      function offsetExpr(prefix) {
+        var e = ["interpolate", ["linear"], ["zoom"]];
+        ZOOMS.forEach(function (z) { e.push(z, ["array", "number", 2, ["get", prefix + z]]); });
+        e.push(17.5, ["literal", [0, 0]]);
+        return e;
+      }
+      var ICON_OFF = offsetExpr("o"), TEXT_OFF = offsetExpr("t");
+
+      function circleImage(r, fill, stroke, strokeW, alpha) {
+        var s = 2, size = (r + strokeW) * 2 + 4;
+        var cv = document.createElement("canvas");
+        cv.width = cv.height = size * s;
+        var g = cv.getContext("2d");
+        g.scale(s, s);
+        g.globalAlpha = alpha == null ? 1 : alpha;
+        g.beginPath(); g.arc(size / 2, size / 2, r, 0, Math.PI * 2);
+        if (fill) { g.fillStyle = fill; g.fill(); }
+        if (stroke && strokeW) { g.lineWidth = strokeW; g.strokeStyle = stroke; g.stroke(); }
+        return { img: g.getImageData(0, 0, cv.width, cv.height), pixelRatio: s };
+      }
+      function ensureImage(map, name, make) {
+        if (map.hasImage(name)) return;
+        var im = make();
+        map.addImage(name, im.img, { pixelRatio: im.pixelRatio });
+      }
+
+      function addLayers(map, c) {
+        var pal = COLORS[c.theme] || COLORS.light, t = c.theme;
+        TYPES.forEach(function (ty) {
+          var k = ty[0];
+          ensureImage(map, "pin-" + k + "-" + t, function () { return circleImage(BASE_R, pal[k], "#ffffff", 2); });
+          ensureImage(map, "glow-" + k + "-" + t, function () { return circleImage(26, pal[k], null, 0, 0.22); });
+        });
+        ensureImage(map, "ring-" + t, function () { return circleImage(BASE_R + 1, null, c.theme === "dark" ? "#ffffff" : "#16181f", 3); });
+        var byType = function (prefix) { return ["concat", prefix, ["get", "status"], "-" + t]; };
+
+        if (!map.getSource("projects")) map.addSource("projects", { type: "geojson", data: GEO });
+        if (!map.getSource("active")) map.addSource("active", { type: "geojson", data: EMPTY });
+        var common = { "icon-offset": ICON_OFF, "icon-size": SIZE_EXPR, "icon-allow-overlap": true, "icon-ignore-placement": true };
+        function layout(extra) { var o = {}, k; for (k in common) o[k] = common[k]; for (k in extra) o[k] = extra[k]; return o; }
+
+        if (!map.getLayer("active-glow"))
+          map.addLayer({ id: "active-glow", type: "symbol", source: "active", layout: layout({ "icon-image": byType("glow-") }) });
+        if (!map.getLayer("points"))
+          map.addLayer({ id: "points", type: "symbol", source: "projects",
+            layout: layout({
+              "icon-image": byType("pin-"),
+              "symbol-sort-key": ["-", 0, ["get", "n"]],
+              "text-field": ["to-string", ["get", "n"]], "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+              "text-size": TEXT_EXPR, "text-offset": TEXT_OFF, "text-allow-overlap": true, "text-ignore-placement": true,
+            }),
+            paint: { "text-color": "#ffffff", "text-opacity": ["step", ["zoom"], 0, 9, 1] } });
+        if (!map.getLayer("active-ring"))
+          map.addLayer({ id: "active-ring", type: "symbol", source: "active", layout: layout({ "icon-image": "ring-" + t }) });
+      }
+
+      // Narrow-screen hover is meaningless; desktop shows the name on hover.
+      function addHover(map) {
+        var tip = new mapboxgl.Popup({ closeButton: false, closeOnClick: false, offset: 12, className: "hover-tip" });
+        map.on("mousemove", "points", function (e) {
+          var f = e.features && e.features[0];
+          if (!f || narrow()) return;
+          tip.setLngLat(f.geometry.coordinates).setHTML('<div style="padding:5px 9px;font-size:13px;font-weight:700">' + esc(f.properties.name) + "</div>").addTo(map);
+        });
+        map.on("mouseleave", "points", function () { tip.remove(); });
+      }
+
+      TRDEmbed({
+        prefix: "texas-frisco-11-06-26",
+        themeKey: "texas-frisco-11-06-26:theme",
+        toggle: "#themeToggle",
+        mountTarget: "#map",
+        onMount: function (ctx) {
+          TRDMap.loadGeoJSON("data.geojson").then(function (data) {
+            GEO = data;
+            FEATURES = GEO.features.slice().sort(function (a, b) { return a.properties.n - b.properties.n; });
+            spreadOverlaps(FEATURES);
+            activate(1);
+
+            mapApi = TRDMap.create({
+              container: "map",
+              token: TOKEN,
+              theme: ctx.theme,
+              embed: ctx.isEmbed,
+              data: GEO,
+              bounds: TRDMap.boundsOf(GEO),
+              fitBoundsOptions: fitOpts(),
+              cooperativeGestures: ctx.isEmbed,
+              interactiveLayers: ["points"],
+              addLayers: addLayers,
+              onFeatureClick: function (f) {
+                if (f && f.properties) activate(f.properties.n, "pan");
+              },
+            });
+            mapApi.on("style", function () { setActiveSource(featureByN(activeN)); });
+            mapApi.on("loaded", function () {
+              // The iframe can settle after the first fit; refit once loaded.
+              showAll(false);
+              addHover(mapApi.map);
+              ctx.postLoaded();
+            });
+          }).catch(function (e) {
+            console.error("Could not load data.geojson", e);
+            $("cap").textContent = "The map data failed to load.";
+          });
+          window.addEventListener("resize", fitCard);
+        },
+        onTheme: function (theme) {
+          if (mapApi) mapApi.setTheme(theme);
+        },
+      });
+    </script>
+  </body>
+</html>

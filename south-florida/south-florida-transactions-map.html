@@ -2,54 +2,83 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-    />
-    <meta name="robots" content="noindex, nofollow" />
-    <title>South Florida Transactions Map - The Real Deal</title>
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="https://therealdeal.com/favicon.ico"
-    />
-    <link rel="canonical" href="https://therealdeal.com/data/" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin="true"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@0,400;0,700;0,900&display=swap"
-    />
-    <link
-      rel="stylesheet"
-      href="https://static.therealdeal.com/ProximaNovaFontFamily/ProximaNova/proxima-nova-all.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css"
-    />
-    <link rel="stylesheet" href="../trd-data/common-map/map.css" />
-
-    <!-- Google Tag Manager -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" href="south-florida-transactions-points.json" as="fetch" crossorigin="anonymous" />
+    <!-- The full map preloads the recent sales; the compact dashboard card
+         (same rule as tx-map.js) draws from the points file alone and fetches
+         sales only when a reader clicks one. -->
     <script>
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
-        j.async = true;
-        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", "GTM-K694XL6");
+      (function () {
+        var q = new URLSearchParams(location.search);
+        if (q.get("view") === "dashboard" || window.innerHeight < 450) return;
+        var l = document.createElement("link");
+        l.rel = "preload";
+        l.href = "south-florida-transactions-recent.json";
+        l.as = "fetch";
+        l.crossOrigin = "anonymous";
+        document.head.appendChild(l);
+      })();
+    </script>
+    <meta name="robots" content="noindex, nofollow" />
+    <title>South Florida Live Transactions Map - The Real Deal</title>
+    <link rel="icon" type="image/x-icon" href="https://therealdeal.com/favicon.ico" />
+    <link rel="canonical" href="https://therealdeal.com/data/miami/2024/priciest-south-florida-sales/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap" />
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" />
+    <link rel="stylesheet" href="transactions/tx.css?v=27" />
+    <!-- Mapbox GL (~370 KB) downloads right away but as a fetch, which (unlike
+         a script tag) doesn't hold up this page's load event; it runs once
+         the page has loaded, so the frame shows (with the preview) first.
+         tx-map.js waits on __txMapbox. -->
+    <script>
+      window.__txMapbox = new Promise(function (resolve) {
+        var src = "https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js";
+        function add(url) {
+          var s = document.createElement("script");
+          s.src = url;
+          s.onload = s.onerror = function () { resolve(); };
+          document.body.appendChild(s);
+        }
+        var code = fetch(src, { priority: "high" }).then(function (r) {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          return r.blob();
+        });
+        function run() {
+          code.then(function (b) { add(URL.createObjectURL(b)); }, function () { add(src); });
+        }
+        if (document.readyState === "complete") run();
+        else window.addEventListener("load", run);
+      });
+    </script>
+
+    <!-- Google Tag Manager, deferred: tx-core.js calls __txLoadGtm() once the
+         sales have rendered (20 s fallback), so tags don't slow the first load. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.__txLoadGtm = function () {
+        if (window.__txGtmLoaded) return;
+        window.__txGtmLoaded = true;
+        // Piano (TRD-3464) waits for the same moment: loaded with the page,
+        // it held up the frame (the TRD article shows an embed only after its
+        // load event) and competed with the sales file for bandwidth.
+        var piano = document.createElement("script");
+        piano.src = "https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5";
+        piano.async = true;
+        document.head.appendChild(piano);
+        (function (w, d, s, l, i) {
+          w[l] = w[l] || [];
+          w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+          var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != "dataLayer" ? "&l=" + l : "";
+          j.async = true;
+          j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+          f.parentNode.insertBefore(j, f);
+        })(window, document, "script", "dataLayer", "GTM-K694XL6");
+      };
+      setTimeout(window.__txLoadGtm, 20000);
     </script>
     <!-- End Google Tag Manager -->
   </head>
@@ -65,311 +94,87 @@
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
-    <main class="map-container">
-      <section id="map" class="map"></section>
+    <main id="tx-app" class="tx-map-app">
+      <div class="tx-topbar">
+        <button type="button" class="tx-filter-toggle" aria-expanded="false" aria-controls="tx-filter-panel">
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h14M6 10h8M9 15h2" /></svg>
+          <span class="tx-ft-label">Filters</span>
+          <span class="tx-badge" hidden>0</span>
+        </button>
+        <div class="tx-count" aria-live="polite"></div>
+        <div id="tx-filter-panel" class="tx-filter-panel" hidden></div>
+        <ul id="tx-results" class="tx-results" aria-label="Search suggestions" hidden></ul>
+      </div>
+      <div class="tx-map-wrap">
+        <!-- Instant preview: a still of the base map, lined up with the live
+             map's opening view, shown until the live map has drawn (tx-map.js
+             fades it out). Made once with the Mapbox Static Images API at
+             -80.45,26.05385 z7.58, 1280x1280 map px (preview-*.webp). -->
+        <div class="tx-preview" aria-hidden="true"><img alt="" /><span>© Mapbox © OpenStreetMap</span></div>
+        <script>
+          (function () {
+            var box = document.querySelector(".tx-preview"), img = box.firstChild;
+            function pref(k) {
+              try { return JSON.parse(localStorage.getItem("trd-sofla-tx:" + k)); } catch (e) { return null; }
+            }
+            // Last theme the TRD page gave this embed, else the OS setting.
+            var theme = pref("theme-seen") || (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+            if (pref("map-base") === "satellite") theme = "dark";
+            img.src = "transactions/preview-" + theme + ".webp";
+            box.style.background = theme === "dark" ? "#1f201f" : "#dbdcdc";
+            box.lastChild.style.color = theme === "dark" ? "rgba(255,255,255,.6)" : "rgba(0,0,0,.55)";
+            // Same opening view as the live map: fit bounds [[-80.95,25.1],
+            // [-79.95,27]], zoomed in further if needed to stay inside
+            // maxBounds [[-82.2,24.3],[-78.8,27.9]], center clamped likewise.
+            // Units: map px at the preview's zoom (7.58).
+            var world = 512 * Math.pow(2, 7.58);
+            function X(lon) { return (lon + 180) / 360 * world; }
+            function Y(lat) { return (1 - Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360)) / Math.PI) / 2 * world; }
+            var bx0 = X(-80.95), bx1 = X(-79.95), by0 = Y(27), by1 = Y(25.1);
+            var mx0 = X(-82.2), mx1 = X(-78.8), my0 = Y(27.9), my1 = Y(24.3);
+            var icx = (bx0 + bx1) / 2, icy = (by0 + by1) / 2; // the image's center
+            function clamp(v, lo, hi) { return lo > hi ? (lo + hi) / 2 : Math.min(hi, Math.max(lo, v)); }
+            function place() {
+              var w = box.clientWidth, h = box.clientHeight;
+              if (!w || !h) return;
+              var k = Math.min(w / (bx1 - bx0), h / (by1 - by0));
+              k = Math.max(k, w / (mx1 - mx0), h / (my1 - my0));
+              var cx = clamp(icx, mx0 + w / 2 / k, mx1 - w / 2 / k);
+              var cy = clamp(icy, my0 + h / 2 / k, my1 - h / 2 / k);
+              var size = 1280 * k;
+              img.style.width = img.style.height = size + "px";
+              img.style.left = w / 2 + (icx - 640 - cx) * k + "px";
+              img.style.top = h / 2 + (icy - 640 - cy) * k + "px";
+            }
+            place();
+            window.addEventListener("resize", place);
+          })();
+        </script>
+        <div id="tx-map" role="region" aria-label="Map of recent South Florida sales"></div>
+        <div class="tx-active" aria-label="Active filters" hidden></div>
+        <button type="button" class="tx-area-btn" hidden>
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="5.5" /><path d="M13 13l4.5 4.5" /></svg>
+          Search this area
+        </button>
+        <div class="tx-legend"></div>
+        <div class="tx-empty-map" hidden></div>
+        <div id="tx-layers" class="tx-layers" role="dialog" aria-label="Map layers" hidden></div>
+        <button type="button" class="tx-list-btn" hidden></button>
+        <aside class="tx-sheet tx-detail" role="dialog" aria-label="Sales in view" hidden></aside>
+        <aside class="tx-detail" role="dialog" aria-modal="false" hidden></aside>
+        <div class="tx-loading"><span class="tx-spinner" aria-hidden="true"></span><span>Loading recent sales…</span></div>
+      </div>
+      <div class="tx-mapfoot">
+        <div class="tx-mapnote"></div>
+        <p class="tx-credit">© <a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noopener">Mapbox</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a><span class="tx-credit-sat" hidden> © Maxar</span> <a href="https://apps.mapbox.com/feedback/" target="_blank" rel="noopener">Improve this map</a></p>
+      </div>
     </main>
 
-    <script src="https://experience.tinypass.com/xbuilder/experience/load?aid=p7sVIGTDn5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
     <script src="https://static.therealdeal.com/library/theme.js?v=1.0"></script>
-    <script src="../trd-data/common-formatter/formatter.js"></script>
-    <script src="../trd-data/common-loading/loading.js"></script>
-    <script src="../trd-data/common-map/map.js?v=1.2"></script>
-    <script>
-      const legendKeys = [
-        {
-          title: "Sales",
-          options: [
-            {
-              value: 100_000,
-              color: {
-                light: "#90CAF9",
-                dark: "#90CAF9",
-              },
-              text: "< $500K",
-              default: false,
-            },
-            {
-              value: 750_000,
-              color: {
-                light: "#42A5F5",
-                dark: "#42A5F5",
-              },
-              text: "$500K - $750K",
-              default: false,
-            },
-            {
-              value: 1_000_000,
-              color: {
-                light: "#1E88E5",
-                dark: "#1E88E5",
-              },
-              text: "$750K - $1M",
-              default: false,
-            },
-            {
-              value: 5_000_000,
-              color: {
-                light: "#1565C0",
-                dark: "#1565C0",
-              },
-              text: "$1M - $5M",
-              default: false,
-            },
-            {
-              value: 10_000_000,
-              color: {
-                light: "#0D47A1",
-                dark: "#0D47A1",
-              },
-              text: "> $10M",
-              default: true,
-            },
-          ],
-        },
-        {
-          title: "Mortgage",
-          options: [
-            {
-              value: "mortgage",
-              color: {
-                light: "#FF9800",
-                dark: "#FF9800",
-              },
-              text: "Orange stroke = Mortgage",
-              default: false,
-              isStroke: true,
-            },
-          ],
-        },
-      ];
-
-      const tooltipDisplayFields = {
-        title: {
-          field: "Physical Address",
-          label: "Address",
-        },
-        content: [
-          {
-            field: "Sale Price",
-            label: "Sale Price",
-            format: "formatPrice",
-          },
-          {
-            field: "Loan Amount",
-            label: "Loan Amount",
-            format: "formatPrice",
-          },
-          {
-            field: "Description",
-            label: "Use Code",
-          },
-          {
-            field: "Record Date",
-            label: "Record Date",
-            format: "formatDate",
-          },
-        ],
-      };
-
-      const filterFields = [
-        {
-          title: "Days",
-          name: "days",
-          dataField: "Record Date",
-          fieldType: "radio",
-          fieldLayoutClass: "radio-group",
-          multiSelect: false,
-          defaultValue: "30",
-          callback: (values, item) => {
-            const days = values[0];
-            const date = new Date();
-            date.setDate(date.getDate() - days);
-            const recordDate = new Date(
-              TrdFormatters.formatDate(item.properties["Record Date"])
-            );
-            return recordDate >= date;
-          },
-          options: [
-            {
-              label: "7 Days",
-              value: "7",
-            },
-            {
-              label: "15 Days",
-              value: "15",
-            },
-            {
-              label: "30 Days",
-              value: "30",
-            },
-          ],
-        },
-        {
-          title: "Sale Price",
-          name: "sale_price",
-          dataField: "sale Price",
-          fieldType: "multi-range",
-          minValue: 100_000,
-          maxValue: 300_000_000,
-          defaultValue: [100_000, 300_000_000],
-          format: "formatCurrency",
-          fieldLayoutClass: "range-slider-container",
-          presets: [
-            {
-              label: "Under $1M",
-              minValue: 100_000,
-              maxValue: 1_000_000,
-            },
-            {
-              label: "$1M - $5M",
-              minValue: 1_000_000,
-              maxValue: 5_000_000,
-            },
-            {
-              label: "$5M+",
-              minValue: 5_000_000,
-              maxValue: 300_000_000,
-            },
-            {
-              label: "All Prices",
-              minValue: 100_000,
-              maxValue: 300_000_000,
-            },
-          ],
-          callback: (values, item) => {
-            const price = item.properties["Sale Price"];
-            return price >= values[0] && price <= values[1];
-          },
-        },
-      ];
-
-      const modalDisplayFields = {
-        title: {
-          field: "Physical Address",
-          label: "Address",
-        },
-        content: [
-          { field: "Doc Type", label: "Doc Type" },
-          { field: "Seller", label: "Seller" },
-          { field: "Buyer", label: "Buyer" },
-          {
-            field: "Sale Price",
-            label: "Sale Price",
-            format: "formatPrice",
-          },
-          {
-            field: "Loan Amount",
-            label: "Loan Amount",
-            format: "formatPrice",
-          },
-          {
-            field: "Record Date",
-            label: "Record Date",
-            format: "formatDate",
-          },
-          { field: "Folio", label: "Folio" },
-          { field: "Description", label: "Use Code Description" },
-          { field: "Acres", label: "Lot Size" },
-          // {
-          //   field: "Previous Sale Date",
-          //   label: "Date of Previous Sale",
-          //   format: "formatDate",
-          // },
-          { field: "Previous Owner Name", label: "Previous Owner Name" },
-          {
-            field: "Previous Sale Price",
-            label: "Previous Sale Price",
-          },
-        ],
-      };
-
-      const fetchDataFilterCallback = (data) => {
-        return {
-          ...data,
-          features: data.features.map((feature) => {
-            return {
-              ...feature,
-              properties: {
-                ...feature.properties,
-                "Use Code Description":
-                  feature.properties["Description"] || null,
-                "Sale Price": TrdFormatters.getNumberValue(
-                  feature.properties["Sale Price"] ||
-                    feature.properties["Consideration"] ||
-                    null
-                ),
-                "Loan Amount": TrdFormatters.getNumberValue(
-                  feature.properties["Loan Amount"] || null
-                ),
-                "Previous Sale Date":
-                  feature.properties["Previous Sale Date"] ||
-                  feature.properties["Date of Previous Sale"] ||
-                  null,
-              },
-            };
-          }),
-        };
-      };
-
-      window.map = trdDataCommonMap({
-        filePaths: [
-          "miami_dade_output.geojson",
-          "palm_beach_output.geojson",
-          "broward_output.geojson",
-        ],
-        eventCategory: "south-florida-transactions-map",
-        mapElementId: "map",
-        filterElementId: "map-filters",
-        legendElementId: "legend",
-        resultElementId: "result",
-        mapCenterLat: 26.380126753919782,
-        mapCenterLng: -80.38513016032842,
-        zoom: 8,
-        minZoom: 8,
-        legendKeys,
-        dataPointKeys: legendKeys[0].options,
-        tooltipDisplayFields,
-        modalDisplayFields,
-        filterFields,
-        fetchDataFilterCallback,
-        loadingEnabled: true,
-        mapLayerPaint: {
-          'circle-stroke-width': [
-            "case",
-            [">", ["to-number", ["get", "Loan Amount"], 0], 0],
-            2,
-            0
-          ],
-          'circle-stroke-color': "#FF9800",
-        },
-        pointSettings: {
-          clickToCenter: true,
-          clickToZoom: true,
-          colorType: "step",
-          radiusType: "radius",
-          colorTypeDataKey: "Sale Price",
-          paintSettings: {
-            hover: {
-              color: { light: "#FF9800", dark: "#F57C00" },
-            },
-            active: {
-              color: { light: "#FF5722", dark: "#D84315" },
-            },
-            default: {
-              radius: 4,
-            },
-          },
-        },
-        searchSettings: {
-          enable: true,
-          placeholderText: "Search by address, folio, seller, buyer...",
-          resultTitleField: "Address",
-          searchFields: ["Address", "Folio", "Buyer", "Seller"],
-        },
-      });
-    </script>
+    <script src="transactions/tx-core.js?v=25"></script>
+    <script src="transactions/tx-search.js?v=23"></script>
+    <script src="transactions/tx-charts.js?v=23"></script>
+    <script src="transactions/tx-compare.js?v=23"></script>
+    <script src="transactions/tx-map.js?v=26"></script>
   </body>
 </html>
