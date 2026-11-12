@@ -178,7 +178,7 @@
         function R(t, c) { return state.scope === "four" && S[t].scope_columns[c] ? S[t].scope_columns[c] : c; }
         function wbName(s) { return String(s || "").replace(/_\*\.xlsx/g, state.scope === "four" ? "_pinhist_four.xlsx" : "_pinhist.xlsx"); }
         function yearCol(t) { return COL[t].year ? "year" : COL[t].filing_year ? "filing_year" : null; }
-        function linkLabel(c) { return /pdf/.test(c) ? "PDF" : /detail|document/.test(c) ? "Document page" : "Clerk search"; }
+        function linkLabel(c, v) { return /pdf/.test(c) ? "PDF" : /\/Document\/Detail/.test(v) ? "Document page" : /opencorporates/.test(v) ? "OpenCorporates" : /Search\/Result\?id1=\d{14}$/.test(v) ? "PIN search" : "Link"; }
 
         function load(t) {
           if (TABLES[t]) return Promise.resolve(TABLES[t]);
@@ -583,7 +583,7 @@
         }
         function rawCols(t) {
           var cols = state.columns.length ? state.columns : S[t].columns.map(function (c) { return c.name; });
-          return cols.map(function (c) { return R(t, c); }).filter(function (c, i, a) { return COL[t][c] && a.indexOf(c) === i; });
+          return cols.map(function (c) { return R(t, c); }).filter(function (c, i, a) { return COL[t][c] && !COL[t][c].hidden && a.indexOf(c) === i; });
         }
         var PAGE = 100;
         function rawHTML(t, T, rows) {
@@ -599,7 +599,7 @@
           slice.forEach(function (r) {
             h += "<tr>" + cols.map(function (c, i) {
               var v = gs[i](r), ty = COL[t][c].type;
-              if (ty === "link") return "<td>" + (v ? '<a href="' + esc(v) + '" target="_blank" rel="noopener">' + linkLabel(c) + "</a>" : "") + "</td>";
+              if (ty === "link") return "<td>" + (v ? '<a href="' + esc(v) + '" target="_blank" rel="noopener">' + linkLabel(c, v) + "</a>" : "") + "</td>";
               return '<td class="' + (ty === "number" ? "num" : v.length > 60 ? "wrap" : "") + '" title="' + esc(v.length > 40 ? v : "") + '">' + esc(v) + "</td>";
             }).join("") + "</tr>";
           });
@@ -789,7 +789,7 @@
           "<li><b>The data behind this page:</b> <code>foreclosure_questions/explorer/</code> — <code>data/&lt;table&gt;.json</code> (" + Object.keys(S).length + " tables), <code>schema.json</code> (columns), <code>presets.json</code> (the ready-made views) and <code>checks.json</code> (the published totals checked on load), written by <code>nb/make_explorer_data.py</code> from the workbooks. Each table’s rows come from these tabs: " +
           Object.keys(S).map(function (k) { return "<b>" + esc(k) + "</b>: " + esc(S[k].sources.join("; ")); }).join(" · ") + "</li>" +
           "<li><b>Party scope:</b> " + esc(X.schema.scope_note) + "</li>" +
-          "<li><b>The fact-check path:</b> every row’s links go to the Cook County Clerk (search, document page, PDF). The Clerk’s site keeps one search per browser session, so open each link in a new private window if a result looks wrong.</li>" +
+          "<li><b>The fact-check path:</b> every row’s links go to the Cook County Clerk’s page for that document (which shows the free document image) and, for filings, the unofficial PDF copy. PIN links open every recording on the parcel.</li>" +
           '<li><b>Related pages:</b> <a href="' + PMAP + '" target="_blank" rel="noopener">pipeline map</a> (which file answers which question) · <a href="https://trd-digital.github.io/trd-news-interactive-maps/chicago-factcheck-map/" target="_blank" rel="noopener">7+ fact-check map</a> · <a href="https://trd-digital.github.io/trd-news-interactive-maps/chicago-party-network/" target="_blank" rel="noopener">all-party network</a> · <a href="https://trd-digital.github.io/trd-news-interactive-maps/chicago-four-party-network/" target="_blank" rel="noopener">four-party network</a></li>' +
           "</ul><p class=\"m\">Data built " + esc(X.meta.built) + " (files of " + esc(X.meta.source_mtime) + "). " + esc(X.meta.readme) + "</p></details>";
 

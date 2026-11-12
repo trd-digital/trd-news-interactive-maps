@@ -135,7 +135,7 @@
         <details class="src">
           <summary>Sources and how to check</summary>
           <ul>
-            <li><b>Deeds, mortgages, assignments and foreclosure filings (lis pendens):</b> Cook County Clerk recordings, <a href="https://crs.cookcountyclerkil.gov/" target="_blank" rel="noopener">crs.cookcountyclerkil.gov</a>. Every such link has a Clerk search link and, where we have it, the Clerk document page. A PIN opens every recording on that parcel.</li>
+            <li><b>Deeds, mortgages, assignments and foreclosure filings (lis pendens):</b> Cook County Clerk recordings, <a href="https://crs.cookcountyclerkil.gov/" target="_blank" rel="noopener">crs.cookcountyclerkil.gov</a>. Every document links to its page on the Clerk's site, which shows the free document image. A PIN opens every recording on that parcel.</li>
             <li><b>Reporters’ tags (T-, R-, UR-), attorneys / agents and PTAX-203 preparers, and the building list:</b> the reporters’ own spreadsheet <code>pin histories of source examples.xlsx</code>, sheet “examples pinhist transactions”.</li>
             <li><b>Officer / manager / agent “of the company” links:</b> OpenCorporates / Illinois Secretary of State company records (files <code>owner_entity_map.csv</code> and <code>combined_entity_officer.csv</code>). Each one links to its OpenCorporates page.</li>
             <li><b>Which party a building is tied to:</b> the Q1 pipeline’s ownership-based list, <code>foreclosure_questions/variant_pinhist/building_units_sqft.csv</code>, column <code>tagged_parties</code> (the same list as the workbook’s violations tab): 243 buildings.</li>
@@ -415,7 +415,7 @@
             (e.address ? '<div class="m">' + esc(e.address) + (e.keypin ? ' · PIN <a href="https://crs.cookcountyclerkil.gov/Search/Result?id1=' + esc(e.keypin) + '" target="_blank" rel="noopener" title="Every recording on this parcel at the Cook County Clerk">' + esc(e.keypin) + "</a>" : "") + "</div>" : "") +
             (e.recAddr ? '<div class="m">Address on the company record: ' + esc(e.recAddr) + "</div>" : "") +
             (e.bparties.length ? '<div class="m">Building tag: ' + esc(e.bparties.join(" / ")) + "</div>" : "") +
-            "<div>" + (e.county ? '<a href="' + esc(e.county) + '" target="_blank" rel="noopener">Clerk search</a>' : "") +
+            "<div>" + (e.county ? '<a href="' + esc(e.county) + '" target="_blank" rel="noopener">Clerk document page</a>' : "") +
             (e.county && e.docLink ? " · " : "") +
             (e.docLink ? '<a href="' + esc(e.docLink) + '" target="_blank" rel="noopener">' + (/opencorporates/.test(e.docLink) ? "OpenCorporates" : "Document page") + "</a>" : "") +
             (!e.county && !e.docLink ? '<span class="m">no link in the source file</span>' : "") +
@@ -493,7 +493,7 @@
           rows.forEach(function (e) {
             html += "<tr><td>" + esc(N[e.s].name) + "</td><td>" + esc(e.relation) + "</td><td>" + esc(N[e.t].name) + "</td><td>" +
               esc(e.docType) + " " + esc(e.doc) + "<br>" + esc(e.recorded) + (e.amount != null ? " · " + money(e.amount) : "") + "<br>" + esc(e.address || e.recAddr) + "<br>" +
-              (e.county ? '<a href="' + esc(e.county) + '" target="_blank" rel="noopener">Clerk search</a> ' : "") +
+              (e.county ? '<a href="' + esc(e.county) + '" target="_blank" rel="noopener">Clerk document page</a> ' : "") +
               (e.docLink ? '<a href="' + esc(e.docLink) + '" target="_blank" rel="noopener">' + (/opencorporates/.test(e.docLink) ? "OpenCorporates" : "Document") + "</a>" : "") + "</td></tr>";
           });
           document.getElementById("tbl").innerHTML = html + "</tbody></table>";
