@@ -149,7 +149,7 @@
         <div class="tip" id="tip"></div>
       </div>
       <div class="lrow"><div class="nlegend" id="nlegend"></div><div id="segSlot"></div></div>
-      <div class="foot">Source: Cook County Clerk records compiled and fact-checked by TRD. <a href="#" id="aboutLink">About the data</a></div>
+      <div class="foot">Source: Cook County Clerk records, each reviewed by TRD&#39;s reporters. <a href="#" id="aboutLink">About the data</a></div>
       <div class="panel" id="panel" role="dialog" aria-modal="false" aria-labelledby="ptitle">
         <div class="ph"><h2 id="ptitle"></h2><button class="x" id="pclose" aria-label="Close">×</button></div>
         <div class="pb" id="pbody"></div>
@@ -165,7 +165,7 @@
         { k: "deed", label: "Deal between them", short: "Deal", text: "A deed that names two of the four investors." },
         { k: "lender", label: "Same lender", chip: "Same lender", short: "Same lender", text: "A mortgage from a lender that also lent on another of the four investors' buildings." },
         { k: "trustee", label: "Same foreclosing trustee", chip: "Same trustee", short: "Same trustee", text: "A foreclosure filed by Wilmington Trust, as trustee for securitized loans, which also foreclosed on another of the four." },
-        { k: "paper", label: "Name on the paperwork", chip: "Paperwork names", short: "Paperwork", text: "A deed on which this person appears as attorney, agent or preparer of the state transfer declaration. These names come from the Clerk's document index and were not individually reviewed by TRD's reporters." },
+        { k: "paper", label: "Name on the paperwork", chip: "Paperwork names", short: "Paperwork", text: "A deed on which this person appears as attorney, agent or preparer of the state transfer declaration." },
         { k: "other", label: "Other foreclosing lenders", chip: "Other lenders", short: "Other lenders", text: "Foreclosures filed by other lenders and trustees, shown to make clear who does not link the investors." }
       ];
       var KBY = {}; KINDS.forEach(function (k) { KBY[k.k] = k; });
@@ -558,9 +558,8 @@
         "How to read it": '<p>Each line stands for one or more Cook County Clerk documents. Its width shows how many documents, or how many buildings, it covers. Click a line for the list, with a link to each record on the Clerk&#39;s site.</p>' +
           '<p><b>Deal between them</b>: a deed naming two of the four investors. Rotenberg and Tauber bought a building together, then Rotenberg sold four to Tauber. MJNT and Tauber share a principal, so their deeds show one person in two vehicles, not two investors trading.</p>' +
           '<p><b>Same lender, same trustee, paperwork names</b>: indirect links. Rotenberg and MJNT never appear on the same document; they connect only through these.</p>',
-        "Caveats": '<p>The deeds and foreclosure filings were compiled by TRD reporters and fact-checked on Oct. 21, 2026.</p>' +
+        "Caveats": '<p>TRD&#39;s reporters reviewed every document on the graph: the deeds, mortgages and foreclosure filings, and the attorney, agent and transfer-declaration names on them.</p>' +
           '<p>A mortgage or foreclosure filing is linked to the investor who owned the building when it was recorded; deeds between two investors link both.</p>' +
-          '<p>Attorney, agent and transfer-declaration preparer names come from the Clerk&#39;s document index and were not individually reviewed by the reporters.</p>' +
           '<p>Reporters identify Vera Pandev as related to the Tauber and MJNT buildings (and to two other investors&#39;). On Bialostozky&#39;s buildings she appears only as closing counsel.</p>' +
           '<p>Built from TRD&#39;s analysis files of ' + esc(fdate(F.meta.source_mtime.slice(0, 10))) + ': ' + F.meta.documents + ' documents behind ' + F.meta.links + ' connections.</p>'
       };
