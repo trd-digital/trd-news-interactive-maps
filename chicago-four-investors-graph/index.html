@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Four Investors' Connections</title>
+    <style>
+      :root {
+        --trd-embed-h: 560px; --trd-embed-h-wide: 560px; --trd-embed-h-phone: 560px;
+        --bg: #ffffff; --panel: #f7f7f5; --ink: #14171f; --ink2: #464c5a; --muted: #6b7182; --line: #dcdfe5; --chip: #eef0f3;
+        --p-Rotenberg: #2a78d6; --p-Tauber: #7c4ddb; --p-MJNT: #12966a; --p-Bialostozky: #d95926;
+        --node: #5b6170; --node-faint: #a3a8b4;
+        --k-deed: #14171f; --k-lender: #c98500; --k-trustee: #d23b2e; --k-paper: #6b7182; --k-other: #b4b8c2;
+        --link: #1f63b8;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #16181d; --panel: #1d2027; --ink: #eef0f4; --ink2: #c0c5d0; --muted: #959cab; --line: #333844; --chip: #262a33;
+          --p-Rotenberg: #4d95ec; --p-Tauber: #a587f5; --p-MJNT: #2bb585; --p-Bialostozky: #ec7440;
+          --node: #aab0bd; --node-faint: #646b7a;
+          --k-deed: #eef0f4; --k-lender: #e8a51c; --k-trustee: #ff6b5e; --k-paper: #9aa1b0; --k-other: #555c6a;
+          --link: #79b0f5;
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #16181d; --panel: #1d2027; --ink: #eef0f4; --ink2: #c0c5d0; --muted: #959cab; --line: #333844; --chip: #262a33;
+        --p-Rotenberg: #4d95ec; --p-Tauber: #a587f5; --p-MJNT: #2bb585; --p-Bialostozky: #ec7440;
+        --node: #aab0bd; --node-faint: #646b7a;
+        --k-deed: #eef0f4; --k-lender: #e8a51c; --k-trustee: #ff6b5e; --k-paper: #9aa1b0; --k-other: #555c6a;
+        --link: #79b0f5;
+        color-scheme: dark;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; overflow: hidden; }
+      body { background: var(--bg); color: var(--ink); font: 13px/1.38 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+      .app { position: relative; height: 560px; max-height: 100vh; display: flex; flex-direction: column; padding: 12px 14px 8px; }
+      h1 { font-size: 19px; line-height: 1.2; margin: 0; font-weight: 800; letter-spacing: -.01em; }
+      .sub { color: var(--ink2); margin: 3px 0 8px; font-size: 13px; }
+      .bar { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 6px; margin-bottom: 4px; }
+      .kchip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink);
+        border-radius: 999px; padding: 3px 9px 3px 8px; font: inherit; font-size: 12px; cursor: pointer; line-height: 1.3; }
+      .kchip[aria-pressed="false"] { color: var(--muted); background: transparent; }
+      .kchip[aria-pressed="false"] svg { opacity: .35; }
+      .kchip svg { flex: none; }
+      .spacer { flex: 1; }
+      .cs { display: none !important; }
+      @media (max-width: 600px) { .cl { display: none !important; } .cs { display: inline !important; } .seg .wl { display: none; } .seg button { padding: 3px 6px; } }
+      .btn { border: 1px solid var(--line); background: var(--chip); color: var(--ink); border-radius: 6px; padding: 3px 9px; font: inherit; font-size: 12px; cursor: pointer; line-height: 1.3; }
+      .btn:hover, .kchip:hover { border-color: var(--muted); }
+      .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; font-size: 12px; }
+      .seg .wl { padding: 3px 6px 3px 8px; color: var(--muted); }
+      .seg button { border: 0; border-left: 1px solid var(--line); background: var(--bg); color: var(--ink2); font: inherit; padding: 3px 8px; cursor: pointer; }
+      .seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+      .stage { position: relative; flex: 1; min-height: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+      #svg { width: 100%; height: 100%; display: block; touch-action: manipulation; }
+      .nlegend { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 11.5px; color: var(--ink2); padding: 5px 0 0; }
+      .nlegend span { display: inline-flex; align-items: center; gap: 5px; }
+      .lrow { display: flex; align-items: flex-start; gap: 8px; padding-top: 5px; }
+      .lrow .nlegend { flex: 1; padding: 2px 0 0; }
+      .foot { font-size: 11px; color: var(--muted); padding-top: 3px; }
+      .foot a { color: var(--muted); }
+      /* graph */
+      .lk { fill: none; stroke-linecap: round; transition: opacity .15s; }
+      .lk.deed { stroke: var(--k-deed); }
+      .lk.lender { stroke: var(--k-lender); }
+      .lk.trustee { stroke: var(--k-trustee); stroke-dasharray: 10 3; }
+      .lk.paper { stroke: var(--k-paper); stroke-dasharray: 2 4; }
+      .lk.other { stroke: var(--k-other); stroke-dasharray: 1 3; }
+      .lk.paper, .lk.other { stroke-linecap: butt; }
+      .hit { fill: none; stroke: transparent; stroke-width: 16; cursor: pointer; }
+      .nd { cursor: grab; transition: opacity .15s; touch-action: none; }
+      .nd.drag { cursor: grabbing; }
+      .nd.drag .shape { filter: drop-shadow(0 2px 4px rgba(0,0,0,.35)); }
+      .pick { display: flex; gap: 6px; align-items: center; }
+      .pick select { max-width: 210px; padding: 3px 4px; }
+      .nd:focus { outline: none; }
+      .nd:focus-visible .shape { stroke: var(--link); stroke-width: 3; }
+      .nd .shape { stroke: var(--bg); stroke-width: 2; }
+      .nd.person .shape { fill: var(--bg); stroke: var(--node); stroke-width: 2.2; }
+      .nd.lender .shape, .nd.trustee .shape { fill: var(--node); }
+      .nd.plaintiff .shape { fill: var(--node-faint); }
+      .nd text { fill: var(--ink); font-size: 11.5px; paint-order: stroke; stroke: var(--bg); stroke-width: 3.5px; stroke-linejoin: round; pointer-events: none; }
+      .nd.investor text { font-size: 14px; font-weight: 800; stroke-width: 4.5px; }
+      .nd.investor text.full { font-size: 10.5px; font-weight: 500; fill: var(--ink2); }
+      .nd.plaintiff text { fill: var(--ink2); font-size: 10.5px; }
+      .focus .lk:not(.on) { opacity: .1; }
+      .focus .nd:not(.on) { opacity: .22; }
+      .lk.sel { opacity: 1 !important; }
+      .tip { position: absolute; pointer-events: none; background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 6px 9px;
+        font-size: 12px; box-shadow: 0 3px 12px rgba(0,0,0,.18); max-width: 260px; display: none; z-index: 5; }
+      .tip b { display: block; }
+      .tip .m { color: var(--muted); }
+      /* panel */
+      .panel { position: absolute; top: 80px; right: 0; bottom: 0; width: 380px; max-width: 100%; background: var(--panel); border-left: 1px solid var(--line);
+        display: none; flex-direction: column; z-index: 6; box-shadow: -6px 0 18px rgba(0,0,0,.12); }
+      .panel.open { display: flex; }
+      .ph { display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px 6px; }
+      .ph h2 { font-size: 15px; line-height: 1.25; margin: 0; flex: 1; }
+      .x { border: 0; background: none; color: var(--ink2); font-size: 20px; line-height: 1; cursor: pointer; padding: 0 2px; }
+      .pb { padding: 0 12px; flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+      .lede { color: var(--ink2); margin: 0 0 6px; font-size: 12.5px; }
+      .kline { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--ink2); margin-bottom: 4px; }
+      .cnt { font-size: 12px; color: var(--muted); margin: 0 0 6px; }
+      .list { flex: 1; min-height: 0; overflow: hidden; margin: 0; padding: 0; list-style: none; }
+      .doc { border-top: 1px solid var(--line); padding: 6px 0; font-size: 12px; }
+      .doc .t { font-weight: 650; }
+      .doc .m { color: var(--muted); }
+      .doc .nm { color: var(--ink2); font-size: 11.5px; overflow-wrap: anywhere; }
+      .doc a, .about a { color: var(--link); }
+      .conn { border-top: 1px solid var(--line); padding: 6px 2px; display: flex; gap: 8px; align-items: center; cursor: pointer; font-size: 12.5px; }
+      .conn:hover { background: var(--chip); }
+      .conn .n { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 12px; }
+      .pager { display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 6px 12px 10px; font-size: 12px; color: var(--muted); }
+      .pager .btn { padding: 2px 9px; }
+      .pager .btn[disabled] { opacity: .35; cursor: default; }
+      .filters { display: flex; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
+      select { font: inherit; font-size: 12px; background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 2px 4px; max-width: 100%; }
+      .about { font-size: 12.3px; color: var(--ink2); }
+      .about p { margin: 0 0 7px; }
+      .about b { color: var(--ink); }
+      .tabs { display: flex; gap: 4px; margin-bottom: 8px; }
+      .tabs button { border: 1px solid var(--line); background: var(--bg); color: var(--ink2); border-radius: 6px; font: inherit; font-size: 12px; padding: 2px 9px; cursor: pointer; }
+      .tabs button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+      @media (max-width: 600px) {
+        .app { padding: 10px 10px 6px; }
+        h1 { font-size: 17px; }
+        .sub { font-size: 12.3px; margin-bottom: 6px; }
+        .kchip { padding: 2px 7px 2px 6px; font-size: 11.5px; gap: 4px; }
+        .kchip svg { width: 16px; }
+        .btn, .seg { font-size: 11.5px; }
+        .panel { width: 100%; border-left: 0; }
+        .nlegend { font-size: 10.8px; gap: 1px 9px; }
+        .hide-phone { display: none; }
+        .pick select { max-width: 132px; }
+        .pick .btn { padding: 3px 7px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <h1>How the four investors are connected</h1>
+      <p class="sub">Eliazer Tauber links the group: he bought buildings with and from Yissocher Rotenberg and helps run MJNT. Chaim Bialostozky shares only a closing attorney with the others. <span class="hide-phone">Click a line or name for the county records behind it, or drag names to rearrange.</span></p>
+      <div class="bar" id="bar"></div>
+      <div class="stage" id="stage">
+        <svg id="svg" role="img" aria-label="Network graph of documents linking Rotenberg, Tauber, MJNT and Bialostozky"></svg>
+        <div class="tip" id="tip"></div>
+      </div>
+      <div class="lrow"><div class="nlegend" id="nlegend"></div><div id="segSlot"></div></div>
+      <div class="foot">Source: Cook County Clerk records compiled and fact-checked by TRD. <a href="#" id="aboutLink">About the data</a></div>
+      <div class="panel" id="panel" role="dialog" aria-modal="false" aria-labelledby="ptitle">
+        <div class="ph"><h2 id="ptitle"></h2><button class="x" id="pclose" aria-label="Close">×</button></div>
+        <div class="pb" id="pbody"></div>
+        <div class="pager" id="pager"></div>
+      </div>
+    </div>
+    <script src="data.js"></script>
+    <script>
+    (function () {
+      "use strict";
+      var F = window.FIG, NS = "http://www.w3.org/2000/svg";
+      var KINDS = [
+        { k: "deed", label: "Deal between them", short: "Deal", text: "A deed that names two of the four investors." },
+        { k: "lender", label: "Same hard-money lender", chip: "Same lender", short: "Same lender", text: "A mortgage from a lender that also lent on another of the four investors' buildings." },
+        { k: "trustee", label: "Same foreclosing trustee", chip: "Same trustee", short: "Same trustee", text: "A foreclosure filed by Wilmington Trust, as trustee for securitized loans, which also foreclosed on another of the four." },
+        { k: "paper", label: "Name on the paperwork", chip: "Paperwork names", short: "Paperwork", text: "A deed on which this person appears as attorney, agent or preparer of the state transfer declaration. These names come from the Clerk's document index and were not individually reviewed by TRD's reporters." },
+        { k: "other", label: "Other foreclosing lenders", chip: "Other lenders", short: "Other lenders", text: "Foreclosures filed by other lenders and trustees, shown to make clear who does not link the investors." }
+      ];
+      var KBY = {}; KINDS.forEach(function (k) { KBY[k.k] = k; });
+      var NODE_KINDS = [["investor", "Investor"], ["lender", "Hard-money lender"], ["trustee", "Securitization trustee"], ["person", "Person on the paperwork"], ["plaintiff", "Other foreclosing lender"]];
+      var NODE_SHORT = { investor: "Investor", lender: "Lender", trustee: "Trustee", person: "Paperwork name", plaintiff: "Other lender" };
+      var NBY = {}; F.nodes.forEach(function (n) { NBY[n.id] = n; });
+      var DOCS = {}; F.docs.forEach(function (d) { DOCS[d.a + "|" + d.b + "|" + d.doc] = d; });
+      var show = { deed: true, lender: true, trustee: true, paper: true, other: false };
+
+      // hand placed so the reading is visible: lenders above, the four across the middle, paperwork names and Bialostozky below
+      var POS = {
+        wide: { w: 900, h: 380, p: {
+          "Sharestates": [300, 34], "Cliffco": [450, 26], "Loan Funder": [600, 34],
+          "Naftalie Berger": [318, 108],
+          "Rotenberg": [190, 160], "Tauber": [450, 160], "MJNT": [710, 160],
+          "Wilmington Trust (as trustee)": [545, 262],
+          "Vera Pandev / Berg Berg Pandev": [650, 322], "Bialostozky": [835, 300],
+          "Abl Rpc Residential Credit Acq Llc": [42, 228], "Toorak Cap Partners Llc": [42, 252], "Loan Funder Llc Series 44355": [42, 276],
+          "Loan Funder Llc Series 51136": [42, 300], "Loan Funder Llc Series 54776": [42, 324], "Residential Inv Trust Iv": [42, 348],
+          "Scf Ln Hldgs Llc": [42, 372], "Laramie Apartments Llc": [42, 204],
+          "Sharestates Investments Llc": [250, 222], "Tryon St Acq Trust I": [235, 330],
+          "Us Bk Trust Natl Assn Tr": [800, 76], "Us Bk Trust Natl Assn": [840, 210],
+          "Federal Natl Mtg Assn": [770, 372], "Walker & Dunlop Llc": [865, 270] } },
+        narrow: { w: 340, h: 360, p: {
+          "Sharestates": [62, 22], "Cliffco": [170, 16], "Loan Funder": [280, 22],
+          "Naftalie Berger": [112, 82],
+          "Rotenberg": [50, 135], "Tauber": [170, 135], "MJNT": [290, 135],
+          "Wilmington Trust (as trustee)": [250, 218],
+          "Vera Pandev / Berg Berg Pandev": [205, 300], "Bialostozky": [300, 320],
+          "Abl Rpc Residential Credit Acq Llc": [14, 205], "Toorak Cap Partners Llc": [14, 225], "Loan Funder Llc Series 44355": [14, 245],
+          "Loan Funder Llc Series 51136": [14, 265], "Loan Funder Llc Series 54776": [14, 285], "Residential Inv Trust Iv": [14, 305],
+          "Scf Ln Hldgs Llc": [14, 325], "Laramie Apartments Llc": [14, 345],
+          "Sharestates Investments Llc": [110, 180], "Tryon St Acq Trust I": [85, 280],
+          "Us Bk Trust Natl Assn Tr": [326, 70], "Us Bk Trust Natl Assn": [326, 210],
+          "Federal Natl Mtg Assn": [250, 352], "Walker & Dunlop Llc": [330, 262] } }
+      };
+      // label side per node: [dx, dy, anchor]
+      var LBL = {
+        wide: { "Sharestates": [-12, 4, "end"], "Cliffco": [12, 4, "start"], "Loan Funder": [12, 4, "start"], "Naftalie Berger": [-11, 4, "end"],
+          "Wilmington Trust (as trustee)": [12, 4, "start"],
+          "Vera Pandev / Berg Berg Pandev": [0, 22, "middle"], "Us Bk Trust Natl Assn Tr": [0, -10, "middle"], "Us Bk Trust Natl Assn": [0, -10, "middle"],
+          "Federal Natl Mtg Assn": [-9, 4, "end"], "Walker & Dunlop Llc": [0, -10, "middle"], "Sharestates Investments Llc": [8, 12, "start"], "Tryon St Acq Trust I": [8, 4, "start"] },
+        narrow: { "Sharestates": [0, 20, "middle"], "Cliffco": [0, 20, "middle"], "Loan Funder": [0, 20, "middle"], "Naftalie Berger": [10, 4, "start"],
+          "Wilmington Trust (as trustee)": [0, 20, "middle"],
+          "Vera Pandev / Berg Berg Pandev": [0, 21, "middle"] }
+      };
+
+      var svg = document.getElementById("svg"), stage = document.getElementById("stage"), tip = document.getElementById("tip");
+      var panel = document.getElementById("panel"), pbody = document.getElementById("pbody"), pager = document.getElementById("pager"), ptitle = document.getElementById("ptitle");
+      var layout = null, selLink = null, focusNode = null;
+
+      function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var a in attrs) e.setAttribute(a, attrs[a]); if (parent) parent.appendChild(e); return e; }
+      function h(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+      function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+      var MON = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
+      function fdate(s, short) { if (!s) return "date not recorded"; var p = s.split("-"); var m = MON[+p[1] - 1]; return short ? m + " " + p[0] : m + " " + (+p[2]) + ", " + p[0]; }
+      function money(v) {
+        if (v == null) return "";
+        if (v >= 1e6) { var x = (v / 1e6).toFixed(1).replace(/\.0$/, ""); return "$" + x + " million"; }
+        return "$" + Math.round(v).toLocaleString("en-US");
+      }
+      function plural(n, w) { return n + " " + w + (n === 1 ? "" : "s"); }
+      function linkName(l) { return NBY[l.a].label + " – " + NBY[l.b].label; }
+      function span(l) { if (!l.first) return fdate(l.last, true); return l.first.slice(0, 7) === l.last.slice(0, 7) ? fdate(l.first, true) : fdate(l.first, true) + " – " + fdate(l.last, true); }
+      function color(n) { return n.kind === "investor" ? "var(--p-" + n.id + ")" : null; }
+      function swatch(k, w) {
+        w = w || 22;
+        var dash = { deed: "", lender: "", trustee: "7 2", paper: "2 3", other: "1 2.5" }[k];
+        return '<svg width="' + w + '" height="10" aria-hidden="true"><line x1="1" y1="5" x2="' + (w - 1) + '" y2="5" stroke="var(--k-' + k + ')" stroke-width="' + (k === "deed" ? 3.2 : 2.6) + '"' + (dash ? ' stroke-dasharray="' + dash + '"' : "") + ' stroke-linecap="' + (k === "paper" || k === "other" ? "butt" : "round") + '"/></svg>';
+      }
+      function shapeSvg(kind, sz) {
+        sz = sz || 12; var c = sz / 2;
+        var s = '<svg width="' + sz + '" height="' + sz + '" aria-hidden="true">';
+        if (kind === "investor") { s = '<svg width="22" height="' + sz + '" aria-hidden="true">'; ["Rotenberg", "Tauber", "MJNT", "Bialostozky"].forEach(function (p, i) { s += '<circle cx="' + (4 + i * 4.7) + '" cy="' + c + '" r="3.6" fill="var(--p-' + p + ')" stroke="var(--bg)" stroke-width=".8"/>'; }); }
+        else if (kind === "lender") s += '<rect x="1.5" y="1.5" width="' + (sz - 3) + '" height="' + (sz - 3) + '" fill="var(--node)"/>';
+        else if (kind === "trustee") s += '<path d="M' + c + ' .5L' + (sz - .5) + ' ' + c + 'L' + c + ' ' + (sz - .5) + 'L.5 ' + c + 'Z" fill="var(--node)"/>';
+        else if (kind === "person") s += '<circle cx="' + c + '" cy="' + c + '" r="' + (c - 1.6) + '" fill="none" stroke="var(--node)" stroke-width="2"/>';
+        else s += '<circle cx="' + c + '" cy="' + c + '" r="' + (c - 3) + '" fill="var(--node-faint)"/>';
+        return s + "</svg>";
+      }
+
+      // ---- toolbar and legends
+      var bar = document.getElementById("bar");
+      KINDS.forEach(function (k) {
+        var b = h("button", "kchip", swatch(k.k) + '<span class="cl">' + (k.chip || k.label) + '</span><span class="cs">' + k.short + "</span>");
+        b.setAttribute("aria-pressed", show[k.k]); b.title = k.text;
+        b.onclick = function () { show[k.k] = !show[k.k]; b.setAttribute("aria-pressed", show[k.k]); if (centerNode) centerOn(centerNode); else draw(); };
+        bar.appendChild(b);
+      });
+      // "Center on" picker and reset (bottom right)
+      var pick = h("div", "pick");
+      var csel = h("select"); csel.setAttribute("aria-label", "Center the graph on a name");
+      var GROUPS = [["investor", "The four investors"], ["lender", "Hard-money lenders"], ["trustee", "Securitization trustee"], ["person", "People on the paperwork"], ["plaintiff", "Other foreclosing lenders"]];
+      csel.innerHTML = '<option value="">Center on a name…</option>' + GROUPS.map(function (g) {
+        return '<optgroup label="' + g[1] + '">' + F.nodes.filter(function (n) { return n.kind === g[0]; })
+          .sort(function (a, b) { return b.n_docs - a.n_docs; })
+          .map(function (n) { return '<option value="' + esc(n.id) + '">' + esc(n.kind === "investor" ? n.full : n.label) + "</option>"; }).join("") + "</optgroup>";
+      }).join("");
+      var resetB = h("button", "btn", "Reset"); resetB.title = "Undo centering and dragging";
+      pick.appendChild(csel); pick.appendChild(resetB);
+      document.getElementById("segSlot").appendChild(pick);
+      csel.onchange = function () { centerOn(csel.value ? NBY[csel.value] : null); };
+      resetB.onclick = function () { csel.value = ""; centerOn(null); };
+      var allB = h("button", "btn", "All documents"); allB.onclick = function () { openDocs(); }; bar.appendChild(allB);
+      document.getElementById("aboutLink").onclick = function (e) { e.preventDefault(); openAbout(); };
+      var nl = document.getElementById("nlegend");
+      NODE_KINDS.forEach(function (k) {
+        var it = h("span", "", shapeSvg(k[0]) + '<span class="cl">' + k[1] + '</span><span class="cs">' + NODE_SHORT[k[0]] + "</span>");
+        if (k[0] === "plaintiff") it.id = "plLegend"; nl.appendChild(it);
+      });
+      nl.appendChild(h("span", "", '<svg width="34" height="10" aria-hidden="true"><line x1="1" y1="5" x2="14" y2="5" stroke="var(--muted)" stroke-width="1.4"/><line x1="19" y1="5" x2="33" y2="5" stroke="var(--muted)" stroke-width="5"/></svg><span class="cl">Thicker line = more documents</span><span class="cs">Thicker = more docs</span>'));
+
+      // ---- graph
+      function visibleLinks() { return F.links.filter(function (l) { return show[l.kind]; }); }
+      function width(l) { return (layout === "narrow" ? 1.3 : 1.6) + (layout === "narrow" ? 1.5 : 2) * Math.sqrt(l.n_docs); }
+      function nodeR(n) { var nar = layout === "narrow"; if (n.kind === "investor") return nar ? 15 : 21; if (n.kind === "plaintiff") return nar ? 3.5 : 4.5; return nar ? 6.5 : 8; }
+      function kindIdx(n) { return ["investor", "lender", "trustee", "person", "plaintiff"].indexOf(n.kind); }
+      function shapeEl(n, g) {
+        var r = nodeR(n), s;
+        if (n.kind === "lender") s = el("rect", { x: -r, y: -r, width: 2 * r, height: 2 * r, rx: 1.5 }, g);
+        else if (n.kind === "trustee") s = el("path", { d: "M0 " + (-r * 1.3) + "L" + (r * 1.3) + " 0L0 " + (r * 1.3) + "L" + (-r * 1.3) + " 0Z" }, g);
+        else s = el("circle", { cx: 0, cy: 0, r: n.kind === "person" ? r - 1 : r }, g);
+        s.setAttribute("class", "shape"); if (n.kind === "investor") s.style.fill = color(n);
+        // a bigger invisible target makes small dots easy to grab on a phone
+        el("circle", { cx: 0, cy: 0, r: Math.max(r + 4, 13), fill: "transparent" }, g);
+        return s;
+      }
+
+      // cur holds where each name sits now: the home layout, a centered layout, or wherever the reader dragged it
+      var cur = {}, lab = {}, outer = {}, centerNode = null, dragged = false, dragging = false, animT = null;
+      function homePos() { var P = POS[layout].p, o = {}; for (var k in P) o[k] = P[k].slice(); return o; }
+      function labelFor(n) {
+        if (lab[n.id]) return lab[n.id];
+        return (LBL[layout] || {})[n.id] || (n.kind === "plaintiff" ? [8, 4, "start"] : [11, 4, "start"]);
+      }
+      function radial(c) {
+        // the chosen name in the middle, the names it connects to on an inner ring, everyone else on an outer ring
+        var L = POS[layout], W = L.w, H = L.h, nar = layout === "narrow", cx = W / 2, cy = H / 2;
+        var nb = {}, vis = {};
+        visibleLinks().forEach(function (l) { vis[l.a] = vis[l.b] = 1; if (l.a === c.id) nb[l.b] = 1; if (l.b === c.id) nb[l.a] = 1; });
+        var order = function (a, b) { return kindIdx(NBY[a]) - kindIdx(NBY[b]) || NBY[b].n_docs - NBY[a].n_docs; };
+        var ring1 = Object.keys(nb).sort(order);
+        // outer ring: deal the kinds out in turn so the investors and lenders spread around it instead of bunching
+        var rest = F.nodes.filter(function (n) { return n.id !== c.id && !nb[n.id] && vis[n.id]; }).map(function (n) { return n.id; }).sort(order);
+        var byKind = {}; rest.forEach(function (id) { (byKind[NBY[id].kind] = byKind[NBY[id].kind] || []).push(id); });
+        var ring2 = [], ks = ["investor", "lender", "trustee", "person", "plaintiff"].filter(function (k) { return byKind[k]; });
+        while (ring2.length < rest.length) ks.forEach(function (k) { if (byKind[k].length) ring2.push(byKind[k].shift()); });
+        var pos = homePos(), labs = {};
+        pos[c.id] = [cx, cy];
+        function ring(ids, rx, ry, off) {
+          ids.forEach(function (id, i) {
+            var a = -Math.PI / 2 + off + 2 * Math.PI * i / ids.length, ca = Math.cos(a);
+            pos[id] = [cx + rx * ca, cy + ry * Math.sin(a)];
+            labs[id] = Math.abs(ca) < .3 ? [0, Math.sin(a) < 0 ? -12 : 20, "middle"] : (ca > 0 ? [11, 4, "start"] : [-11, 4, "end"]);
+          });
+        }
+        ring(ring1, W * (nar ? .31 : .25), H * (nar ? .30 : .33), 0);
+        ring(ring2, W * (nar ? .44 : .37), H * (nar ? .46 : .46), ring2.length ? Math.PI / ring2.length : 0);
+        return { pos: pos, labs: labs, ring2: ring2 };
+      }
+      function animateTo(target, labs) {
+        lab = labs || {};
+        var from = {}; for (var k in cur) from[k] = cur[k].slice();
+        draw();
+        if (animT) cancelAnimationFrame(animT);
+        var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches, t0 = performance.now(), dur = reduce ? 0 : 480;
+        function step(t) {
+          var u = dur ? Math.min(1, Math.max(0, (t - t0) / dur)) : 1, e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+          for (var k in target) { var a = from[k] || target[k], b = target[k]; cur[k] = [a[0] + (b[0] - a[0]) * e, a[1] + (b[1] - a[1]) * e]; }
+          update();
+          animT = u < 1 ? requestAnimationFrame(step) : null;
+        }
+        step(t0);
+      }
+      function centerOn(n) {
+        if (panel.classList.contains("open")) { panel.classList.remove("open"); selLink = null; focusNode = null; }
+        if (n && n.kind === "plaintiff" && !show.other) { show.other = true; syncChips(); }
+        centerNode = n || null;
+        outer = {};
+        if (n) { var r = radial(n); r.ring2.forEach(function (id) { outer[id] = 1; }); animateTo(r.pos, r.labs); }
+        else animateTo(homePos(), {});
+      }
+      function linkD(l) {
+        var a = cur[l.a], b = cur[l.b];
+        // slight bend keeps parallel routes apart and off the nodes in between
+        var mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy) || 1;
+        var bend = l.kind === "other" ? 0 : Math.min(26, len * .07) * (l.kind === "trustee" ? -1 : 1);
+        return "M" + a[0].toFixed(1) + " " + a[1].toFixed(1) + "Q" + (mx - dy / len * bend).toFixed(1) + " " + (my + dx / len * bend).toFixed(1) + " " + b[0].toFixed(1) + " " + b[1].toFixed(1);
+      }
+      function update() {
+        F.nodes.forEach(function (n) { if (n._el && cur[n.id]) n._el.setAttribute("transform", "translate(" + cur[n.id][0].toFixed(1) + " " + cur[n.id][1].toFixed(1) + ")"); });
+        visibleLinks().forEach(function (l) { if (l._el) { var d = linkD(l); l._el.setAttribute("d", d); l._hit.setAttribute("d", d); } });
+      }
+      function svgPt(ev) { var p = svg.createSVGPoint(); p.x = ev.clientX; p.y = ev.clientY; return p.matrixTransform(svg.getScreenCTM().inverse()); }
+      function draw() {
+        var nl = stage.clientWidth < 600 ? "narrow" : "wide";
+        if (nl !== layout) {
+          // switching between the wide and phone layouts starts from that layout's own positions
+          layout = nl; cur = homePos(); lab = {}; outer = {};
+          if (centerNode) { var r0 = radial(centerNode); cur = r0.pos; lab = r0.labs; r0.ring2.forEach(function (id) { outer[id] = 1; }); }
+        }
+        var L = POS[layout];
+        svg.setAttribute("viewBox", "0 0 " + L.w + " " + L.h);
+        svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+        F.nodes.forEach(function (n) { n._el = null; }); F.links.forEach(function (l) { l._el = l._hit = null; });
+        var links = visibleLinks();
+        var used = {}; links.forEach(function (l) { used[l.a] = used[l.b] = 1; });
+        var gL = el("g", { "class": "links" }, svg), gN = el("g", { "class": "nodes" }, svg);
+        links.slice().sort(function (a, b) { return KINDS.findIndex(function (k) { return k.k === b.kind; }) - KINDS.findIndex(function (k) { return k.k === a.kind; }); })
+          .forEach(function (l) {
+            var p = el("path", { "class": "lk " + l.kind }, gL);
+            var w = width(l); p.style.strokeWidth = w; l._el = p;
+            if (l.kind === "paper") p.style.strokeDasharray = Math.max(2, w * .8) + " " + Math.max(3.5, w * 1.1);
+            if (l === selLink) p.classList.add("sel");
+            var hit = el("path", { "class": "hit" }, gL); l._hit = hit;
+            hit.addEventListener("mousemove", function (ev) { if (!dragging) showTip(ev, l); });
+            hit.addEventListener("mouseleave", hideTip);
+            hit.addEventListener("click", function (ev) { ev.stopPropagation(); hideTip(); openLink(l); });
+          });
+        F.nodes.forEach(function (n) {
+          if (!cur[n.id] || (n.kind === "plaintiff" && !used[n.id])) return;
+          var g = el("g", { "class": "nd " + n.kind, tabindex: 0, role: "button", "aria-label": n.full + ", " + plural(n.n_docs, "document") }, gN);
+          shapeEl(n, g); n._el = g;
+          if (n.kind === "investor") {
+            var r = nodeR(n);
+            var t = el("text", { x: 0, y: r + (layout === "narrow" ? 14 : 17), "text-anchor": "middle" }, g); t.textContent = n.id;
+            if (layout === "wide") { var t2 = el("text", { x: 0, y: r + 30, "text-anchor": "middle", "class": "full" }, g); t2.textContent = n.full.replace(/^MJNT /, ""); }
+          } else if (!((layout === "narrow" && ((n.kind === "plaintiff" && !centerNode) || outer[n.id])) || (outer[n.id] && n.kind === "plaintiff"))) {
+            var o = labelFor(n);
+            var tt = el("text", { x: o[0], y: o[1], "text-anchor": o[2] }, g); tt.textContent = n.label;
+          }
+          g.addEventListener("mouseenter", function (ev) { if (dragging) return; focus(n); showNodeTip(ev, n); });
+          g.addEventListener("mousemove", function (ev) { if (!dragging) showNodeTip(ev, n); });
+          g.addEventListener("mouseleave", function () { if (dragging) return; focus(null); hideTip(); });
+          g.addEventListener("pointerdown", function (ev) {
+            if (ev.button !== 0) return;
+            ev.stopPropagation();
+            var start = svgPt(ev), p0 = cur[n.id].slice(), moved = false, pid = ev.pointerId;
+            try { g.setPointerCapture(pid); } catch (e) {}
+            function mv(e) {
+              var p = svgPt(e), dx = p.x - start.x, dy = p.y - start.y;
+              if (!moved && Math.hypot(dx, dy) < 4) return;
+              if (!moved) { moved = dragging = true; hideTip(); g.classList.add("drag"); focus(n); }
+              cur[n.id] = [Math.max(6, Math.min(L.w - 6, p0[0] + dx)), Math.max(6, Math.min(L.h - 6, p0[1] + dy))];
+              update();
+            }
+            function up() {
+              g.removeEventListener("pointermove", mv); g.removeEventListener("pointerup", up); g.removeEventListener("pointercancel", up);
+              try { g.releasePointerCapture(pid); } catch (e) {}
+              g.classList.remove("drag");
+              if (moved) { dragged = true; dragging = false; focus(null); setTimeout(function () { dragged = false; }, 0); }
+            }
+            g.addEventListener("pointermove", mv); g.addEventListener("pointerup", up); g.addEventListener("pointercancel", up);
+          });
+          g.addEventListener("click", function (ev) { ev.stopPropagation(); if (dragged) { dragged = false; return; } hideTip(); openNode(n); });
+          g.addEventListener("keydown", function (ev) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); openNode(n); } });
+        });
+        update();
+        document.getElementById("plLegend").style.display = show.other ? "" : "none";
+        focus(null);
+      }
+      function focus(n, keep) {
+        if (!n && !keep) n = focusNode || centerNode;
+        svg.classList.toggle("focus", !!n || !!selLink);
+        F.nodes.forEach(function (x) { if (x._el) x._el.classList.toggle("on", !!n && x === n); });
+        visibleLinks().forEach(function (l) {
+          var on = !!n && (l.a === n.id || l.b === n.id);
+          if (l._el) l._el.classList.toggle("on", on);
+          if (on) { if (NBY[l.a]._el) NBY[l.a]._el.classList.add("on"); if (NBY[l.b]._el) NBY[l.b]._el.classList.add("on"); }
+        });
+        if (selLink && selLink._el) { selLink._el.classList.add("on"); [selLink.a, selLink.b].forEach(function (id) { if (NBY[id]._el) NBY[id]._el.classList.add("on"); }); }
+      }
+      function place(ev, html) {
+        tip.innerHTML = html; tip.style.display = "block";
+        var r = stage.getBoundingClientRect(), x = ev.clientX - r.left + 12, y = ev.clientY - r.top + 12;
+        if (x + tip.offsetWidth > r.width - 4) x = ev.clientX - r.left - tip.offsetWidth - 12;
+        if (y + tip.offsetHeight > r.height - 4) y = ev.clientY - r.top - tip.offsetHeight - 12;
+        tip.style.left = Math.max(4, x) + "px"; tip.style.top = Math.max(4, y) + "px";
+      }
+      function showTip(ev, l) {
+        place(ev, "<b>" + esc(linkName(l)) + '</b><span class="m">' + esc(KBY[l.kind].label) + "</span><br>" + plural(l.n_docs, "document") + " on " + plural(l.n_bldgs, "building") + ", " + esc(span(l)) + '<br><span class="m">Click for the records</span>');
+      }
+      function showNodeTip(ev, n) { place(ev, "<b>" + esc(n.full) + '</b><span class="m">' + esc(NODE_KINDS.find(function (k) { return k[0] === n.kind; })[1]) + "</span><br>" + plural(n.n_docs, "document") + " in " + plural(n.n_links, "connection")); }
+      function hideTip() { tip.style.display = "none"; }
+
+      // ---- panel with a pager that shows only the rows that fit
+      var pageState = null;
+      function openPanel(title) { panel.style.top = bar.offsetTop + "px"; ptitle.textContent = title; panel.classList.add("open"); pbody.innerHTML = ""; pager.innerHTML = ""; }
+      function closePanel() { panel.classList.remove("open"); selLink = null; focusNode = null; draw(); focus(null); }
+      document.getElementById("pclose").onclick = closePanel;
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape" && panel.classList.contains("open")) closePanel(); });
+      svg.addEventListener("click", function () { if (panel.classList.contains("open")) closePanel(); });
+
+      function paged(items, render, list) {
+        // fit as many items as the list box holds, then page
+        var st = { items: items, render: render, list: list, start: 0, size: items.length, starts: [0] };
+        pageState = st; fill(st);
+      }
+      function fill(st) {
+        var list = st.list; list.innerHTML = "";
+        var i = st.start;
+        for (; i < st.items.length; i++) {
+          var node = st.render(st.items[i]); list.appendChild(node);
+          if (list.scrollHeight > list.clientHeight + 1 && i > st.start) { list.removeChild(node); break; }
+        }
+        st.end = i;
+        pager.innerHTML = "";
+        if (st.items.length === 0) { pager.textContent = "No documents match."; return; }
+        if (st.start === 0 && st.end >= st.items.length) { pager.textContent = st.items.length + " of " + st.items.length; return; }
+        var prev = h("button", "btn", "‹ Prev"), next = h("button", "btn", "Next ›");
+        prev.disabled = st.start === 0; next.disabled = st.end >= st.items.length;
+        prev.onclick = function () { st.starts.pop(); st.start = st.starts[st.starts.length - 1] || 0; if (!st.starts.length) st.starts = [0]; fill(st); };
+        next.onclick = function () { st.start = st.end; st.starts.push(st.start); fill(st); };
+        pager.appendChild(prev); pager.appendChild(h("span", "", (st.start + 1) + "–" + st.end + " of " + st.items.length)); pager.appendChild(next);
+      }
+      function docCard(d, withLink) {
+        var li = h("li", "doc");
+        var amt = money(d.amount);
+        var html = '<div class="t">' + esc(fdate(d.date)) + " · " + esc(d.type) + "</div>" +
+          '<div>' + esc(d.address) + (amt ? ' · <span class="m">' + amt + "</span>" : "") + "</div>";
+        if (withLink) html += '<div class="m">' + esc(linkName({ a: d.a, b: d.b })) + " · " + esc(KBY[d.kind].short) + "</div>";
+        else if (d.kind !== "deed") html += '<div class="nm">' + esc(d.detail) + "</div>";
+        html += '<div><a href="' + esc(d.link) + '" target="_blank" rel="noopener">Cook County Clerk record ' + esc(d.doc) + " ↗</a></div>";
+        li.innerHTML = html; return li;
+      }
+      function openLink(l) {
+        selLink = l; focusNode = null; draw();
+        openPanel(linkName(l));
+        pbody.appendChild(h("div", "kline", swatch(l.kind) + esc(KBY[l.kind].label)));
+        pbody.appendChild(h("p", "lede", esc(l.text || KBY[l.kind].text)));
+        pbody.appendChild(h("p", "cnt", plural(l.n_docs, "document") + " on " + plural(l.n_bldgs, "building") + " · " + esc(span(l))));
+        var list = h("ul", "list"); pbody.appendChild(list);
+        var ds = l.docs.map(function (d) { return DOCS[l.a + "|" + l.b + "|" + d]; }).sort(function (x, y) { return (x.date || "9") < (y.date || "9") ? -1 : 1; });
+        paged(ds, function (d) { return docCard(d, false); }, list);
+      }
+      function openNode(n) {
+        selLink = null; focusNode = n; draw();
+        openPanel(n.full);
+        pbody.appendChild(h("div", "kline", shapeSvg(n.kind) + esc(NODE_KINDS.find(function (k) { return k[0] === n.kind; })[1])));
+        if (n.desc) pbody.appendChild(h("p", "lede", esc(n.desc)));
+        var mine = F.links.filter(function (l) { return l.a === n.id || l.b === n.id; })
+          .sort(function (x, y) { return KINDS.findIndex(function (k) { return k.k === x.kind; }) - KINDS.findIndex(function (k) { return k.k === y.kind; }) || y.n_docs - x.n_docs; });
+        pbody.appendChild(h("p", "cnt", plural(n.n_docs, "document") + " in " + plural(mine.length, "connection") + ". Pick one to see its records."));
+        var list = h("ul", "list"); pbody.appendChild(list);
+        paged(mine, function (l) {
+          var other = NBY[l.a === n.id ? l.b : l.a];
+          var li = h("li", "conn", swatch(l.kind, 18) + "<span>" + esc(other.label) + "</span><span class=n>" + plural(l.n_docs, "doc") + "</span>");
+          li.tabIndex = 0; li.setAttribute("role", "button");
+          li.onclick = function () { if (!show[l.kind]) { show[l.kind] = true; syncChips(); } openLink(l); };
+          li.onkeydown = function (e) { if (e.key === "Enter") li.onclick(); };
+          return li;
+        }, list);
+      }
+      function syncChips() { bar.querySelectorAll(".kchip").forEach(function (b, i) { b.setAttribute("aria-pressed", show[KINDS[i].k]); }); }
+
+      // ---- all documents, filterable, with CSV download
+      function openDocs() {
+        selLink = null; focusNode = null; draw(); focus(null);
+        openPanel("All documents");
+        var f = h("div", "filters");
+        var sk = h("select"); sk.setAttribute("aria-label", "Connection type");
+        sk.innerHTML = '<option value="">All connection types</option>' + KINDS.map(function (k) { return '<option value="' + k.k + '">' + esc(k.label) + "</option>"; }).join("");
+        var si = h("select"); si.setAttribute("aria-label", "Investor");
+        si.innerHTML = '<option value="">All four investors</option>' + ["Rotenberg", "Tauber", "MJNT", "Bialostozky"].map(function (x) { return "<option>" + x + "</option>"; }).join("");
+        var dl = h("button", "btn", "Download CSV");
+        f.appendChild(sk); f.appendChild(si); f.appendChild(dl); pbody.appendChild(f);
+        var cnt = h("p", "cnt"); pbody.appendChild(cnt);
+        var list = h("ul", "list"); pbody.appendChild(list);
+        function rows() { return F.docs.filter(function (d) { return (!sk.value || d.kind === sk.value) && (!si.value || d.a === si.value || d.b === si.value); }); }
+        function run() { var r = rows(); cnt.textContent = plural(r.length, "record") + " (" + new Set(r.map(function (d) { return d.doc; })).size + " distinct documents; a document can back more than one line)"; paged(r, function (d) { return docCard(d, true); }, list); }
+        sk.onchange = si.onchange = run;
+        dl.onclick = function () {
+          var cols = ["recorded", "document_number", "document_type", "investor_or_party_a", "party_b", "connection", "address", "pin", "amount", "names_on_document", "detail", "clerk_link"];
+          var lines = [cols.join(",")].concat(rows().map(function (d) {
+            return [d.date, d.doc, d.type, NBY[d.a].label, NBY[d.b].label, KBY[d.kind].label, d.address, d.keypin, d.amount == null ? "" : d.amount, d.names, d.detail, d.link]
+              .map(function (v) { v = String(v == null ? "" : v); return /[",\n|]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(",");
+          }));
+          var a = document.createElement("a");
+          a.href = URL.createObjectURL(new Blob([lines.join("\n") + "\n"], { type: "text/csv" }));
+          a.download = "four-investors-connections-documents.csv"; document.body.appendChild(a); a.click(); a.remove();
+        };
+        run();
+      }
+
+      // ---- about: caveats and sources, two short tabs so nothing scrolls
+      var ABOUT = {
+        "How to read it": '<p>Each line stands for one or more Cook County Clerk documents. Its width shows how many documents, or how many buildings, it covers. Click a line for the list, with a link to each record on the Clerk&#39;s site.</p>' +
+          '<p><b>Deal between them</b>: a deed naming two of the four investors. Rotenberg and Tauber bought a building together, then Rotenberg sold four to Tauber. MJNT and Tauber share a principal, so their deeds show one person in two vehicles, not two investors trading.</p>' +
+          '<p><b>Same lender, same trustee, paperwork names</b>: indirect links. Rotenberg and MJNT never appear on the same document; they connect only through these.</p>',
+        "Caveats": '<p>The deeds and foreclosure filings were compiled by TRD reporters and fact-checked on Oct. 21, 2026.</p>' +
+          '<p>Attorney, agent and transfer-declaration preparer names come from the Clerk&#39;s document index and were not individually reviewed by the reporters.</p>' +
+          '<p>Reporters identify Vera Pandev as related to the Tauber and MJNT buildings (and to two other investors&#39;). On Bialostozky&#39;s buildings she appears only as closing counsel.</p>' +
+          '<p>Built from TRD&#39;s analysis files of ' + esc(fdate(F.meta.source_mtime.slice(0, 10))) + ': ' + F.meta.documents + ' documents behind ' + F.meta.links + ' connections.</p>'
+      };
+      function openAbout(tab) {
+        selLink = null; focusNode = null; draw(); focus(null);
+        tab = tab || "How to read it";
+        openPanel("About the data");
+        var tabs = h("div", "tabs");
+        Object.keys(ABOUT).forEach(function (k) { var b = h("button", "", k); b.setAttribute("aria-pressed", k === tab); b.onclick = function () { openAbout(k); }; tabs.appendChild(b); });
+        pbody.appendChild(tabs); pbody.appendChild(h("div", "about", ABOUT[tab]));
+      }
+
+      var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { draw(); if (pageState && panel.classList.contains("open") && pageState.list.isConnected) fill(pageState); }, 120); });
+      draw();
+    })();
+    </script>
+  </body>
+</html>
